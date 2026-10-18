@@ -606,7 +606,7 @@ Alola_Akala_TrainerBattleSwimmerWaterM_Text_1:
 	.string "If I hadn't swam myself\nmaybe I would've had the energy to win…$"
 
 Alola_Akala_TrainerBattleSwimmerWaterM_Text_2:
-	.string "The current out here is strong!\n"
+	.string "The current is strong!\n"
 	.string "A POKéMON must be really powerful to\l"
 	.string "migrate all the way out to the ISLES!$"
 

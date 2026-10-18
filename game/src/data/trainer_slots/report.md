@@ -12,16 +12,16 @@ at home (with the reason below); other are trainers the scaling classification k
 | --- | ---: | ---: | ---: |
 | Kanto | 72 | 105 | 30 |
 | Sevii | 63 | 22 | 6 |
-| Johto | 102 | 107 | 30 |
-| Alola | 8 | 11 | 0 |
-| Hoenn | 264 | 147 | 53 |
-| total | 509 | 392 | 119 |
+| Johto | 103 | 106 | 30 |
+| Alola | 11 | 8 | 0 |
+| Hoenn | 268 | 143 | 53 |
+| total | 517 | 384 | 119 |
 
 ## Why ORDINARY trainers stay fixed
 
 | Reason | Slots |
 | --- | ---: |
-| dialogue audit: a line is about the place (resolved below) | 156 |
+| dialogue audit: a line is about the place (resolved below) | 148 |
 | hidden by a story or time-of-day flag | 139 |
 | Trick House puzzle rooms: the trainers are part of the Trick Master's puzzles | 24 |
 | S.S. Aqua trainers are one-time ferry content | 22 |
@@ -96,7 +96,7 @@ its rotating slots, so a group of one slot never shows anyone but its own traine
 | 54 | Johto | BUG_CATCHER |  | 3 |
 | 55 | Johto | BURGLAR |  | 2 |
 | 56 | Johto | CAMPER |  | 6 |
-| 57 | Johto | COOLTRAINER |  | 14 |
+| 57 | Johto | COOLTRAINER |  | 15 |
 | 58 | Johto | FIREBREATHER |  | 1 |
 | 59 | Johto | FISHERMAN |  | 9 |
 | 60 | Johto | GENTLEMAN |  | 1 |
@@ -118,77 +118,78 @@ its rotating slots, so a group of one slot never shows anyone but its own traine
 | 76 | Johto | YOUNGSTER |  | 5 |
 | 77 | Johto | YOUNG_COUPLE | yes | 2 |
 | 78 | Alola | BUG_CATCHER |  | 2 |
-| 79 | Alola | CAMPER |  | 1 |
-| 80 | Alola | PICNICKER |  | 1 |
-| 81 | Alola | SWIMMER_F |  | 2 |
-| 82 | Alola | SWIMMER_M |  | 1 |
-| 83 | Alola | TUBER_M |  | 1 |
-| 84 | Hoenn | AROMA_LADY |  | 5 |
-| 85 | Hoenn | BATTLE_GIRL |  | 4 |
-| 86 | Hoenn | BEAUTY |  | 1 |
-| 87 | Hoenn | BIRD_KEEPER |  | 12 |
-| 88 | Hoenn | BLACK_BELT |  | 9 |
-| 89 | Hoenn | BUG_CATCHER |  | 8 |
-| 90 | Hoenn | BUG_MANIAC |  | 5 |
-| 91 | Hoenn | CAMPER |  | 8 |
-| 92 | Hoenn | COLLECTOR |  | 3 |
-| 93 | Hoenn | COOLTRAINER |  | 21 |
-| 94 | Hoenn | DRAGON_TAMER |  | 1 |
-| 95 | Hoenn | EXPERT |  | 7 |
-| 96 | Hoenn | FISHERMAN |  | 16 |
-| 97 | Hoenn | GENTLEMAN |  | 1 |
-| 98 | Hoenn | GUITARIST |  | 5 |
-| 99 | Hoenn | HEX_MANIAC |  | 2 |
-| 100 | Hoenn | HIKER |  | 5 |
-| 101 | Hoenn | KINDLER |  | 3 |
-| 102 | Hoenn | LADY |  | 2 |
-| 103 | Hoenn | LASS |  | 3 |
-| 104 | Hoenn | NINJA_BOY |  | 7 |
-| 105 | Hoenn | OLD_COUPLE | yes | 1 |
-| 106 | Hoenn | PARASOL_LADY |  | 5 |
-| 107 | Hoenn | PICNICKER |  | 7 |
-| 108 | Hoenn | PKMN_BREEDER |  | 5 |
-| 109 | Hoenn | PKMN_RANGER |  | 4 |
-| 110 | Hoenn | POKEFAN |  | 3 |
-| 111 | Hoenn | POKEMANIAC |  | 3 |
-| 112 | Hoenn | PSYCHIC |  | 8 |
-| 113 | Hoenn | RICH_BOY |  | 2 |
-| 114 | Hoenn | RUIN_MANIAC |  | 4 |
-| 115 | Hoenn | SAILOR |  | 4 |
-| 116 | Hoenn | SCHOOL_KID |  | 1 |
-| 117 | Hoenn | SIS_AND_BRO | yes | 2 |
-| 118 | Hoenn | SR_AND_JR | yes | 3 |
-| 119 | Hoenn | SWIMMER_F |  | 21 |
-| 120 | Hoenn | SWIMMER_M |  | 23 |
-| 121 | Hoenn | TRIATHLETE |  | 19 |
-| 122 | Hoenn | TUBER_F |  | 4 |
-| 123 | Hoenn | TUBER_M |  | 1 |
-| 124 | Hoenn | TWINS | yes | 4 |
-| 125 | Hoenn | YOUNGSTER |  | 9 |
-| 126 | Hoenn | YOUNG_COUPLE | yes | 3 |
+| 79 | Alola | CAMPER |  | 2 |
+| 80 | Alola | HIKER |  | 1 |
+| 81 | Alola | PICNICKER |  | 1 |
+| 82 | Alola | SWIMMER_F |  | 2 |
+| 83 | Alola | SWIMMER_M |  | 2 |
+| 84 | Alola | TUBER_M |  | 1 |
+| 85 | Hoenn | AROMA_LADY |  | 5 |
+| 86 | Hoenn | BATTLE_GIRL |  | 4 |
+| 87 | Hoenn | BEAUTY |  | 1 |
+| 88 | Hoenn | BIRD_KEEPER |  | 12 |
+| 89 | Hoenn | BLACK_BELT |  | 9 |
+| 90 | Hoenn | BUG_CATCHER |  | 8 |
+| 91 | Hoenn | BUG_MANIAC |  | 5 |
+| 92 | Hoenn | CAMPER |  | 8 |
+| 93 | Hoenn | COLLECTOR |  | 3 |
+| 94 | Hoenn | COOLTRAINER |  | 21 |
+| 95 | Hoenn | DRAGON_TAMER |  | 1 |
+| 96 | Hoenn | EXPERT |  | 7 |
+| 97 | Hoenn | FISHERMAN |  | 16 |
+| 98 | Hoenn | GENTLEMAN |  | 1 |
+| 99 | Hoenn | GUITARIST |  | 5 |
+| 100 | Hoenn | HEX_MANIAC |  | 2 |
+| 101 | Hoenn | HIKER |  | 5 |
+| 102 | Hoenn | KINDLER |  | 3 |
+| 103 | Hoenn | LADY |  | 2 |
+| 104 | Hoenn | LASS |  | 3 |
+| 105 | Hoenn | NINJA_BOY |  | 7 |
+| 106 | Hoenn | OLD_COUPLE | yes | 1 |
+| 107 | Hoenn | PARASOL_LADY |  | 5 |
+| 108 | Hoenn | PICNICKER |  | 7 |
+| 109 | Hoenn | PKMN_BREEDER |  | 5 |
+| 110 | Hoenn | PKMN_RANGER |  | 4 |
+| 111 | Hoenn | POKEFAN |  | 3 |
+| 112 | Hoenn | POKEMANIAC |  | 3 |
+| 113 | Hoenn | PSYCHIC |  | 9 |
+| 114 | Hoenn | RICH_BOY |  | 2 |
+| 115 | Hoenn | RUIN_MANIAC |  | 5 |
+| 116 | Hoenn | SAILOR |  | 4 |
+| 117 | Hoenn | SCHOOL_KID |  | 1 |
+| 118 | Hoenn | SIS_AND_BRO | yes | 2 |
+| 119 | Hoenn | SR_AND_JR | yes | 3 |
+| 120 | Hoenn | SWIMMER_F |  | 22 |
+| 121 | Hoenn | SWIMMER_M |  | 23 |
+| 122 | Hoenn | TRIATHLETE |  | 20 |
+| 123 | Hoenn | TUBER_F |  | 4 |
+| 124 | Hoenn | TUBER_M |  | 1 |
+| 125 | Hoenn | TWINS | yes | 4 |
+| 126 | Hoenn | YOUNGSTER |  | 9 |
+| 127 | Hoenn | YOUNG_COUPLE | yes | 3 |
 
-127 groups; sizes: 1 slot(s) x 25, 2 slot(s) x 36, 3 slot(s) x 21, 4 slot(s) x 13, 5 slot(s) x 9, 6 slot(s) x 3, 7 slot(s) x 4, 8 slot(s) x 5, 9 slot(s) x 3, 12 slot(s) x 1, 13 slot(s) x 1, 14 slot(s) x 1, 16 slot(s) x 1, 19 slot(s) x 1, 21 slot(s) x 2, 23 slot(s) x 1
+128 groups; sizes: 1 slot(s) x 24, 2 slot(s) x 38, 3 slot(s) x 21, 4 slot(s) x 12, 5 slot(s) x 10, 6 slot(s) x 3, 7 slot(s) x 4, 8 slot(s) x 4, 9 slot(s) x 4, 12 slot(s) x 1, 13 slot(s) x 1, 15 slot(s) x 1, 16 slot(s) x 1, 20 slot(s) x 1, 21 slot(s) x 1, 22 slot(s) x 1, 23 slot(s) x 1
 
 ## Dialogue audit
 
-665 candidates were audited; 156 have a line that names a map, landmark, building or local event. Each is resolved below: **exclude** keeps the trainer at
+665 candidates were audited; 148 have a line that names a map, landmark, building or local event. Each is resolved below: **exclude** keeps the trainer at
 home (its line is about the place), **reword** means the line was edited to neutral wording in the script source (the audit then
 finds nothing).
 
-Resolutions: 156 excluded, 8 reworded.
+Resolutions: 148 excluded, 16 reworded.
 
 | Trainer | Slot | Resolution | Reason |
 | --- | --- | --- | --- |
 | TRAINER_AARON | Route134 | exclude | names METEOR FALLS; refers to its surroundings ("in this area", "this area"). The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_AIDAN | Route127 | reword | Post-battle line: "diving spots in the sea around here" now reads "diving spots in the sea" (data/text/trainers.inc). |
-| TRAINER_AKALA_CAVE_CAMPER_HNS | Akala_Cave_hns | exclude | refers to its surroundings ("in here"). The post-battle line is about the place the trainer was written for, so it stays at home. |
-| TRAINER_AKALA_CAVE_HIKER_HNS | Akala_Cave_hns | exclude | refers to its surroundings ("up here"). The intro is about the place the trainer was written for, so it stays at home. |
+| TRAINER_AKALA_CAVE_CAMPER_HNS | Akala_Cave_hns | reword | Post-battle line: "Is it warm in here or is it just me?" now reads "Is it warm or is it just me?" (data/maps/Akala_Cave_hns/scripts.inc). |
+| TRAINER_AKALA_CAVE_HIKER_HNS | Akala_Cave_hns | reword | Intro: "all the way up here" now reads "all the way here" (data/maps/Akala_Cave_hns/scripts.inc). |
 | TRAINER_AKALA_CAVE_PICNICKER_HNS | Akala_Cave_hns | exclude | refers to its surroundings ("this cave"). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_AKALA_HIKER_HNS | AkalaIsle_hns | exclude | names AKALA ISLE. The post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_AKALA_PICNICKER_HNS | AkalaIsle_hns | exclude | names AKALA ISLE. The post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_AKALA_SWIMMER_1_HNS | AkalaIsle_hns | exclude | names ULA'ULA ISLE. The post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_AKALA_SWIMMER_2_HNS | AkalaIsle_hns | exclude | names AKALA ISLE. The post-battle line is about the place the trainer was written for, so it stays at home. |
-| TRAINER_AKALA_SWIMMER_3_HNS | AkalaIsle_hns | exclude | refers to its surroundings ("out here"). The post-battle line is about the place the trainer was written for, so it stays at home. |
+| TRAINER_AKALA_SWIMMER_3_HNS | AkalaIsle_hns | reword | Post-battle line: "The current out here is strong!" now reads "The current is strong!" (data/maps/AkalaIsle_hns/scripts.inc). |
 | TRAINER_ALEXA | Route128 | exclude | names POKéMON LEAGUE; names a building or local event (LEAGUE). The intro is about the place the trainer was written for, so it stays at home. |
 | TRAINER_ALFRED_HNS | OlivineCity_Lighthouse_hns | exclude | refers to its surroundings ("the LIGHTHOUSE"). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_ALLEN_HNS | Route44_hns | exclude | names ECRUTEAK; names a building or local event (GYM). The post-battle line is about the place the trainer was written for, so it stays at home. |
@@ -205,8 +206,8 @@ Resolutions: 156 excluded, 8 reworded.
 | TRAINER_BRYANT | Route112 | exclude | names FIERY PATH. The intro is about the place the trainer was written for, so it stays at home. |
 | TRAINER_CALE | Route121 | exclude | names LILYCOVE. The post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_CAMERON_1 | Route123 | exclude | names MT. PYRE. The post-battle line is about the place the trainer was written for, so it stays at home. |
-| TRAINER_CARA_HNS | DragonsDen_Cavern_hns | exclude | refers to its surroundings ("in here"). The intro is about the place the trainer was written for, so it stays at home. |
-| TRAINER_CARLEE | Route128 | exclude | refers to its surroundings ("in this area", "this area"). The intro is about the place the trainer was written for, so it stays at home. |
+| TRAINER_CARA_HNS | DragonsDen_Cavern_hns | reword | Intro: "You shouldn't be in here!" now reads "You shouldn't be here!" (data/maps/DragonsDen_Cavern_hns/scripts.inc). |
+| TRAINER_CARLEE | Route128 | reword | Intro: "more harsh in this area" now reads "more harsh than usual" (data/text/trainers.inc). |
 | TRAINER_CAROLINE | VictoryRoad_B2F | exclude | names POKéMON LEAGUE, VICTORY ROAD; names a building or local event (LEAGUE). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_CHAD | Route124 | exclude | names underwater; refers to its surroundings ("around here"). The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_CHARLIE | AbandonedShip_Corridors_1F | exclude | refers to its surroundings ("the ship"). The intro is about the place the trainer was written for, so it stays at home. |
@@ -237,7 +238,7 @@ Resolutions: 156 excluded, 8 reworded.
 | TRAINER_ETHAN_1 | JaggedPass | exclude | names JAGGED PASS, MAUVILLE CITY. The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_EUGENE_HNS | Route39_hns | exclude | names OLIVINE. The intro is about the place the trainer was written for, so it stays at home. |
 | TRAINER_FELIX | VictoryRoad_B2F | exclude | names POKéMON LEAGUE; names a building or local event (LEAGUE). The post-battle line is about the place the trainer was written for, so it stays at home. |
-| TRAINER_FOSTER | Route105 | exclude | refers to its surroundings ("around here"). The intro is about the place the trainer was written for, so it stays at home. |
+| TRAINER_FOSTER | Route105 | reword | Intro: "a mystical rock around here" now reads "a mystical rock somewhere" (data/text/trainers.inc). |
 | TRAINER_GAVEN_HNS | Route26_hns | exclude | names POKéMON LEAGUE, VICTORY ROAD; names a building or local event (LEAGUE). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_GEORGE_HNS | Route41_hns | exclude | names CIANWOOD, OLIVINE. The post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_GILBERT_HNS | Route27_hns | exclude | names POKéMON LEAGUE; names a building or local event (LEAGUE). The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
@@ -249,7 +250,7 @@ Resolutions: 156 excluded, 8 reworded.
 | TRAINER_HUEY | Route109 | exclude | names SLATEPORT; refers to its surroundings ("In the best port"). The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_IRENE | Route111 | exclude | names MT. CHIMNEY; refers to its surroundings ("around here"). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_IRENE_HNS | Route34_hns | exclude | refers to its surroundings ("this beach"). The post-battle line is about the place the trainer was written for, so it stays at home. |
-| TRAINER_ISABELLA | Route124 | exclude | refers to its surroundings ("around here"). The post-battle line is about the place the trainer was written for, so it stays at home. |
+| TRAINER_ISABELLA | Route124 | reword | Post-battle line: "shards of things around here" now reads "shards of things lying around" (data/text/trainers.inc). |
 | TRAINER_ISAIAH_1 | Route128 | exclude | names EVER GRANDE CITY. The intro and post-battle line and rematch line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_JANI | AbandonedShip_Rooms2_1F | exclude | refers to its surroundings ("this ship"). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_JAYLEN | Route113 | exclude | refers to its surroundings ("around here"). The intro is about the place the trainer was written for, so it stays at home. |
@@ -276,7 +277,7 @@ Resolutions: 156 excluded, 8 reworded.
 | TRAINER_LEONARD_HNS | UnionCave_B1F_hns | exclude | refers to its surroundings ("down here"). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_LLOYD_HNS | Route25_hns | exclude | Route 25's six-trainer challenge numbers its opponents ("No. 3", "second", "last in line", "the six of us"); the line is about this trainer's place in the sequence, so it stays at home. |
 | TRAINER_MARCEL | Route121 | exclude | names a building or local event (CONTEST). The post-battle line is about the place the trainer was written for, so it stays at home. |
-| TRAINER_MARLENE | Route115 | exclude | refers to its surroundings ("this place"). The post-battle line is about the place the trainer was written for, so it stays at home. |
+| TRAINER_MARLENE | Route115 | reword | Post-battle line: "But this place isn't very peaceful…" now reads "But it isn't very peaceful…" (data/text/trainers.inc). |
 | TRAINER_MATHEW_HNS | Route41_hns | exclude | names WHIRL ISLANDS. The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_MATTHEW | Route108 | exclude | names ABANDONED SHIP; refers to its surroundings ("that ABANDONED SHIP", "the ABANDONED SHIP"). The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_MICHELLE | VictoryRoad_B1F | exclude | names POKéMON LEAGUE; names a building or local event (LEAGUE). The intro is about the place the trainer was written for, so it stays at home. |
@@ -496,369 +497,377 @@ Every trainer slot with an `ORDINARY` trainer: rotating slots by index, then the
 | 143 | LakeOfRage_hns local id 5 | TRAINER_RAYMOND_HNS | FISHERMAN | 59 | rotating | |
 | 144 | LakeOfRage_hns local id 9 | TRAINER_AARON_HNS | COOLTRAINER | 57 | rotating | |
 | 145 | DragonsDen_Cavern_hns local id 2+3 | TRAINER_LEA_AND_PIA_HNS | TWINS | 75 | rotating | |
-| 146 | ViridianForest_hns local id 1 | TRAINER_DOUG_HNS | BUG_CATCHER | 3 | rotating | |
-| 147 | ViridianForest_hns local id 2 | TRAINER_ED_HNS | BUG_CATCHER | 3 | rotating | |
-| 148 | PoniIsle_hns local id 4 | TRAINER_PONI_SWIMMER_2_HNS | TUBER_M | 83 | rotating | |
-| 149 | PoniIsle_hns local id 5 | TRAINER_PONI_SWIMMER_1_HNS | SWIMMER_F | 81 | rotating | |
-| 150 | AkalaIsle_hns local id 10 | TRAINER_AKALA_CAMPER_HNS | CAMPER | 79 | rotating | |
-| 151 | MelemeleIsle_hns local id 10 | TRAINER_MELEMELE_SWIMMER_1_HNS | SWIMMER_F | 81 | rotating | |
-| 152 | AlolaWater_hns local id 1 | TRAINER_MELEMELE_SWIMMER_2_HNS | SWIMMER_M | 82 | rotating | |
-| 153 | UlaulaIsle_hns local id 5 | TRAINER_ULAULA_PICNICKER_HNS | PICNICKER | 80 | rotating | |
-| 154 | Akala_Forest_hns local id 1 | TRAINER_AKALA_FOREST_BUGCATCHER_1_HNS | BUG_CATCHER | 78 | rotating | |
-| 155 | Akala_Forest_hns local id 2 | TRAINER_AKALA_FOREST_BUGCATCHER_2_HNS | BUG_CATCHER | 78 | rotating | |
-| 156 | Route102 local id 2 | TRAINER_CALVIN_1 | YOUNGSTER | 125 | rotating | |
-| 157 | Route102 local id 3 | TRAINER_RICK | BUG_CATCHER | 89 | rotating | |
-| 158 | Route102 local id 4 | TRAINER_TIANA | LASS | 103 | rotating | |
-| 159 | Route102 local id 9 | TRAINER_ALLEN | YOUNGSTER | 125 | rotating | |
-| 160 | Route103 local id 3 | TRAINER_DAISY | AROMA_LADY | 84 | rotating | |
-| 161 | Route103 local id 4+5 | TRAINER_AMY_AND_LIV_1 | TWINS | 124 | rotating | |
-| 162 | Route103 local id 6 | TRAINER_ANDREW | FISHERMAN | 96 | rotating | |
-| 163 | Route103 local id 12 | TRAINER_MIGUEL_1 | POKEFAN | 110 | rotating | |
-| 164 | Route103 local id 16 | TRAINER_RHETT | BLACK_BELT | 88 | rotating | |
-| 165 | Route103 local id 17 | TRAINER_MARCOS | GUITARIST | 98 | rotating | |
-| 166 | Route103 local id 18 | TRAINER_ISABELLE | SWIMMER_F | 119 | rotating | |
-| 167 | Route103 local id 19 | TRAINER_PETE | SWIMMER_M | 120 | rotating | |
-| 168 | Route104 local id 3 | TRAINER_HALEY_1 | LASS | 103 | rotating | |
-| 169 | Route104 local id 10 | TRAINER_IVAN | FISHERMAN | 96 | rotating | |
-| 170 | Route104 local id 24+25 | TRAINER_GINA_AND_MIA_1 | TWINS | 124 | rotating | |
-| 171 | Route104 local id 26 | TRAINER_WINSTON_1 | RICH_BOY | 113 | rotating | |
-| 172 | Route104 local id 27 | TRAINER_CINDY_1 | LADY | 102 | rotating | |
-| 173 | Route104 local id 29 | TRAINER_BILLY | YOUNGSTER | 125 | rotating | |
-| 174 | Route104 local id 34 | TRAINER_DARIAN | FISHERMAN | 96 | rotating | |
-| 175 | Route105 local id 1 | TRAINER_LUIS | SWIMMER_M | 120 | rotating | |
-| 176 | Route105 local id 3 | TRAINER_BEVERLY | SWIMMER_F | 119 | rotating | |
-| 177 | Route105 local id 4 | TRAINER_IMANI | SWIMMER_F | 119 | rotating | |
-| 178 | Route105 local id 7 | TRAINER_JOSUE | BIRD_KEEPER | 87 | rotating | |
-| 179 | Route105 local id 8 | TRAINER_ANDRES_1 | RUIN_MANIAC | 114 | rotating | |
-| 180 | Route106 local id 1 | TRAINER_DOUGLAS | SWIMMER_M | 120 | rotating | |
-| 181 | Route106 local id 2 | TRAINER_KYLA | SWIMMER_F | 119 | rotating | |
-| 182 | Route106 local id 3 | TRAINER_ELLIOT_1 | FISHERMAN | 96 | rotating | |
-| 183 | Route106 local id 4 | TRAINER_NED | FISHERMAN | 96 | rotating | |
-| 184 | Route107 local id 1 | TRAINER_DARRIN | SWIMMER_M | 120 | rotating | |
-| 185 | Route107 local id 2 | TRAINER_TONY_1 | SWIMMER_M | 120 | rotating | |
-| 186 | Route107 local id 4 | TRAINER_BETH | SWIMMER_F | 119 | rotating | |
-| 187 | Route107 local id 5+6 | TRAINER_LISA_AND_RAY | SIS_AND_BRO | 117 | rotating | |
-| 188 | Route107 local id 7 | TRAINER_CAMRON | TRIATHLETE | 121 | rotating | |
-| 189 | Route108 local id 1 | TRAINER_JEROME | SWIMMER_M | 120 | rotating | |
-| 190 | Route108 local id 2 | TRAINER_TARA | SWIMMER_F | 119 | rotating | |
-| 191 | Route108 local id 4 | TRAINER_MISSY | SWIMMER_F | 119 | rotating | |
-| 192 | Route108 local id 5 | TRAINER_CAROLINA | COOLTRAINER | 93 | rotating | |
-| 193 | Route108 local id 6 | TRAINER_CORY_1 | SAILOR | 115 | rotating | |
-| 194 | Route109 local id 4 | TRAINER_DAVID | SWIMMER_M | 120 | rotating | |
-| 195 | Route109 local id 5 | TRAINER_ALICE | SWIMMER_F | 119 | rotating | |
-| 196 | Route109 local id 7 | TRAINER_EDMOND | SAILOR | 115 | rotating | |
-| 197 | Route109 local id 9 | TRAINER_LOLA_1 | TUBER_F | 122 | rotating | |
-| 198 | Route109 local id 12 | TRAINER_GWEN | TUBER_F | 122 | rotating | |
-| 199 | Route109 local id 13 | TRAINER_AUSTINA | TUBER_F | 122 | rotating | |
-| 200 | Route109 local id 14 | TRAINER_CARTER | FISHERMAN | 96 | rotating | |
-| 201 | Route109 local id 18+19 | TRAINER_MEL_AND_PAUL | YOUNG_COUPLE | 126 | rotating | |
-| 202 | Route109 local id 22 | TRAINER_HAILEY | TUBER_F | 122 | rotating | |
-| 203 | Route109 local id 23 | TRAINER_CHANDLER | TUBER_M | 123 | rotating | |
-| 204 | Route110 local id 8 | TRAINER_JASMINE | TRIATHLETE | 121 | rotating | |
-| 205 | Route110 local id 9 | TRAINER_ANTHONY | TRIATHLETE | 121 | rotating | |
-| 206 | Route110 local id 10 | TRAINER_ABIGAIL_1 | TRIATHLETE | 121 | rotating | |
-| 207 | Route110 local id 11 | TRAINER_BENJAMIN_1 | TRIATHLETE | 121 | rotating | |
-| 208 | Route110 local id 12 | TRAINER_EDWARD | PSYCHIC | 112 | rotating | |
-| 209 | Route110 local id 13 | TRAINER_JACLYN | PSYCHIC | 112 | rotating | |
-| 210 | Route110 local id 14 | TRAINER_EDWIN_1 | COLLECTOR | 92 | rotating | |
-| 211 | Route110 local id 15 | TRAINER_DALE | FISHERMAN | 96 | rotating | |
-| 212 | Route110 local id 27 | TRAINER_JACOB | TRIATHLETE | 121 | rotating | |
-| 213 | Route110 local id 30 | TRAINER_TIMMY | YOUNGSTER | 125 | rotating | |
-| 214 | Route110 local id 31 | TRAINER_ISABEL_1 | POKEFAN | 110 | rotating | |
-| 215 | Route110 local id 32 | TRAINER_KALEB | POKEFAN | 110 | rotating | |
-| 216 | Route110 local id 33 | TRAINER_ALYSSA | TRIATHLETE | 121 | rotating | |
-| 217 | Route110 local id 34 | TRAINER_JOSEPH | GUITARIST | 98 | rotating | |
-| 218 | Route111 local id 9 | TRAINER_DREW | CAMPER | 91 | rotating | |
-| 219 | Route111 local id 10 | TRAINER_DUSTY_1 | RUIN_MANIAC | 114 | rotating | |
-| 220 | Route111 local id 11 | TRAINER_BEAU | CAMPER | 91 | rotating | |
-| 221 | Route111 local id 29 | TRAINER_TRAVIS | CAMPER | 91 | rotating | |
-| 222 | Route111 local id 30 | TRAINER_DAISUKE | BLACK_BELT | 88 | rotating | |
-| 223 | Route111 local id 31 | TRAINER_BROOKE_1 | COOLTRAINER | 93 | rotating | |
-| 224 | Route111 local id 35 | TRAINER_TYRON | CAMPER | 91 | rotating | |
-| 225 | Route111 local id 36 | TRAINER_CELINA | AROMA_LADY | 84 | rotating | |
-| 226 | Route111 local id 38 | TRAINER_HAYDEN | KINDLER | 101 | rotating | |
-| 227 | Route111 local id 40 | TRAINER_CELIA | PICNICKER | 107 | rotating | |
-| 228 | Route111 local id 41 | TRAINER_BRANDEN | CAMPER | 91 | rotating | |
-| 229 | Route112 local id 2 | TRAINER_BRICE | HIKER | 100 | rotating | |
-| 230 | Route112 local id 3 | TRAINER_LARRY | CAMPER | 91 | rotating | |
-| 231 | Route112 local id 4 | TRAINER_CAROL | PICNICKER | 107 | rotating | |
-| 232 | Route112 local id 14 | TRAINER_SHAYLA | AROMA_LADY | 84 | rotating | |
-| 233 | Route113 local id 4 | TRAINER_DILLON | YOUNGSTER | 125 | rotating | |
-| 234 | Route113 local id 5 | TRAINER_MADELINE_1 | PARASOL_LADY | 106 | rotating | |
-| 235 | Route113 local id 10+11 | TRAINER_TORI_AND_TIA | TWINS | 124 | rotating | |
-| 236 | Route113 local id 13 | TRAINER_WYATT | POKEMANIAC | 111 | rotating | |
-| 237 | Route113 local id 14 | TRAINER_LAWRENCE | CAMPER | 91 | rotating | |
-| 238 | Route113 local id 15 | TRAINER_SOPHIE | PICNICKER | 107 | rotating | |
-| 239 | Route113 local id 16 | TRAINER_COBY | BIRD_KEEPER | 87 | rotating | |
-| 240 | Route114 local id 3 | TRAINER_LENNY | HIKER | 100 | rotating | |
-| 241 | Route114 local id 4 | TRAINER_LUCAS_1 | HIKER | 100 | rotating | |
-| 242 | Route114 local id 5 | TRAINER_SHANE | CAMPER | 91 | rotating | |
-| 243 | Route114 local id 6 | TRAINER_NANCY | PICNICKER | 107 | rotating | |
-| 244 | Route114 local id 7 | TRAINER_STEVE_1 | POKEMANIAC | 111 | rotating | |
-| 245 | Route114 local id 15 | TRAINER_NOLAN | FISHERMAN | 96 | rotating | |
-| 246 | Route114 local id 17 | TRAINER_BERNIE_1 | KINDLER | 101 | rotating | |
-| 247 | Route114 local id 22+23 | TRAINER_TYRA_AND_IVY | SR_AND_JR | 118 | rotating | |
-| 248 | Route114 local id 24 | TRAINER_CHARLOTTE | PICNICKER | 107 | rotating | |
-| 249 | Route114 local id 25 | TRAINER_ANGELINA | PICNICKER | 107 | rotating | |
-| 250 | Route114 local id 27 | TRAINER_KAI | FISHERMAN | 96 | rotating | |
-| 251 | Route115 local id 2 | TRAINER_TIMOTHY_1 | EXPERT | 95 | rotating | |
-| 252 | Route115 local id 3 | TRAINER_NOB_1 | BLACK_BELT | 88 | rotating | |
-| 253 | Route115 local id 8 | TRAINER_KOICHI | BLACK_BELT | 88 | rotating | |
-| 254 | Route115 local id 9 | TRAINER_HECTOR | COLLECTOR | 92 | rotating | |
-| 255 | Route115 local id 17 | TRAINER_KYRA | TRIATHLETE | 121 | rotating | |
-| 256 | Route115 local id 18 | TRAINER_JAIDEN | NINJA_BOY | 104 | rotating | |
-| 257 | Route115 local id 19 | TRAINER_HELENE | BATTLE_GIRL | 85 | rotating | |
-| 258 | Route115 local id 20 | TRAINER_ALIX | PSYCHIC | 112 | rotating | |
-| 259 | Route116 local id 3 | TRAINER_JOEY | YOUNGSTER | 125 | rotating | |
-| 260 | Route116 local id 6 | TRAINER_JOSE | BUG_CATCHER | 89 | rotating | |
-| 261 | Route116 local id 16 | TRAINER_JANICE | LASS | 103 | rotating | |
-| 262 | Route116 local id 17 | TRAINER_KAREN_1 | SCHOOL_KID | 116 | rotating | |
-| 263 | Route116 local id 23 | TRAINER_SARAH | LADY | 102 | rotating | |
-| 264 | Route116 local id 24 | TRAINER_DAWSON | RICH_BOY | 113 | rotating | |
-| 265 | Route116 local id 27 | TRAINER_JOHNSON | YOUNGSTER | 125 | rotating | |
-| 266 | Route116 local id 28 | TRAINER_DEVAN | HIKER | 100 | rotating | |
-| 267 | Route117 local id 8 | TRAINER_DYLAN_1 | TRIATHLETE | 121 | rotating | |
-| 268 | Route117 local id 9 | TRAINER_LYDIA_1 | PKMN_BREEDER | 108 | rotating | |
-| 269 | Route117 local id 10 | TRAINER_ISAAC_1 | PKMN_BREEDER | 108 | rotating | |
-| 270 | Route117 local id 17 | TRAINER_MARIA_1 | TRIATHLETE | 121 | rotating | |
-| 271 | Route117 local id 18 | TRAINER_DEREK | BUG_MANIAC | 90 | rotating | |
-| 272 | Route117 local id 19+20 | TRAINER_ANNA_AND_MEG_1 | SR_AND_JR | 118 | rotating | |
-| 273 | Route117 local id 22 | TRAINER_BRANDI | PSYCHIC | 112 | rotating | |
-| 274 | Route117 local id 23 | TRAINER_AISHA | BATTLE_GIRL | 85 | rotating | |
-| 275 | Route117 local id 24 | TRAINER_MELINA | TRIATHLETE | 121 | rotating | |
-| 276 | Route118 local id 4 | TRAINER_PERRY | BIRD_KEEPER | 87 | rotating | |
-| 277 | Route118 local id 14 | TRAINER_ROSE_1 | AROMA_LADY | 84 | rotating | |
-| 278 | Route118 local id 15 | TRAINER_WADE | FISHERMAN | 96 | rotating | |
-| 279 | Route118 local id 16 | TRAINER_CHESTER | BIRD_KEEPER | 87 | rotating | |
-| 280 | Route118 local id 17 | TRAINER_BARNY | FISHERMAN | 96 | rotating | |
-| 281 | Route118 local id 18 | TRAINER_DALTON_1 | GUITARIST | 98 | rotating | |
-| 282 | Route118 local id 21 | TRAINER_DEANDRE | YOUNGSTER | 125 | rotating | |
-| 283 | Route119 local id 4 | TRAINER_GREG | BUG_CATCHER | 89 | rotating | |
-| 284 | Route119 local id 5 | TRAINER_TAYLOR | BUG_MANIAC | 90 | rotating | |
-| 285 | Route119 local id 6 | TRAINER_DONALD | BUG_MANIAC | 90 | rotating | |
-| 286 | Route119 local id 7 | TRAINER_JACKSON_1 | PKMN_RANGER | 109 | rotating | |
-| 287 | Route119 local id 8 | TRAINER_BRENT | BUG_MANIAC | 90 | rotating | |
-| 288 | Route119 local id 9 | TRAINER_CATHERINE_1 | PKMN_RANGER | 109 | rotating | |
-| 289 | Route119 local id 10 | TRAINER_DOUG | BUG_CATCHER | 89 | rotating | |
-| 290 | Route119 local id 11 | TRAINER_KENT | BUG_CATCHER | 89 | rotating | |
-| 291 | Route119 local id 12 | TRAINER_YASU | NINJA_BOY | 104 | rotating | |
-| 292 | Route119 local id 13 | TRAINER_TAKASHI | NINJA_BOY | 104 | rotating | |
-| 293 | Route119 local id 14 | TRAINER_HUGH | BIRD_KEEPER | 87 | rotating | |
-| 294 | Route119 local id 15 | TRAINER_PHIL | BIRD_KEEPER | 87 | rotating | |
-| 295 | Route119 local id 34 | TRAINER_HIDEO | NINJA_BOY | 104 | rotating | |
-| 296 | Route119 local id 37 | TRAINER_CHRIS | FISHERMAN | 96 | rotating | |
-| 297 | Route119 local id 38 | TRAINER_RACHEL | PARASOL_LADY | 106 | rotating | |
-| 298 | Route119 local id 39 | TRAINER_DAYTON | KINDLER | 101 | rotating | |
-| 299 | Route119 local id 40 | TRAINER_FABIAN | GUITARIST | 98 | rotating | |
-| 300 | Route120 local id 11 | TRAINER_COLIN | BIRD_KEEPER | 87 | rotating | |
-| 301 | Route120 local id 12 | TRAINER_ROBERT_1 | BIRD_KEEPER | 87 | rotating | |
-| 302 | Route120 local id 13 | TRAINER_LORENZO | PKMN_RANGER | 109 | rotating | |
-| 303 | Route120 local id 14 | TRAINER_JENNA | PKMN_RANGER | 109 | rotating | |
-| 304 | Route120 local id 15 | TRAINER_JEFFREY_1 | BUG_MANIAC | 90 | rotating | |
-| 305 | Route120 local id 24 | TRAINER_JENNIFER | COOLTRAINER | 93 | rotating | |
-| 306 | Route120 local id 25 | TRAINER_CHIP | RUIN_MANIAC | 114 | rotating | |
-| 307 | Route120 local id 26 | TRAINER_CLARISSA | PARASOL_LADY | 106 | rotating | |
-| 308 | Route120 local id 27 | TRAINER_ANGELICA | PARASOL_LADY | 106 | rotating | |
-| 309 | Route120 local id 34 | TRAINER_KEIGO | NINJA_BOY | 104 | rotating | |
-| 310 | Route120 local id 35 | TRAINER_RILEY | NINJA_BOY | 104 | rotating | |
-| 311 | Route120 local id 42 | TRAINER_CALLIE | BATTLE_GIRL | 85 | rotating | |
-| 312 | Route120 local id 43 | TRAINER_LEONEL | COOLTRAINER | 93 | rotating | |
-| 313 | Route121 local id 10+11 | TRAINER_KATE_AND_JOY | SR_AND_JR | 118 | rotating | |
-| 314 | Route121 local id 18 | TRAINER_WALTER_1 | GENTLEMAN | 97 | rotating | |
-| 315 | Route121 local id 24 | TRAINER_MYLES | PKMN_BREEDER | 108 | rotating | |
-| 316 | Route121 local id 25 | TRAINER_PAT | PKMN_BREEDER | 108 | rotating | |
-| 317 | Route121 local id 27 | TRAINER_CRISTIN_1 | COOLTRAINER | 93 | rotating | |
-| 318 | Route123 local id 8 | TRAINER_WENDY | COOLTRAINER | 93 | rotating | |
-| 319 | Route123 local id 9 | TRAINER_BRAXTON | COOLTRAINER | 93 | rotating | |
-| 320 | Route123 local id 26 | TRAINER_VIOLET | AROMA_LADY | 84 | rotating | |
-| 321 | Route123 local id 27+28 | TRAINER_MIU_AND_YUKI | TWINS | 124 | rotating | |
-| 322 | Route123 local id 30 | TRAINER_JACKI_1 | PSYCHIC | 112 | rotating | |
-| 323 | Route123 local id 34 | TRAINER_JONAS | NINJA_BOY | 104 | rotating | |
-| 324 | Route123 local id 35 | TRAINER_KAYLEY | PARASOL_LADY | 106 | rotating | |
-| 325 | Route123 local id 36 | TRAINER_ED | COLLECTOR | 92 | rotating | |
-| 326 | Route123 local id 37 | TRAINER_FERNANDO_1 | GUITARIST | 98 | rotating | |
-| 327 | Route123 local id 38 | TRAINER_ALBERTO | BIRD_KEEPER | 87 | rotating | |
-| 328 | Route123 local id 39 | TRAINER_FREDRICK | EXPERT | 95 | rotating | |
-| 329 | Route123 local id 41 | TRAINER_JAZMYN | COOLTRAINER | 93 | rotating | |
-| 330 | Route123 local id 42 | TRAINER_DAVIS | BUG_CATCHER | 89 | rotating | |
-| 331 | Route124 local id 1 | TRAINER_SPENCER | SWIMMER_M | 120 | rotating | |
-| 332 | Route124 local id 2 | TRAINER_ROLAND | SWIMMER_M | 120 | rotating | |
-| 333 | Route124 local id 4 | TRAINER_GRACE | SWIMMER_F | 119 | rotating | |
-| 334 | Route124 local id 9+10 | TRAINER_LILA_AND_ROY_1 | SIS_AND_BRO | 117 | rotating | |
-| 335 | Route124 local id 11 | TRAINER_DECLAN | SWIMMER_M | 120 | rotating | |
-| 336 | Route125 local id 1 | TRAINER_NOLEN | SWIMMER_M | 120 | rotating | |
-| 337 | Route125 local id 2 | TRAINER_STAN | SWIMMER_M | 120 | rotating | |
-| 338 | Route125 local id 4 | TRAINER_SHARON | SWIMMER_F | 119 | rotating | |
-| 339 | Route125 local id 8 | TRAINER_PRESLEY | BIRD_KEEPER | 87 | rotating | |
-| 340 | Route125 local id 9 | TRAINER_AURON | EXPERT | 95 | rotating | |
-| 341 | Route126 local id 1 | TRAINER_BARRY | SWIMMER_M | 120 | rotating | |
-| 342 | Route126 local id 3 | TRAINER_NIKKI | SWIMMER_F | 119 | rotating | |
-| 343 | Route126 local id 4 | TRAINER_BRENDA | SWIMMER_F | 119 | rotating | |
-| 344 | Route126 local id 6 | TRAINER_SIENNA | SWIMMER_F | 119 | rotating | |
-| 345 | Route126 local id 7 | TRAINER_PABLO_1 | TRIATHLETE | 121 | rotating | |
-| 346 | Route126 local id 8 | TRAINER_ISOBEL | TRIATHLETE | 121 | rotating | |
-| 347 | Route126 local id 9 | TRAINER_LEONARDO | SWIMMER_M | 120 | rotating | |
-| 348 | Route127 local id 1 | TRAINER_CAMDEN | TRIATHLETE | 121 | rotating | |
-| 349 | Route127 local id 2 | TRAINER_DONNY | TRIATHLETE | 121 | rotating | |
-| 350 | Route127 local id 5 | TRAINER_JONAH | FISHERMAN | 96 | rotating | |
-| 351 | Route127 local id 6 | TRAINER_ROGER | FISHERMAN | 96 | rotating | |
-| 352 | Route127 local id 7 | TRAINER_HENRY | FISHERMAN | 96 | rotating | |
-| 353 | Route127 local id 8 | TRAINER_AIDAN | BIRD_KEEPER | 87 | rotating | |
-| 354 | Route127 local id 9 | TRAINER_KOJI_1 | BLACK_BELT | 88 | rotating | |
-| 355 | Route127 local id 10 | TRAINER_ATHENA | COOLTRAINER | 93 | rotating | |
-| 356 | Route128 local id 7 | TRAINER_RUBEN | COOLTRAINER | 93 | rotating | |
-| 357 | Route128 local id 10 | TRAINER_HARRISON | SWIMMER_M | 120 | rotating | |
-| 358 | Route129 local id 1 | TRAINER_CHASE | TRIATHLETE | 121 | rotating | |
-| 359 | Route129 local id 2 | TRAINER_ALLISON | TRIATHLETE | 121 | rotating | |
-| 360 | Route129 local id 3 | TRAINER_TISHA | SWIMMER_F | 119 | rotating | |
-| 361 | Route129 local id 4 | TRAINER_REED | SWIMMER_M | 120 | rotating | |
-| 362 | Route130 local id 1 | TRAINER_RODNEY | SWIMMER_M | 120 | rotating | |
-| 363 | Route130 local id 2 | TRAINER_KATIE | SWIMMER_F | 119 | rotating | |
-| 364 | Route130 local id 4 | TRAINER_SANTIAGO | SWIMMER_M | 120 | rotating | |
-| 365 | Route131 local id 1 | TRAINER_RICHARD | SWIMMER_M | 120 | rotating | |
-| 366 | Route131 local id 2 | TRAINER_HERMAN | SWIMMER_M | 120 | rotating | |
-| 367 | Route131 local id 3 | TRAINER_SUSIE | SWIMMER_F | 119 | rotating | |
-| 368 | Route131 local id 4 | TRAINER_KARA | SWIMMER_F | 119 | rotating | |
-| 369 | Route131 local id 8 | TRAINER_TALIA | TRIATHLETE | 121 | rotating | |
-| 370 | Route132 local id 1 | TRAINER_GILBERT | SWIMMER_M | 120 | rotating | |
-| 371 | Route132 local id 2 | TRAINER_DANA | SWIMMER_F | 119 | rotating | |
-| 372 | Route132 local id 4 | TRAINER_KIYO | BLACK_BELT | 88 | rotating | |
-| 373 | Route132 local id 5 | TRAINER_RONALD | FISHERMAN | 96 | rotating | |
-| 374 | Route132 local id 6 | TRAINER_PAXTON | EXPERT | 95 | rotating | |
-| 375 | Route132 local id 7 | TRAINER_DARCY | COOLTRAINER | 93 | rotating | |
-| 376 | Route132 local id 8 | TRAINER_MAKAYLA | EXPERT | 95 | rotating | |
-| 377 | Route132 local id 9 | TRAINER_JONATHAN | COOLTRAINER | 93 | rotating | |
-| 378 | Route133 local id 1 | TRAINER_FRANKLIN | SWIMMER_M | 120 | rotating | |
-| 379 | Route133 local id 2 | TRAINER_LINDA | SWIMMER_F | 119 | rotating | |
-| 380 | Route133 local id 3 | TRAINER_DEBRA | SWIMMER_F | 119 | rotating | |
-| 381 | Route133 local id 7 | TRAINER_WARREN | COOLTRAINER | 93 | rotating | |
-| 382 | Route133 local id 8 | TRAINER_MOLLIE | EXPERT | 95 | rotating | |
-| 383 | Route133 local id 9 | TRAINER_CONOR | EXPERT | 95 | rotating | |
-| 384 | Route134 local id 1 | TRAINER_JACK | SWIMMER_M | 120 | rotating | |
-| 385 | Route134 local id 2 | TRAINER_LAUREL | SWIMMER_F | 119 | rotating | |
-| 386 | Route134 local id 4 | TRAINER_ALEX | BIRD_KEEPER | 87 | rotating | |
-| 387 | Route134 local id 5 | TRAINER_HITOSHI | BLACK_BELT | 88 | rotating | |
-| 388 | Route134 local id 6 | TRAINER_MARLEY | COOLTRAINER | 93 | rotating | |
-| 389 | Route134 local id 7 | TRAINER_KELVIN | SAILOR | 115 | rotating | |
-| 390 | Route134 local id 8 | TRAINER_REYNA | BATTLE_GIRL | 85 | rotating | |
-| 391 | Route134 local id 9 | TRAINER_HUDSON | SAILOR | 115 | rotating | |
-| 392 | MeteorFalls_1F_2R local id 1 | TRAINER_NICOLAS_1 | DRAGON_TAMER | 94 | rotating | |
-| 393 | MeteorFalls_1F_2R local id 2+3 | TRAINER_JOHN_AND_JAY_1 | OLD_COUPLE | 105 | rotating | |
-| 394 | RusturfTunnel local id 9 | TRAINER_MIKE_2 | HIKER | 100 | rotating | |
-| 395 | PetalburgWoods local id 9 | TRAINER_LYLE | BUG_CATCHER | 89 | rotating | |
-| 396 | PetalburgWoods local id 10 | TRAINER_JAMES_1 | BUG_CATCHER | 89 | rotating | |
-| 397 | JaggedPass local id 6 | TRAINER_AUTUMN | PICNICKER | 107 | rotating | |
-| 398 | JaggedPass local id 7 | TRAINER_JULIO | TRIATHLETE | 121 | rotating | |
-| 399 | MtPyre_2F local id 1 | TRAINER_MARK | POKEMANIAC | 111 | rotating | |
-| 400 | MtPyre_2F local id 5+6 | TRAINER_DEZ_AND_LUKE | YOUNG_COUPLE | 126 | rotating | |
-| 401 | MtPyre_2F local id 7 | TRAINER_ZANDER | BLACK_BELT | 88 | rotating | |
-| 402 | MtPyre_3F local id 1 | TRAINER_WILLIAM | PSYCHIC | 112 | rotating | |
-| 403 | MtPyre_3F local id 2 | TRAINER_KAYLA | PSYCHIC | 112 | rotating | |
-| 404 | MtPyre_3F local id 4 | TRAINER_GABRIELLE_1 | PKMN_BREEDER | 108 | rotating | |
-| 405 | MtPyre_4F local id 1 | TRAINER_TASHA | HEX_MANIAC | 99 | rotating | |
-| 406 | MtPyre_5F local id 1 | TRAINER_ATSUSHI | BLACK_BELT | 88 | rotating | |
-| 407 | MtPyre_6F local id 1 | TRAINER_VALERIE_1 | HEX_MANIAC | 99 | rotating | |
-| 408 | MtPyre_6F local id 3 | TRAINER_CEDRIC | PSYCHIC | 112 | rotating | |
-| 409 | VictoryRoad_1F local id 1 | TRAINER_EDGAR | COOLTRAINER | 93 | rotating | |
-| 410 | VictoryRoad_1F local id 2 | TRAINER_HOPE | COOLTRAINER | 93 | rotating | |
-| 411 | VictoryRoad_1F local id 3 | TRAINER_ALBERT | COOLTRAINER | 93 | rotating | |
-| 412 | VictoryRoad_1F local id 8 | TRAINER_KATELYNN | COOLTRAINER | 93 | rotating | |
-| 413 | VictoryRoad_B1F local id 20 | TRAINER_MITCHELL | COOLTRAINER | 93 | rotating | |
-| 414 | VictoryRoad_B2F local id 1 | TRAINER_VITO | COOLTRAINER | 93 | rotating | |
-| 415 | VictoryRoad_B2F local id 4 | TRAINER_JULIE | COOLTRAINER | 93 | rotating | |
-| 416 | AbandonedShip_Rooms_1F local id 3 | TRAINER_THALIA_1 | BEAUTY | 86 | rotating | |
-| 417 | AbandonedShip_Rooms_1F local id 4 | TRAINER_DEMETRIUS | YOUNGSTER | 125 | rotating | |
-| 418 | AbandonedShip_Rooms2_1F local id 1+2 | TRAINER_KIRA_AND_DAN_1 | YOUNG_COUPLE | 126 | rotating | |
-| 419 | AbandonedShip_Rooms2_1F local id 4 | TRAINER_GARRISON | RUIN_MANIAC | 114 | rotating | |
-| 420 | PokemonMansion_1F_Frlg local id 1 | TRAINER_WAYFARER_COAST_SCIENTIST_TED | SCIENTIST | 16 | rotating | |
-| 421 | PokemonMansion_1F_Frlg local id 5 | TRAINER_WAYFARER_COAST_YOUNGSTER_JOHNSON | YOUNGSTER | 21 | rotating | |
-| 422 | PokemonMansion_3F_Frlg local id 2 | TRAINER_WAYFARER_COAST_SCIENTIST_BRAYDON | SCIENTIST | 16 | rotating | |
-| 423 | PokemonMansion_B1F_Frlg local id 2 | TRAINER_WAYFARER_COAST_BURGLAR_LEWIS | BURGLAR | 4 | rotating | |
-| 424 | MtEmber_Exterior_Frlg local id 4 | TRAINER_WAYFARER_SEVII_CRUSH_GIRL_JOCELYN | CRUSH_GIRL | 29 | rotating | |
-| 425 | MtEmber_Exterior_Frlg local id 5 | TRAINER_WAYFARER_SEVII_PKMN_RANGER_LOGAN | PKMN_RANGER | 40 | rotating | |
-| 426 | MtEmber_Exterior_Frlg local id 6 | TRAINER_WAYFARER_SEVII_PKMN_RANGER_BETH | PKMN_RANGER | 40 | rotating | |
-| 427 | SixIsland_PatternBush_Frlg local id 1 | TRAINER_WAYFARER_SEVII_PKMN_BREEDER_BETHANY | PKMN_BREEDER | 39 | rotating | |
-| 428 | SixIsland_PatternBush_Frlg local id 2 | TRAINER_WAYFARER_SEVII_PKMN_BREEDER_ALLISON | PKMN_BREEDER | 39 | rotating | |
-| 429 | SixIsland_PatternBush_Frlg local id 4 | TRAINER_WAYFARER_SEVII_BUG_CATCHER_JONAH | BUG_CATCHER | 25 | rotating | |
-| 430 | SixIsland_PatternBush_Frlg local id 5 | TRAINER_WAYFARER_SEVII_BUG_CATCHER_VANCE | BUG_CATCHER | 25 | rotating | |
-| 431 | SixIsland_PatternBush_Frlg local id 6 | TRAINER_WAYFARER_SEVII_YOUNGSTER_NASH | YOUNGSTER | 49 | rotating | |
-| 432 | SixIsland_PatternBush_Frlg local id 7 | TRAINER_WAYFARER_SEVII_YOUNGSTER_CORDELL | YOUNGSTER | 49 | rotating | |
-| 433 | SixIsland_PatternBush_Frlg local id 8 | TRAINER_WAYFARER_SEVII_LASS_DALIA | LASS | 36 | rotating | |
-| 434 | SixIsland_PatternBush_Frlg local id 9 | TRAINER_WAYFARER_SEVII_LASS_JOANA | LASS | 36 | rotating | |
-| 435 | SixIsland_PatternBush_Frlg local id 10 | TRAINER_WAYFARER_SEVII_CAMPER_RILEY | CAMPER | 26 | rotating | |
-| 436 | SixIsland_PatternBush_Frlg local id 11 | TRAINER_WAYFARER_SEVII_PICNICKER_MARCY | PICNICKER | 38 | rotating | |
-| 437 | FiveIsland_LostCave_Room1_Frlg local id 1 | TRAINER_WAYFARER_SEVII_RUIN_MANIAC_LAWSON | RUIN_MANIAC | 42 | rotating | |
-| 438 | Route19_Frlg local id 1 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_REECE | SWIMMER_M | 20 | rotating | |
-| 439 | Route19_Frlg local id 2 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_RICHARD | SWIMMER_M | 20 | rotating | |
-| 440 | Route19_Frlg local id 3 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_TONY | SWIMMER_M | 20 | rotating | |
-| 441 | Route19_Frlg local id 4 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_MATTHEW | SWIMMER_M | 20 | rotating | |
-| 442 | Route19_Frlg local id 5 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_DOUGLAS | SWIMMER_M | 20 | rotating | |
-| 443 | Route19_Frlg local id 6 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_DAVID | SWIMMER_M | 20 | rotating | |
-| 444 | Route19_Frlg local id 9 | TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_CONNIE | SWIMMER_F | 19 | rotating | |
-| 445 | Route19_Frlg local id 11+12 | TRAINER_WAYFARER_COAST_SIS_AND_BRO_LIA_LUC | SIS_AND_BRO | 17 | rotating | |
-| 446 | Route20_Frlg local id 3 | TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_NORA | SWIMMER_F | 19 | rotating | |
-| 447 | Route20_Frlg local id 4 | TRAINER_WAYFARER_COAST_BIRD_KEEPER_ROGER | BIRD_KEEPER | 2 | rotating | |
-| 448 | Route20_Frlg local id 5 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_DEAN | SWIMMER_M | 20 | rotating | |
-| 449 | Route20_Frlg local id 7 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_BARRY | SWIMMER_M | 20 | rotating | |
-| 450 | Route20_Frlg local id 8 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_DARRIN | SWIMMER_M | 20 | rotating | |
-| 451 | Route20_Frlg local id 10 | TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_TIFFANY | SWIMMER_F | 19 | rotating | |
-| 452 | Route21_North_Frlg local id 1 | TRAINER_WAYFARER_COAST_FISHERMAN_RONALD | FISHERMAN | 8 | rotating | |
-| 453 | Route21_North_Frlg local id 2 | TRAINER_WAYFARER_COAST_FISHERMAN_WADE | FISHERMAN | 8 | rotating | |
-| 454 | Route21_North_Frlg local id 3 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_SPENCER | SWIMMER_M | 20 | rotating | |
-| 455 | Route21_North_Frlg local id 4+5 | TRAINER_WAYFARER_COAST_SIS_AND_BRO_LIL_IAN | SIS_AND_BRO | 17 | rotating | |
-| 456 | Route21_South_Frlg local id 2 | TRAINER_WAYFARER_COAST_FISHERMAN_NOLAN | FISHERMAN | 8 | rotating | |
-| 457 | Route21_South_Frlg local id 3 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_JACK | SWIMMER_M | 20 | rotating | |
-| 458 | Route21_South_Frlg local id 4 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_JEROME | SWIMMER_M | 20 | rotating | |
-| 459 | Route21_South_Frlg local id 5 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_ROLAND | SWIMMER_M | 20 | rotating | |
-| 460 | OneIsland_KindleRoad_Frlg local id 1 | TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_MARIA | SWIMMER_F | 44 | rotating | |
-| 461 | OneIsland_KindleRoad_Frlg local id 2 | TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_ABIGAIL | SWIMMER_F | 44 | rotating | |
-| 462 | OneIsland_KindleRoad_Frlg local id 4 | TRAINER_WAYFARER_SEVII_SWIMMER_MALE_GARRETT | SWIMMER_M | 45 | rotating | |
-| 463 | OneIsland_KindleRoad_Frlg local id 5 | TRAINER_WAYFARER_SEVII_FISHERMAN_TOMMY | FISHERMAN | 31 | rotating | |
-| 464 | OneIsland_KindleRoad_Frlg local id 6 | TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON | CRUSH_GIRL | 29 | rotating | |
-| 465 | OneIsland_KindleRoad_Frlg local id 7 | TRAINER_WAYFARER_SEVII_CRUSH_GIRL_TANYA | CRUSH_GIRL | 29 | rotating | |
-| 466 | OneIsland_KindleRoad_Frlg local id 9 | TRAINER_WAYFARER_SEVII_BLACK_BELT_HUGH | BLACK_BELT | 24 | rotating | |
-| 467 | OneIsland_KindleRoad_Frlg local id 10 | TRAINER_WAYFARER_SEVII_CAMPER_BRYCE | CAMPER | 26 | rotating | |
-| 468 | OneIsland_KindleRoad_Frlg local id 11 | TRAINER_WAYFARER_SEVII_PICNICKER_CLAIRE | PICNICKER | 38 | rotating | |
-| 469 | OneIsland_KindleRoad_Frlg local id 12+13 | TRAINER_WAYFARER_SEVII_CRUSH_KIN_MIK_KIA | CRUSH_KIN | 30 | rotating | |
-| 470 | ThreeIsland_BondBridge_Frlg local id 1 | TRAINER_WAYFARER_SEVII_AROMA_LADY_NIKKI | AROMA_LADY | 22 | rotating | |
-| 471 | ThreeIsland_BondBridge_Frlg local id 3 | TRAINER_WAYFARER_SEVII_TUBER_AMIRA | TUBER | 47 | rotating | |
-| 472 | ThreeIsland_BondBridge_Frlg local id 4 | TRAINER_WAYFARER_SEVII_TUBER_ALEXIS | TUBER | 47 | rotating | |
-| 473 | ThreeIsland_BondBridge_Frlg local id 5 | TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_TISHA | SWIMMER_F | 44 | rotating | |
-| 474 | ThreeIsland_BondBridge_Frlg local id 6+7 | TRAINER_WAYFARER_SEVII_TWINS_JOY_MEG | TWINS | 48 | rotating | |
-| 475 | FiveIsland_ResortGorgeous_Frlg local id 1 | TRAINER_WAYFARER_SEVII_PAINTER_DAISY | PAINTER | 37 | rotating | |
-| 476 | FiveIsland_ResortGorgeous_Frlg local id 2 | TRAINER_WAYFARER_SEVII_PAINTER_CELINA | PAINTER | 37 | rotating | |
-| 477 | FiveIsland_ResortGorgeous_Frlg local id 3 | TRAINER_WAYFARER_SEVII_PAINTER_RAYNA | PAINTER | 37 | rotating | |
-| 478 | FiveIsland_ResortGorgeous_Frlg local id 4 | TRAINER_WAYFARER_SEVII_LADY_JACKI | LADY | 35 | rotating | |
-| 479 | FiveIsland_ResortGorgeous_Frlg local id 5 | TRAINER_WAYFARER_SEVII_LADY_GILLIAN | LADY | 35 | rotating | |
-| 480 | FiveIsland_ResortGorgeous_Frlg local id 6 | TRAINER_WAYFARER_SEVII_YOUNGSTER_DESTIN | YOUNGSTER | 49 | rotating | |
-| 481 | FiveIsland_ResortGorgeous_Frlg local id 7 | TRAINER_WAYFARER_SEVII_SWIMMER_MALE_TOBY | SWIMMER_M | 45 | rotating | |
-| 482 | FiveIsland_WaterLabyrinth_Frlg local id 2 | TRAINER_WAYFARER_SEVII_PKMN_BREEDER_ALIZE | PKMN_BREEDER | 39 | rotating | |
-| 483 | FiveIsland_MemorialPillar_Frlg local id 3 | TRAINER_WAYFARER_SEVII_BIRD_KEEPER_CHAZ | BIRD_KEEPER | 23 | rotating | |
-| 484 | FiveIsland_MemorialPillar_Frlg local id 4 | TRAINER_WAYFARER_SEVII_BIRD_KEEPER_HAROLD | BIRD_KEEPER | 23 | rotating | |
-| 485 | SixIsland_OutcastIsland_Frlg local id 2 | TRAINER_WAYFARER_SEVII_FISHERMAN_TYLOR | FISHERMAN | 31 | rotating | |
-| 486 | SixIsland_OutcastIsland_Frlg local id 5+6 | TRAINER_WAYFARER_SEVII_SIS_AND_BRO_AVA_GEB | SIS_AND_BRO | 43 | rotating | |
-| 487 | SixIsland_GreenPath_Frlg local id 1 | TRAINER_WAYFARER_SEVII_PSYCHIC_JACLYN | PSYCHIC | 41 | rotating | |
-| 488 | SixIsland_WaterPath_Frlg local id 2 | TRAINER_WAYFARER_SEVII_JUGGLER_EDWARD | JUGGLER | 34 | rotating | |
-| 489 | SixIsland_WaterPath_Frlg local id 3 | TRAINER_WAYFARER_SEVII_SWIMMER_MALE_SAMIR | SWIMMER_M | 45 | rotating | |
-| 490 | SixIsland_WaterPath_Frlg local id 4 | TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_DENISE | SWIMMER_F | 44 | rotating | |
-| 491 | SixIsland_WaterPath_Frlg local id 5+6 | TRAINER_WAYFARER_SEVII_TWINS_MIU_MIA | TWINS | 48 | rotating | |
-| 492 | SixIsland_WaterPath_Frlg local id 7 | TRAINER_WAYFARER_SEVII_HIKER_EARL | HIKER | 33 | rotating | |
-| 493 | SixIsland_RuinValley_Frlg local id 2 | TRAINER_WAYFARER_SEVII_RUIN_MANIAC_STANLY | RUIN_MANIAC | 42 | rotating | |
-| 494 | SixIsland_RuinValley_Frlg local id 5 | TRAINER_WAYFARER_SEVII_HIKER_DARYL | HIKER | 33 | rotating | |
-| 495 | SevenIsland_TrainerTower_Frlg local id 1 | TRAINER_WAYFARER_SEVII_PSYCHIC_DARIO | PSYCHIC | 41 | rotating | |
-| 496 | SevenIsland_SevaultCanyon_Entrance_Frlg local id 1 | TRAINER_WAYFARER_SEVII_AROMA_LADY_MIAH | AROMA_LADY | 22 | rotating | |
-| 497 | SevenIsland_SevaultCanyon_Entrance_Frlg local id 2+3 | TRAINER_WAYFARER_SEVII_YOUNG_COUPLE_EVE_JON | YOUNG_COUPLE | 50 | rotating | |
-| 498 | SevenIsland_SevaultCanyon_Entrance_Frlg local id 5 | TRAINER_WAYFARER_SEVII_PKMN_RANGER_MADELINE | PKMN_RANGER | 40 | rotating | |
-| 499 | SevenIsland_SevaultCanyon_Entrance_Frlg local id 6 | TRAINER_WAYFARER_SEVII_JUGGLER_MASON | JUGGLER | 34 | rotating | |
-| 500 | SevenIsland_SevaultCanyon_Frlg local id 2 | TRAINER_WAYFARER_SEVII_TAMER_EVAN | TAMER | 46 | rotating | |
-| 501 | SevenIsland_SevaultCanyon_Frlg local id 3 | TRAINER_WAYFARER_SEVII_PKMN_RANGER_JACKSON | PKMN_RANGER | 40 | rotating | |
-| 502 | SevenIsland_SevaultCanyon_Frlg local id 4 | TRAINER_WAYFARER_SEVII_PKMN_RANGER_KATELYN | PKMN_RANGER | 40 | rotating | |
-| 503 | SevenIsland_SevaultCanyon_Frlg local id 5 | TRAINER_WAYFARER_SEVII_COOLTRAINER_LEROY | COOLTRAINER | 27 | rotating | |
-| 504 | SevenIsland_SevaultCanyon_Frlg local id 6 | TRAINER_WAYFARER_SEVII_COOLTRAINER_MICHELLE | COOLTRAINER | 27 | rotating | |
-| 505 | SevenIsland_SevaultCanyon_Frlg local id 7+8 | TRAINER_WAYFARER_SEVII_COOL_COUPLE_LEX_NYA | COOL_COUPLE | 28 | rotating | |
-| 506 | SevenIsland_TanobyRuins_Frlg local id 2 | TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BENJAMIN | RUIN_MANIAC | 42 | rotating | |
-| 507 | SevenIsland_TanobyRuins_Frlg local id 3 | TRAINER_WAYFARER_SEVII_PAINTER_EDNA | PAINTER | 37 | rotating | |
-| 508 | SevenIsland_TanobyRuins_Frlg local id 4 | TRAINER_WAYFARER_SEVII_GENTLEMAN_CLIFFORD | GENTLEMAN | 32 | rotating | |
+| 146 | DragonsDen_Cavern_hns local id 4 | TRAINER_CARA_HNS | COOLTRAINER | 57 | rotating | |
+| 147 | ViridianForest_hns local id 1 | TRAINER_DOUG_HNS | BUG_CATCHER | 3 | rotating | |
+| 148 | ViridianForest_hns local id 2 | TRAINER_ED_HNS | BUG_CATCHER | 3 | rotating | |
+| 149 | PoniIsle_hns local id 4 | TRAINER_PONI_SWIMMER_2_HNS | TUBER_M | 84 | rotating | |
+| 150 | PoniIsle_hns local id 5 | TRAINER_PONI_SWIMMER_1_HNS | SWIMMER_F | 82 | rotating | |
+| 151 | AkalaIsle_hns local id 10 | TRAINER_AKALA_CAMPER_HNS | CAMPER | 79 | rotating | |
+| 152 | AkalaIsle_hns local id 11 | TRAINER_AKALA_SWIMMER_3_HNS | SWIMMER_M | 83 | rotating | |
+| 153 | MelemeleIsle_hns local id 10 | TRAINER_MELEMELE_SWIMMER_1_HNS | SWIMMER_F | 82 | rotating | |
+| 154 | AlolaWater_hns local id 1 | TRAINER_MELEMELE_SWIMMER_2_HNS | SWIMMER_M | 83 | rotating | |
+| 155 | UlaulaIsle_hns local id 5 | TRAINER_ULAULA_PICNICKER_HNS | PICNICKER | 81 | rotating | |
+| 156 | Akala_Forest_hns local id 1 | TRAINER_AKALA_FOREST_BUGCATCHER_1_HNS | BUG_CATCHER | 78 | rotating | |
+| 157 | Akala_Forest_hns local id 2 | TRAINER_AKALA_FOREST_BUGCATCHER_2_HNS | BUG_CATCHER | 78 | rotating | |
+| 158 | Akala_Cave_hns local id 5 | TRAINER_AKALA_CAVE_CAMPER_HNS | CAMPER | 79 | rotating | |
+| 159 | Akala_Cave_hns local id 7 | TRAINER_AKALA_CAVE_HIKER_HNS | HIKER | 80 | rotating | |
+| 160 | Route102 local id 2 | TRAINER_CALVIN_1 | YOUNGSTER | 126 | rotating | |
+| 161 | Route102 local id 3 | TRAINER_RICK | BUG_CATCHER | 90 | rotating | |
+| 162 | Route102 local id 4 | TRAINER_TIANA | LASS | 104 | rotating | |
+| 163 | Route102 local id 9 | TRAINER_ALLEN | YOUNGSTER | 126 | rotating | |
+| 164 | Route103 local id 3 | TRAINER_DAISY | AROMA_LADY | 85 | rotating | |
+| 165 | Route103 local id 4+5 | TRAINER_AMY_AND_LIV_1 | TWINS | 125 | rotating | |
+| 166 | Route103 local id 6 | TRAINER_ANDREW | FISHERMAN | 97 | rotating | |
+| 167 | Route103 local id 12 | TRAINER_MIGUEL_1 | POKEFAN | 111 | rotating | |
+| 168 | Route103 local id 16 | TRAINER_RHETT | BLACK_BELT | 89 | rotating | |
+| 169 | Route103 local id 17 | TRAINER_MARCOS | GUITARIST | 99 | rotating | |
+| 170 | Route103 local id 18 | TRAINER_ISABELLE | SWIMMER_F | 120 | rotating | |
+| 171 | Route103 local id 19 | TRAINER_PETE | SWIMMER_M | 121 | rotating | |
+| 172 | Route104 local id 3 | TRAINER_HALEY_1 | LASS | 104 | rotating | |
+| 173 | Route104 local id 10 | TRAINER_IVAN | FISHERMAN | 97 | rotating | |
+| 174 | Route104 local id 24+25 | TRAINER_GINA_AND_MIA_1 | TWINS | 125 | rotating | |
+| 175 | Route104 local id 26 | TRAINER_WINSTON_1 | RICH_BOY | 114 | rotating | |
+| 176 | Route104 local id 27 | TRAINER_CINDY_1 | LADY | 103 | rotating | |
+| 177 | Route104 local id 29 | TRAINER_BILLY | YOUNGSTER | 126 | rotating | |
+| 178 | Route104 local id 34 | TRAINER_DARIAN | FISHERMAN | 97 | rotating | |
+| 179 | Route105 local id 1 | TRAINER_LUIS | SWIMMER_M | 121 | rotating | |
+| 180 | Route105 local id 3 | TRAINER_BEVERLY | SWIMMER_F | 120 | rotating | |
+| 181 | Route105 local id 4 | TRAINER_IMANI | SWIMMER_F | 120 | rotating | |
+| 182 | Route105 local id 6 | TRAINER_FOSTER | RUIN_MANIAC | 115 | rotating | |
+| 183 | Route105 local id 7 | TRAINER_JOSUE | BIRD_KEEPER | 88 | rotating | |
+| 184 | Route105 local id 8 | TRAINER_ANDRES_1 | RUIN_MANIAC | 115 | rotating | |
+| 185 | Route106 local id 1 | TRAINER_DOUGLAS | SWIMMER_M | 121 | rotating | |
+| 186 | Route106 local id 2 | TRAINER_KYLA | SWIMMER_F | 120 | rotating | |
+| 187 | Route106 local id 3 | TRAINER_ELLIOT_1 | FISHERMAN | 97 | rotating | |
+| 188 | Route106 local id 4 | TRAINER_NED | FISHERMAN | 97 | rotating | |
+| 189 | Route107 local id 1 | TRAINER_DARRIN | SWIMMER_M | 121 | rotating | |
+| 190 | Route107 local id 2 | TRAINER_TONY_1 | SWIMMER_M | 121 | rotating | |
+| 191 | Route107 local id 4 | TRAINER_BETH | SWIMMER_F | 120 | rotating | |
+| 192 | Route107 local id 5+6 | TRAINER_LISA_AND_RAY | SIS_AND_BRO | 118 | rotating | |
+| 193 | Route107 local id 7 | TRAINER_CAMRON | TRIATHLETE | 122 | rotating | |
+| 194 | Route108 local id 1 | TRAINER_JEROME | SWIMMER_M | 121 | rotating | |
+| 195 | Route108 local id 2 | TRAINER_TARA | SWIMMER_F | 120 | rotating | |
+| 196 | Route108 local id 4 | TRAINER_MISSY | SWIMMER_F | 120 | rotating | |
+| 197 | Route108 local id 5 | TRAINER_CAROLINA | COOLTRAINER | 94 | rotating | |
+| 198 | Route108 local id 6 | TRAINER_CORY_1 | SAILOR | 116 | rotating | |
+| 199 | Route109 local id 4 | TRAINER_DAVID | SWIMMER_M | 121 | rotating | |
+| 200 | Route109 local id 5 | TRAINER_ALICE | SWIMMER_F | 120 | rotating | |
+| 201 | Route109 local id 7 | TRAINER_EDMOND | SAILOR | 116 | rotating | |
+| 202 | Route109 local id 9 | TRAINER_LOLA_1 | TUBER_F | 123 | rotating | |
+| 203 | Route109 local id 12 | TRAINER_GWEN | TUBER_F | 123 | rotating | |
+| 204 | Route109 local id 13 | TRAINER_AUSTINA | TUBER_F | 123 | rotating | |
+| 205 | Route109 local id 14 | TRAINER_CARTER | FISHERMAN | 97 | rotating | |
+| 206 | Route109 local id 18+19 | TRAINER_MEL_AND_PAUL | YOUNG_COUPLE | 127 | rotating | |
+| 207 | Route109 local id 22 | TRAINER_HAILEY | TUBER_F | 123 | rotating | |
+| 208 | Route109 local id 23 | TRAINER_CHANDLER | TUBER_M | 124 | rotating | |
+| 209 | Route110 local id 8 | TRAINER_JASMINE | TRIATHLETE | 122 | rotating | |
+| 210 | Route110 local id 9 | TRAINER_ANTHONY | TRIATHLETE | 122 | rotating | |
+| 211 | Route110 local id 10 | TRAINER_ABIGAIL_1 | TRIATHLETE | 122 | rotating | |
+| 212 | Route110 local id 11 | TRAINER_BENJAMIN_1 | TRIATHLETE | 122 | rotating | |
+| 213 | Route110 local id 12 | TRAINER_EDWARD | PSYCHIC | 113 | rotating | |
+| 214 | Route110 local id 13 | TRAINER_JACLYN | PSYCHIC | 113 | rotating | |
+| 215 | Route110 local id 14 | TRAINER_EDWIN_1 | COLLECTOR | 93 | rotating | |
+| 216 | Route110 local id 15 | TRAINER_DALE | FISHERMAN | 97 | rotating | |
+| 217 | Route110 local id 27 | TRAINER_JACOB | TRIATHLETE | 122 | rotating | |
+| 218 | Route110 local id 30 | TRAINER_TIMMY | YOUNGSTER | 126 | rotating | |
+| 219 | Route110 local id 31 | TRAINER_ISABEL_1 | POKEFAN | 111 | rotating | |
+| 220 | Route110 local id 32 | TRAINER_KALEB | POKEFAN | 111 | rotating | |
+| 221 | Route110 local id 33 | TRAINER_ALYSSA | TRIATHLETE | 122 | rotating | |
+| 222 | Route110 local id 34 | TRAINER_JOSEPH | GUITARIST | 99 | rotating | |
+| 223 | Route111 local id 9 | TRAINER_DREW | CAMPER | 92 | rotating | |
+| 224 | Route111 local id 10 | TRAINER_DUSTY_1 | RUIN_MANIAC | 115 | rotating | |
+| 225 | Route111 local id 11 | TRAINER_BEAU | CAMPER | 92 | rotating | |
+| 226 | Route111 local id 29 | TRAINER_TRAVIS | CAMPER | 92 | rotating | |
+| 227 | Route111 local id 30 | TRAINER_DAISUKE | BLACK_BELT | 89 | rotating | |
+| 228 | Route111 local id 31 | TRAINER_BROOKE_1 | COOLTRAINER | 94 | rotating | |
+| 229 | Route111 local id 35 | TRAINER_TYRON | CAMPER | 92 | rotating | |
+| 230 | Route111 local id 36 | TRAINER_CELINA | AROMA_LADY | 85 | rotating | |
+| 231 | Route111 local id 38 | TRAINER_HAYDEN | KINDLER | 102 | rotating | |
+| 232 | Route111 local id 40 | TRAINER_CELIA | PICNICKER | 108 | rotating | |
+| 233 | Route111 local id 41 | TRAINER_BRANDEN | CAMPER | 92 | rotating | |
+| 234 | Route112 local id 2 | TRAINER_BRICE | HIKER | 101 | rotating | |
+| 235 | Route112 local id 3 | TRAINER_LARRY | CAMPER | 92 | rotating | |
+| 236 | Route112 local id 4 | TRAINER_CAROL | PICNICKER | 108 | rotating | |
+| 237 | Route112 local id 14 | TRAINER_SHAYLA | AROMA_LADY | 85 | rotating | |
+| 238 | Route113 local id 4 | TRAINER_DILLON | YOUNGSTER | 126 | rotating | |
+| 239 | Route113 local id 5 | TRAINER_MADELINE_1 | PARASOL_LADY | 107 | rotating | |
+| 240 | Route113 local id 10+11 | TRAINER_TORI_AND_TIA | TWINS | 125 | rotating | |
+| 241 | Route113 local id 13 | TRAINER_WYATT | POKEMANIAC | 112 | rotating | |
+| 242 | Route113 local id 14 | TRAINER_LAWRENCE | CAMPER | 92 | rotating | |
+| 243 | Route113 local id 15 | TRAINER_SOPHIE | PICNICKER | 108 | rotating | |
+| 244 | Route113 local id 16 | TRAINER_COBY | BIRD_KEEPER | 88 | rotating | |
+| 245 | Route114 local id 3 | TRAINER_LENNY | HIKER | 101 | rotating | |
+| 246 | Route114 local id 4 | TRAINER_LUCAS_1 | HIKER | 101 | rotating | |
+| 247 | Route114 local id 5 | TRAINER_SHANE | CAMPER | 92 | rotating | |
+| 248 | Route114 local id 6 | TRAINER_NANCY | PICNICKER | 108 | rotating | |
+| 249 | Route114 local id 7 | TRAINER_STEVE_1 | POKEMANIAC | 112 | rotating | |
+| 250 | Route114 local id 15 | TRAINER_NOLAN | FISHERMAN | 97 | rotating | |
+| 251 | Route114 local id 17 | TRAINER_BERNIE_1 | KINDLER | 102 | rotating | |
+| 252 | Route114 local id 22+23 | TRAINER_TYRA_AND_IVY | SR_AND_JR | 119 | rotating | |
+| 253 | Route114 local id 24 | TRAINER_CHARLOTTE | PICNICKER | 108 | rotating | |
+| 254 | Route114 local id 25 | TRAINER_ANGELINA | PICNICKER | 108 | rotating | |
+| 255 | Route114 local id 27 | TRAINER_KAI | FISHERMAN | 97 | rotating | |
+| 256 | Route115 local id 2 | TRAINER_TIMOTHY_1 | EXPERT | 96 | rotating | |
+| 257 | Route115 local id 3 | TRAINER_NOB_1 | BLACK_BELT | 89 | rotating | |
+| 258 | Route115 local id 8 | TRAINER_KOICHI | BLACK_BELT | 89 | rotating | |
+| 259 | Route115 local id 9 | TRAINER_HECTOR | COLLECTOR | 93 | rotating | |
+| 260 | Route115 local id 17 | TRAINER_KYRA | TRIATHLETE | 122 | rotating | |
+| 261 | Route115 local id 18 | TRAINER_JAIDEN | NINJA_BOY | 105 | rotating | |
+| 262 | Route115 local id 19 | TRAINER_HELENE | BATTLE_GIRL | 86 | rotating | |
+| 263 | Route115 local id 20 | TRAINER_ALIX | PSYCHIC | 113 | rotating | |
+| 264 | Route115 local id 21 | TRAINER_MARLENE | PSYCHIC | 113 | rotating | |
+| 265 | Route116 local id 3 | TRAINER_JOEY | YOUNGSTER | 126 | rotating | |
+| 266 | Route116 local id 6 | TRAINER_JOSE | BUG_CATCHER | 90 | rotating | |
+| 267 | Route116 local id 16 | TRAINER_JANICE | LASS | 104 | rotating | |
+| 268 | Route116 local id 17 | TRAINER_KAREN_1 | SCHOOL_KID | 117 | rotating | |
+| 269 | Route116 local id 23 | TRAINER_SARAH | LADY | 103 | rotating | |
+| 270 | Route116 local id 24 | TRAINER_DAWSON | RICH_BOY | 114 | rotating | |
+| 271 | Route116 local id 27 | TRAINER_JOHNSON | YOUNGSTER | 126 | rotating | |
+| 272 | Route116 local id 28 | TRAINER_DEVAN | HIKER | 101 | rotating | |
+| 273 | Route117 local id 8 | TRAINER_DYLAN_1 | TRIATHLETE | 122 | rotating | |
+| 274 | Route117 local id 9 | TRAINER_LYDIA_1 | PKMN_BREEDER | 109 | rotating | |
+| 275 | Route117 local id 10 | TRAINER_ISAAC_1 | PKMN_BREEDER | 109 | rotating | |
+| 276 | Route117 local id 17 | TRAINER_MARIA_1 | TRIATHLETE | 122 | rotating | |
+| 277 | Route117 local id 18 | TRAINER_DEREK | BUG_MANIAC | 91 | rotating | |
+| 278 | Route117 local id 19+20 | TRAINER_ANNA_AND_MEG_1 | SR_AND_JR | 119 | rotating | |
+| 279 | Route117 local id 22 | TRAINER_BRANDI | PSYCHIC | 113 | rotating | |
+| 280 | Route117 local id 23 | TRAINER_AISHA | BATTLE_GIRL | 86 | rotating | |
+| 281 | Route117 local id 24 | TRAINER_MELINA | TRIATHLETE | 122 | rotating | |
+| 282 | Route118 local id 4 | TRAINER_PERRY | BIRD_KEEPER | 88 | rotating | |
+| 283 | Route118 local id 14 | TRAINER_ROSE_1 | AROMA_LADY | 85 | rotating | |
+| 284 | Route118 local id 15 | TRAINER_WADE | FISHERMAN | 97 | rotating | |
+| 285 | Route118 local id 16 | TRAINER_CHESTER | BIRD_KEEPER | 88 | rotating | |
+| 286 | Route118 local id 17 | TRAINER_BARNY | FISHERMAN | 97 | rotating | |
+| 287 | Route118 local id 18 | TRAINER_DALTON_1 | GUITARIST | 99 | rotating | |
+| 288 | Route118 local id 21 | TRAINER_DEANDRE | YOUNGSTER | 126 | rotating | |
+| 289 | Route119 local id 4 | TRAINER_GREG | BUG_CATCHER | 90 | rotating | |
+| 290 | Route119 local id 5 | TRAINER_TAYLOR | BUG_MANIAC | 91 | rotating | |
+| 291 | Route119 local id 6 | TRAINER_DONALD | BUG_MANIAC | 91 | rotating | |
+| 292 | Route119 local id 7 | TRAINER_JACKSON_1 | PKMN_RANGER | 110 | rotating | |
+| 293 | Route119 local id 8 | TRAINER_BRENT | BUG_MANIAC | 91 | rotating | |
+| 294 | Route119 local id 9 | TRAINER_CATHERINE_1 | PKMN_RANGER | 110 | rotating | |
+| 295 | Route119 local id 10 | TRAINER_DOUG | BUG_CATCHER | 90 | rotating | |
+| 296 | Route119 local id 11 | TRAINER_KENT | BUG_CATCHER | 90 | rotating | |
+| 297 | Route119 local id 12 | TRAINER_YASU | NINJA_BOY | 105 | rotating | |
+| 298 | Route119 local id 13 | TRAINER_TAKASHI | NINJA_BOY | 105 | rotating | |
+| 299 | Route119 local id 14 | TRAINER_HUGH | BIRD_KEEPER | 88 | rotating | |
+| 300 | Route119 local id 15 | TRAINER_PHIL | BIRD_KEEPER | 88 | rotating | |
+| 301 | Route119 local id 34 | TRAINER_HIDEO | NINJA_BOY | 105 | rotating | |
+| 302 | Route119 local id 37 | TRAINER_CHRIS | FISHERMAN | 97 | rotating | |
+| 303 | Route119 local id 38 | TRAINER_RACHEL | PARASOL_LADY | 107 | rotating | |
+| 304 | Route119 local id 39 | TRAINER_DAYTON | KINDLER | 102 | rotating | |
+| 305 | Route119 local id 40 | TRAINER_FABIAN | GUITARIST | 99 | rotating | |
+| 306 | Route120 local id 11 | TRAINER_COLIN | BIRD_KEEPER | 88 | rotating | |
+| 307 | Route120 local id 12 | TRAINER_ROBERT_1 | BIRD_KEEPER | 88 | rotating | |
+| 308 | Route120 local id 13 | TRAINER_LORENZO | PKMN_RANGER | 110 | rotating | |
+| 309 | Route120 local id 14 | TRAINER_JENNA | PKMN_RANGER | 110 | rotating | |
+| 310 | Route120 local id 15 | TRAINER_JEFFREY_1 | BUG_MANIAC | 91 | rotating | |
+| 311 | Route120 local id 24 | TRAINER_JENNIFER | COOLTRAINER | 94 | rotating | |
+| 312 | Route120 local id 25 | TRAINER_CHIP | RUIN_MANIAC | 115 | rotating | |
+| 313 | Route120 local id 26 | TRAINER_CLARISSA | PARASOL_LADY | 107 | rotating | |
+| 314 | Route120 local id 27 | TRAINER_ANGELICA | PARASOL_LADY | 107 | rotating | |
+| 315 | Route120 local id 34 | TRAINER_KEIGO | NINJA_BOY | 105 | rotating | |
+| 316 | Route120 local id 35 | TRAINER_RILEY | NINJA_BOY | 105 | rotating | |
+| 317 | Route120 local id 42 | TRAINER_CALLIE | BATTLE_GIRL | 86 | rotating | |
+| 318 | Route120 local id 43 | TRAINER_LEONEL | COOLTRAINER | 94 | rotating | |
+| 319 | Route121 local id 10+11 | TRAINER_KATE_AND_JOY | SR_AND_JR | 119 | rotating | |
+| 320 | Route121 local id 18 | TRAINER_WALTER_1 | GENTLEMAN | 98 | rotating | |
+| 321 | Route121 local id 24 | TRAINER_MYLES | PKMN_BREEDER | 109 | rotating | |
+| 322 | Route121 local id 25 | TRAINER_PAT | PKMN_BREEDER | 109 | rotating | |
+| 323 | Route121 local id 27 | TRAINER_CRISTIN_1 | COOLTRAINER | 94 | rotating | |
+| 324 | Route123 local id 8 | TRAINER_WENDY | COOLTRAINER | 94 | rotating | |
+| 325 | Route123 local id 9 | TRAINER_BRAXTON | COOLTRAINER | 94 | rotating | |
+| 326 | Route123 local id 26 | TRAINER_VIOLET | AROMA_LADY | 85 | rotating | |
+| 327 | Route123 local id 27+28 | TRAINER_MIU_AND_YUKI | TWINS | 125 | rotating | |
+| 328 | Route123 local id 30 | TRAINER_JACKI_1 | PSYCHIC | 113 | rotating | |
+| 329 | Route123 local id 34 | TRAINER_JONAS | NINJA_BOY | 105 | rotating | |
+| 330 | Route123 local id 35 | TRAINER_KAYLEY | PARASOL_LADY | 107 | rotating | |
+| 331 | Route123 local id 36 | TRAINER_ED | COLLECTOR | 93 | rotating | |
+| 332 | Route123 local id 37 | TRAINER_FERNANDO_1 | GUITARIST | 99 | rotating | |
+| 333 | Route123 local id 38 | TRAINER_ALBERTO | BIRD_KEEPER | 88 | rotating | |
+| 334 | Route123 local id 39 | TRAINER_FREDRICK | EXPERT | 96 | rotating | |
+| 335 | Route123 local id 41 | TRAINER_JAZMYN | COOLTRAINER | 94 | rotating | |
+| 336 | Route123 local id 42 | TRAINER_DAVIS | BUG_CATCHER | 90 | rotating | |
+| 337 | Route124 local id 1 | TRAINER_SPENCER | SWIMMER_M | 121 | rotating | |
+| 338 | Route124 local id 2 | TRAINER_ROLAND | SWIMMER_M | 121 | rotating | |
+| 339 | Route124 local id 4 | TRAINER_GRACE | SWIMMER_F | 120 | rotating | |
+| 340 | Route124 local id 9+10 | TRAINER_LILA_AND_ROY_1 | SIS_AND_BRO | 118 | rotating | |
+| 341 | Route124 local id 11 | TRAINER_DECLAN | SWIMMER_M | 121 | rotating | |
+| 342 | Route124 local id 12 | TRAINER_ISABELLA | TRIATHLETE | 122 | rotating | |
+| 343 | Route125 local id 1 | TRAINER_NOLEN | SWIMMER_M | 121 | rotating | |
+| 344 | Route125 local id 2 | TRAINER_STAN | SWIMMER_M | 121 | rotating | |
+| 345 | Route125 local id 4 | TRAINER_SHARON | SWIMMER_F | 120 | rotating | |
+| 346 | Route125 local id 8 | TRAINER_PRESLEY | BIRD_KEEPER | 88 | rotating | |
+| 347 | Route125 local id 9 | TRAINER_AURON | EXPERT | 96 | rotating | |
+| 348 | Route126 local id 1 | TRAINER_BARRY | SWIMMER_M | 121 | rotating | |
+| 349 | Route126 local id 3 | TRAINER_NIKKI | SWIMMER_F | 120 | rotating | |
+| 350 | Route126 local id 4 | TRAINER_BRENDA | SWIMMER_F | 120 | rotating | |
+| 351 | Route126 local id 6 | TRAINER_SIENNA | SWIMMER_F | 120 | rotating | |
+| 352 | Route126 local id 7 | TRAINER_PABLO_1 | TRIATHLETE | 122 | rotating | |
+| 353 | Route126 local id 8 | TRAINER_ISOBEL | TRIATHLETE | 122 | rotating | |
+| 354 | Route126 local id 9 | TRAINER_LEONARDO | SWIMMER_M | 121 | rotating | |
+| 355 | Route127 local id 1 | TRAINER_CAMDEN | TRIATHLETE | 122 | rotating | |
+| 356 | Route127 local id 2 | TRAINER_DONNY | TRIATHLETE | 122 | rotating | |
+| 357 | Route127 local id 5 | TRAINER_JONAH | FISHERMAN | 97 | rotating | |
+| 358 | Route127 local id 6 | TRAINER_ROGER | FISHERMAN | 97 | rotating | |
+| 359 | Route127 local id 7 | TRAINER_HENRY | FISHERMAN | 97 | rotating | |
+| 360 | Route127 local id 8 | TRAINER_AIDAN | BIRD_KEEPER | 88 | rotating | |
+| 361 | Route127 local id 9 | TRAINER_KOJI_1 | BLACK_BELT | 89 | rotating | |
+| 362 | Route127 local id 10 | TRAINER_ATHENA | COOLTRAINER | 94 | rotating | |
+| 363 | Route128 local id 7 | TRAINER_RUBEN | COOLTRAINER | 94 | rotating | |
+| 364 | Route128 local id 9 | TRAINER_CARLEE | SWIMMER_F | 120 | rotating | |
+| 365 | Route128 local id 10 | TRAINER_HARRISON | SWIMMER_M | 121 | rotating | |
+| 366 | Route129 local id 1 | TRAINER_CHASE | TRIATHLETE | 122 | rotating | |
+| 367 | Route129 local id 2 | TRAINER_ALLISON | TRIATHLETE | 122 | rotating | |
+| 368 | Route129 local id 3 | TRAINER_TISHA | SWIMMER_F | 120 | rotating | |
+| 369 | Route129 local id 4 | TRAINER_REED | SWIMMER_M | 121 | rotating | |
+| 370 | Route130 local id 1 | TRAINER_RODNEY | SWIMMER_M | 121 | rotating | |
+| 371 | Route130 local id 2 | TRAINER_KATIE | SWIMMER_F | 120 | rotating | |
+| 372 | Route130 local id 4 | TRAINER_SANTIAGO | SWIMMER_M | 121 | rotating | |
+| 373 | Route131 local id 1 | TRAINER_RICHARD | SWIMMER_M | 121 | rotating | |
+| 374 | Route131 local id 2 | TRAINER_HERMAN | SWIMMER_M | 121 | rotating | |
+| 375 | Route131 local id 3 | TRAINER_SUSIE | SWIMMER_F | 120 | rotating | |
+| 376 | Route131 local id 4 | TRAINER_KARA | SWIMMER_F | 120 | rotating | |
+| 377 | Route131 local id 8 | TRAINER_TALIA | TRIATHLETE | 122 | rotating | |
+| 378 | Route132 local id 1 | TRAINER_GILBERT | SWIMMER_M | 121 | rotating | |
+| 379 | Route132 local id 2 | TRAINER_DANA | SWIMMER_F | 120 | rotating | |
+| 380 | Route132 local id 4 | TRAINER_KIYO | BLACK_BELT | 89 | rotating | |
+| 381 | Route132 local id 5 | TRAINER_RONALD | FISHERMAN | 97 | rotating | |
+| 382 | Route132 local id 6 | TRAINER_PAXTON | EXPERT | 96 | rotating | |
+| 383 | Route132 local id 7 | TRAINER_DARCY | COOLTRAINER | 94 | rotating | |
+| 384 | Route132 local id 8 | TRAINER_MAKAYLA | EXPERT | 96 | rotating | |
+| 385 | Route132 local id 9 | TRAINER_JONATHAN | COOLTRAINER | 94 | rotating | |
+| 386 | Route133 local id 1 | TRAINER_FRANKLIN | SWIMMER_M | 121 | rotating | |
+| 387 | Route133 local id 2 | TRAINER_LINDA | SWIMMER_F | 120 | rotating | |
+| 388 | Route133 local id 3 | TRAINER_DEBRA | SWIMMER_F | 120 | rotating | |
+| 389 | Route133 local id 7 | TRAINER_WARREN | COOLTRAINER | 94 | rotating | |
+| 390 | Route133 local id 8 | TRAINER_MOLLIE | EXPERT | 96 | rotating | |
+| 391 | Route133 local id 9 | TRAINER_CONOR | EXPERT | 96 | rotating | |
+| 392 | Route134 local id 1 | TRAINER_JACK | SWIMMER_M | 121 | rotating | |
+| 393 | Route134 local id 2 | TRAINER_LAUREL | SWIMMER_F | 120 | rotating | |
+| 394 | Route134 local id 4 | TRAINER_ALEX | BIRD_KEEPER | 88 | rotating | |
+| 395 | Route134 local id 5 | TRAINER_HITOSHI | BLACK_BELT | 89 | rotating | |
+| 396 | Route134 local id 6 | TRAINER_MARLEY | COOLTRAINER | 94 | rotating | |
+| 397 | Route134 local id 7 | TRAINER_KELVIN | SAILOR | 116 | rotating | |
+| 398 | Route134 local id 8 | TRAINER_REYNA | BATTLE_GIRL | 86 | rotating | |
+| 399 | Route134 local id 9 | TRAINER_HUDSON | SAILOR | 116 | rotating | |
+| 400 | MeteorFalls_1F_2R local id 1 | TRAINER_NICOLAS_1 | DRAGON_TAMER | 95 | rotating | |
+| 401 | MeteorFalls_1F_2R local id 2+3 | TRAINER_JOHN_AND_JAY_1 | OLD_COUPLE | 106 | rotating | |
+| 402 | RusturfTunnel local id 9 | TRAINER_MIKE_2 | HIKER | 101 | rotating | |
+| 403 | PetalburgWoods local id 9 | TRAINER_LYLE | BUG_CATCHER | 90 | rotating | |
+| 404 | PetalburgWoods local id 10 | TRAINER_JAMES_1 | BUG_CATCHER | 90 | rotating | |
+| 405 | JaggedPass local id 6 | TRAINER_AUTUMN | PICNICKER | 108 | rotating | |
+| 406 | JaggedPass local id 7 | TRAINER_JULIO | TRIATHLETE | 122 | rotating | |
+| 407 | MtPyre_2F local id 1 | TRAINER_MARK | POKEMANIAC | 112 | rotating | |
+| 408 | MtPyre_2F local id 5+6 | TRAINER_DEZ_AND_LUKE | YOUNG_COUPLE | 127 | rotating | |
+| 409 | MtPyre_2F local id 7 | TRAINER_ZANDER | BLACK_BELT | 89 | rotating | |
+| 410 | MtPyre_3F local id 1 | TRAINER_WILLIAM | PSYCHIC | 113 | rotating | |
+| 411 | MtPyre_3F local id 2 | TRAINER_KAYLA | PSYCHIC | 113 | rotating | |
+| 412 | MtPyre_3F local id 4 | TRAINER_GABRIELLE_1 | PKMN_BREEDER | 109 | rotating | |
+| 413 | MtPyre_4F local id 1 | TRAINER_TASHA | HEX_MANIAC | 100 | rotating | |
+| 414 | MtPyre_5F local id 1 | TRAINER_ATSUSHI | BLACK_BELT | 89 | rotating | |
+| 415 | MtPyre_6F local id 1 | TRAINER_VALERIE_1 | HEX_MANIAC | 100 | rotating | |
+| 416 | MtPyre_6F local id 3 | TRAINER_CEDRIC | PSYCHIC | 113 | rotating | |
+| 417 | VictoryRoad_1F local id 1 | TRAINER_EDGAR | COOLTRAINER | 94 | rotating | |
+| 418 | VictoryRoad_1F local id 2 | TRAINER_HOPE | COOLTRAINER | 94 | rotating | |
+| 419 | VictoryRoad_1F local id 3 | TRAINER_ALBERT | COOLTRAINER | 94 | rotating | |
+| 420 | VictoryRoad_1F local id 8 | TRAINER_KATELYNN | COOLTRAINER | 94 | rotating | |
+| 421 | VictoryRoad_B1F local id 20 | TRAINER_MITCHELL | COOLTRAINER | 94 | rotating | |
+| 422 | VictoryRoad_B2F local id 1 | TRAINER_VITO | COOLTRAINER | 94 | rotating | |
+| 423 | VictoryRoad_B2F local id 4 | TRAINER_JULIE | COOLTRAINER | 94 | rotating | |
+| 424 | AbandonedShip_Rooms_1F local id 3 | TRAINER_THALIA_1 | BEAUTY | 87 | rotating | |
+| 425 | AbandonedShip_Rooms_1F local id 4 | TRAINER_DEMETRIUS | YOUNGSTER | 126 | rotating | |
+| 426 | AbandonedShip_Rooms2_1F local id 1+2 | TRAINER_KIRA_AND_DAN_1 | YOUNG_COUPLE | 127 | rotating | |
+| 427 | AbandonedShip_Rooms2_1F local id 4 | TRAINER_GARRISON | RUIN_MANIAC | 115 | rotating | |
+| 428 | PokemonMansion_1F_Frlg local id 1 | TRAINER_WAYFARER_COAST_SCIENTIST_TED | SCIENTIST | 16 | rotating | |
+| 429 | PokemonMansion_1F_Frlg local id 5 | TRAINER_WAYFARER_COAST_YOUNGSTER_JOHNSON | YOUNGSTER | 21 | rotating | |
+| 430 | PokemonMansion_3F_Frlg local id 2 | TRAINER_WAYFARER_COAST_SCIENTIST_BRAYDON | SCIENTIST | 16 | rotating | |
+| 431 | PokemonMansion_B1F_Frlg local id 2 | TRAINER_WAYFARER_COAST_BURGLAR_LEWIS | BURGLAR | 4 | rotating | |
+| 432 | MtEmber_Exterior_Frlg local id 4 | TRAINER_WAYFARER_SEVII_CRUSH_GIRL_JOCELYN | CRUSH_GIRL | 29 | rotating | |
+| 433 | MtEmber_Exterior_Frlg local id 5 | TRAINER_WAYFARER_SEVII_PKMN_RANGER_LOGAN | PKMN_RANGER | 40 | rotating | |
+| 434 | MtEmber_Exterior_Frlg local id 6 | TRAINER_WAYFARER_SEVII_PKMN_RANGER_BETH | PKMN_RANGER | 40 | rotating | |
+| 435 | SixIsland_PatternBush_Frlg local id 1 | TRAINER_WAYFARER_SEVII_PKMN_BREEDER_BETHANY | PKMN_BREEDER | 39 | rotating | |
+| 436 | SixIsland_PatternBush_Frlg local id 2 | TRAINER_WAYFARER_SEVII_PKMN_BREEDER_ALLISON | PKMN_BREEDER | 39 | rotating | |
+| 437 | SixIsland_PatternBush_Frlg local id 4 | TRAINER_WAYFARER_SEVII_BUG_CATCHER_JONAH | BUG_CATCHER | 25 | rotating | |
+| 438 | SixIsland_PatternBush_Frlg local id 5 | TRAINER_WAYFARER_SEVII_BUG_CATCHER_VANCE | BUG_CATCHER | 25 | rotating | |
+| 439 | SixIsland_PatternBush_Frlg local id 6 | TRAINER_WAYFARER_SEVII_YOUNGSTER_NASH | YOUNGSTER | 49 | rotating | |
+| 440 | SixIsland_PatternBush_Frlg local id 7 | TRAINER_WAYFARER_SEVII_YOUNGSTER_CORDELL | YOUNGSTER | 49 | rotating | |
+| 441 | SixIsland_PatternBush_Frlg local id 8 | TRAINER_WAYFARER_SEVII_LASS_DALIA | LASS | 36 | rotating | |
+| 442 | SixIsland_PatternBush_Frlg local id 9 | TRAINER_WAYFARER_SEVII_LASS_JOANA | LASS | 36 | rotating | |
+| 443 | SixIsland_PatternBush_Frlg local id 10 | TRAINER_WAYFARER_SEVII_CAMPER_RILEY | CAMPER | 26 | rotating | |
+| 444 | SixIsland_PatternBush_Frlg local id 11 | TRAINER_WAYFARER_SEVII_PICNICKER_MARCY | PICNICKER | 38 | rotating | |
+| 445 | FiveIsland_LostCave_Room1_Frlg local id 1 | TRAINER_WAYFARER_SEVII_RUIN_MANIAC_LAWSON | RUIN_MANIAC | 42 | rotating | |
+| 446 | Route19_Frlg local id 1 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_REECE | SWIMMER_M | 20 | rotating | |
+| 447 | Route19_Frlg local id 2 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_RICHARD | SWIMMER_M | 20 | rotating | |
+| 448 | Route19_Frlg local id 3 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_TONY | SWIMMER_M | 20 | rotating | |
+| 449 | Route19_Frlg local id 4 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_MATTHEW | SWIMMER_M | 20 | rotating | |
+| 450 | Route19_Frlg local id 5 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_DOUGLAS | SWIMMER_M | 20 | rotating | |
+| 451 | Route19_Frlg local id 6 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_DAVID | SWIMMER_M | 20 | rotating | |
+| 452 | Route19_Frlg local id 9 | TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_CONNIE | SWIMMER_F | 19 | rotating | |
+| 453 | Route19_Frlg local id 11+12 | TRAINER_WAYFARER_COAST_SIS_AND_BRO_LIA_LUC | SIS_AND_BRO | 17 | rotating | |
+| 454 | Route20_Frlg local id 3 | TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_NORA | SWIMMER_F | 19 | rotating | |
+| 455 | Route20_Frlg local id 4 | TRAINER_WAYFARER_COAST_BIRD_KEEPER_ROGER | BIRD_KEEPER | 2 | rotating | |
+| 456 | Route20_Frlg local id 5 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_DEAN | SWIMMER_M | 20 | rotating | |
+| 457 | Route20_Frlg local id 7 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_BARRY | SWIMMER_M | 20 | rotating | |
+| 458 | Route20_Frlg local id 8 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_DARRIN | SWIMMER_M | 20 | rotating | |
+| 459 | Route20_Frlg local id 10 | TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_TIFFANY | SWIMMER_F | 19 | rotating | |
+| 460 | Route21_North_Frlg local id 1 | TRAINER_WAYFARER_COAST_FISHERMAN_RONALD | FISHERMAN | 8 | rotating | |
+| 461 | Route21_North_Frlg local id 2 | TRAINER_WAYFARER_COAST_FISHERMAN_WADE | FISHERMAN | 8 | rotating | |
+| 462 | Route21_North_Frlg local id 3 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_SPENCER | SWIMMER_M | 20 | rotating | |
+| 463 | Route21_North_Frlg local id 4+5 | TRAINER_WAYFARER_COAST_SIS_AND_BRO_LIL_IAN | SIS_AND_BRO | 17 | rotating | |
+| 464 | Route21_South_Frlg local id 2 | TRAINER_WAYFARER_COAST_FISHERMAN_NOLAN | FISHERMAN | 8 | rotating | |
+| 465 | Route21_South_Frlg local id 3 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_JACK | SWIMMER_M | 20 | rotating | |
+| 466 | Route21_South_Frlg local id 4 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_JEROME | SWIMMER_M | 20 | rotating | |
+| 467 | Route21_South_Frlg local id 5 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_ROLAND | SWIMMER_M | 20 | rotating | |
+| 468 | OneIsland_KindleRoad_Frlg local id 1 | TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_MARIA | SWIMMER_F | 44 | rotating | |
+| 469 | OneIsland_KindleRoad_Frlg local id 2 | TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_ABIGAIL | SWIMMER_F | 44 | rotating | |
+| 470 | OneIsland_KindleRoad_Frlg local id 4 | TRAINER_WAYFARER_SEVII_SWIMMER_MALE_GARRETT | SWIMMER_M | 45 | rotating | |
+| 471 | OneIsland_KindleRoad_Frlg local id 5 | TRAINER_WAYFARER_SEVII_FISHERMAN_TOMMY | FISHERMAN | 31 | rotating | |
+| 472 | OneIsland_KindleRoad_Frlg local id 6 | TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON | CRUSH_GIRL | 29 | rotating | |
+| 473 | OneIsland_KindleRoad_Frlg local id 7 | TRAINER_WAYFARER_SEVII_CRUSH_GIRL_TANYA | CRUSH_GIRL | 29 | rotating | |
+| 474 | OneIsland_KindleRoad_Frlg local id 9 | TRAINER_WAYFARER_SEVII_BLACK_BELT_HUGH | BLACK_BELT | 24 | rotating | |
+| 475 | OneIsland_KindleRoad_Frlg local id 10 | TRAINER_WAYFARER_SEVII_CAMPER_BRYCE | CAMPER | 26 | rotating | |
+| 476 | OneIsland_KindleRoad_Frlg local id 11 | TRAINER_WAYFARER_SEVII_PICNICKER_CLAIRE | PICNICKER | 38 | rotating | |
+| 477 | OneIsland_KindleRoad_Frlg local id 12+13 | TRAINER_WAYFARER_SEVII_CRUSH_KIN_MIK_KIA | CRUSH_KIN | 30 | rotating | |
+| 478 | ThreeIsland_BondBridge_Frlg local id 1 | TRAINER_WAYFARER_SEVII_AROMA_LADY_NIKKI | AROMA_LADY | 22 | rotating | |
+| 479 | ThreeIsland_BondBridge_Frlg local id 3 | TRAINER_WAYFARER_SEVII_TUBER_AMIRA | TUBER | 47 | rotating | |
+| 480 | ThreeIsland_BondBridge_Frlg local id 4 | TRAINER_WAYFARER_SEVII_TUBER_ALEXIS | TUBER | 47 | rotating | |
+| 481 | ThreeIsland_BondBridge_Frlg local id 5 | TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_TISHA | SWIMMER_F | 44 | rotating | |
+| 482 | ThreeIsland_BondBridge_Frlg local id 6+7 | TRAINER_WAYFARER_SEVII_TWINS_JOY_MEG | TWINS | 48 | rotating | |
+| 483 | FiveIsland_ResortGorgeous_Frlg local id 1 | TRAINER_WAYFARER_SEVII_PAINTER_DAISY | PAINTER | 37 | rotating | |
+| 484 | FiveIsland_ResortGorgeous_Frlg local id 2 | TRAINER_WAYFARER_SEVII_PAINTER_CELINA | PAINTER | 37 | rotating | |
+| 485 | FiveIsland_ResortGorgeous_Frlg local id 3 | TRAINER_WAYFARER_SEVII_PAINTER_RAYNA | PAINTER | 37 | rotating | |
+| 486 | FiveIsland_ResortGorgeous_Frlg local id 4 | TRAINER_WAYFARER_SEVII_LADY_JACKI | LADY | 35 | rotating | |
+| 487 | FiveIsland_ResortGorgeous_Frlg local id 5 | TRAINER_WAYFARER_SEVII_LADY_GILLIAN | LADY | 35 | rotating | |
+| 488 | FiveIsland_ResortGorgeous_Frlg local id 6 | TRAINER_WAYFARER_SEVII_YOUNGSTER_DESTIN | YOUNGSTER | 49 | rotating | |
+| 489 | FiveIsland_ResortGorgeous_Frlg local id 7 | TRAINER_WAYFARER_SEVII_SWIMMER_MALE_TOBY | SWIMMER_M | 45 | rotating | |
+| 490 | FiveIsland_WaterLabyrinth_Frlg local id 2 | TRAINER_WAYFARER_SEVII_PKMN_BREEDER_ALIZE | PKMN_BREEDER | 39 | rotating | |
+| 491 | FiveIsland_MemorialPillar_Frlg local id 3 | TRAINER_WAYFARER_SEVII_BIRD_KEEPER_CHAZ | BIRD_KEEPER | 23 | rotating | |
+| 492 | FiveIsland_MemorialPillar_Frlg local id 4 | TRAINER_WAYFARER_SEVII_BIRD_KEEPER_HAROLD | BIRD_KEEPER | 23 | rotating | |
+| 493 | SixIsland_OutcastIsland_Frlg local id 2 | TRAINER_WAYFARER_SEVII_FISHERMAN_TYLOR | FISHERMAN | 31 | rotating | |
+| 494 | SixIsland_OutcastIsland_Frlg local id 5+6 | TRAINER_WAYFARER_SEVII_SIS_AND_BRO_AVA_GEB | SIS_AND_BRO | 43 | rotating | |
+| 495 | SixIsland_GreenPath_Frlg local id 1 | TRAINER_WAYFARER_SEVII_PSYCHIC_JACLYN | PSYCHIC | 41 | rotating | |
+| 496 | SixIsland_WaterPath_Frlg local id 2 | TRAINER_WAYFARER_SEVII_JUGGLER_EDWARD | JUGGLER | 34 | rotating | |
+| 497 | SixIsland_WaterPath_Frlg local id 3 | TRAINER_WAYFARER_SEVII_SWIMMER_MALE_SAMIR | SWIMMER_M | 45 | rotating | |
+| 498 | SixIsland_WaterPath_Frlg local id 4 | TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_DENISE | SWIMMER_F | 44 | rotating | |
+| 499 | SixIsland_WaterPath_Frlg local id 5+6 | TRAINER_WAYFARER_SEVII_TWINS_MIU_MIA | TWINS | 48 | rotating | |
+| 500 | SixIsland_WaterPath_Frlg local id 7 | TRAINER_WAYFARER_SEVII_HIKER_EARL | HIKER | 33 | rotating | |
+| 501 | SixIsland_RuinValley_Frlg local id 2 | TRAINER_WAYFARER_SEVII_RUIN_MANIAC_STANLY | RUIN_MANIAC | 42 | rotating | |
+| 502 | SixIsland_RuinValley_Frlg local id 5 | TRAINER_WAYFARER_SEVII_HIKER_DARYL | HIKER | 33 | rotating | |
+| 503 | SevenIsland_TrainerTower_Frlg local id 1 | TRAINER_WAYFARER_SEVII_PSYCHIC_DARIO | PSYCHIC | 41 | rotating | |
+| 504 | SevenIsland_SevaultCanyon_Entrance_Frlg local id 1 | TRAINER_WAYFARER_SEVII_AROMA_LADY_MIAH | AROMA_LADY | 22 | rotating | |
+| 505 | SevenIsland_SevaultCanyon_Entrance_Frlg local id 2+3 | TRAINER_WAYFARER_SEVII_YOUNG_COUPLE_EVE_JON | YOUNG_COUPLE | 50 | rotating | |
+| 506 | SevenIsland_SevaultCanyon_Entrance_Frlg local id 5 | TRAINER_WAYFARER_SEVII_PKMN_RANGER_MADELINE | PKMN_RANGER | 40 | rotating | |
+| 507 | SevenIsland_SevaultCanyon_Entrance_Frlg local id 6 | TRAINER_WAYFARER_SEVII_JUGGLER_MASON | JUGGLER | 34 | rotating | |
+| 508 | SevenIsland_SevaultCanyon_Frlg local id 2 | TRAINER_WAYFARER_SEVII_TAMER_EVAN | TAMER | 46 | rotating | |
+| 509 | SevenIsland_SevaultCanyon_Frlg local id 3 | TRAINER_WAYFARER_SEVII_PKMN_RANGER_JACKSON | PKMN_RANGER | 40 | rotating | |
+| 510 | SevenIsland_SevaultCanyon_Frlg local id 4 | TRAINER_WAYFARER_SEVII_PKMN_RANGER_KATELYN | PKMN_RANGER | 40 | rotating | |
+| 511 | SevenIsland_SevaultCanyon_Frlg local id 5 | TRAINER_WAYFARER_SEVII_COOLTRAINER_LEROY | COOLTRAINER | 27 | rotating | |
+| 512 | SevenIsland_SevaultCanyon_Frlg local id 6 | TRAINER_WAYFARER_SEVII_COOLTRAINER_MICHELLE | COOLTRAINER | 27 | rotating | |
+| 513 | SevenIsland_SevaultCanyon_Frlg local id 7+8 | TRAINER_WAYFARER_SEVII_COOL_COUPLE_LEX_NYA | COOL_COUPLE | 28 | rotating | |
+| 514 | SevenIsland_TanobyRuins_Frlg local id 2 | TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BENJAMIN | RUIN_MANIAC | 42 | rotating | |
+| 515 | SevenIsland_TanobyRuins_Frlg local id 3 | TRAINER_WAYFARER_SEVII_PAINTER_EDNA | PAINTER | 37 | rotating | |
+| 516 | SevenIsland_TanobyRuins_Frlg local id 4 | TRAINER_WAYFARER_SEVII_GENTLEMAN_CLIFFORD | GENTLEMAN | 32 | rotating | |
 | - | Route30_hns local id 2 | TRAINER_JOEY_HNS | YOUNGSTER | - | fixed | hidden by a flag (FLAG_HIDE_ROUTE_30_NPCS): a story or time-of-day trainer |
 | - | Route32_hns local id 16 | TRAINER_PETER_HNS | BIRD_KEEPER | - | fixed | dialogue audit: names VIOLET CITY; refers to its surroundings ("at the GYM"); names a building or local event (GYM). The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | Route33_hns local id 1 | TRAINER_ANTHONY_HNS | HIKER | - | fixed | dialogue audit: refers to its surroundings ("through the tunnel"). The intro and rematch line is about the place the trainer was written for, so it stays at home. |
@@ -949,7 +958,6 @@ Every trainer slot with an `ORDINARY` trainer: rotating slots by index, then the
 | - | BurnedTower_1F_hns local id 5 | TRAINER_RICHARDO_HNS | BURGLAR | - | fixed | dialogue audit: names BURNED TOWER; refers to its surroundings ("in the BURNED TOWER"). The intro is about the place the trainer was written for, so it stays at home. |
 | - | LakeOfRage_hns local id 7 | TRAINER_LOIS_HNS | COOLTRAINER | - | fixed | hidden by a flag (FLAG_TEMP_1): a story or time-of-day trainer |
 | - | DragonsDen_Cavern_hns local id 1 | TRAINER_DARIN_HNS | DRAGON_TAMER | - | fixed | dialogue audit: refers to its surroundings ("The SHRINE"). The post-battle line is about the place the trainer was written for, so it stays at home. |
-| - | DragonsDen_Cavern_hns local id 4 | TRAINER_CARA_HNS | COOLTRAINER | - | fixed | dialogue audit: refers to its surroundings ("in here"). The intro is about the place the trainer was written for, so it stays at home. |
 | - | ViridianForest_hns local id 8 | TRAINER_ROB_HNS | BUG_CATCHER | - | fixed | dialogue audit: names VIRIDIAN. The post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | MtMoon_Cave_hns local id 16 | TRAINER_MT_MOON_ROCKET_GRUNT_1_HNS | TEAM_ROCKET | - | fixed | script does more than battle: specialvar GetBattleOutcome, specialvar WayfarerCanStartOrdinaryBattleForScript |
 | - | MtMoon_Cave_hns local id 17 | TRAINER_MT_MOON_ROCKET_GRUNT_2_HNS | TEAM_ROCKET | - | fixed | script does more than battle: specialvar GetBattleOutcome, specialvar WayfarerCanStartOrdinaryBattleForScript |
@@ -967,14 +975,11 @@ Every trainer slot with an `ORDINARY` trainer: rotating slots by index, then the
 | - | AkalaIsle_hns local id 7 | TRAINER_AKALA_HIKER_HNS | HIKER | - | fixed | dialogue audit: names AKALA ISLE. The post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | AkalaIsle_hns local id 8 | TRAINER_AKALA_SWIMMER_2_HNS | SWIMMER_F | - | fixed | dialogue audit: names AKALA ISLE. The post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | AkalaIsle_hns local id 9 | TRAINER_AKALA_PICNICKER_HNS | PICNICKER | - | fixed | dialogue audit: names AKALA ISLE. The post-battle line is about the place the trainer was written for, so it stays at home. |
-| - | AkalaIsle_hns local id 11 | TRAINER_AKALA_SWIMMER_3_HNS | SWIMMER_M | - | fixed | dialogue audit: refers to its surroundings ("out here"). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | AkalaIsle_hns local id 12 | TRAINER_AKALA_SWIMMER_1_HNS | SWIMMER_F | - | fixed | dialogue audit: names ULA'ULA ISLE. The post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | UlaulaIsle_hns local id 6 | TRAINER_ULAULA_YOUNGSTER_HNS | YOUNGSTER | - | fixed | dialogue audit: names MT. LANIKALA; refers to its surroundings ("this mountain"). The defeat and intro and post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | UlaulaIsle_hns local id 8 | TRAINER_ULAULA_HIKER_HNS | HIKER | - | fixed | dialogue audit: names MT. LANIKALA, ULA'ULA ISLE; refers to its surroundings ("this mountain"). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | UlaulaIsle_hns local id 10 | TRAINER_ULAULA_COOLTRAINER_HNS | COOLTRAINER | - | fixed | dialogue audit: refers to its surroundings ("This cave", "that cave"). The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
-| - | Akala_Cave_hns local id 5 | TRAINER_AKALA_CAVE_CAMPER_HNS | CAMPER | - | fixed | dialogue audit: refers to its surroundings ("in here"). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | Akala_Cave_hns local id 6 | TRAINER_AKALA_CAVE_PICNICKER_HNS | PICNICKER | - | fixed | dialogue audit: refers to its surroundings ("this cave"). The post-battle line is about the place the trainer was written for, so it stays at home. |
-| - | Akala_Cave_hns local id 7 | TRAINER_AKALA_CAVE_HIKER_HNS | HIKER | - | fixed | dialogue audit: refers to its surroundings ("up here"). The intro is about the place the trainer was written for, so it stays at home. |
 | - | SSAqua_1F_hns local id 5 | TRAINER_JEFF_HNS | SAILOR | - | fixed | S.S. Aqua trainers are one-time ferry content |
 | - | SSAqua_B1F_hns local id 1 | TRAINER_WAI_HNS | BLACK_BELT | - | fixed | S.S. Aqua trainers are one-time ferry content |
 | - | SSAqua_B1F_hns local id 2 | TRAINER_NATE_HNS | SCHOOL_KID | - | fixed | S.S. Aqua trainers are one-time ferry content |
@@ -999,7 +1004,6 @@ Every trainer slot with an `ORDINARY` trainer: rotating slots by index, then the
 | - | SSAqua_RoomSW_hns local id 1 | TRAINER_CASSIE_HNS | BEAUTY | - | fixed | S.S. Aqua trainers are one-time ferry content |
 | - | SSAqua_RoomSW_hns local id 2 | TRAINER_CLYDE_HNS | GUITARIST | - | fixed | S.S. Aqua trainers are one-time ferry content |
 | - | Route105 local id 2 | TRAINER_DOMINIK | SWIMMER_M | - | fixed | dialogue audit: names SLATEPORT. The post-battle line is about the place the trainer was written for, so it stays at home. |
-| - | Route105 local id 6 | TRAINER_FOSTER | RUIN_MANIAC | - | fixed | dialogue audit: refers to its surroundings ("around here"). The intro is about the place the trainer was written for, so it stays at home. |
 | - | Route107 local id 3 | TRAINER_DENISE | SWIMMER_F | - | fixed | dialogue audit: names DEWFORD. The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | Route108 local id 3 | TRAINER_MATTHEW | SWIMMER_M | - | fixed | dialogue audit: names ABANDONED SHIP; refers to its surroundings ("that ABANDONED SHIP", "the ABANDONED SHIP"). The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | Route109 local id 6 | TRAINER_HUEY | SAILOR | - | fixed | dialogue audit: names SLATEPORT; refers to its surroundings ("In the best port"). The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
@@ -1018,7 +1022,6 @@ Every trainer slot with an `ORDINARY` trainer: rotating slots by index, then the
 | - | Route113 local id 9 | TRAINER_LUNG | NINJA_BOY | - | fixed | buried trainer: it reveals itself out of the ground |
 | - | Route114 local id 16 | TRAINER_CLAUDE | FISHERMAN | - | fixed | dialogue audit: names METEOR FALLS. The post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | Route115 local id 7 | TRAINER_CYNDY_1 | BATTLE_GIRL | - | fixed | dialogue audit: refers to its surroundings ("This beach"). The intro is about the place the trainer was written for, so it stays at home. |
-| - | Route115 local id 21 | TRAINER_MARLENE | PSYCHIC | - | fixed | dialogue audit: refers to its surroundings ("this place"). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | Route116 local id 13 | TRAINER_CLARK | HIKER | - | fixed | dialogue audit: refers to its surroundings ("the tunnel"). The intro is about the place the trainer was written for, so it stays at home. |
 | - | Route116 local id 18 | TRAINER_JERRY_1 | SCHOOL_KID | - | fixed | dialogue audit: refers to its surroundings ("at the TRAINER'S SCHOOL"). The intro and post-battle line and rematch line is about the place the trainer was written for, so it stays at home. |
 | - | Route121 local id 17 | TRAINER_VANESSA | POKEFAN | - | fixed | dialogue audit: names LILYCOVE; names a building or local event (CONTEST). The post-battle line is about the place the trainer was written for, so it stays at home. |
@@ -1030,7 +1033,6 @@ Every trainer slot with an `ORDINARY` trainer: rotating slots by index, then the
 | - | Route123 local id 31 | TRAINER_KINDRA | HEX_MANIAC | - | fixed | dialogue audit: names MT. PYRE. The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | Route124 local id 3 | TRAINER_JENNY_1 | SWIMMER_F | - | fixed | dialogue audit: refers to its surroundings ("the TRICK HOUSE"). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | Route124 local id 5 | TRAINER_CHAD | SWIMMER_M | - | fixed | dialogue audit: names underwater; refers to its surroundings ("around here"). The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
-| - | Route124 local id 12 | TRAINER_ISABELLA | TRIATHLETE | - | fixed | dialogue audit: refers to its surroundings ("around here"). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | Route125 local id 3 | TRAINER_TANYA | SWIMMER_F | - | fixed | dialogue audit: names MOSSDEEP CITY. The post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | Route125 local id 5 | TRAINER_ERNEST_1 | SAILOR | - | fixed | dialogue audit: names SHOAL CAVE; refers to its surroundings ("The SHOAL CAVE", "inside the SHOAL CAVE"). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | Route125 local id 6+7 | TRAINER_KIM_AND_IRIS | SR_AND_JR | - | fixed | dialogue audit: names SHOAL CAVE; refers to its surroundings ("in the SHOAL CAVE", "out here", "the SHOAL CAVE"). The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
@@ -1039,7 +1041,6 @@ Every trainer slot with an `ORDINARY` trainer: rotating slots by index, then the
 | - | Route128 local id 2 | TRAINER_KATELYN_1 | TRIATHLETE | - | fixed | dialogue audit: names VICTORY ROAD. The post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | Route128 local id 6 | TRAINER_WAYNE | FISHERMAN | - | fixed | dialogue audit: refers to its surroundings ("the falls"). The intro is about the place the trainer was written for, so it stays at home. |
 | - | Route128 local id 8 | TRAINER_ALEXA | COOLTRAINER | - | fixed | dialogue audit: names POKéMON LEAGUE; names a building or local event (LEAGUE). The intro is about the place the trainer was written for, so it stays at home. |
-| - | Route128 local id 9 | TRAINER_CARLEE | SWIMMER_F | - | fixed | dialogue audit: refers to its surroundings ("in this area", "this area"). The intro is about the place the trainer was written for, so it stays at home. |
 | - | Route129 local id 5 | TRAINER_CLARENCE | SWIMMER_M | - | fixed | dialogue audit: names POKéMON LEAGUE; names a building or local event (LEAGUE). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | Route131 local id 5+6 | TRAINER_RELI_AND_IAN | SIS_AND_BRO | - | fixed | dialogue audit: names PACIFIDLOG. The post-battle line is about the place the trainer was written for, so it stays at home. |
 | - | Route131 local id 7 | TRAINER_KEVIN | SWIMMER_M | - | fixed | dialogue audit: names PACIFIDLOG. The intro is about the place the trainer was written for, so it stays at home. |

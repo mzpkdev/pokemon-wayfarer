@@ -429,7 +429,7 @@ Route104_Text_DarianPostBattle:
 
 Route105_Text_FosterIntro:
 	.string "There's supposed to be a mystical\n"
-	.string "rock around here.\l"
+	.string "rock somewhere.\l"
 	.string "Do you know anything about it?$"
 
 Route105_Text_FosterDefeated:
@@ -2168,7 +2168,7 @@ Route115_Text_MarleneDefeat:
 
 Route115_Text_MarlenePostBattle:
 	.string "I was meditating with my POKéMON.\n"
-	.string "But this place isn't very peaceful…$"
+	.string "But it isn't very peaceful…$"
 
 Route116_Text_ClarkIntro:
 	.string "If the tunnel doesn't go through, then\n"
@@ -3778,7 +3778,7 @@ Route124_Text_IsabellaDefeat:
 
 Route124_Text_IsabellaPostBattle:
 	.string "You can find pretty colored shards\n"
-	.string "of things around here.$"
+	.string "of things lying around.$"
 
 Route125_Text_NolenIntro:
 	.string "I heard you approaching, so I hung\n"
@@ -4255,7 +4255,7 @@ Route128_Text_HarrisonPostBattle:
 
 Route128_Text_CarleeIntro:
 	.string "The sunlight seems to be more harsh\n"
-	.string "in this area.$"
+	.string "than usual.$"
 
 Route128_Text_CarleeDefeat:
 	.string "I couldn't see very well because of\n"

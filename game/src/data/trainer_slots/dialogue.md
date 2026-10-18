@@ -547,6 +547,9 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_LEA_AND_PIA_HNS | DragonsDen_Cavern_hns | intro | It's a stranger we don't know. |  |
 | TRAINER_LEA_AND_PIA_HNS | DragonsDen_Cavern_hns | defeat | Ouchies. |  |
 | TRAINER_LEA_AND_PIA_HNS | DragonsDen_Cavern_hns | say | It was like having to battle LANCE. |  |
+| TRAINER_CARA_HNS | DragonsDen_Cavern_hns | intro | You shouldn't be here! |  |
+| TRAINER_CARA_HNS | DragonsDen_Cavern_hns | defeat | Oh yikes, I lost! |  |
+| TRAINER_CARA_HNS | DragonsDen_Cavern_hns | say | Soon I'm going to get permission from our MASTER to use dragons. When I do, I'm going to become an admirable dragon trainer and gain our MASTER's approval. |  |
 | TRAINER_DOUG_HNS | ViridianForest_hns | intro | Why don't girls like bug POKéMON? |  |
 | TRAINER_DOUG_HNS | ViridianForest_hns | defeat | No good! |  |
 | TRAINER_DOUG_HNS | ViridianForest_hns | say | Bug POKéMON squish like plush toys when you squeeze their bellies. I love how they feel! |  |
@@ -562,6 +565,9 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_AKALA_CAMPER_HNS | AkalaIsle_hns | intro | I want to be the first to prove myself to the Totem POKéMON! |  |
 | TRAINER_AKALA_CAMPER_HNS | AkalaIsle_hns | defeat | Drat, that's not going to help my case. |  |
 | TRAINER_AKALA_CAMPER_HNS | AkalaIsle_hns | say | There's a weird Totem further ahead but I haven't seen a Totem POKéMON. |  |
+| TRAINER_AKALA_SWIMMER_3_HNS | AkalaIsle_hns | intro | Hah! You need to ride a POKéMON to surf? |  |
+| TRAINER_AKALA_SWIMMER_3_HNS | AkalaIsle_hns | defeat | If I hadn't swam myself maybe I would've had the energy to win… |  |
+| TRAINER_AKALA_SWIMMER_3_HNS | AkalaIsle_hns | say | The current is strong! A POKéMON must be really powerful to migrate all the way out to the ISLES! |  |
 | TRAINER_MELEMELE_SWIMMER_1_HNS | MelemeleIsle_hns | intro | The waters are warm here by the ISLES! |  |
 | TRAINER_MELEMELE_SWIMMER_1_HNS | MelemeleIsle_hns | defeat | Maybe I should dry off on land for a bit… |  |
 | TRAINER_MELEMELE_SWIMMER_1_HNS | MelemeleIsle_hns | say | There are plenty of neat POKéMON in the water, try all your fishing rods! |  |
@@ -577,6 +583,12 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_AKALA_FOREST_BUGCATCHER_2_HNS | Akala_Forest_hns | intro | Look at what I caught! |  |
 | TRAINER_AKALA_FOREST_BUGCATCHER_2_HNS | Akala_Forest_hns | defeat | Awh, that bites! |  |
 | TRAINER_AKALA_FOREST_BUGCATCHER_2_HNS | Akala_Forest_hns | say | The climate is a bit different on the ALOLA ISLES… I'm sure that's why there are some unique Bug-type POKéMON here. |  |
+| TRAINER_AKALA_CAVE_CAMPER_HNS | Akala_Cave_hns | intro | Check me out! I caught some strong POKéMON! |  |
+| TRAINER_AKALA_CAVE_CAMPER_HNS | Akala_Cave_hns | defeat | Not bad, but not good enough! |  |
+| TRAINER_AKALA_CAVE_CAMPER_HNS | Akala_Cave_hns | say | Is it warm or is it just me? |  |
+| TRAINER_AKALA_CAVE_HIKER_HNS | Akala_Cave_hns | intro | You must be tough if you made it all the way here! |  |
+| TRAINER_AKALA_CAVE_HIKER_HNS | Akala_Cave_hns | defeat | Tougher than me! |  |
+| TRAINER_AKALA_CAVE_HIKER_HNS | Akala_Cave_hns | say | I had to stop climbing because it was getting far too hot. It's like someone's got a fire going up on the peak… |  |
 | TRAINER_CALVIN_1 | Route102 | intro | If you have POKéMON with you, then you're an official POKéMON TRAINER! You can't say no to my challenge! |  |
 | TRAINER_CALVIN_1 | Route102 | defeat | Arrgh, I lost… I should have trained mine more… |  |
 | TRAINER_CALVIN_1 | Route102 | say | Listen, you. If you're strong, you should have told me before! |  |
@@ -670,6 +682,9 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_IMANI | Route105 | intro | The blue, blue sky… The vast sea… It's so peaceful… |  |
 | TRAINER_IMANI | Route105 | defeat | I lost while I was lounging! |  |
 | TRAINER_IMANI | Route105 | say | I want to be told I'm relaxing to be with. Giggle. |  |
+| TRAINER_FOSTER | Route105 | intro | There's supposed to be a mystical rock somewhere. Do you know anything about it? |  |
+| TRAINER_FOSTER | Route105 | defeat | I was thinking too much about that rock, while my POKéMON remained weak… |  |
+| TRAINER_FOSTER | Route105 | say | I can spend hours and hours staring at a nice rock without growing bored. |  |
 | TRAINER_JOSUE | Route105 | intro | I'm exhausted from swimming. I'm just not used to it. I need a battle for a change of pace! |  |
 | TRAINER_JOSUE | Route105 | defeat | I lost because I battled at sea. |  |
 | TRAINER_JOSUE | Route105 | say | Yeah, for me, the sky is a much better match than the sea. |  |
@@ -973,6 +988,9 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_ALIX | Route115 | intro | Our eyes met! There's no getting away now! |  |
 | TRAINER_ALIX | Route115 | defeat | Gah! Not bad! |  |
 | TRAINER_ALIX | Route115 | say | Oh, well. I think I will TELEPORT home. |  |
+| TRAINER_MARLENE | Route115 | intro | You've disturbed my meditation… You'll be punished for it. |  |
+| TRAINER_MARLENE | Route115 | defeat | You've broken my concentration! |  |
+| TRAINER_MARLENE | Route115 | say | I was meditating with my POKéMON. But it isn't very peaceful… |  |
 | TRAINER_JOEY | Route116 | intro | My POKéMON rule! Check them out! |  |
 | TRAINER_JOEY | Route116 | defeat | Ouch! A scrape! I have to put on a bandage! |  |
 | TRAINER_JOEY | Route116 | say | Bandages are signs of toughness! I've got another one! |  |
@@ -1273,6 +1291,9 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_DECLAN | Route124 | intro | Here I am swimming by my lonesome on this wide, beautiful sea. There's no other word for it. This is pathetic! |  |
 | TRAINER_DECLAN | Route124 | defeat | I'm feeling blue. Blue as the sky… |  |
 | TRAINER_DECLAN | Route124 | say | I should chat up lady SWIMMERS and invite them on a long swim. |  |
+| TRAINER_ISABELLA | Route124 | intro | I'm not going to lose to some surfer TRAINER. |  |
+| TRAINER_ISABELLA | Route124 | defeat | I've only got sweat in my eyes! I am not crying! |  |
+| TRAINER_ISABELLA | Route124 | say | You can find pretty colored shards of things lying around. |  |
 | TRAINER_NOLEN | Route125 | intro | I heard you approaching, so I hung around for you! |  |
 | TRAINER_NOLEN | Route125 | defeat | I surrender! |  |
 | TRAINER_NOLEN | Route125 | say | Sound travels faster in water than it does through air. |  |
@@ -1342,6 +1363,9 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_RUBEN | Route128 | intro | There is no stronger TRAINER than I! |  |
 | TRAINER_RUBEN | Route128 | defeat | This can't be! |  |
 | TRAINER_RUBEN | Route128 | say | There probably is no stronger TRAINER than you! |  |
+| TRAINER_CARLEE | Route128 | intro | The sunlight seems to be more harsh than usual. |  |
+| TRAINER_CARLEE | Route128 | defeat | I couldn't see very well because of the sun's glare. |  |
+| TRAINER_CARLEE | Route128 | say | I should go back soon. I need to reapply my sunscreen. |  |
 | TRAINER_HARRISON | Route128 | intro | You're looking awfully tough. I wonder if I can win? |  |
 | TRAINER_HARRISON | Route128 | defeat | Ouch! I guess it was impossible to win. |  |
 | TRAINER_HARRISON | Route128 | say | There are tough TRAINERS galore around EVER GRANDE. Do you think I may be out of my league? |  |

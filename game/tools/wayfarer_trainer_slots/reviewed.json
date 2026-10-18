@@ -86,13 +86,19 @@
     },
     {
       "trainer": "TRAINER_AKALA_CAVE_CAMPER_HNS",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"in here\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "resolution": "reword",
+      "reason": "Post-battle line: \"Is it warm in here or is it just me?\" now reads \"Is it warm or is it just me?\" (data/maps/Akala_Cave_hns/scripts.inc).",
+      "was": [
+        "Is it warm in here or is it just me?"
+      ]
     },
     {
       "trainer": "TRAINER_AKALA_CAVE_HIKER_HNS",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"up here\"). The intro is about the place the trainer was written for, so it stays at home."
+      "resolution": "reword",
+      "reason": "Intro: \"all the way up here\" now reads \"all the way here\" (data/maps/Akala_Cave_hns/scripts.inc).",
+      "was": [
+        "You must be tough if you made it all the way up here!"
+      ]
     },
     {
       "trainer": "TRAINER_AKALA_CAVE_PICNICKER_HNS",
@@ -121,8 +127,11 @@
     },
     {
       "trainer": "TRAINER_AKALA_SWIMMER_3_HNS",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"out here\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "resolution": "reword",
+      "reason": "Post-battle line: \"The current out here is strong!\" now reads \"The current is strong!\" (data/maps/AkalaIsle_hns/scripts.inc).",
+      "was": [
+        "The current out here is strong! A POKéMON must be really powerful to migrate all the way out to the ISLES!"
+      ]
     },
     {
       "trainer": "TRAINER_ALEXA",
@@ -206,13 +215,19 @@
     },
     {
       "trainer": "TRAINER_CARA_HNS",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"in here\"). The intro is about the place the trainer was written for, so it stays at home."
+      "resolution": "reword",
+      "reason": "Intro: \"You shouldn't be in here!\" now reads \"You shouldn't be here!\" (data/maps/DragonsDen_Cavern_hns/scripts.inc).",
+      "was": [
+        "You shouldn't be in here!"
+      ]
     },
     {
       "trainer": "TRAINER_CARLEE",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"in this area\", \"this area\"). The intro is about the place the trainer was written for, so it stays at home."
+      "resolution": "reword",
+      "reason": "Intro: \"more harsh in this area\" now reads \"more harsh than usual\" (data/text/trainers.inc).",
+      "was": [
+        "The sunlight seems to be more harsh in this area."
+      ]
     },
     {
       "trainer": "TRAINER_CAROLINE",
@@ -369,8 +384,11 @@
     },
     {
       "trainer": "TRAINER_FOSTER",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"around here\"). The intro is about the place the trainer was written for, so it stays at home."
+      "resolution": "reword",
+      "reason": "Intro: \"a mystical rock around here\" now reads \"a mystical rock somewhere\" (data/text/trainers.inc).",
+      "was": [
+        "There's supposed to be a mystical rock around here. Do you know anything about it?"
+      ]
     },
     {
       "trainer": "TRAINER_GAVEN_HNS",
@@ -435,8 +453,11 @@
     },
     {
       "trainer": "TRAINER_ISABELLA",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"around here\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "resolution": "reword",
+      "reason": "Post-battle line: \"shards of things around here\" now reads \"shards of things lying around\" (data/text/trainers.inc).",
+      "was": [
+        "You can find pretty colored shards of things around here."
+      ]
     },
     {
       "trainer": "TRAINER_ISAIAH_1",
@@ -573,8 +594,11 @@
     },
     {
       "trainer": "TRAINER_MARLENE",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"this place\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "resolution": "reword",
+      "reason": "Post-battle line: \"But this place isn't very peaceful…\" now reads \"But it isn't very peaceful…\" (data/text/trainers.inc).",
+      "was": [
+        "I was meditating with my POKéMON. But this place isn't very peaceful…"
+      ]
     },
     {
       "trainer": "TRAINER_MATHEW_HNS",
