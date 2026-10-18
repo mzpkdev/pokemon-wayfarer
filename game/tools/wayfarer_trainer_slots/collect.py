@@ -42,7 +42,7 @@ ALLOWED_CALLS = {'Common_EventScript_NoOp'}
 class Slot:
     __slots__ = ('map_const', 'map_name', 'map_value', 'local_id', 'x', 'y', 'gfx', 'script', 'trainer_type', 'hide_flag', 'sight',
                  'movement', 'home', 'home_id', 'pair', 'klass', 'family', 'region', 'policy', 'status', 'reason', 'texts', 'contact',
-                 'index', 'group', 'family_ids', 'gift', 'commands')
+                 'index', 'group', 'family_ids', 'gift', 'commands', 'map_type')
 
     def __init__(self, **fields):
         for slot in self.__slots__:
@@ -251,7 +251,7 @@ def collect_slots(maps, labels, root=ROOT):
                 continue
             slot = Slot(map_const=const, map_name=info.name, map_value=info.value, local_id=obj['local_id'], x=obj['x'], y=obj['y'],
                         gfx=obj['gfx'], script=obj['script'], trainer_type=obj['trainer_type'], hide_flag=obj['flag'],
-                        sight=obj['sight'], movement=obj['movement'])
+                        sight=obj['sight'], movement=obj['movement'], map_type=info.map_type)
             facts = analyzer.analyse(obj['script'], family_of.get(by_number.get(0), []))
             home = by_number.get(facts['home']) if facts['home'] is not None else None
             if home is not None:

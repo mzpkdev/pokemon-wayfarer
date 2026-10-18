@@ -102,8 +102,12 @@
     },
     {
       "trainer": "TRAINER_AKALA_CAVE_PICNICKER_HNS",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"this cave\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "cave",
+      "phrases": [
+        "this cave"
+      ],
+      "reason": "The lines need a cave (\"this cave\"); the trainer rotates only among cave spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_AKALA_HIKER_HNS",
@@ -170,8 +174,12 @@
     },
     {
       "trainer": "TRAINER_BECKY",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"in the desert\"). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "desert",
+      "phrases": [
+        "in the desert"
+      ],
+      "reason": "The lines need a desert (\"in the desert\"); the trainer rotates only among desert spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_BERKE_HNS",
@@ -185,8 +193,12 @@
     },
     {
       "trainer": "TRAINER_BILL_HNS",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"in the cave\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "cave",
+      "phrases": [
+        "in the cave"
+      ],
+      "reason": "The lines need a cave (\"in the cave\"); the trainer rotates only among cave spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_BOB_HNS",
@@ -195,8 +207,12 @@
     },
     {
       "trainer": "TRAINER_BRYAN",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"This desert\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "desert",
+      "phrases": [
+        "This desert"
+      ],
+      "reason": "The lines need a desert (\"This desert\"); the trainer rotates only among desert spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_BRYANT",
@@ -241,13 +257,21 @@
     },
     {
       "trainer": "TRAINER_CHARLIE",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"the ship\"). The intro is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "ship",
+      "phrases": [
+        "the ship"
+      ],
+      "reason": "The lines need a ship (\"the ship\"); the trainer rotates only among ship spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_CHOW_HNS",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"this tower\"). The intro is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "tower",
+      "phrases": [
+        "this tower"
+      ],
+      "reason": "The lines need a tower (\"this tower\"); the trainer rotates only among tower spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_CLARENCE",
@@ -271,8 +295,12 @@
     },
     {
       "trainer": "TRAINER_CYNDY_1",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"This beach\"). The intro is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "coast",
+      "phrases": [
+        "This beach"
+      ],
+      "reason": "The lines need a coast (\"This beach\"); the trainer rotates only among coast spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_DARIN_HNS",
@@ -314,8 +342,12 @@
     },
     {
       "trainer": "TRAINER_DIANNE",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"this cave\"). The intro is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "cave",
+      "phrases": [
+        "this cave"
+      ],
+      "reason": "The lines need a cave (\"this cave\"); the trainer rotates only among cave spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_DOMINIK",
@@ -425,8 +457,12 @@
     },
     {
       "trainer": "TRAINER_HEIDI",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"in the desert\"). The intro is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "desert",
+      "phrases": [
+        "in the desert"
+      ],
+      "reason": "The lines need a desert (\"in the desert\"); the trainer rotates only among desert spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_HUDSON",
@@ -466,8 +502,12 @@
     },
     {
       "trainer": "TRAINER_JANI",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"this ship\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "ship",
+      "phrases": [
+        "this ship"
+      ],
+      "reason": "The lines need a ship (\"this ship\"); the trainer rotates only among ship spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_JAYLEN",
@@ -564,8 +604,12 @@
     },
     {
       "trainer": "TRAINER_LARRY_HNS",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"inside the cave\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "cave",
+      "phrases": [
+        "inside the cave"
+      ],
+      "reason": "The lines need a cave (\"inside the cave\"); the trainer rotates only among cave spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_LAURA_HNS",
@@ -574,13 +618,21 @@
     },
     {
       "trainer": "TRAINER_LEAH",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"this mountain\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "mountain",
+      "phrases": [
+        "this mountain"
+      ],
+      "reason": "The lines need a mountain (\"this mountain\"); the trainer rotates only among mountain spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_LEONARD_HNS",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"down here\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "cave",
+      "phrases": [
+        "down here"
+      ],
+      "reason": "The lines need a cave (\"down here\"); the trainer rotates only among cave spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_LLOYD_HNS",
@@ -647,8 +699,12 @@
     },
     {
       "trainer": "TRAINER_RAY_HNS",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"this cave\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "cave",
+      "phrases": [
+        "this cave"
+      ],
+      "reason": "The lines need a cave (\"this cave\"); the trainer rotates only among cave spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_REENA_HNS",
@@ -786,18 +842,30 @@
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_BURGLAR_ARNIE",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"This old place\"). The intro is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "mansion",
+      "phrases": [
+        "This old place"
+      ],
+      "reason": "The lines need a mansion (\"This old place\"); the trainer rotates only among mansion spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_BURGLAR_SIMON",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"This place\"). The intro is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "mansion",
+      "phrases": [
+        "This place"
+      ],
+      "reason": "The lines need a mansion (\"This place\"); the trainer rotates only among mansion spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_FISHERMAN_CLAUDE",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"this place\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "coast",
+      "phrases": [
+        "this place"
+      ],
+      "reason": "The lines need a coast (\"this place\"); the trainer rotates only among coast spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_PICNICKER_IRENE",
@@ -811,8 +879,12 @@
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_SCIENTIST_IVAN",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"This place\"). The intro is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "mansion",
+      "phrases": [
+        "This place"
+      ],
+      "reason": "The lines need a mansion (\"This place\"); the trainer rotates only among mansion spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ALICE",
@@ -836,8 +908,12 @@
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_AXLE",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"These waters\"). The intro and rematch line is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "coast",
+      "phrases": [
+        "These waters"
+      ],
+      "reason": "The lines need a coast (\"These waters\"); the trainer rotates only among coast spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_AROMA_LADY_ROSE",
@@ -911,8 +987,12 @@
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_AMARA",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"in these parts\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "resolution": "place",
+      "place": "coast",
+      "phrases": [
+        "in these parts"
+      ],
+      "reason": "The lines need a coast (\"in these parts\"); the trainer rotates only among coast spots, which the generator checks against the map."
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_NICOLE",

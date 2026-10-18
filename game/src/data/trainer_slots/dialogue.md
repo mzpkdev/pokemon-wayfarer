@@ -466,6 +466,9 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_ERNEST_HNS | OlivineCity_Lighthouse_hns | intro | I wanted to battle JASMINE, but she's not up to it now. So, how about you? |  |
 | TRAINER_ERNEST_HNS | OlivineCity_Lighthouse_hns | defeat | Whoa, whoa. You're overwhelming! |  |
 | TRAINER_ERNEST_HNS | OlivineCity_Lighthouse_hns | say | A GYM LEADER isn't just about being strong. A LEADER also needs to be compassionate. |  |
+| TRAINER_CHOW_HNS | SproutTower_1F_hns | intro | We stand guard in this tower. Here, we express our gratitude to honor all POKéMON. | landmark: this tower |
+| TRAINER_CHOW_HNS | SproutTower_1F_hns | defeat | Th-Thank you! |  |
+| TRAINER_CHOW_HNS | SproutTower_1F_hns | say | All living beings coexist through cooperation. We must always be thankful for this. |  |
 | TRAINER_EDMOND_HNS | SproutTower_2F_hns | intro | …Sway like leaves in the wind… |  |
 | TRAINER_EDMOND_HNS | SproutTower_2F_hns | defeat | Oh, I'm weak! |  |
 | TRAINER_EDMOND_HNS | SproutTower_2F_hns | say | I tried to copy BELLSPROUT's gentle movements for battle… But I didn't train well enough. |  |
@@ -484,9 +487,21 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_DANIEL_HNS | UnionCave_1F_hns | intro | Whoa! What a surprise! I didn't expect to see anyone here! |  |
 | TRAINER_DANIEL_HNS | UnionCave_1F_hns | defeat | Whoa! I'm beaten big time! |  |
 | TRAINER_DANIEL_HNS | UnionCave_1F_hns | say | I was conned into buying a SLOWPOKETAIL. I feel sorry for the poor POKéMON. |  |
+| TRAINER_BILL_HNS | UnionCave_1F_hns | intro | ZUBAT's SUPERSONIC keeps confusing my POKéMON. I'm seriously upset about that! |  |
+| TRAINER_BILL_HNS | UnionCave_1F_hns | defeat | I flamed out! |  |
+| TRAINER_BILL_HNS | UnionCave_1F_hns | say | On weekends, you can hear strange roars from deep in the cave. | landmark: in the cave |
+| TRAINER_LARRY_HNS | UnionCave_1F_hns | intro | I roam far and wide in search of POKéMON. Are you looking for POKéMON too? Then you're my collecting rival! |  |
+| TRAINER_LARRY_HNS | UnionCave_1F_hns | defeat | Ugh. My poor POKéMON… |  |
+| TRAINER_LARRY_HNS | UnionCave_1F_hns | say | Every Friday, you can hear POKéMON roars from deep inside the cave. | landmark: inside the cave |
+| TRAINER_RAY_HNS | UnionCave_1F_hns | intro | If it's light, a cave isn't scary. If you're strong, POKéMON aren't scary. |  |
+| TRAINER_RAY_HNS | UnionCave_1F_hns | defeat | FLASH! |  |
+| TRAINER_RAY_HNS | UnionCave_1F_hns | say | It's my POKéMON's fire that lights up this cave. | landmark: this cave |
 | TRAINER_PHILLIP_HNS | UnionCave_B1F_hns | intro | It's been a while since I last saw another person. Don't be shy. Let's battle! |  |
 | TRAINER_PHILLIP_HNS | UnionCave_B1F_hns | defeat | Uurggh… |  |
 | TRAINER_PHILLIP_HNS | UnionCave_B1F_hns | say | I've been lost for a long time… I don't mind it here, but I am soooo hungry! |  |
+| TRAINER_LEONARD_HNS | UnionCave_B1F_hns | intro | What do you know! A visitor! |  |
+| TRAINER_LEONARD_HNS | UnionCave_B1F_hns | defeat | Wahahah! You're a feisty one! |  |
+| TRAINER_LEONARD_HNS | UnionCave_B1F_hns | say | I live down here. You can, too, if you'd like. There's plenty of room, you see. | place phrase: down here |
 | TRAINER_CALVIN_HNS | UnionCave_B1F_hns | intro | I came all the way here to conduct my POKéMON research. Let me demonstrate my findings in a real battle! |  |
 | TRAINER_CALVIN_HNS | UnionCave_B1F_hns | defeat | You demonstrated on me! |  |
 | TRAINER_CALVIN_HNS | UnionCave_B1F_hns | say | I should compile and announce my study findings. I might even become famous like PROF.ELM. |  |
@@ -586,6 +601,9 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_AKALA_CAVE_CAMPER_HNS | Akala_Cave_hns | intro | Check me out! I caught some strong POKéMON! |  |
 | TRAINER_AKALA_CAVE_CAMPER_HNS | Akala_Cave_hns | defeat | Not bad, but not good enough! |  |
 | TRAINER_AKALA_CAVE_CAMPER_HNS | Akala_Cave_hns | say | Is it warm or is it just me? |  |
+| TRAINER_AKALA_CAVE_PICNICKER_HNS | Akala_Cave_hns | intro | I'm tired from all this walking, let's have a battle! |  |
+| TRAINER_AKALA_CAVE_PICNICKER_HNS | Akala_Cave_hns | defeat | Well that was refreshing! |  |
+| TRAINER_AKALA_CAVE_PICNICKER_HNS | Akala_Cave_hns | say | I'm usually not this tired but the heat in this cave is exhausting! | landmark: this cave |
 | TRAINER_AKALA_CAVE_HIKER_HNS | Akala_Cave_hns | intro | You must be tough if you made it all the way here! |  |
 | TRAINER_AKALA_CAVE_HIKER_HNS | Akala_Cave_hns | defeat | Tougher than me! |  |
 | TRAINER_AKALA_CAVE_HIKER_HNS | Akala_Cave_hns | say | I had to stop climbing because it was getting far too hot. It's like someone's got a fire going up on the peak… |  |
@@ -838,6 +856,9 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_JOSEPH | Route110 | intro | Okay! Full-throttle time! If you can't groove, you get left behind! |  |
 | TRAINER_JOSEPH | Route110 | defeat | You got into the groove all right… |  |
 | TRAINER_JOSEPH | Route110 | say | This isn't going to bring me down! Losing has made me a better man! |  |
+| TRAINER_HEIDI | Route111 | intro | I'm having a picnic in the desert. You can always find a TRAINER, so I can enjoy a battle here, too! | landmark: in the desert |
+| TRAINER_HEIDI | Route111 | defeat | Ohhh! You're mean! |  |
+| TRAINER_HEIDI | Route111 | say | When you're battling in a sandstorm, watch out for your POKéMON's HP. It can faint if you don't keep an eye on it! |  |
 | TRAINER_DREW | Route111 | intro | Oh, hey! Those GO-GOGGLES suit you. But I think they look better on me. Let's decide who they look better on with a battle! |  |
 | TRAINER_DREW | Route111 | defeat | I couldn't see what was happening at my sides because of the GO-GOGGLES. |  |
 | TRAINER_DREW | Route111 | say | The GO-GOGGLES make it possible to get through sandstorms. That makes me happy! |  |
@@ -850,6 +871,9 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_BEAU | Route111 | intro | Wearing these GO-GOGGLES makes me feel like a superhero. Right now, nobody can beat me! |  |
 | TRAINER_BEAU | Route111 | defeat | I can't win on spirit alone… |  |
 | TRAINER_BEAU | Route111 | say | I'm going to be a real hero one day. I'm going to work harder to make me and my POKéMON stronger. |  |
+| TRAINER_BECKY | Route111 | intro | I heard there are fossils to be found in the desert. Where could they be? | landmark: in the desert |
+| TRAINER_BECKY | Route111 | defeat | I came up short… |  |
+| TRAINER_BECKY | Route111 | say | If they can find fossils in the desert, it must have been a sea before. | landmark: in the desert |
 | TRAINER_TRAVIS | Route111 | intro | I'm full of pep! And my POKéMON is peppy, too! |  |
 | TRAINER_TRAVIS | Route111 | defeat | My POKéMON lost its pep… |  |
 | TRAINER_TRAVIS | Route111 | say | When I see a TRAINER with a lot of pep, I can't help looking. |  |
@@ -871,6 +895,9 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_HAYDEN | Route111 | intro | When you're as famished as I am, there is no room for pity! |  |
 | TRAINER_HAYDEN | Route111 | defeat | Groan… |  |
 | TRAINER_HAYDEN | Route111 | say | My stomach is grumbling! Maybe I can grill some BERRIES… |  |
+| TRAINER_BRYAN | Route111 | intro | How tough are you? We shall expose that secret! |  |
+| TRAINER_BRYAN | Route111 | defeat | Oh! Your strength! It is shrouded in mystery! |  |
+| TRAINER_BRYAN | Route111 | say | This desert hoards mysteries in its shifting sands! | landmark: This desert |
 | TRAINER_CELIA | Route111 | intro | I shouldn't have come to a place like this for a picnic! |  |
 | TRAINER_CELIA | Route111 | defeat | Aww! I really shouldn't have come! |  |
 | TRAINER_CELIA | Route111 | say | In a sandstorm like this, I can't set the places for a picnic even with my GO-GOGGLES on… |  |
@@ -970,6 +997,12 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_NOB_1 | Route115 | rematch | After you beat me, we trained hard to improve our skills. Come on, give us a rematch! |  |
 | TRAINER_NOB_1 | Route115 | rematch | Ugwaaah! We lost again! |  |
 | TRAINER_NOB_1 | Route115 | say | My POKéMON will grow stronger! I'll redouble my training! |  |
+| TRAINER_CYNDY_1 | Route115 | intro | This beach is my secret training spot! Don't come butting in! | terrain: This beach |
+| TRAINER_CYNDY_1 | Route115 | defeat | I haven't trained enough! |  |
+| TRAINER_CYNDY_1 | Route115 | say | The sand acts as a cushion to reduce impact and prevent injury. This is the perfect place to train. |  |
+| TRAINER_CYNDY_1 | Route115 | rematch | Okay, let's get this battle on! |  |
+| TRAINER_CYNDY_1 | Route115 | rematch | I can battle but my POKéMON… |  |
+| TRAINER_CYNDY_1 | Route115 | say | Even when I lose, I still get some enjoyment out of it. It must be that I love POKéMON. |  |
 | TRAINER_KOICHI | Route115 | intro | You! My MACHOP! Demand a battle! |  |
 | TRAINER_KOICHI | Route115 | defeat | Ouch, ouch, ouch! |  |
 | TRAINER_KOICHI | Route115 | say | My MACHOP crew! So long as they seek power, I will grow strong with them! |  |
@@ -1521,6 +1554,9 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_ZANDER | MtPyre_2F | intro | Kiyaaaaah! I'm terrified! |  |
 | TRAINER_ZANDER | MtPyre_2F | defeat | Nooooooo! I lost my wits! |  |
 | TRAINER_ZANDER | MtPyre_2F | say | I get freaked out every time I see anything move… I shouldn't have come here to train… |  |
+| TRAINER_LEAH | MtPyre_2F | intro | You are an unfamiliar sight… Depart before anything befalls you! |  |
+| TRAINER_LEAH | MtPyre_2F | defeat | Hmm… You're durable. |  |
+| TRAINER_LEAH | MtPyre_2F | say | Our family has been TRAINERS here since my great-grandmother's time… It is my duty to protect this mountain… | terrain: this mountain |
 | TRAINER_WILLIAM | MtPyre_3F | intro | The rich atmosphere of the mountain has elevated my psychic power! A mere child like you… You dream of winning? |  |
 | TRAINER_WILLIAM | MtPyre_3F | defeat | I drown in self-pity… |  |
 | TRAINER_WILLIAM | MtPyre_3F | say | My psychic powers have surely grown several times, but… |  |
@@ -1569,6 +1605,12 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_JULIE | VictoryRoad_B2F | intro | You shouldn't get complacent just because you have a lot of GYM BADGES. There's always going to be someone who's better than you! |  |
 | TRAINER_JULIE | VictoryRoad_B2F | defeat | You're better than me! |  |
 | TRAINER_JULIE | VictoryRoad_B2F | say | Gaze on your collected BADGES and remember the TRAINERS you've faced. |  |
+| TRAINER_DIANNE | VictoryRoad_B2F | intro | The elite among the elite gather in this cave. How are you finding it? | landmark: this cave |
+| TRAINER_DIANNE | VictoryRoad_B2F | defeat | Not rattled in the least bit! |  |
+| TRAINER_DIANNE | VictoryRoad_B2F | say | You do have guts! I like that! Keep it going! |  |
+| TRAINER_CHARLIE | AbandonedShip_Corridors_1F | intro | What's so funny about having my inner tube aboard the ship? | landmark: the ship |
+| TRAINER_CHARLIE | AbandonedShip_Corridors_1F | defeat | Whoa, you overwhelmed me! |  |
+| TRAINER_CHARLIE | AbandonedShip_Corridors_1F | say | It's not easy throwing POKé BALLS while hanging on to an inner tube! |  |
 | TRAINER_THALIA_1 | AbandonedShip_Rooms_1F | intro | What on earth would compel you to come here? You must be curious! |  |
 | TRAINER_THALIA_1 | AbandonedShip_Rooms_1F | defeat | Not just curious, but also strong… |  |
 | TRAINER_THALIA_1 | AbandonedShip_Rooms_1F | say | The man next door… He says he's just sightseeing, but I don't know about that. |  |
@@ -1593,18 +1635,30 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_GARRISON | AbandonedShip_Rooms2_1F | intro | Strength and compassion… Those are a TRAINER's treasures! |  |
 | TRAINER_GARRISON | AbandonedShip_Rooms2_1F | defeat | Ah, there is something about you that sparkles. |  |
 | TRAINER_GARRISON | AbandonedShip_Rooms2_1F | say | In a cabin somewhere on board, I saw something sparkle. |  |
+| TRAINER_JANI | AbandonedShip_Rooms2_1F | intro | I'm not good at swimming, but I am good at battles! |  |
+| TRAINER_JANI | AbandonedShip_Rooms2_1F | defeat | Oops. That didn't go very well. |  |
+| TRAINER_JANI | AbandonedShip_Rooms2_1F | say | Walking around barefoot in this ship is kind of gross. | landmark: this ship |
 | TRAINER_WAYFARER_COAST_SCIENTIST_TED | PokemonMansion_1F_Frlg | intro | Who are you? There shouldn't be anyone here. |  |
 | TRAINER_WAYFARER_COAST_SCIENTIST_TED | PokemonMansion_1F_Frlg | defeat | Ouch! |  |
 | TRAINER_WAYFARER_COAST_SCIENTIST_TED | PokemonMansion_1F_Frlg | say | A key? I don't know what you're talking about. |  |
 | TRAINER_WAYFARER_COAST_YOUNGSTER_JOHNSON | PokemonMansion_1F_Frlg | intro | W-w-waah! You startled me! I thought you were a ghost. |  |
 | TRAINER_WAYFARER_COAST_YOUNGSTER_JOHNSON | PokemonMansion_1F_Frlg | defeat | Tch! I can't get any wins. |  |
 | TRAINER_WAYFARER_COAST_YOUNGSTER_JOHNSON | PokemonMansion_1F_Frlg | say | I was exploring here by myself, but I feel spooked. I ought to go soon. |  |
+| TRAINER_WAYFARER_COAST_BURGLAR_ARNIE | PokemonMansion_2F_Frlg | intro | I can't get out! This old place is one big puzzle. | terrain: This old place |
+| TRAINER_WAYFARER_COAST_BURGLAR_ARNIE | PokemonMansion_2F_Frlg | defeat | Oh, no! My bag of loot! |  |
+| TRAINER_WAYFARER_COAST_BURGLAR_ARNIE | PokemonMansion_2F_Frlg | say | The switches here open and close alternating sets of doors. |  |
+| TRAINER_WAYFARER_COAST_BURGLAR_SIMON | PokemonMansion_3F_Frlg | intro | This place is, like, huge! | terrain: This place |
+| TRAINER_WAYFARER_COAST_BURGLAR_SIMON | PokemonMansion_3F_Frlg | defeat | Ayah! |  |
+| TRAINER_WAYFARER_COAST_BURGLAR_SIMON | PokemonMansion_3F_Frlg | say | I wonder where my partner went. |  |
 | TRAINER_WAYFARER_COAST_SCIENTIST_BRAYDON | PokemonMansion_3F_Frlg | intro | My mentor once lived here. |  |
 | TRAINER_WAYFARER_COAST_SCIENTIST_BRAYDON | PokemonMansion_3F_Frlg | defeat | Whew! Overwhelming! |  |
 | TRAINER_WAYFARER_COAST_SCIENTIST_BRAYDON | PokemonMansion_3F_Frlg | say | So, you're stuck? Try jumping off over there! |  |
 | TRAINER_WAYFARER_COAST_BURGLAR_LEWIS | PokemonMansion_B1F_Frlg | intro | Uh-oh… Where am I now? |  |
 | TRAINER_WAYFARER_COAST_BURGLAR_LEWIS | PokemonMansion_B1F_Frlg | defeat | Awooh! |  |
 | TRAINER_WAYFARER_COAST_BURGLAR_LEWIS | PokemonMansion_B1F_Frlg | say | You can find stuff lying around. The residents must've left them. |  |
+| TRAINER_WAYFARER_COAST_SCIENTIST_IVAN | PokemonMansion_B1F_Frlg | intro | This place is ideal for a lab. Look at all this space. | terrain: This place |
+| TRAINER_WAYFARER_COAST_SCIENTIST_IVAN | PokemonMansion_B1F_Frlg | defeat | What was that for? |  |
+| TRAINER_WAYFARER_COAST_SCIENTIST_IVAN | PokemonMansion_B1F_Frlg | say | I like it here. It's conducive to my studies. |  |
 | TRAINER_WAYFARER_SEVII_CRUSH_GIRL_JOCELYN | MtEmber_Exterior_Frlg | intro | I've been in training so I can mend my broken heart… It toughened me up physically at least! Hi-yah! |  |
 | TRAINER_WAYFARER_SEVII_CRUSH_GIRL_JOCELYN | MtEmber_Exterior_Frlg | defeat | I think I tried to overdo it… |  |
 | TRAINER_WAYFARER_SEVII_CRUSH_GIRL_JOCELYN | MtEmber_Exterior_Frlg | say | The way you battle, it reminds me of the guy who dumped me… |  |
@@ -1671,6 +1725,10 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_DAVID | Route19_Frlg | defeat | Help! |  |
 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_DAVID | Route19_Frlg | say | I guess you have to fish for sea POKéMON. |  |
 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_DAVID | Route19_Frlg | rematch | I tried diving for POKéMON again, but it was a no-go like before. |  |
+| TRAINER_WAYFARER_COAST_SWIMMER_MALE_AXLE | Route19_Frlg | intro | Ahoy, there! These waters are treacherous! | terrain: These waters |
+| TRAINER_WAYFARER_COAST_SWIMMER_MALE_AXLE | Route19_Frlg | defeat | Ooh! Dangerous! |  |
+| TRAINER_WAYFARER_COAST_SWIMMER_MALE_AXLE | Route19_Frlg | say | M-my legs! They cramped up! Glub, glub… |  |
+| TRAINER_WAYFARER_COAST_SWIMMER_MALE_AXLE | Route19_Frlg | rematch | These waters are treacherous! You shouldn't come back here! | terrain: These waters |
 | TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_CONNIE | Route19_Frlg | intro | I swam here with my friends… I'm tired… |  |
 | TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_CONNIE | Route19_Frlg | defeat | I'm exhausted… |  |
 | TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_CONNIE | Route19_Frlg | say | If I were to ride a POKéMON on the sea, I'd like a LAPRAS. LAPRAS is so big, I bet it would keep me dry on water. |  |
@@ -1727,6 +1785,10 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_WAYFARER_COAST_SIS_AND_BRO_LIL_IAN | Route21_North_Frlg | defeat | IAN: Awww, Sis! Get it together! |  |
 | TRAINER_WAYFARER_COAST_SIS_AND_BRO_LIL_IAN | Route21_North_Frlg | say | IAN: Come on, Sis! You're not going to lose weight like this! |  |
 | TRAINER_WAYFARER_COAST_SIS_AND_BRO_LIL_IAN | Route21_North_Frlg | rematch | IAN: My sis is still a slob. Help me get her into shape! |  |
+| TRAINER_WAYFARER_COAST_FISHERMAN_CLAUDE | Route21_South_Frlg | intro | Hey, don't scare away the fish! |  |
+| TRAINER_WAYFARER_COAST_FISHERMAN_CLAUDE | Route21_South_Frlg | defeat | Sorry! I'm just so frustrated from not catching anything. |  |
+| TRAINER_WAYFARER_COAST_FISHERMAN_CLAUDE | Route21_South_Frlg | say | Sheesh, I haven't caught a thing. Could this place actually be a giant pool or something? | terrain: this place |
+| TRAINER_WAYFARER_COAST_FISHERMAN_CLAUDE | Route21_South_Frlg | rematch | Hey, cut it out already. You always scare away the fish! |  |
 | TRAINER_WAYFARER_COAST_FISHERMAN_NOLAN | Route21_South_Frlg | intro | Keep me company till I get a hit. |  |
 | TRAINER_WAYFARER_COAST_FISHERMAN_NOLAN | Route21_South_Frlg | defeat | That burned some time. |  |
 | TRAINER_WAYFARER_COAST_FISHERMAN_NOLAN | Route21_South_Frlg | say | Oh wait! I got a bite! Yeah! |  |
@@ -1787,6 +1849,10 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_WAYFARER_SEVII_CRUSH_KIN_MIK_KIA | OneIsland_KindleRoad_Frlg | defeat | KIA: Huh?! I can't believe it! |  |
 | TRAINER_WAYFARER_SEVII_CRUSH_KIN_MIK_KIA | OneIsland_KindleRoad_Frlg | say | KIA: How could there be anyone better than my big brother? |  |
 | TRAINER_WAYFARER_SEVII_CRUSH_KIN_MIK_KIA | OneIsland_KindleRoad_Frlg | rematch | KIA: My big brother and I make an awesome combination! We won't lose this time! |  |
+| TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_AMARA | OneIsland_TreasureBeach_Frlg | intro | Lying back, rocked by the waves… It's exquisite. |  |
+| TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_AMARA | OneIsland_TreasureBeach_Frlg | defeat | I lost… It feels awful. |  |
+| TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_AMARA | OneIsland_TreasureBeach_Frlg | say | The sea is pleasantly warm in these parts. | place phrase: in these parts |
+| TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_AMARA | OneIsland_TreasureBeach_Frlg | rematch | Lying back, rocked by the waves… I don't notice time slipping by… |  |
 | TRAINER_WAYFARER_SEVII_AROMA_LADY_NIKKI | ThreeIsland_BondBridge_Frlg | intro | The salty tang of the sea… It tickles my heart. |  |
 | TRAINER_WAYFARER_SEVII_AROMA_LADY_NIKKI | ThreeIsland_BondBridge_Frlg | defeat | …Sniff, sniff… Something smells unpleasant… |  |
 | TRAINER_WAYFARER_SEVII_AROMA_LADY_NIKKI | ThreeIsland_BondBridge_Frlg | say | Perhaps that reek is your sweaty POKéMON's body odor… |  |

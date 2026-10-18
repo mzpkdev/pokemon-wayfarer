@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "comment": "Place types for trainer groups (daily world slots, Trainer groups). A trainer whose lines need a kind of place joins one group per region and place type instead of its class group; the generator checks every slot of the group against the type's rule using map metadata, so a trainer can only rotate among spots that really are that kind of place. A rule is satisfied when any of its tests holds for the slot's map or object.",
+  "types": {
+    "cave": {
+      "describe": "an underground map (cave, tunnel, mine)",
+      "map_types": ["MAP_TYPE_UNDERGROUND"]
+    },
+    "ship": {
+      "describe": "a ship's map",
+      "map_name_prefixes": ["AbandonedShip"]
+    },
+    "tower": {
+      "describe": "a tower or lighthouse map",
+      "map_name_prefixes": ["SproutTower", "BurnedTower", "OlivineCity_Lighthouse", "BellTower", "TinTower", "MirageTower"]
+    },
+    "mansion": {
+      "describe": "the Pokemon Mansion",
+      "map_name_prefixes": ["PokemonMansion"]
+    },
+    "mountain": {
+      "describe": "a mountain's maps",
+      "map_name_prefixes": ["MtPyre", "MtChimney", "JaggedPass", "MtMortar", "MtEmber", "MtMoon", "MtSilver"]
+    },
+    "desert": {
+      "describe": "the object stands on or beside deep sand",
+      "near": {"behaviours": ["MB_DEEP_SAND"], "radius": 1}
+    },
+    "coast": {
+      "describe": "the object stands within three tiles of surfable water",
+      "near": {"behaviours": ["surfable"], "radius": 3}
+    }
+  }
+}

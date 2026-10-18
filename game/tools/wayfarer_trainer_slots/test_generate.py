@@ -17,7 +17,7 @@ def obj(local_id=1, home='TRAINER_A', gfx='OBJ_EVENT_GFX_BOY_1', problems=(), pa
         script='Script_A', texts=(), gift=False):
     return C.Slot(map_const='MAP_A', map_name='MapA', map_value=0x0100, local_id=local_id, x=3, y=4, gfx=gfx, script=script,
                   trainer_type=trainer_type, hide_flag=hide, sight='3', movement='MOVEMENT_TYPE_NONE', home=home, home_id=1, pair=pair,
-                  klass='TRAINER_CLASS_HIKER_HNS', policy='ORDINARY', texts=list(texts), gift=gift,
+                  klass='TRAINER_CLASS_HIKER_HNS', policy='ORDINARY', texts=list(texts), gift=gift, map_type='MAP_TYPE_ROUTE',
                   commands={'problems': list(problems)})
 
 
@@ -189,6 +189,17 @@ class Audit(unittest.TestCase):
         self.assertEqual(self.flags('I won at the contest.'), [])
         self.assertIn(('local event', 'gym'), self.flags('Are you going to the GYM? Me too!'))
 
+    def test_a_place_resolution_must_cover_every_flagged_phrase(self):
+        row = {'trainer': 'TRAINER_A', 'resolution': 'place', 'place': 'cave', 'phrases': ['this cave'], 'reason': 'x'}
+        unit, flagged, errors = self.run_audit([row], text='It is hot in this cave.')
+        self.assertEqual((errors, unit.status, unit.place), ([], 'rotating', 'cave'))
+        _, _, errors = self.run_audit([row], text='It is hot in this cave near ROUTE 118.')
+        self.assertTrue(any('does not cover' in e for e in errors), errors)
+        _, _, errors = self.run_audit([row], text='Hello.')
+        self.assertTrue(any('no line is flagged any more' in e for e in errors), errors)
+        _, _, errors = self.run_audit([{**row, 'place': 'moon'}], text='It is hot in this cave.')
+        self.assertTrue(any('needs a known place type' in e or 'known place type' in e for e in errors), errors)
+
     def test_a_challenge_sequence_is_flagged(self):
         self.assertEqual([k for k, _ in self.flags("Here's No. 3! I won't be easy.")], ['sequence'])
         self.assertEqual([k for k, _ in self.flags("I'm second. Now it's serious!")], ['sequence'])
@@ -225,7 +236,7 @@ class Audit(unittest.TestCase):
         _, _, errors = self.run_audit([{'trainer': 'TRAINER_GONE', 'resolution': 'exclude', 'reason': 'x'}], text='Hello.')
         self.assertTrue(any('TRAINER_GONE' in e for e in errors), errors)
         _, _, errors = self.run_audit([{'trainer': 'TRAINER_A', 'resolution': 'keep', 'reason': 'x'}], text='Hello.')
-        self.assertTrue(any('needs resolution exclude or reword' in e for e in errors), errors)
+        self.assertTrue(any('needs resolution exclude, reword or place' in e for e in errors), errors)
         _, _, errors = self.run_audit([{'trainer': 'TRAINER_A', 'resolution': 'exclude', 'reason': ''}])
         self.assertTrue(any('needs resolution' in e for e in errors), errors)
 
@@ -313,6 +324,53 @@ class Rendering(unittest.TestCase):
         self.assertEqual(text, G.render_slots(rotating, members, keys, [], [255] * 64, 2, 2))
 
 
+class PlaceTypes(unittest.TestCase):
+    def placed(self, place, map_type='MAP_TYPE_ROUTE', map_name='MapA', **kw):
+        unit = obj(**kw)
+        unit.map_type, unit.map_name = map_type, map_name
+        units, _ = units_of(unit)
+        units[0].status, units[0].place = 'rotating', place
+        return units
+
+    def test_a_slot_of_the_wrong_kind_fails_generation(self):
+        errors = []
+        G.check_places(self.placed('cave'), errors)
+        self.assertTrue(any('assigned place type cave' in e and 'is not one' in e for e in errors), errors)
+        errors = []
+        G.check_places(self.placed('ship', map_name='SSAnne_Deck'), errors)
+        self.assertTrue(any('place type ship' in e for e in errors), errors)
+
+    def test_a_slot_of_the_right_kind_passes(self):
+        for place, kwargs in (('cave', {'map_type': 'MAP_TYPE_UNDERGROUND'}), ('ship', {'map_name': 'AbandonedShip_Rooms_1F'}),
+                              ('mansion', {'map_name': 'PokemonMansion_2F_Frlg'}), ('tower', {'map_name': 'SproutTower_1F_hns'})):
+            errors = []
+            G.check_places(self.placed(place, **kwargs), errors)
+            self.assertEqual(errors, [], place)
+
+    def test_an_unknown_place_type_fails(self):
+        errors = []
+        G.check_places(self.placed('moon'), errors)
+        self.assertTrue(any('unknown place type' in e for e in errors), errors)
+
+    def test_a_place_type_trainer_is_in_the_place_group_only(self):
+        old = G.region_of
+        try:
+            G.region_of = lambda name, root=G.ROOT: 'Hoenn'
+            a, b, c = obj(1, 'TRAINER_A'), obj(2, 'TRAINER_B'), obj(3, 'TRAINER_C')
+            units, errors = classified(a, b, c)
+            units[0].place = 'cave'
+            units[1].place = 'cave'
+            keys, members = G.make_groups(units, errors)
+            self.assertEqual(errors, [])
+            self.assertEqual(sorted(len(m) for m in members.values()), [1, 2])
+            self.assertEqual(sum(len(m) for m in members.values()), 3)
+            self.assertEqual(units[0].group, units[1].group)
+            self.assertNotEqual(units[0].group, units[2].group)
+            self.assertEqual(sorted(k[1] for k in keys), ['@cave', 'HIKER'])
+        finally:
+            G.region_of = old
+
+
 class Reach(unittest.TestCase):
     def test_a_slot_map_without_a_reach_entry_fails(self):
         unit = obj()
@@ -373,6 +431,20 @@ class Repository(unittest.TestCase):
             self.assertEqual(unit.status, 'fixed')
         # A rematch family's first trainer stands at its fixed home exactly when it is not a rotating slot.
         self.assertEqual(homes & {u.home for u in self.state['rotating']}, set())
+
+    def test_every_slot_of_a_place_group_is_that_kind_of_place(self):
+        specs = G.P.load_specs()
+        placed = [u for u in self.state['rotating'] if u.place]
+        self.assertTrue(placed)
+        world = G.P.load_world({u.map_name for u in placed})
+        for unit in placed:
+            self.assertTrue(G.P.holds(specs[unit.place], unit, world), unit.label)
+        # A trainer is in one group only: its place group or its class group, never both.
+        groups = [u.group for u in self.state['rotating']]
+        self.assertEqual(len(groups), len(self.state['rotating']))
+        for gid, members in self.state['members'].items():
+            kinds = {G.group_label(u) for u in members}
+            self.assertEqual(len(kinds), 1, gid)
 
     def test_the_sevii_contacts_fit_their_reserve(self):
         contacts = [c for c in self.state['sevii'] if c != 255]
