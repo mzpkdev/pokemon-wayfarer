@@ -29,17 +29,17 @@ def units_of(*objects):
 
 def classified(*objects, reviewed=None):
     if reviewed is None:
-        reviewed = {**copy.deepcopy(REVIEWED), 'dialogue': [], 'fixed_slots': [], 'fixed_maps': [], 'fixed_classes': []}
+        reviewed = {**copy.deepcopy(REVIEWED), 'dialogue': [], 'not_daily_slots': [], 'not_daily_maps': [], 'not_daily_classes': []}
     units, errors = units_of(*objects)
     G.classify(units, reviewed, errors)
     return units, errors
 
 
 class Units(unittest.TestCase):
-    def test_a_plain_trainer_rotates(self):
+    def test_a_plain_trainer_is_daily(self):
         units, errors = classified(obj())
         self.assertEqual(errors, [])
-        self.assertEqual((units[0].status, units[0].family), ('rotating', 'HIKER'))
+        self.assertEqual((units[0].status, units[0].family), ('daily', 'HIKER'))
 
     def test_class_copies_merge_into_one_family(self):
         self.assertEqual(G.class_family('TRAINER_CLASS_HIKER_HNS', {}), 'HIKER')
@@ -51,14 +51,14 @@ class Units(unittest.TestCase):
     def test_two_objects_of_a_double_battle_form_a_pair(self):
         units, _ = classified(obj(1, pair=True), obj(2, pair=True))
         self.assertEqual(len(units), 1)
-        self.assertEqual((units[0].pair, len(units[0].objects), units[0].status), (True, 2, 'rotating'))
+        self.assertEqual((units[0].pair, len(units[0].objects), units[0].status), (True, 2, 'daily'))
 
     def test_a_pair_needs_exactly_two_objects(self):
         units, _ = classified(obj(1, pair=True))
-        self.assertEqual(units[0].status, 'fixed')
+        self.assertEqual(units[0].status, 'not-daily')
         self.assertIn('pair', units[0].reason)
         units, _ = classified(obj(1), obj(2))
-        self.assertEqual(units[0].status, 'fixed')
+        self.assertEqual(units[0].status, 'not-daily')
 
     def test_fixed_reasons(self):
         for kind, kwargs, text in (
@@ -67,32 +67,32 @@ class Units(unittest.TestCase):
                 ('hidden', {'hide': 'FLAG_HIDE_THEM'}, 'hidden by a flag (FLAG_HIDE_THEM)'),
                 ('graphics', {'gfx': 'OBJ_EVENT_GFX_VAR_0'}, 'variable graphics')):
             units, _ = classified(obj(**kwargs))
-            self.assertEqual(units[0].status, 'fixed', kind)
+            self.assertEqual(units[0].status, 'not-daily', kind)
             self.assertIn(text, units[0].reason, kind)
 
     def test_policy_other_than_ordinary_stays_fixed(self):
         slot = obj()
         slot.policy = 'GYM_MEMBER'
         units, _ = classified(slot)
-        self.assertEqual(units[0].status, 'fixed')
+        self.assertEqual(units[0].status, 'not-daily')
         self.assertIn('GYM_MEMBER', units[0].reason)
 
     def test_reviewed_map_class_and_slot_exclusions(self):
         reviewed = copy.deepcopy(REVIEWED)
-        reviewed.update(fixed_maps=[{'prefix': 'Map', 'reason': 'a story map'}], fixed_classes=[], fixed_slots=[], dialogue=[])
+        reviewed.update(not_daily_maps=[{'prefix': 'Map', 'reason': 'a story map'}], not_daily_classes=[], not_daily_slots=[], dialogue=[])
         units, errors = classified(obj(), reviewed=reviewed)
-        self.assertEqual((units[0].status, units[0].reason), ('fixed', 'a story map'))
-        reviewed.update(fixed_maps=[], fixed_classes=[{'class': 'HIKER', 'reason': 'villains'}])
+        self.assertEqual((units[0].status, units[0].reason), ('not-daily', 'a story map'))
+        reviewed.update(not_daily_maps=[], not_daily_classes=[{'class': 'HIKER', 'reason': 'villains'}])
         units, errors = classified(obj(), reviewed=reviewed)
-        self.assertEqual((units[0].status, units[0].reason), ('fixed', 'villains'))
-        reviewed.update(fixed_classes=[], fixed_slots=[{'map': 'MapA', 'ids': [1], 'reason': 'authored twice'}])
+        self.assertEqual((units[0].status, units[0].reason), ('not-daily', 'villains'))
+        reviewed.update(not_daily_classes=[], not_daily_slots=[{'map': 'MapA', 'ids': [1], 'reason': 'authored twice'}])
         units, errors = classified(obj(), reviewed=reviewed)
-        self.assertEqual((units[0].status, units[0].reason), ('fixed', 'authored twice'))
+        self.assertEqual((units[0].status, units[0].reason), ('not-daily', 'authored twice'))
 
     def test_stale_or_unknown_reviewed_entries_fail(self):
         reviewed = copy.deepcopy(REVIEWED)
-        reviewed.update(fixed_maps=[{'prefix': 'Nowhere', 'reason': 'x'}], fixed_classes=[{'class': 'NOBODY', 'reason': 'x'}],
-                        fixed_slots=[{'map': 'MapB', 'ids': [1], 'reason': 'x'}, {'map': 'MapA', 'ids': [9], 'reason': 'x'}], dialogue=[])
+        reviewed.update(not_daily_maps=[{'prefix': 'Nowhere', 'reason': 'x'}], not_daily_classes=[{'class': 'NOBODY', 'reason': 'x'}],
+                        not_daily_slots=[{'map': 'MapB', 'ids': [1], 'reason': 'x'}, {'map': 'MapA', 'ids': [9], 'reason': 'x'}], dialogue=[])
         _, errors = classified(obj(), reviewed=reviewed)
         joined = '\n'.join(errors)
         self.assertIn('prefix Nowhere matches no trainer slot map', joined)
@@ -102,7 +102,7 @@ class Units(unittest.TestCase):
 
 
 class Groups(unittest.TestCase):
-    def rotating(self, *specs):
+    def daily(self, *specs):
         objects = []
         for number, (home, region_map, family, pair) in enumerate(specs, 1):
             slot = obj(number, home=home, pair=pair)
@@ -121,7 +121,7 @@ class Groups(unittest.TestCase):
         old = G.region_of
         try:
             G.region_of = lambda name, root=G.ROOT: 'Hoenn' if name.startswith('H') else 'Kanto'
-            units, errors = self.rotating(('TRAINER_A', 'Hoenn1', 'HIKER', False), ('TRAINER_B', 'Hoenn2', 'HIKER', False),
+            units, errors = self.daily(('TRAINER_A', 'Hoenn1', 'HIKER', False), ('TRAINER_B', 'Hoenn2', 'HIKER', False),
                                           ('TRAINER_C', 'Kanto1', 'HIKER', False), ('TRAINER_D', 'Hoenn3', 'TWINS', True),
                                           ('TRAINER_E', 'Hoenn4', 'BIRD_KEEPER', False))
             self.assertEqual(errors, [])
@@ -141,9 +141,9 @@ class Groups(unittest.TestCase):
         old = G.region_of
         try:
             G.region_of = lambda name, root=G.ROOT: 'Hoenn'
-            units, errors = self.rotating(('TRAINER_A', 'M1', 'HIKER', False), ('TRAINER_A', 'M2', 'HIKER', False))
+            units, errors = self.daily(('TRAINER_A', 'M1', 'HIKER', False), ('TRAINER_A', 'M2', 'HIKER', False))
             G.make_groups(units, errors)
-            self.assertTrue(any('is the home of 2 rotating slots' in e for e in errors), errors)
+            self.assertTrue(any('is the home of 2 daily slots' in e for e in errors), errors)
         finally:
             G.region_of = old
 
@@ -151,7 +151,7 @@ class Groups(unittest.TestCase):
         old = G.region_of
         try:
             G.region_of = lambda name, root=G.ROOT: 'Other'
-            units, errors = self.rotating(('TRAINER_A', 'M1', 'HIKER', False))
+            units, errors = self.daily(('TRAINER_A', 'M1', 'HIKER', False))
             G.make_groups(units, errors)
             self.assertTrue(any('region Other has no trainer group' in e for e in errors), errors)
         finally:
@@ -196,22 +196,26 @@ class Audit(unittest.TestCase):
         self.assertNotEqual(self.flags('The POKéMON LEAGUE is right over there.'), [])
         self.assertNotEqual(self.flags('I am at the GYM now.'), [])
 
-    def test_a_home_resolution_keeps_the_trainer_rotating_in_a_group_of_its_own(self):
-        unit, flagged, errors = self.run_audit([{'trainer': 'TRAINER_A', 'resolution': 'home', 'reason': 'about ROUTE 118'}])
+    def test_a_home_range_keeps_the_trainer_daily_with_no_group(self):
+        unit, flagged, errors = self.run_audit([{'trainer': 'TRAINER_A', 'range': 'home', 'reason': 'about ROUTE 118'}])
         self.assertEqual(errors, [])
-        self.assertEqual((unit.status, unit.home_only, unit.reason), ('rotating', True, 'about ROUTE 118'))
-        self.assertEqual(G.group_label(unit), '!A')
+        self.assertEqual((unit.status, unit.range_kind, unit.reason), ('daily', 'home', 'about ROUTE 118'))
+        self.assertIsNone(G.group_label(unit))
+
+    def test_a_dialogue_row_may_set_the_absence_chance(self):
+        unit, _, errors = self.run_audit([{'trainer': 'TRAINER_A', 'range': 'home', 'absence': 0, 'reason': 'keeps the spot'}])
+        self.assertEqual((errors, unit.absence), ([], 0))
 
     def test_a_place_resolution_must_cover_every_flagged_phrase(self):
-        row = {'trainer': 'TRAINER_A', 'resolution': 'place', 'place': 'cave', 'phrases': ['this cave'], 'reason': 'x'}
+        row = {'trainer': 'TRAINER_A', 'range': 'place:cave', 'phrases': ['this cave'], 'reason': 'x'}
         unit, flagged, errors = self.run_audit([row], text='It is hot in this cave.')
-        self.assertEqual((errors, unit.status, unit.place), ([], 'rotating', 'cave'))
+        self.assertEqual((errors, unit.status, unit.place), ([], 'daily', 'cave'))
         _, _, errors = self.run_audit([row], text='It is hot in this cave near ROUTE 118.')
         self.assertTrue(any('does not cover' in e for e in errors), errors)
         _, _, errors = self.run_audit([row], text='Hello.')
         self.assertTrue(any('no line is flagged any more' in e for e in errors), errors)
-        _, _, errors = self.run_audit([{**row, 'place': 'moon'}], text='It is hot in this cave.')
-        self.assertTrue(any('needs a known place type' in e or 'known place type' in e for e in errors), errors)
+        _, _, errors = self.run_audit([{**row, 'range': 'place:moon'}], text='It is hot in this cave.')
+        self.assertTrue(any('range must be class, home or place' in e for e in errors), errors)
 
     def test_a_challenge_sequence_is_flagged(self):
         self.assertEqual([k for k, _ in self.flags("Here's No. 3! I won't be easy.")], ['sequence'])
@@ -219,7 +223,7 @@ class Audit(unittest.TestCase):
         self.assertEqual([k for k, _ in self.flags("Beat the six of us trainers to win a fabulous prize!")], ['sequence'])
         self.assertEqual(self.flags('The two of us together is much stronger!'), [])
 
-    def run_audit(self, resolutions, text='I live near ROUTE 118.', status='rotating', trainer='TRAINER_A'):
+    def run_audit(self, resolutions, text='I live near ROUTE 118.', status='daily', trainer='TRAINER_A'):
         unit, _ = units_of(obj(home=trainer, texts=[('say', 'Text_A')]))
         unit = unit[0]
         unit.status = status
@@ -233,28 +237,31 @@ class Audit(unittest.TestCase):
         self.assertIn('TRAINER_A', flagged)
         self.assertTrue(any('has no reviewed resolution' in e for e in errors), errors)
 
-    def test_an_exclusion_keeps_the_trainer_home_with_its_reason(self):
-        unit, _, errors = self.run_audit([{'trainer': 'TRAINER_A', 'resolution': 'exclude', 'reason': 'about ROUTE 118'}])
+    def test_not_daily_takes_the_trainer_out_with_its_reason(self):
+        unit, _, errors = self.run_audit([{'trainer': 'TRAINER_A', 'not_daily': True, 'reason': 'about ROUTE 118'}])
         self.assertEqual(errors, [])
-        self.assertEqual(unit.status, 'fixed')
+        self.assertEqual(unit.status, 'not-daily')
         self.assertIn('about ROUTE 118', unit.reason)
 
     def test_a_reword_must_leave_nothing_flagged(self):
-        _, _, errors = self.run_audit([{'trainer': 'TRAINER_A', 'resolution': 'reword', 'reason': 'edited'}])
+        row = {'trainer': 'TRAINER_A', 'range': 'class', 'was': ['I live near ROUTE 118.'], 'reason': 'edited'}
+        _, _, errors = self.run_audit([row])
         self.assertTrue(any('still names a place' in e for e in errors), errors)
-        unit, flagged, errors = self.run_audit([{'trainer': 'TRAINER_A', 'resolution': 'reword', 'reason': 'edited'}], text='I live nearby.')
-        self.assertEqual((errors, flagged, unit.status), ([], {}, 'rotating'))
+        _, _, errors = self.run_audit([{k: v for k, v in row.items() if k != 'was'}])
+        self.assertTrue(any('keeps its class range but a line names a place' in e for e in errors), errors)
+        unit, flagged, errors = self.run_audit([row], text='I live nearby.')
+        self.assertEqual((errors, flagged, unit.status), ([], {}, 'daily'))
 
     def test_stale_resolutions_fail(self):
-        _, _, errors = self.run_audit([{'trainer': 'TRAINER_GONE', 'resolution': 'exclude', 'reason': 'x'}], text='Hello.')
+        _, _, errors = self.run_audit([{'trainer': 'TRAINER_GONE', 'not_daily': True, 'reason': 'x'}], text='Hello.')
         self.assertTrue(any('TRAINER_GONE' in e for e in errors), errors)
         _, _, errors = self.run_audit([{'trainer': 'TRAINER_A', 'resolution': 'keep', 'reason': 'x'}], text='Hello.')
-        self.assertTrue(any('needs resolution exclude, home, reword or place' in e for e in errors), errors)
-        _, _, errors = self.run_audit([{'trainer': 'TRAINER_A', 'resolution': 'exclude', 'reason': ''}])
-        self.assertTrue(any('needs resolution' in e for e in errors), errors)
+        self.assertTrue(any('needs either not_daily or a range' in e for e in errors), errors)
+        _, _, errors = self.run_audit([{'trainer': 'TRAINER_A', 'range': 'home', 'reason': ''}])
+        self.assertTrue(any('needs a reason' in e for e in errors), errors)
 
-    def test_only_rotating_candidates_are_audited(self):
-        _, flagged, errors = self.run_audit([], status='fixed')
+    def test_only_daily_candidates_are_audited(self):
+        _, flagged, errors = self.run_audit([], status='not-daily')
         self.assertEqual((flagged, errors), ({}, []))
 
 
@@ -327,14 +334,17 @@ class Rendering(unittest.TestCase):
             keys, members = G.make_groups(units, errors)
         finally:
             G.region_of = old
-        rotating = sorted((u for u in units if u.status == 'rotating'), key=lambda u: u.index)
-        header = G.render_count(len(rotating), len(keys), 0, 2, 2, 64)
+        daily = sorted((u for u in units if u.status == 'daily'), key=lambda u: u.index)
+        G.apply_absence(units, {'default_absence_percent': 25, 'absence': []}, errors)
+        header = G.render_count(len(daily), len(keys), 0, 2, 2, 64)
         self.assertIn('#define WORLD_TRAINER_SLOT_COUNT        2', header)
         self.assertIn('#define WORLD_TRAINER_GROUP_COUNT       1', header)
-        text = G.render_slots(rotating, members, keys, [], [255] * 64, 2, 2)
+        text = G.render_slots(daily, members, keys, [], [255] * 64, 2, 2, [25])
         self.assertIn('{ 0, 2 }, // 0: Hoenn HIKER', text)
         self.assertIn('TRAINER_A', text)
-        self.assertEqual(text, G.render_slots(rotating, members, keys, [], [255] * 64, 2, 2))
+        self.assertEqual(text, G.render_slots(daily, members, keys, [], [255] * 64, 2, 2, [25]))
+        self.assertIn('sWorldTrainerAbsence[] = { 25 }', text)
+        self.assertIn('WORLD_TRAINER_ABSENCE(0)', text)
 
 
 class PlaceTypes(unittest.TestCase):
@@ -342,7 +352,7 @@ class PlaceTypes(unittest.TestCase):
         unit = obj(**kw)
         unit.map_type, unit.map_name = map_type, map_name
         units, _ = units_of(unit)
-        units[0].status, units[0].place = 'rotating', place
+        units[0].status, units[0].place = 'daily', place
         return units
 
     def test_a_slot_of_the_wrong_kind_fails_generation(self):
@@ -384,6 +394,54 @@ class PlaceTypes(unittest.TestCase):
             G.region_of = old
 
 
+class Absence(unittest.TestCase):
+    def apply(self, rows, default=25):
+        units, errors = classified(obj(1, 'TRAINER_A'), obj(2, 'TRAINER_B'))
+        levels = G.apply_absence(units, {'default_absence_percent': default, 'absence': rows}, errors)
+        return units, levels, errors
+
+    def test_every_slot_gets_the_default_and_a_reviewed_value_overrides_it(self):
+        units, levels, errors = self.apply([{'trainer': 'TRAINER_B', 'percent': 0, 'reason': 'the keeper is always there'}])
+        self.assertEqual((errors, levels, [u.absence for u in units]), ([], [25, 0], [25, 0]))
+        units, levels, errors = self.apply([])
+        self.assertEqual((errors, levels, [u.absence for u in units]), ([], [25], [25, 25]))
+
+    def test_bad_absence_rows_fail(self):
+        for row, text in (({'trainer': 'TRAINER_B', 'percent': 101, 'reason': 'x'}, 'percent from 0 to 100'),
+                          ({'trainer': 'TRAINER_B', 'percent': 0, 'reason': ''}, 'percent from 0 to 100'),
+                          ({'trainer': 'TRAINER_GONE', 'percent': 0, 'reason': 'x'}, 'not a daily trainer slot')):
+            _, _, errors = self.apply([row])
+            self.assertTrue(any(text in e for e in errors), (row, errors))
+        _, _, errors = self.apply([{'trainer': 'TRAINER_B', 'percent': 0, 'reason': 'x'}, {'trainer': 'TRAINER_B', 'percent': 5, 'reason': 'x'}])
+        self.assertTrue(any('lists TRAINER_B twice' in e for e in errors), errors)
+
+    def test_the_rendered_row_carries_the_absence_index(self):
+        units, levels, errors = self.apply([{'trainer': 'TRAINER_B', 'percent': 0, 'reason': 'x'}])
+        old = G.region_of
+        try:
+            G.region_of = lambda name, root=G.ROOT: 'Hoenn'
+            keys, members = G.make_groups(units, errors)
+        finally:
+            G.region_of = old
+        text = G.render_slots(units, members, keys, [], [255] * 64, 2, 2, levels)
+        self.assertIn('sWorldTrainerAbsence[] = { 25, 0 }', text)
+        self.assertEqual(text.count('WORLD_TRAINER_ABSENCE(0)'), 1)
+        self.assertEqual(text.count('WORLD_TRAINER_ABSENCE(1)'), 1)
+
+    def test_a_home_range_row_has_the_home_marker_and_no_group(self):
+        units, levels, errors = self.apply([])
+        units[0].range_kind = 'home'
+        old = G.region_of
+        try:
+            G.region_of = lambda name, root=G.ROOT: 'Hoenn'
+            keys, members = G.make_groups(units, errors)
+        finally:
+            G.region_of = old
+        text = G.render_slots(units, members, keys, [], [255] * 64, 2, 2, levels)
+        self.assertIn('WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0)', text)
+        self.assertEqual(len(keys), 1)
+
+
 class Reach(unittest.TestCase):
     def test_a_slot_map_without_a_reach_entry_fails(self):
         unit = obj()
@@ -410,18 +468,20 @@ class Repository(unittest.TestCase):
             self.assertEqual(path.read_text(), content, f'{path} is stale: run make world-trainers-generate')
 
     def test_a_trainer_has_one_place(self):
-        homes = [u.home for u in self.state['rotating']]
+        homes = [u.home for u in self.state['daily']]
         self.assertEqual(len(homes), len(set(homes)))
-        fixed = {u.home for u in self.state['units'] if u.status == 'fixed'}
+        fixed = {u.home for u in self.state['units'] if u.status == 'not-daily'}
         self.assertEqual(fixed & set(homes), set())
 
-    def test_every_rotating_trainer_is_ordinary_with_a_group_and_a_global_script(self):
-        for unit in self.state['rotating']:
+    def test_every_daily_trainer_is_ordinary_with_a_range_and_a_global_script(self):
+        for unit in self.state['daily']:
             self.assertEqual(unit.policy, 'ORDINARY', unit.label)
-            self.assertIsNotNone(unit.group, unit.label)
+            self.assertEqual(unit.group is None, unit.range_kind == 'home', unit.label)
+            self.assertIn(unit.range_kind, ('class', 'place', 'home'), unit.label)
             self.assertEqual(len(unit.objects), 2 if unit.pair else 1, unit.label)
         members = self.state['members']
-        self.assertEqual(sum(len(m) for m in members.values()), len(self.state['rotating']))
+        homes = sum(1 for u in self.state['daily'] if u.range_kind == 'home')
+        self.assertEqual(sum(len(m) for m in members.values()) + homes, len(self.state['daily']))
 
     def test_group_slots_are_listed_in_slot_order(self):
         for group in self.state['members'].values():
@@ -429,18 +489,24 @@ class Repository(unittest.TestCase):
             self.assertEqual(indexes, sorted(indexes))
         self.assertLessEqual(max(len(m) for m in self.state['members'].values()), self.state['group_max'])
 
-    def test_home_only_trainers_are_groups_of_one_and_the_route_25_sequence_stays_fixed(self):
-        homes = [u for u in self.state['rotating'] if u.home_only]
+    def test_home_ranges_use_no_group_and_the_route_25_sequence_is_not_daily(self):
+        homes = [u for u in self.state['daily'] if u.range_kind == 'home']
         self.assertTrue(homes)
         for unit in homes:
-            self.assertEqual(len(self.state['members'][unit.group]), 1, unit.label)
-            self.assertEqual(self.state['resolutions'][unit.home]['resolution'], 'home')
+            self.assertIsNone(unit.group, unit.label)
+            self.assertEqual(self.state['resolutions'][unit.home]['range'], 'home')
         by_home = {u.home: u for u in self.state['units']}
         for name in ('DUDLEY', 'JOE', 'LAURA', 'LLOYD', 'ELLEN', 'SHANNON'):
             unit = by_home[f'TRAINER_{name}_HNS']
-            self.assertEqual((unit.status, unit.home_only), ('fixed', None), name)
-        self.assertEqual(sum(1 for r in self.state['resolutions'].values() if r['resolution'] == 'exclude'), 6)
-        self.assertLessEqual(len(self.state['keys']), 255)
+            self.assertEqual((unit.status, unit.range_kind), ('not-daily', None), name)
+        self.assertEqual(sum(1 for r in self.state['resolutions'].values() if r.get('not_daily')), 6)
+        self.assertLessEqual(len(self.state['keys']), G.GROUP_HOME)
+
+    def test_every_slot_has_an_absence_from_the_table(self):
+        for unit in self.state['daily']:
+            self.assertIn(unit.absence, self.state['levels'], unit.label)
+        self.assertLessEqual(len(self.state['levels']), 8)
+        self.assertEqual(self.state['levels'][0], self.state['reviewed']['default_absence_percent'])
 
     def test_every_flagged_trainer_has_a_resolution_and_no_exclusion_is_stale(self):
         resolutions = self.state['resolutions']
@@ -448,26 +514,26 @@ class Repository(unittest.TestCase):
             self.assertIn(trainer, resolutions)
         homes = {u.home: u for u in self.state['units']}
         for trainer, row in resolutions.items():
-            if row['resolution'] == 'exclude':
-                self.assertEqual(homes[trainer].status, 'fixed')
+            if row.get('not_daily'):
+                self.assertEqual(homes[trainer].status, 'not-daily')
 
     def test_fixed_contacts_keep_a_home(self):
         homes = {u.home for u in self.state['fixed_homes']}
         for unit in self.state['fixed_homes']:
-            self.assertEqual(unit.status, 'fixed')
-        # A rematch family's first trainer stands at its fixed home exactly when it is not a rotating slot.
-        self.assertEqual(homes & {u.home for u in self.state['rotating']}, set())
+            self.assertEqual(unit.status, 'not-daily')
+        # A rematch family's first trainer stands at its fixed home exactly when it is not a daily slot.
+        self.assertEqual(homes & {u.home for u in self.state['daily']}, set())
 
     def test_every_slot_of_a_place_group_is_that_kind_of_place(self):
         specs = G.P.load_specs()
-        placed = [u for u in self.state['rotating'] if u.place]
+        placed = [u for u in self.state['daily'] if u.place]
         self.assertTrue(placed)
         world = G.P.load_world({u.map_name for u in placed})
         for unit in placed:
             self.assertTrue(G.P.holds(specs[unit.place], unit, world), unit.label)
         # A trainer is in one group only: its place group or its class group, never both.
-        groups = [u.group for u in self.state['rotating']]
-        self.assertEqual(len(groups), len(self.state['rotating']))
+        groups = [u.group for u in self.state['daily']]
+        self.assertEqual(len(groups), len(self.state['daily']))
         for gid, members in self.state['members'].items():
             kinds = {G.group_label(u) for u in members}
             self.assertEqual(len(kinds), 1, gid)
@@ -478,8 +544,8 @@ class Repository(unittest.TestCase):
         self.assertTrue(all(G.SEVII_CONTACT_BASE <= c < G.COAST_CONTACT_BASE for c in contacts))
 
     def test_dialogue_inventory_lists_every_candidate(self):
-        text = G.render_dialogue(self.state['rotating'], self.state['flagged'])
-        for unit in self.state['rotating']:
+        text = G.render_dialogue(self.state['daily'], self.state['flagged'])
+        for unit in self.state['daily']:
             self.assertIn(f'| {unit.home} |', text, unit.label)
 
 

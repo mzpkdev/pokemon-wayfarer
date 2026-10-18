@@ -36,7 +36,7 @@ struct Snapshot
     u8 rematches[MAX_REMATCH_ENTRIES];
     struct ObjectEvent object;
     u32 debugDay, debugSeed;
-    u8 debugFlags;
+    u8 debugFlags, debugAbsence;
     u8 selected;
     u16 vars[VARS_COUNT];
     struct SaveBlock3 sb3;
@@ -57,6 +57,7 @@ static struct Snapshot *TakeSnapshot(void)
     snapshot->debugDay = gDailySlotsDebugDay;
     snapshot->debugSeed = gDailySlotsDebugSeed;
     snapshot->debugFlags = gDailySlotsDebugFlags;
+    snapshot->debugAbsence = gDailySlotsDebugAbsence;
     snapshot->selected = gSelectedObjectEvent;
     memcpy(snapshot->vars, gSaveBlock1Ptr->vars, sizeof(snapshot->vars));
     snapshot->sb3 = *gSaveBlock3Ptr;
@@ -75,6 +76,7 @@ static void RestoreSnapshot(struct Snapshot *snapshot)
     gDailySlotsDebugDay = snapshot->debugDay;
     gDailySlotsDebugSeed = snapshot->debugSeed;
     gDailySlotsDebugFlags = snapshot->debugFlags;
+    gDailySlotsDebugAbsence = snapshot->debugAbsence;
     gSelectedObjectEvent = snapshot->selected;
     memcpy(gSaveBlock1Ptr->vars, snapshot->vars, sizeof(snapshot->vars));
     *gSaveBlock3Ptr = snapshot->sb3;
@@ -210,6 +212,20 @@ TEST("Daily trainers: the slot tables are consistent")
             if (i > 0)
                 EXPECT_GT(slot, DailyTrainers_GroupSlot(group, i - 1));
         }
+    }
+    // A home-range slot has no group; every other slot is in exactly one.
+    for (slot = 0; slot < WORLD_TRAINER_SLOT_COUNT; slot++)
+    {
+        if (DailyTrainers_IsHomeRange(slot))
+        {
+            EXPECT_EQ(DailyTrainers_GetSlot(slot)->group, WORLD_TRAINER_GROUP_HOME);
+            EXPECT_EQ(DailyTrainers_RangeSize(slot), 1);
+            total++;
+        }
+        else
+            EXPECT_LT(DailyTrainers_GetSlot(slot)->group, WORLD_TRAINER_GROUP_COUNT);
+        EXPECT_LE(WORLD_TRAINER_SLOT_ABSENCE(DailyTrainers_GetSlot(slot)->flags), 7);
+        EXPECT_LE(DailyTrainers_AbsencePercent(slot), 100);
     }
     EXPECT_EQ(total, WORLD_TRAINER_SLOT_COUNT);
     for (slot = 0; slot < WORLD_TRAINER_SLOT_COUNT; slot++)
@@ -545,12 +561,11 @@ TEST("Daily trainers: every map keeps its objects, places and sight, and holds a
 {
     struct Snapshot *snapshot = TakeSnapshot();
     u16 slot, day = 0;
-    u8 group;
 
     DailySlots_InitNewGame();
     StartDay(2200);
-    for (group = 0; group < WORLD_TRAINER_GROUP_COUNT; group++)
-        DefeatGroup(group);
+    for (slot = 0; slot < WORLD_TRAINER_SLOT_COUNT; slot++)
+        DefeatSlot(slot);
     for (slot = 0; slot < WORLD_TRAINER_SLOT_COUNT; slot++)
     {
         const struct WorldTrainerSlot *row = DailyTrainers_GetSlot(slot);
@@ -986,7 +1001,7 @@ TEST("Daily trainers: WhereIsTrainerToday names today's place and none for a tra
     RestoreSnapshot(snapshot);
 }
 
-TEST("Daily trainers: a fixed contact stands at its home and a trainer bound to its place rotates in a group of one")
+TEST("Daily trainers: a contact that is not daily stands at its home and a home-range trainer is placed in its own slot")
 {
     struct Snapshot *snapshot = TakeSnapshot();
     u8 map, num, local;
@@ -1011,7 +1026,7 @@ TEST("Daily trainers: a fixed contact stands at its home and a trainer bound to 
     RestoreSnapshot(snapshot);
 }
 
-TEST("Daily trainers: a place-bound trainer is at home or away each day, battled once a day, and a ready one is always home")
+TEST("Daily trainers: a home-range trainer is at home or away each day, battled once a day, and a ready one is always home")
 {
     struct Snapshot *snapshot = TakeSnapshot();
     u16 slot = DailyTrainers_FindSlot(MAP_GROUP(MAP_ROUTE33_HNS), MAP_NUM(MAP_ROUTE33_HNS), 1);
@@ -1021,11 +1036,12 @@ TEST("Daily trainers: a place-bound trainer is at home or away each day, battled
 
     ASSUME(slot != NO_TRAINER_SLOT);
     row = DailyTrainers_GetSlot(slot);
-    EXPECT_EQ(DailyTrainers_GroupSize(DailyTrainers_GroupOf(slot)), 1);
+    EXPECT(DailyTrainers_IsHomeRange(slot));
+    EXPECT_EQ(DailyTrainers_RangeSize(slot), 1);
     DailySlots_InitNewGame();
     StartDay(12000);
     // Undefeated: waiting at home as ever.
-    DailyTrainers_ResolveGroup(DailyTrainers_GroupOf(slot), out);
+    DailyTrainers_ResolveRange(slot, out);
     EXPECT_EQ(out[0], DAILY_OCCUPANT_HOME);
     // Beaten for the first time today: still at home today (frozen), battled, cleared.
     EnterSlotMap(slot);
@@ -1034,13 +1050,13 @@ TEST("Daily trainers: a place-bound trainer is at home or away each day, battled
     SetTrainerFlag(row->trainerId);
     DailyTrainers_OnTrainersWon();
     EXPECT(DailyTrainers_IsCleared(slot));
-    DailyTrainers_ResolveGroup(DailyTrainers_GroupOf(slot), out);
+    DailyTrainers_ResolveRange(slot, out);
     EXPECT_EQ(out[0], DAILY_OCCUPANT_HOME);
     // From the next day it is present (as its own occupant) or away by the 25 percent roll, and open to one battle a day.
     for (day = 12001; day < 12301; day++)
     {
         StartDay(day);
-        DailyTrainers_ResolveGroup(DailyTrainers_GroupOf(slot), out);
+        DailyTrainers_ResolveRange(slot, out);
         EXPECT(out[0] == slot || out[0] == DAILY_OCCUPANT_AWAY);
         EXPECT(!DailyTrainers_IsCleared(slot));
         if (out[0] == slot)
@@ -1062,14 +1078,14 @@ TEST("Daily trainers: a place-bound trainer is at home or away each day, battled
     {
         StartDay(day);
         gPokemonStoragePtr->dailySlots.readyAtDayStart[contact / 8] |= 1 << (contact % 8);
-        DailyTrainers_ResolveGroup(DailyTrainers_GroupOf(slot), out);
+        DailyTrainers_ResolveRange(slot, out);
         EXPECT_EQ(out[0], slot);
         EXPECT(DailyTrainers_WhereIsTrainerToday(row->trainerId, &map, &num, &local));
         EXPECT_EQ(local, row->localId[0]);
     }
     // A win in its slot on a day it stands there clears it for that day only.
     StartDay(12501);
-    DailyTrainers_ResolveGroup(DailyTrainers_GroupOf(slot), out);
+    DailyTrainers_ResolveRange(slot, out);
     if (out[0] == slot)
     {
         EnterSlotMap(slot);
@@ -1081,6 +1097,73 @@ TEST("Daily trainers: a place-bound trainer is at home or away each day, battled
     }
     StartDay(12502);
     EXPECT(!DailyTrainers_IsCleared(slot));
+
+    RestoreSnapshot(snapshot);
+}
+
+TEST("Daily trainers: a slot with no absence always has someone, battleable once a day after the first win")
+{
+    struct Snapshot *snapshot = TakeSnapshot();
+    u16 slot = DailyTrainers_FindSlot(MAP_GROUP(MAP_ROUTE33_HNS), MAP_NUM(MAP_ROUTE33_HNS), 1);
+    u8 group = FindGroup(0, 4, FALSE, 2);
+    const struct WorldTrainerSlot *row;
+    u16 out[WORLD_TRAINER_GROUP_SLOTS_MAX], day, i;
+    u8 map, num, local;
+
+    ASSUME(slot != NO_TRAINER_SLOT);
+    ASSUME(group != 0xFF);
+    row = DailyTrainers_GetSlot(slot);
+    // The generated tables give every slot the default 25 percent today.
+    EXPECT_EQ(DailyTrainers_AbsencePercent(slot), 25);
+    gDailySlotsDebugFlags = DAILY_DEBUG_DAY | DAILY_DEBUG_SEED | DAILY_DEBUG_ABSENCE;
+    gDailySlotsDebugAbsence = 0;
+    DailySlots_InitNewGame();
+    StartDay(13000);
+    gDailySlotsDebugFlags |= DAILY_DEBUG_ABSENCE;
+    EXPECT_EQ(DailyTrainers_AbsencePercent(slot), 0);
+    SetTrainerFlag(row->trainerId);
+    for (day = 13001; day < 13201; day++)
+    {
+        StartDay(day);
+        gDailySlotsDebugFlags |= DAILY_DEBUG_ABSENCE;
+        // A home range: the trainer is there every day, never away, and the slot is open for one battle.
+        DailyTrainers_ResolveRange(slot, out);
+        EXPECT_EQ(out[0], slot);
+        EXPECT(!DailyTrainers_IsCleared(slot));
+        EnterSlotMap(slot);
+        EXPECT(!DailyTrainers_HideTemplate(LiveTemplate(slot, 0)));
+        EXPECT_EQ(DailyTrainers_NoteBattle(0, row->localId[0], row->trainerId), DailyTrainers_LatestTeam(row->trainerId));
+        DailyTrainers_OnTrainersWon();
+        EXPECT(DailyTrainers_IsCleared(slot));
+        EXPECT(!DailyTrainers_WhereIsTrainerToday(row->trainerId, &map, &num, &local));
+        // Clearing is for the day: a second note of the same slot is harmless and the slot stays cleared.
+        EXPECT(DailyTrainers_IsCleared(slot));
+    }
+    // A class range with no absence places every wanderer every day.
+    DailySlots_InitNewGame();
+    StartDay(13300);
+    DefeatGroup(group);
+    for (day = 13301; day < 13361; day++)
+    {
+        u16 placed = 0;
+
+        StartDay(day);
+        gDailySlotsDebugFlags |= DAILY_DEBUG_ABSENCE;
+        DailyTrainers_ResolveGroup(group, out);
+        for (i = 0; i < DailyTrainers_GroupSize(group); i++)
+        {
+            EXPECT_NE(out[i], DAILY_OCCUPANT_AWAY);
+            placed += out[i] != DAILY_OCCUPANT_HOME;
+        }
+        EXPECT_EQ(placed, DailyTrainers_GroupSize(group));
+    }
+    // And at 100 percent nobody is ever there.
+    gDailySlotsDebugAbsence = 100;
+    StartDay(13400);
+    gDailySlotsDebugFlags |= DAILY_DEBUG_ABSENCE;
+    DailyTrainers_ResolveGroup(group, out);
+    for (i = 0; i < DailyTrainers_GroupSize(group); i++)
+        EXPECT_EQ(out[i], DAILY_OCCUPANT_AWAY);
 
     RestoreSnapshot(snapshot);
 }

@@ -30,16 +30,23 @@ A build-time generator reads Wayfarer's compiled map events, the trainer
 classification and [World items](world-items.md), and emits constant ROM
 tables. Nothing is built at runtime.
 
-- **Trainer slots:** one row per rotating regular trainer: map, local id, home
-  trainer id, trainer group and pair flag. A pair is one row and two objects
-  (two local ids and two sprites, one double-battle trainer). The slot keeps its
-  own position, facing, movement and sight range. The generator emits only
-  rotating slots; a fixed `ORDINARY` trainer that is a rematch contact gets a
-  row in a small table of homes, which is all `WhereIsTrainerToday` needs.
+- **Trainer slots:** one row per daily regular trainer: map, local id, home
+  trainer id, range (a group id, or the home marker), flags (pair, home range,
+  absence level) and, per object, the sprite and the authored script. A pair is
+  one row and two objects (two local ids and two sprites, one double-battle
+  trainer). The slot keeps its own position, facing, movement and sight range.
+  The generator emits only daily slots; an `ORDINARY` trainer that is a rematch
+  contact but not daily gets a row in a small table of homes, which is all
+  `WhereIsTrainerToday` needs.
+- **Absence levels:** a small generated table of percentages (`sWorldTrainerAbsence[]`,
+  at most 8 distinct values). A slot's flags hold the index of its level, so a
+  slot costs no extra byte.
 - **Trainer groups:** one row per class family and region, split into a
   singles group and a pairs group, and one row per place type and region (and
   singles or pairs) for the trainers whose lines need a kind of place: a group
-  of that type, mixing classes. A group lists its slots in a fixed order.
+  of that type, mixing classes. A group lists its slots in a fixed order. A home
+  range has no group row: its slot carries the reserved group id `0xFF` and the
+  home flag, so the 255-group cap counts only class and place groups.
 - **Item spots:** one row per item ball (map, local id) and hidden item (map,
   bg event index): kind (static prize or dynamic), the prize item and its
   existing flag for prizes, and the spot's reach tier from
@@ -54,35 +61,52 @@ tables. Nothing is built at runtime.
 
 Every slot has a dense slot index, which the save state uses.
 
-### Which trainers rotate
+### Which trainers are daily
 
-A trainer slot rotates only when its trainer is `ORDINARY` in the
+One rule covers every daily trainer: **a beaten trainer is placed somewhere in
+its range each day, and is battleable once there; each free slot is empty with
+its absence chance.** A trainer's range is the group of slots it can stand in.
+There are three kinds and no modes:
+
+- **class:** the slots of its class family in its region (singles or pairs);
+- **place:** the slots of one place type in its region, mixing classes, for a
+  trainer whose lines need a kind of place;
+- **home:** its own slot alone, for a trainer whose lines are about its own
+  spot. Each day it is at home or away, never anywhere else.
+
+Each slot has an **absence chance**, 25% by default. At 0% someone is always
+there; the trainer is still battleable once a day after the first win.
+
+A trainer is daily when it is `ORDINARY` in the
 [classification manifest](trainer-party-scaling.md#classification-contract)
-and isn't excluded by the PRD's fixed list: Gym members, rivals, bosses,
-notable trainers, facility trainers, story trainers, path blockers, and
-trainers whose script does more than battle. Phone registration and one-time
-gifts don't exclude a trainer; they move with it.
+and isn't kept out by the PRD's list: Gym members, rivals, bosses, notable
+trainers, facility trainers, story trainers, path blockers, and trainers whose
+script does more than battle. Phone registration and one-time gifts don't keep
+a trainer out; they move with it. Every other trainer is **not daily**: it
+stays where it was authored, and the report gives the reason.
 
 The generator proposes each slot's status from script analysis, and authors
-review it in the report. A slot can be forced fixed by a reviewed exclusion
-with a reason (`reviewed.json`, by map prefix, trainer class or slot). A fixed
-contact stays at home and still gets Battle and FoundItem calls. A rotating
+review it in the report. A slot can be made not daily by a reviewed entry with
+a reason (`reviewed.json`, by map prefix, trainer class or slot), and a slot's
+absence chance can be set per trainer with a reason (`absence`). A not-daily
+contact stays at home and still gets Battle and FoundItem calls. A daily
 candidate must also pass the [dialogue audit](#dialogue-audit).
 
-Script analysis keeps a trainer fixed when its object is hidden by a flag, is a
-buried trainer, has non-static graphics, or its script (followed through gotos,
-calls and fall-through) does anything beyond battling, rematching, registering a
-phone number, handing over a gift and speaking. The reviewed fixed lists add the
-S.S. Anne, S.S. Aqua and S.S. Tidal trainers (one-time ship content), Pokemon
-Tower, the Trick House puzzle rooms, Silph Co., the Rocket Hideouts, the Game
-Corner hideout entrance, the villain grunt classes, and the two Route 26
-trainers authored on two maps. Of 901 `ORDINARY` trainer slots (1,051 trainer
-objects in all, pairs counting once per trainer), 659 rotate (632 singles and 27
-pairs, 686 objects): 545 in class or place-type groups and 114 home-only (see below); the report lists why each of the others stays at home.
+Script analysis marks a trainer not daily when its object is hidden by a flag,
+is a buried trainer, has non-static graphics, or its script (followed through
+gotos, calls and fall-through) does anything beyond battling, rematching,
+registering a phone number, handing over a gift and speaking. The reviewed
+lists add the S.S. Anne, S.S. Aqua and S.S. Tidal trainers (one-time ship
+content), Pokemon Tower, the Trick House puzzle rooms, Silph Co., the Rocket
+Hideouts, the Game Corner hideout entrance, the villain grunt classes, and the
+two Route 26 trainers authored on two maps. Of 901 `ORDINARY` trainer slots
+(1,051 trainer objects in all, pairs counting once per trainer), 659 are daily
+(632 singles and 27 pairs, 686 objects): 525 with a class range, 20 with a
+place range and 114 with a home range; the report lists why each of the others
+is not daily.
 
-**Place-type groups.** Most trainers rotate among their class family's slots in
-their region. A trainer whose lines need a kind of place ("this cave", "in the
-desert", "this ship") joins the group of that place type in its region instead,
+**Place ranges.** A trainer whose lines need a kind of place ("this cave", "in
+the desert", "this ship") has the range of that place type in its region,
 mixing classes, so it can only stand in spots of that type. `reviewed.json`
 assigns the type per trainer with the phrases that need it, and the generator
 checks every slot against the type's rule in `place_types.json` (an underground
@@ -90,19 +114,18 @@ map, a map-name prefix such as the Abandoned Ship or the Pokemon Mansion, or a
 metatile behaviour near the slot's object: deep sand for a desert, surfable
 water within three tiles for a coast) and fails on a slot that is not that
 kind of place. The types are cave, tower, mountain, ship, mansion, desert and
-coast. A trainer is in exactly one group. A place-type group of one slot never
-rotates; it only keeps the trainer's own spot in the daily bookkeeping.
+coast. A trainer has exactly one range. A place group of one slot only keeps
+the trainer's own spot in the daily bookkeeping.
 
-**Home-only trainers.** A trainer whose dialogue is bound to its own place (it
-names a town, a route, a building or a landmark) still takes part in the day, as
-a group of one: after its first win its home slot rotates with only itself to
-draw, so each day it is at home or away (the flat 25% roll), battleable once a
-day while there, and placed every day when it is ready or holds a gift as the
-day starts. It never stands anywhere else, so its lines are never out of place.
-The report calls these slots home-only and counts them per region. One group
-exists per home-only trainer; the slot row's group field is a byte, so
-generation fails past 255 groups. Only a trainer that cannot be absent stays
-fixed: the Route 25 six-trainer challenge, whose lines number its members.
+**Home ranges.** A trainer whose dialogue is bound to its own place (it names a
+town, a route, a building or a landmark) has its own slot as its range. After
+its first win it is at home or away each day (the slot's absence roll),
+battleable once a day while there, and placed every day when it is ready or
+holds a gift as the day starts. Its lines are never out of place. A home range
+needs no group: the slot row carries the home marker (group `0xFF` and the home
+flag), resolved as a range of one slot. The only daily-adjacent trainers left
+out are those whose lines cannot survive absence at all: the Route 25
+six-trainer challenge, whose lines number its members, is not daily.
 
 ## The day
 
@@ -194,23 +217,25 @@ per-map resolved occupants live in EWRAM for the map's lifetime only.
 
 ### Who stands where today
 
-For each trainer group, on map load, resolve all of the group's slots at once:
+For each range, on map load, resolve all of the range's slots at once (a group
+for a class or place range, the slot alone for a home range, seeded by the slot):
 
 1. **Home slots.** A slot whose home trainer is undefeated shows the home
    trainer. A slot whose `homeBeatenToday` bit is set also shows the home
-   trainer, defeated. Neither is a rotating slot today.
+   trainer, defeated. Neither is a free slot today.
 2. **Wanderers.** The group's wandering trainers are its defeated trainers,
    minus those whose `homeBeatenToday` bit is set. A trainer beaten for the
    first time today starts wandering tomorrow, so the day's shuffle never
    changes after a win.
-3. **Rotating slots** are the remaining slots: those whose home trainer is
+3. **Free slots** are the remaining slots: those whose home trainer is
    defeated and not beaten today. There are exactly as many as wanderers.
 4. **Shuffle.** Order the wanderers by a hash permutation keyed by
-   `roll(GROUP, groupId, 0)` and assign them to the rotating slots in group
+   `roll(GROUP, groupId, 0)` and assign them to the free slots in group
    order.
-5. **Empty spots.** Each rotating slot is empty when
-   `roll(EMPTY, slotIndex, 0) % 100 < 25`. A wanderer assigned to an empty
-   slot is away today.
+5. **Empty spots.** Each free slot is empty when
+   `roll(EMPTY, slotIndex, 0) % 100 < absence(slot)`, the slot's own absence
+   chance (25% unless the slot's level says otherwise; a slot at 0% is never
+   empty). A wanderer assigned to an empty slot is away today.
 6. **Guaranteed places.** A wanderer in `readyAtDayStart` or `giftAtDayStart`
    (ready for a rematch or holding a gift when the day started; see
    [Phone rematches](phone-rematches.md)) is always placed. If it was assigned
@@ -222,8 +247,8 @@ For each trainer group, on map load, resolve all of the group's slots at once:
 
 Only the current map's groups need resolving, but the result is the same
 wherever it's computed. A lookup `WhereIsTrainerToday(trainerId)` resolves the
-trainer's group and returns the map and slot, or none. For a contact whose slot
-is fixed (excluded from rotation) it returns the home map and slot (it has no
+trainer's group and returns the map and slot, or none. For a contact that is
+not daily it returns the home map and slot (it has no
 daily battle, so `clearedToday` doesn't apply), and such a contact is placed at
 home for ready and gift calls. Its home script still checks live readiness
 and the live gift flag, so its Battle and FoundItem calls also need those to
@@ -235,7 +260,7 @@ has already had today's battle. Phone calls use it to name today's place.
 
 After the map's object templates are copied to
 `gSaveBlock1Ptr->objectEventTemplates` and before objects spawn, rewrite each
-rotating slot's template:
+free slot's template:
 
 - **Occupied:** set the graphics to the occupant's trainer sprite and the script
   to the occupant's own authored script (the generated table keeps both for
@@ -298,12 +323,12 @@ occupant pair's sprites and scripts.
 The game notes the slot of each opponent when a trainer battle is configured,
 and only when the opponent is the slot's home trainer or its wanderer; a win
 (`SetBattledTrainersFlags`) then clears the notes' slots. Rematch battles
-(`ShouldTryRematchBattle`) are not offered at a rotating slot: a ready
+(`ShouldTryRematchBattle`) are not offered at a free slot: a ready
 contact is placed, but its rematch is the phone's.
 
 **Sight.** The trainer sight check (`trainer_see.c`) treats a defeated trainer
 as done, so a wanderer would never approach. Like the Battle Pyramid and
-Trainer Hill overrides, it gets a rotating-slot branch: for an object the hook
+Trainer Hill overrides, it gets a free-slot branch: for an object the hook
 rewrote, it reads the slot's `clearedToday` bit instead of the trainer's defeat
 flag, so a wanderer approaches by sight until it is cleared for the day.
 
@@ -338,8 +363,7 @@ set. So the hook handles flags per spot kind and adds a spawn check:
   `flagId` with none. The dynamic pickup script sets only `clearedToday`,
   then runs `removeobject`.
 - **Spawn check.** In `TrySpawnObjectEvents`, next to the existing
-  `WayfarerWalkers_HideTemplate` call, a template that belongs to a rotating
-  trainer slot or to a dynamic or taken-prize item spot spawns only if the slot
+  `WayfarerWalkers_HideTemplate` call, a template that belongs to a daily trainer slot or to a dynamic or taken-prize item spot spawns only if the slot
   is occupied today. An item spot must also have its `clearedToday` bit unset,
   so a picked-up ball stays gone on every camera step and reload until the next
   day. A cleared trainer slot still spawns: its occupant stays and speaks. The
@@ -394,12 +418,14 @@ The Itemfinder sees resolved hidden items only.
   item ball, so the one-off spawn path needs no check.
 - **Debug override.** `gDailySlotsDebugFlags`, `gDailySlotsDebugDay` and
   `gDailySlotsDebugSeed` pin the day and seed in the mechanics-test and E2E
-  builds. `DAILY_DEBUG_NO_EMPTY` also keeps every rotating trainer slot occupied,
+  builds. `DAILY_DEBUG_NO_EMPTY` also keeps every free trainer slot occupied,
+  `DAILY_DEBUG_ABSENCE` replaces every slot's absence chance with
+  `gDailySlotsDebugAbsence`,
   and `gDailyTrainersDebugOccupants` lets a journey read the map's occupants.
 
 ## Dialogue audit
 
-The generator writes an inventory of every rotating candidate's intro, defeat
+The generator writes an inventory of every daily candidate's intro, defeat
 and post-battle lines (`src/data/trainer_slots/dialogue.md`). It flags lines
 that name a map, landmark, building or local event, using the map name table
 (and the stems of its town, city and island names) and the reviewed word lists
@@ -407,19 +433,20 @@ in `tools/wayfarer_trainer_slots/landmarks.json`: landmark nouns after a
 determiner, terrain nouns after a demonstrative ("this beach", not "the sea"),
 place phrases ("around here"), local-event words written in capitals, and
 phrases that number a trainer among a challenge's opponents ("No. 3", "last in
-line"). Each flagged trainer is resolved in `reviewed.json` by a reviewed edit to
-neutral wording (`reword`, which the audit then confirms by finding nothing), by
-moving it into the group of the kind of place its lines need (`place`, with the
-type and the phrases), by keeping it at its own slot in a group of one
-(`home`, with a reason: [home-only trainers](#which-trainers-rotate)), or, when
-its absence would break its lines, by excluding it from rotation with a reason
-(`exclude`). Generation fails while
-a flagged line is unresolved, a reword still names a place, or a resolution is
-stale. A false positive of the word lists is fixed in the lists, not waived. Text of generated Sevii and coast scripts is not edited by hand: those
-trainers are home-only or placed, never reworded.
+line"). Each flagged trainer is resolved in `reviewed.json` with a reason, by one of:
+a reviewed edit to neutral wording (`range: class` with the old line in `was`,
+which the audit then confirms by finding nothing); a place range
+(`range: place:<type>`, with the phrases that need the kind of place); a home
+range (`range: home`: the lines are about the spot itself); or `not_daily`,
+when absence would break its lines. A resolution may also set `absence` for the
+trainer's slot. Generation fails while a flagged line is unresolved, a reword
+still names a place, or a resolution is stale. A false positive of the word
+lists is fixed in the lists, not waived. Text of generated Sevii and coast
+scripts is not edited by hand: those trainers get a home or place range, never a
+reword.
 
-Of 665 candidates, 164 named a place at some point: 114 are home-only, 6 stay
-fixed (the Route 25 sequence), 16 were reworded, 20 joined a place-type group and
+Of 665 candidates, 164 named a place at some point: 114 have a home range, 6 are
+not daily (the Route 25 sequence), 16 were reworded, 20 have a place range and
 8 were cleared by narrow reviewed
 phrases (a goal or plan that reads fine anywhere: "aim for the POKéMON
 LEAGUE", "going to the GYM?"). The report lists every resolution with its reason
@@ -438,19 +465,19 @@ teams. This spec ships the seams it reads:
   the nine coast families. Hoenn and the table's growth to 118 rows join by
   appending rows; `DailyContacts_IndexOf` finds them with no change.
 - `WhereIsTrainerToday` and `DailyContacts_ReadyAtDayStart`/`GiftAtDayStart` are
-  the lookups the calls use. A fixed contact's home is a small generated table.
+  the lookups the calls use. A not-daily contact's home is a small generated table.
 - Ready contacts are placed but their next-team rematch battle is not offered at
-  a rotating slot; a gift holder hands its gift over wherever it stands (HNS gifts
+  a free slot; a gift holder hands its gift over wherever it stands (HNS gifts
   only, the one gift source that exists).
 - A wanderer fights with its latest beaten rematch team, not its next one.
 
 ## Interactions
 
 - **Vs. Seeker:** retired. The Vermilion Pokémon Center giver isn't compiled
-  into Wayfarer, and no rotating path reads Vs. Seeker readiness.
+  into Wayfarer, and no daily path reads Vs. Seeker readiness.
 - **Randomizer settings:** a draw resolves the occupant or item first; the
   trainer and item randomizers then apply as they do to authored content.
-- **Challenge settings** such as Nuzlocke and mono-type apply to rotating
+- **Challenge settings** such as Nuzlocke and mono-type apply to daily
   battles as they do to authored ones.
 - **Defeat flags and trainer rematch flags** keep their existing meaning.
 
@@ -460,7 +487,7 @@ Debug and E2E builds can override `day` and `saveSeed`, so any draw can be
 reproduced. Tests cover:
 
 - the same draw across reload, save and reset, and a new draw on a new day;
-- Continue: save on a map with a rotating occupant and a dynamic ball, reset
+- Continue: save on a map with a daily occupant and a dynamic ball, reset
   and Continue, then talk to the trainer (the occupant's battle, not the
   authored one), pick up the ball, and take camera steps (it stays gone);
 - New Game on the same day as an existing save: no item spot or trainer slot
@@ -468,7 +495,7 @@ reproduced. Tests cover:
   snapshot carries over;
 - the home-beaten-today freeze, and the wanderer starting the next day;
 - one place per trainer per day, pairs, and placement of ready and gift trainers, including readiness or a gift flag changing mid-day, and Battle text only for a ready-at-day-start contact and FoundItem text only for a gift-at-day-start one;
-- a fixed (non-rotating) contact receiving Battle and FoundItem calls that name its home map, and only General calls after that day's rematch or gift;
+- a not-daily contact receiving Battle and FoundItem calls that name its home map, and only General calls after that day's rematch or gift;
 - wanderers approaching by sight until cleared, and not after (the mechanics test
   reads the flag checks the sight path and the battle script make; the E2E journey
   walks into the sight line);
@@ -478,14 +505,14 @@ reproduced. Tests cover:
 - empty odds and tier odds over many days within tolerance;
 - prize pickup becoming dynamic the next day;
 - the template hook changing nothing but sprite and script on every map with a
-  slot, and holding every rotating slot of the busiest map;
+  slot, and holding every free slot of the busiest map;
 - the generated reports: slot status, exclusions, the dialogue audit and pool
   validation.
 
 ## Generation and reports
 
 The generator fails on: a slot that names a map Wayfarer doesn't compile, an
-unknown item or trainer, a rotating trainer without a group, a prize spot with
+unknown item or trainer, a daily trainer with a class or place range but no group, a prize spot with
 no flag, a group whose wanderers can't all fit its slots, or an unresolved
 dialogue flag. Its report lists slot status by region with reasons, group
 sizes, the dialogue audit, and pool weights per reach.
@@ -496,5 +523,6 @@ label, a map whose local ids are not dense, and a stale reviewed entry. It write
 `src/data/trainer_slots/{slots.h,report.md,dialogue.md}` and
 `include/constants/world_trainer_slots.h`; the report has slot status by region
 with the reason each `ORDINARY` trainer stays at home, the group sizes and the
-audit's resolutions. A group's slots are its wanderers' places by construction,
+audit's resolutions; its columns are range (class, place, home), the count
+of slots at 0% absence, and the reason each not-daily trainer is not daily. A group's slots are its wanderers' places by construction,
 so "wanderers that cannot fit" reduces to a trainer listed twice in one group.

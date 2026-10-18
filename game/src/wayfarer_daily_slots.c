@@ -29,6 +29,7 @@ extern const u8 DailyItems_EventScript_Ball[];
 EWRAM_DATA u32 gDailySlotsDebugDay = 0;
 EWRAM_DATA u32 gDailySlotsDebugSeed = 0;
 EWRAM_DATA u8 gDailySlotsDebugFlags = 0;
+EWRAM_DATA u8 gDailySlotsDebugAbsence = 0;
 EWRAM_DATA u16 gDailySlotsDebugFoundItem = 0;
 EWRAM_DATA u16 gDailySlotsDebugFoundCount = 0;
 #endif

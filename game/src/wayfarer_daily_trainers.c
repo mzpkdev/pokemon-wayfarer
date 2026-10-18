@@ -8,7 +8,7 @@
 // stamped day, the defeat flags and the day-start snapshots, so a group can be
 // resolved from anywhere (WhereIsTrainerToday) with the same result as on the
 // map. Only the map's resolved occupants are kept, in EWRAM, for the map's
-// lifetime. A rotating slot shows the occupant's own sprite and runs the
+// lifetime. A free slot shows the occupant's own sprite and runs the
 // occupant's own authored script: the flag checks the battle scripts make
 // (GetTrainerFlag, the trainer sight check) read the slot's clearedToday bit
 // instead of the trainer's permanent defeat flag.
@@ -215,24 +215,33 @@ static bool8 IsGuaranteed(u16 slot)
 }
 
 // ---------- who stands where ----------
+// The slot's absence chance in percent: 0 means someone is always there.
+u8 DailyTrainers_AbsencePercent(u16 slot)
+{
+#if TESTING || defined(E2E_TESTING)
+    if (gDailySlotsDebugFlags & DAILY_DEBUG_ABSENCE)
+        return gDailySlotsDebugAbsence;
+#endif
+    return sWorldTrainerAbsence[WORLD_TRAINER_SLOT_ABSENCE(sWorldTrainerSlots[slot].flags)];
+}
+
 static bool8 IsEmptyToday(u16 slot)
 {
 #if TESTING || defined(E2E_TESTING)
     if (gDailySlotsDebugFlags & DAILY_DEBUG_NO_EMPTY)
         return FALSE;
 #endif
-    return DailySlots_Roll(DAILY_ROLL_TRAINER_EMPTY, slot, 0) % 100 < DAILY_TRAINER_EMPTY_PERCENT;
+    return DailySlots_Roll(DAILY_ROLL_TRAINER_EMPTY, slot, 0) % 100 < DailyTrainers_AbsencePercent(slot);
 }
 
-// Resolves every slot of a group at once. out[i] is the group's i-th slot's occupant: DAILY_OCCUPANT_HOME
+// Resolves every slot of a range at once (a group's slots, or a home range's one slot). out[i] is the range's i-th slot's occupant: DAILY_OCCUPANT_HOME
 // when the slot shows its own home trainer (undefeated, or beaten today), DAILY_OCCUPANT_AWAY when it is
 // rotating and empty, otherwise the occupant's slot row. Wanderers are the defeated trainers that were not
 // first beaten today; the rotating slots are exactly their home slots. Wanderer j is the one whose home is
 // the j-th rotating slot, so every array below is indexed by that order.
-static void ResolveGroup(u8 group, u16 *out)
+static void ResolveMembers(const u16 *members, u8 count, u32 seedKey, u16 *out)
 {
-    const struct WorldTrainerGroup *info = &sWorldTrainerGroups[group];
-    u32 seed = DailySlots_Roll(DAILY_ROLL_TRAINER_GROUP, group, 0);
+    u32 seed = DailySlots_Roll(DAILY_ROLL_TRAINER_GROUP, seedKey, 0);
     u8 position[WORLD_TRAINER_GROUP_SLOTS_MAX];     // group position of each rotating slot / wanderer's home
     u32 key[WORLD_TRAINER_GROUP_SLOTS_MAX];
     u8 who[WORLD_TRAINER_GROUP_SLOTS_MAX];          // the wanderer assigned to each rotating slot
@@ -241,9 +250,9 @@ static void ResolveGroup(u8 group, u16 *out)
     u8 rotating = 0;
     u8 i, j, k, rank;
 
-    for (i = 0; i < info->count; i++)
+    for (i = 0; i < count; i++)
     {
-        u16 slot = sWorldTrainerGroupSlots[info->first + i];
+        u16 slot = members[i];
 
         out[i] = DAILY_OCCUPANT_HOME;
         if (HasTrainerBeenFought(sWorldTrainerSlots[slot].trainerId) && !DailyTrainers_IsHomeBeaten(slot))
@@ -256,7 +265,7 @@ static void ResolveGroup(u8 group, u16 *out)
     // The hash permutation: the wanderer with the k-th smallest key goes to the k-th rotating slot.
     for (j = 0; j < rotating; j++)
     {
-        u16 slot = sWorldTrainerGroupSlots[info->first + position[j]];
+        u16 slot = members[position[j]];
 
         rank = 0;
         for (k = 0; k < rotating; k++)
@@ -296,7 +305,37 @@ static void ResolveGroup(u8 group, u16 *out)
         who[swap] = j;
     }
     for (k = 0; k < rotating; k++)
-        out[position[k]] = away[k] ? DAILY_OCCUPANT_AWAY : sWorldTrainerGroupSlots[info->first + position[who[k]]];
+        out[position[k]] = away[k] ? DAILY_OCCUPANT_AWAY : members[position[who[k]]];
+}
+
+static void ResolveGroup(u8 group, u16 *out)
+{
+    ResolveMembers(&sWorldTrainerGroupSlots[sWorldTrainerGroups[group].first], sWorldTrainerGroups[group].count, group, out);
+}
+
+// A home range is its slot alone: out[0] is that slot's occupant today.
+static void ResolveHome(u16 slot, u16 *out)
+{
+    ResolveMembers(&slot, 1, slot, out);
+}
+
+bool8 DailyTrainers_IsHomeRange(u16 slot)
+{
+    return (sWorldTrainerSlots[slot].flags & WORLD_TRAINER_SLOT_HOME) != 0;
+}
+
+u16 DailyTrainers_RangeSize(u16 slot)
+{
+    return DailyTrainers_IsHomeRange(slot) ? 1 : sWorldTrainerGroups[sWorldTrainerSlots[slot].group].count;
+}
+
+// out[i] is the occupant of the range's i-th slot (a home range has the one slot).
+void DailyTrainers_ResolveRange(u16 slot, u16 *out)
+{
+    if (DailyTrainers_IsHomeRange(slot))
+        ResolveHome(slot, out);
+    else
+        ResolveGroup(sWorldTrainerSlots[slot].group, out);
 }
 
 u8 DailyTrainers_GroupOf(u16 slot)
@@ -341,11 +380,14 @@ static u8 PositionInGroup(u8 group, u16 slot)
 u16 DailyTrainers_ResolveOccupant(u16 slot)
 {
     u16 out[WORLD_TRAINER_GROUP_SLOTS_MAX];
-    u8 group = sWorldTrainerSlots[slot].group;
-    u8 position = PositionInGroup(group, slot);
 
-    ResolveGroup(group, out);
-    return position == 0xFF ? DAILY_OCCUPANT_HOME : out[position];
+    if (DailyTrainers_IsHomeRange(slot))
+    {
+        ResolveHome(slot, out);
+        return out[0];
+    }
+    ResolveGroup(sWorldTrainerSlots[slot].group, out);
+    return out[PositionInGroup(sWorldTrainerSlots[slot].group, slot)];
 }
 
 // ---------- the map-load hook ----------
@@ -372,8 +414,24 @@ static void ApplyOccupant(u16 slot, u16 occupant)
     }
 }
 
+// Records a slot's occupant for the map's lifetime and gives the slot its sprite and script; an empty slot only records.
+static void PlaceOccupant(u16 slot, u16 occupant)
+{
+    if (occupant == DAILY_OCCUPANT_HOME)
+        return;
+    if (sNumMapOccupants < WORLD_TRAINER_MAP_SLOTS_MAX)
+    {
+        sMapOccupants[sNumMapOccupants].slot = slot;
+        sMapOccupants[sNumMapOccupants].occupant = occupant;
+        sNumMapOccupants++;
+    }
+    if (occupant != DAILY_OCCUPANT_AWAY)
+        ApplyOccupant(slot, occupant);
+}
+
 // Map load, and Continue after the saved scripts are reset to the authored ones: every trainer slot goes back to
-// its authored sprite and script, then each group of the map is resolved and its occupants applied.
+// its authored sprite and script, then each range of the map (each group, each home slot) is resolved and its
+// occupants applied.
 void DailyTrainers_RewriteTemplates(void)
 {
     u8 groups[(WORLD_TRAINER_GROUP_COUNT + 7) / 8];
@@ -398,7 +456,8 @@ void DailyTrainers_RewriteTemplates(void)
             template->graphicsId = row->gfx[object];
             template->script = row->script[object];
         }
-        groups[row->group / 8] |= 1 << (row->group % 8);
+        if (row->group != WORLD_TRAINER_GROUP_HOME)
+            groups[row->group / 8] |= 1 << (row->group % 8);
     }
     for (group = 0; group < WORLD_TRAINER_GROUP_COUNT; group++)
     {
@@ -419,17 +478,17 @@ void DailyTrainers_RewriteTemplates(void)
                 resolved = TRUE;
             }
             occupant = out[PositionInGroup(group, slot)];
-            if (occupant == DAILY_OCCUPANT_HOME)
-                continue;
-            if (sNumMapOccupants < WORLD_TRAINER_MAP_SLOTS_MAX)
-            {
-                sMapOccupants[sNumMapOccupants].slot = slot;
-                sMapOccupants[sNumMapOccupants].occupant = occupant;
-                sNumMapOccupants++;
-            }
-            if (occupant != DAILY_OCCUPANT_AWAY)
-                ApplyOccupant(slot, occupant);
+            PlaceOccupant(slot, occupant);
         }
+    }
+    for (slot = first; slot < WORLD_TRAINER_SLOT_COUNT && SlotMapKey(slot) == key; slot++)
+    {
+        u16 out[1];
+
+        if (!DailyTrainers_IsHomeRange(slot))
+            continue;
+        ResolveHome(slot, out);
+        PlaceOccupant(slot, out[0]);
     }
 }
 
@@ -619,7 +678,7 @@ bool8 DailyTrainers_WhereIsTrainerToday(u16 trainerId, u8 *mapGroup, u8 *mapNum,
     u16 home = SlotOfTrainer(first);
     u16 out[WORLD_TRAINER_GROUP_SLOTS_MAX];
     u16 place, i;
-    u8 group, position;
+    u8 position;
 
     if (home == NO_TRAINER_SLOT)
     {
@@ -635,8 +694,7 @@ bool8 DailyTrainers_WhereIsTrainerToday(u16 trainerId, u8 *mapGroup, u8 *mapNum,
         }
         return FALSE;
     }
-    group = sWorldTrainerSlots[home].group;
-    ResolveGroup(group, out);
+    DailyTrainers_ResolveRange(home, out);
     place = NO_TRAINER_SLOT;
     if (!HasTrainerBeenFought(first) || DailyTrainers_IsHomeBeaten(home))
     {
@@ -644,11 +702,11 @@ bool8 DailyTrainers_WhereIsTrainerToday(u16 trainerId, u8 *mapGroup, u8 *mapNum,
     }
     else
     {
-        for (position = 0; position < sWorldTrainerGroups[group].count; position++)
+        for (position = 0; position < DailyTrainers_RangeSize(home); position++)
         {
             if (out[position] == home)
             {
-                place = sWorldTrainerGroupSlots[sWorldTrainerGroups[group].first + position];
+                place = DailyTrainers_IsHomeRange(home) ? home : sWorldTrainerGroupSlots[sWorldTrainerGroups[sWorldTrainerSlots[home].group].first + position];
                 break;
             }
         }

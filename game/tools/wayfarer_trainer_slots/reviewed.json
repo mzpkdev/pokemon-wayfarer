@@ -1,10 +1,11 @@
 {
   "version": 1,
-  "comment": "Reviewed decisions for the daily trainer slots. fixed_maps, fixed_classes and fixed_slots force a trainer slot to stay at home with a reason; class_aliases merge trainer classes into one family; dialogue lists the resolution of every trainer the dialogue audit flags.",
+  "comment": "Reviewed decisions for the daily trainer slots. Every beaten trainer is placed somewhere in its range each day: its class group (default), a place-type group, or its own slot (home). Each free slot is empty with its absence chance (default_absence_percent; 0 means someone is always there). not_daily_* force a trainer out of the daily slots with a reason; class_aliases merge trainer classes into one family; absence lists per-trainer absence chances; dialogue lists the resolution of every trainer the dialogue audit flags.",
+  "default_absence_percent": 25,
   "class_aliases": {
     "COOLTRAINER_2": "COOLTRAINER"
   },
-  "fixed_maps": [
+  "not_daily_maps": [
     {
       "prefix": "SSAnne",
       "reason": "S.S. Anne trainers are one-time ship content (S.S. Anne spec)"
@@ -38,7 +39,7 @@
       "reason": "Game Corner hideout entrance is a story place"
     }
   ],
-  "fixed_classes": [
+  "not_daily_classes": [
     {
       "class": "TEAM_ROCKET",
       "reason": "villain grunts in story places"
@@ -52,7 +53,7 @@
       "reason": "villain grunts in story places"
     }
   ],
-  "fixed_slots": [
+  "not_daily_slots": [
     {
       "map": "Route26_hns",
       "ids": [
@@ -70,40 +71,40 @@
       "reason": "Jake and Joyce are authored on both Route 26 and its north half: one trainer, one place, so both stay at home"
     }
   ],
+  "absence": [],
   "dialogue": [
     {
       "trainer": "TRAINER_AARON",
-      "resolution": "home",
+      "range": "home",
       "reason": "names METEOR FALLS; refers to its surroundings (\"in this area\", \"this area\"). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_AIDAN",
-      "resolution": "reword",
-      "reason": "Post-battle line: \"diving spots in the sea around here\" now reads \"diving spots in the sea\" (data/text/trainers.inc).",
+      "range": "class",
       "was": [
         "There're lots of diving spots in the sea around here."
-      ]
+      ],
+      "reason": "Post-battle line: \"diving spots in the sea around here\" now reads \"diving spots in the sea\" (data/text/trainers.inc)."
     },
     {
       "trainer": "TRAINER_AKALA_CAVE_CAMPER_HNS",
-      "resolution": "reword",
-      "reason": "Post-battle line: \"Is it warm in here or is it just me?\" now reads \"Is it warm or is it just me?\" (data/maps/Akala_Cave_hns/scripts.inc).",
+      "range": "class",
       "was": [
         "Is it warm in here or is it just me?"
-      ]
+      ],
+      "reason": "Post-battle line: \"Is it warm in here or is it just me?\" now reads \"Is it warm or is it just me?\" (data/maps/Akala_Cave_hns/scripts.inc)."
     },
     {
       "trainer": "TRAINER_AKALA_CAVE_HIKER_HNS",
-      "resolution": "reword",
-      "reason": "Intro: \"all the way up here\" now reads \"all the way here\" (data/maps/Akala_Cave_hns/scripts.inc).",
+      "range": "class",
       "was": [
         "You must be tough if you made it all the way up here!"
-      ]
+      ],
+      "reason": "Intro: \"all the way up here\" now reads \"all the way here\" (data/maps/Akala_Cave_hns/scripts.inc)."
     },
     {
       "trainer": "TRAINER_AKALA_CAVE_PICNICKER_HNS",
-      "resolution": "place",
-      "place": "cave",
+      "range": "place:cave",
       "phrases": [
         "this cave"
       ],
@@ -111,66 +112,65 @@
     },
     {
       "trainer": "TRAINER_AKALA_HIKER_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names AKALA ISLE. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_AKALA_PICNICKER_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names AKALA ISLE. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_AKALA_SWIMMER_1_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names ULA'ULA ISLE. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_AKALA_SWIMMER_2_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names AKALA ISLE. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_AKALA_SWIMMER_3_HNS",
-      "resolution": "reword",
-      "reason": "Post-battle line: \"The current out here is strong!\" now reads \"The current is strong!\" (data/maps/AkalaIsle_hns/scripts.inc).",
+      "range": "class",
       "was": [
         "The current out here is strong! A POKéMON must be really powerful to migrate all the way out to the ISLES!"
-      ]
+      ],
+      "reason": "Post-battle line: \"The current out here is strong!\" now reads \"The current is strong!\" (data/maps/AkalaIsle_hns/scripts.inc)."
     },
     {
       "trainer": "TRAINER_ALFRED_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"the LIGHTHOUSE\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_ALLEN_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names ECRUTEAK; names a building or local event (GYM). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_ANTHONY_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"through the tunnel\"). The intro and rematch line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_ARNIE_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names NATIONAL PARK; refers to its surroundings (\"at the NATIONAL PARK\"); names a building or local event (Contest). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_BARNEY_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names POWER PLANT; refers to its surroundings (\"the POWER PLANT\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_BECK",
-      "resolution": "home",
+      "range": "home",
       "reason": "names FORTREE; refers to its surroundings (\"out here\", \"this place\"). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_BECKY",
-      "resolution": "place",
-      "place": "desert",
+      "range": "place:desert",
       "phrases": [
         "in the desert"
       ],
@@ -178,18 +178,17 @@
     },
     {
       "trainer": "TRAINER_BERKE_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"the islands\", \"those islands\"). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_BIANCA",
-      "resolution": "home",
+      "range": "home",
       "reason": "names MAUVILLE; refers to its surroundings (\"This road\"). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_BILL_HNS",
-      "resolution": "place",
-      "place": "cave",
+      "range": "place:cave",
       "phrases": [
         "in the cave"
       ],
@@ -197,13 +196,12 @@
     },
     {
       "trainer": "TRAINER_BOB_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names CELADON. The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_BRYAN",
-      "resolution": "place",
-      "place": "desert",
+      "range": "place:desert",
       "phrases": [
         "This desert"
       ],
@@ -211,49 +209,48 @@
     },
     {
       "trainer": "TRAINER_BRYANT",
-      "resolution": "home",
+      "range": "home",
       "reason": "names FIERY PATH. The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_CALE",
-      "resolution": "home",
+      "range": "home",
       "reason": "names LILYCOVE. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_CAMERON_1",
-      "resolution": "home",
+      "range": "home",
       "reason": "names MT. PYRE. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_CARA_HNS",
-      "resolution": "reword",
-      "reason": "Intro: \"You shouldn't be in here!\" now reads \"You shouldn't be here!\" (data/maps/DragonsDen_Cavern_hns/scripts.inc).",
+      "range": "class",
       "was": [
         "You shouldn't be in here!"
-      ]
+      ],
+      "reason": "Intro: \"You shouldn't be in here!\" now reads \"You shouldn't be here!\" (data/maps/DragonsDen_Cavern_hns/scripts.inc)."
     },
     {
       "trainer": "TRAINER_CARLEE",
-      "resolution": "reword",
-      "reason": "Intro: \"more harsh in this area\" now reads \"more harsh than usual\" (data/text/trainers.inc).",
+      "range": "class",
       "was": [
         "The sunlight seems to be more harsh in this area."
-      ]
+      ],
+      "reason": "Intro: \"more harsh in this area\" now reads \"more harsh than usual\" (data/text/trainers.inc)."
     },
     {
       "trainer": "TRAINER_CAROLINE",
-      "resolution": "home",
+      "range": "home",
       "reason": "names POKéMON LEAGUE, VICTORY ROAD; names a building or local event (LEAGUE). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_CHAD",
-      "resolution": "home",
+      "range": "home",
       "reason": "names underwater; refers to its surroundings (\"around here\"). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_CHARLIE",
-      "resolution": "place",
-      "place": "ship",
+      "range": "place:ship",
       "phrases": [
         "the ship"
       ],
@@ -261,8 +258,7 @@
     },
     {
       "trainer": "TRAINER_CHOW_HNS",
-      "resolution": "place",
-      "place": "tower",
+      "range": "place:tower",
       "phrases": [
         "this tower"
       ],
@@ -270,23 +266,22 @@
     },
     {
       "trainer": "TRAINER_CLARK",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"the tunnel\"). The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_CLAUDE",
-      "resolution": "home",
+      "range": "home",
       "reason": "names METEOR FALLS. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_CONNIE_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"the GYM\", \"this city's GYM\"); names a building or local event (GYM). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_CYNDY_1",
-      "resolution": "place",
-      "place": "coast",
+      "range": "place:coast",
       "phrases": [
         "This beach"
       ],
@@ -294,46 +289,45 @@
     },
     {
       "trainer": "TRAINER_DARIN_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"The SHRINE\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_DEAN",
-      "resolution": "home",
+      "range": "home",
       "reason": "names SOOTOPOLIS, SOOTOPOLIS CITY. The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_DEAN_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names ROCK TUNNEL; names a building or local event (POKéMON CENTER). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_DENISE",
-      "resolution": "home",
+      "range": "home",
       "reason": "names DEWFORD. The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_DENIS_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names CIANWOOD; refers to its surroundings (\"up here\"). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_DEZ_AND_LUKE",
-      "resolution": "reword",
-      "reason": "Post-battle line: \"I'm right here by your side\" now reads \"I'm here by your side\" (data/maps/MtPyre_2F/scripts.inc).",
+      "range": "class",
       "was": [
         "LUKE: Well, we lost but that's okay! I'm right here by your side."
-      ]
+      ],
+      "reason": "Post-battle line: \"I'm right here by your side\" now reads \"I'm here by your side\" (data/maps/MtPyre_2F/scripts.inc)."
     },
     {
       "trainer": "TRAINER_DIANA_1",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"This place\"). The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_DIANNE",
-      "resolution": "place",
-      "place": "cave",
+      "range": "place:cave",
       "phrases": [
         "this cave"
       ],
@@ -341,109 +335,108 @@
     },
     {
       "trainer": "TRAINER_DOMINIK",
-      "resolution": "home",
+      "range": "home",
       "reason": "names SLATEPORT. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_DUDLEY_HNS",
-      "resolution": "exclude",
+      "not_daily": true,
       "reason": "Route 25's six-trainer challenge numbers its opponents (\"No. 3\", \"second\", \"last in line\", \"the six of us\"); the line is about this trainer's place in the sequence, so it stays at home."
     },
     {
       "trainer": "TRAINER_DUNCAN",
-      "resolution": "home",
+      "range": "home",
       "reason": "names underwater; refers to its surroundings (\"The ship\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_ELAINE_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names CIANWOOD. The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_ELIJAH",
-      "resolution": "home",
+      "range": "home",
       "reason": "names SLATEPORT. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_ELLEN_HNS",
-      "resolution": "exclude",
+      "not_daily": true,
       "reason": "Route 25's six-trainer challenge numbers its opponents (\"No. 3\", \"second\", \"last in line\", \"the six of us\"); the line is about this trainer's place in the sequence, so it stays at home."
     },
     {
       "trainer": "TRAINER_ERIC",
-      "resolution": "home",
+      "range": "home",
       "reason": "names JAGGED PASS, MT. CHIMNEY. The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_ERIK_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names BLACKTHORN, ICE PATH. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_ERIN_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names GOLDENROD; refers to its surroundings (\"the GYM\"); names a building or local event (GYM). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_ERNEST_1",
-      "resolution": "home",
+      "range": "home",
       "reason": "names SHOAL CAVE; refers to its surroundings (\"The SHOAL CAVE\", \"inside the SHOAL CAVE\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_ETHAN_1",
-      "resolution": "home",
+      "range": "home",
       "reason": "names JAGGED PASS, MAUVILLE CITY. The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_EUGENE_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names OLIVINE. The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_FELIX",
-      "resolution": "home",
+      "range": "home",
       "reason": "names POKéMON LEAGUE; names a building or local event (LEAGUE). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_FOSTER",
-      "resolution": "reword",
-      "reason": "Intro: \"a mystical rock around here\" now reads \"a mystical rock somewhere\" (data/text/trainers.inc).",
+      "range": "class",
       "was": [
         "There's supposed to be a mystical rock around here. Do you know anything about it?"
-      ]
+      ],
+      "reason": "Intro: \"a mystical rock around here\" now reads \"a mystical rock somewhere\" (data/text/trainers.inc)."
     },
     {
       "trainer": "TRAINER_GAVEN_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names POKéMON LEAGUE, VICTORY ROAD; names a building or local event (LEAGUE). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_GEORGE_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names CIANWOOD, OLIVINE. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_GRANT_HNS",
-      "resolution": "reword",
-      "reason": "Intro: \"camping out here\" now reads \"camping alone\" (data/maps/Route47_hns/scripts.inc).",
+      "range": "class",
       "was": [
         "I'm camping out here with my POKéMON!"
-      ]
+      ],
+      "reason": "Intro: \"camping out here\" now reads \"camping alone\" (data/maps/Route47_hns/scripts.inc)."
     },
     {
       "trainer": "TRAINER_HALLE",
-      "resolution": "home",
+      "range": "home",
       "reason": "names VICTORY ROAD. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_HARRIS_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names UNDERGROUND PATH. The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_HEIDI",
-      "resolution": "place",
-      "place": "desert",
+      "range": "place:desert",
       "phrases": [
         "in the desert"
       ],
@@ -451,44 +444,43 @@
     },
     {
       "trainer": "TRAINER_HUDSON",
-      "resolution": "reword",
-      "reason": "Intro: \"another SAILOR around here?\" now reads \"another SAILOR?\" (data/text/trainers.inc).",
+      "range": "class",
       "was": [
         "Listen, have you seen another SAILOR around here?"
-      ]
+      ],
+      "reason": "Intro: \"another SAILOR around here?\" now reads \"another SAILOR?\" (data/text/trainers.inc)."
     },
     {
       "trainer": "TRAINER_HUEY",
-      "resolution": "home",
+      "range": "home",
       "reason": "names SLATEPORT; refers to its surroundings (\"In the best port\"). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_IRENE",
-      "resolution": "home",
+      "range": "home",
       "reason": "names MT. CHIMNEY; refers to its surroundings (\"around here\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_IRENE_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"this beach\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_ISABELLA",
-      "resolution": "reword",
-      "reason": "Post-battle line: \"shards of things around here\" now reads \"shards of things lying around\" (data/text/trainers.inc).",
+      "range": "class",
       "was": [
         "You can find pretty colored shards of things around here."
-      ]
+      ],
+      "reason": "Post-battle line: \"shards of things around here\" now reads \"shards of things lying around\" (data/text/trainers.inc)."
     },
     {
       "trainer": "TRAINER_ISAIAH_1",
-      "resolution": "home",
+      "range": "home",
       "reason": "names EVER GRANDE CITY. The intro and post-battle line and rematch line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_JANI",
-      "resolution": "place",
-      "place": "ship",
+      "range": "place:ship",
       "phrases": [
         "this ship"
       ],
@@ -496,91 +488,90 @@
     },
     {
       "trainer": "TRAINER_JAYLEN",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"around here\"). The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_JENNY_1",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"the TRICK HOUSE\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_JERRY_1",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"at the TRAINER'S SCHOOL\"). The intro and post-battle line and rematch line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_JOE_HNS",
-      "resolution": "exclude",
+      "not_daily": true,
       "reason": "Route 25's six-trainer challenge numbers its opponents (\"No. 3\", \"second\", \"last in line\", \"the six of us\"); the line is about this trainer's place in the sequence, so it stays at home."
     },
     {
       "trainer": "TRAINER_JOHNNY_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names LAVENDER. The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_JOHNSON",
-      "resolution": "reword",
-      "reason": "Intro: dropped \"It's a dead end up here.\" and kept \"I'm bored, so can we battle?\" (data/text/trainers.inc).",
+      "range": "class",
       "was": [
         "It's a dead end up here."
-      ]
+      ],
+      "reason": "Intro: dropped \"It's a dead end up here.\" and kept \"I'm bored, so can we battle?\" (data/text/trainers.inc)."
     },
     {
       "trainer": "TRAINER_JOSE_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names ROUTE 27; refers to its surroundings (\"out here\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_KARA_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"inside the ISLANDS\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_KATELYN_1",
-      "resolution": "home",
+      "range": "home",
       "reason": "names VICTORY ROAD. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_KAYLEE_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names WHIRL ISLANDS. The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_KENNY_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names ROCK TUNNEL. The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_KENT_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names CIANWOOD. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_KEVIN",
-      "resolution": "home",
+      "range": "home",
       "reason": "names PACIFIDLOG. The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_KIM_AND_IRIS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names SHOAL CAVE; refers to its surroundings (\"in the SHOAL CAVE\", \"out here\", \"the SHOAL CAVE\"). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_KINDRA",
-      "resolution": "home",
+      "range": "home",
       "reason": "names MT. PYRE. The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_KIRK_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"that island\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_LARRY_HNS",
-      "resolution": "place",
-      "place": "cave",
+      "range": "place:cave",
       "phrases": [
         "inside the cave"
       ],
@@ -588,13 +579,12 @@
     },
     {
       "trainer": "TRAINER_LAURA_HNS",
-      "resolution": "exclude",
+      "not_daily": true,
       "reason": "Route 25's six-trainer challenge numbers its opponents (\"No. 3\", \"second\", \"last in line\", \"the six of us\"); the line is about this trainer's place in the sequence, so it stays at home."
     },
     {
       "trainer": "TRAINER_LEAH",
-      "resolution": "place",
-      "place": "mountain",
+      "range": "place:mountain",
       "phrases": [
         "this mountain"
       ],
@@ -602,8 +592,7 @@
     },
     {
       "trainer": "TRAINER_LEONARD_HNS",
-      "resolution": "place",
-      "place": "cave",
+      "range": "place:cave",
       "phrases": [
         "down here"
       ],
@@ -611,66 +600,65 @@
     },
     {
       "trainer": "TRAINER_LLOYD_HNS",
-      "resolution": "exclude",
+      "not_daily": true,
       "reason": "Route 25's six-trainer challenge numbers its opponents (\"No. 3\", \"second\", \"last in line\", \"the six of us\"); the line is about this trainer's place in the sequence, so it stays at home."
     },
     {
       "trainer": "TRAINER_MARLENE",
-      "resolution": "reword",
-      "reason": "Post-battle line: \"But this place isn't very peaceful…\" now reads \"But it isn't very peaceful…\" (data/text/trainers.inc).",
+      "range": "class",
       "was": [
         "I was meditating with my POKéMON. But this place isn't very peaceful…"
-      ]
+      ],
+      "reason": "Post-battle line: \"But this place isn't very peaceful…\" now reads \"But it isn't very peaceful…\" (data/text/trainers.inc)."
     },
     {
       "trainer": "TRAINER_MATHEW_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names WHIRL ISLANDS. The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_MATTHEW",
-      "resolution": "home",
+      "range": "home",
       "reason": "names ABANDONED SHIP; refers to its surroundings (\"that ABANDONED SHIP\", \"the ABANDONED SHIP\"). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_MICHELLE",
-      "resolution": "home",
+      "range": "home",
       "reason": "names POKéMON LEAGUE; names a building or local event (LEAGUE). The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_NARD_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"this tower\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_NICO_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"the TOWER\"). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_OWEN",
-      "resolution": "home",
+      "range": "home",
       "reason": "names PETALBURG CITY. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_PETER_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names VIOLET CITY; refers to its surroundings (\"at the GYM\"); names a building or local event (GYM). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_QUENTIN_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names TRAINER HILL. The defeat and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_QUINCY",
-      "resolution": "home",
+      "range": "home",
       "reason": "names VICTORY ROAD. The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_RAY_HNS",
-      "resolution": "place",
-      "place": "cave",
+      "range": "place:cave",
       "phrases": [
         "this cave"
       ],
@@ -678,137 +666,136 @@
     },
     {
       "trainer": "TRAINER_REENA_HNS",
-      "resolution": "reword",
-      "reason": "Intro and rematch intro: \"wild POKéMON in these parts\" now reads \"wild POKéMON\" (data/maps/Route27_hns/scripts.inc).",
+      "range": "class",
       "was": [
         "You shouldn't underestimate the wild POKéMON in these parts."
-      ]
+      ],
+      "reason": "Intro and rematch intro: \"wild POKéMON in these parts\" now reads \"wild POKéMON\" (data/maps/Route27_hns/scripts.inc)."
     },
     {
       "trainer": "TRAINER_RELI_AND_IAN",
-      "resolution": "home",
+      "range": "home",
       "reason": "names PACIFIDLOG. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_RICHARDO_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names BURNED TOWER; refers to its surroundings (\"in the BURNED TOWER\"). The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_RICKY_1",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"at the SEASHORE HOUSE\"). The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_ROB_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names VIRIDIAN. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_RUSSELL_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names AZALEA. The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_SAMUEL",
-      "resolution": "home",
+      "range": "home",
       "reason": "names POKéMON LEAGUE; names a building or local event (LEAGUE). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_SHANNON_HNS",
-      "resolution": "exclude",
+      "not_daily": true,
       "reason": "Route 25's six-trainer challenge numbers its opponents (\"No. 3\", \"second\", \"last in line\", \"the six of us\"); the line is about this trainer's place in the sequence, so it stays at home."
     },
     {
       "trainer": "TRAINER_SIDNEY_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names POWER PLANT; refers to its surroundings (\"The POWER PLANT\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_SIMON_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names CIANWOOD CITY. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_SOPHIE",
-      "resolution": "reword",
-      "reason": "Post-battle line: \"I'm just going to sleep right here!\" now reads \"I'm just going to sleep!\" (data/text/trainers.inc).",
+      "range": "class",
       "was": [
         "I'm just going to sleep right here!"
-      ]
+      ],
+      "reason": "Post-battle line: \"I'm just going to sleep right here!\" now reads \"I'm just going to sleep!\" (data/text/trainers.inc)."
     },
     {
       "trainer": "TRAINER_SPENCER_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names LAKE OF RAGE. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_STAN_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"The RUINS\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_TAMMY",
-      "resolution": "home",
+      "range": "home",
       "reason": "names MT. PYRE. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_TANYA",
-      "resolution": "home",
+      "range": "home",
       "reason": "names MOSSDEEP CITY. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_TERRELL_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names OLIVINE; refers to its surroundings (\"The GYM\", \"the GYM\"); names a building or local event (GYM). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_TIFFANY_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names LAKE OF RAGE. The intro and rematch line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_TIMMY",
-      "resolution": "reword",
-      "reason": "Intro: \"in the grass around here\" now reads \"in the grass\" (data/text/trainers.inc).",
+      "range": "class",
       "was": [
         "I found some cool POKéMON in the grass around here!"
-      ]
+      ],
+      "reason": "Intro: \"in the grass around here\" now reads \"in the grass\" (data/text/trainers.inc)."
     },
     {
       "trainer": "TRAINER_TOBY_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names CIANWOOD CITY. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_TRENT_1",
-      "resolution": "home",
+      "range": "home",
       "reason": "names MT. CHIMNEY; refers to its surroundings (\"these mountain trails\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_ULAULA_COOLTRAINER_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"This cave\", \"that cave\"). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_ULAULA_HIKER_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names MT. LANIKALA, ULA'ULA ISLE; refers to its surroundings (\"this mountain\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_ULAULA_YOUNGSTER_HNS",
-      "resolution": "home",
+      "range": "home",
       "reason": "names MT. LANIKALA; refers to its surroundings (\"this mountain\"). The defeat and intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_VANESSA",
-      "resolution": "home",
+      "range": "home",
       "reason": "names LILYCOVE; names a building or local event (CONTEST). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_BURGLAR_ARNIE",
-      "resolution": "place",
-      "place": "mansion",
+      "range": "place:mansion",
       "phrases": [
         "This old place"
       ],
@@ -816,8 +803,7 @@
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_BURGLAR_SIMON",
-      "resolution": "place",
-      "place": "mansion",
+      "range": "place:mansion",
       "phrases": [
         "This place"
       ],
@@ -825,8 +811,7 @@
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_FISHERMAN_CLAUDE",
-      "resolution": "place",
-      "place": "coast",
+      "range": "place:coast",
       "phrases": [
         "this place"
       ],
@@ -834,18 +819,17 @@
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_PICNICKER_IRENE",
-      "resolution": "home",
+      "range": "home",
       "reason": "names SEAFOAM. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_PICNICKER_MISSY",
-      "resolution": "home",
+      "range": "home",
       "reason": "names CINNABAR, CINNABAR ISLAND, POKéMON MANSION. The intro and post-battle line and rematch line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_SCIENTIST_IVAN",
-      "resolution": "place",
-      "place": "mansion",
+      "range": "place:mansion",
       "phrases": [
         "This place"
       ],
@@ -853,28 +837,27 @@
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ALICE",
-      "resolution": "home",
+      "range": "home",
       "reason": "names SEAFOAM ISLANDS. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ANYA",
-      "resolution": "home",
+      "range": "home",
       "reason": "names FUCHSIA, SEAFOAM ISLANDS. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_MELISSA",
-      "resolution": "home",
+      "range": "home",
       "reason": "names CINNABAR. The intro and post-battle line and rematch line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_SHIRLEY",
-      "resolution": "home",
+      "range": "home",
       "reason": "names SEAFOAM; refers to its surroundings (\"this island\"). The intro and post-battle line and rematch line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_AXLE",
-      "resolution": "place",
-      "place": "coast",
+      "range": "place:coast",
       "phrases": [
         "These waters"
       ],
@@ -882,78 +865,77 @@
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_AROMA_LADY_ROSE",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"the woods\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_AROMA_LADY_VIOLET",
-      "resolution": "home",
+      "range": "home",
       "reason": "names BERRY FOREST. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_BIRD_KEEPER_MILO",
-      "resolution": "home",
+      "range": "home",
       "reason": "names FOUR ISLAND. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_BLACK_BELT_SHEA",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"this island\"). The intro and rematch line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_BUG_CATCHER_GARRET",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"around here\"). The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_CRUSH_GIRL_CYNDY",
-      "resolution": "home",
+      "range": "home",
       "reason": "names TRAINER TOWER. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_PKMN_RANGER_NICOLAS",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"This island\", \"the TOWER\"). The intro and post-battle line and rematch line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_POKEMANIAC_HECTOR",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"the ruins\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_PSYCHIC_LAURA",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"the caves\", \"the right tunnel\", \"this cave\"). The defeat and intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_PSYCHIC_RODETTE",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"this island\"). The intro and post-battle line and rematch line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BRANDON",
-      "resolution": "home",
+      "range": "home",
       "reason": "names TANOBY RUINS; refers to its surroundings (\"The TANOBY RUINS\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_RUIN_MANIAC_FOSTER",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"on the SEVII ISLANDS\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_RUIN_MANIAC_LARRY",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"Those ruins\", \"the ruins\", \"this island\"). The intro and post-battle line and rematch line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_RUIN_MANIAC_LAYTON",
-      "resolution": "home",
+      "range": "home",
       "reason": "names PATTERN BUSH. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_AMARA",
-      "resolution": "place",
-      "place": "coast",
+      "range": "place:coast",
       "phrases": [
         "in these parts"
       ],
@@ -961,22 +943,22 @@
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_NICOLE",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"the island\"). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_SWIMMER_MALE_FINN",
-      "resolution": "home",
+      "range": "home",
       "reason": "names MT. EMBER. The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_SWIMMER_MALE_MYMO",
-      "resolution": "home",
+      "range": "home",
       "reason": "names SIX ISLAND. The rematch line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_WAYNE",
-      "resolution": "home",
+      "range": "home",
       "reason": "refers to its surroundings (\"the falls\"). The intro is about the place the trainer was written for, so it stays at home."
     }
   ]
