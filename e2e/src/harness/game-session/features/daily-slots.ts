@@ -22,7 +22,14 @@ export type DailySlotsApi = {
   reapply: () => Promise<void>
   /** What the last managed pickup gave and how many there were since boot. */
   found: () => Promise<{ count: number; item: number }>
+  /**
+   * Who stands in the current map's rotating trainer slots: each entry's slot row and its occupant's
+   * slot row (the same row when the slot's own trainer stands there, `away` when it is empty today).
+   */
+  trainerOccupants: () => Promise<{ slot: number; occupant: number; away: boolean }[]>
 }
+
+const awayOccupant = 0xfffe
 
 export const createDailySlotsApi = (runtime: SessionRuntime): DailySlotsApi => {
   let lastPin: { day: number; seed?: number; noEmpty?: boolean } | undefined
@@ -44,6 +51,16 @@ export const createDailySlotsApi = (runtime: SessionRuntime): DailySlotsApi => {
     },
     reapply: async () => {
       if (lastPin) await api.pin(lastPin)
+    },
+    trainerOccupants: async () => {
+      const count = (await runtime.readBytes(runtime.address("gDailyTrainersDebugOccupantCount"), 1))[0]!
+      if (count === 0) return []
+      const bytes = await runtime.readBytes(runtime.address("gDailyTrainersDebugOccupants"), count * 4)
+      const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength)
+      return Array.from({ length: count }, (_, index) => {
+        const occupant = view.getUint16(index * 4 + 2, true)
+        return { slot: view.getUint16(index * 4, true), occupant, away: occupant === awayOccupant }
+      })
     },
     found: async () => ({
       count: await runtime.readUint16(runtime.address("gDailySlotsDebugFoundCount")),

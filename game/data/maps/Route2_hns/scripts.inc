@@ -72,8 +72,8 @@ Route2_Text_RobRematchDefeat:
 	.string "I need better bugs!$"
 
 Route2_Text_RobPostRematch:
-	.string "I caught every bug in VIRIDIAN.\n"
-	.string "Is there a better FOREST somewhere?$"
+	.string "I caught every bug I could find.\n"
+	.string "Is there a better place somewhere?$"
 
 Route2_Text_BugCatcherRob_Seen:
 	.string "My bug POKéMON are tough. Prepare to\n"

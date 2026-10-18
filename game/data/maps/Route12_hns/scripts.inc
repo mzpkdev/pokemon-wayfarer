@@ -112,8 +112,7 @@ Route12_Text_FisherBarneyAfterBattle:
 	.string "lives.\p"
 	.string "If it weren't, people wouldn't\n"
 	.string "have made such a fuss when the\l"
-	.string "POWER PLANT went out of\l"
-	.string "commission.$"
+	.string "power went out.$"
 
 Route12_Text_KyleRegister:
 	.string "I'll remember this.\n"

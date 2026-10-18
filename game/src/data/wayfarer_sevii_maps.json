@@ -13479,7 +13479,7 @@
             "include": "data/maps/SixIsland_RuinValley_Frlg/scripts.inc",
             "label": "SixIsland_RuinValley_OnLoad",
             "sha256": "bf813673ca60ec4b167032a7dfc68862dbe5e83dbacbddd9e2077f9dfd5d26bc",
-            "file_sha256": "5c69f02b5e411579bcc9405c8221eccda5198220e7573c583a83f56bcaf27747"
+            "file_sha256": "432fac9c4e213e1908c1ba5bf540b999f13a8605f82c1a378bdb0fa0016bd342"
           },
           "wayfarer_script": "WayfarerSevii_RuinValley_OnLoad",
           "reason": "Preserves accepted Wayfarer environmental geometry without FRLG campaign state."
@@ -18142,7 +18142,7 @@
     }
   ],
   "baseline": {
-    "projection_sha256": "55080575293b88514bd4b6d6b24e4c18622c4d0cc77828f3fda0f10447a3887c",
+    "projection_sha256": "6feb270680bbb49893a1594fd249354bbc62f3f80f85184ddaa15ff1d0ceb435",
     "wild_encounters_sha256": "a2264a3346ae5ac0a37cdc22169a1455b2a51a9b7b626f3090504d84eaabb0b7",
     "event_island_baseline_sha256": "75086dcd44b31f457405a6b9f0d6598832ead0532b8437ea0fdf4752768f0a9f"
   },
@@ -19191,7 +19191,7 @@
           "label": "UpdateFollowingPokemon",
           "kind": "native",
           "path": "src/event_object_movement.c",
-          "sha256": "766f6b5587623496a7fe844a5818a98b59932949f2acbad8cb8369b3c222696c"
+          "sha256": "acd68264fad243497247d043cdcfe71e3841367ef937d4e5a078dccdba0d8bb2"
         },
         {
           "label": "gText_HowMayIServeYou",
@@ -19334,25 +19334,25 @@
           "label": "SixIsland_RuinValley_Text_CheckDoorMoreThoroughly",
           "kind": "script_symbol",
           "path": "data/maps/SixIsland_RuinValley_Frlg/scripts.inc",
-          "sha256": "5c69f02b5e411579bcc9405c8221eccda5198220e7573c583a83f56bcaf27747"
+          "sha256": "432fac9c4e213e1908c1ba5bf540b999f13a8605f82c1a378bdb0fa0016bd342"
         },
         {
           "label": "SixIsland_RuinValley_Text_SeveralDotsOnTheDoor",
           "kind": "script_symbol",
           "path": "data/maps/SixIsland_RuinValley_Frlg/scripts.inc",
-          "sha256": "5c69f02b5e411579bcc9405c8221eccda5198220e7573c583a83f56bcaf27747"
+          "sha256": "432fac9c4e213e1908c1ba5bf540b999f13a8605f82c1a378bdb0fa0016bd342"
         },
         {
           "label": "SixIsland_RuinValley_Text_DoorIsOpen",
           "kind": "script_symbol",
           "path": "data/maps/SixIsland_RuinValley_Frlg/scripts.inc",
-          "sha256": "5c69f02b5e411579bcc9405c8221eccda5198220e7573c583a83f56bcaf27747"
+          "sha256": "432fac9c4e213e1908c1ba5bf540b999f13a8605f82c1a378bdb0fa0016bd342"
         },
         {
           "label": "SixIsland_RuinValley_Text_LeftDoorAlone",
           "kind": "script_symbol",
           "path": "data/maps/SixIsland_RuinValley_Frlg/scripts.inc",
-          "sha256": "5c69f02b5e411579bcc9405c8221eccda5198220e7573c583a83f56bcaf27747"
+          "sha256": "432fac9c4e213e1908c1ba5bf540b999f13a8605f82c1a378bdb0fa0016bd342"
         },
         {
           "label": "Braille_Text_Cut",
@@ -20133,19 +20133,19 @@
           "label": "SixIsland_OutcastIsland_Text_RocketDefeat",
           "kind": "script_symbol",
           "path": "data/maps/SixIsland_OutcastIsland_Frlg/scripts.inc",
-          "sha256": "8dd6f502a09d5822888a6d7598b45af2f64b817f08d7c6dca752aef2b0d6d2a8"
+          "sha256": "c77e80430deeccb449bc2bade19838eacf19ebf94cb88e56a321207f7936c2c3"
         },
         {
           "label": "SixIsland_OutcastIsland_Text_RocketIntro",
           "kind": "script_symbol",
           "path": "data/maps/SixIsland_OutcastIsland_Frlg/scripts.inc",
-          "sha256": "8dd6f502a09d5822888a6d7598b45af2f64b817f08d7c6dca752aef2b0d6d2a8"
+          "sha256": "c77e80430deeccb449bc2bade19838eacf19ebf94cb88e56a321207f7936c2c3"
         },
         {
           "label": "SixIsland_OutcastIsland_Text_RocketPostBattle",
           "kind": "script_symbol",
           "path": "data/maps/SixIsland_OutcastIsland_Frlg/scripts.inc",
-          "sha256": "8dd6f502a09d5822888a6d7598b45af2f64b817f08d7c6dca752aef2b0d6d2a8"
+          "sha256": "c77e80430deeccb449bc2bade19838eacf19ebf94cb88e56a321207f7936c2c3"
         },
         {
           "label": "SixIsland_Text_SkyAtNightIsFantastic",
@@ -20971,7 +20971,7 @@
           "label": "SevenIsland_SevaultCanyon_Text_BrunoTrainedWithBrawly",
           "kind": "script_symbol",
           "path": "data/maps/SevenIsland_SevaultCanyon_Frlg/scripts.inc",
-          "sha256": "3c3c6b5cd4b651210576984d596ab6a8e2a2e37ed4f8ab4b56234c14eae8f20c"
+          "sha256": "d6bc1572bdc0c3ec6d429513d8ef017deb752b1238f28501b0a523cc23b20b9f"
         },
         {
           "label": "SixIsland_House_Text_GoodPlaceForNatureAndHistory",
@@ -21007,13 +21007,13 @@
           "label": "SixIsland_RuinValley_Text_CantFigureOutHowToGetInside",
           "kind": "script_symbol",
           "path": "data/maps/SixIsland_RuinValley_Frlg/scripts.inc",
-          "sha256": "5c69f02b5e411579bcc9405c8221eccda5198220e7573c583a83f56bcaf27747"
+          "sha256": "432fac9c4e213e1908c1ba5bf540b999f13a8605f82c1a378bdb0fa0016bd342"
         },
         {
           "label": "SixIsland_RuinValley_Text_IFoundThisPlace",
           "kind": "script_symbol",
           "path": "data/maps/SixIsland_RuinValley_Frlg/scripts.inc",
-          "sha256": "5c69f02b5e411579bcc9405c8221eccda5198220e7573c583a83f56bcaf27747"
+          "sha256": "432fac9c4e213e1908c1ba5bf540b999f13a8605f82c1a378bdb0fa0016bd342"
         },
         {
           "label": "ThreeIsland_House2_Text_CantMakeThisSpoonBend",
@@ -22217,19 +22217,19 @@
           "label": "SevenIsland_SevaultCanyon_Text_RouteSign",
           "kind": "script_symbol",
           "path": "data/maps/SevenIsland_SevaultCanyon_Frlg/scripts.inc",
-          "sha256": "3c3c6b5cd4b651210576984d596ab6a8e2a2e37ed4f8ab4b56234c14eae8f20c"
+          "sha256": "d6bc1572bdc0c3ec6d429513d8ef017deb752b1238f28501b0a523cc23b20b9f"
         },
         {
           "label": "SevenIsland_TrainerTower_Text_TrainerTowerAhead",
           "kind": "script_symbol",
           "path": "data/maps/SevenIsland_TrainerTower_Frlg/scripts.inc",
-          "sha256": "a8b779c60926953fa641de83c5298713d3042e2c32dbcf10546acc23916390da"
+          "sha256": "2821d4395959e292c428698ad1f6165bf584fd18c17fe9708951b68a2882f1fc"
         },
         {
           "label": "SevenIsland_TrainerTower_Text_TrainerTowerSign",
           "kind": "script_symbol",
           "path": "data/maps/SevenIsland_TrainerTower_Frlg/scripts.inc",
-          "sha256": "a8b779c60926953fa641de83c5298713d3042e2c32dbcf10546acc23916390da"
+          "sha256": "2821d4395959e292c428698ad1f6165bf584fd18c17fe9708951b68a2882f1fc"
         },
         {
           "label": "SixIsland_GreenPath_Text_LeftRouteSign",

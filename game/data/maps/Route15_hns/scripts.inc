@@ -148,8 +148,8 @@ Route15_Text_SchoolboyTommyAfterBattle:
 	.string "my Japanese class.$"
 
 Route15_Text_SchoolboyJohnnySeen:
-	.string "We're on a field trip to LAVENDER\n"
-	.string "RADIO TOWER for social studies.$"
+	.string "We're on a field trip for social\n"
+	.string "studies.$"
 
 Route15_Text_SchoolboyJohnnyBeaten:
 	.string "You're wickedly tough!$"

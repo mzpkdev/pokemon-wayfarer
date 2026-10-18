@@ -1100,7 +1100,7 @@ WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Text_CyndyIntro::
 
 WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Text_CyndyPostBattle::
 	.string "The way I am now, I may have to\n"
-	.string "hold off on TRAINER TOWER…$"
+	.string "hold off on my next challenge…$"
 
 WayfarerSevii_Trainer_SevenIsland_SevaultCanyon_Text_CyndyRematchIntro::
 	.string "Let's have another battle.\n"
@@ -1405,17 +1405,17 @@ WayfarerSevii_Trainer_SevenIsland_TrainerTower_Text_RodetteDefeat::
 	.string "What an amazing TRAINER!$"
 
 WayfarerSevii_Trainer_SevenIsland_TrainerTower_Text_RodetteIntro::
-	.string "Somewhere on this island, peculiar\n"
+	.string "Somewhere out there, peculiar\n"
 	.string "POKéMON are sleeping.$"
 
 WayfarerSevii_Trainer_SevenIsland_TrainerTower_Text_RodettePostBattle::
-	.string "Somewhere on this island, peculiar\n"
+	.string "Somewhere out there, peculiar\n"
 	.string "POKéMON are sleeping.\p"
 	.string "Could it be that they're waiting\n"
 	.string "for you?$"
 
 WayfarerSevii_Trainer_SevenIsland_TrainerTower_Text_RodetteRematchIntro::
-	.string "Somewhere on this island, peculiar\n"
+	.string "Somewhere out there, peculiar\n"
 	.string "POKéMON are sleeping.$"
 
 WayfarerSevii_Trainer_SixIsland_GreenPath_EventScript_Jaclyn::
@@ -1557,8 +1557,7 @@ WayfarerSevii_Trainer_SixIsland_OutcastIsland_Text_MymoDefeat::
 
 WayfarerSevii_Trainer_SixIsland_OutcastIsland_Text_MymoIntro::
 	.string "Gasp… Gasp…\p"
-	.string "I swam here from SIX ISLE PORT\n"
-	.string "in one go.$"
+	.string "I swam here in one go.$"
 
 WayfarerSevii_Trainer_SixIsland_OutcastIsland_Text_MymoPostBattle::
 	.string "I'm only at the halfway point…\n"
@@ -1566,8 +1565,7 @@ WayfarerSevii_Trainer_SixIsland_OutcastIsland_Text_MymoPostBattle::
 
 WayfarerSevii_Trainer_SixIsland_OutcastIsland_Text_MymoRematchIntro::
 	.string "Gasp… Gasp…\p"
-	.string "I swam here from SIX ISLAND's port\n"
-	.string "in one go again.$"
+	.string "I swam here in one go again.$"
 
 WayfarerSevii_Trainer_SixIsland_OutcastIsland_Text_NicoleDefeat::
 	.string "I didn't lose to you at swimming.\n"
@@ -1900,8 +1898,8 @@ WayfarerSevii_Trainer_SixIsland_RuinValley_Text_FosterIntro::
 	.string "come here?$"
 
 WayfarerSevii_Trainer_SixIsland_RuinValley_Text_FosterPostBattle::
-	.string "There are several ruins on the\n"
-	.string "SEVII ISLANDS.\p"
+	.string "There are many ruins in the\n"
+	.string "world.\p"
 	.string "The majority of them date back\n"
 	.string "a long way.$"
 

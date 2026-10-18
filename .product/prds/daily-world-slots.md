@@ -1,7 +1,8 @@
 # Daily world slots
 
-Implemented: Partial. The item slots ([Item slots](#item-slots)) are implemented;
-trainer slots, trainer groups, phone rematches and the dialogue audit are not.
+Implemented: Partial. The item slots ([Item slots](#item-slots)), the trainer slots,
+the trainer ranges and the dialogue audit are implemented; phone numbers, calls and
+rematches ([Phone rematches](../specs/phone-rematches.md)) are not.
 
 Specifications: [Daily world slots](../specs/daily-world-slots.md),
 [World items](../specs/world-items.md),
@@ -36,21 +37,27 @@ and travel stays light because some spots are empty.
 - **Slot:** a regular trainer spot or an item spot on a map, keeping its
   position, facing and sight range.
 - **Authored occupant:** the trainer or item placed in the slot today.
-- **Rotating slot:** a dynamic spot, or a slot whose authored occupant is used
+- **Free slot:** a dynamic spot, or a slot whose authored occupant is used
   up: the trainer is defeated or the prize is picked up.
-- **Draw:** what a rotating slot holds on a given day: one candidate from its
+- **Draw:** what a free slot holds on a given day: one candidate from its
   pool, or nothing.
-- **Pool:** the candidates a rotating slot draws from.
+- **Pool:** the candidates a free slot draws from.
 - **Static prize:** an item spot holding a fixed, authored item that you find
   once.
 - **Dynamic spot:** an item spot that draws a random find every day.
 - **Class family:** a trainer class with its per-source copies merged, for
   example Hiker, Hiker (HNS) and Hiker (FRLG).
-- **Trainer group:** the regular trainers of one class family in one region,
-  together with their home slots.
+- **Range:** the group of slots a beaten trainer can stand in: the slots of its
+  class family in its region (class), the slots of one place type in its region
+  for a trainer whose lines need a kind of place (place), or its own slot
+  (home).
+- **Absence chance:** the chance that a free slot is empty on a given day, 25%
+  by default and set per slot. At 0% someone is always there.
+- **Not daily:** a regular-looking trainer that stays where it was authored, for
+  a stated reason.
 - **Home slot:** the slot a trainer was authored in.
 - **Wandering trainer:** a regular trainer you have beaten. Their home slot
-  rotates, and they appear in their group's rotating slots.
+  becomes free, and they appear in the free slots of their range.
 - **Rematch team:** one of a trainer's stronger authored teams for later
   battles, up to five in total.
 
@@ -73,8 +80,8 @@ with its authored occupant and keeps it until it is used up. Prizes are
 therefore never lost to a draw: each one is found exactly once, where it is
 placed.
 
-After that, the slot becomes a rotating slot from the next day. Dynamic spots
-skip this step and rotate from the first day.
+After that, the slot becomes a free slot from the next day. Dynamic spots
+skip this step and are free from the first day.
 
 ### Clearing a slot
 
@@ -84,13 +91,17 @@ empty. Losing to a trainer clears nothing.
 
 ### Empty slots
 
-Each day a rotating slot is empty with a flat 25% chance. Otherwise it draws
-one candidate from its pool. The chance is the same in every region, reach and
-Trainer Rating.
+Each day a free slot is empty with its absence chance, 25% unless the slot sets
+another. Otherwise it draws one candidate from its pool. The chance is the same
+in every region, reach and Trainer Rating, except where a slot sets its own.
 
 ### Trainer slots
 
-Only regular trainer slots rotate. These stay fixed under today's rules:
+One rule: **a beaten trainer is placed somewhere in their range each day, and
+is battleable once there; each free slot is empty with its absence chance.**
+
+Only regular trainer slots are daily. These stay where they are authored (not
+daily):
 
 - Gym trainers, inside their Gyms.
 - Rivals, villain bosses and admins, Elite Four members, Champions and
@@ -100,6 +111,8 @@ Only regular trainer slots rotate. These stay fixed under today's rules:
   Offering a phone number or giving a one-time item doesn't count.
 - Battle facility trainers, including the Battle Pyramid, Trainer Hill and
   Trainer Tower.
+- One-time ship content, the Trick House puzzle rooms and Pokemon Tower, and the
+  Route 25 challenge, whose lines number its trainers.
 
 The classification reuses the regular-trainer classification that
 [trainer party scaling](trainer-party-scaling.md#coverage-and-exclusions)
@@ -110,26 +123,33 @@ one-time gifts move with the trainer (see
 #### Trainers are people
 
 A trainer you haven't beaten waits at their home slot. Once you beat them,
-they become a wandering trainer and their home slot starts rotating the next
-day.
+they become a wandering trainer and their home slot becomes free the next day.
 
-Each day, every trainer group shuffles its wandering trainers into its rotating
-slots. As a result:
+Each day, every range shuffles its wandering trainers into its free slots. As a
+result:
 
 - **One place a day.** A trainer appears in at most one slot a day, anywhere in
   the world. Some days they appear nowhere.
-- **Variety grows as you explore.** A group's rotating slots only draw from
-  trainers you have beaten in that group. Early on a group may have one
+- **Variety grows as you explore.** A range's free slots only draw from
+  trainers you have beaten in that range. Early on a range may have one
   wandering trainer, who keeps returning to their own spot. Once you have
   cleared a region, every spot of that kind can hold any of its trainers.
-- **Empty spots.** Each rotating slot is empty with the flat empty chance. A
-  trainer left without a slot is away for the day.
+- **Empty spots.** Each free slot is empty with its absence chance. A trainer
+  left without a slot is away for the day. A slot with no absence always has
+  someone in it.
 - **Each candidate brings their own** name, sprite, party, dialogue, phone
   number and gifts. The slot keeps its own position, facing and sight range.
-- **Pairs rotate as pairs.** Two-trainer slots, such as Twins or a Young
-  Couple, form their own group and draw only pairs.
+- **Pairs move as pairs.** Two-trainer slots, such as Twins or a Young
+  Couple, form their own range and draw only pairs.
+- **Class range (the default).** The slots of the trainer's class family in the
+  region.
+- **Place range.** A trainer whose lines only make sense in a cave, a desert, on
+  a ship or on a coast moves among spots of that kind in its region, with any
+  class.
+- **Home range.** A trainer whose lines name their own town, route or landmark
+  has only their own slot: each day they are there or away, never anywhere else.
 
-A wandering trainer in a rotating slot battles you again on any day you meet
+A wandering trainer in a free slot battles you again on any day you meet
 them. Clearing them clears that slot for the day.
 
 **Strength and rewards** follow the existing regular trainer rules: the
@@ -164,11 +184,11 @@ Phone numbers and rematches belong to the trainer, not the spot:
   starts. Each of them is always given a slot that day, so a call never sends
   you to an empty spot. A trainer who becomes ready during the day is placed
   and calls from the next day, and beating a ready trainer clears their
-  readiness without moving anyone that day. If their group has no rotating
-  slot free that day, the call waits for the next day.
+  readiness without moving anyone that day. If their range has no free
+  slot that day, the call waits for the next day.
 - **Gifts.** The nine HNS contacts who hand out items keep doing so from
   wherever they stand: their gift call names today's place, and the item is
-  handed over at the rotating slot, not only in their home map.
+  handed over at the free slot, not only in their home map.
 - **Hoenn's trainers** join the phone through the separate
   [Hoenn phone rematches](hoenn-phone-rematches.md) design, and the FRLG
   trainers on Sevii and the Kanto coast through
@@ -256,7 +276,7 @@ Itemfinder finds hidden dynamic items the same way it finds authored ones.
 
 ## Boundaries
 
-- Story content, Gyms, notable trainers and Leagues don't rotate. The
+- Story content, Gyms, notable trainers and Leagues are not daily. The
   repeatable challenge in the late game stays with
   [notable trainers](notable-trainers.md) and [Leagues](leagues.md).
 - Authored trainer placement, parties and dialogue stay as they are. Items
@@ -280,8 +300,8 @@ Itemfinder finds hidden dynamic items the same way it finds authored ones.
   Road. Each is a renewable source of permanent power, so their weights need
   the closest tuning.
 - **Region size shapes variety.** Once a region is cleared, the median trainer
-  group has about 7 trainers, and about 14 slots are alone in their group
-  (2026-10-07 inventory). Before that, a group's variety is the number of its
+  range has about 7 trainers, and about 14 slots are alone in their range
+  (2026-10-07 inventory). Before that, a range's variety is the number of its
   trainers you have beaten.
 
 ## Content
@@ -305,7 +325,7 @@ generated objects excluded:
   brings them back first, with the rest of what the port meant to keep, so
   Sevii's spots start with their authored items like every other region.
 - **Dialogue audit (required):** a trainer's intro and post-battle lines move
-  with them. Every candidate's lines are audited before it can rotate. Lines
+  with them. Every candidate's lines are audited before it can be daily. Lines
   that name a place, landmark or local event get neutral wording, or the
   trainer leaves the pool.
 - **Rematches:** 176 rematch families (a pair counts once) have rematch
@@ -321,7 +341,7 @@ generated objects excluded:
 
 ## Interactions
 
-- **Trainer party scaling:** rotating trainers are regular trainers for
+- **Trainer party scaling:** daily trainers are regular trainers for
   scaling. This replaces that design's rule that adds no repeatable farming.
 - **Wild encounters v2:** item pools follow the
   [reach assignments](../specs/reach-assignments.md).
@@ -329,7 +349,7 @@ generated objects excluded:
   stands on a slot's tile.
 - **Randomizer settings:** the item and trainer randomizers apply to a draw the
   same way they apply to authored content.
-- **Challenge settings** such as Nuzlocke and mono-type apply to rotating
+- **Challenge settings** such as Nuzlocke and mono-type apply to daily
   trainers as they apply to authored ones.
 
 ## Constraints
@@ -360,8 +380,8 @@ generated objects excluded:
 
 ## Open questions
 
-- Does a group with very few wandering trainers feel repetitive early on, and
-  should the empty chance be higher in small groups?
+- Does a range with very few wandering trainers feel repetitive early on, and
+  should the absence chance be higher in small ranges?
 
 ## References
 

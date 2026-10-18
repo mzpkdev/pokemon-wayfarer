@@ -106,7 +106,7 @@ Alola_Melemele_BattleDugtrio_Text_0:
 	.string "Cha-Cha!$"
 
 Alola_AkalaCave_TrainerBattleHiker_Text_0:
-	.string "You must be tough if you made it all the\nway up here!$"
+	.string "You must be tough if you made it all the\nway here!$"
 
 Alola_AkalaCave_TrainerBattleHiker_Text_1:
 	.string "Tougher than me!$"
@@ -134,4 +134,4 @@ Alola_AkalaCave_TrainerBattleCamper_Text_1:
 	.string "Not bad,\nbut not good enough!$"
 
 Alola_AkalaCave_TrainerBattleCamper_Text_2:
-	.string "Is it warm in here or is it just me?$"
+	.string "Is it warm or is it just me?$"

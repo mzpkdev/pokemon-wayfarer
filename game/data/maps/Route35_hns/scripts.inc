@@ -184,8 +184,8 @@ Route35_Text_BugCatcherArnieBeaten:
 	.string "Huh? I shouldn't have lost that…$"
 
 Route35_Text_BugCatcherArnieAfter:
-	.string "My VENONAT won me the Bug-Catching\n"
-	.string "Contest at the NATIONAL PARK.$"
+	.string "My VENONAT won me a bug-catching\n"
+	.string "tournament.$"
 
 Route35_Text_IrwinRegister:
 	.string "I was going to dazzle you with my\n"
@@ -204,8 +204,8 @@ Route35_Text_ArnieRematchDefeat:
 	.string "Huh? I shouldn't have lost that…$"
 
 Route35_Text_ArniePostRematch:
-	.string "My VENONAT won me the Bug-Catching\n"
-	.string "Contest at the NATIONAL PARK.$"
+	.string "My VENONAT won me a bug-catching\n"
+	.string "tournament.$"
 
 Route35_Text_BugCatcherArnieYanma:
 	.string "Wow… Look at all those YANMA!\p"

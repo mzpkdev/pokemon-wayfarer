@@ -203,7 +203,7 @@ Route27_Text_CooltrainermBrianAfter:
 
 Route27_Text_CooltrainerfReenaSeen:
     .string "You shouldn't underestimate the\n"
-    .string "wild POKéMON in these parts.$"
+    .string "wild POKéMON.$"
 
 Route27_Text_CooltrainerfReenaBeaten:
     .string "Oh! You're much too strong!$"
@@ -218,7 +218,7 @@ Route27_Text_ReenaRegister:
 
 Route27_Text_ReenaRematchIntro:
     .string "You shouldn't underestimate the\n"
-    .string "wild POKéMON in these parts.$"
+    .string "wild POKéMON.$"
 
 Route27_Text_ReenaRematchDefeat:
     .string "Oh! You're much too strong!$"
@@ -287,10 +287,10 @@ Route27_Text_JoseHasItem:
     .string "Here, you can have it!$"
 
 Route27_Text_JoseGaveItem:
-    .string "I find all sorts of things\n"
-    .string "out here on ROUTE 27.\p"
-    .string "I'll let you know if I find\n"
-    .string "anything else!$"
+	.string "I find all sorts of things\n"
+	.string "while bird-watching.\p"
+	.string "I'll let you know if I find\n"
+	.string "anything else!$"
 
 Route27_Text_JoseNoRoom:
     .string "Hmm, your BAG is full.\p"

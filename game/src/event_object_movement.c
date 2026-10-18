@@ -3173,6 +3173,9 @@ void TrySpawnObjectEvents(s16 cameraX, s16 cameraY)
                 // A dynamic or taken-prize item ball spawns only while today's find is there.
                 if (DailyItems_HideTemplate(template))
                     continue;
+                // An empty rotating trainer slot spawns nobody today.
+                if (DailyTrainers_HideTemplate(template))
+                    continue;
 #endif
                 if (IsLightSpriteGfxId(template->graphicsId))
                     SpawnLightSprite(npcX, npcY, cameraX, cameraY, GetLightTypeFromTemplate(template));

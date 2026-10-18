@@ -429,7 +429,7 @@ Route104_Text_DarianPostBattle:
 
 Route105_Text_FosterIntro:
 	.string "There's supposed to be a mystical\n"
-	.string "rock around here.\l"
+	.string "rock somewhere.\l"
 	.string "Do you know anything about it?$"
 
 Route105_Text_FosterDefeated:
@@ -463,8 +463,8 @@ Route105_Text_DominikDefeated:
 
 Route105_Text_DominikPostBattle:
 	.string "Why is the sea blue?\p"
-	.string "I learned about that at the MUSEUM in\n"
-	.string "SLATEPORT, but I forgot.$"
+	.string "I learned about that at a MUSEUM,\n"
+	.string "but I forgot.$"
 
 Route105_Text_BeverlyIntro:
 	.string "My body feels lighter in the water.\n"
@@ -824,13 +824,14 @@ Route109_Text_AlicePostBattle:
 
 Route109_Text_HueyIntro:
 	.string "I've laid anchor in ports around\n"
-	.string "the world, but SLATEPORT's the best.$"
+	.string "the world, but my home port's the\l"
+	.string "best.$"
 
 Route109_Text_HueyDefeated:
 	.string "You're the best!$"
 
 Route109_Text_HueyPostBattle:
-	.string "In the best port was the best\n"
+	.string "In my best port was the best\n"
 	.string "TRAINER…$"
 
 Route109_Text_EdmondIntro:
@@ -1187,8 +1188,8 @@ Route110_Text_IsabelRematchPostBattle:
 	.string "But I like to battle, too!$"
 
 Route110_Text_TimmyIntro:
-	.string "I found some cool POKéMON in the grass\n"
-	.string "around here!$"
+	.string "I found some cool POKéMON in the\n"
+	.string "grass!$"
 
 Route110_Text_TimmyDefeated:
 	.string "Being cool isn't enough to win…$"
@@ -1343,9 +1344,9 @@ Route111_Text_IreneDefeat:
 	.string "Oh, you're disgustingly good!$"
 
 Route111_Text_IrenePostBattle:
-	.string "I'm thinking that I should go to\n"
-	.string "MT. CHIMNEY, but the view around\l"
-	.string "here is very nice, too.$"
+	.string "I'm thinking that I should go up\n"
+	.string "a mountain, but the view here is\l"
+	.string "very nice, too.$"
 
 Route111_Text_DaisukeIntro:
 	.string "To train myself, I challenge all\n"
@@ -1498,16 +1499,16 @@ Route111_Text_HaydenPostBattle:
 	.string "Maybe I can grill some BERRIES…$"
 
 Route111_Text_BiancaIntro:
-	.string "Did you come from MAUVILLE?\n"
-	.string "Then you should be full of energy!$"
+	.string "Did you come from far? Then you\n"
+	.string "should be full of energy!$"
 
 Route111_Text_BiancaDefeat:
 	.string "Ooh lala!\n"
 	.string "That's a lot to take!$"
 
 Route111_Text_BiancaPostBattle:
-	.string "This road here…\n"
-	.string "You have quite a ways to travel.$"
+	.string "The road ahead… You have quite a\n"
+	.string "ways to travel.$"
 
 Route112_Text_BriceIntro:
 	.string "Hahahaha!\n"
@@ -1534,11 +1535,11 @@ Route112_Text_TrentDefeat:
 
 Route112_Text_TrentPostBattle:
 	.string "Try hiking, and I mean really\n"
-	.string "pounding, on these mountain trails\l"
-	.string "with a heavy pack weighing dozens of\l"
+	.string "pounding, on mountain trails with\l"
+	.string "a heavy pack weighing dozens of\l"
 	.string "pounds.\p"
-	.string "That, my friend, will get your body\n"
-	.string "into serious shape.$"
+	.string "That, my friend, will get your\n"
+	.string "body into serious shape.$"
 
 Route112_Text_TrentRegister:
 	.string "Ow, my legs have cramped up.\n"
@@ -1555,10 +1556,11 @@ Route112_Text_TrentRematchDefeat:
 	.string "I got trumped in power?$"
 
 Route112_Text_TrentRematchPostBattle:
-	.string "I hear there are some seriously tough\n"
-	.string "TRAINERS on top of MT. CHIMNEY.\p"
-	.string "I intend to get up there and give them\n"
-	.string "a challenge!$"
+	.string "I hear there are some seriously\n"
+	.string "tough TRAINERS on top of a\l"
+	.string "mountain.\p"
+	.string "I intend to get up there and give\n"
+	.string "them a challenge!$"
 
 Route112_Text_LarryIntro:
 	.string "I'm strong.\n"
@@ -1585,8 +1587,8 @@ Route112_Text_CarolPostBattle:
 	.string "If you have the most fun, you win!$"
 
 Route112_Text_BryantIntro:
-	.string "I caught hot POKéMON in FIERY PATH!\n"
-	.string "Take a look!$"
+	.string "I caught hot POKéMON deep inside a\n"
+	.string "volcano! Take a look!$"
 
 Route112_Text_BryantDefeat:
 	.string "What a bumpy ride that was!$"
@@ -1758,7 +1760,7 @@ Route113_Text_SophieDefeat:
 
 Route113_Text_SophiePostBattle:
 	.string "Losing burns me up…\n"
-	.string "I'm just going to sleep right here!\l"
+	.string "I'm just going to sleep!\l"
 	.string "Zzz!$"
 
 Route113_Text_LawrenceIntro:
@@ -1906,10 +1908,10 @@ Route114_Text_ClaudeDefeat:
 	.string "If we were fishing, I would've won…$"
 
 Route114_Text_ClaudePostBattle:
-	.string "I think I'll try my luck at landing\n"
-	.string "a big one at METEOR FALLS.\p"
-	.string "There has to be something in there.\n"
-	.string "I just know it.$"
+	.string "I think I'll try my luck at\n"
+	.string "landing a big one at a waterfall.\p"
+	.string "There has to be something in\n"
+	.string "there. I just know it.$"
 
 Route114_Text_NolanIntro:
 	.string "I like to fish. But I also like to\n"
@@ -2168,7 +2170,7 @@ Route115_Text_MarleneDefeat:
 
 Route115_Text_MarlenePostBattle:
 	.string "I was meditating with my POKéMON.\n"
-	.string "But this place isn't very peaceful…$"
+	.string "But it isn't very peaceful…$"
 
 Route116_Text_ClarkIntro:
 	.string "If the tunnel doesn't go through, then\n"
@@ -2218,9 +2220,10 @@ Route116_Text_JanicePostBattle:
 	.string "power, that's ideal, I think.$"
 
 Route116_Text_JerryIntro:
-	.string "We learn all sorts of things at the\n"
-	.string "TRAINER'S SCHOOL.\p"
-	.string "I want to test things out for real!$"
+	.string "We learn all sorts of things at\n"
+	.string "school.\p"
+	.string "I want to test things out for\n"
+	.string "real!$"
 
 Route116_Text_JerryDefeat:
 	.string "I slacked off in school…\n"
@@ -2228,8 +2231,8 @@ Route116_Text_JerryDefeat:
 
 Route116_Text_JerryPostBattle:
 	.string "I'll have to redo some courses at\n"
-	.string "the TRAINER'S SCHOOL.\l"
-	.string "If I don't, ROXANNE will be steamed.$"
+	.string "school. If I don't, my teacher\l"
+	.string "will be steamed.$"
 
 Route116_Text_JerryRegister1:
 	.string "I learned at the TRAINER'S SCHOOL\n"
@@ -2244,9 +2247,9 @@ Route116_Text_JerryRegister2:
 	.string "so can I just try it?$"
 
 Route116_Text_JerryRematchIntro:
-	.string "I've been studying seriously at the\n"
-	.string "TRAINER'S SCHOOL.\l"
-	.string "I won't lose like I did last time.$"
+	.string "I've been studying seriously at\n"
+	.string "school. I won't lose like I did\l"
+	.string "last time.$"
 
 Route116_Text_JerryRematchDefeat:
 	.string "Hunh?\n"
@@ -2254,8 +2257,8 @@ Route116_Text_JerryRematchDefeat:
 
 Route116_Text_JerryPostRematch:
 	.string "I'll have to redo some courses at\n"
-	.string "the TRAINER'S SCHOOL.\l"
-	.string "If I don't, ROXANNE will be steamed.$"
+	.string "school. If I don't, my teacher\l"
+	.string "will be steamed.$"
 
 Route116_Text_KarenIntro:
 	.string "I study at school, and I study on\n"
@@ -2328,7 +2331,6 @@ Route116_Text_DevanPostBattle:
 	.string "types, that's what I ought to do.$"
 
 Route116_Text_JohnsonIntro:
-	.string "It's a dead end up here.\n"
 	.string "I'm bored, so can we battle?$"
 
 Route116_Text_JohnsonDefeat:
@@ -3146,7 +3148,7 @@ Route121_Text_VanessaDefeat:
 	.string "This isn't what I meant!$"
 
 Route121_Text_VanessaPostBattle:
-	.string "I'm going to a CONTEST in LILYCOVE.\p"
+	.string "I'm going to a big show.\p"
 	.string "My POKéMON should have no problem\n"
 	.string "sweeping the MASTER CLASS.$"
 
@@ -3189,9 +3191,9 @@ Route121_Text_TammyDefeat:
 	.string "I have lost…$"
 
 Route121_Text_TammyPostBattle:
-	.string "MT. PYRE…\n"
-	.string "There is a mysterious power\l"
-	.string "at work there…$"
+	.string "Some places… There is a\n"
+	.string "mysterious power at work\l"
+	.string "there…$"
 
 Route121_Text_KateIntro:
 	.string "KATE: Together, we're fearless!\n"
@@ -3297,9 +3299,8 @@ Route121_Text_CaleDefeat:
 	.string "I'm holding stuff in both hands!$"
 
 Route121_Text_CalePostBattle:
-	.string "I bought too much stuff at\n"
-	.string "the LILYCOVE DEPT. STORE.\p"
-	.string "It's up the road from here.\n"
+	.string "I bought too much stuff at the\n"
+	.string "DEPT. STORE.\p"
 	.string "I wish I had a BAG like yours.$"
 
 Route121_Text_MylesIntro:
@@ -3399,8 +3400,8 @@ Route123_Text_CameronRematchDefeat:
 	.string "I feel sad…$"
 
 Route123_Text_CameronPostRematch:
-	.string "I should train at MT. PYRE…\n"
-	.string "I'll never beat you this way…$"
+	.string "I should train harder… I'll\n"
+	.string "never beat you this way…$"
 
 Route123_Text_JackiIntro:
 	.string "Don't be too happy if your POKéMON\n"
@@ -3644,8 +3645,9 @@ Route124_Text_JennyRematchDefeat:
 	.string "I lost again…$"
 
 Route124_Text_JennyPostRematch:
-	.string "This has nothing to do with anything,\n"
-	.string "but maybe I'll visit the TRICK HOUSE.$"
+	.string "This has nothing to do with\n"
+	.string "anything, but maybe I'll take a\l"
+	.string "trip somewhere.$"
 
 Route124_Text_GraceIntro:
 	.string "I'm growing bored of swimming…\n"
@@ -3779,7 +3781,7 @@ Route124_Text_IsabellaDefeat:
 
 Route124_Text_IsabellaPostBattle:
 	.string "You can find pretty colored shards\n"
-	.string "of things around here.$"
+	.string "of things lying around.$"
 
 Route125_Text_NolenIntro:
 	.string "I heard you approaching, so I hung\n"
@@ -3811,8 +3813,7 @@ Route125_Text_TanyaDefeat:
 	.string "You're too much!$"
 
 Route125_Text_TanyaPostBattle:
-	.string "Whew…\n"
-	.string "Which way is it to MOSSDEEP CITY?$"
+	.string "Whew… Which way is the shore?$"
 
 Route125_Text_SharonIntro:
 	.string "How would you like to take on the\n"
@@ -4102,7 +4103,7 @@ Route127_Text_AidanDefeat:
 
 Route127_Text_AidanPostBattle:
 	.string "There're lots of diving spots in\n"
-	.string "the sea around here.\p"
+	.string "the sea.\p"
 	.string "You can spot them easily from the sky\n"
 	.string "because of their darker color.$"
 
@@ -4147,7 +4148,7 @@ Route127_Text_AthenaPostBattle:
 	.string "and sky, it feels as if time slows down.$"
 
 Route128_Text_IsaiahIntro:
-	.string "EVER GRANDE CITY is still a long ways\n"
+	.string "The finish is still a long ways\n"
 	.string "away…$"
 
 Route128_Text_IsaiahDefeat:
@@ -4164,14 +4165,14 @@ Route128_Text_IsaiahRegister:
 	.string "Please register me in your POKéNAV.$"
 
 Route128_Text_IsaiahRematchIntro:
-	.string "I'm still feeling good. I'll keep on\n"
-	.string "swimming to EVER GRANDE CITY.$"
+	.string "I'm still feeling good. I'll keep\n"
+	.string "on swimming to the finish.$"
 
 Route128_Text_IsaiahRematchDefeat:
 	.string "I've yet to taste my first victory…$"
 
 Route128_Text_IsaiahPostRematch:
-	.string "I'll eventually reach EVER GRANDE CITY\n"
+	.string "I'll eventually reach the finish\n"
 	.string "where I can eventually win…$"
 
 Route128_Text_KatelynIntro:
@@ -4202,7 +4203,7 @@ Route128_Text_KatelynRematchDefeat:
 
 Route128_Text_KatelynPostRematch:
 	.string "You should give serious thought to\n"
-	.string "challenges on VICTORY ROAD.$"
+	.string "tougher challenges.$"
 
 Route128_Text_AlexaIntro:
 	.string "We've been working so hard to mount\n"
@@ -4228,9 +4229,10 @@ Route128_Text_RubenPostBattle:
 	.string "than you!$"
 
 Route128_Text_WayneIntro:
-	.string "I want to visit EVER GRANDE, so I\n"
-	.string "caught myself a POKéMON that knows\l"
-	.string "the move WATERFALL to crest the falls.$"
+	.string "I want to go far, so I caught\n"
+	.string "myself a POKéMON that knows the\l"
+	.string "move WATERFALL to crest steep\l"
+	.string "rapids.$"
 
 Route128_Text_WayneDefeat:
 	.string "I'm crestfallen!$"
@@ -4238,7 +4240,8 @@ Route128_Text_WayneDefeat:
 Route128_Text_WaynePostBattle:
 	.string "Awww, phooey!\p"
 	.string "My POKéMON knows WATERFALL, but\n"
-	.string "I'm not ready for EVER GRANDE yet!$"
+	.string "I'm not ready for the big trip\l"
+	.string "yet!$"
 
 Route128_Text_HarrisonIntro:
 	.string "You're looking awfully tough.\n"
@@ -4250,13 +4253,13 @@ Route128_Text_HarrisonDefeat:
 
 Route128_Text_HarrisonPostBattle:
 	.string "There are tough TRAINERS galore\n"
-	.string "around EVER GRANDE.\p"
-	.string "Do you think I may be out\n"
-	.string "of my league?$"
+	.string "out there.\p"
+	.string "Do you think I may be out of my\n"
+	.string "league?$"
 
 Route128_Text_CarleeIntro:
 	.string "The sunlight seems to be more harsh\n"
-	.string "in this area.$"
+	.string "than usual.$"
 
 Route128_Text_CarleeDefeat:
 	.string "I couldn't see very well because of\n"
@@ -4636,7 +4639,7 @@ Route133_Text_WarrenPostBattle:
 	.string "I mean, that's obvious!$"
 
 Route133_Text_BeckIntro:
-	.string "I came all the way out here with my\n"
+	.string "I came all the way here with my\n"
 	.string "BIRD POKéMON.$"
 
 Route133_Text_BeckDefeat:
@@ -4644,8 +4647,8 @@ Route133_Text_BeckDefeat:
 	.string "You're stunningly cool!$"
 
 Route133_Text_BeckPostBattle:
-	.string "I'd like to go back to FORTREE,\n"
-	.string "but I've grown to like this place, too.$"
+	.string "I'd like to go back home, but I've\n"
+	.string "grown to like it here, too.$"
 
 Route133_Text_MollieIntro:
 	.string "I must have battled thousands\n"
@@ -4716,17 +4719,17 @@ Route134_Text_HitoshiPostBattle:
 	.string "I lost. I am deeply shamed…$"
 
 Route134_Text_AaronIntro:
-	.string "The savage tide in this area serves to\n"
-	.string "make us stronger than ever.$"
+	.string "The savage tide serves to make us\n"
+	.string "stronger than ever.$"
 
 Route134_Text_AaronDefeat:
 	.string "I willingly concede defeat.$"
 
 Route134_Text_AaronPostBattle:
-	.string "We will return for more training at\n"
-	.string "METEOR FALLS.\p"
-	.string "If you'd like, you should go, too.\n"
-	.string "It will definitely toughen you up!$"
+	.string "We will return for more training.\p"
+	.string "If you'd like, you should train,\n"
+	.string "too. It will definitely toughen\l"
+	.string "you up!$"
 
 Route134_Text_KelvinIntro:
 	.string "O-our boat!\n"
@@ -4769,8 +4772,8 @@ Route134_Text_ReynaPostBattle:
 	.string "TRAINERS I happen to meet!$"
 
 Route134_Text_HudsonIntro:
-	.string "Listen, have you seen another SAILOR\n"
-	.string "around here?$"
+	.string "Listen, have you seen another\n"
+	.string "SAILOR?$"
 
 Route134_Text_HudsonDefeat:
 	.string "Now, that's something!$"

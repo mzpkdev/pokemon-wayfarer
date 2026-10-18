@@ -106,9 +106,11 @@ STATIC_ASSERT(sizeof(struct PokemonStorage) <= 35712, WayfarerPokemonStorageSect
 STATIC_ASSERT(TOTAL_BOXES_COUNT == 13, WayfarerPcBoxCount);
 STATIC_ASSERT(sizeof(struct WayfarerWorldRecord) == 8, WayfarerWorldRecordSize);
 STATIC_ASSERT(sizeof(struct WayfarerWorldState) == WORLD_STATE_SIZE, WayfarerWorldStateSize);
-// The daily state: stampDay and one cleared bit per item spot, padded to a word. The trainer half appends after it.
-STATIC_ASSERT(sizeof(struct WayfarerDailySlots) == ((2 + (DAILY_SLOT_COUNT + 7) / 8 + 3) / 4) * 4, WayfarerDailySlotsSize);
-STATIC_ASSERT(sizeof(struct WayfarerDailySlots) <= 128, WayfarerDailySlotsBudget);
+// The daily state: stampDay, one cleared bit per item spot and trainer slot, one home-beaten bit per trainer slot and two
+// 160-bit phone snapshots, padded to a word. It lives in the room the 13-box decision freed (daily world slots spec,
+// Save state); SaveBlock1 does not grow.
+STATIC_ASSERT(sizeof(struct WayfarerDailySlots) == ((2 + (DAILY_SLOT_COUNT + 7) / 8 + (WORLD_TRAINER_SLOT_COUNT + 7) / 8 + 2 * (DAILY_CONTACT_COUNT / 8) + 3) / 4) * 4, WayfarerDailySlotsSize);
+STATIC_ASSERT(sizeof(struct WayfarerDailySlots) <= 330, WayfarerDailySlotsBudget);
 STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn) < 1024, WayfarerHoennStateRuntimeBudget);
 STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn.vars) == 512, WayfarerHoennVarBankSize);
 STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn.persistentFlags) == 188, WayfarerHoennFlagBankSize);

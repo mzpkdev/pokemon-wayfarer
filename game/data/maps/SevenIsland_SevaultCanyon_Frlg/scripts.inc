@@ -14,7 +14,7 @@ SevenIsland_SevaultCanyon_Text_CyndyDefeat::
 
 SevenIsland_SevaultCanyon_Text_CyndyPostBattle::
 	.string "The way I am now, I may have to\n"
-	.string "hold off on TRAINER TOWER…$"
+	.string "hold off on my next challenge…$"
 
 SevenIsland_SevaultCanyon_Text_EvanIntro::
 	.string "It doesn't matter if you happen to\n"

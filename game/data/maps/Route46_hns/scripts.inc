@@ -80,9 +80,9 @@ Route46_Text_PicnickerErinBeaten:
 	.string "Oh, rats!$"
 
 Route46_Text_PicnickerErinAfterBattle:
-	.string "I've been to many GYMS, but the\n"
-	.string "GYM in GOLDENROD is my favorite.\p"
-	.string "It's filled with pretty flowers!$"
+	.string "I've been to many GYMS, but my\n"
+	.string "favorite one is filled with\l"
+	.string "pretty flowers!$"
 
 Route46_Text_ErinRegister:
 	.string "I've been to many GYMS, but the\n"
@@ -97,9 +97,9 @@ Route46_Text_ErinRematchDefeat:
 	.string "Oh, rats!$"
 
 Route46_Text_ErinPostRematch:
-	.string "I've been to many GYMS, but the\n"
-	.string "GYM in GOLDENROD is my favorite.\p"
-	.string "It's filled with pretty flowers!$"
+	.string "I've been to many GYMS, but my\n"
+	.string "favorite one is filled with\l"
+	.string "pretty flowers!$"
 
 Route46_Text_PicnickerErin2Beaten:
 	.string "Aww… I keep losing all the time!\p"

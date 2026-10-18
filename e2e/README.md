@@ -242,6 +242,14 @@ managed pickup. Pin before `arrange()`: the pin applies from the next map load, 
 EWRAM, and is lost by a reset. The saved day stamp keeps a pinned day across
 `saveAndReload()`.
 
+Regular trainers rotate too: once a trainer is beaten, its home slot is shuffled with the
+other beaten trainers of its class and region from the next day, and `noEmpty` also keeps
+every free trainer slot occupied. `game.dailySlots.trainerOccupants()` lists the
+current map's daily slots and who stands in each (a slot row, or `away`); a slot whose
+occupant row differs from its own row holds a wanderer. The Route 8 journey
+(`wayfarer-daily-trainers.e2e.ts`) beats both Super Nerds, searches pinned days for one that
+swaps them, and checks the wanderer's battle, its post-battle line, the sight rule and Continue.
+
 ## Layout
 
 `src/harness/` owns the emulator, ROM, process mechanics, and the public

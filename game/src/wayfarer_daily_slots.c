@@ -29,6 +29,7 @@ extern const u8 DailyItems_EventScript_Ball[];
 EWRAM_DATA u32 gDailySlotsDebugDay = 0;
 EWRAM_DATA u32 gDailySlotsDebugSeed = 0;
 EWRAM_DATA u8 gDailySlotsDebugFlags = 0;
+EWRAM_DATA u8 gDailySlotsDebugAbsence = 0;
 EWRAM_DATA u16 gDailySlotsDebugFoundItem = 0;
 EWRAM_DATA u16 gDailySlotsDebugFoundCount = 0;
 #endif
@@ -123,7 +124,10 @@ void DailySlots_OnMapLoad(void)
     if (daily->stampDay != day)
     {
         memset(daily->clearedToday, 0, sizeof(daily->clearedToday));
+        memset(daily->homeBeatenToday, 0, sizeof(daily->homeBeatenToday));
         daily->stampDay = day;
+        // Who is ready for a rematch and who holds a gift is fixed for the whole day.
+        DailyContacts_TakeSnapshots();
     }
 }
 

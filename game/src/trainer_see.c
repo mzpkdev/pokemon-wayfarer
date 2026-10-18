@@ -14,6 +14,7 @@
 #include "trainer_see.h"
 #include "wayfarer_local_adventures.h"
 #include "wayfarer_celadon_hideout.h"
+#include "wayfarer_daily_slots.h"
 #include "trainer_hill.h"
 #include "util.h"
 #include "battle_pyramid.h"
@@ -614,6 +615,21 @@ static u8 CheckTrainer(u8 objectEventId)
     }
     else if (trainerBattlePtr)
     {
+#if IS_WAYFARER
+        // A wanderer in a rotating slot approaches by sight until its slot is battled for the day.
+        if (DailyTrainers_ObjectIsRotating(objectEventId))
+        {
+            // A ready occupant walks up and runs its own script into the rematch, as a ready trainer at home does.
+            if (I_VS_SEEKER_CHARGING && DailyTrainers_ObjectOffersRematch(objectEventId))
+            {
+                trainerBattlePtr = NULL;
+                numTrainers = 0xFF;
+            }
+            else if (DailyTrainers_ObjectIsDone(objectEventId))
+                return 0;
+        }
+        else
+#endif
         if (GetTrainerFlagFromScriptPointer(trainerBattlePtr))
         {
             //If there is a rematch, we want to trigger the approach sequence

@@ -20,6 +20,7 @@ void WayfarerSeviiRematchSetReady(u16 trainerId);
 void WayfarerSeviiRematchClearReady(u16 trainerId);
 void WayfarerSeviiRematchClearAllReady(void);
 u16 WayfarerSeviiRematchGetOpponent(u16 trainerId);
+u16 WayfarerSeviiRematchGetLatest(u16 trainerId);
 void WayfarerSeviiRematchAdvance(u16 trainerId);
 s32 WayfarerSeviiRematchFamilyIndex(u16 trainerId);
 

@@ -156,10 +156,10 @@ OlivineLighthouse_Text_SailorTerrellBeaten:
 	.string "You are both kind and strong…$"
 
 OlivineLighthouse_Text_SailorTerrellAfter:
-	.string "Every time I return to OLIVINE,\n"
-	.string "I visit the GYM.\p"
-	.string "The GYM LEADER’s POKéMON type\n"
-	.string "changed without me noticing.$"
+	.string "Every time I return to port, I\n"
+	.string "check in on an old rival.\p"
+	.string "His POKéMON type changed\n"
+	.string "without me noticing.$"
 
 OlivineLighthouse_Text_GentlemanPrestonSeen:
 	.string "I travel the world to train my\n"

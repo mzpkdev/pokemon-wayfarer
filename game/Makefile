@@ -421,7 +421,7 @@ MAKEFLAGS += --no-print-directory
 .DELETE_ON_ERROR:
 
 RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test surfable-pokemon-pixel-alias-test wild-encounter-scaling-test wild-encounters-v2-check wild-encounters-v2-hm-audit wayfarer-hoenn-content-test wayfarer-hoenn-content-audit wayfarer-hoenn-entry-test wayfarer-hoenn-entry-audit wayfarer-sevii-port-test wayfarer-sevii-port-audit rom-report-test ram-report-test
-RULES_NO_SCAN += league-circuit-test trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit world-items-generate world-items-test world-items-audit
+RULES_NO_SCAN += league-circuit-test trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit world-items-generate world-items-test world-items-audit world-trainers-generate world-trainers-test world-trainers-audit
 RULES_NO_SCAN += summary-screen-test
 RULES_NO_SCAN += wayfarer-sevii-content-test wayfarer-sevii-content-audit
 RULES_NO_SCAN += legacy-multiboot-test
@@ -533,7 +533,7 @@ check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-po
 check: wayfarer-sinnoh-port-audit
 check: league-circuit-test
 check: native-hm-windows-test wild-encounters-v2-check
-check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit league-circuit-test trainer-party-scaling-audit trainer-party-scaling-test world-items-audit world-items-test
+check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit league-circuit-test trainer-party-scaling-audit trainer-party-scaling-test world-items-audit world-items-test world-trainers-audit world-trainers-test
 endif
 	@cp $(TESTELF) $(HEADLESSELF)
 	$(PATCHELF) $(HEADLESSELF) gTestRunnerHeadless '\x01' gTestRunnerSkipIsFail "$(TEST_SKIP_IS_FAIL)"
@@ -570,7 +570,7 @@ endif
 # Other rules
 rom: $(ROM)
 ifeq ($(BUILD_NAME),wayfarer)
-$(ELF): wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-port-audit trainer-party-scaling-audit world-items-audit
+$(ELF): wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-port-audit trainer-party-scaling-audit world-items-audit world-trainers-audit
 endif
 ifeq ($(RELEASE),1)
 rom: $(ROM_REPORT)
@@ -910,7 +910,7 @@ ifeq ($(MAP_VERSION),wayfarer)
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/reach.py --check
 endif
 
-.PHONY: world-items-generate world-items-test world-items-audit
+.PHONY: world-items-generate world-items-test world-items-audit world-trainers-generate world-trainers-test world-trainers-audit
 # tools/wayfarer_item_slots reads the Wayfarer map version's mapjson outputs and scripts, so it only exists on that version.
 ifeq ($(MAP_VERSION),wayfarer)
 WORLD_ITEMS_INPUTS := $(MAPS_DIR)/groups.inc $(INCLUDECONSTS_OUTDIR)/map_groups.h $(MAP_EVENTS) $(MAP_HEADERS) $(MAP_VERSION_STAMP)
@@ -929,6 +929,27 @@ endif
 
 world-items-test:
 	WORLD_ITEMS_REQUIRE_MAPS=$(WORLD_ITEMS_REQUIRE_MAPS) PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_item_slots -p 'test_*.py' -q
+
+.PHONY: world-trainers-generate world-trainers-test world-trainers-audit
+# tools/wayfarer_trainer_slots reads the Wayfarer map version's mapjson outputs and scripts, and the trainer scaling
+# classification, so it only exists on that version.
+ifeq ($(MAP_VERSION),wayfarer)
+WORLD_TRAINERS_INPUTS := $(MAPS_DIR)/groups.inc $(INCLUDECONSTS_OUTDIR)/map_groups.h $(MAP_EVENTS) $(MAP_HEADERS) $(MAP_VERSION_STAMP)
+world-trainers-generate world-trainers-audit world-trainers-test: $(WORLD_TRAINERS_INPUTS)
+world-trainers-test: WORLD_TRAINERS_REQUIRE_MAPS := 1
+
+world-trainers-generate:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_trainer_slots/generate.py
+
+world-trainers-audit:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_trainer_slots/generate.py --check
+else
+world-trainers-generate world-trainers-audit:
+	@echo "world trainers need MAP_VERSION=wayfarer"
+endif
+
+world-trainers-test:
+	WORLD_TRAINERS_REQUIRE_MAPS=$(WORLD_TRAINERS_REQUIRE_MAPS) PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_trainer_slots -p 'test_*.py' -q
 
 frlg-traversal-static-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/traversal/tests -p 'test_frlg_*.py' -q

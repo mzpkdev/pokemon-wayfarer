@@ -836,8 +836,7 @@ SixIsland_OutcastIsland_Text_TylorRematchIntro::
 
 SixIsland_OutcastIsland_Text_MymoRematchIntro::
 	.string "Gasp… Gasp…\p"
-	.string "I swam here from SIX ISLAND's port\n"
-	.string "in one go again.$"
+	.string "I swam here in one go again.$"
 
 SixIsland_OutcastIsland_Text_NicoleRematchIntro::
 	.string "You always come along while I'm\n"
@@ -911,7 +910,7 @@ SevenIsland_TrainerTower_Text_DarioRematchIntro::
 	.string "I sensed your approach.$"
 
 SevenIsland_TrainerTower_Text_RodetteRematchIntro::
-	.string "Somewhere on this island, peculiar\n"
+	.string "Somewhere out there, peculiar\n"
 	.string "POKéMON are sleeping.$"
 
 SevenIsland_SevaultCanyon_Entrance_Text_MiahRematchIntro::

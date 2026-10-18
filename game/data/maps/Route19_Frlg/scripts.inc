@@ -80,9 +80,8 @@ Route19_Text_AnyaDefeat::
 	.string "Oh! I lost!$"
 
 Route19_Text_AnyaPostBattle::
-	.string "It's still a long way to go to\n"
-	.string "SEAFOAM ISLANDS…\p"
-	.string "I want to go back to FUCHSIA…$"
+	.string "It's still a long way to go…\p"
+	.string "I want to go back home…$"
 
 Route19_Text_AliceIntro::
 	.string "Swimming's great!\n"
@@ -92,8 +91,8 @@ Route19_Text_AliceDefeat::
 	.string "Shocker!$"
 
 Route19_Text_AlicePostBattle::
-	.string "My boyfriend wanted to swim to\n"
-	.string "SEAFOAM ISLANDS.$"
+	.string "My boyfriend wanted to swim\n"
+	.string "far away.$"
 
 Route19_Text_AxleIntro::
 	.string "Ahoy, there!\n"

@@ -236,7 +236,7 @@ DragonsDen_Cavern_Text_CooltrainermDarinAfter:
     .string "You're not allowed to just go in!$"
 
 DragonsDen_Cavern_Text_CooltrainerfCaraSeen:
-    .string "You shouldn't be in here!$"
+    .string "You shouldn't be here!$"
 
 DragonsDen_Cavern_Text_CooltrainerfCaraBeaten:
     .string "Oh yikes, I lost!$"

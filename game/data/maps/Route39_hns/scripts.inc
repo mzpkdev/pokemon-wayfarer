@@ -240,7 +240,7 @@ Route39_EventScript_Eugene::
 	end
 
 Route39_Text_SailorEugeneSeen:
-	.string "I just got back to OLIVINE.\p"
+	.string "I just got back to port.\p"
 	.string "So how about a POKéMON battle?$"
 
 Route39_Text_SailorEugeneBeaten:
