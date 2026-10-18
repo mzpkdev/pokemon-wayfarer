@@ -1,8 +1,9 @@
-// Daily world slots, trainer half (Wayfarer only). Every regular trainer spot is
-// a slot: its home trainer stands there until beaten, and from the next day the
-// slot rotates among the beaten trainers of its group. Specs:
+// Daily world slots, trainer half (Wayfarer only). Every daily trainer spot is
+// a slot: its home trainer stands there until beaten, and from the next day each
+// beaten trainer is placed somewhere in its range (class group, place group or
+// home slot), with each free slot empty at its absence chance. Spec:
 // .product/specs/daily-world-slots.md (Trainers, Save state, Flags and
-// visibility) and .product/prds/daily-world-slots.md (Trainers are people).
+// visibility).
 //
 // Everything about who stands where is a pure function of the save's seed, the
 // stamped day, the defeat flags and the day-start snapshots, so a group can be
