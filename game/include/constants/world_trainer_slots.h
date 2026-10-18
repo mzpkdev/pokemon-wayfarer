@@ -2,11 +2,11 @@
 #ifndef GUARD_CONSTANTS_WORLD_TRAINER_SLOTS_H
 #define GUARD_CONSTANTS_WORLD_TRAINER_SLOTS_H
 
-#define WORLD_TRAINER_SLOT_COUNT        537
+#define WORLD_TRAINER_SLOT_COUNT        545
 #define WORLD_TRAINER_GROUP_COUNT       139
-#define WORLD_TRAINER_FIXED_HOME_COUNT  41
+#define WORLD_TRAINER_FIXED_HOME_COUNT  39
 #define WORLD_TRAINER_MAP_SLOTS_MAX     17   // most rotating slots on one map
-#define WORLD_TRAINER_GROUP_SLOTS_MAX   23   // most slots in one group
+#define WORLD_TRAINER_GROUP_SLOTS_MAX   25   // most slots in one group
 #define WORLD_TRAINER_SEVII_FAMILIES    64
 
 #endif

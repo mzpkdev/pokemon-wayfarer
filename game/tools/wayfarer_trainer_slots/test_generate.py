@@ -187,7 +187,14 @@ class Audit(unittest.TestCase):
     def test_local_events_are_case_sensitive_proper_nouns(self):
         self.assertEqual([k for k, _ in self.flags('I won the Bug-Catching Contest.')], ['local event'])
         self.assertEqual(self.flags('I won at the contest.'), [])
-        self.assertIn(('local event', 'gym'), self.flags('Are you going to the GYM? Me too!'))
+        self.assertIn(('local event', 'gym'), self.flags('Meet me at the GYM later.'))
+
+    def test_reviewed_allowed_phrases_cancel_only_their_span(self):
+        self.assertEqual(self.flags('You should aim for the POKéMON LEAGUE.'), [])
+        self.assertEqual(self.flags('Are you going to the GYM? Me too!'), [])
+        self.assertEqual(self.flags('The GYM BADGES are pretty.'), [])
+        self.assertNotEqual(self.flags('The POKéMON LEAGUE is right over there.'), [])
+        self.assertNotEqual(self.flags('I am at the GYM now.'), [])
 
     def test_a_place_resolution_must_cover_every_flagged_phrase(self):
         row = {'trainer': 'TRAINER_A', 'resolution': 'place', 'place': 'cave', 'phrases': ['this cave'], 'reason': 'x'}

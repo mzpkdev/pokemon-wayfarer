@@ -32,8 +32,8 @@ def alternation(words):
 
 
 def build_patterns(names, words):
-    """(patterns, exceptions): [(kind, compiled regex)] for the map names, their stems, landmark phrases, terrain
-    after a demonstrative, place phrases and local-event words; plus the phrases that cancel an event match."""
+    """(patterns, allowed): [(kind, compiled regex)] for the map names, their stems, landmark phrases, terrain
+    after a demonstrative, place phrases and local-event words; plus one regex of the reviewed phrases that cancel a match."""
     patterns = []
     stems = set()
     for name in names:
@@ -50,18 +50,18 @@ def build_patterns(names, words):
     # Case-sensitive: the scripts write proper nouns in capitals ("the GYM"), so "no contest" or "out of my league" is not an event.
     patterns.append(('local event', re.compile(r'(?<![A-Za-z])(?:' + alternation(words['local_events']) + r')(?![A-Za-z])')))
     patterns.append(('sequence', re.compile('|'.join(words['sequence_patterns']))))
-    exceptions = re.compile(r'(?<![A-Za-z])(?:' + alternation(words['local_event_exceptions']) + r')(?![A-Za-z])')
-    return patterns, exceptions
+    allowed = re.compile('|'.join(f"(?:{row['pattern']})" for row in words['allowed_phrases']))
+    return patterns, allowed
 
 
 def flag_text(text, built):
     """[(kind, matched text)] for one line."""
-    patterns, exceptions = built
-    cancelled = [match.span() for match in exceptions.finditer(text)]
+    patterns, allowed = built
+    cancelled = [match.span() for match in allowed.finditer(text)]
     found = []
     for kind, pattern in patterns:
         for match in pattern.finditer(text):
-            if kind == 'local event' and any(start <= match.start() and match.end() <= end for start, end in cancelled):
+            if any(start <= match.start() and match.end() <= end for start, end in cancelled):
                 continue
             found.append((kind, match.group(0)))
     return found

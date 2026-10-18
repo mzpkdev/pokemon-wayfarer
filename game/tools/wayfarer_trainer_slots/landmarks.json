@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "comment": "Reviewed word lists for the dialogue audit (daily world slots, Dialogue audit). A line is flagged when it matches a map name (or the stem of a town, city or island name), a landmark noun after a determiner, a terrain noun after a demonstrative, a place phrase or a local-event word, or a sequence phrase that numbers the trainer among a challenge's opponents. Local-event words are matched case-sensitively: the scripts write proper nouns in capitals, so 'No contest at all' is not the CONTEST. Each flagged trainer needs a resolution in reviewed.json. Extend a list here; never silence a trainer.",
+  "comment": "Reviewed word lists for the dialogue audit (daily world slots, Dialogue audit). A line is flagged when it matches a map name (or the stem of a town, city or island name), a landmark noun after a determiner, a terrain noun after a demonstrative, a place phrase or a local-event word, or a sequence phrase that numbers the trainer among a challenge's opponents. Local-event words are matched case-sensitively: the scripts write proper nouns in capitals, so 'No contest at all' is not the CONTEST. A phrase in allowed_phrases (case-sensitive, narrow, each with the reason it reads fine anywhere) is cancelled. Each flagged trainer needs a resolution in reviewed.json. Extend a list here; never silence a trainer.",
   "stem_stoplist": [
     "BIRTH",
     "FARAWAY",
@@ -189,20 +189,64 @@
     "SILPH",
     "ELITE FOUR"
   ],
-  "local_event_exceptions": [
-    "GYM BADGE",
-    "GYM BADGES",
-    "GYM LEADER",
-    "GYM LEADERS",
-    "GYM LEADER’s",
-    "GYMS",
-    "LEAGUE CHAMP",
-    "LEAGUE CHAMPION"
-  ],
   "sequence_patterns": [
     "No\\. ?\\d+",
     "I'm (?:the )?(?:first|second|third|fourth|fifth|sixth|seventh|last)\\b",
     "\\bof us trainers\\b",
     "\\blast in line\\b"
+  ],
+  "allowed_phrases": [
+    {
+      "pattern": "(?:[Tt]he )?GYM BADGES?",
+      "reason": "the player's badges, not a building"
+    },
+    {
+      "pattern": "GYM LEADER(?:S|’s)?",
+      "reason": "a role, not a building"
+    },
+    {
+      "pattern": "GYMS",
+      "reason": "a plural, general mention"
+    },
+    {
+      "pattern": "LEAGUE CHAMP(?:ION)?",
+      "reason": "a title, not a place"
+    },
+    {
+      "pattern": "(?:going|heading|headed) (?:to|for) the GYM",
+      "reason": "asks where the player is headed; names no particular gym"
+    },
+    {
+      "pattern": "on the POKéMON LEAGUE challenge",
+      "reason": "the player's goal, true anywhere"
+    },
+    {
+      "pattern": "do well at the LEAGUE",
+      "reason": "a prediction about the player, true anywhere"
+    },
+    {
+      "pattern": "aim for the POKéMON LEAGUE",
+      "reason": "advice about the player's goal, true anywhere"
+    },
+    {
+      "pattern": "mount a POKéMON LEAGUE challenge",
+      "reason": "the speaker's own goal, true anywhere"
+    },
+    {
+      "pattern": "sights on the POKéMON LEAGUE",
+      "reason": "the player's goal, true anywhere"
+    },
+    {
+      "pattern": "win your way through the POKéMON LEAGUE",
+      "reason": "general advice, true anywhere"
+    },
+    {
+      "pattern": "catch more POKéMON at the SAFARI",
+      "reason": "the speaker's plan, not where it stands"
+    },
+    {
+      "pattern": "before entering any CONTEST",
+      "reason": "a plan, not a place"
+    }
   ]
 }

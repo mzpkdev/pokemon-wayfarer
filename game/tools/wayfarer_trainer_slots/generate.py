@@ -449,6 +449,11 @@ def render_report(units, rotating, members, keys, flagged, resolutions, reviewed
         unit = by_home.get(trainer)
         what = row['resolution'] + (f' ({row["place"]}: ' + ', '.join(f'"{p}"' for p in row['phrases']) + ')' if row['resolution'] == 'place' else '')
         lines.append(f'| {trainer} | {unit.map_name if unit else "-"} | {what} | {row["reason"]} |')
+    words = A.load_words()
+    lines += ['', '### Phrases the audit allows', '',
+              'Narrow phrases that read fine anywhere (case-sensitive). A trainer whose only flagged phrases are these rotates with its class.', '',
+              '| Pattern | Why it is fine anywhere |', '| --- | --- |']
+    lines += [f'| `{row["pattern"]}` | {row["reason"]} |' for row in words['allowed_phrases']]
     lines += ['']
     lines += ['## Slots', '', 'Every trainer slot with an `ORDINARY` trainer: rotating slots by index, then the fixed ones.', '',
               '| # | Slot | Trainer | Class | Group | Status | Reason |', '| ---: | --- | --- | --- | ---: | --- | --- |']

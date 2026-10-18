@@ -71,6 +71,9 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_GINA_HNS | Route34_hns | intro | Are you a TRAINER? Let's have a practice battle. |  |
 | TRAINER_GINA_HNS | Route34_hns | defeat | Oh, no! I just can't win… |  |
 | TRAINER_GINA_HNS | Route34_hns | say | You're too strong to be a practice partner. |  |
+| TRAINER_KIM_HNS | Route35_hns | intro | Are you going to the GYM? Me too! |  |
+| TRAINER_KIM_HNS | Route35_hns | defeat | Oh. I couldn't win… |  |
+| TRAINER_KIM_HNS | Route35_hns | say | The GYM BADGES are pretty. I collect them. |  |
 | TRAINER_BRYAN_HNS | Route35_hns | intro | What kinds of BALLS do you use? |  |
 | TRAINER_BRYAN_HNS | Route35_hns | defeat | Yikes! Not fast enough! |  |
 | TRAINER_BRYAN_HNS | Route35_hns | say | Some POKéMON flee right away. Try catching them with KURT's FAST BALL. Whenever I find a ASPEAR BERRY, I take it to KURT. He turns it into a custom BALL. |  |
@@ -436,6 +439,9 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_BLAKE_HNS | Route27_hns | intro | You look pretty strong. Let me battle you! |  |
 | TRAINER_BLAKE_HNS | Route27_hns | defeat | Yow! |  |
 | TRAINER_BLAKE_HNS | Route27_hns | say | If you prevail on this harsh trek, the truth will be revealed! Heh, sorry, I just wanted to say something cool. |  |
+| TRAINER_GILBERT_HNS | Route27_hns | intro | Don't say a thing! Let me guess what you're thinking. Mmmmmmm… I got it! You're on the POKéMON LEAGUE challenge! |  |
+| TRAINER_GILBERT_HNS | Route27_hns | defeat | You're too much! |  |
+| TRAINER_GILBERT_HNS | Route27_hns | say | With your skills, you'll do well at the LEAGUE. That's what my premonition says. |  |
 | TRAINER_REENA_HNS | Route27_hns | intro | You shouldn't underestimate the wild POKéMON. |  |
 | TRAINER_REENA_HNS | Route27_hns | defeat | Oh! You're much too strong! |  |
 | TRAINER_REENA_HNS | Route27_hns | say | You're just a kid, but you're not to be underestimated either. |  |
@@ -886,6 +892,12 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_BROOKE_1 | Route111 | rematch | You can make POKéMON stronger or weaker depending on the moves you teach them. What kinds of moves do your POKéMON know? |  |
 | TRAINER_BROOKE_1 | Route111 | rematch | You've taught them good moves! |  |
 | TRAINER_BROOKE_1 | Route111 | say | Maybe I should have stopped my POKéMON from evolving until they learned better moves… |  |
+| TRAINER_WILTON_1 | Route111 | intro | Show me how much you've toughened your POKéMON. |  |
+| TRAINER_WILTON_1 | Route111 | defeat | I see, you've toughened them considerably. |  |
+| TRAINER_WILTON_1 | Route111 | say | POKéMON and TRAINERS learn much through battling. What's important is to never give up even if you lose. |  |
+| TRAINER_WILTON_1 | Route111 | rematch | We're training here to elevate our game to the next level. Stay and train with us! |  |
+| TRAINER_WILTON_1 | Route111 | rematch | Ooh, you're decent! |  |
+| TRAINER_WILTON_1 | Route111 | say | Since you're that strong, you should aim for the POKéMON LEAGUE. |  |
 | TRAINER_TYRON | Route111 | intro | This is my favorite kind of POKéMON! |  |
 | TRAINER_TYRON | Route111 | defeat | Wait! Did you get a good look at my POKéMON? |  |
 | TRAINER_TYRON | Route111 | say | When having a battle, I get a kick out of showing off my POKéMON. I bet everyone feels that way when they enter a battle! |  |
@@ -1240,12 +1252,21 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_WALTER_1 | Route121 | rematch | With my POKéMON, I have traveled to the world's four corners. You might say I have some confidence in my abilities. |  |
 | TRAINER_WALTER_1 | Route121 | rematch | Ah, well played. |  |
 | TRAINER_WALTER_1 | Route121 | say | Your POKéMON and you… Your prowess together will be considered strong, even overseas. |  |
+| TRAINER_JESSICA_1 | Route121 | intro | Stop! Have a good look at my precious POKéMON! |  |
+| TRAINER_JESSICA_1 | Route121 | defeat | Oh, how dare you! Don't take it so seriously! |  |
+| TRAINER_JESSICA_1 | Route121 | say | Maybe I'll go catch more POKéMON at the SAFARI. |  |
+| TRAINER_JESSICA_1 | Route121 | rematch | My precious POKéMON grew! Have a good look! |  |
+| TRAINER_JESSICA_1 | Route121 | rematch | Oh, how dare you! You still won't take it easy! |  |
+| TRAINER_JESSICA_1 | Route121 | say | Maybe I'll go catch more POKéMON at the SAFARI. |  |
 | TRAINER_MYLES | Route121 | intro | There's nothing I love more than checking out other people's POKéMON! |  |
 | TRAINER_MYLES | Route121 | defeat | Super awesome! |  |
 | TRAINER_MYLES | Route121 | say | They're great, your POKéMON! How do you raise them? |  |
 | TRAINER_PAT | Route121 | intro | I want everybody to see the POKéMON I've raised! |  |
 | TRAINER_PAT | Route121 | defeat | Wow! Spectacular! |  |
 | TRAINER_PAT | Route121 | say | I raise every POKéMON with the same love and care--I don't pick favorites. |  |
+| TRAINER_MARCEL | Route121 | intro | My POKéMON have never tasted defeat! On their next win, I'm entering them in CONTESTS. |  |
+| TRAINER_MARCEL | Route121 | defeat | Oh, now what happened here? |  |
+| TRAINER_MARCEL | Route121 | say | I may have to train my gang some more before entering any CONTEST. |  |
 | TRAINER_CRISTIN_1 | Route121 | intro | I have this routine. Defeat five TRAINERS a day. Guess what? You're number five! |  |
 | TRAINER_CRISTIN_1 | Route121 | defeat | No! You're horrid! |  |
 | TRAINER_CRISTIN_1 | Route121 | say | I didn't expect to lose this easily… I'll win next time! |  |
@@ -1396,6 +1417,9 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_RUBEN | Route128 | intro | There is no stronger TRAINER than I! |  |
 | TRAINER_RUBEN | Route128 | defeat | This can't be! |  |
 | TRAINER_RUBEN | Route128 | say | There probably is no stronger TRAINER than you! |  |
+| TRAINER_ALEXA | Route128 | intro | We've been working so hard to mount a POKéMON LEAGUE challenge… We can't afford to lose now! |  |
+| TRAINER_ALEXA | Route128 | defeat | Oh! How could this happen?! |  |
+| TRAINER_ALEXA | Route128 | say | After all I've done to get here, I won't give up after one setback. |  |
 | TRAINER_CARLEE | Route128 | intro | The sunlight seems to be more harsh than usual. |  |
 | TRAINER_CARLEE | Route128 | defeat | I couldn't see very well because of the sun's glare. |  |
 | TRAINER_CARLEE | Route128 | say | I should go back soon. I need to reapply my sunscreen. |  |
@@ -1414,6 +1438,9 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_REED | Route129 | intro | Say hey, hey! Let's get on with it! |  |
 | TRAINER_REED | Route129 | defeat | Beat, I'm beaten. That's it, done! |  |
 | TRAINER_REED | Route129 | say | There's nothing for a loser. Time for me to beat it home. |  |
+| TRAINER_CLARENCE | Route129 | intro | Surfing isn't as easy as it seems, isn't that right? |  |
+| TRAINER_CLARENCE | Route129 | defeat | Winning sure isn't easy. |  |
+| TRAINER_CLARENCE | Route129 | say | You have your sights on the POKéMON LEAGUE? Keep at it! |  |
 | TRAINER_RODNEY | Route130 | intro | What a surprise! I didn't expect to see a TRAINER out in the sea. I think we should battle! |  |
 | TRAINER_RODNEY | Route130 | defeat | This kid's awfully tough… |  |
 | TRAINER_RODNEY | Route130 | say | Your eyes have that look of someone who's experienced harsh challenges and won. It suits you well! |  |
@@ -1596,6 +1623,9 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_KATELYNN | VictoryRoad_1F | intro | I have nothing to say to anyone that's come this far. Come on! |  |
 | TRAINER_KATELYNN | VictoryRoad_1F | defeat | This is a disgrace… |  |
 | TRAINER_KATELYNN | VictoryRoad_1F | say | Humph, go right on ahead. See if I care. |  |
+| TRAINER_SHANNON | VictoryRoad_B1F | intro | To win your way through the POKéMON LEAGUE, you need the trust of your POKéMON. |  |
+| TRAINER_SHANNON | VictoryRoad_B1F | defeat | Your relationship is based on solid trust. |  |
+| TRAINER_SHANNON | VictoryRoad_B1F | say | By being together all the time, trust grows between POKéMON and TRAINERS. |  |
 | TRAINER_MITCHELL | VictoryRoad_B1F | intro | My POKéMON are cosmically awe inspiring! |  |
 | TRAINER_MITCHELL | VictoryRoad_B1F | defeat | I've never met anyone like you before. |  |
 | TRAINER_MITCHELL | VictoryRoad_B1F | say | Even outside of battle, I sense incredible power emanating from you and your POKéMON. |  |

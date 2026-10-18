@@ -138,11 +138,6 @@
       ]
     },
     {
-      "trainer": "TRAINER_ALEXA",
-      "resolution": "exclude",
-      "reason": "names POKéMON LEAGUE; names a building or local event (LEAGUE). The intro is about the place the trainer was written for, so it stays at home."
-    },
-    {
       "trainer": "TRAINER_ALFRED_HNS",
       "resolution": "exclude",
       "reason": "refers to its surroundings (\"the LIGHTHOUSE\"). The post-battle line is about the place the trainer was written for, so it stays at home."
@@ -272,11 +267,6 @@
         "this tower"
       ],
       "reason": "The lines need a tower (\"this tower\"); the trainer rotates only among tower spots, which the generator checks against the map."
-    },
-    {
-      "trainer": "TRAINER_CLARENCE",
-      "resolution": "exclude",
-      "reason": "names POKéMON LEAGUE; names a building or local event (LEAGUE). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_CLARK",
@@ -433,11 +423,6 @@
       "reason": "names CIANWOOD, OLIVINE. The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
-      "trainer": "TRAINER_GILBERT_HNS",
-      "resolution": "exclude",
-      "reason": "names POKéMON LEAGUE; names a building or local event (LEAGUE). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
-    },
-    {
       "trainer": "TRAINER_GRANT_HNS",
       "resolution": "reword",
       "reason": "Intro: \"camping out here\" now reads \"camping alone\" (data/maps/Route47_hns/scripts.inc).",
@@ -525,11 +510,6 @@
       "reason": "refers to its surroundings (\"at the TRAINER'S SCHOOL\"). The intro and post-battle line and rematch line is about the place the trainer was written for, so it stays at home."
     },
     {
-      "trainer": "TRAINER_JESSICA_1",
-      "resolution": "exclude",
-      "reason": "names a building or local event (SAFARI). The post-battle line is about the place the trainer was written for, so it stays at home."
-    },
-    {
       "trainer": "TRAINER_JOE_HNS",
       "resolution": "exclude",
       "reason": "Route 25's six-trainer challenge numbers its opponents (\"No. 3\", \"second\", \"last in line\", \"the six of us\"); the line is about this trainer's place in the sequence, so it stays at home."
@@ -588,11 +568,6 @@
       "reason": "names SHOAL CAVE; refers to its surroundings (\"in the SHOAL CAVE\", \"out here\", \"the SHOAL CAVE\"). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
-      "trainer": "TRAINER_KIM_HNS",
-      "resolution": "exclude",
-      "reason": "refers to its surroundings (\"The GYM\", \"the GYM\"); names a building or local event (GYM). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
-    },
-    {
       "trainer": "TRAINER_KINDRA",
       "resolution": "exclude",
       "reason": "names MT. PYRE. The intro and post-battle line is about the place the trainer was written for, so it stays at home."
@@ -638,11 +613,6 @@
       "trainer": "TRAINER_LLOYD_HNS",
       "resolution": "exclude",
       "reason": "Route 25's six-trainer challenge numbers its opponents (\"No. 3\", \"second\", \"last in line\", \"the six of us\"); the line is about this trainer's place in the sequence, so it stays at home."
-    },
-    {
-      "trainer": "TRAINER_MARCEL",
-      "resolution": "exclude",
-      "reason": "names a building or local event (CONTEST). The post-battle line is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_MARLENE",
@@ -743,11 +713,6 @@
       "trainer": "TRAINER_SAMUEL",
       "resolution": "exclude",
       "reason": "names POKéMON LEAGUE; names a building or local event (LEAGUE). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
-    },
-    {
-      "trainer": "TRAINER_SHANNON",
-      "resolution": "exclude",
-      "reason": "names POKéMON LEAGUE; names a building or local event (LEAGUE). The intro is about the place the trainer was written for, so it stays at home."
     },
     {
       "trainer": "TRAINER_SHANNON_HNS",
@@ -1013,11 +978,6 @@
       "trainer": "TRAINER_WAYNE",
       "resolution": "exclude",
       "reason": "refers to its surroundings (\"the falls\"). The intro is about the place the trainer was written for, so it stays at home."
-    },
-    {
-      "trainer": "TRAINER_WILTON_1",
-      "resolution": "exclude",
-      "reason": "names POKéMON LEAGUE; names a building or local event (LEAGUE). The post-battle line is about the place the trainer was written for, so it stays at home."
     }
   ]
 }
