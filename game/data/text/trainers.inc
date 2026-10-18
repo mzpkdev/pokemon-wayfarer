@@ -1187,8 +1187,8 @@ Route110_Text_IsabelRematchPostBattle:
 	.string "But I like to battle, too!$"
 
 Route110_Text_TimmyIntro:
-	.string "I found some cool POKéMON in the grass\n"
-	.string "around here!$"
+	.string "I found some cool POKéMON in the\n"
+	.string "grass!$"
 
 Route110_Text_TimmyDefeated:
 	.string "Being cool isn't enough to win…$"
@@ -1758,7 +1758,7 @@ Route113_Text_SophieDefeat:
 
 Route113_Text_SophiePostBattle:
 	.string "Losing burns me up…\n"
-	.string "I'm just going to sleep right here!\l"
+	.string "I'm just going to sleep!\l"
 	.string "Zzz!$"
 
 Route113_Text_LawrenceIntro:
@@ -2328,7 +2328,6 @@ Route116_Text_DevanPostBattle:
 	.string "types, that's what I ought to do.$"
 
 Route116_Text_JohnsonIntro:
-	.string "It's a dead end up here.\n"
 	.string "I'm bored, so can we battle?$"
 
 Route116_Text_JohnsonDefeat:
@@ -4102,7 +4101,7 @@ Route127_Text_AidanDefeat:
 
 Route127_Text_AidanPostBattle:
 	.string "There're lots of diving spots in\n"
-	.string "the sea around here.\p"
+	.string "the sea.\p"
 	.string "You can spot them easily from the sky\n"
 	.string "because of their darker color.$"
 
@@ -4769,8 +4768,8 @@ Route134_Text_ReynaPostBattle:
 	.string "TRAINERS I happen to meet!$"
 
 Route134_Text_HudsonIntro:
-	.string "Listen, have you seen another SAILOR\n"
-	.string "around here?$"
+	.string "Listen, have you seen another\n"
+	.string "SAILOR?$"
 
 Route134_Text_HudsonDefeat:
 	.string "Now, that's something!$"
