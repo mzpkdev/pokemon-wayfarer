@@ -48,7 +48,8 @@ and travel stays light because some spots are empty.
 - **Class family:** a trainer class with its per-source copies merged, for
   example Hiker, Hiker (HNS) and Hiker (FRLG).
 - **Trainer group:** the regular trainers of one class family in one region,
-  together with their home slots.
+  together with their home slots; or, for trainers whose lines need a kind of
+  place, those of one place type in one region.
 - **Home slot:** the slot a trainer was authored in.
 - **Wandering trainer:** a regular trainer you have beaten. Their home slot
   rotates, and they appear in their group's rotating slots.
@@ -129,6 +130,9 @@ slots. As a result:
   number and gifts. The slot keeps its own position, facing and sight range.
 - **Pairs rotate as pairs.** Two-trainer slots, such as Twins or a Young
   Couple, form their own group and draw only pairs.
+- **Lines about a kind of place.** A trainer whose lines only make sense in a
+  cave, a desert, on a ship or on a coast rotates among spots of that kind in
+  its region, with any class, instead of among its class's spots.
 
 A wandering trainer in a rotating slot battles you again on any day you meet
 them. Clearing them clears that slot for the day.

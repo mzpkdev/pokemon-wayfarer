@@ -37,7 +37,9 @@ tables. Nothing is built at runtime.
   rotating slots; a fixed `ORDINARY` trainer that is a rematch contact gets a
   row in a small table of homes, which is all `WhereIsTrainerToday` needs.
 - **Trainer groups:** one row per class family and region, split into a
-  singles group and a pairs group. A group lists its slots in a fixed order.
+  singles group and a pairs group, and one row per place type and region (and
+  singles or pairs) for the trainers whose lines need a kind of place: a group
+  of that type, mixing classes. A group lists its slots in a fixed order.
 - **Item spots:** one row per item ball (map, local id) and hidden item (map,
   bg event index): kind (static prize or dynamic), the prize item and its
   existing flag for prizes, and the spot's reach tier from
@@ -75,8 +77,21 @@ S.S. Anne, S.S. Aqua and S.S. Tidal trainers (one-time ship content), Pokemon
 Tower, the Trick House puzzle rooms, Silph Co., the Rocket Hideouts, the Game
 Corner hideout entrance, the villain grunt classes, and the two Route 26
 trainers authored on two maps. Of 901 `ORDINARY` trainer slots (1,051 trainer
-objects in all, pairs counting once per trainer), 509 rotate (484 singles and 25
-pairs, 534 objects); the report lists why each of the others stays at home.
+objects in all, pairs counting once per trainer), 545 rotate (520 singles and 25
+pairs, 570 objects); the report lists why each of the others stays at home.
+
+**Place-type groups.** Most trainers rotate among their class family's slots in
+their region. A trainer whose lines need a kind of place ("this cave", "in the
+desert", "this ship") joins the group of that place type in its region instead,
+mixing classes, so it can only stand in spots of that type. `reviewed.json`
+assigns the type per trainer with the phrases that need it, and the generator
+checks every slot against the type's rule in `place_types.json` (an underground
+map, a map-name prefix such as the Abandoned Ship or the Pokemon Mansion, or a
+metatile behaviour near the slot's object: deep sand for a desert, surfable
+water within three tiles for a coast) and fails on a slot that is not that
+kind of place. The types are cave, tower, mountain, ship, mansion, desert and
+coast. A trainer is in exactly one group. A place-type group of one slot never
+rotates; it only keeps the trainer's own spot in the daily bookkeeping.
 
 ## The day
 
@@ -137,26 +152,26 @@ day is placed and calls from the next day. Battle text uses only
 either set is placed. The phone reads the stamped day, never the clock, so a
 call before the next map load uses the previous day's arrangement.
 
-Budget (509 trainer slots and 838 item spots, Sevii included; the generated
+Budget (545 trainer slots and 838 item spots, Sevii included; the generated
 counts are in `include/constants/world_trainer_slots.h` and `world_item_spots.h`):
 
 | Part | Bytes |
 | --- | ---: |
 | `stampDay` | 2 |
-| `clearedToday` (1,347 bits) | 169 |
-| `homeBeatenToday` (509 bits) | 64 |
+| `clearedToday` (1,383 bits) | 173 |
+| `homeBeatenToday` (545 bits) | 69 |
 | `readyAtDayStart`, `giftAtDayStart` (160 bits each) | 40 |
-| Total in `PokemonStorage` (a word-aligned struct) | 276 |
+| Total in `PokemonStorage` (a word-aligned struct) | 284 |
 
 | Block | Free before | Added | Left after |
 | --- | ---: | --- | ---: |
-| `PokemonStorage` (13 boxes, PR #139 merged, after the 2,104 bytes other specs plan) | 416 | 276 | 140 |
+| `PokemonStorage` (13 boxes, PR #139 merged, after the 2,104 bytes other specs plan) | 416 | 284 | 132 |
 | SaveBlock1 | 112 | 18 (`trainerRematches` 100 to 118) | 94 |
 
 The `PokemonStorage` figure is Notable world simulation's: of its 2,520
 bytes, the world state, the haunts' traded slots and the Masters growth plan
 2,008 (about 416 left with the 96 bytes of face-only trainers), and the daily
-state takes 276 of that margin (the budget assert allows 330). Capacity figures come from the built ELF and
+state takes 284 of that margin (the budget assert allows 330). Capacity figures come from the built ELF and
 the limits in `src/save.c`: nine storage sectors hold 35,712 bytes, and four
 SaveBlock1 sectors of 3,968 bytes hold 15,872 against 15,760 used (`gSaveblock1`
 is 0x3E10, less the 128-byte `SAVEBLOCK_MOVE_RANGE` pad in `load_save.h`).
@@ -382,14 +397,19 @@ determiner, terrain nouns after a demonstrative ("this beach", not "the sea"),
 place phrases ("around here"), local-event words written in capitals, and
 phrases that number a trainer among a challenge's opponents ("No. 3", "last in
 line"). Each flagged trainer is resolved in `reviewed.json` by a reviewed edit to
-neutral wording (`reword`, which the audit then confirms by finding nothing), or
-by excluding it from rotation with a reason (`exclude`). Generation fails while
+neutral wording (`reword`, which the audit then confirms by finding nothing), by
+moving it into the group of the kind of place its lines need (`place`, with the
+type and the phrases), or by excluding it from rotation with a reason
+(`exclude`). Generation fails while
 a flagged line is unresolved, a reword still names a place, or a resolution is
 stale. A false positive of the word lists is fixed in the lists, not waived. Text of generated Sevii and coast scripts is not edited by hand: those
 trainers are excluded.
 
-Of 665 candidates, 164 named a place at some point: 156 are excluded and 8 were
-reworded. The report lists every resolution with its reason.
+Of 665 candidates, 164 named a place at some point: 120 are excluded, 16 were
+reworded, 20 joined a place-type group and 8 were cleared by narrow reviewed
+phrases (a goal or plan that reads fine anywhere: "aim for the POKéMON
+LEAGUE", "going to the GYM?"). The report lists every resolution with its reason
+and every allowed phrase with why it is fine anywhere.
 
 ### What the trainer half leaves for the phone
 
