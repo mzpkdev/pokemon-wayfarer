@@ -1017,9 +1017,9 @@ TEST("Daily trainers: a contact that is not daily stands at its home and a home-
     SetTrainerFlag(TRAINER_JOEY_HNS);
     StartDay(11001);
     EXPECT(DailyTrainers_WhereIsTrainerToday(TRAINER_JOEY_HNS, &map, &num, &local));
-    // Anthony (Route 33) talks about the tunnel he came through, so he is bound to his place: he has a slot of his own
-    // and rotates in a group of one.
-    EXPECT(DailyTrainers_FindSlot(MAP_GROUP(MAP_ROUTE33_HNS), MAP_NUM(MAP_ROUTE33_HNS), 1) != NO_TRAINER_SLOT);
+    // Sidney (Route 9) talks about the power plant across the river, so he is bound to his place: his range is his own slot.
+    EXPECT(DailyTrainers_FindSlot(MAP_GROUP(MAP_ROUTE9_HNS), MAP_NUM(MAP_ROUTE9_HNS), 6) != NO_TRAINER_SLOT);
+    EXPECT(DailyTrainers_IsHomeRange(DailyTrainers_FindSlot(MAP_GROUP(MAP_ROUTE9_HNS), MAP_NUM(MAP_ROUTE9_HNS), 6)));
     // A trainer that is no slot and no fixed contact is nowhere.
     EXPECT(!DailyTrainers_WhereIsTrainerToday(TRAINER_FALKNER_1_HNS, &map, &num, &local));
 
@@ -1029,7 +1029,7 @@ TEST("Daily trainers: a contact that is not daily stands at its home and a home-
 TEST("Daily trainers: a home-range trainer is at home or away each day, battled once a day, and a ready one is always home")
 {
     struct Snapshot *snapshot = TakeSnapshot();
-    u16 slot = DailyTrainers_FindSlot(MAP_GROUP(MAP_ROUTE33_HNS), MAP_NUM(MAP_ROUTE33_HNS), 1);
+    u16 slot = DailyTrainers_FindSlot(MAP_GROUP(MAP_ROUTE9_HNS), MAP_NUM(MAP_ROUTE9_HNS), 6);
     const struct WorldTrainerSlot *row;
     u16 out[WORLD_TRAINER_GROUP_SLOTS_MAX], day, home = 0, away = 0;
     u8 map, num, local, contact;
@@ -1072,9 +1072,10 @@ TEST("Daily trainers: a home-range trainer is at home or away each day, battled 
     EXPECT_GT(away * 100, (u32)(home + away) * 17);
     EXPECT_LT(away * 100, (u32)(home + away) * 33);
     // Ready or holding a gift as the day started: placed every day, in its own empty slot when the roll says empty.
+    // (No home-range trainer is a phone contact today, so the guarantee is exercised by the group tests; this loop
+    // runs for a home range that becomes one.)
     contact = DailyContacts_IndexOf(row->trainerId);
-    ASSUME(contact != DAILY_NO_CONTACT);
-    for (day = 12301; day < 12501; day++)
+    for (day = 12301; contact != DAILY_NO_CONTACT && day < 12501; day++)
     {
         StartDay(day);
         gPokemonStoragePtr->dailySlots.readyAtDayStart[contact / 8] |= 1 << (contact % 8);
@@ -1104,7 +1105,7 @@ TEST("Daily trainers: a home-range trainer is at home or away each day, battled 
 TEST("Daily trainers: a slot with no absence always has someone, battleable once a day after the first win")
 {
     struct Snapshot *snapshot = TakeSnapshot();
-    u16 slot = DailyTrainers_FindSlot(MAP_GROUP(MAP_ROUTE33_HNS), MAP_NUM(MAP_ROUTE33_HNS), 1);
+    u16 slot = DailyTrainers_FindSlot(MAP_GROUP(MAP_ROUTE9_HNS), MAP_NUM(MAP_ROUTE9_HNS), 6);
     u8 group = FindGroup(0, 4, FALSE, 2);
     const struct WorldTrainerSlot *row;
     u16 out[WORLD_TRAINER_GROUP_SLOTS_MAX], day, i;

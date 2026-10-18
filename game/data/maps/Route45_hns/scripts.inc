@@ -113,8 +113,8 @@ Route45_Text_HikerErikBeaten:
     .string "Oh, I lost that!$"
 
 Route45_Text_HikerErikAfter:
-    .string "I'll head back to BLACKTHORN's\n"
-    .string "ICE PATH and train some more.$"
+	.string "I'll head back to the\n"
+	.string "mountains and train some more.$"
 
 Route45_Text_HikerMichaelSeen:
     .string "Yo! You're spunky! But you know\n"

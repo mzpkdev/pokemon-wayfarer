@@ -32,8 +32,7 @@ SixIsland_OutcastIsland_Text_TylorPostBattle::
 
 SixIsland_OutcastIsland_Text_MymoIntro::
 	.string "Gasp… Gasp…\p"
-	.string "I swam here from SIX ISLE PORT\n"
-	.string "in one go.$"
+	.string "I swam here in one go.$"
 
 SixIsland_OutcastIsland_Text_MymoDefeat::
 	.string "Gasp…\n"

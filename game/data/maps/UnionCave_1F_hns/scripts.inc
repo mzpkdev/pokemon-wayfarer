@@ -71,7 +71,7 @@ UnionCave_1F_EventScript_Item_Awakening::
 	end
 
 UnionCave_1F_Text_HikerRussellSeen:
-	.string "You're headed to AZALEA, are you?\p"
+	.string "You're headed somewhere, are you?\p"
 	.string "Let my POKéMON see if you are good\n"
 	.string "enough to battle.$"
 

@@ -71,12 +71,52 @@
       "reason": "Jake and Joyce are authored on both Route 26 and its north half: one trainer, one place, so both stay at home"
     }
   ],
-  "absence": [],
+  "absence": [
+    {
+      "trainer": "TRAINER_WAYFARER_SEVII_PKMN_RANGER_NICOLAS",
+      "percent": 0,
+      "reason": "A ranger patrolling the canyon entrance and pointing at the tower; presence is the job."
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BRANDON",
+      "percent": 0,
+      "reason": "Researcher at the TANOBY RUINS chamber; the ruins feel empty without him."
+    },
+    {
+      "trainer": "TRAINER_CONNIE_HNS",
+      "percent": 0,
+      "reason": "Keeps a vigil for the LIGHTHOUSE POKéMON and wants JASMINE back; the scene is wrong without her."
+    },
+    {
+      "trainer": "TRAINER_NICO_HNS",
+      "percent": 0,
+      "reason": "A sage defending SPROUT TOWER's pillar; the tower's monk, always there."
+    },
+    {
+      "trainer": "TRAINER_STAN_HNS",
+      "percent": 0,
+      "reason": "The researcher at the RUINS OF ALPH; part of the place."
+    },
+    {
+      "trainer": "TRAINER_DARIN_HNS",
+      "percent": 0,
+      "reason": "Guards the SHRINE ahead and the MASTER; a gatekeeper, never absent."
+    },
+    {
+      "trainer": "TRAINER_QUINCY",
+      "percent": 0,
+      "reason": "Explains what VICTORY ROAD is and stands at its start; gatekeeper of the road."
+    }
+  ],
   "dialogue": [
     {
       "trainer": "TRAINER_AARON",
-      "range": "home",
-      "reason": "names METEOR FALLS; refers to its surroundings (\"in this area\", \"this area\"). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Clan training talk; the place is incidental. (the lines now read: The savage tide serves to make us stronger than ever. / We will return for more training. If you'd like, you should train, too. It will definitely toughen you up!)",
+      "was": [
+        "The savage tide in this area serves to make us stronger than ever.",
+        "We will return for more training at METEOR FALLS. If you'd like, you should go, too. It will definitely toughen you up!"
+      ]
     },
     {
       "trainer": "TRAINER_AIDAN",
@@ -145,28 +185,44 @@
     },
     {
       "trainer": "TRAINER_ALLEN_HNS",
-      "range": "home",
-      "reason": "names ECRUTEAK; names a building or local event (GYM). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: The gym leader's name carries the memory; the gym name is not needed. (the lines now read: Wow. You have a lot of BADGES. No wonder you're so tough. I wonder if MORTY is still in training? He really hammered me.)",
+      "was": [
+        "Wow. You have a lot of BADGES. No wonder you're so tough. I wonder if ECRUTEAK GYM's MORTY is still in training? He really hammered me."
+      ]
     },
     {
       "trainer": "TRAINER_ANTHONY_HNS",
-      "range": "home",
-      "reason": "refers to its surroundings (\"through the tunnel\"). The intro and rematch line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Where he came from is chatter (intro and rematch). (the lines now read: I came a long way, but I still have plenty of energy left.)",
+      "was": [
+        "I came through the tunnel, but I still have plenty of energy left."
+      ]
     },
     {
       "trainer": "TRAINER_ARNIE_HNS",
-      "range": "home",
-      "reason": "names NATIONAL PARK; refers to its surroundings (\"at the NATIONAL PARK\"); names a building or local event (Contest). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: A past win; the venue is incidental. (the lines now read: My VENONAT won me a bug-catching tournament.)",
+      "was": [
+        "My VENONAT won me the Bug-Catching Contest at the NATIONAL PARK."
+      ]
     },
     {
       "trainer": "TRAINER_BARNEY_HNS",
-      "range": "home",
-      "reason": "names POWER PLANT; refers to its surroundings (\"the POWER PLANT\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Quiz banter; the landmark is only the example. (the lines now read: I think electricity is the most important thing in our daily lives. If it weren't, people wouldn't have made such a fuss when the power went out.)",
+      "was": [
+        "I think electricity is the most important thing in our daily lives. If it weren't, people wouldn't have made such a fuss when the POWER PLANT went out of commission."
+      ]
     },
     {
       "trainer": "TRAINER_BECK",
-      "range": "home",
-      "reason": "names FORTREE; refers to its surroundings (\"out here\", \"this place\"). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Homesickness chatter. (the lines now read: I came all the way here with my BIRD POKéMON. / I'd like to go back home, but I've grown to like it here, too.)",
+      "was": [
+        "I came all the way out here with my BIRD POKéMON.",
+        "I'd like to go back to FORTREE, but I've grown to like this place, too."
+      ]
     },
     {
       "trainer": "TRAINER_BECKY",
@@ -183,8 +239,12 @@
     },
     {
       "trainer": "TRAINER_BIANCA",
-      "range": "home",
-      "reason": "names MAUVILLE; refers to its surroundings (\"This road\"). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Travel chatter. (the lines now read: Did you come from far? Then you should be full of energy! / The road ahead… You have quite a ways to travel.)",
+      "was": [
+        "Did you come from MAUVILLE? Then you should be full of energy!",
+        "This road here… You have quite a ways to travel."
+      ]
     },
     {
       "trainer": "TRAINER_BILL_HNS",
@@ -209,18 +269,27 @@
     },
     {
       "trainer": "TRAINER_BRYANT",
-      "range": "home",
-      "reason": "names FIERY PATH. The intro is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Boast; the place is incidental. (the lines now read: I caught hot POKéMON deep inside a volcano! Take a look!)",
+      "was": [
+        "I caught hot POKéMON in FIERY PATH! Take a look!"
+      ]
     },
     {
       "trainer": "TRAINER_CALE",
-      "range": "home",
-      "reason": "names LILYCOVE. The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Shopping gag. (the lines now read: I bought too much stuff at the DEPT. STORE. I wish I had a BAG like yours.)",
+      "was": [
+        "I bought too much stuff at the LILYCOVE DEPT. STORE. It's up the road from here. I wish I had a BAG like yours."
+      ]
     },
     {
       "trainer": "TRAINER_CAMERON_1",
-      "range": "home",
-      "reason": "names MT. PYRE. The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: A plan. (the lines now read: I should train harder… I'll never beat you this way…)",
+      "was": [
+        "I should train at MT. PYRE… I'll never beat you this way…"
+      ]
     },
     {
       "trainer": "TRAINER_CARA_HNS",
@@ -271,8 +340,11 @@
     },
     {
       "trainer": "TRAINER_CLAUDE",
-      "range": "home",
-      "reason": "names METEOR FALLS. The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: A plan. (the lines now read: I think I'll try my luck at landing a big one at a waterfall. There has to be something in there. I just know it.)",
+      "was": [
+        "I think I'll try my luck at landing a big one at METEOR FALLS. There has to be something in there. I just know it."
+      ]
     },
     {
       "trainer": "TRAINER_CONNIE_HNS",
@@ -299,8 +371,12 @@
     },
     {
       "trainer": "TRAINER_DEAN_HNS",
-      "range": "home",
-      "reason": "names ROCK TUNNEL; names a building or local event (POKéMON CENTER). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Where he came to explore is chatter, not the point of the spot. (the lines now read: I came to explore. / My POKéMON were hurt before I even got started. I'd better get them healed right away.)",
+      "was": [
+        "I came to explore ROCK TUNNEL.",
+        "My POKéMON were hurt before even entering ROCK TUNNEL. I'd better take them to a POKéMON CENTER right away."
+      ]
     },
     {
       "trainer": "TRAINER_DENISE",
@@ -335,8 +411,11 @@
     },
     {
       "trainer": "TRAINER_DOMINIK",
-      "range": "home",
-      "reason": "names SLATEPORT. The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Trivia chatter. (the lines now read: Why is the sea blue? I learned about that at a MUSEUM, but I forgot.)",
+      "was": [
+        "Why is the sea blue? I learned about that at the MUSEUM in SLATEPORT, but I forgot."
+      ]
     },
     {
       "trainer": "TRAINER_DUDLEY_HNS",
@@ -350,8 +429,11 @@
     },
     {
       "trainer": "TRAINER_ELAINE_HNS",
-      "range": "home",
-      "reason": "names CIANWOOD. The intro is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Destination chatter; a swimmer stays in water spots. (the lines now read: Are you going far? How about a quick battle first?)",
+      "was": [
+        "Are you going to CIANWOOD? How about a quick battle first?"
+      ]
     },
     {
       "trainer": "TRAINER_ELIJAH",
@@ -370,13 +452,19 @@
     },
     {
       "trainer": "TRAINER_ERIK_HNS",
-      "range": "home",
-      "reason": "names BLACKTHORN, ICE PATH. The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: A plan. (the lines now read: I'll head back to the mountains and train some more.)",
+      "was": [
+        "I'll head back to BLACKTHORN's ICE PATH and train some more."
+      ]
     },
     {
       "trainer": "TRAINER_ERIN_HNS",
-      "range": "home",
-      "reason": "names GOLDENROD; refers to its surroundings (\"the GYM\"); names a building or local event (GYM). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Favorite-gym chatter. (the lines now read: I've been to many GYMS, but my favorite one is filled with pretty flowers!)",
+      "was": [
+        "I've been to many GYMS, but the GYM in GOLDENROD is my favorite. It's filled with pretty flowers!"
+      ]
     },
     {
       "trainer": "TRAINER_ERNEST_1",
@@ -390,8 +478,11 @@
     },
     {
       "trainer": "TRAINER_EUGENE_HNS",
-      "range": "home",
-      "reason": "names OLIVINE. The intro is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Where he docked is chatter. (the lines now read: I just got back to port. So how about a POKéMON battle?)",
+      "was": [
+        "I just got back to OLIVINE. So how about a POKéMON battle?"
+      ]
     },
     {
       "trainer": "TRAINER_FELIX",
@@ -431,8 +522,11 @@
     },
     {
       "trainer": "TRAINER_HARRIS_HNS",
-      "range": "home",
-      "reason": "names UNDERGROUND PATH. The intro is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Incidental news about a reopened path; the battle line works on any Biker spot. (the lines now read: The way is open again! Now, let's battle!)",
+      "was": [
+        "The UNDERGROUND PATH is open again! Now, let's battle!"
+      ]
     },
     {
       "trainer": "TRAINER_HEIDI",
@@ -452,13 +546,20 @@
     },
     {
       "trainer": "TRAINER_HUEY",
-      "range": "home",
-      "reason": "names SLATEPORT; refers to its surroundings (\"In the best port\"). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Home-port pride; reads fine for any Sailor. (the lines now read: I've laid anchor in ports around the world, but my home port's the best. / In my best port was the best TRAINER…)",
+      "was": [
+        "I've laid anchor in ports around the world, but SLATEPORT's the best.",
+        "In the best port was the best TRAINER…"
+      ]
     },
     {
       "trainer": "TRAINER_IRENE",
-      "range": "home",
-      "reason": "names MT. CHIMNEY; refers to its surroundings (\"around here\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Wanderlust chatter. (the lines now read: I'm thinking that I should go up a mountain, but the view here is very nice, too.)",
+      "was": [
+        "I'm thinking that I should go to MT. CHIMNEY, but the view around here is very nice, too."
+      ]
     },
     {
       "trainer": "TRAINER_IRENE_HNS",
@@ -475,8 +576,13 @@
     },
     {
       "trainer": "TRAINER_ISAIAH_1",
-      "range": "home",
-      "reason": "names EVER GRANDE CITY. The intro and post-battle line and rematch line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Triathlon goal chatter (intro, rematch, say). (the lines now read: The finish is still a long ways away… / I'm still feeling good. I'll keep on swimming to the finish. / I'll eventually reach the finish where I can eventually win…)",
+      "was": [
+        "EVER GRANDE CITY is still a long ways away…",
+        "I'm still feeling good. I'll keep on swimming to EVER GRANDE CITY.",
+        "I'll eventually reach EVER GRANDE CITY where I can eventually win…"
+      ]
     },
     {
       "trainer": "TRAINER_JANI",
@@ -493,13 +599,21 @@
     },
     {
       "trainer": "TRAINER_JENNY_1",
-      "range": "home",
-      "reason": "refers to its surroundings (\"the TRICK HOUSE\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: The line itself says it is unrelated. (the lines now read: This has nothing to do with anything, but maybe I'll take a trip somewhere.)",
+      "was": [
+        "This has nothing to do with anything, but maybe I'll visit the TRICK HOUSE."
+      ]
     },
     {
       "trainer": "TRAINER_JERRY_1",
-      "range": "home",
-      "reason": "refers to its surroundings (\"at the TRAINER'S SCHOOL\"). The intro and post-battle line and rematch line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Schoolchild chatter (intro, say, rematch). (the lines now read: We learn all sorts of things at school. I want to test things out for real! / I'll have to redo some courses at school. If I don't, my teacher will be steamed. / I've been studying seriously at school. I won't lose like I did last time.)",
+      "was": [
+        "We learn all sorts of things at the TRAINER'S SCHOOL. I want to test things out for real!",
+        "I'll have to redo some courses at the TRAINER'S SCHOOL. If I don't, ROXANNE will be steamed.",
+        "I've been studying seriously at the TRAINER'S SCHOOL. I won't lose like I did last time."
+      ]
     },
     {
       "trainer": "TRAINER_JOE_HNS",
@@ -508,8 +622,11 @@
     },
     {
       "trainer": "TRAINER_JOHNNY_HNS",
-      "range": "home",
-      "reason": "names LAVENDER. The intro is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Where the field trip goes is incidental. (the lines now read: We're on a field trip for social studies.)",
+      "was": [
+        "We're on a field trip to LAVENDER RADIO TOWER for social studies."
+      ]
     },
     {
       "trainer": "TRAINER_JOHNSON",
@@ -521,8 +638,11 @@
     },
     {
       "trainer": "TRAINER_JOSE_HNS",
-      "range": "home",
-      "reason": "names ROUTE 27; refers to its surroundings (\"out here\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Gift contact; the gift line only needs bird-watching. Gift flag moves with him. (the lines now read: I find all sorts of things while bird-watching. I'll let you know if I find anything else!)",
+      "was": [
+        "I find all sorts of things out here on ROUTE 27. I'll let you know if I find anything else!"
+      ]
     },
     {
       "trainer": "TRAINER_KARA_HNS",
@@ -531,8 +651,11 @@
     },
     {
       "trainer": "TRAINER_KATELYN_1",
-      "range": "home",
-      "reason": "names VICTORY ROAD. The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Advice. (the lines now read: You should give serious thought to tougher challenges.)",
+      "was": [
+        "You should give serious thought to challenges on VICTORY ROAD."
+      ]
     },
     {
       "trainer": "TRAINER_KAYLEE_HNS",
@@ -541,8 +664,11 @@
     },
     {
       "trainer": "TRAINER_KENNY_HNS",
-      "range": "home",
-      "reason": "names ROCK TUNNEL. The intro is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: A plan, not the spot. (the lines now read: I should go find a cave to get myself an ONIX.)",
+      "was": [
+        "I should go to ROCK TUNNEL to get myself an ONIX."
+      ]
     },
     {
       "trainer": "TRAINER_KENT_HNS",
@@ -638,13 +764,20 @@
     },
     {
       "trainer": "TRAINER_OWEN",
-      "range": "home",
-      "reason": "names PETALBURG CITY. The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Rumor chatter. (the lines now read: The rumors I heard, that tough little kid is from a small town.)",
+      "was": [
+        "The rumors I heard, that tough little kid is from PETALBURG CITY."
+      ]
     },
     {
       "trainer": "TRAINER_PETER_HNS",
-      "range": "home",
-      "reason": "names VIOLET CITY; refers to its surroundings (\"at the GYM\"); names a building or local event (GYM). The intro and post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Gym-badge chatter; the city is incidental. (the lines now read: That BADGE! You beat FALKNER? / I should train again before my next challenge.)",
+      "was": [
+        "That BADGE! It's from VIOLET CITY! You beat FALKNER?",
+        "I should train again at the GYM in VIOLET CITY."
+      ]
     },
     {
       "trainer": "TRAINER_QUENTIN_HNS",
@@ -679,8 +812,11 @@
     },
     {
       "trainer": "TRAINER_RICHARDO_HNS",
-      "range": "home",
-      "reason": "names BURNED TOWER; refers to its surroundings (\"in the BURNED TOWER\"). The intro is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Joke that only needs 'practicing'. (the lines now read: I'm practicing my stealing! Don't try this at home!)",
+      "was": [
+        "I'm practicing my stealing in the BURNED TOWER! Don't try this at home!"
+      ]
     },
     {
       "trainer": "TRAINER_RICKY_1",
@@ -689,13 +825,19 @@
     },
     {
       "trainer": "TRAINER_ROB_HNS",
-      "range": "home",
-      "reason": "names VIRIDIAN. The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Bug Catcher boast; the forest is only chatter. (the lines now read: I caught every bug I could find. Is there a better place somewhere?)",
+      "was": [
+        "I caught every bug in VIRIDIAN. Is there a better FOREST somewhere?"
+      ]
     },
     {
       "trainer": "TRAINER_RUSSELL_HNS",
-      "range": "home",
-      "reason": "names AZALEA. The intro is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Destination chatter. (the lines now read: You're headed somewhere, are you? Let my POKéMON see if you are good enough to battle.)",
+      "was": [
+        "You're headed to AZALEA, are you? Let my POKéMON see if you are good enough to battle."
+      ]
     },
     {
       "trainer": "TRAINER_SAMUEL",
@@ -714,8 +856,11 @@
     },
     {
       "trainer": "TRAINER_SIMON_HNS",
-      "range": "home",
-      "reason": "names CIANWOOD CITY. The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Distance chatter. (the lines now read: It's a good distance from here.)",
+      "was": [
+        "CIANWOOD CITY is a good distance away from here."
+      ]
     },
     {
       "trainer": "TRAINER_SOPHIE",
@@ -737,23 +882,35 @@
     },
     {
       "trainer": "TRAINER_TAMMY",
-      "range": "home",
-      "reason": "names MT. PYRE. The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Hex Maniac mystique works anywhere. (the lines now read: Some places… There is a mysterious power at work there…)",
+      "was": [
+        "MT. PYRE… There is a mysterious power at work there…"
+      ]
     },
     {
       "trainer": "TRAINER_TANYA",
-      "range": "home",
-      "reason": "names MOSSDEEP CITY. The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Lost-swimmer gag. (the lines now read: Whew… Which way is the shore?)",
+      "was": [
+        "Whew… Which way is it to MOSSDEEP CITY?"
+      ]
     },
     {
       "trainer": "TRAINER_TERRELL_HNS",
-      "range": "home",
-      "reason": "names OLIVINE; refers to its surroundings (\"The GYM\", \"the GYM\"); names a building or local event (GYM). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Sailor port chatter. (the lines now read: Every time I return to port, I check in on an old rival. His POKéMON type changed without me noticing.)",
+      "was": [
+        "Every time I return to OLIVINE, I visit the GYM. The GYM LEADER’s POKéMON type changed without me noticing."
+      ]
     },
     {
       "trainer": "TRAINER_TIFFANY_HNS",
-      "range": "home",
-      "reason": "names LAKE OF RAGE. The intro and rematch line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Destination chatter (intro and rematch). (the lines now read: Are you going far too? Let's play for a little while!)",
+      "was": [
+        "Are you going to LAKE OF RAGE too? Let's play for a little while!"
+      ]
     },
     {
       "trainer": "TRAINER_TIMMY",
@@ -765,13 +922,20 @@
     },
     {
       "trainer": "TRAINER_TOBY_HNS",
-      "range": "home",
-      "reason": "names CIANWOOD CITY. The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: A plan; the town is incidental. (the lines now read: I plan to train to teach my POKéMON how to FLY.)",
+      "was": [
+        "I plan to train in CIANWOOD CITY to teach my POKéMON how to FLY."
+      ]
     },
     {
       "trainer": "TRAINER_TRENT_1",
-      "range": "home",
-      "reason": "names MT. CHIMNEY; refers to its surroundings (\"these mountain trails\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Hiker advice and a plan. (the lines now read: Try hiking, and I mean really pounding, on mountain trails with a heavy pack weighing dozens of pounds. That, my friend, will get your body into serious shape. / I hear there are some seriously tough TRAINERS on top of a mountain. I intend to get up there and give them a challenge!)",
+      "was": [
+        "Try hiking, and I mean really pounding, on these mountain trails with a heavy pack weighing dozens of pounds. That, my friend, will get your body into serious shape.",
+        "I hear there are some seriously tough TRAINERS on top of MT. CHIMNEY. I intend to get up there and give them a challenge!"
+      ]
     },
     {
       "trainer": "TRAINER_ULAULA_COOLTRAINER_HNS",
@@ -790,8 +954,11 @@
     },
     {
       "trainer": "TRAINER_VANESSA",
-      "range": "home",
-      "reason": "names LILYCOVE; names a building or local event (CONTEST). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Contest boast; Contest is an allowed phrase. (the lines now read: I'm going to a big show. My POKéMON should have no problem sweeping the MASTER CLASS.)",
+      "was": [
+        "I'm going to a CONTEST in LILYCOVE. My POKéMON should have no problem sweeping the MASTER CLASS."
+      ]
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_BURGLAR_ARNIE",
@@ -837,13 +1004,19 @@
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ALICE",
-      "range": "home",
-      "reason": "names SEAFOAM ISLANDS. The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Swimming chatter; a swimmer stays in water spots. Generated coast script (see note). (the lines now read: My boyfriend wanted to swim far away.)",
+      "was": [
+        "My boyfriend wanted to swim to SEAFOAM ISLANDS."
+      ]
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ANYA",
-      "range": "home",
-      "reason": "names FUCHSIA, SEAFOAM ISLANDS. The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Hometown and destination chatter. Generated coast script. (the lines now read: It's still a long way to go… I want to go back home…)",
+      "was": [
+        "It's still a long way to go to SEAFOAM ISLANDS… I want to go back to FUCHSIA…"
+      ]
     },
     {
       "trainer": "TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_MELISSA",
@@ -890,8 +1063,11 @@
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_CRUSH_GIRL_CYNDY",
-      "range": "home",
-      "reason": "names TRAINER TOWER. The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: A plan; Crush Girl lines work on any spot. Generated Sevii script. (the lines now read: The way I am now, I may have to hold off on my next challenge…)",
+      "was": [
+        "The way I am now, I may have to hold off on TRAINER TOWER…"
+      ]
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_PKMN_RANGER_NICOLAS",
@@ -910,8 +1086,12 @@
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_PSYCHIC_RODETTE",
-      "range": "home",
-      "reason": "refers to its surroundings (\"this island\"). The intro and post-battle line and rematch line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Mystic hint that reads the same anywhere (three lines, intro, say, rematch). Generated Sevii script. (the lines now read: Somewhere out there, peculiar POKéMON are sleeping. / Somewhere out there, peculiar POKéMON are sleeping. Could it be that they're waiting for you?)",
+      "was": [
+        "Somewhere on this island, peculiar POKéMON are sleeping.",
+        "Somewhere on this island, peculiar POKéMON are sleeping. Could it be that they're waiting for you?"
+      ]
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BRANDON",
@@ -920,8 +1100,11 @@
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_RUIN_MANIAC_FOSTER",
-      "range": "home",
-      "reason": "refers to its surroundings (\"on the SEVII ISLANDS\"). The post-battle line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: General ruin lore; fits any Ruin Maniac spot. Generated Sevii script. (the lines now read: There are many ruins in the world. The majority of them date back a long way.)",
+      "was": [
+        "There are several ruins on the SEVII ISLANDS. The majority of them date back a long way."
+      ]
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_RUIN_MANIAC_LARRY",
@@ -953,13 +1136,21 @@
     },
     {
       "trainer": "TRAINER_WAYFARER_SEVII_SWIMMER_MALE_MYMO",
-      "range": "home",
-      "reason": "names SIX ISLAND. The rematch line is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Where he swam from is chatter. The intro line names SIX ISLE PORT but the audit does not flag it; reword both together. Generated Sevii script. (the lines now read: Gasp… Gasp… I swam here in one go again. / Gasp… Gasp… I swam here in one go.)",
+      "was": [
+        "Gasp… Gasp… I swam here from SIX ISLAND's port in one go again.",
+        "Gasp… Gasp… I swam here from SIX ISLE PORT in one go."
+      ]
     },
     {
       "trainer": "TRAINER_WAYNE",
-      "range": "home",
-      "reason": "refers to its surroundings (\"the falls\"). The intro is about the place the trainer was written for, so it stays at home."
+      "range": "class",
+      "reason": "Reworded: Goal chatter. The defeat line names EVER GRANDE but is not flagged; reword both. (the lines now read: I want to go far, so I caught myself a POKéMON that knows the move WATERFALL to crest steep rapids. / Awww, phooey! My POKéMON knows WATERFALL, but I'm not ready for the big trip yet!)",
+      "was": [
+        "I want to visit EVER GRANDE, so I caught myself a POKéMON that knows the move WATERFALL to crest the falls.",
+        "Awww, phooey! My POKéMON knows WATERFALL, but I'm not ready for EVER GRANDE yet!"
+      ]
     }
   ]
 }

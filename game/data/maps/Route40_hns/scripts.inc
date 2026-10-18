@@ -25,8 +25,8 @@ Route40_Text_SwimmermSimonBeaten:
 	.string "OK! Uncle! I give!$"
 
 Route40_Text_SwimmermSimonAfter:
-	.string "CIANWOOD CITY is a good\n"
-	.string "distance away from here.$"
+	.string "It's a good distance from\n"
+	.string "here.$"
 
 Route40_EventScript_Randall::
 	trainerbattle_single TRAINER_RANDALL_HNS, Route40_Text_SwimmermRandallSeen, Route40_Text_SwimmermRandallBeaten
@@ -51,7 +51,7 @@ Route40_EventScript_Elaine::
 	end
 
 Route40_Text_SwimmerfElaineSeen:
-	.string "Are you going to CIANWOOD?\p"
+	.string "Are you going far?\p"
 	.string "How about a quick battle\n"
 	.string "first?$"
 

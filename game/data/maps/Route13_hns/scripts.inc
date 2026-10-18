@@ -182,7 +182,7 @@ Route13_Text_BirdKeeperBretAfterBattle:
 	.string "happy.$"
 
 Route13_Text_HikerKennySeen:
-	.string "I should go to ROCK TUNNEL to get\n"
+	.string "I should go find a cave to get\n"
 	.string "myself an ONIX.$"
 
 Route13_Text_HikerKennyBeaten:

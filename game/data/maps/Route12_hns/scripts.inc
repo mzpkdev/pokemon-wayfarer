@@ -108,12 +108,11 @@ Route12_Text_FisherBarneyBeaten:
 
 Route12_Text_FisherBarneyAfterBattle:
 	.string "I think electricity is the most\n"
-	.string "important thing in our daily\l"
+	.string "important thing in our daily\p"
 	.string "lives.\p"
 	.string "If it weren't, people wouldn't\n"
-	.string "have made such a fuss when the\l"
-	.string "POWER PLANT went out of\l"
-	.string "commission.$"
+	.string "have made such a fuss when the\p"
+	.string "power went out.$"
 
 Route12_Text_KyleRegister:
 	.string "I'll remember this.\n"

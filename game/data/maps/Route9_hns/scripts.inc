@@ -46,16 +46,16 @@ Route9_EventScript_Item_Flash_Cannon::
     end
 
 Route9_Text_CamperDeanSeen:
-	.string "I came to explore ROCK TUNNEL.$"
+	.string "I came to explore.$"
 
 Route9_Text_CamperDeanBeaten:
 	.string "Whoa! Danger, man.$"
 
 Route9_Text_CamperDeanAfter:
-	.string "My POKéMON were hurt before even\n"
-	.string "entering ROCK TUNNEL.\p"
-	.string "I'd better take them to a POKéMON\n"
-	.string "CENTER right away.$"
+	.string "My POKéMON were hurt before I\n"
+	.string "even got started.\p"
+	.string "I'd better get them healed right\n"
+	.string "away.$"
 
 Route9_Text_PicnickerHeidiSeen:
 	.string "Have you ever been to a picnic?\p"

@@ -101,8 +101,8 @@ content), Pokemon Tower, the Trick House puzzle rooms, Silph Co., the Rocket
 Hideouts, the Game Corner hideout entrance, the villain grunt classes, and the
 two Route 26 trainers authored on two maps. Of 901 `ORDINARY` trainer slots
 (1,051 trainer objects in all, pairs counting once per trainer), 659 are daily
-(632 singles and 27 pairs, 686 objects): 525 with a class range, 20 with a
-place range and 114 with a home range; the report lists why each of the others
+(632 singles and 27 pairs, 686 objects): 572 with a class range, 20 with a
+place range and 67 with a home range, 7 of the slots at 0% absence; the report lists why each of the others
 is not daily.
 
 **Place ranges.** A trainer whose lines need a kind of place ("this cave", "in
@@ -445,8 +445,8 @@ lists is fixed in the lists, not waived. Text of generated Sevii and coast
 scripts is not edited by hand: those trainers get a home or place range, never a
 reword.
 
-Of 665 candidates, 164 named a place at some point: 114 have a home range, 6 are
-not daily (the Route 25 sequence), 16 were reworded, 20 have a place range and
+Of 665 candidates, 164 named a place at some point: 67 have a home range, 6 are
+not daily (the Route 25 sequence), 63 were reworded, 20 have a place range and
 8 were cleared by narrow reviewed
 phrases (a goal or plan that reads fine anywhere: "aim for the POKéMON
 LEAGUE", "going to the GYM?"). The report lists every resolution with its reason

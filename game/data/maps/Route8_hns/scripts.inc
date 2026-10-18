@@ -45,8 +45,7 @@ Route8_Text_BikerDwayneAfter:
 	.string "never fall!$"
 
 Route8_Text_BikerHarrisSeen:
-	.string "The UNDERGROUND PATH is open\n"
-	.string "again!\p"
+	.string "The way is open again!\p"
 	.string "Now, let's battle!$"
 
 Route8_Text_BikerHarrisBeaten:

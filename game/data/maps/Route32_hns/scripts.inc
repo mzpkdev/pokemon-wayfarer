@@ -483,15 +483,15 @@ Route32_Text_LizPostRematch:
 	.string "I was having a nice chat too.$"
 
 Route32_Text_BirdKeeperPeter_Seen:
-	.string "That BADGE! It's from VIOLET CITY!\n"
+	.string "That BADGE!\p"
 	.string "You beat FALKNER?$"
 
 Route32_Text_BirdKeeperPeter_Beaten:
 	.string "I know what my weaknesses are.$"
 
 Route32_Text_BirdKeeperPeter_After:
-	.string "I should train again at the\n"
-	.string "GYM in VIOLET CITY.$"
+	.string "I should train again before my\n"
+	.string "next challenge.$"
 
 Route32_Text_RoarIntro:
 	.string "WROOOOAR! PEOPLE RUN WHEN I\n"

@@ -287,10 +287,10 @@ Route27_Text_JoseHasItem:
     .string "Here, you can have it!$"
 
 Route27_Text_JoseGaveItem:
-    .string "I find all sorts of things\n"
-    .string "out here on ROUTE 27.\p"
-    .string "I'll let you know if I find\n"
-    .string "anything else!$"
+	.string "I find all sorts of things\n"
+	.string "while bird-watching.\p"
+	.string "I'll let you know if I find\n"
+	.string "anything else!$"
 
 Route27_Text_JoseNoRoom:
     .string "Hmm, your BAG is full.\p"

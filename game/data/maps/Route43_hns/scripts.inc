@@ -161,8 +161,8 @@ Route43_Text_CamperSpencerAfter:
     .string "We were planning to camp there.$"
 
 Route43_Text_PicnickerTiffanySeen:
-    .string "Are you going to LAKE OF RAGE too?\p"
-    .string "Let's play for a little while!$"
+	.string "Are you going far too?\p"
+	.string "Let's play for a little while!$"
 
 Route43_Text_PicnickerTiffanyBeaten:
     .string "I played too much!$"
@@ -176,8 +176,8 @@ Route43_Text_TiffanyRegister:
     .string "Won't you join us?$"
 
 Route43_Text_TiffanyRematchIntro:
-    .string "Are you going to LAKE OF RAGE too?\p"
-    .string "Let's play for a little while!$"
+	.string "Are you going far too?\p"
+	.string "Let's play for a little while!$"
 
 Route43_Text_TiffanyRematchDefeat:
     .string "I played too much!$"
