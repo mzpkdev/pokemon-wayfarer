@@ -1443,7 +1443,7 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_JENNIFER | Route120 | say | The special abilities of POKéMON will make battle styles change. |  |
 | TRAINER_CHIP | Route120 | intro | Who might you be? Are you perhaps searching for ancient ruins that are rumored to possibly exist according to legend? |  |
 | TRAINER_CHIP | Route120 | defeat | What a disgraceful setback… |  |
-| TRAINER_CHIP | Route120 | say | That giant rock… I would like to believe it may indeed contain ancient ruins. But I see no entrance. |  |
+| TRAINER_CHIP | Route120 | say | That giant rock… I would like to believe it may indeed contain ancient ruins. But I see no entrance. | spot phrase: giant rock |
 | TRAINER_CLARISSA | Route120 | intro | Why am I carrying this parasol? I'll tell you if you can win against me. |  |
 | TRAINER_CLARISSA | Route120 | defeat | A parasol can't ward off POKéMON attacks… |  |
 | TRAINER_CLARISSA | Route120 | say | I don't think strong sunlight is good for my POKéMON. So I shield them with my parasol. |  |
@@ -2009,7 +2009,7 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_WAYFARER_COAST_SCIENTIST_TED | PokemonMansion_1F_Frlg | say | A key? I don't know what you're talking about. |  |
 | TRAINER_WAYFARER_COAST_YOUNGSTER_JOHNSON | PokemonMansion_1F_Frlg | intro | W-w-waah! You startled me! I thought you were a ghost. |  |
 | TRAINER_WAYFARER_COAST_YOUNGSTER_JOHNSON | PokemonMansion_1F_Frlg | defeat | Tch! I can't get any wins. |  |
-| TRAINER_WAYFARER_COAST_YOUNGSTER_JOHNSON | PokemonMansion_1F_Frlg | say | I was exploring here by myself, but I feel spooked. I ought to go soon. |  |
+| TRAINER_WAYFARER_COAST_YOUNGSTER_JOHNSON | PokemonMansion_1F_Frlg | say | I was exploring here by myself, but I feel spooked. I ought to go soon. | spot phrase: exploring here |
 | TRAINER_WAYFARER_COAST_BURGLAR_ARNIE | PokemonMansion_2F_Frlg | intro | I can't get out! This old place is one big puzzle. | terrain: This old place |
 | TRAINER_WAYFARER_COAST_BURGLAR_ARNIE | PokemonMansion_2F_Frlg | defeat | Oh, no! My bag of loot! |  |
 | TRAINER_WAYFARER_COAST_BURGLAR_ARNIE | PokemonMansion_2F_Frlg | say | The switches here open and close alternating sets of doors. |  |

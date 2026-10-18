@@ -1325,6 +1325,19 @@
         "She'll be coming 'round MT.SILVER when she comes… MT.SILVER is in JOHTO, right?"
       ],
       "reason": "Reworded: MT.SILVER is dropped (data/maps/Route9_hns/scripts.inc)."
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_COAST_YOUNGSTER_JOHNSON",
+      "range": "place:mansion",
+      "phrases": [
+        "exploring here"
+      ],
+      "reason": "'I was exploring here by myself, but I feel spooked' is about the POKéMON MANSION; the trainer stays among mansion spots."
+    },
+    {
+      "trainer": "TRAINER_CHIP",
+      "range": "home",
+      "reason": "'That giant rock… ancient ruins. But I see no entrance': the rock beside this stretch of ROUTE 120."
     }
   ]
 }

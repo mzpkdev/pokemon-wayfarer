@@ -12,12 +12,12 @@ trainers the scaling classification keeps out of the daily slots (Gym members, b
 
 | Region | Class range | Place range | Home range | Not daily (ORDINARY) | Other trainers |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Kanto | 78 | 6 | 7 | 86 | 30 |
+| Kanto | 77 | 7 | 7 | 86 | 30 |
 | Sevii | 60 | 1 | 20 | 4 | 6 |
 | Johto | 116 | 5 | 22 | 66 | 30 |
 | Alola | 10 | 1 | 8 | 0 | 0 |
-| Hoenn | 277 | 8 | 40 | 86 | 53 |
-| total | 541 | 21 | 97 | 242 | 119 |
+| Hoenn | 276 | 8 | 41 | 86 | 53 |
+| total | 539 | 22 | 98 | 242 | 119 |
 
 659 daily slots. Absence chances (default 25%): 25%: 652, 0%: 7. 7 slot(s) at 0% (someone is always there).
 
@@ -56,7 +56,7 @@ group: the slot is its own range (the row's group field is the home marker), so 
 | Group | Region | Class family or @place type | Pairs | Slots |
 | ---: | --- | --- | --- | ---: |
 | 0 | Kanto | @coast |  | 2 |
-| 1 | Kanto | @mansion |  | 4 |
+| 1 | Kanto | @mansion |  | 5 |
 | 2 | Kanto | BATTLE_GIRL |  | 1 |
 | 3 | Kanto | BIKER |  | 8 |
 | 4 | Kanto | BIRD_KEEPER |  | 4 |
@@ -78,7 +78,7 @@ group: the slot is its own range (the row's group field is the home marker), so 
 | 20 | Kanto | SUPER_NERD |  | 3 |
 | 21 | Kanto | SWIMMER_F |  | 5 |
 | 22 | Kanto | SWIMMER_M |  | 13 |
-| 23 | Kanto | YOUNGSTER |  | 5 |
+| 23 | Kanto | YOUNGSTER |  | 4 |
 | 24 | Sevii | @coast |  | 1 |
 | 25 | Sevii | AROMA_LADY |  | 2 |
 | 26 | Sevii | BIRD_KEEPER |  | 2 |
@@ -180,7 +180,7 @@ group: the slot is its own range (the row's group field is the home marker), so 
 | 122 | Hoenn | POKEMANIAC |  | 3 |
 | 123 | Hoenn | PSYCHIC |  | 10 |
 | 124 | Hoenn | RICH_BOY |  | 2 |
-| 125 | Hoenn | RUIN_MANIAC |  | 5 |
+| 125 | Hoenn | RUIN_MANIAC |  | 4 |
 | 126 | Hoenn | SAILOR |  | 5 |
 | 127 | Hoenn | SCHOOL_KID |  | 2 |
 | 128 | Hoenn | SIS_AND_BRO | yes | 2 |
@@ -194,18 +194,18 @@ group: the slot is its own range (the row's group field is the home marker), so 
 | 136 | Hoenn | YOUNGSTER |  | 9 |
 | 137 | Hoenn | YOUNG_COUPLE | yes | 1 |
 
-11 place-type groups, 6 of one slot; 21 trainers in them. 97 trainers have a home range.
+11 place-type groups, 6 of one slot; 22 trainers in them. 98 trainers have a home range.
 
-138 groups of 255 possible; sizes: 1 slot(s) x 33, 2 slot(s) x 34, 3 slot(s) x 17, 4 slot(s) x 16, 5 slot(s) x 13, 6 slot(s) x 3, 7 slot(s) x 5, 8 slot(s) x 5, 9 slot(s) x 2, 10 slot(s) x 1, 11 slot(s) x 1, 12 slot(s) x 1, 13 slot(s) x 1, 15 slot(s) x 1, 18 slot(s) x 1, 21 slot(s) x 1, 22 slot(s) x 1, 23 slot(s) x 1, 25 slot(s) x 1
+138 groups of 255 possible; sizes: 1 slot(s) x 33, 2 slot(s) x 34, 3 slot(s) x 17, 4 slot(s) x 17, 5 slot(s) x 12, 6 slot(s) x 3, 7 slot(s) x 5, 8 slot(s) x 5, 9 slot(s) x 2, 10 slot(s) x 1, 11 slot(s) x 1, 12 slot(s) x 1, 13 slot(s) x 1, 15 slot(s) x 1, 18 slot(s) x 1, 21 slot(s) x 1, 22 slot(s) x 1, 23 slot(s) x 1, 25 slot(s) x 1
 
 ## Dialogue audit
 
-665 candidates were audited; 111 have a line that names a map, landmark, building or local event. Each is resolved below by its range: **class** after a
+665 candidates were audited; 113 have a line that names a map, landmark, building or local event. Each is resolved below by its range: **class** after a
 reword (the line was edited to neutral wording in the script source, the audit then finds nothing), **place:<type>** (the trainer
 joins the group of that place type, whose slots are all that kind of place), **home** (the lines are about the spot itself, so the
 trainer is placed only in its own slot), or **not daily** (its absence would break its lines).
 
-Resolutions: 65 class (reworded), 21 place, 97 home, 6 not daily.
+Resolutions: 65 class (reworded), 22 place, 98 home, 6 not daily.
 
 | Trainer | Slot | Range | Absence | Reason |
 | --- | --- | --- | --- | --- |
@@ -243,6 +243,7 @@ Resolutions: 65 class (reworded), 21 place, 97 home, 6 not daily.
 | TRAINER_CAROLINE | VictoryRoad_B2F | home | 25 | names POKéMON LEAGUE, VICTORY ROAD; names a building or local event (LEAGUE). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_CHAD | Route124 | home | 25 | names underwater; refers to its surroundings ("around here"). The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_CHARLIE | AbandonedShip_Corridors_1F | place:ship ("the ship") | 25 | The lines need a ship ("the ship"); the trainer rotates only among ship spots, which the generator checks against the map. |
+| TRAINER_CHIP | Route120 | home | 25 | 'That giant rock… ancient ruins. But I see no entrance': the rock beside this stretch of ROUTE 120. |
 | TRAINER_CHOW_HNS | SproutTower_1F_hns | place:tower ("this tower") | 25 | The lines need a tower ("this tower"); the trainer rotates only among tower spots, which the generator checks against the map. |
 | TRAINER_CLARK | Route116 | home | 25 | refers to its surroundings ("the tunnel"). The intro is about the place the trainer was written for, so it stays at home. |
 | TRAINER_CLAUDE | Route114 | class | 25 | Reworded: A plan. (the lines now read: I think I'll try my luck at landing a big one at a waterfall. There has to be something in there. I just know it.) |
@@ -371,6 +372,7 @@ Resolutions: 65 class (reworded), 21 place, 97 home, 6 not daily.
 | TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_MELISSA | Route20_Frlg | home | 25 | names CINNABAR. The intro and post-battle line and rematch line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_SHIRLEY | Route20_Frlg | home | 25 | names SEAFOAM; refers to its surroundings ("this island"). The intro and post-battle line and rematch line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_WAYFARER_COAST_SWIMMER_MALE_AXLE | Route19_Frlg | place:coast ("These waters") | 25 | The lines need a coast ("These waters"); the trainer rotates only among coast spots, which the generator checks against the map. |
+| TRAINER_WAYFARER_COAST_YOUNGSTER_JOHNSON | PokemonMansion_1F_Frlg | place:mansion ("exploring here") | 25 | 'I was exploring here by myself, but I feel spooked' is about the POKéMON MANSION; the trainer stays among mansion spots. |
 | TRAINER_WAYFARER_SEVII_AROMA_LADY_ROSE | SixIsland_WaterPath_Frlg | home | 25 | refers to its surroundings ("the woods"). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_WAYFARER_SEVII_AROMA_LADY_VIOLET | ThreeIsland_BondBridge_Frlg | home | 25 | names BERRY FOREST. The post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_WAYFARER_SEVII_BIRD_KEEPER_MILO | FiveIsland_MemorialPillar_Frlg | home | 25 | names FOUR ISLAND. The post-battle line is about the place the trainer was written for, so it stays at home. |
@@ -812,7 +814,7 @@ Every trainer slot with an `ORDINARY` trainer: daily slots by index, then the on
 | 384 | Route120 local id 14 | TRAINER_JENNA | PKMN_RANGER | 120 | 25% | daily |
 | 385 | Route120 local id 15 | TRAINER_JEFFREY_1 | BUG_MANIAC | 101 | 25% | daily |
 | 386 | Route120 local id 24 | TRAINER_JENNIFER | COOLTRAINER | 104 | 25% | daily |
-| 387 | Route120 local id 25 | TRAINER_CHIP | RUIN_MANIAC | 125 | 25% | daily |
+| 387 | Route120 local id 25 | TRAINER_CHIP | home | - | 25% | daily |
 | 388 | Route120 local id 26 | TRAINER_CLARISSA | PARASOL_LADY | 117 | 25% | daily |
 | 389 | Route120 local id 27 | TRAINER_ANGELICA | PARASOL_LADY | 117 | 25% | daily |
 | 390 | Route120 local id 34 | TRAINER_KEIGO | NINJA_BOY | 115 | 25% | daily |
@@ -967,7 +969,7 @@ Every trainer slot with an `ORDINARY` trainer: daily slots by index, then the on
 | 539 | AbandonedShip_Rooms2_1F local id 4 | TRAINER_GARRISON | RUIN_MANIAC | 125 | 25% | daily |
 | 540 | AbandonedShip_Rooms2_1F local id 5 | TRAINER_JANI | @ship | 94 | 25% | daily |
 | 541 | PokemonMansion_1F_Frlg local id 1 | TRAINER_WAYFARER_COAST_SCIENTIST_TED | SCIENTIST | 18 | 25% | daily |
-| 542 | PokemonMansion_1F_Frlg local id 5 | TRAINER_WAYFARER_COAST_YOUNGSTER_JOHNSON | YOUNGSTER | 23 | 25% | daily |
+| 542 | PokemonMansion_1F_Frlg local id 5 | TRAINER_WAYFARER_COAST_YOUNGSTER_JOHNSON | @mansion | 1 | 25% | daily |
 | 543 | PokemonMansion_2F_Frlg local id 1 | TRAINER_WAYFARER_COAST_BURGLAR_ARNIE | @mansion | 1 | 25% | daily |
 | 544 | PokemonMansion_3F_Frlg local id 1 | TRAINER_WAYFARER_COAST_BURGLAR_SIMON | @mansion | 1 | 25% | daily |
 | 545 | PokemonMansion_3F_Frlg local id 2 | TRAINER_WAYFARER_COAST_SCIENTIST_BRAYDON | @mansion | 1 | 25% | daily |

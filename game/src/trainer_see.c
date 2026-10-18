@@ -619,7 +619,13 @@ static u8 CheckTrainer(u8 objectEventId)
         // A wanderer in a rotating slot approaches by sight until its slot is battled for the day.
         if (DailyTrainers_ObjectIsRotating(objectEventId))
         {
-            if (DailyTrainers_ObjectIsDone(objectEventId))
+            // A ready occupant walks up and runs its own script into the rematch, as a ready trainer at home does.
+            if (I_VS_SEEKER_CHARGING && DailyTrainers_ObjectOffersRematch(objectEventId))
+            {
+                trainerBattlePtr = NULL;
+                numTrainers = 0xFF;
+            }
+            else if (DailyTrainers_ObjectIsDone(objectEventId))
                 return 0;
         }
         else

@@ -262,6 +262,8 @@
     "\\bthe (?:ones?|rest) here\\b",
     "\\bfrom here\\b(?<=hill from here)",
     "\\b(?:further|farther) ahead\\b",
-    "\\bfind (?:us|them) here\\b"
+    "\\bfind (?:us|them) here\\b",
+    "\\bexploring here\\b",
+    "\\bgiant rock\\b"
   ]
 }

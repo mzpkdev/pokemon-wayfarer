@@ -184,7 +184,7 @@ class Audit(unittest.TestCase):
     def test_phrasing_that_ties_a_line_to_its_spot_is_flagged_without_a_name(self):
         for text in ('Until I improve, my teacher, who rests here, will never find peace.', 'They halted development here to protect POKéMON.',
                      'My dream ends here again…', 'This is where we DRAGON users do our training.', 'There is an odd place nearby.',
-                     'A mystic POKéMON is said to sleep inside here.'):
+                     'A mystic POKéMON is said to sleep inside here.', 'I was exploring here by myself.', 'That giant rock may hold ruins.'):
             self.assertIn('spot phrase', [kind for kind, _ in self.flags(text)], text)
         for text in ('Here, you can have it!', 'It is a good distance from here.', 'We came here on a dare.', 'I like it here.'):
             self.assertNotIn('spot phrase', [kind for kind, _ in self.flags(text)], text)

@@ -101,8 +101,8 @@ content), Pokemon Tower, the Trick House puzzle rooms, Silph Co., the Rocket
 Hideouts, the Game Corner hideout entrance, the villain grunt classes, and the
 two Route 26 trainers authored on two maps. Of 901 `ORDINARY` trainer slots
 (1,051 trainer objects in all, pairs counting once per trainer), 659 are daily
-(632 singles and 27 pairs, 686 objects): 541 with a class range, 21 with a
-place range and 97 with a home range, 7 of the slots at 0% absence; the report lists why each of the others
+(632 singles and 27 pairs, 686 objects): 539 with a class range, 22 with a
+place range and 98 with a home range, 7 of the slots at 0% absence; the report lists why each of the others
 is not daily.
 
 **Place ranges.** A trainer whose lines need a kind of place ("this cave", "in
@@ -327,9 +327,10 @@ and only when the opponent is the slot's home trainer or its wanderer; a win
 in `readyAtDayStart` and is still ready (`DailyTrainers_ObjectOffersRematch`): a
 rematch already won today leaves the slot cleared and readiness clear, and a
 trainer who becomes ready mid-day is offered from the next day. For such an
-occupant the flag check and the sight check read done (as for a gift), so the
-object's own script falls through its battle to the rematch check and the
-player talks to it; `trainerbattle_rematch` then takes the next team as at
+occupant the flag check reads done (as for a gift), so the object's own script
+falls through its battle to the rematch check; the sight check takes the
+approach path a ready trainer at home takes, so the occupant walks up and runs
+its own script; `trainerbattle_rematch` then takes the next team as at
 home (the daily notes keep the script's first-stage id), and its win clears the
 slot for the day and advances the rematch stage. A wanderer that is not offered
 a rematch fights its latest beaten team once.
@@ -460,8 +461,8 @@ reworded only in their FRLG sources (`data/maps/*_Frlg/scripts.inc`,
 generated `ordinary.inc`; a reword keeps the page convention (`\n` once, then
 `\l`, `\p` only between sentences).
 
-Of 665 candidates, 197 named a place at some point: 97 have a home range, 6 are
-not daily (the Route 25 sequence), 65 were reworded, 21 have a place range and
+Of 665 candidates, 199 named a place at some point: 98 have a home range, 6 are
+not daily (the Route 25 sequence), 65 were reworded, 22 have a place range and
 8 were cleared by narrow reviewed
 phrases (a goal or plan that reads fine anywhere: "aim for the POKéMON
 LEAGUE", "going to the GYM?"). The report lists every resolution with its reason
