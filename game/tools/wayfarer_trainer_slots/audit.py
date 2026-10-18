@@ -38,17 +38,22 @@ def build_patterns(names, words):
     stems = set()
     for name in names:
         match = STEM_SUFFIX.match(name)
-        if match and ' ' not in match.group(1) and match.group(1) not in words['stem_stoplist'] and len(match.group(1)) >= 5:
+        if match and match.group(1) not in words['stem_stoplist'] and len(match.group(1)) >= 5:
             stems.add(match.group(1))
     full = (names | stems)
-    spaced = '|'.join(re.escape(name).replace(r'\ ', r'\s+') for name in sorted(full, key=len, reverse=True))
+    # A space may be missing or doubled in the scripts ("MT.MOON" for "MT. MOON").
+    spaced = '|'.join(re.escape(name).replace(r'\ ', r'\s*') for name in sorted(full, key=len, reverse=True))
     patterns.append(('map name', re.compile(r'(?<![A-Za-z])(?:' + spaced + r')(?![A-Za-z])', re.I)))
+    # Stems that are ordinary words in lower case ("victory") count only when written in capitals, as a name.
+    patterns.append(('map name', re.compile(r'(?<![A-Za-z])(?:' + alternation(words['capital_stems']) + r')(?![A-Za-z])')))
     determiners = '|'.join(words['determiners'])
     patterns.append(('landmark', re.compile(r'\b(?:' + determiners + r')\s+(?:(?!(?:the|a|an)\b)[A-Za-z\'-]+\s+)?(?:' + alternation(words['landmark_nouns']) + r')\b', re.I)))
     patterns.append(('terrain', re.compile(r'\b(?:' + '|'.join(words['demonstratives']) + r')\s+(?:(?!(?:the|a|an)\b)[A-Za-z\'-]+\s+)?(?:' + alternation(words['terrain_nouns']) + r')\b', re.I)))
     patterns.append(('place phrase', re.compile(r'\b(?:' + alternation(words['place_phrases']) + r')\b', re.I)))
     # Case-sensitive: the scripts write proper nouns in capitals ("the GYM"), so "no contest" or "out of my league" is not an event.
     patterns.append(('local event', re.compile(r'(?<![A-Za-z])(?:' + alternation(words['local_events']) + r')(?![A-Za-z])')))
+    # Phrases that tie a line to the spot it is spoken at without naming it ("rests here", "ends here", "this is where").
+    patterns.append(('spot phrase', re.compile('|'.join(words['spot_phrases']), re.I)))
     patterns.append(('sequence', re.compile('|'.join(words['sequence_patterns']))))
     allowed = re.compile('|'.join(f"(?:{row['pattern']})" for row in words['allowed_phrases']))
     return patterns, allowed

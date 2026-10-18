@@ -172,6 +172,23 @@ class Audit(unittest.TestCase):
         self.assertIn(('map name', 'cianwood'), self.flags('Are you going to CIANWOOD?'))
         self.assertIn(('map name', 'pokémon league'), self.flags('The POKéMON LEAGUE is far.'))
 
+    def test_names_written_without_a_space_or_with_several_words_still_match(self):
+        self.assertIn(('map name', 'mt.moon'), self.flags('I heard CLEFAIRY appear at MT.MOON.'))
+        self.assertIn(('map name', 'mt.mortar'), self.flags("I'm investigating MT.MORTAR."))
+        self.assertIn(('map name', 'ever grande'), self.flags('There are tough TRAINERS galore around EVER GRANDE.'))
+
+    def test_a_name_that_is_also_a_word_counts_only_in_capitals(self):
+        self.assertIn(('map name', 'victory'), self.flags('This road lives up to its name of VICTORY.'))
+        self.assertEqual(self.flags('A victory is a victory.'), [])
+
+    def test_phrasing_that_ties_a_line_to_its_spot_is_flagged_without_a_name(self):
+        for text in ('Until I improve, my teacher, who rests here, will never find peace.', 'They halted development here to protect POKéMON.',
+                     'My dream ends here again…', 'This is where we DRAGON users do our training.', 'There is an odd place nearby.',
+                     'A mystic POKéMON is said to sleep inside here.'):
+            self.assertIn('spot phrase', [kind for kind, _ in self.flags(text)], text)
+        for text in ('Here, you can have it!', 'It is a good distance from here.', 'We came here on a dare.', 'I like it here.'):
+            self.assertNotIn('spot phrase', [kind for kind, _ in self.flags(text)], text)
+
     def test_landmarks_buildings_and_demonstrative_terrain(self):
         self.assertIn(('landmark', 'this cave'), self.flags('It is hot in this cave.'))
         self.assertIn(('landmark', 'the lighthouse'), self.flags('Up top is a POKéMON that keeps the LIGHTHOUSE lit.'))

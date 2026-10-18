@@ -101,8 +101,8 @@ content), Pokemon Tower, the Trick House puzzle rooms, Silph Co., the Rocket
 Hideouts, the Game Corner hideout entrance, the villain grunt classes, and the
 two Route 26 trainers authored on two maps. Of 901 `ORDINARY` trainer slots
 (1,051 trainer objects in all, pairs counting once per trainer), 659 are daily
-(632 singles and 27 pairs, 686 objects): 572 with a class range, 20 with a
-place range and 67 with a home range, 7 of the slots at 0% absence; the report lists why each of the others
+(632 singles and 27 pairs, 686 objects): 541 with a class range, 21 with a
+place range and 97 with a home range, 7 of the slots at 0% absence; the report lists why each of the others
 is not daily.
 
 **Place ranges.** A trainer whose lines need a kind of place ("this cave", "in
@@ -323,8 +323,16 @@ occupant pair's sprites and scripts.
 The game notes the slot of each opponent when a trainer battle is configured,
 and only when the opponent is the slot's home trainer or its wanderer; a win
 (`SetBattledTrainersFlags`) then clears the notes' slots. Rematch battles
-(`ShouldTryRematchBattle`) are not offered at a free slot: a ready
-contact is placed, but its rematch is the phone's.
+(`ShouldTryRematchBattle`) are offered at a free slot only to an occupant that was
+in `readyAtDayStart` and is still ready (`DailyTrainers_ObjectOffersRematch`): a
+rematch already won today leaves the slot cleared and readiness clear, and a
+trainer who becomes ready mid-day is offered from the next day. For such an
+occupant the flag check and the sight check read done (as for a gift), so the
+object's own script falls through its battle to the rematch check and the
+player talks to it; `trainerbattle_rematch` then takes the next team as at
+home (the daily notes keep the script's first-stage id), and its win clears the
+slot for the day and advances the rematch stage. A wanderer that is not offered
+a rematch fights its latest beaten team once.
 
 **Sight.** The trainer sight check (`trainer_see.c`) treats a defeated trainer
 as done, so a wanderer would never approach. Like the Battle Pyramid and
@@ -431,9 +439,13 @@ that name a map, landmark, building or local event, using the map name table
 (and the stems of its town, city and island names) and the reviewed word lists
 in `tools/wayfarer_trainer_slots/landmarks.json`: landmark nouns after a
 determiner, terrain nouns after a demonstrative ("this beach", not "the sea"),
-place phrases ("around here"), local-event words written in capitals, and
-phrases that number a trainer among a challenge's opponents ("No. 3", "last in
-line"). Each flagged trainer is resolved in `reviewed.json` with a reason, by one of:
+place phrases ("around here"), local-event words written in capitals, spot
+phrases that tie a line to where it is spoken without naming it ("rests here",
+"development here", "ends here", "this is where", "an odd place nearby"; kept
+narrow, never a bare "here"), and phrases that number a trainer among a
+challenge's opponents ("No. 3", "last in line"). Names are matched with the
+space optional ("MT.MOON"), a multi-word stem counts ("EVER GRANDE"), and a few
+stems that are ordinary words ("VICTORY") count only in capitals. Each flagged trainer is resolved in `reviewed.json` with a reason, by one of:
 a reviewed edit to neutral wording (`range: class` with the old line in `was`,
 which the audit then confirms by finding nothing); a place range
 (`range: place:<type>`, with the phrases that need the kind of place); a home
@@ -441,12 +453,15 @@ range (`range: home`: the lines are about the spot itself); or `not_daily`,
 when absence would break its lines. A resolution may also set `absence` for the
 trainer's slot. Generation fails while a flagged line is unresolved, a reword
 still names a place, or a resolution is stale. A false positive of the word
-lists is fixed in the lists, not waived. Text of generated Sevii and coast
-scripts is not edited by hand: those trainers get a home or place range, never a
-reword.
+lists is fixed in the lists, not waived. The Sevii and Kanto coast scripts are
+reworded only in their FRLG sources (`data/maps/*_Frlg/scripts.inc`,
+`data/text/trainers_frlg.inc`) and then regenerated
+(`tools/wayfarer_sevii_trainer_content/generate.py`), never by editing the
+generated `ordinary.inc`; a reword keeps the page convention (`\n` once, then
+`\l`, `\p` only between sentences).
 
-Of 665 candidates, 164 named a place at some point: 67 have a home range, 6 are
-not daily (the Route 25 sequence), 63 were reworded, 20 have a place range and
+Of 665 candidates, 197 named a place at some point: 97 have a home range, 6 are
+not daily (the Route 25 sequence), 65 were reworded, 21 have a place range and
 8 were cleared by narrow reviewed
 phrases (a goal or plan that reads fine anywhere: "aim for the POKéMON
 LEAGUE", "going to the GYM?"). The report lists every resolution with its reason
@@ -466,10 +481,14 @@ teams. This spec ships the seams it reads:
   appending rows; `DailyContacts_IndexOf` finds them with no change.
 - `WhereIsTrainerToday` and `DailyContacts_ReadyAtDayStart`/`GiftAtDayStart` are
   the lookups the calls use. A not-daily contact's home is a small generated table.
-- Ready contacts are placed but their next-team rematch battle is not offered at
-  a free slot; a gift holder hands its gift over wherever it stands (HNS gifts
-  only, the one gift source that exists).
-- A wanderer fights with its latest beaten rematch team, not its next one.
+- A ready contact is placed, and at its slot it is rematched in person on the
+  day it was ready as the day began (see [Battles](#battles)); a gift holder
+  hands its gift over wherever it stands (HNS gifts only, the one gift source
+  that exists).
+- A wanderer fights with its latest beaten rematch team, not its next one. The
+  coast and Sevii registries report their top team once every rematch is won
+  (a Sevii stage is two bits, so from its last stage it repeats the family's top
+  team).
 
 ## Interactions
 
@@ -506,8 +525,16 @@ reproduced. Tests cover:
 - prize pickup becoming dynamic the next day;
 - the template hook changing nothing but sprite and script on every map with a
   slot, and holding every free slot of the busiest map;
+- a ready-at-day-start occupant of a free slot being rematched in person with the next team, once, and a trainer who became ready mid-day fighting as a plain wanderer;
+- a rematch family reporting its top team as the latest once every rematch is won (coast two- and three-team families, Sevii);
 - the generated reports: slot status, exclusions, the dialogue audit and pool
   validation.
+
+## Known limitations
+
+- A day change on a camera-transition map load can leave the previous map's
+  still-visible objects stale until the map is reloaded.
+- Walkers may walk onto the tile of a slot that is off camera.
 
 ## Generation and reports
 

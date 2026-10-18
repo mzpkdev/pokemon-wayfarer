@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "comment": "Reviewed word lists for the dialogue audit (daily world slots, Dialogue audit). A line is flagged when it matches a map name (or the stem of a town, city or island name), a landmark noun after a determiner, a terrain noun after a demonstrative, a place phrase or a local-event word, or a sequence phrase that numbers the trainer among a challenge's opponents. Local-event words are matched case-sensitively: the scripts write proper nouns in capitals, so 'No contest at all' is not the CONTEST. A phrase in allowed_phrases (case-sensitive, narrow, each with the reason it reads fine anywhere) is cancelled. Each flagged trainer needs a resolution in reviewed.json. Extend a list here; never silence a trainer.",
+  "comment": "Reviewed word lists for the dialogue audit (daily world slots, Dialogue audit). A line is flagged when it matches a map name (or the stem of a town, city or island name), a landmark noun after a determiner, a terrain noun after a demonstrative, a place phrase or a local-event word, or a sequence phrase that numbers the trainer among a challenge's opponents. Local-event words are matched case-sensitively: the scripts write proper nouns in capitals, so 'No contest at all' is not the CONTEST. A phrase in allowed_phrases (case-sensitive, narrow, each with the reason it reads fine anywhere) is cancelled. Each flagged trainer needs a resolution in reviewed.json. Extend a list here; never silence a trainer. spot_phrases are regexes (case-insensitive) for phrasing that ties a line to its spot without a name; keep them narrow, never a bare 'here'. capital_stems are stems matched only in capitals.",
   "stem_stoplist": [
     "BIRTH",
     "FARAWAY",
@@ -38,7 +38,6 @@
     "WATER",
     "FIERY",
     "GREEN",
-    "VICTORY",
     "POWER",
     "SECRET",
     "ROCK",
@@ -248,5 +247,21 @@
       "pattern": "before entering any CONTEST",
       "reason": "a plan, not a place"
     }
+  ],
+  "capital_stems": [
+    "VICTORY"
+  ],
+  "spot_phrases": [
+    "\\b(?:rests?|sleeps?|lived|lives|lies|buried|dwells?) here\\b",
+    "\\bsleep(?:ing)? (?:inside|within) here\\b",
+    "\\b(?:inside|within) here\\b",
+    "\\b(?:development|construction|digging|excavation) here\\b",
+    "\\b(?:ends?|lost|fell|failed|stops?) here\\b",
+    "\\bthis is where\\b",
+    "\\b(?:place|spot|area|building|tower|cave) nearby\\b",
+    "\\bthe (?:ones?|rest) here\\b",
+    "\\bfrom here\\b(?<=hill from here)",
+    "\\b(?:further|farther) ahead\\b",
+    "\\bfind (?:us|them) here\\b"
   ]
 }

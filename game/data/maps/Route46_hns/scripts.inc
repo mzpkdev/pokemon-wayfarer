@@ -81,7 +81,7 @@ Route46_Text_PicnickerErinBeaten:
 
 Route46_Text_PicnickerErinAfterBattle:
 	.string "I've been to many GYMS, but my\n"
-	.string "favorite one is filled with\p"
+	.string "favorite one is filled with\l"
 	.string "pretty flowers!$"
 
 Route46_Text_ErinRegister:
@@ -98,7 +98,7 @@ Route46_Text_ErinRematchDefeat:
 
 Route46_Text_ErinPostRematch:
 	.string "I've been to many GYMS, but my\n"
-	.string "favorite one is filled with\p"
+	.string "favorite one is filled with\l"
 	.string "pretty flowers!$"
 
 Route46_Text_PicnickerErin2Beaten:

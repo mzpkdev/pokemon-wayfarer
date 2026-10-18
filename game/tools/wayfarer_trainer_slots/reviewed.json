@@ -1151,6 +1151,180 @@
         "I want to visit EVER GRANDE, so I caught myself a POKéMON that knows the move WATERFALL to crest the falls.",
         "Awww, phooey! My POKéMON knows WATERFALL, but I'm not ready for EVER GRANDE yet!"
       ]
+    },
+    {
+      "trainer": "TRAINER_AKALA_CAMPER_HNS",
+      "range": "home",
+      "reason": "The Totem 'further ahead' is a landmark of this spot."
+    },
+    {
+      "trainer": "TRAINER_AUTUMN",
+      "range": "home",
+      "reason": "Asks about the odd rock protrusion 'up the hill from here': the pass itself."
+    },
+    {
+      "trainer": "TRAINER_NICOLAS_1",
+      "range": "home",
+      "reason": "'This is where we DRAGON users do our training' and 'how special it is here': METEOR FALLS itself."
+    },
+    {
+      "trainer": "TRAINER_MARKUS_HNS",
+      "range": "home",
+      "reason": "Searches MT.MORTAR for his partner Hugh (they call each other by name); the two stay where they are written."
+    },
+    {
+      "trainer": "TRAINER_HUGH_HNS",
+      "range": "home",
+      "reason": "Searches MT.MORTAR for his pal Markus (they call each other by name); the two stay where they are written."
+    },
+    {
+      "trainer": "TRAINER_ATSUSHI",
+      "range": "home",
+      "reason": "'My teacher, who rests here': the graves of MT. PYRE."
+    },
+    {
+      "trainer": "TRAINER_VALERIE_1",
+      "range": "home",
+      "reason": "The spirits of POKéMON 'sleep here' and 'rest here': MT. PYRE."
+    },
+    {
+      "trainer": "TRAINER_ZANDER",
+      "range": "home",
+      "reason": "Freaked out by every movement and 'shouldn't have come here to train': a haunted MT. PYRE floor."
+    },
+    {
+      "trainer": "TRAINER_TASHA",
+      "range": "home",
+      "reason": "'When I'm here… I shiver with fear': the horror of MT. PYRE."
+    },
+    {
+      "trainer": "TRAINER_MEL_AND_PAUL",
+      "range": "home",
+      "reason": "'Don't tell anyone that we're here. This is just our private world of two': a hideaway spot."
+    },
+    {
+      "trainer": "TRAINER_TALIA",
+      "range": "home",
+      "reason": "'An odd place nearby. There's a huge tower there': directions from this spot."
+    },
+    {
+      "trainer": "TRAINER_DEBRA",
+      "range": "home",
+      "reason": "'Cast away, and this is where I've drifted': a castaway at this stretch of sea."
+    },
+    {
+      "trainer": "TRAINER_KATE_HNS",
+      "range": "home",
+      "reason": "'We never expected anyone to find us here': a hideout spot."
+    },
+    {
+      "trainer": "TRAINER_HOPE_HNS",
+      "range": "home",
+      "reason": "Wonders where the CLEFAIRY of MT.MOON are, right beside it."
+    },
+    {
+      "trainer": "TRAINER_MIKE_2",
+      "range": "home",
+      "reason": "'They halted development here to protect POKéMON': RUSTURF TUNNEL itself."
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BENJAMIN",
+      "range": "home",
+      "reason": "A mystic POKéMON 'sleeps inside here' and 'the one here': the TANOBY RUINS."
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_SEVII_PSYCHIC_JACLYN",
+      "range": "home",
+      "reason": "'This is where I TELEPORT' every time: the GREEN PATH."
+    },
+    {
+      "trainer": "TRAINER_EDGAR",
+      "range": "home",
+      "reason": "'My dream ends here again': the end of the first VICTORY ROAD floor, where the challenge turns away challengers."
+    },
+    {
+      "trainer": "TRAINER_ALBERT",
+      "range": "home",
+      "reason": "'I lost here… I lack the qualifications to become the CHAMPION': VICTORY ROAD."
+    },
+    {
+      "trainer": "TRAINER_HOPE",
+      "range": "home",
+      "reason": "'This seemingly infinite and harsh road lives up to its name of VICTORY': VICTORY ROAD."
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_SEVII_RUIN_MANIAC_LAWSON",
+      "range": "home",
+      "reason": "A hint for the LOST CAVE puzzle ('the number of boulders is a hint'): the room itself."
+    },
+    {
+      "trainer": "TRAINER_PRESLEY",
+      "range": "home",
+      "reason": "'Why would a BIRDKEEPER like me come out to the sea?' and his message in a bottle: a Bird Keeper standing in the sea, which his class group of land routes cannot do."
+    },
+    {
+      "trainer": "TRAINER_THEO_HNS",
+      "range": "home",
+      "reason": "'Why are you here? Are you just going to gawk?' and wanting to reach the sick POKéMON at the top: the OLIVINE LIGHTHOUSE."
+    },
+    {
+      "trainer": "TRAINER_KIRA_AND_DAN_1",
+      "range": "home",
+      "reason": "'Find the treasures here' in the ABANDONED SHIP."
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_SEVII_PKMN_BREEDER_ALLISON",
+      "range": "home",
+      "reason": "'Preserve the natural ecology of POKéMON here': the PATTERN BUSH."
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_SEVII_SWIMMER_MALE_TOBY",
+      "range": "home",
+      "reason": "'The marine life here at this resort': the RESORT GORGEOUS."
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_SEVII_HIKER_EARL",
+      "range": "home",
+      "reason": "Asks where the mountains are 'around these parts': the WATER PATH, which has none."
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_SEVII_PAINTER_EDNA",
+      "range": "home",
+      "reason": "Painting an old building with CLIFFORD, who 'brought me here': the TANOBY RUINS."
+    },
+    {
+      "trainer": "TRAINER_LENNY",
+      "range": "home",
+      "reason": "'You're supposed to shout yodelayhihoo since it doesn't echo here': an open route with a view."
+    },
+    {
+      "trainer": "TRAINER_MARCEL",
+      "range": "home",
+      "reason": "'Oh, now what happened here?': the scene of this route."
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_COAST_SCIENTIST_BRAYDON",
+      "range": "place:mansion",
+      "phrases": [
+        "lived here"
+      ],
+      "reason": "'My mentor once lived here' is true only in the POKéMON MANSION; the trainer stays among mansion spots."
+    },
+    {
+      "trainer": "TRAINER_HARRISON",
+      "range": "class",
+      "was": [
+        "There are tough TRAINERS galore around EVER GRANDE. Do you think I may be out of my league?"
+      ],
+      "reason": "Reworded: 'around EVER GRANDE' becomes 'out there' (data/text/trainers.inc)."
+    },
+    {
+      "trainer": "TRAINER_TIM_HNS",
+      "range": "class",
+      "was": [
+        "She'll be coming 'round MT.SILVER when she comes… MT.SILVER is in JOHTO, right?"
+      ],
+      "reason": "Reworded: MT.SILVER is dropped (data/maps/Route9_hns/scripts.inc)."
     }
   ]
 }

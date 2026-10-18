@@ -36,8 +36,9 @@ Route33_EventScript_Lass::
 	end
 
 Route33_Text_HikerAnthony2Seen:
-	.string "I came a long way, but I still\n"
-	.string "have plenty of energy left.$"
+	.string "I came a long way, but I\n"
+	.string "still have plenty of\l"
+	.string "energy left.$"
 
 Route33_Text_HikerAnthony2Beaten:
 	.string "Whoa! You've got more zip\n"
@@ -52,8 +53,9 @@ Route33_Text_AnthonyRegister:
 	.string "in the mountains.$"
 
 Route33_Text_AnthonyRematchIntro:
-	.string "I came a long way, but I still\n"
-	.string "have plenty of energy left.$"
+	.string "I came a long way, but I\n"
+	.string "still have plenty of\l"
+	.string "energy left.$"
 
 Route33_Text_AnthonyRematchDefeat:
 	.string "Whoa! You've got more zip\n"

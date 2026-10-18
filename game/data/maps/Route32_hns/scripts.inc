@@ -490,8 +490,8 @@ Route32_Text_BirdKeeperPeter_Beaten:
 	.string "I know what my weaknesses are.$"
 
 Route32_Text_BirdKeeperPeter_After:
-	.string "I should train again before my\n"
-	.string "next challenge.$"
+	.string "I should train again before\n"
+	.string "my next challenge.$"
 
 Route32_Text_RoarIntro:
 	.string "WROOOOAR! PEOPLE RUN WHEN I\n"

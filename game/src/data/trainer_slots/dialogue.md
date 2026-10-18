@@ -79,7 +79,7 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_IRENE_HNS | Route34_hns | say | IRENE: Isn't this beach great? It's our secret little getaway! | terrain: this beach |
 | TRAINER_KATE_HNS | Route34_hns | intro | KATE: I must pay you back for taking care of my sisters! |  |
 | TRAINER_KATE_HNS | Route34_hns | defeat | KATE: No! I can't believe I lost. |  |
-| TRAINER_KATE_HNS | Route34_hns | say | KATE: I'm sorry we jumped you. We never expected anyone to find us here. You sure startled us. |  |
+| TRAINER_KATE_HNS | Route34_hns | say | KATE: I'm sorry we jumped you. We never expected anyone to find us here. You sure startled us. | spot phrase: find us here |
 | TRAINER_GINA_HNS | Route34_hns | intro | Are you a TRAINER? Let's have a practice battle. |  |
 | TRAINER_GINA_HNS | Route34_hns | defeat | Oh, no! I just can't win… |  |
 | TRAINER_GINA_HNS | Route34_hns | say | You're too strong to be a practice partner. |  |
@@ -348,7 +348,7 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_BURT_HNS | Route3_hns | say | The greatest fire-breather in KANTO, that's me. But not the best trainer… |  |
 | TRAINER_HOPE_HNS | Route4_hns | intro | I have a feeling that I can win. Let's see if I'm right! |  |
 | TRAINER_HOPE_HNS | Route4_hns | defeat | Aww, you are too strong. |  |
-| TRAINER_HOPE_HNS | Route4_hns | say | I heard CLEFAIRY appear at MT.MOON. But where could they be? |  |
+| TRAINER_HOPE_HNS | Route4_hns | say | I heard CLEFAIRY appear at MT.MOON. But where could they be? | map name: MT.MOON |
 | TRAINER_HANK_HNS | Route4_hns | intro | I'm raising my POKéMON. Want to battle with me? |  |
 | TRAINER_HANK_HNS | Route4_hns | defeat | Ack! I lost that one… |  |
 | TRAINER_HANK_HNS | Route4_hns | say | If you have a specific POKéMON that you want to raise, put it out first, then switch it right away. That's how to do it. |  |
@@ -388,7 +388,7 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_DEAN_HNS | Route9_hns | intro | I came to explore. |  |
 | TRAINER_DEAN_HNS | Route9_hns | defeat | Whoa! Danger, man. |  |
 | TRAINER_DEAN_HNS | Route9_hns | say | My POKéMON were hurt before I even got started. I'd better get them healed right away. |  |
-| TRAINER_TIM_HNS | Route9_hns | intro | She'll be coming 'round MT.SILVER when she comes… MT.SILVER is in JOHTO, right? |  |
+| TRAINER_TIM_HNS | Route9_hns | intro | She'll be coming 'round when she comes… She's from JOHTO, right? |  |
 | TRAINER_TIM_HNS | Route9_hns | defeat | I was too busy singing… |  |
 | TRAINER_TIM_HNS | Route9_hns | say | Battles are about concentration. |  |
 | TRAINER_SIDNEY_HNS | Route9_hns | intro | I'll tell you a secret. But first, we battle! |  |
@@ -687,13 +687,13 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_RICHARDO_HNS | BurnedTower_1F_hns | say | Maybe a life of crime isn't for me... |  |
 | TRAINER_MARKUS_HNS | MtMortar_1F_North_hns | intro | Hey! HUGH! |  |
 | TRAINER_MARKUS_HNS | MtMortar_1F_North_hns | defeat | I mistook you for someone else… |  |
-| TRAINER_MARKUS_HNS | MtMortar_1F_North_hns | say | I came to explore MT.MORTAR, but I got separated from my partner… Did you run into a trainer who uses a SEADRA that knows WATERFALL? |  |
+| TRAINER_MARKUS_HNS | MtMortar_1F_North_hns | say | I came to explore MT.MORTAR, but I got separated from my partner… Did you run into a trainer who uses a SEADRA that knows WATERFALL? | map name: MT.MORTAR |
 | TRAINER_MILLER_HNS | MtMortar_1F_North_hns | intro | I'm not losing this time! |  |
 | TRAINER_MILLER_HNS | MtMortar_1F_North_hns | defeat | I lost to some kid...? |  |
 | TRAINER_MILLER_HNS | MtMortar_1F_North_hns | say | A while back, this karate dude wanted to battle. He was ridiculously good. He just thrashed us silly. He went in deeper saying it was for his training. I wonder how he is? |  |
 | TRAINER_HUGH_HNS | MtMortar_2F_hns | intro | Yo! MARKUS! |  |
 | TRAINER_HUGH_HNS | MtMortar_2F_hns | defeat | Sorry, my mistake. I misjudged you. |  |
-| TRAINER_HUGH_HNS | MtMortar_2F_hns | say | I'm investigating MT.MORTAR, but my pal's gone AWOL. Have you seen a trainer who has a SLOWPOKE that can use STRENGTH? |  |
+| TRAINER_HUGH_HNS | MtMortar_2F_hns | say | I'm investigating MT.MORTAR, but my pal's gone AWOL. Have you seen a trainer who has a SLOWPOKE that can use STRENGTH? | map name: MT.MORTAR |
 | TRAINER_ANDRE_HNS | LakeOfRage_hns | intro | Let me battle with the POKéMON I just caught! |  |
 | TRAINER_ANDRE_HNS | LakeOfRage_hns | defeat | I might be an expert angler, but I stink as a POKéMON trainer… |  |
 | TRAINER_ANDRE_HNS | LakeOfRage_hns | say | I won't lose as an angler! I catch POKéMON all day. |  |
@@ -744,7 +744,7 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_AKALA_PICNICKER_HNS | AkalaIsle_hns | say | It's so lush on AKALA ISLE, I can easily hide in the trees! | map name: AKALA ISLE |
 | TRAINER_AKALA_CAMPER_HNS | AkalaIsle_hns | intro | I want to be the first to prove myself to the Totem POKéMON! |  |
 | TRAINER_AKALA_CAMPER_HNS | AkalaIsle_hns | defeat | Drat, that's not going to help my case. |  |
-| TRAINER_AKALA_CAMPER_HNS | AkalaIsle_hns | say | There's a weird Totem further ahead but I haven't seen a Totem POKéMON. |  |
+| TRAINER_AKALA_CAMPER_HNS | AkalaIsle_hns | say | There's a weird Totem further ahead but I haven't seen a Totem POKéMON. | spot phrase: further ahead |
 | TRAINER_AKALA_SWIMMER_3_HNS | AkalaIsle_hns | intro | Hah! You need to ride a POKéMON to surf? |  |
 | TRAINER_AKALA_SWIMMER_3_HNS | AkalaIsle_hns | defeat | If I hadn't swam myself maybe I would've had the energy to win… |  |
 | TRAINER_AKALA_SWIMMER_3_HNS | AkalaIsle_hns | say | The current is strong! A POKéMON must be really powerful to migrate all the way out to the ISLES! |  |
@@ -1707,7 +1707,7 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_CARLEE | Route128 | say | I should go back soon. I need to reapply my sunscreen. |  |
 | TRAINER_HARRISON | Route128 | intro | You're looking awfully tough. I wonder if I can win? |  |
 | TRAINER_HARRISON | Route128 | defeat | Ouch! I guess it was impossible to win. |  |
-| TRAINER_HARRISON | Route128 | say | There are tough TRAINERS galore around EVER GRANDE. Do you think I may be out of my league? |  |
+| TRAINER_HARRISON | Route128 | say | There are tough TRAINERS galore out there. Do you think I may be out of my league? |  |
 | TRAINER_CHASE | Route129 | intro | This is my first triathlon. I'm all tense and nervous! |  |
 | TRAINER_CHASE | Route129 | defeat | Wroooaaar! I failed to win! |  |
 | TRAINER_CHASE | Route129 | say | If I'm all tensed up, I won't be able to give it my all. |  |
@@ -1755,7 +1755,7 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_KEVIN | Route131 | say | Tch! …Oh, wait. I'm not angry. Honestly! But, boy, you're strong! Hahaha! |  |
 | TRAINER_TALIA | Route131 | intro | If you can beat me, I'll give you some great information! |  |
 | TRAINER_TALIA | Route131 | defeat | Oh? Did I lose? |  |
-| TRAINER_TALIA | Route131 | say | There is an odd place nearby. There's a huge tower there. Why don't you go take a look? |  |
+| TRAINER_TALIA | Route131 | say | There is an odd place nearby. There's a huge tower there. Why don't you go take a look? | spot phrase: place nearby |
 | TRAINER_GILBERT | Route132 | intro | I used to catch colds all the time as a kid, but I became totally fit after I started swimming. |  |
 | TRAINER_GILBERT | Route132 | defeat | I crave more power… |  |
 | TRAINER_GILBERT | Route132 | say | TRAINERS travel the fields and mountains, so they must be fit, too. |  |
@@ -1786,7 +1786,7 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_LINDA | Route133 | intro | Welcome! I've been expecting you! |  |
 | TRAINER_LINDA | Route133 | defeat | No! Please! |  |
 | TRAINER_LINDA | Route133 | say | A strong child TRAINER… That's so annoying! |  |
-| TRAINER_DEBRA | Route133 | intro | I've led a life of woe and misery… I've been cast away, and this is where I've drifted… |  |
+| TRAINER_DEBRA | Route133 | intro | I've led a life of woe and misery… I've been cast away, and this is where I've drifted… | spot phrase: this is where |
 | TRAINER_DEBRA | Route133 | defeat | Another loss… |  |
 | TRAINER_DEBRA | Route133 | say | A life adrift… I don't want it anymore! |  |
 | TRAINER_BECK | Route133 | intro | I came all the way here with my BIRD POKéMON. |  |
@@ -1828,7 +1828,7 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_HUDSON | Route134 | intro | Listen, have you seen another SAILOR? |  |
 | TRAINER_HUDSON | Route134 | defeat | Now, that's something! |  |
 | TRAINER_HUDSON | Route134 | say | Our boat drifted out to sea. My buddy's a timid fellow, so I'm worried about him. |  |
-| TRAINER_NICOLAS_1 | MeteorFalls_1F_2R | intro | This is where we DRAGON users do our training. The CHAMPION even visits. Now do you see how special it is here? |  |
+| TRAINER_NICOLAS_1 | MeteorFalls_1F_2R | intro | This is where we DRAGON users do our training. The CHAMPION even visits. Now do you see how special it is here? | spot phrase: This is where |
 | TRAINER_NICOLAS_1 | MeteorFalls_1F_2R | defeat | Urgh! I didn't expect you to be so strong! |  |
 | TRAINER_NICOLAS_1 | MeteorFalls_1F_2R | say | The road ahead remains long and harsh. When will my POKéMON and I become the best? |  |
 | TRAINER_NICOLAS_1 | MeteorFalls_1F_2R | rematch | Since we met, we have trained hard with our sights on number one. Help us see how much stronger we've become! |  |
@@ -1848,7 +1848,7 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_JOHN_AND_JAY_1 | MeteorFalls_1F_2R | say | JAY: Fifty years of marriage… Many things have happened. I hope that we will continue to make happy memories together. |  |
 | TRAINER_MIKE_2 | RusturfTunnel | intro | What do you call a wild man up in the mountains? A mountain man, right? So why don't they call a POKéMON in the mountains a mountain POKéMON? |  |
 | TRAINER_MIKE_2 | RusturfTunnel | defeat | My POKéMON… Ran out of power… |  |
-| TRAINER_MIKE_2 | RusturfTunnel | say | They halted development here to protect POKéMON, right? There's a feel-good story! |  |
+| TRAINER_MIKE_2 | RusturfTunnel | say | They halted development here to protect POKéMON, right? There's a feel-good story! | spot phrase: development here |
 | TRAINER_LYLE | PetalburgWoods | intro | I caught a whole bunch of POKéMON! Go, go, go! My BUG POKéMON team! |  |
 | TRAINER_LYLE | PetalburgWoods | defeat | I have all these POKéMON, but I couldn't win… |  |
 | TRAINER_LYLE | PetalburgWoods | say | I caught a bunch of POKéMON. Now I'm out of POKé BALLS. |  |
@@ -1877,7 +1877,7 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_DIANA_1 | JaggedPass | say | I'll forget about losing and just enjoy this bumpy hike. |  |
 | TRAINER_AUTUMN | JaggedPass | intro | I climb this hill every day. I have confidence in my strength! |  |
 | TRAINER_AUTUMN | JaggedPass | defeat | Hmm… What went wrong? |  |
-| TRAINER_AUTUMN | JaggedPass | say | What is that odd rock protrusion a little up the hill from here? |  |
+| TRAINER_AUTUMN | JaggedPass | say | What is that odd rock protrusion a little up the hill from here? | spot phrase: from here |
 | TRAINER_JULIO | JaggedPass | intro | Aiyeeh! It's awfully scary to shoot down the mountain in one go! |  |
 | TRAINER_JULIO | JaggedPass | defeat | I feel like I'm falling apart… |  |
 | TRAINER_JULIO | JaggedPass | say | My bicycle bounced around so much, my rear end's sore… |  |
@@ -1913,31 +1913,31 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_TASHA | MtPyre_4F | say | I want to see dreadful things… I can't leave… Stay… Won't you stay with me? |  |
 | TRAINER_ATSUSHI | MtPyre_5F | intro | Teacher… Please watch over my progress! |  |
 | TRAINER_ATSUSHI | MtPyre_5F | defeat | Teacher… Please forgive me! |  |
-| TRAINER_ATSUSHI | MtPyre_5F | say | Until I improve, my teacher, who rests here, will never find true peace… |  |
+| TRAINER_ATSUSHI | MtPyre_5F | say | Until I improve, my teacher, who rests here, will never find true peace… | spot phrase: rests here |
 | TRAINER_VALERIE_1 | MtPyre_6F | intro | When I'm here… A curious power flows into me… |  |
 | TRAINER_VALERIE_1 | MtPyre_6F | defeat | The power is ebbing away… |  |
-| TRAINER_VALERIE_1 | MtPyre_6F | say | Perhaps the power is from the spirits of POKéMON in fitful sleep here… |  |
+| TRAINER_VALERIE_1 | MtPyre_6F | say | Perhaps the power is from the spirits of POKéMON in fitful sleep here… | spot phrase: sleep here |
 | TRAINER_VALERIE_1 | MtPyre_6F | rematch | Behind you… What is it… |  |
 | TRAINER_VALERIE_1 | MtPyre_6F | rematch | Something faded away… |  |
-| TRAINER_VALERIE_1 | MtPyre_6F | say | The POKéMON at rest here… Sometimes, they play… |  |
+| TRAINER_VALERIE_1 | MtPyre_6F | say | The POKéMON at rest here… Sometimes, they play… | spot phrase: rest here |
 | TRAINER_CEDRIC | MtPyre_6F | intro | Have you lost your bearings? Have no fear for I am here! |  |
 | TRAINER_CEDRIC | MtPyre_6F | defeat | Weren't you lost? |  |
 | TRAINER_CEDRIC | MtPyre_6F | say | I had this feeling that a lost TRAINER would be panicked and easy to beat. It's dirty and I won't try it again… |  |
 | TRAINER_EDGAR | VictoryRoad_1F | intro | I've made it this far a couple times, but the last stretch is so long… |  |
-| TRAINER_EDGAR | VictoryRoad_1F | defeat | My dream ends here again… |  |
+| TRAINER_EDGAR | VictoryRoad_1F | defeat | My dream ends here again… | spot phrase: ends here |
 | TRAINER_EDGAR | VictoryRoad_1F | say | You've made it this far. Keep the momentum going and become the CHAMPION! If anyone can, it's you! |  |
-| TRAINER_HOPE | VictoryRoad_1F | intro | This seemingly infinite and harsh road lives up to its name of VICTORY. |  |
+| TRAINER_HOPE | VictoryRoad_1F | intro | This seemingly infinite and harsh road lives up to its name of VICTORY. | map name: VICTORY |
 | TRAINER_HOPE | VictoryRoad_1F | defeat | Your battle style is fantastic… |  |
 | TRAINER_HOPE | VictoryRoad_1F | say | You seem to have the potential for becoming the CHAMPION. |  |
 | TRAINER_ALBERT | VictoryRoad_1F | intro | I didn't come all this way to lose now. That possibility doesn't exist! |  |
 | TRAINER_ALBERT | VictoryRoad_1F | defeat | Impossible… I lost? |  |
-| TRAINER_ALBERT | VictoryRoad_1F | say | I lost here… That means I lack the qualifications to become the CHAMPION… |  |
+| TRAINER_ALBERT | VictoryRoad_1F | say | I lost here… That means I lack the qualifications to become the CHAMPION… | spot phrase: lost here |
 | TRAINER_KATELYNN | VictoryRoad_1F | intro | I have nothing to say to anyone that's come this far. Come on! |  |
 | TRAINER_KATELYNN | VictoryRoad_1F | defeat | This is a disgrace… |  |
 | TRAINER_KATELYNN | VictoryRoad_1F | say | Humph, go right on ahead. See if I care. |  |
-| TRAINER_QUINCY | VictoryRoad_1F | intro | What is the VICTORY ROAD? I'll tell you if you win! | map name: VICTORY ROAD |
+| TRAINER_QUINCY | VictoryRoad_1F | intro | What is the VICTORY ROAD? I'll tell you if you win! | map name: VICTORY |
 | TRAINER_QUINCY | VictoryRoad_1F | defeat | Okay! Well done! |  |
-| TRAINER_QUINCY | VictoryRoad_1F | say | Getting through here safely--that's the final test for any TRAINER aiming to become the POKéMON CHAMPION. That's why it's called the VICTORY ROAD. | map name: VICTORY ROAD |
+| TRAINER_QUINCY | VictoryRoad_1F | say | Getting through here safely--that's the final test for any TRAINER aiming to become the POKéMON CHAMPION. That's why it's called the VICTORY ROAD. | map name: VICTORY |
 | TRAINER_SAMUEL | VictoryRoad_B1F | intro | The thought that I'm getting closer to the POKéMON LEAGUE… I'm getting stage fright… | local event: LEAGUE |
 | TRAINER_SAMUEL | VictoryRoad_B1F | defeat | I couldn't do a thing… |  |
 | TRAINER_SAMUEL | VictoryRoad_B1F | say | The POKéMON LEAGUE became distant again… What a letdown… | local event: LEAGUE |
@@ -1952,7 +1952,7 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_MITCHELL | VictoryRoad_B1F | say | Even outside of battle, I sense incredible power emanating from you and your POKéMON. |  |
 | TRAINER_HALLE | VictoryRoad_B1F | intro | Okay, no need to get your back up! Relax, let's take it easy! |  |
 | TRAINER_HALLE | VictoryRoad_B1F | defeat | Whoa! Wonderful! |  |
-| TRAINER_HALLE | VictoryRoad_B1F | say | Sure, this is VICTORY ROAD. But it's not all that different from the path you've taken so far. Try to enjoy things the rest of the way! | map name: VICTORY ROAD |
+| TRAINER_HALLE | VictoryRoad_B1F | say | Sure, this is VICTORY ROAD. But it's not all that different from the path you've taken so far. Try to enjoy things the rest of the way! | map name: VICTORY |
 | TRAINER_VITO | VictoryRoad_B2F | intro | I trained together with my whole family, every one of us! I'm not losing to anyone! |  |
 | TRAINER_VITO | VictoryRoad_B2F | defeat | Better than my family?! Is that possible?! |  |
 | TRAINER_VITO | VictoryRoad_B2F | say | I was better than everyone in my family. I've never lost before… I've lost my confidence… Maybe I'll go home… |  |
@@ -2016,7 +2016,7 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_WAYFARER_COAST_BURGLAR_SIMON | PokemonMansion_3F_Frlg | intro | This place is, like, huge! | terrain: This place |
 | TRAINER_WAYFARER_COAST_BURGLAR_SIMON | PokemonMansion_3F_Frlg | defeat | Ayah! |  |
 | TRAINER_WAYFARER_COAST_BURGLAR_SIMON | PokemonMansion_3F_Frlg | say | I wonder where my partner went. |  |
-| TRAINER_WAYFARER_COAST_SCIENTIST_BRAYDON | PokemonMansion_3F_Frlg | intro | My mentor once lived here. |  |
+| TRAINER_WAYFARER_COAST_SCIENTIST_BRAYDON | PokemonMansion_3F_Frlg | intro | My mentor once lived here. | spot phrase: lived here |
 | TRAINER_WAYFARER_COAST_SCIENTIST_BRAYDON | PokemonMansion_3F_Frlg | defeat | Whew! Overwhelming! |  |
 | TRAINER_WAYFARER_COAST_SCIENTIST_BRAYDON | PokemonMansion_3F_Frlg | say | So, you're stuck? Try jumping off over there! |  |
 | TRAINER_WAYFARER_COAST_BURGLAR_LEWIS | PokemonMansion_B1F_Frlg | intro | Uh-oh… Where am I now? |  |
@@ -2352,7 +2352,7 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_WAYFARER_SEVII_SIS_AND_BRO_AVA_GEB | SixIsland_OutcastIsland_Frlg | defeat | GEB: Wow, Big Sister, this person's really good! |  |
 | TRAINER_WAYFARER_SEVII_SIS_AND_BRO_AVA_GEB | SixIsland_OutcastIsland_Frlg | say | GEB: I'm hanging onto my sister because I can't touch the bottom. |  |
 | TRAINER_WAYFARER_SEVII_SIS_AND_BRO_AVA_GEB | SixIsland_OutcastIsland_Frlg | rematch | GEB: My big sister and I are way tougher than before! |  |
-| TRAINER_WAYFARER_SEVII_PSYCHIC_JACLYN | SixIsland_GreenPath_Frlg | intro | …Huh? I was envisioning my house, but this is where I TELEPORT? |  |
+| TRAINER_WAYFARER_SEVII_PSYCHIC_JACLYN | SixIsland_GreenPath_Frlg | intro | …Huh? I was envisioning my house, but this is where I TELEPORT? | spot phrase: this is where |
 | TRAINER_WAYFARER_SEVII_PSYCHIC_JACLYN | SixIsland_GreenPath_Frlg | defeat | Big boo-boo! |  |
 | TRAINER_WAYFARER_SEVII_PSYCHIC_JACLYN | SixIsland_GreenPath_Frlg | say | I am so scatterbrained! I need to focus so I can TELEPORT properly to my house! |  |
 | TRAINER_WAYFARER_SEVII_PSYCHIC_JACLYN | SixIsland_GreenPath_Frlg | rematch | …Huh? I envision my house, but TELEPORT always brings me here! |  |
@@ -2472,10 +2472,10 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BRANDON | SevenIsland_TanobyRuins_Frlg | defeat | That was uncalled for. You didn't have to be so rough. |  |
 | TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BRANDON | SevenIsland_TanobyRuins_Frlg | say | The TANOBY RUINS date back at least 1,500 years. But it's a baffling mystery as to why it was built in the first place. | landmark: The TANOBY RUINS |
 | TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BRANDON | SevenIsland_TanobyRuins_Frlg | rematch | Have you discovered anything about this stone chamber? |  |
-| TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BENJAMIN | SevenIsland_TanobyRuins_Frlg | intro | A mystic POKéMON is said to sleep inside here. |  |
+| TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BENJAMIN | SevenIsland_TanobyRuins_Frlg | intro | A mystic POKéMON is said to sleep inside here. | spot phrase: sleep inside here |
 | TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BENJAMIN | SevenIsland_TanobyRuins_Frlg | defeat | I'm not much good in battle. |  |
-| TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BENJAMIN | SevenIsland_TanobyRuins_Frlg | say | I hear there are other ruins like the one here. Might they be the resting places of other mystic POKéMON? |  |
-| TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BENJAMIN | SevenIsland_TanobyRuins_Frlg | rematch | A mystic POKéMON is said to sleep inside here. |  |
+| TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BENJAMIN | SevenIsland_TanobyRuins_Frlg | say | I hear there are other ruins like the one here. Might they be the resting places of other mystic POKéMON? | spot phrase: the one here |
+| TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BENJAMIN | SevenIsland_TanobyRuins_Frlg | rematch | A mystic POKéMON is said to sleep inside here. | spot phrase: sleep inside here |
 | TRAINER_WAYFARER_SEVII_PAINTER_EDNA | SevenIsland_TanobyRuins_Frlg | intro | CLIFFORD is teaching me how to paint. |  |
 | TRAINER_WAYFARER_SEVII_PAINTER_EDNA | SevenIsland_TanobyRuins_Frlg | defeat | We might get in trouble for being noisy here. |  |
 | TRAINER_WAYFARER_SEVII_PAINTER_EDNA | SevenIsland_TanobyRuins_Frlg | say | I said that I wanted to paint an old building. So CLIFFORD brought me here. |  |
