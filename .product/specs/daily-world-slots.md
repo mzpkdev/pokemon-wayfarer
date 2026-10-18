@@ -1,11 +1,16 @@
 # Daily world slots
 
 PRD: [Daily world slots](../prds/daily-world-slots.md)
-Implemented: Partial. The item half is implemented: the day, deterministic draws, the
-saved daily state with `clearedToday`, the item spot generator and tables, the
-map-load and Continue hooks for item balls, the spawn check, hidden items and the
-Itemfinder, and the debug and E2E day and seed override. Trainer slots, trainer
-groups, the dialogue audit and the phone snapshots are not.
+Implemented: Yes, apart from the phone itself. The item half: the day, deterministic
+draws, the saved daily state, the item spot generator and tables, the map-load and
+Continue hooks for item balls, the spawn check, hidden items and the Itemfinder, and the
+debug and E2E day and seed override. The trainer half: the trainer slot and group
+generator (`game/tools/wayfarer_trainer_slots`), the dialogue audit with its reviewed
+resolutions, who stands where today, the map-load and Continue hook, the battle and sight
+paths, the day-start phone snapshots and `WhereIsTrainerToday`. Calls, phone numbers,
+readiness and the rematch table growth belong to [Phone rematches](phone-rematches.md)
+and are not implemented; [what the trainer half leaves for it](#what-the-trainer-half-leaves-for-the-phone)
+lists the seams.
 
 Design status: draft. Numbers are placeholders for playtesting. Item pools and
 static prizes are in [World items](world-items.md); trainer levels are in
@@ -25,9 +30,12 @@ A build-time generator reads Wayfarer's compiled map events, the trainer
 classification and [World items](world-items.md), and emits constant ROM
 tables. Nothing is built at runtime.
 
-- **Trainer slots:** one row per regular trainer object: map, local id, home
-  trainer id, trainer group and pair flag. The slot keeps its own position,
-  facing, movement and sight range.
+- **Trainer slots:** one row per rotating regular trainer: map, local id, home
+  trainer id, trainer group and pair flag. A pair is one row and two objects
+  (two local ids and two sprites, one double-battle trainer). The slot keeps its
+  own position, facing, movement and sight range. The generator emits only
+  rotating slots; a fixed `ORDINARY` trainer that is a rematch contact gets a
+  row in a small table of homes, which is all `WhereIsTrainerToday` needs.
 - **Trainer groups:** one row per class family and region, split into a
   singles group and a pairs group. A group lists its slots in a fixed order.
 - **Item spots:** one row per item ball (map, local id) and hidden item (map,
@@ -55,9 +63,20 @@ gifts don't exclude a trainer; they move with it.
 
 The generator proposes each slot's status from script analysis, and authors
 review it in the report. A slot can be forced fixed by a reviewed exclusion
-with a reason. A fixed contact stays at home and still gets Battle and
-FoundItem calls. A rotating candidate must also pass the
-[dialogue audit](#dialogue-audit).
+with a reason (`reviewed.json`, by map prefix, trainer class or slot). A fixed
+contact stays at home and still gets Battle and FoundItem calls. A rotating
+candidate must also pass the [dialogue audit](#dialogue-audit).
+
+Script analysis keeps a trainer fixed when its object is hidden by a flag, is a
+buried trainer, has non-static graphics, or its script (followed through gotos,
+calls and fall-through) does anything beyond battling, rematching, registering a
+phone number, handing over a gift and speaking. The reviewed fixed lists add the
+S.S. Anne, S.S. Aqua and S.S. Tidal trainers (one-time ship content), Pokemon
+Tower, the Trick House puzzle rooms, Silph Co., the Rocket Hideouts, the Game
+Corner hideout entrance, the villain grunt classes, and the two Route 26
+trainers authored on two maps. Of 901 `ORDINARY` trainer slots (1,051 trainer
+objects in all, pairs counting once per trainer), 509 rotate (484 singles and 25
+pairs, 534 objects); the report lists why each of the others stays at home.
 
 ## The day
 
@@ -92,14 +111,14 @@ friendship and follower state.
 
 ```text
 u16 stampDay                          // day the bits below belong to
-bitset clearedToday[slotCount]        // every trainer slot and item spot
+bitset clearedToday[slotCount]        // every item spot, then every trainer slot
 bitset homeBeatenToday[trainerSlotCount]
 bitset readyAtDayStart[contactCount]  // contacts ready for a rematch when the day began
 bitset giftAtDayStart[contactCount]   // contacts holding a gift when the day began
 ```
 
 SaveBlock1 only grows by [`trainerRematches`](phone-rematches.md#rematch-table-and-save-state),
-100 to 118 bytes.
+100 to 118 bytes. The trainer half does not grow it: that belongs to the phone.
 
 **New Game.** New Game doesn't clear `PokemonStorage` beyond the boxes, so the
 struct clears itself like its neighbours do: a new-game init, called from
@@ -118,30 +137,31 @@ day is placed and calls from the next day. Battle text uses only
 either set is placed. The phone reads the stamped day, never the clock, so a
 call before the next map load uses the previous day's arrangement.
 
-Budget (about 720 trainer slots and 860 item spots, Sevii included):
+Budget (509 trainer slots and 838 item spots, Sevii included; the generated
+counts are in `include/constants/world_trainer_slots.h` and `world_item_spots.h`):
 
 | Part | Bytes |
 | --- | ---: |
 | `stampDay` | 2 |
-| `clearedToday` (1,580 bits) | 198 |
-| `homeBeatenToday` (720 bits) | 90 |
+| `clearedToday` (1,347 bits) | 169 |
+| `homeBeatenToday` (509 bits) | 64 |
 | `readyAtDayStart`, `giftAtDayStart` (160 bits each) | 40 |
-| Total in `PokemonStorage` | 330 |
+| Total in `PokemonStorage` (a word-aligned struct) | 276 |
 
 | Block | Free before | Added | Left after |
 | --- | ---: | --- | ---: |
-| `PokemonStorage` (13 boxes, PR #139 merged, after the 2,104 bytes other specs plan) | 416 | 330 | 86 |
+| `PokemonStorage` (13 boxes, PR #139 merged, after the 2,104 bytes other specs plan) | 416 | 276 | 140 |
 | SaveBlock1 | 112 | 18 (`trainerRematches` 100 to 118) | 94 |
 
 The `PokemonStorage` figure is Notable world simulation's: of its 2,520
 bytes, the world state, the haunts' traded slots and the Masters growth plan
 2,008 (about 416 left with the 96 bytes of face-only trainers), and the daily
-state takes 330 of that margin. Capacity figures come from the built ELF and
+state takes 276 of that margin (the budget assert allows 330). Capacity figures come from the built ELF and
 the limits in `src/save.c`: nine storage sectors hold 35,712 bytes, and four
 SaveBlock1 sectors of 3,968 bytes hold 15,872 against 15,760 used (`gSaveblock1`
 is 0x3E10, less the 128-byte `SAVEBLOCK_MOVE_RANGE` pad in `load_save.h`).
-Add static asserts on the size of the daily struct and on both blocks, and
-keep `PokemonStorageFreeSpace`. Follow the RAM rules in `AGENTS.md`; the
+`save.c` asserts the daily struct's size and its 330-byte budget, and keeps
+`PokemonStorageFreeSpace`. The layout change bumped `SAVE_VERSION` to 14. Follow the RAM rules in `AGENTS.md`; the
 per-map resolved occupants live in EWRAM for the map's lifetime only.
 
 ## Trainers
@@ -191,9 +211,13 @@ After the map's object templates are copied to
 `gSaveBlock1Ptr->objectEventTemplates` and before objects spawn, rewrite each
 rotating slot's template:
 
-- **Occupied:** set the graphics to the occupant's trainer sprite, the script
-  to the shared rotating-trainer script, and the trainer type and sight from
-  the slot. The occupant is remembered per local id for the map's lifetime.
+- **Occupied:** set the graphics to the occupant's trainer sprite and the script
+  to the occupant's own authored script (the generated table keeps both for
+  every slot), and keep the trainer type, movement and sight from the slot. The
+  occupant is remembered per local id for the map's lifetime. There is no
+  separate shared script: the trainer sight check runs the object's script until
+  its `trainerbattle`, so only the occupant's own script gives the sight path the
+  occupant's texts, and the home scripts already carry the gift hand-off.
 - **Empty:** nothing is rewritten; the [spawn check](#flags-and-visibility)
   keeps the template from spawning.
 
@@ -216,16 +240,22 @@ way and is the precedent.
 
 ### Battles
 
-The shared rotating-trainer script battles the slot's occupant with that
-trainer's own intro, defeat and post-battle text:
+The occupant's own authored script battles it with that trainer's own intro,
+defeat and post-battle text. The script's flag check is the only thing that
+changes: `GetTrainerFlag` and the trainer sight check read the slot, not the
+trainer's permanent flag:
 
 - **Gift first.** If the occupant holds a phone gift (see
-  [Phone rematches](phone-rematches.md#gifts)), the script runs the gift
-  hand-off before anything else, as the trainer's home map script does today.
+  [Phone rematches](phone-rematches.md#gifts)), the flag check reads done, so
+  the script falls through to its own gift hand-off before any battle, as the
+  trainer's home map script does today. A trainer holding a gift does not
+  approach by sight, as at home today; the player talks to it.
 - **Eligible** when the slot's `clearedToday` bit is unset. The trainer's
   permanent defeat flag is already set, so it doesn't gate this battle.
 - **After a win**, set the slot's `clearedToday` bit. The occupant stays and
-  speaks its post-battle line for the rest of the day.
+  speaks its post-battle line for the rest of the day. The one-time script the
+  home battle runs after the win (registering a phone number) is skipped for a
+  wanderer; its post-battle conversation still offers what it offered before.
 - **A loss** clears nothing.
 - **Party, levels and rewards** come from the occupant's trainer id, including
   its latest rematch team, through
@@ -236,7 +266,14 @@ A home trainer's first battle uses its authored script. On that win the game
 sets the trainer's defeat flag as today, plus the slot's `homeBeatenToday` and
 `clearedToday` bits.
 
-Pairs battle as one unit and share one slot pair.
+Pairs battle as one unit and share one slot pair: both objects take the
+occupant pair's sprites and scripts.
+
+The game notes the slot of each opponent when a trainer battle is configured,
+and only when the opponent is the slot's home trainer or its wanderer; a win
+(`SetBattledTrainersFlags`) then clears the notes' slots. Rematch battles
+(`ShouldTryRematchBattle`) are not offered at a rotating slot: a ready
+contact is placed, but its rematch is the phone's.
 
 **Sight.** The trainer sight check (`trainer_see.c`) treats a defeated trainer
 as done, so a wanderer would never approach. Like the Battle Pyramid and
@@ -317,7 +354,8 @@ The Itemfinder sees resolved hidden items only.
   Itemfinder (including connected maps) all recompute it.
 - **Slot index.** Item spots are the first rows of the shared `clearedToday`
   bitset, in the order of `src/data/item_slots/spots.h` (map, ball before
-  hidden, id). Trainer slots will follow them.
+  hidden, id). Trainer slots follow them, in the order of
+  `src/data/trainer_slots/slots.h` (map, then the first local id).
 - **Prize flags.** The generator writes each prize spot's permanent flag into the
   spot table as the map assembles it, and the runtime reads a prize's flag from
   there, for balls and hidden items alike. For a hidden prize it is the same flag
@@ -330,16 +368,47 @@ The Itemfinder sees resolved hidden items only.
   item ball, so the one-off spawn path needs no check.
 - **Debug override.** `gDailySlotsDebugFlags`, `gDailySlotsDebugDay` and
   `gDailySlotsDebugSeed` pin the day and seed in the mechanics-test and E2E
-  builds.
+  builds. `DAILY_DEBUG_NO_EMPTY` also keeps every rotating trainer slot occupied,
+  and `gDailyTrainersDebugOccupants` lets a journey read the map's occupants.
 
 ## Dialogue audit
 
 The generator writes an inventory of every rotating candidate's intro, defeat
-and post-battle lines. It flags lines that name a map, landmark, building or
-local event, using the map name table and a reviewed landmark word list. Each
-flagged trainer is resolved by a reviewed edit to neutral wording, or by
-excluding it from rotation with a reason. Generation fails while a flagged
-line is unresolved.
+and post-battle lines (`src/data/trainer_slots/dialogue.md`). It flags lines
+that name a map, landmark, building or local event, using the map name table
+(and the stems of its town, city and island names) and the reviewed word lists
+in `tools/wayfarer_trainer_slots/landmarks.json`: landmark nouns after a
+determiner, terrain nouns after a demonstrative ("this beach", not "the sea"),
+place phrases ("around here"), local-event words written in capitals, and
+phrases that number a trainer among a challenge's opponents ("No. 3", "last in
+line"). Each flagged trainer is resolved in `reviewed.json` by a reviewed edit to
+neutral wording (`reword`, which the audit then confirms by finding nothing), or
+by excluding it from rotation with a reason (`exclude`). Generation fails while
+a flagged line is unresolved, a reword still names a place, or a resolution is
+stale. A false positive of the word lists is fixed in the lists, not waived. Text of generated Sevii and coast scripts is not edited by hand: those
+trainers are excluded.
+
+Of 665 candidates, 164 named a place at some point: 156 are excluded and 8 were
+reworded. The report lists every resolution with its reason.
+
+### What the trainer half leaves for the phone
+
+[Phone rematches](phone-rematches.md) owns calls, numbers, readiness and rematch
+teams. This spec ships the seams it reads:
+
+- `readyAtDayStart` and `giftAtDayStart` are saved and filled at day start from
+  the readiness and gift state the game has today (the HNS rematch table's
+  `trainerRematches`, the HNS gift flags, the Sevii and coast registries'
+  pending bits). A contact is a bit in the index space the phone spec lays out:
+  table rows 0-117, then the 32 Sevii families that carry a stronger team, then
+  the nine coast families. Hoenn and the table's growth to 118 rows join by
+  appending rows; `DailyContacts_IndexOf` finds them with no change.
+- `WhereIsTrainerToday` and `DailyContacts_ReadyAtDayStart`/`GiftAtDayStart` are
+  the lookups the calls use. A fixed contact's home is a small generated table.
+- Ready contacts are placed but their next-team rematch battle is not offered at
+  a rotating slot; a gift holder hands its gift over wherever it stands (HNS gifts
+  only, the one gift source that exists).
+- A wanderer fights with its latest beaten rematch team, not its next one.
 
 ## Interactions
 
@@ -366,14 +435,16 @@ reproduced. Tests cover:
 - the home-beaten-today freeze, and the wanderer starting the next day;
 - one place per trainer per day, pairs, and placement of ready and gift trainers, including readiness or a gift flag changing mid-day, and Battle text only for a ready-at-day-start contact and FoundItem text only for a gift-at-day-start one;
 - a fixed (non-rotating) contact receiving Battle and FoundItem calls that name its home map, and only General calls after that day's rematch or gift;
-- wanderers approaching by sight until cleared, and not after;
+- wanderers approaching by sight until cleared, and not after (the mechanics test
+  reads the flag checks the sight path and the battle script make; the E2E journey
+  walks into the sight line);
 - dynamic and taken-prize spots staying visible after a reload on the same day, and refilling the next day, with no permanent flag set;
 - a picked-up ball (dynamic or taken prize) not respawning on later camera steps, a reload or leaving and re-entering the map the same day, and an empty slot's template never spawning;
 - a prize spot giving the prize item, never its authored item, for both balls and hidden spots;
 - empty odds and tier odds over many days within tolerance;
 - prize pickup becoming dynamic the next day;
-- the template hook with walkers present and the 16-sprite budget on the
-  busiest maps;
+- the template hook changing nothing but sprite and script on every map with a
+  slot, and holding every rotating slot of the busiest map;
 - the generated reports: slot status, exclusions, the dialogue audit and pool
   validation.
 
@@ -384,3 +455,12 @@ unknown item or trainer, a rotating trainer without a group, a prize spot with
 no flag, a group whose wanderers can't all fit its slots, or an unresolved
 dialogue flag. Its report lists slot status by region with reasons, group
 sizes, the dialogue audit, and pool weights per reach.
+
+The trainer generator (`make world-trainers-generate`, audited and tested by
+`make check`) also fails on a trainer in two slots, a script that is not a global
+label, a map whose local ids are not dense, and a stale reviewed entry. It writes
+`src/data/trainer_slots/{slots.h,report.md,dialogue.md}` and
+`include/constants/world_trainer_slots.h`; the report has slot status by region
+with the reason each `ORDINARY` trainer stays at home, the group sizes and the
+audit's resolutions. A group's slots are its wanderers' places by construction,
+so "wanderers that cannot fit" reduces to a trainer listed twice in one group.

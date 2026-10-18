@@ -29,6 +29,7 @@ content must preserve the existing regional HM acquisition requirements.
 | `league_halls.c` | Ordered hall locations, names, conditions, and their battle starting statuses. |
 | `league_events.c` | Accepted events, saved teams, content validation, reigning champions, reign records, and Gallery counts. |
 | `league_circuit.c` | Room admission, battle progress, event resolution, recovery, and first-win integration. |
+| `wayfarer_daily_trainers.c` | Daily trainer slots: who stands in each rotating slot today, the map-load and Continue hook that gives a slot its occupant's sprite and script, the spawn check for empty slots, the day-start phone snapshots and contact index, `WhereIsTrainerToday`, and the battle notes that clear a slot after a win. Tables come from `tools/wayfarer_trainer_slots`. |
 | `battle_main.c` | Eligible opponent preparation, battle snapshot lifetime, and construction through the existing Pokémon constructor. |
 | `battle_ai_main.c` | Applying frozen notable flags after the engine's normal AI setup, including prediction slots. |
 
