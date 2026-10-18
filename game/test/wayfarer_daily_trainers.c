@@ -9,9 +9,13 @@
 #include "overworld.h"
 #include "pokemon_storage_system.h"
 #include "script.h"
+#include "trainer_see.h"
+#include "wayfarer_sevii_state.h"
+#include "wayfarer_coast_trainers.h"
 #include "wayfarer_daily_slots.h"
 #include "wayfarer_sevii_rematches.h"
 #include "test/test.h"
+#include "constants/battle_setup.h"
 #include "constants/flags.h"
 #include "constants/maps.h"
 #include "constants/opponents.h"
@@ -733,7 +737,7 @@ TEST("Daily trainers: the battle scripts read the slot, so a wanderer approaches
     EXPECT(DailyTrainers_ObjectIsRotating(0));
     EXPECT(!DailyTrainers_ObjectIsDone(0));
     EXPECT_EQ(GetTrainerFlag(), FALSE);
-    // Rematch battles are not offered at a rotating slot.
+    // Not ready for a rematch as the day began: none is offered.
     EXPECT_EQ(ShouldTryRematchBattle(), FALSE);
     // After the win it is done for the day.
     DailyTrainers_SetCleared(slot);
@@ -1185,6 +1189,134 @@ TEST("Daily trainers: a wanderer fights with its latest rematch team")
     EXPECT_EQ(DailyTrainers_LatestTeam(TRAINER_WADE_HNS), second);
     // A trainer with no rematch team fights as itself.
     EXPECT_EQ(DailyTrainers_LatestTeam(TRAINER_FALKNER_1_HNS), TRAINER_FALKNER_1_HNS);
+
+    RestoreSnapshot(snapshot);
+}
+
+TEST("Daily trainers: a ready occupant of a free slot is rematched in person, once, with the next team")
+{
+    struct Snapshot *snapshot = TakeSnapshot();
+    u16 wadeHome = DailyTrainers_FindSlot(MAP_GROUP(MAP_ROUTE31_HNS), MAP_NUM(MAP_ROUTE31_HNS), 1);
+    s32 table = TrainerIdToRematchTableId(gRematchTable, TRAINER_WADE_HNS);
+    u8 contact = DailyContacts_IndexOf(TRAINER_WADE_HNS);
+    u8 group;
+    u16 out[WORLD_TRAINER_GROUP_SLOTS_MAX], slot = NO_TRAINER_SLOT, day, i;
+    bool32 met;
+    const struct WorldTrainerSlot *row;
+    struct ObjectEvent *object = &gObjectEvents[0];
+
+    ASSUME(wadeHome != NO_TRAINER_SLOT);
+    ASSUME(table >= 0 && contact != DAILY_NO_CONTACT);
+    group = DailyTrainers_GetSlot(wadeHome)->group;
+    DailySlots_InitNewGame();
+    StartDay(13000);
+    DefeatGroup(group);
+    // A day Wade stands in some slot of his group, ready as the day began.
+    for (day = 13001; day < 13200 && slot == NO_TRAINER_SLOT; day++)
+    {
+        StartDay(day);
+        gSaveBlock1Ptr->trainerRematches[table] = 1;
+        gPokemonStoragePtr->dailySlots.readyAtDayStart[contact / 8] |= 1 << (contact % 8);
+        DailyTrainers_ResolveGroup(group, out);
+        for (i = 0; i < DailyTrainers_GroupSize(group); i++)
+        {
+            if (out[i] == wadeHome)
+                slot = DailyTrainers_GroupSlot(group, i);
+        }
+    }
+    ASSUME(slot != NO_TRAINER_SLOT);
+    row = DailyTrainers_GetSlot(slot);
+    EnterSlotMap(slot);
+    memset(object, 0, sizeof(*object));
+    object->active = TRUE;
+    object->localId = row->localId[0];
+    object->mapGroup = row->mapGroup;
+    object->mapNum = row->mapNum;
+    gSelectedObjectEvent = 0;
+    TRAINER_BATTLE_PARAM.opponentA = TRAINER_WADE_HNS;
+    // Ready at the day's start and still ready: met in person. The sight and flag checks leave the talk path open.
+    EXPECT(DailyTrainers_ObjectIsRotating(0));
+    EXPECT(DailyTrainers_ObjectOffersRematch(0));
+    EXPECT(DailyTrainers_ObjectIsDone(0));
+    EXPECT_EQ(GetTrainerFlag(), TRUE);
+    EXPECT_EQ(ShouldTryRematchBattle(), TRUE);
+    // The rematch battle takes the next team, and the win clears the slot and the readiness.
+    TRAINER_BATTLE_PARAM.mode = TRAINER_BATTLE_REMATCH;
+    gApproachingTrainerId = 0;
+    gSpecialVar_LastTalked = row->localId[0];
+    BattleSetup_ConfigureTrainerBattle(NULL);
+    EXPECT_EQ(TRAINER_BATTLE_PARAM.opponentA, gRematchTable[table].trainerIds[1]);
+    DailyTrainers_OnTrainersWon();
+    gSaveBlock1Ptr->trainerRematches[table] = 0;
+    EXPECT(DailyTrainers_IsCleared(slot));
+    TRAINER_BATTLE_PARAM.opponentA = TRAINER_WADE_HNS;
+    EXPECT_EQ(ShouldTryRematchBattle(), FALSE);
+    EXPECT(DailyTrainers_ObjectIsDone(0));
+    // Ready again later the same day: not offered until tomorrow, and a slot already battled is not offered either.
+    gSaveBlock1Ptr->trainerRematches[table] = 1;
+    EXPECT_EQ(ShouldTryRematchBattle(), FALSE);
+    // Became ready mid-day (not in the day-start snapshot): fights as a plain wanderer, with its latest team.
+    for (met = FALSE, day = day + 1; day < 13400 && !met; day++)
+    {
+        gSaveBlock1Ptr->trainerRematches[table] = 0;
+        StartDay(day);
+        gSaveBlock1Ptr->trainerRematches[table] = 1;
+        DailyTrainers_ResolveGroup(group, out);
+        for (i = 0; i < DailyTrainers_GroupSize(group); i++)
+        {
+            if (out[i] != wadeHome)
+                continue;
+            slot = DailyTrainers_GroupSlot(group, i);
+            EnterSlotMap(slot);
+            object->localId = DailyTrainers_GetSlot(slot)->localId[0];
+            object->mapGroup = DailyTrainers_GetSlot(slot)->mapGroup;
+            object->mapNum = DailyTrainers_GetSlot(slot)->mapNum;
+            EXPECT(DailyTrainers_ObjectIsRotating(0));
+            EXPECT(!DailyTrainers_ObjectOffersRematch(0));
+            EXPECT_EQ(ShouldTryRematchBattle(), FALSE);
+            EXPECT(!DailyTrainers_ObjectIsDone(0));
+            EXPECT_EQ(DailyTrainers_NoteBattle(0, DailyTrainers_GetSlot(slot)->localId[0], TRAINER_WADE_HNS), DailyTrainers_LatestTeam(TRAINER_WADE_HNS));
+            met = TRUE;
+        }
+    }
+    EXPECT(met);
+
+    RestoreSnapshot(snapshot);
+}
+
+TEST("Daily trainers: a rematch family's latest team is its top team once every rematch is won")
+{
+    struct Snapshot *snapshot = TakeSnapshot();
+    u16 coast3 = TRAINER_WAYFARER_COAST_PICNICKER_MISSY;
+    u16 coast2 = TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ALICE;
+
+    gSaveBlock3Ptr->wayfarerCoast.vars[WAYFARER_COAST_REMATCH_STAGE_VAR_LOW] = 0;
+    gSaveBlock3Ptr->wayfarerCoast.vars[WAYFARER_COAST_REMATCH_STAGE_VAR_HIGH] = 0;
+    // A three-team family: first team, then the second, then the third and it stays there.
+    EXPECT_EQ(WayfarerCoastRematchGetLatest(coast3), TRAINER_WAYFARER_COAST_PICNICKER_MISSY);
+    WayfarerCoastRematchAdvance(coast3);
+    EXPECT_EQ(WayfarerCoastRematchGetLatest(coast3), TRAINER_WAYFARER_COAST_PICNICKER_MISSY_2);
+    WayfarerCoastRematchAdvance(coast3);
+    EXPECT_EQ(WayfarerCoastRematchGetLatest(coast3), TRAINER_WAYFARER_COAST_PICNICKER_MISSY_3);
+    WayfarerCoastRematchAdvance(coast3);
+    EXPECT_EQ(WayfarerCoastRematchGetLatest(coast3), TRAINER_WAYFARER_COAST_PICNICKER_MISSY_3);
+    EXPECT_EQ(WayfarerCoastRematchGetOpponent(coast3), TRAINER_WAYFARER_COAST_PICNICKER_MISSY_3);
+    // A two-team family reports its rematch team once that is beaten.
+    EXPECT_EQ(WayfarerCoastRematchGetLatest(coast2), TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ALICE);
+    EXPECT_EQ(WayfarerCoastRematchGetOpponent(coast2), TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ALICE_2);
+    WayfarerCoastRematchAdvance(coast2);
+    EXPECT_EQ(WayfarerCoastRematchGetLatest(coast2), TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ALICE_2);
+    EXPECT_EQ(WayfarerCoastRematchGetOpponent(coast2), TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ALICE_2);
+    // A Sevii family ends on its top team.
+    WayfarerSeviiRematchStageSet(WayfarerSeviiRematchFamilyIndex(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON), 0);
+    EXPECT_EQ(WayfarerSeviiRematchGetLatest(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON), TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON);
+    WayfarerSeviiRematchAdvance(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON);
+    EXPECT_EQ(WayfarerSeviiRematchGetLatest(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON), TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON_2);
+    WayfarerSeviiRematchAdvance(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON);
+    EXPECT_EQ(WayfarerSeviiRematchGetLatest(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON), TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON_3);
+    WayfarerSeviiRematchAdvance(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON);
+    WayfarerSeviiRematchAdvance(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON);
+    EXPECT_EQ(WayfarerSeviiRematchGetLatest(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON), TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON_3);
 
     RestoreSnapshot(snapshot);
 }

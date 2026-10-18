@@ -559,14 +559,32 @@ bool8 DailyTrainers_ObjectIsRotating(u8 objectEventId)
     return entry != NULL && entry->occupant != DAILY_OCCUPANT_AWAY;
 }
 
-// Done for the day: the slot was battled, or the occupant holds a phone gift, which its script hands over first.
+// A ready occupant of a free slot is met in person: it was ready for a rematch as the day began and still is, and its
+// slot has not been battled today. A rematch won at the slot clears it for the day; a trainer who becomes ready
+// mid-day is offered from the next day.
+bool8 DailyTrainers_ObjectOffersRematch(u8 objectEventId)
+{
+    const struct MapOccupant *entry = OccupantOfObject(objectEventId);
+    u16 trainerId;
+    u8 contact;
+
+    if (entry == NULL || entry->occupant == DAILY_OCCUPANT_AWAY || DailyTrainers_IsCleared(entry->slot))
+        return FALSE;
+    trainerId = sWorldTrainerSlots[entry->occupant].trainerId;
+    contact = DailyContacts_IndexOf(trainerId);
+    return contact != DAILY_NO_CONTACT && DailyContacts_ReadyAtDayStart(contact) && ShouldTryRematchBattleForTrainerId(trainerId);
+}
+
+// Done for the day: the slot was battled, or the occupant holds a phone gift or a rematch, which its script hands
+// over first (the talk path, not the sight battle).
 bool8 DailyTrainers_ObjectIsDone(u8 objectEventId)
 {
     const struct MapOccupant *entry = OccupantOfObject(objectEventId);
 
     if (entry == NULL || entry->occupant == DAILY_OCCUPANT_AWAY)
         return TRUE;
-    return DailyTrainers_IsCleared(entry->slot) || MatchCall_HnsTrainerHasGift(sWorldTrainerSlots[entry->occupant].trainerId);
+    return DailyTrainers_IsCleared(entry->slot) || MatchCall_HnsTrainerHasGift(sWorldTrainerSlots[entry->occupant].trainerId)
+        || DailyTrainers_ObjectOffersRematch(objectEventId);
 }
 
 // The latest rematch team the occupant has fought: the team a wanderer brings, or its own trainer if it has no rematches.

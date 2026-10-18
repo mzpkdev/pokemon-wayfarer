@@ -1658,10 +1658,22 @@ void SetMapVarsToTrainerB(void)
 // wanderer fight with its latest rematch team.
 static void NoteDailyTrainerBattle(void)
 {
+    // A rematch keeps the script's first-stage id: the rematch lookup picks the next team from it.
+    bool8 rematch = TRAINER_BATTLE_PARAM.mode == TRAINER_BATTLE_REMATCH || TRAINER_BATTLE_PARAM.mode == TRAINER_BATTLE_REMATCH_DOUBLE;
+    u16 team;
+
     if (gApproachingTrainerId == 0)
-        TRAINER_BATTLE_PARAM.opponentA = DailyTrainers_NoteBattle(0, gSpecialVar_LastTalked, TRAINER_BATTLE_PARAM.opponentA);
+    {
+        team = DailyTrainers_NoteBattle(0, gSpecialVar_LastTalked, TRAINER_BATTLE_PARAM.opponentA);
+        if (!rematch)
+            TRAINER_BATTLE_PARAM.opponentA = team;
+    }
     else
-        TRAINER_BATTLE_PARAM.opponentB = DailyTrainers_NoteBattle(1, gSpecialVar_LastTalked, TRAINER_BATTLE_PARAM.opponentB);
+    {
+        team = DailyTrainers_NoteBattle(1, gSpecialVar_LastTalked, TRAINER_BATTLE_PARAM.opponentB);
+        if (!rematch)
+            TRAINER_BATTLE_PARAM.opponentB = team;
+    }
 }
 #endif
 
@@ -2998,9 +3010,9 @@ u16 GetLastBeatenRematchTrainerId(u16 trainerId)
 bool8 ShouldTryRematchBattle(void)
 {
 #if IS_WAYFARER
-    // A wanderer is met once a day. Ready-for-rematch battles at rotating slots belong to the phone rematches.
+    // A wanderer is met once a day. At a free slot a rematch is offered only to an occupant that was ready as the day began.
     if (DailyTrainers_ObjectIsRotating(gSelectedObjectEvent))
-        return FALSE;
+        return DailyTrainers_ObjectOffersRematch(gSelectedObjectEvent);
 #endif
     return ShouldTryRematchBattleForTrainerId(TRAINER_BATTLE_PARAM.opponentA);
 }

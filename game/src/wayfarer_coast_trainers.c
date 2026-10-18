@@ -98,7 +98,18 @@ bool8 WayfarerCoastRematchFamilyIsReady(s32 family)
     return CoastFlagGet(WAYFARER_COAST_REMATCH_PENDING_SLOT_FIRST + family);
 }
 
-// The team the family fought last: its current stage's trainer (the first stage until a rematch is won).
+// The index of a family's last authored team. The stage counts rematches won, up to this index.
+static u8 TopStage(s32 family)
+{
+    u8 top = WAYFARER_COAST_REMATCH_STAGES - 1;
+
+    while (top > 0 && sWayfarerCoastRematchFamilies[family].trainerIds[top] == TRAINER_NONE)
+        top--;
+    return top;
+}
+
+// The team the family fought last: the stage's trainer (the first stage until a rematch is won), and the last
+// authored team once every rematch is won.
 u16 WayfarerCoastRematchGetLatest(u16 trainerId)
 {
     s32 family = WayfarerCoastRematchFamilyIndex(trainerId);
@@ -107,8 +118,8 @@ u16 WayfarerCoastRematchGetLatest(u16 trainerId)
     if (family == -1)
         return trainerId;
     stage = GetStage(family);
-    if (stage >= WAYFARER_COAST_REMATCH_STAGES || sWayfarerCoastRematchFamilies[family].trainerIds[stage] == TRAINER_NONE)
-        return trainerId;
+    if (stage > TopStage(family))
+        stage = TopStage(family);
     return sWayfarerCoastRematchFamilies[family].trainerIds[stage];
 }
 
@@ -161,25 +172,17 @@ u16 WayfarerCoastRematchGetOpponent(u16 trainerId)
     if (family == -1)
         return trainerId;
     stage = GetStage(family);
-    if (stage >= WAYFARER_COAST_REMATCH_STAGES)
-        stage = 0;
-    if (stage >= WAYFARER_COAST_REMATCH_STAGES - 1
-     || sWayfarerCoastRematchFamilies[family].trainerIds[stage + 1] == TRAINER_NONE)
-        return sWayfarerCoastRematchFamilies[family].trainerIds[stage];
+    if (stage >= TopStage(family))
+        return sWayfarerCoastRematchFamilies[family].trainerIds[TopStage(family)];
     return sWayfarerCoastRematchFamilies[family].trainerIds[stage + 1];
 }
 
 void WayfarerCoastRematchAdvance(u16 trainerId)
 {
     s32 family = WayfarerCoastRematchFamilyIndex(trainerId);
-    u8 stage;
 
-    if (family == -1)
-        return;
-    stage = GetStage(family);
-    if (stage + 2 < WAYFARER_COAST_REMATCH_STAGES
-     && sWayfarerCoastRematchFamilies[family].trainerIds[stage + 2] != TRAINER_NONE)
-        SetStage(family, stage + 1);
+    if (family != -1 && GetStage(family) < TopStage(family))
+        SetStage(family, GetStage(family) + 1);
 }
 
 #endif  // IS_WAYFARER

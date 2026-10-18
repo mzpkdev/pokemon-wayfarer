@@ -181,6 +181,7 @@ bool8 DailyTrainers_HideTemplate(const struct ObjectEventTemplate *template);
 bool8 DailyTrainers_IsSlotTile(s16 x, s16 y);
 bool8 DailyTrainers_ObjectIsRotating(u8 objectEventId);
 bool8 DailyTrainers_ObjectIsDone(u8 objectEventId);
+bool8 DailyTrainers_ObjectOffersRematch(u8 objectEventId);
 u16 DailyTrainers_NoteBattle(u8 which, u8 localId, u16 opponent);
 bool8 DailyTrainers_NotedRotating(u8 which);
 void DailyTrainers_OnTrainersWon(void);
