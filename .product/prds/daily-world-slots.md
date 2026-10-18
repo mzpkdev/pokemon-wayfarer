@@ -130,6 +130,9 @@ slots. As a result:
   number and gifts. The slot keeps its own position, facing and sight range.
 - **Pairs rotate as pairs.** Two-trainer slots, such as Twins or a Young
   Couple, form their own group and draw only pairs.
+- **Lines about their own place.** A trainer whose lines name a particular town,
+  route or landmark stays at their own spot but still rotates daily: each day
+  they are there or away, never anywhere else.
 - **Lines about a kind of place.** A trainer whose lines only make sense in a
   cave, a desert, on a ship or on a coast rotates among spots of that kind in
   its region, with any class, instead of among its class's spots.

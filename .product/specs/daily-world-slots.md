@@ -77,8 +77,8 @@ S.S. Anne, S.S. Aqua and S.S. Tidal trainers (one-time ship content), Pokemon
 Tower, the Trick House puzzle rooms, Silph Co., the Rocket Hideouts, the Game
 Corner hideout entrance, the villain grunt classes, and the two Route 26
 trainers authored on two maps. Of 901 `ORDINARY` trainer slots (1,051 trainer
-objects in all, pairs counting once per trainer), 545 rotate (520 singles and 25
-pairs, 570 objects); the report lists why each of the others stays at home.
+objects in all, pairs counting once per trainer), 659 rotate (632 singles and 27
+pairs, 686 objects): 545 in class or place-type groups and 114 home-only (see below); the report lists why each of the others stays at home.
 
 **Place-type groups.** Most trainers rotate among their class family's slots in
 their region. A trainer whose lines need a kind of place ("this cave", "in the
@@ -92,6 +92,17 @@ water within three tiles for a coast) and fails on a slot that is not that
 kind of place. The types are cave, tower, mountain, ship, mansion, desert and
 coast. A trainer is in exactly one group. A place-type group of one slot never
 rotates; it only keeps the trainer's own spot in the daily bookkeeping.
+
+**Home-only trainers.** A trainer whose dialogue is bound to its own place (it
+names a town, a route, a building or a landmark) still takes part in the day, as
+a group of one: after its first win its home slot rotates with only itself to
+draw, so each day it is at home or away (the flat 25% roll), battleable once a
+day while there, and placed every day when it is ready or holds a gift as the
+day starts. It never stands anywhere else, so its lines are never out of place.
+The report calls these slots home-only and counts them per region. One group
+exists per home-only trainer; the slot row's group field is a byte, so
+generation fails past 255 groups. Only a trainer that cannot be absent stays
+fixed: the Route 25 six-trainer challenge, whose lines number its members.
 
 ## The day
 
@@ -152,26 +163,26 @@ day is placed and calls from the next day. Battle text uses only
 either set is placed. The phone reads the stamped day, never the clock, so a
 call before the next map load uses the previous day's arrangement.
 
-Budget (545 trainer slots and 838 item spots, Sevii included; the generated
+Budget (659 trainer slots and 838 item spots, Sevii included; the generated
 counts are in `include/constants/world_trainer_slots.h` and `world_item_spots.h`):
 
 | Part | Bytes |
 | --- | ---: |
 | `stampDay` | 2 |
-| `clearedToday` (1,383 bits) | 173 |
-| `homeBeatenToday` (545 bits) | 69 |
+| `clearedToday` (1,497 bits) | 188 |
+| `homeBeatenToday` (659 bits) | 83 |
 | `readyAtDayStart`, `giftAtDayStart` (160 bits each) | 40 |
-| Total in `PokemonStorage` (a word-aligned struct) | 284 |
+| Total in `PokemonStorage` (a word-aligned struct) | 316 |
 
 | Block | Free before | Added | Left after |
 | --- | ---: | --- | ---: |
-| `PokemonStorage` (13 boxes, PR #139 merged, after the 2,104 bytes other specs plan) | 416 | 284 | 132 |
+| `PokemonStorage` (13 boxes, PR #139 merged, after the 2,104 bytes other specs plan) | 416 | 316 | 100 |
 | SaveBlock1 | 112 | 18 (`trainerRematches` 100 to 118) | 94 |
 
 The `PokemonStorage` figure is Notable world simulation's: of its 2,520
 bytes, the world state, the haunts' traded slots and the Masters growth plan
 2,008 (about 416 left with the 96 bytes of face-only trainers), and the daily
-state takes 284 of that margin (the budget assert allows 330). Capacity figures come from the built ELF and
+state takes 316 of that margin (the budget assert allows 330). Capacity figures come from the built ELF and
 the limits in `src/save.c`: nine storage sectors hold 35,712 bytes, and four
 SaveBlock1 sectors of 3,968 bytes hold 15,872 against 15,760 used (`gSaveblock1`
 is 0x3E10, less the 128-byte `SAVEBLOCK_MOVE_RANGE` pad in `load_save.h`).
@@ -399,14 +410,17 @@ phrases that number a trainer among a challenge's opponents ("No. 3", "last in
 line"). Each flagged trainer is resolved in `reviewed.json` by a reviewed edit to
 neutral wording (`reword`, which the audit then confirms by finding nothing), by
 moving it into the group of the kind of place its lines need (`place`, with the
-type and the phrases), or by excluding it from rotation with a reason
+type and the phrases), by keeping it at its own slot in a group of one
+(`home`, with a reason: [home-only trainers](#which-trainers-rotate)), or, when
+its absence would break its lines, by excluding it from rotation with a reason
 (`exclude`). Generation fails while
 a flagged line is unresolved, a reword still names a place, or a resolution is
 stale. A false positive of the word lists is fixed in the lists, not waived. Text of generated Sevii and coast scripts is not edited by hand: those
-trainers are excluded.
+trainers are home-only or placed, never reworded.
 
-Of 665 candidates, 164 named a place at some point: 120 are excluded, 16 were
-reworded, 20 joined a place-type group and 8 were cleared by narrow reviewed
+Of 665 candidates, 164 named a place at some point: 114 are home-only, 6 stay
+fixed (the Route 25 sequence), 16 were reworded, 20 joined a place-type group and
+8 were cleared by narrow reviewed
 phrases (a goal or plan that reads fine anywhere: "aim for the POKéMON
 LEAGUE", "going to the GYM?"). The report lists every resolution with its reason
 and every allowed phrase with why it is fine anywhere.
