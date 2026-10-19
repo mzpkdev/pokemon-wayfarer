@@ -105,19 +105,16 @@ def hosting(maps, labels):
 
 
 def rematch_families(root=ROOT):
-    """[(trainer ids, map const or None)]: the Wayfarer rematch table rows (with their map), the Sevii rows and
-    the Hoenn rows, which the ROM does not compile yet (no map: their stages stand where the first stage does)."""
+    """[(trainer ids, map const or None)]: the Wayfarer rematch table rows (the HNS rows and the Hoenn rows, each with its
+    map), then the Sevii rows and the coast rows (no map: their stages stand where the first stage does)."""
     families = []
     source = read(root / 'src/battle_setup.c')
     start = source.index('#if IS_HNS\nconst struct RematchTrainer')
     middle = source.index('\n#else', start)
-    end = source.index('\n#endif', middle)
     hns = re.sub(r'#if !IS_WAYFARER.*?#endif', '', source[start:middle], flags=re.S)  # the Wayfarer table
     for match in re.finditer(r'=\s*REMATCH\(([^)]*)\)', hns):
         parts = [part.strip() for part in match.group(1).split(',')]
         families.append((parts[:5], parts[5]))
-    for match in re.finditer(r'=\s*REMATCH\(([^)]*)\)', source[middle:end]):
-        families.append(([part.strip() for part in match.group(1).split(',')][:5], None))
     for match in re.finditer(r'SEVII_REMATCH\(([^)]*)\)', read(SEVII_REMATCHES)):
         families.append(([part.strip() for part in match.group(1).split(',')], None))
     coast = read(COAST_REMATCHES)

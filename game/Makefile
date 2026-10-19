@@ -423,6 +423,7 @@ MAKEFLAGS += --no-print-directory
 RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test surfable-pokemon-pixel-alias-test wild-encounter-scaling-test wild-encounters-v2-check wild-encounters-v2-hm-audit wayfarer-hoenn-content-test wayfarer-hoenn-content-audit wayfarer-hoenn-entry-test wayfarer-hoenn-entry-audit wayfarer-sevii-port-test wayfarer-sevii-port-audit rom-report-test ram-report-test
 RULES_NO_SCAN += league-circuit-test trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit world-items-generate world-items-test world-items-audit world-trainers-generate world-trainers-test world-trainers-audit
 RULES_NO_SCAN += summary-screen-test
+RULES_NO_SCAN += wayfarer-phone-texts-test wayfarer-phone-texts-audit
 RULES_NO_SCAN += wayfarer-sevii-content-test wayfarer-sevii-content-audit
 RULES_NO_SCAN += legacy-multiboot-test
 RULES_NO_SCAN += wayfarer-world-test wayfarer-world-report-test
@@ -533,7 +534,7 @@ check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-po
 check: wayfarer-sinnoh-port-audit
 check: league-circuit-test
 check: native-hm-windows-test wild-encounters-v2-check
-check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit league-circuit-test trainer-party-scaling-audit trainer-party-scaling-test world-items-audit world-items-test world-trainers-audit world-trainers-test
+check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit league-circuit-test trainer-party-scaling-audit trainer-party-scaling-test world-items-audit world-items-test world-trainers-audit world-trainers-test wayfarer-phone-texts-audit wayfarer-phone-texts-test
 endif
 	@cp $(TESTELF) $(HEADLESSELF)
 	$(PATCHELF) $(HEADLESSELF) gTestRunnerHeadless '\x01' gTestRunnerSkipIsFail "$(TEST_SKIP_IS_FAIL)"
@@ -570,7 +571,7 @@ endif
 # Other rules
 rom: $(ROM)
 ifeq ($(BUILD_NAME),wayfarer)
-$(ELF): wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-port-audit trainer-party-scaling-audit world-items-audit world-trainers-audit
+$(ELF): wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-port-audit trainer-party-scaling-audit world-items-audit world-trainers-audit wayfarer-phone-texts-audit
 endif
 ifeq ($(RELEASE),1)
 rom: $(ROM_REPORT)
@@ -950,6 +951,15 @@ endif
 
 world-trainers-test:
 	WORLD_TRAINERS_REQUIRE_MAPS=$(WORLD_TRAINERS_REQUIRE_MAPS) PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_trainer_slots -p 'test_*.py' -q
+
+# Every phone contact has its call texts, every Battle and FoundItem text names today's place, and every line fits the call
+# window (tools/wayfarer_phone_texts). The ROM waits for the audit, so a contact without texts fails the build.
+.PHONY: wayfarer-phone-texts-test wayfarer-phone-texts-audit
+wayfarer-phone-texts-audit:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_phone_texts/audit.py
+
+wayfarer-phone-texts-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_phone_texts -p 'test_*.py' -q
 
 frlg-traversal-static-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/traversal/tests -p 'test_frlg_*.py' -q

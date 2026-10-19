@@ -32,8 +32,8 @@ MatchCall_HNS_Joey_General3::
 
 MatchCall_HNS_Joey_Battle::
 	.string "Yo, {PLAYER}!\p"
-	.string "Let's get together and\n"
-	.string "battle!\p"
+	.string "Let's get together at\n"
+	.string "{STR_VAR_2} and battle!\p"
 	.string "I promise things will be\n"
 	.string "different!$"
 
@@ -76,13 +76,13 @@ MatchCall_HNS_Wade_FoundItem::
 	.string "BERRIES.\p"
 	.string "If you want, I'll share\n"
 	.string "some with you.\p"
-	.string "I'll be waiting on\n"
-	.string "ROUTE 31.$"
+	.string "I'll be waiting at\n"
+	.string "{STR_VAR_2} today.$"
 
 MatchCall_HNS_Wade_Battle::
 	.string "{PLAYER}, howdy!\p"
 	.string "Do you feel like a POKéMON\n"
-	.string "battle?\p"
+	.string "battle at {STR_VAR_2}?\p"
 	.string "It won't be like last\n"
 	.string "time!$"
 
@@ -116,7 +116,8 @@ MatchCall_HNS_Ralph_General3::
 
 MatchCall_HNS_Ralph_Battle::
 	.string "Hey, {PLAYER}!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Liz - Picnicker, Route 32
@@ -156,7 +157,8 @@ MatchCall_HNS_Liz_General3::
 
 MatchCall_HNS_Liz_Battle::
 	.string "Hi, {PLAYER}!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Anthony - Hiker, Route 33
@@ -192,7 +194,8 @@ MatchCall_HNS_Anthony_General3::
 
 MatchCall_HNS_Anthony_Battle::
 	.string "Hey there, {PLAYER}!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Todd - Camper, Route 34
@@ -225,7 +228,8 @@ MatchCall_HNS_Todd_General3::
 
 MatchCall_HNS_Todd_Battle::
 	.string "Hey, {PLAYER}!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Gina - Picnicker, Route 34
@@ -256,7 +260,8 @@ MatchCall_HNS_Gina_General3::
 
 MatchCall_HNS_Gina_Battle::
 	.string "Hi, {PLAYER}!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Irwin - Juggler, Route 35
@@ -287,7 +292,8 @@ MatchCall_HNS_Irwin_General3::
 MatchCall_HNS_Irwin_Battle::
 	.string "Uh, hello, {PLAYER}?\n"
 	.string "It's your pal, IRWIN!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Arnie - Bug Catcher, Route 35
@@ -316,7 +322,8 @@ MatchCall_HNS_Arnie_General3::
 
 MatchCall_HNS_Arnie_Battle::
 	.string "Hey, {PLAYER}!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Alan - Schoolboy, Route 36
@@ -352,13 +359,14 @@ MatchCall_HNS_Alan_FoundItem::
 	.string "Hehehe, I picked up\n"
 	.string "something nice!\p"
 	.string "You can have it!\p"
-	.string "Why don't you come to\n"
-	.string "ROUTE 36 and pick it up?$"
+	.string "I'm at {STR_VAR_2}.\n"
+	.string "Come pick it up!$"
 
 MatchCall_HNS_Alan_Battle::
 	.string "Hi, {PLAYER}!\n"
 	.string "It's ALAN!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Dana - Lass, Route 38
@@ -396,12 +404,13 @@ MatchCall_HNS_Dana_FoundItem::
 	.string "As I promised, it's yours!\n"
 	.string "I'm sure you'd like it.\p"
 	.string "Come get it! I'm waiting\n"
-	.string "on ROUTE 38!$"
+	.string "at {STR_VAR_2} today!$"
 
 MatchCall_HNS_Dana_Battle::
 	.string "Hi, {PLAYER}!\n"
 	.string "It's DANA!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Chad - Schoolboy, Route 38
@@ -441,7 +450,8 @@ MatchCall_HNS_Chad_General3::
 MatchCall_HNS_Chad_Battle::
 	.string "Hello, {PLAYER}!\n"
 	.string "It's CHAD!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Derek - Pokefan M, Route 39
@@ -479,13 +489,14 @@ MatchCall_HNS_Derek_FoundItem::
 	.string "It's DEREK!\p"
 	.string "I'd like you to have a\n"
 	.string "NUGGET.\p"
-	.string "I'm on ROUTE 39.\n"
+	.string "I'm at {STR_VAR_2}.\n"
 	.string "Come pick it up!$"
 
 MatchCall_HNS_Derek_Battle::
 	.string "Hey, {PLAYER}!\n"
 	.string "It's DEREK!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Tully - Fisher, Route 42
@@ -523,13 +534,14 @@ MatchCall_HNS_Tully_FoundItem::
 	.string "thing at the water's edge.\p"
 	.string "Like I promised, it's\n"
 	.string "yours.\p"
-	.string "I'll be waiting on\n"
-	.string "ROUTE 42.$"
+	.string "I'll be waiting at\n"
+	.string "{STR_VAR_2} today.$"
 
 MatchCall_HNS_Tully_Battle::
 	.string "Hey, {PLAYER}!\n"
 	.string "It's TULLY!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Brent - Pokemaniac, Route 43
@@ -570,7 +582,8 @@ MatchCall_HNS_Brent_General3::
 MatchCall_HNS_Brent_Battle::
 	.string "Hey, {PLAYER}!\n"
 	.string "It's BRENT!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Tiffany - Picnicker, Route 43
@@ -610,7 +623,8 @@ MatchCall_HNS_Tiffany_General3::
 MatchCall_HNS_Tiffany_Battle::
 	.string "Hi, {PLAYER}!\n"
 	.string "It's TIFFANY!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Vance - Bird Keeper, Route 44
@@ -642,7 +656,8 @@ MatchCall_HNS_Vance_General3::
 MatchCall_HNS_Vance_Battle::
 	.string "Hey, {PLAYER}!\n"
 	.string "It's VANCE!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Wilton - Fisher, Route 44
@@ -676,13 +691,14 @@ MatchCall_HNS_Wilton_FoundItem::
 	.string "It's WILTON!\p"
 	.string "I snagged an item while\n"
 	.string "fishing.\p"
-	.string "Come pick it up on\n"
-	.string "ROUTE 44.$"
+	.string "Come pick it up at\n"
+	.string "{STR_VAR_2} today.$"
 
 MatchCall_HNS_Wilton_Battle::
 	.string "Hey, {PLAYER}!\n"
 	.string "It's WILTON!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Kenji - Blackbelt, Route 45
@@ -712,7 +728,8 @@ MatchCall_HNS_Kenji_General3::
 MatchCall_HNS_Kenji_Battle::
 	.string "Hey, {PLAYER}!\n"
 	.string "This is KENJI!\p"
-	.string "I'm taking a break!\p"
+	.string "I'm taking a break at\n"
+	.string "{STR_VAR_2} today!\p"
 	.string "Why not drop by if you\n"
 	.string "are free?$"
 
@@ -721,8 +738,9 @@ MatchCall_HNS_Kenji_FoundItem::
 	.string "This is KENJI!\p"
 	.string "I'm taking a break from\n"
 	.string "training.\p"
-	.string "I found something good.\n"
-	.string "Come get it if you want!$"
+	.string "I found something good.\p"
+	.string "Come get it at\n"
+	.string "{STR_VAR_2} if you want!$"
 
 @ Parry - Hiker, Route 45
 MatchCall_HNS_Parry_General1::
@@ -752,7 +770,7 @@ MatchCall_HNS_Parry_Battle::
 	.string "Hey, {PLAYER}!\n"
 	.string "It's PARRY!\p"
 	.string "You'll battle with me\n"
-	.string "again, right?$"
+	.string "again at {STR_VAR_2}?$"
 
 @ Erin - Picnicker, Route 46
 MatchCall_HNS_Erin_General1::
@@ -782,8 +800,8 @@ MatchCall_HNS_Erin_Battle::
 	.string "It's ERIN!\p"
 	.string "I'm working hard to raise\n"
 	.string "my POKéMON!\p"
-	.string "Come back for another\n"
-	.string "battle!$"
+	.string "Come to {STR_VAR_2}\n"
+	.string "for another battle!$"
 
 @ Jack - Schoolboy, National Park
 MatchCall_HNS_Jack_General1::
@@ -817,7 +835,8 @@ MatchCall_HNS_Jack_General3::
 MatchCall_HNS_Jack_Battle::
 	.string "Hey, {PLAYER}!\n"
 	.string "It's JACK!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Beverly - Pokefan F, National Park
@@ -850,16 +869,15 @@ MatchCall_HNS_Beverly_FoundItem::
 	.string "My husband got some\n"
 	.string "NUGGETS.\p"
 	.string "If you'd like, you could\n"
-	.string "have one as thanks for\l"
-	.string "helping me out.\p"
-	.string "I'll be at NATIONAL PARK.\n"
-	.string "Please come see me when\l"
-	.string "you can.$"
+	.string "have one as thanks for\p"
+	.string "helping me out. I'll be at\n"
+	.string "{STR_VAR_2}. Come see me!$"
 
 MatchCall_HNS_Beverly_Battle::
 	.string "Hello, {PLAYER}!\n"
 	.string "It's BEVERLY!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Huey - Sailor, Olivine Lighthouse
@@ -880,7 +898,8 @@ MatchCall_HNS_Huey_General2::
 MatchCall_HNS_Huey_Battle::
 	.string "Yo, {PLAYER}!\n"
 	.string "It's HUEY!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Gaven - Cooltrainer M, Route 26
@@ -912,7 +931,8 @@ MatchCall_HNS_Gaven_General3::
 MatchCall_HNS_Gaven_Battle::
 	.string "Hey, {PLAYER}!\n"
 	.string "It's GAVEN!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Beth - Cooltrainer F, Route 26
@@ -947,7 +967,8 @@ MatchCall_HNS_Beth_General3::
 MatchCall_HNS_Beth_Battle::
 	.string "Hi, {PLAYER}!\n"
 	.string "It's BETH!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Jose - Bird Keeper, Route 27
@@ -986,18 +1007,17 @@ MatchCall_HNS_Jose_FoundItem::
 	.string "Hey, {PLAYER}!\n"
 	.string "It's JOSE!\p"
 	.string "My FARFETCH'D had\n"
-	.string "something pretty in its\l"
-	.string "beak.\p"
-	.string "Like I promised, you can\n"
-	.string "have it.\p"
-	.string "Catch up to me on\n"
-	.string "ROUTE 27, and I'll let\l"
-	.string "you have it.$"
+	.string "something pretty in its\p"
+	.string "beak. Like I promised, you\n"
+	.string "can have it.\p"
+	.string "Catch up to me at\n"
+	.string "{STR_VAR_2} today.$"
 
 MatchCall_HNS_Jose_Battle::
 	.string "Hey, {PLAYER}!\n"
 	.string "It's JOSE!\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Reena - Cooltrainer F, Route 27
@@ -1034,7 +1054,8 @@ MatchCall_HNS_Reena_General3::
 MatchCall_HNS_Reena_Battle::
 	.string "Hello, {PLAYER}.\n"
 	.string "It's REENA.\p"
-	.string "I was waiting for you.\n"
+	.string "I was waiting for you\n"
+	.string "at {STR_VAR_2} today!\p"
 	.string "Let's battle!$"
 
 @ Alex - Battle Girl, Route 13
@@ -1057,7 +1078,8 @@ MatchCall_HNS_Alex_Battle::
 	.string "Hey, {PLAYER}!\n"
 	.string "It's ALEX!\p"
 	.string "My regal POKéMON are ready\n"
-	.string "for a rematch! Come to ROUTE 13!$"
+	.string "for a rematch!\p"
+	.string "Come to {STR_VAR_2}!$"
 
 @ Riley - Biker, Route 17
 MatchCall_HNS_Riley_General1::
@@ -1079,7 +1101,7 @@ MatchCall_HNS_Riley_General2::
 MatchCall_HNS_Riley_Battle::
 	.string "Yo, {PLAYER}!\n"
 	.string "RILEY here.\p"
-	.string "Get down to CYCLING ROAD!\n"
+	.string "Get down to {STR_VAR_2}!\n"
 	.string "I want a rematch!$"
 
 @ Trevor - Juggler, Route 14
@@ -1102,8 +1124,9 @@ MatchCall_HNS_Trevor_General2::
 MatchCall_HNS_Trevor_Battle::
 	.string "Hi, {PLAYER}!\n"
 	.string "It's TREVOR.\p"
-	.string "My friends are ready for battle!\n"
-	.string "Come see on ROUTE 14!$"
+	.string "My friends are ready for\n"
+	.string "battle! Come see us at\l"
+	.string "{STR_VAR_2}!$"
 
 @ Kyle - Fisherman, Route 12
 MatchCall_HNS_Kyle_General1::
@@ -1121,7 +1144,7 @@ MatchCall_HNS_Kyle_Battle::
 	.string "KYLE here.\p"
 	.string "I've reeled in some tough\n"
 	.string "new POKéMON!\p"
-	.string "Come to ROUTE 12 for\n"
+	.string "Come to {STR_VAR_2} for\n"
 	.string "a battle!$"
 
 @ Carter - Pokefan, Route 14
@@ -1146,7 +1169,7 @@ MatchCall_HNS_Carter_Battle::
 	.string "CARTER here.\p"
 	.string "I have new starters to\n"
 	.string "show off! Come to\l"
-	.string "ROUTE 14!$"
+	.string "{STR_VAR_2}!$"
 
 @ Hillary - Expert, Route 15
 MatchCall_HNS_Hillary_General1::
@@ -1164,7 +1187,8 @@ MatchCall_HNS_Hillary_Battle::
 	.string "It's HILLARY.\p"
 	.string "My POKéMON have graduated\n"
 	.string "to the next level!\p"
-	.string "Come test us on ROUTE 15!$"
+	.string "Come test us at\n"
+	.string "{STR_VAR_2}!$"
 
 @ Rob - Bug Catcher, Route 2
 MatchCall_HNS_Rob_General1::
@@ -1183,7 +1207,7 @@ MatchCall_HNS_Rob_Battle::
 	.string "ROB here!\p"
 	.string "My bug team is stronger\n"
 	.string "than ever!\p"
-	.string "Come to ROUTE 2 for a\n"
+	.string "Come to {STR_VAR_2} for a\n"
 	.string "rematch!$"
 
 #if !IS_WAYFARER
@@ -1230,7 +1254,7 @@ MatchCall_HNS_Billy_Battle::
 	.string "Hey, {PLAYER}!\n"
 	.string "It's BILLY.\p"
 	.string "I learned some new tricks!\n"
-	.string "Come to ROUTE 15!$"
+	.string "Come to {STR_VAR_2}!$"
 
 @ Kenny - Hiker, Route 13
 MatchCall_HNS_Kenny_General1::
@@ -1251,7 +1275,7 @@ MatchCall_HNS_Kenny_Battle::
 	.string "KENNY here.\p"
 	.string "I've trained hard in the\n"
 	.string "mountains!\p"
-	.string "Come to ROUTE 13 for\n"
+	.string "Come to {STR_VAR_2} for\n"
 	.string "a battle!$"
 
 @ Joel - Biker, Route 17
@@ -1275,7 +1299,7 @@ MatchCall_HNS_Joel_Battle::
 	.string "Hey, {PLAYER}!\n"
 	.string "JOEL here.\p"
 	.string "I look AND fight cool now!\n"
-	.string "Come to CYCLING ROAD!$"
+	.string "Come to {STR_VAR_2}!$"
 
 @ Charles - Biker, Route 17
 MatchCall_HNS_Charles_General1::
@@ -1297,4 +1321,4 @@ MatchCall_HNS_Charles_Battle::
 	.string "CHARLES here.\p"
 	.string "The highway stars want\n"
 	.string "revenge! Come to\l"
-	.string "CYCLING ROAD!$"
+	.string "{STR_VAR_2}!$"
