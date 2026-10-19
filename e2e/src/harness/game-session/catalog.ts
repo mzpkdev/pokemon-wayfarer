@@ -65,6 +65,7 @@ export const maps = {
   "route-6": { mapGroup: 0, mapNum: 46 },
   "route-7": { mapGroup: 0, mapNum: 47 },
   "route-8": { mapGroup: 0, mapNum: 48 },
+  "route-31": { mapGroup: 0, mapNum: 13 },
   "route-10": { mapGroup: 0, mapNum: 50 },
   "route-13": { mapGroup: 0, mapNum: 53 },
   "route-16": { mapGroup: 0, mapNum: 56 },
@@ -500,6 +501,7 @@ export const seviiImportedMaps = [
 ] as const
 
 export const storyVars = {
+  wadeItem: 0x4097,
   silphElevatorFloor: 0x40da,
   silphGiovanniScene: 0x40db,
   baobaResearch: 0x4054,
@@ -540,6 +542,11 @@ export const storyVars = {
 } as const
 
 export const storyFlags = {
+  hasMatchCall: 0x1f3,
+  wadeHasItem: 0x2ea,
+  wadeDefeated: 0x5a8, // TRAINER_FLAGS_START + TRAINER_WADE_HNS (168)
+  phoneRoseRegistered: 0x8be, // the first appended rematch row, contact 90
+  phoneDaltonRegistered: 0x8d1, // contact 109
   hideMtSilverRed: 0x0a9,
   defeatedRed: 0x23b,
   endNuzlocke: 0x964,

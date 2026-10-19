@@ -13,6 +13,7 @@
 #include "wayfarer_sevii_state.h"
 #include "wayfarer_coast_trainers.h"
 #include "wayfarer_daily_slots.h"
+#include "wayfarer_phone.h"
 #include "wayfarer_sevii_rematches.h"
 #include "test/test.h"
 #include "constants/battle_setup.h"
@@ -1181,6 +1182,9 @@ TEST("Daily trainers: a wanderer fights with its latest rematch team")
 
     ASSUME(wade >= 0);
     ASSUME(second != 0);
+    // A contact with a registered number brings the latest rematch team it has fought (phone-rematches.md; one without
+    // a number brings the team its Trainer Rating unlocks, tested in test/wayfarer_phone.c).
+    FlagSet(PhoneContact_RegisteredFlag(wade));
     // Nothing beaten beyond the first team: the first team.
     ClearTrainerFlag(second);
     EXPECT_EQ(DailyTrainers_LatestTeam(TRAINER_WADE_HNS), TRAINER_WADE_HNS);
