@@ -84,6 +84,7 @@
 #include "battle_util.h"
 #include "naming_screen.h"
 #include "chooseboxmon.h"
+#include "wayfarer_phone.h"
 
 #define TAG_ITEM_ICON 5500
 
@@ -3815,7 +3816,7 @@ bool32 IsTrainerRegistered(void)
     int index = GetRematchIdxByTrainerIdx(gSpecialVar_0x8004);
     if (index >= 0)
     {
-        if (FlagGet(TRAINER_REGISTERED_FLAGS_START + index) == TRUE)
+        if (FlagGet(PhoneContact_RegisteredFlag(index)) == TRUE)
             return TRUE;
     }
     return FALSE;

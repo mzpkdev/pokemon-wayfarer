@@ -57,6 +57,7 @@
 #include "wayfarer_sevii_trainer_defeats.h"
 #include "wayfarer_coast_trainers.h"
 #include "wayfarer_daily_slots.h"
+#include "wayfarer_phone.h"
 #include "wayfarer_coast_trainer_defeats.h"
 #include "wayfarer_ss_anne.h"
 #include "wayfarer_ss_anne_trainer_defeats.h"
@@ -241,6 +242,74 @@ const struct RematchTrainer gRematchTable[REMATCH_TABLE_ENTRIES] =
     [REMATCH_KENNY_HNS]   = REMATCH(TRAINER_KENNY_HNS,    TRAINER_KENNY_2_HNS,   TRAINER_KENNY_3_HNS,   TRAINER_KENNY_3_HNS,   TRAINER_KENNY_3_HNS,   MAP_ROUTE13_HNS),
     [REMATCH_JOEL_HNS]    = REMATCH(TRAINER_JOEL_HNS,     TRAINER_JOEL_2_HNS,    TRAINER_JOEL_3_HNS,    TRAINER_JOEL_3_HNS,    TRAINER_JOEL_3_HNS,    MAP_ROUTE17_HNS),
     [REMATCH_CHARLES_HNS] = REMATCH(TRAINER_CHARLES_HNS,  TRAINER_CHARLES_2_HNS, TRAINER_CHARLES_3_HNS, TRAINER_CHARLES_3_HNS, TRAINER_CHARLES_3_HNS, MAP_ROUTE17_HNS),
+#if IS_WAYFARER
+    // Hoenn's rematch trainers (phone-rematches.md). HNS reuses the Emerald names of indexes 0-27 for other people, so those
+    // 28 Hoenn trainers are appended past the Elite Four rows; the other 36 keep their Emerald names in the empty indexes 28-63.
+    [REMATCH_JERRY] = REMATCH(TRAINER_JERRY_1, TRAINER_JERRY_2, TRAINER_JERRY_3, TRAINER_JERRY_4, TRAINER_JERRY_5, MAP_ROUTE116),
+    [REMATCH_ANNA_AND_MEG] = REMATCH(TRAINER_ANNA_AND_MEG_1, TRAINER_ANNA_AND_MEG_2, TRAINER_ANNA_AND_MEG_3, TRAINER_ANNA_AND_MEG_4, TRAINER_ANNA_AND_MEG_5, MAP_ROUTE117),
+    [REMATCH_ISABEL] = REMATCH(TRAINER_ISABEL_1, TRAINER_ISABEL_2, TRAINER_ISABEL_3, TRAINER_ISABEL_4, TRAINER_ISABEL_5, MAP_ROUTE110),
+    [REMATCH_MIGUEL] = REMATCH(TRAINER_MIGUEL_1, TRAINER_MIGUEL_2, TRAINER_MIGUEL_3, TRAINER_MIGUEL_4, TRAINER_MIGUEL_5, MAP_ROUTE103),
+    [REMATCH_TIMOTHY] = REMATCH(TRAINER_TIMOTHY_1, TRAINER_TIMOTHY_2, TRAINER_TIMOTHY_3, TRAINER_TIMOTHY_4, TRAINER_TIMOTHY_5, MAP_ROUTE115),
+    [REMATCH_SHELBY] = REMATCH(TRAINER_SHELBY_1, TRAINER_SHELBY_2, TRAINER_SHELBY_3, TRAINER_SHELBY_4, TRAINER_SHELBY_5, MAP_MT_CHIMNEY),
+    [REMATCH_CALVIN] = REMATCH(TRAINER_CALVIN_1, TRAINER_CALVIN_2, TRAINER_CALVIN_3, TRAINER_CALVIN_4, TRAINER_CALVIN_5, MAP_ROUTE102),
+    [REMATCH_ELLIOT] = REMATCH(TRAINER_ELLIOT_1, TRAINER_ELLIOT_2, TRAINER_ELLIOT_3, TRAINER_ELLIOT_4, TRAINER_ELLIOT_5, MAP_ROUTE106),
+    [REMATCH_ISAIAH] = REMATCH(TRAINER_ISAIAH_1, TRAINER_ISAIAH_2, TRAINER_ISAIAH_3, TRAINER_ISAIAH_4, TRAINER_ISAIAH_5, MAP_ROUTE128),
+    [REMATCH_MARIA] = REMATCH(TRAINER_MARIA_1, TRAINER_MARIA_2, TRAINER_MARIA_3, TRAINER_MARIA_4, TRAINER_MARIA_5, MAP_ROUTE117),
+    [REMATCH_ABIGAIL] = REMATCH(TRAINER_ABIGAIL_1, TRAINER_ABIGAIL_2, TRAINER_ABIGAIL_3, TRAINER_ABIGAIL_4, TRAINER_ABIGAIL_5, MAP_ROUTE110),
+    [REMATCH_DYLAN] = REMATCH(TRAINER_DYLAN_1, TRAINER_DYLAN_2, TRAINER_DYLAN_3, TRAINER_DYLAN_4, TRAINER_DYLAN_5, MAP_ROUTE117),
+    [REMATCH_KATELYN] = REMATCH(TRAINER_KATELYN_1, TRAINER_KATELYN_2, TRAINER_KATELYN_3, TRAINER_KATELYN_4, TRAINER_KATELYN_5, MAP_ROUTE128),
+    [REMATCH_BENJAMIN] = REMATCH(TRAINER_BENJAMIN_1, TRAINER_BENJAMIN_2, TRAINER_BENJAMIN_3, TRAINER_BENJAMIN_4, TRAINER_BENJAMIN_5, MAP_ROUTE110),
+    [REMATCH_PABLO] = REMATCH(TRAINER_PABLO_1, TRAINER_PABLO_2, TRAINER_PABLO_3, TRAINER_PABLO_4, TRAINER_PABLO_5, MAP_ROUTE126),
+    [REMATCH_NICOLAS] = REMATCH(TRAINER_NICOLAS_1, TRAINER_NICOLAS_2, TRAINER_NICOLAS_3, TRAINER_NICOLAS_4, TRAINER_NICOLAS_5, MAP_METEOR_FALLS_1F_2R),
+    [REMATCH_ROBERT] = REMATCH(TRAINER_ROBERT_1, TRAINER_ROBERT_2, TRAINER_ROBERT_3, TRAINER_ROBERT_4, TRAINER_ROBERT_5, MAP_ROUTE120),
+    [REMATCH_LAO] = REMATCH(TRAINER_LAO_1, TRAINER_LAO_2, TRAINER_LAO_3, TRAINER_LAO_4, TRAINER_LAO_5, MAP_ROUTE113),
+    [REMATCH_CYNDY] = REMATCH(TRAINER_CYNDY_1, TRAINER_CYNDY_2, TRAINER_CYNDY_3, TRAINER_CYNDY_4, TRAINER_CYNDY_5, MAP_ROUTE115),
+    [REMATCH_MADELINE] = REMATCH(TRAINER_MADELINE_1, TRAINER_MADELINE_2, TRAINER_MADELINE_3, TRAINER_MADELINE_4, TRAINER_MADELINE_5, MAP_ROUTE113),
+    [REMATCH_JENNY] = REMATCH(TRAINER_JENNY_1, TRAINER_JENNY_2, TRAINER_JENNY_3, TRAINER_JENNY_4, TRAINER_JENNY_5, MAP_ROUTE124),
+    [REMATCH_DIANA] = REMATCH(TRAINER_DIANA_1, TRAINER_DIANA_2, TRAINER_DIANA_3, TRAINER_DIANA_4, TRAINER_DIANA_5, MAP_JAGGED_PASS),
+    [REMATCH_AMY_AND_LIV] = REMATCH(TRAINER_AMY_AND_LIV_1, TRAINER_AMY_AND_LIV_2, TRAINER_AMY_AND_LIV_4, TRAINER_AMY_AND_LIV_5, TRAINER_AMY_AND_LIV_6, MAP_ROUTE103),
+    [REMATCH_ERNEST] = REMATCH(TRAINER_ERNEST_1, TRAINER_ERNEST_2, TRAINER_ERNEST_3, TRAINER_ERNEST_4, TRAINER_ERNEST_5, MAP_ROUTE125),
+    [REMATCH_CORY] = REMATCH(TRAINER_CORY_1, TRAINER_CORY_2, TRAINER_CORY_3, TRAINER_CORY_4, TRAINER_CORY_5, MAP_ROUTE108),
+    [REMATCH_EDWIN] = REMATCH(TRAINER_EDWIN_1, TRAINER_EDWIN_2, TRAINER_EDWIN_3, TRAINER_EDWIN_4, TRAINER_EDWIN_5, MAP_ROUTE110),
+    [REMATCH_LYDIA] = REMATCH(TRAINER_LYDIA_1, TRAINER_LYDIA_2, TRAINER_LYDIA_3, TRAINER_LYDIA_4, TRAINER_LYDIA_5, MAP_ROUTE117),
+    [REMATCH_ISAAC] = REMATCH(TRAINER_ISAAC_1, TRAINER_ISAAC_2, TRAINER_ISAAC_3, TRAINER_ISAAC_4, TRAINER_ISAAC_5, MAP_ROUTE117),
+    [REMATCH_GABRIELLE] = REMATCH(TRAINER_GABRIELLE_1, TRAINER_GABRIELLE_2, TRAINER_GABRIELLE_3, TRAINER_GABRIELLE_4, TRAINER_GABRIELLE_5, MAP_MT_PYRE_3F),
+    [REMATCH_CATHERINE] = REMATCH(TRAINER_CATHERINE_1, TRAINER_CATHERINE_2, TRAINER_CATHERINE_3, TRAINER_CATHERINE_4, TRAINER_CATHERINE_5, MAP_ROUTE119),
+    [REMATCH_JACKSON] = REMATCH(TRAINER_JACKSON_1, TRAINER_JACKSON_2, TRAINER_JACKSON_3, TRAINER_JACKSON_4, TRAINER_JACKSON_5, MAP_ROUTE119),
+    [REMATCH_HALEY] = REMATCH(TRAINER_HALEY_1, TRAINER_HALEY_2, TRAINER_HALEY_3, TRAINER_HALEY_4, TRAINER_HALEY_5, MAP_ROUTE104),
+    [REMATCH_JAMES] = REMATCH(TRAINER_JAMES_1, TRAINER_JAMES_2, TRAINER_JAMES_3, TRAINER_JAMES_4, TRAINER_JAMES_5, MAP_PETALBURG_WOODS),
+    [REMATCH_TRENT] = REMATCH(TRAINER_TRENT_1, TRAINER_TRENT_2, TRAINER_TRENT_3, TRAINER_TRENT_4, TRAINER_TRENT_5, MAP_ROUTE112),
+    [REMATCH_SAWYER] = REMATCH(TRAINER_SAWYER_1, TRAINER_SAWYER_2, TRAINER_SAWYER_3, TRAINER_SAWYER_4, TRAINER_SAWYER_5, MAP_MT_CHIMNEY),
+    [REMATCH_KIRA_AND_DAN] = REMATCH(TRAINER_KIRA_AND_DAN_1, TRAINER_KIRA_AND_DAN_2, TRAINER_KIRA_AND_DAN_3, TRAINER_KIRA_AND_DAN_4, TRAINER_KIRA_AND_DAN_5, MAP_ABANDONED_SHIP_ROOMS2_1F),
+    [REMATCH_ROSE_HOENN] = REMATCH(TRAINER_ROSE_1, TRAINER_ROSE_2, TRAINER_ROSE_3, TRAINER_ROSE_4, TRAINER_ROSE_5, MAP_ROUTE118),
+    [REMATCH_ANDRES_HOENN] = REMATCH(TRAINER_ANDRES_1, TRAINER_ANDRES_2, TRAINER_ANDRES_3, TRAINER_ANDRES_4, TRAINER_ANDRES_5, MAP_ROUTE105),
+    [REMATCH_DUSTY_HOENN] = REMATCH(TRAINER_DUSTY_1, TRAINER_DUSTY_2, TRAINER_DUSTY_3, TRAINER_DUSTY_4, TRAINER_DUSTY_5, MAP_ROUTE111),
+    [REMATCH_LOLA_HOENN] = REMATCH(TRAINER_LOLA_1, TRAINER_LOLA_2, TRAINER_LOLA_3, TRAINER_LOLA_4, TRAINER_LOLA_5, MAP_ROUTE109),
+    [REMATCH_RICKY_HOENN] = REMATCH(TRAINER_RICKY_1, TRAINER_RICKY_2, TRAINER_RICKY_3, TRAINER_RICKY_4, TRAINER_RICKY_5, MAP_ROUTE109),
+    [REMATCH_LILA_AND_ROY_HOENN] = REMATCH(TRAINER_LILA_AND_ROY_1, TRAINER_LILA_AND_ROY_2, TRAINER_LILA_AND_ROY_3, TRAINER_LILA_AND_ROY_4, TRAINER_LILA_AND_ROY_5, MAP_ROUTE124),
+    [REMATCH_CRISTIN_HOENN] = REMATCH(TRAINER_CRISTIN_1, TRAINER_CRISTIN_2, TRAINER_CRISTIN_3, TRAINER_CRISTIN_4, TRAINER_CRISTIN_5, MAP_ROUTE121),
+    [REMATCH_BROOKE_HOENN] = REMATCH(TRAINER_BROOKE_1, TRAINER_BROOKE_2, TRAINER_BROOKE_3, TRAINER_BROOKE_4, TRAINER_BROOKE_5, MAP_ROUTE111),
+    [REMATCH_WILTON_HOENN] = REMATCH(TRAINER_WILTON_1, TRAINER_WILTON_2, TRAINER_WILTON_3, TRAINER_WILTON_4, TRAINER_WILTON_5, MAP_ROUTE111),
+    [REMATCH_VALERIE_HOENN] = REMATCH(TRAINER_VALERIE_1, TRAINER_VALERIE_2, TRAINER_VALERIE_3, TRAINER_VALERIE_4, TRAINER_VALERIE_5, MAP_MT_PYRE_6F),
+    [REMATCH_CINDY_HOENN] = REMATCH(TRAINER_CINDY_1, TRAINER_CINDY_3, TRAINER_CINDY_4, TRAINER_CINDY_5, TRAINER_CINDY_6, MAP_ROUTE104),
+    [REMATCH_THALIA_HOENN] = REMATCH(TRAINER_THALIA_1, TRAINER_THALIA_2, TRAINER_THALIA_3, TRAINER_THALIA_4, TRAINER_THALIA_5, MAP_ABANDONED_SHIP_ROOMS_1F),
+    [REMATCH_JESSICA_HOENN] = REMATCH(TRAINER_JESSICA_1, TRAINER_JESSICA_2, TRAINER_JESSICA_3, TRAINER_JESSICA_4, TRAINER_JESSICA_5, MAP_ROUTE121),
+    [REMATCH_WINSTON_HOENN] = REMATCH(TRAINER_WINSTON_1, TRAINER_WINSTON_2, TRAINER_WINSTON_3, TRAINER_WINSTON_4, TRAINER_WINSTON_5, MAP_ROUTE104),
+    [REMATCH_STEVE_HOENN] = REMATCH(TRAINER_STEVE_1, TRAINER_STEVE_2, TRAINER_STEVE_3, TRAINER_STEVE_4, TRAINER_STEVE_5, MAP_ROUTE114),
+    [REMATCH_TONY_HOENN] = REMATCH(TRAINER_TONY_1, TRAINER_TONY_2, TRAINER_TONY_3, TRAINER_TONY_4, TRAINER_TONY_5, MAP_ROUTE107),
+    [REMATCH_NOB_HOENN] = REMATCH(TRAINER_NOB_1, TRAINER_NOB_2, TRAINER_NOB_3, TRAINER_NOB_4, TRAINER_NOB_5, MAP_ROUTE115),
+    [REMATCH_KOJI_HOENN] = REMATCH(TRAINER_KOJI_1, TRAINER_KOJI_2, TRAINER_KOJI_3, TRAINER_KOJI_4, TRAINER_KOJI_5, MAP_ROUTE127),
+    [REMATCH_FERNANDO_HOENN] = REMATCH(TRAINER_FERNANDO_1, TRAINER_FERNANDO_2, TRAINER_FERNANDO_3, TRAINER_FERNANDO_4, TRAINER_FERNANDO_5, MAP_ROUTE123),
+    [REMATCH_DALTON_HOENN] = REMATCH(TRAINER_DALTON_1, TRAINER_DALTON_2, TRAINER_DALTON_3, TRAINER_DALTON_4, TRAINER_DALTON_5, MAP_ROUTE118),
+    [REMATCH_BERNIE_HOENN] = REMATCH(TRAINER_BERNIE_1, TRAINER_BERNIE_2, TRAINER_BERNIE_3, TRAINER_BERNIE_4, TRAINER_BERNIE_5, MAP_ROUTE114),
+    [REMATCH_ETHAN_HOENN] = REMATCH(TRAINER_ETHAN_1, TRAINER_ETHAN_2, TRAINER_ETHAN_3, TRAINER_ETHAN_4, TRAINER_ETHAN_5, MAP_JAGGED_PASS),
+    [REMATCH_JOHN_AND_JAY_HOENN] = REMATCH(TRAINER_JOHN_AND_JAY_1, TRAINER_JOHN_AND_JAY_2, TRAINER_JOHN_AND_JAY_3, TRAINER_JOHN_AND_JAY_4, TRAINER_JOHN_AND_JAY_5, MAP_METEOR_FALLS_1F_2R),
+    [REMATCH_JEFFREY_HOENN] = REMATCH(TRAINER_JEFFREY_1, TRAINER_JEFFREY_2, TRAINER_JEFFREY_3, TRAINER_JEFFREY_4, TRAINER_JEFFREY_5, MAP_ROUTE120),
+    [REMATCH_CAMERON_HOENN] = REMATCH(TRAINER_CAMERON_1, TRAINER_CAMERON_2, TRAINER_CAMERON_3, TRAINER_CAMERON_4, TRAINER_CAMERON_5, MAP_ROUTE123),
+    [REMATCH_JACKI_HOENN] = REMATCH(TRAINER_JACKI_1, TRAINER_JACKI_2, TRAINER_JACKI_3, TRAINER_JACKI_4, TRAINER_JACKI_5, MAP_ROUTE123),
+    [REMATCH_WALTER_HOENN] = REMATCH(TRAINER_WALTER_1, TRAINER_WALTER_2, TRAINER_WALTER_3, TRAINER_WALTER_4, TRAINER_WALTER_5, MAP_ROUTE121),
+    [REMATCH_KAREN_HOENN] = REMATCH(TRAINER_KAREN_1, TRAINER_KAREN_2, TRAINER_KAREN_3, TRAINER_KAREN_4, TRAINER_KAREN_5, MAP_ROUTE116),
+#endif
 };
 #else
 const struct RematchTrainer gRematchTable[REMATCH_TABLE_ENTRIES] =
@@ -2391,6 +2460,16 @@ const u8 *BattleSetup_GetTrainerPostBattleScript(void)
     }
     else
     {
+#if IS_WAYFARER
+        // A win against a contact without a registered number offers it, unless the trainer's own after-battle script
+        // does (its first win at home). A wanderer runs no such script: this one asks in its place.
+        if (PhoneOffer_IsDue(TRAINER_BATTLE_PARAM.opponentA)
+         && (TRAINER_BATTLE_PARAM.battleScriptRetAddrA == NULL || DailyTrainers_NotedRotating(0)))
+        {
+            gWhichTrainerToFaceAfterBattle = 0;
+            return PhoneOffer_EventScript_AfterBattle;
+        }
+#endif
         // A wanderer runs no one-time after-battle script (phone registration, say): it only speaks.
         if (TRAINER_BATTLE_PARAM.battleScriptRetAddrA != NULL
 #if IS_WAYFARER
@@ -2594,7 +2673,7 @@ s32 TrainerIdToRematchTableId(const struct RematchTrainer *table, u16 trainerId)
 // This applies to the Elite Four and Victory Road Wally (if he's not been defeated yet)
 static inline bool32 IsRematchForbidden(s32 rematchTableId)
 {
-    if (rematchTableId >= REMATCH_ELITE_FOUR_ENTRIES)
+    if (REMATCH_IS_ELITE_FOUR(rematchTableId))
         return TRUE;
     else if (rematchTableId == REMATCH_WALLY_VR)
         return !FlagGet(FLAG_DEFEATED_WALLY_VICTORY_ROAD);
@@ -2628,7 +2707,7 @@ static inline bool32 DoesCurrentMapMatchRematchTrainerMap(s32 i, const struct Re
 
 bool32 TrainerIsMatchCallRegistered(s32 i)
 {
-    return FlagGet(TRAINER_REGISTERED_FLAGS_START + i);
+    return FlagGet(PhoneContact_RegisteredFlag(i));
 }
 
 #if FREE_MATCH_CALL == FALSE
@@ -2636,11 +2715,16 @@ static bool32 UpdateRandomTrainerRematches(const struct RematchTrainer *table, u
 {
     s32 i;
 
+#if !IS_WAYFARER
+    // Vs. Seeker is retired in Wayfarer and never suppresses step-based rematches.
     if (CheckBagHasItem(ITEM_VS_SEEKER, 1) && I_VS_SEEKER_CHARGING != 0)
         return FALSE;
+#endif
 
-    for (i = 0; i < REMATCH_SPECIAL_TRAINER_START; i++)
+    for (i = 0; i < REMATCH_TABLE_ENTRIES; i++)
     {
+        if (!REMATCH_IS_NORMAL(i) || table[i].trainerIds[0] == TRAINER_NONE)
+            continue;
         if (!DoesCurrentMapMatchRematchTrainerMap(i,table,mapGroup,mapNum) || IsRematchForbidden(i))
             continue; // Only check permitted trainers within the current map.
 
@@ -2727,7 +2811,7 @@ static bool8 IsTrainerReadyForRematch_(const struct RematchTrainer *table, u16 t
     return TRUE;
 }
 
-#if IS_HNS
+#if IS_HNS && !IS_WAYFARER
 // HnS rematch teams climb steeply between stages (Joey's Rattata runs 27 -> 30 -> 40 -> 65),
 // so an ungated rematch can be dozens of levels above the player's party the moment the
 // previous stage is beaten. Gate the stage the player is offered on badge count: a stage is
@@ -2809,7 +2893,7 @@ static s32 GetMaxRematchStageForBadges(const struct RematchTrainer *trainerEntry
 
     return maxStage;
 }
-#endif // IS_HNS
+#endif // IS_HNS && !IS_WAYFARER
 
 u16 GetRematchTrainerIdFromTable(const struct RematchTrainer *table, u16 firstBattleTrainerId)
 {
@@ -2822,7 +2906,7 @@ u16 GetRematchTrainerIdFromTable(const struct RematchTrainer *table, u16 firstBa
         return FALSE;
 
     trainerEntry = &table[tableId];
-#if IS_HNS
+#if IS_HNS && !IS_WAYFARER
     maxStage = GetMaxRematchStageForBadges(trainerEntry);
 #endif
     for (i = 1; i <= maxStage; i++)
@@ -2847,6 +2931,16 @@ static u16 GetLastBeatenRematchTrainerIdFromTable(const struct RematchTrainer *t
         return FALSE;
 
     trainerEntry = &table[tableId];
+#if IS_WAYFARER
+    // The highest team fought. A trainer without a registered number is fought at the team its rating unlocks, which
+    // can skip the ones between.
+    for (i = REMATCHES_COUNT - 1; i > 0; i--)
+    {
+        if (trainerEntry->trainerIds[i] != 0 && HasTrainerBeenFought(trainerEntry->trainerIds[i]))
+            return trainerEntry->trainerIds[i];
+    }
+    return trainerEntry->trainerIds[0];
+#else
     for (i = 1; i < REMATCHES_COUNT; i++)
     {
         if (trainerEntry->trainerIds[i] == 0) // previous entry was this trainer's last one
@@ -2856,6 +2950,7 @@ static u16 GetLastBeatenRematchTrainerIdFromTable(const struct RematchTrainer *t
     }
 
     return trainerEntry->trainerIds[REMATCHES_COUNT - 1]; // already beaten at max stage
+#endif
 }
 
 static void ClearTrainerWantRematchState(const struct RematchTrainer *table, u16 firstBattleTrainerId)
@@ -2882,6 +2977,7 @@ void ClearCurrentTrainerWantRematchVsSeeker(void)
 #endif //FREE_MATCH_CALL
 }
 
+#if !IS_WAYFARER
 static u32 GetTrainerMatchCallFlag(u32 trainerId)
 {
     s32 i;
@@ -2889,20 +2985,26 @@ static u32 GetTrainerMatchCallFlag(u32 trainerId)
     for (i = 0; i < REMATCH_TABLE_ENTRIES; i++)
     {
         if (gRematchTable[i].trainerIds[0] == trainerId)
-            return TRAINER_REGISTERED_FLAGS_START + i;
+            return PhoneContact_RegisteredFlag(i);
     }
 
     return 0xFFFF;
 }
+#endif
 
+// Wayfarer offers the number instead of registering it (phone-rematches.md, Getting a number): the trainer's own script
+// asks after the first win, and the shared after-battle script (PhoneOffer_EventScript_AfterBattle) asks after a win
+// against a wanderer.
 static void RegisterTrainerInMatchCall(void)
 {
+#if !IS_WAYFARER
     if (FlagGet(FLAG_HAS_MATCH_CALL))
     {
         u32 matchCallFlagId = GetTrainerMatchCallFlag(TRAINER_BATTLE_PARAM.opponentA);
         if (matchCallFlagId != 0xFFFF)
             FlagSet(matchCallFlagId);
     }
+#endif
 }
 
 static bool8 WasSecondRematchWon(const struct RematchTrainer *table, u16 firstBattleTrainerId)
@@ -2949,8 +3051,10 @@ void IncrementRematchStepCounter(void)
     if (!HasEnoughBadgesForRematch())
         return;
 
+#if !IS_WAYFARER
     if (IsVsSeekerEnabled())
         return;
+#endif
 
     if (gSaveBlock1Ptr->trainerRematchStepCounter >= STEP_COUNTER_MAX)
         gSaveBlock1Ptr->trainerRematchStepCounter = STEP_COUNTER_MAX;
@@ -2989,6 +3093,11 @@ bool32 IsRematchTrainerIn(u16 mapGroup, u16 mapNum)
 static u16 GetRematchTrainerId(u16 trainerId)
 {
 #if IS_WAYFARER
+    // Every contact's next team follows the higher of the teams fought and the teams its rating unlocks.
+    u8 contact = DailyContacts_IndexOf(trainerId);
+
+    if (contact != DAILY_NO_CONTACT)
+        return PhoneContact_NextTeam(contact);
     if (WayfarerCoastRematchHasFamily(trainerId))
         return WayfarerCoastRematchGetOpponent(trainerId);
     if (WayfarerSeviiRematchHasFamily(trainerId))

@@ -2649,6 +2649,43 @@ void TrySetPlayerIconBlink(void)
 #undef sVisible
 #undef sTimer
 
+#if IS_WAYFARER
+#define PHONE_PLACE_NAME_WIDTH 16
+// The place name of a map in any region, whichever region the player is in now (GetMapName reads the region map of the
+// player's current map). The phone names the place a contact stands in, and that can be in another region.
+u8 *WayfarerGetPlaceNameOfMap(u8 *dest, u8 mapGroup, u8 mapNum)
+{
+    mapsec_u16_t mapSecId = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum)->regionMapSectionId;
+    const u8 *name = NULL;
+
+    if (WayfarerIsMapHoennSource(mapGroup, mapNum))
+    {
+        if (mapSecId < WAYFARER_HOENN_MAPSEC_NONE)
+            name = sWayfarerHoennRegionMapEntries[mapSecId].name;
+    }
+    else if (mapSecId < MAPSEC_NONE)
+    {
+        name = gRegionMapEntries[mapSecId].name;
+    }
+    if (name == NULL)
+    {
+        *dest = EOS;
+        return dest;
+    }
+    // The call texts leave 16 characters for the place; a longer name ("OLIVINE LIGHTHOUSE") drops its first word.
+    if (StringLength(name) > PHONE_PLACE_NAME_WIDTH)
+    {
+        const u8 *space = name;
+
+        while (*space != EOS && *space != CHAR_SPACE)
+            space++;
+        if (*space == CHAR_SPACE)
+            name = space + 1;
+    }
+    return StringCopy(dest, name);
+}
+#endif
+
 u8 *GetMapName(u8 *dest, mapsec_u16_t regionMapId, u16 padLength)
 {
     u8 *str;

@@ -92,10 +92,54 @@ enum {
     REMATCH_GLACIA,
     REMATCH_DRAKE,
     REMATCH_WALLACE,
+#if IS_WAYFARER
+    // Wayfarer's Hoenn contacts whose Emerald names HNS reuses for other people (indexes 0-27). They are appended past
+    // the Elite Four rows and are normal trainers; see REMATCH_APPENDED_START.
+    REMATCH_ROSE_HOENN,
+    REMATCH_ANDRES_HOENN,
+    REMATCH_DUSTY_HOENN,
+    REMATCH_LOLA_HOENN,
+    REMATCH_RICKY_HOENN,
+    REMATCH_LILA_AND_ROY_HOENN,
+    REMATCH_CRISTIN_HOENN,
+    REMATCH_BROOKE_HOENN,
+    REMATCH_WILTON_HOENN,
+    REMATCH_VALERIE_HOENN,
+    REMATCH_CINDY_HOENN,
+    REMATCH_THALIA_HOENN,
+    REMATCH_JESSICA_HOENN,
+    REMATCH_WINSTON_HOENN,
+    REMATCH_STEVE_HOENN,
+    REMATCH_TONY_HOENN,
+    REMATCH_NOB_HOENN,
+    REMATCH_KOJI_HOENN,
+    REMATCH_FERNANDO_HOENN,
+    REMATCH_DALTON_HOENN,
+    REMATCH_BERNIE_HOENN,
+    REMATCH_ETHAN_HOENN,
+    REMATCH_JOHN_AND_JAY_HOENN,
+    REMATCH_JEFFREY_HOENN,
+    REMATCH_CAMERON_HOENN,
+    REMATCH_JACKI_HOENN,
+    REMATCH_WALTER_HOENN,
+    REMATCH_KAREN_HOENN,
+#endif
     REMATCH_TABLE_ENTRIES // The total number of rematch entries. Must be last in enum
 };
 
 #define REMATCH_SPECIAL_TRAINER_START   REMATCH_WALLY_VR
 #define REMATCH_ELITE_FOUR_ENTRIES      REMATCH_SIDNEY
+
+// Wayfarer appends 28 normal Hoenn trainers after the Elite Four rows (indexes 90-117). Elsewhere the range is empty.
+#if IS_WAYFARER
+#define REMATCH_APPENDED_START          REMATCH_ROSE_HOENN
+#else
+#define REMATCH_APPENDED_START          REMATCH_TABLE_ENTRIES
+#endif
+// The rows that are ordinary trainers (not Wally, a gym leader or the Elite Four): everything before the special rows
+// and the appended range. REMATCH_NORMAL_ENTRIES is how many there are.
+#define REMATCH_IS_NORMAL(i)            ((i) < REMATCH_SPECIAL_TRAINER_START || ((i) >= REMATCH_APPENDED_START && (i) < REMATCH_TABLE_ENTRIES))
+#define REMATCH_IS_ELITE_FOUR(i)        ((i) >= REMATCH_ELITE_FOUR_ENTRIES && (i) < REMATCH_APPENDED_START)
+#define REMATCH_NORMAL_ENTRIES          (REMATCH_SPECIAL_TRAINER_START + REMATCH_TABLE_ENTRIES - REMATCH_APPENDED_START)
 
 #endif // GUARD_REMATCHES_H

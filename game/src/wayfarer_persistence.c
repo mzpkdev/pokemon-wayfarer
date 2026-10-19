@@ -489,6 +489,11 @@ void WayfarerUpdateHnsRegionContextForMap(s16 mapGroup, s16 mapNum)
         WayfarerSetSavedCurrentRegion(explicitRegion);
 }
 
+bool8 WayfarerIsMapHoennSource(s16 mapGroup, s16 mapNum)
+{
+    return IsWayfarerMapHoennSource(mapGroup, mapNum);
+}
+
 bool8 WayfarerIsCurrentMapHoennSource(void)
 {
     return IsWayfarerMapHoennSource(gSaveBlock1Ptr->location.mapGroup,

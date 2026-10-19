@@ -27,5 +27,11 @@ u32 GetTrainerRematchStepCounter(void);
 void SetTrainerRematchStepCounter(u32 value);
 bool32 HnsUpdateRouteStepCounter(void);
 bool8 MatchCall_HnsTrainerHasGift(u16 trainerId);
+bool8 MatchCall_HnsRollGift(u16 trainerId, u32 giftRoll, u32 itemRoll);
+bool8 MatchCall_ContactHasTexts(u8 contact);
+
+#if TESTING || defined(E2E_TESTING)
+extern u16 gMatchCallDebugContact;
+#endif
 
 #endif //GUARD_MATCH_CALL_H

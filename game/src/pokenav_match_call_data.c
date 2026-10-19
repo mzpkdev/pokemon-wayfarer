@@ -7,6 +7,8 @@
 #include "gym_leader_rematch.h"
 #include "match_call.h"
 #include "pokenav.h"
+#include "wayfarer_daily_slots.h"
+#include "wayfarer_phone.h"
 #include "strings.h"
 #include "constants/region_map_sections.h"
 #include "constants/trainers.h"
@@ -1253,8 +1255,13 @@ static u32 MatchCallGetFunctionIndex(match_call_t matchCall)
     }
 }
 
+// A contact's first trainer: a rematch table row, or (Wayfarer) a Sevii or coast family after the table's rows.
 u32 GetTrainerIdxByRematchIdx(u32 rematchIdx)
 {
+#if IS_WAYFARER
+    if (rematchIdx >= REMATCH_TABLE_ENTRIES)
+        return DailyContacts_FirstTrainer(rematchIdx);
+#endif
     return gRematchTable[rematchIdx].trainerIds[0];
 }
 
@@ -1383,7 +1390,7 @@ static bool32 MatchCall_IsRematchable_NPC(match_call_t matchCall)
 static bool32 MatchCall_IsRematchable_Trainer(match_call_t matchCall)
 {
 #if FREE_MATCH_CALL == FALSE
-    if (matchCall.trainer->rematchTableIdx >= REMATCH_ELITE_FOUR_ENTRIES)
+    if (REMATCH_IS_ELITE_FOUR(matchCall.trainer->rematchTableIdx))
         return FALSE;
     return gSaveBlock1Ptr->trainerRematches[matchCall.trainer->rematchTableIdx] ? TRUE : FALSE;
 #else
@@ -1690,9 +1697,12 @@ bool32 MatchCall_HasRematchId(u32 idx)
     return FALSE;
 }
 
+// Wayfarer registers a contact only when the player accepts its offer (Std_OfferMatchCall).
 void SetMatchCallRegisteredFlag(void)
 {
+#if !IS_WAYFARER
     int index = GetRematchIdxByTrainerIdx(gSpecialVar_0x8004);
     if (index >= 0)
-        FlagSet(TRAINER_REGISTERED_FLAGS_START + index);
+        FlagSet(PhoneContact_RegisteredFlag(index));
+#endif
 }

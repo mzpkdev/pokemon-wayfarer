@@ -93,6 +93,13 @@ u16 WayfarerCoastRematchFamilyFirst(s32 family)
     return sWayfarerCoastRematchFamilies[family].trainerIds[0];
 }
 
+// A family's authored teams in order (the unused tail is TRAINER_NONE) and how many slots the array has.
+const u16 *WayfarerCoastRematchFamilyTeams(s32 family, u8 *slots)
+{
+    *slots = WAYFARER_COAST_REMATCH_STAGES;
+    return sWayfarerCoastRematchFamilies[family].trainerIds;
+}
+
 bool8 WayfarerCoastRematchFamilyIsReady(s32 family)
 {
     return CoastFlagGet(WAYFARER_COAST_REMATCH_PENDING_SLOT_FIRST + family);
