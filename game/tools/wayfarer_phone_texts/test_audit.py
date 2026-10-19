@@ -59,12 +59,25 @@ class Repository(unittest.TestCase):
         for label, text in authored.items():
             self.assertEqual(compiled.get(label), text, label)
 
+    def test_a_contact_without_a_place_is_reported(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for relative in ('data/text/match_call_hns.inc', 'data/text/match_call_hoenn.inc', 'data/text/match_call_sevii_coast.inc',
+                             'src/data/wayfarer_phone_hoenn.h', 'src/data/wayfarer_phone_sevii.h', 'src/data/wayfarer_phone_coast.h',
+                             'src/match_call.c', 'src/battle_setup.c', 'src/data/wayfarer_sevii_rematches.h', 'src/wayfarer_coast_trainers.c',
+                             'src/data/trainer_slots/slots.h'):
+                (root / relative).parent.mkdir(parents=True, exist_ok=True)
+                (root / relative).write_text((A.ROOT / relative).read_text())
+            slots = root / 'src/data/trainer_slots/slots.h'
+            slots.write_text(slots.read_text().replace('{ TRAINER_TULLY_HNS, MAP_GROUP', '{ TRAINER_NOT_TULLY, MAP_GROUP'))
+            self.assertIn('TRAINER_TULLY_HNS is a phone contact with neither a daily slot nor a fixed home', A.audit(root))
+
     def test_a_missing_text_is_reported(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             for relative in ('data/text/match_call_hns.inc', 'data/text/match_call_hoenn.inc', 'data/text/match_call_sevii_coast.inc',
                              'src/data/wayfarer_phone_hoenn.h', 'src/data/wayfarer_phone_sevii.h', 'src/data/wayfarer_phone_coast.h',
-                             'src/match_call.c', 'src/battle_setup.c', 'src/data/wayfarer_sevii_rematches.h', 'src/wayfarer_coast_trainers.c'):
+                             'src/match_call.c', 'src/battle_setup.c', 'src/data/trainer_slots/slots.h', 'src/data/wayfarer_sevii_rematches.h', 'src/wayfarer_coast_trainers.c'):
                 (root / relative).parent.mkdir(parents=True, exist_ok=True)
                 (root / relative).write_text((A.ROOT / relative).read_text())
             hoenn = root / 'data/text/match_call_hoenn.inc'
@@ -76,7 +89,7 @@ class Repository(unittest.TestCase):
             root = Path(directory)
             for relative in ('data/text/match_call_hns.inc', 'data/text/match_call_hoenn.inc', 'data/text/match_call_sevii_coast.inc',
                              'src/data/wayfarer_phone_hoenn.h', 'src/data/wayfarer_phone_sevii.h', 'src/data/wayfarer_phone_coast.h',
-                             'src/match_call.c', 'src/battle_setup.c', 'src/data/wayfarer_sevii_rematches.h', 'src/wayfarer_coast_trainers.c'):
+                             'src/match_call.c', 'src/battle_setup.c', 'src/data/trainer_slots/slots.h', 'src/data/wayfarer_sevii_rematches.h', 'src/wayfarer_coast_trainers.c'):
                 (root / relative).parent.mkdir(parents=True, exist_ok=True)
                 (root / relative).write_text((A.ROOT / relative).read_text())
             hns = root / 'data/text/match_call_hns.inc'

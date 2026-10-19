@@ -23,10 +23,12 @@
 #include "constants/characters.h"
 #include "constants/flags.h"
 #include "constants/game_stat.h"
+#include "constants/items.h"
 #include "constants/maps.h"
 #include "constants/opponents.h"
 #include "constants/region_map_sections.h"
 #include "constants/vars.h"
+#include "constants/wayfarer_persistence.h"
 
 #if IS_WAYFARER
 
@@ -165,6 +167,12 @@ TEST("Phone: the contacts are the normal rematch rows, the Sevii families that c
         // Every contact is found again by its first trainer and has every text a call can ask for.
         EXPECT_EQ(DailyContacts_IndexOf(DailyContacts_FirstTrainer(contact)), contact);
         EXPECT(MatchCall_ContactHasTexts(contact));
+        // Every contact stands somewhere (a daily slot or a fixed home), so a call can name its place.
+        {
+            u8 homeGroup, homeNum, homeLocal;
+
+            EXPECT(DailyTrainers_WhereIsTrainerToday(DailyContacts_FirstTrainer(contact), &homeGroup, &homeNum, &homeLocal));
+        }
     }
     // HNS's 39 (Nicole is compiled out) and Hoenn's 64; Sevii's 32 and the coast's 9.
     EXPECT_EQ(table, 39 + 64);
@@ -433,7 +441,14 @@ TEST("Phone: a trainer without a registered number unlocks teams 2 to 5 at Train
     EXPECT_EQ(DailyTrainers_LatestTeam(TRAINER_WADE_HNS), ids[3]);
     FightUpTo(five, 1);
     FlagSet(PhoneContact_RegisteredFlag(five));
+    // Registering never lowers it: the rating's team (tier 3) is further on than the latest fought (tier 1).
+    EXPECT_EQ(DailyTrainers_LatestTeam(TRAINER_WADE_HNS), ids[3]);
+    FightUpTo(five, 4);
+    EXPECT_EQ(DailyTrainers_LatestTeam(TRAINER_WADE_HNS), ids[4]);
+    SetTrainerRating(0);
+    FightUpTo(five, 1);
     EXPECT_EQ(DailyTrainers_LatestTeam(TRAINER_WADE_HNS), ids[1]);
+    SetTrainerRating(120);
     // A contact with a single team brings it whatever the rating.
     SetTrainerRating(160);
     EXPECT_EQ(PhoneContact_RatingTier(ContactOf(TRAINER_ROSE_1)), 4);
@@ -872,6 +887,73 @@ TEST("Phone: a win against an unregistered contact is followed by the number off
     FlagSet(FLAG_HAS_MATCH_CALL);
     EXPECT(!PhoneOffer_IsDue(TRAINER_FALKNER_1_HNS));
     TRAINER_BATTLE_PARAM.battleScriptRetAddrA = NULL;
+
+    RestoreSnapshot(snapshot);
+}
+
+TEST("Phone: a contact that never wanders asks again when talked to, once, then its own script goes on")
+{
+    struct Snapshot *snapshot = TakeSnapshot();
+    u8 lao = ContactOf(TRAINER_LAO_1), joey = ContactOf(TRAINER_JOEY_HNS), tully = ContactOf(TRAINER_TULLY_HNS), wade = ContactOf(TRAINER_WADE_HNS);
+    static const u8 sResume[] = { 0 };
+    struct ScriptContext ctx;
+
+    ClearPhoneState();
+    FlagSet(FLAG_HAS_MATCH_CALL);
+    // Fixed homes: Joey, Lao, Shelby, Sawyer and Tully. A contact in a daily slot gets a later win instead.
+    EXPECT(DailyContacts_IsFixed(lao));
+    EXPECT(DailyContacts_IsFixed(joey));
+    EXPECT(DailyContacts_IsFixed(tully));
+    EXPECT(!DailyContacts_IsFixed(wade));
+    EXPECT(PhoneOffer_IsDueOnTalk(TRAINER_LAO_1));
+    EXPECT(PhoneOffer_IsDueOnTalk(TRAINER_TULLY_HNS));
+    EXPECT(!PhoneOffer_IsDueOnTalk(TRAINER_WADE_HNS));
+    EXPECT(!PhoneOffer_IsDueOnTalk(TRAINER_FALKNER_1_HNS));
+    // Declined, it asks again on the next talk; the offer then hands over to the script that was running.
+    TRAINER_BATTLE_PARAM.opponentA = TRAINER_LAO_1;
+    PhoneOffer_StartInteraction();
+    EXPECT_EQ(PhoneOffer_BeginTalkOffer(sResume), PhoneOffer_EventScript_TalkAgain);
+    gSpecialVar_0x8000 = TRAINER_LAO_1;
+    EXPECT_EQ(PhoneOffer_CanOffer(), TRUE);
+    ctx.scriptPtr = NULL;
+    PhoneOffer_Resume(&ctx);
+    EXPECT_EQ(ctx.scriptPtr, sResume);
+    // The script's own offer, later in the same interaction, does not ask a second time.
+    EXPECT_EQ(PhoneOffer_CanOffer(), FALSE);
+    PhoneOffer_StartInteraction();
+    EXPECT_EQ(PhoneOffer_CanOffer(), TRUE);
+    PhoneOffer_Accept();
+    EXPECT(!PhoneOffer_IsDueOnTalk(TRAINER_LAO_1));
+    // Without the Pokégear it never asks.
+    FlagClear(FLAG_HAS_MATCH_CALL);
+    EXPECT(!PhoneOffer_IsDueOnTalk(TRAINER_TULLY_HNS));
+
+    RestoreSnapshot(snapshot);
+}
+
+TEST("Phone: Hoenn scripts and the phone share one Pokégear flag, and a gift holder is not rolled for again")
+{
+    struct Snapshot *snapshot = TakeSnapshot();
+    u8 wade = ContactOf(TRAINER_WADE_HNS);
+
+    FlagClear(FLAG_HAS_MATCH_CALL);
+    EXPECT(!FlagGet(HOENN_FLAG_ID(0x12F)));
+    FlagSet(HOENN_FLAG_ID(0x12F));
+    EXPECT(FlagGet(FLAG_HAS_MATCH_CALL));
+    FlagClear(FLAG_HAS_MATCH_CALL);
+    EXPECT(!FlagGet(HOENN_FLAG_ID(0x12F)));
+
+    // A contact that already holds a gift is not picked by the step event again.
+    ClearPhoneState();
+    StartDay(9000);
+    MeetAndRegister(wade);
+    StandWith(wade);
+    FlagSet(FLAG_WADE_HAS_ITEM_HNS);
+    VarSet(VAR_WADE_ITEM_HNS, ITEM_NUGGET);
+    PhoneReadiness_OnRegionSteps();
+    EXPECT(!PhoneContact_IsReady(wade));
+    EXPECT_EQ(VarGet(VAR_WADE_ITEM_HNS), ITEM_NUGGET);
+    FlagClear(FLAG_WADE_HAS_ITEM_HNS);
 
     RestoreSnapshot(snapshot);
 }

@@ -12,6 +12,8 @@
 #include "constants/flags.h"
 #include "constants/rematches.h"
 
+struct ScriptContext;
+
 #if IS_WAYFARER
 
 enum PhoneRegion
@@ -48,10 +50,15 @@ void PhoneReadiness_OnRegionSteps(void);
 
 // The number offer after a win.
 bool8 PhoneOffer_IsDue(u16 trainerId);
+bool8 PhoneOffer_IsDueOnTalk(u16 trainerId);
+const u8 *PhoneOffer_BeginTalkOffer(const u8 *resume);
+void PhoneOffer_Resume(struct ScriptContext *ctx);
+void PhoneOffer_StartInteraction(void);
 u32 PhoneOffer_CanOffer(void);
 void PhoneOffer_BufferTarget(void);
 void PhoneOffer_Accept(void);
 extern const u8 PhoneOffer_EventScript_AfterBattle[];
+extern const u8 PhoneOffer_EventScript_TalkAgain[];
 
 #else
 

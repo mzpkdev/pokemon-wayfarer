@@ -1555,6 +1555,7 @@ static const struct WorldTrainerFixedHome sWorldTrainerFixedHomes[] =
     { TRAINER_LAO_1, MAP_GROUP(MAP_ROUTE113), MAP_NUM(MAP_ROUTE113), 8 }, // Route113
     { TRAINER_SHELBY_1, MAP_GROUP(MAP_MT_CHIMNEY), MAP_NUM(MAP_MT_CHIMNEY), 25 }, // MtChimney
     { TRAINER_SAWYER_1, MAP_GROUP(MAP_MT_CHIMNEY), MAP_NUM(MAP_MT_CHIMNEY), 30 }, // MtChimney
+    { TRAINER_TULLY_HNS, MAP_GROUP(MAP_ROUTE42_HNS), MAP_NUM(MAP_ROUTE42_HNS), 4 }, // Route42_hns
 };
 
 // Contact index of each Sevii rematch family (255: not a phone contact).

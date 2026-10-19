@@ -236,6 +236,21 @@ Resolutions made while implementing; the rules above already reflect them.
 - **Number offer.** `SetMatchCallRegisteredFlag` no longer registers; `STD_REGISTER_MATCH_CALL` asks (needs the Pokégear),
   so the scripts' `register_matchcall` keeps their flavour text and then offers. A win with no after-battle script of the
   trainer's own (a wanderer, or a Sevii or coast contact) runs `PhoneOffer_EventScript_AfterBattle`.
+- **Asking again.** A contact that wanders is asked again after a later win. A contact with no daily slot (Joey, Tully,
+  Lao, Shelby, Sawyer) never gets one, so it asks again when talked to: the talk path (`gotopostbattlescript`) runs
+  `PhoneOffer_EventScript_TalkAgain` before the rest of its script, and the script's own offer in that interaction is
+  skipped. In a two-trainer battle both trainers are offered in turn.
+- **Pokégear.** Every offer is gated on the HNS `FLAG_HAS_MATCH_CALL`; Emerald's flag (`0x612F`, set by the Rustboro
+  Devon scene) is the same flag in Wayfarer.
+- **Readiness sources.** The 255 region steps are the only one: entering a map no longer readies a contact
+  (`TryUpdateRandomTrainerRematches` returns at once), and a contact already holding a gift is not picked again.
+- **Wanderer teams.** A registered, not-ready wanderer brings the higher of its latest fought team and the team its rating
+  unlocks, so registering never lowers its everyday team (the same for Sevii and coast families).
+- **Talk-only contacts.** Tully has no sight line, so the slot generator makes no slot for him; it records him as a
+  fixed home (`TRAINER_TYPE_NONE` rematch leads), and the phone text audit fails any contact with neither a slot nor a
+  fixed home.
+- **Contact list.** Each entry's place is named from its home map (`WayfarerGetPlaceNameOfMap`), and the ready Poké
+  Ball also shows for the Sevii and coast contacts.
 - **Save.** `SAVE_VERSION` is 15. E2E and test builds can force the next call with `gMatchCallDebugContact`.
 - **Rematch tooling.** The Hoenn rows are compiled, so `tools/trainer_scaling/reach.py` reads them from the Wayfarer table.
 

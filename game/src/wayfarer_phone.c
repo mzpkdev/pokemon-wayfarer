@@ -14,6 +14,8 @@
 #include "match_call.h"
 #include "overworld.h"
 #include "regions.h"
+#include "script.h"
+#include "trainer_see.h"
 #include "trainer_rating.h"
 #include "wayfarer_persistence.h"
 #include "wayfarer_coast_trainers.h"
@@ -139,13 +141,17 @@ u8 PhoneContact_RatingTier(u8 contact)
     return tier < count ? tier : count - 1;
 }
 
-// The team a wanderer with a registered number brings when it is not ready: the latest it has fought.
+// The team a wanderer with a registered number brings when it is not ready: the latest it has fought, or the team the
+// rating unlocks if that is further on, so registering never lowers its everyday team.
 u16 PhoneContact_LatestTeam(u8 contact)
 {
-    u8 count;
+    u8 count, tier;
     const u16 *ids = DailyContacts_Teams(contact, &count);
 
-    return ids == NULL ? TRAINER_NONE : ids[PhoneContact_FoughtTier(contact)];
+    if (ids == NULL)
+        return TRAINER_NONE;
+    tier = PhoneContact_FoughtTier(contact);
+    return ids[max(tier, PhoneContact_RatingTier(contact))];
 }
 
 // A ready contact's next battle: the team after the higher of the highest fought and the highest the rating unlocks.
@@ -223,6 +229,7 @@ static bool8 IsReadinessCandidate(u8 contact, enum PhoneRegion region)
     return PhoneContact_IsRegistered(contact)
         && HasTrainerBeenFought(DailyContacts_FirstTrainer(contact))
         && !PhoneContact_IsReady(contact)
+        && !MatchCall_HnsTrainerHasGift(DailyContacts_FirstTrainer(contact))   // a gift is not rolled again
         && PhoneContact_Region(contact) == region;
 }
 
@@ -260,6 +267,40 @@ void PhoneReadiness_OnRegionSteps(void)
 }
 
 // ---------- the number offer ----------
+// Where the trainer's own script goes on after a talk-again offer, and the contact whose number was just offered in this
+// interaction (so the script's own offer does not ask a second time).
+static EWRAM_DATA const u8 *sTalkOfferResume = NULL;
+static EWRAM_DATA u8 sOfferedContactPlusOne = 0;
+
+void PhoneOffer_StartInteraction(void)
+{
+    sOfferedContactPlusOne = 0;
+}
+
+// A contact with no daily slot never gets a later win, so talking to it again is how it asks again.
+bool8 PhoneOffer_IsDueOnTalk(u16 trainerId)
+{
+    u8 contact = DailyContacts_IndexOf(trainerId);
+
+    return PhoneOffer_IsDue(trainerId) && DailyContacts_IsFixed(contact);
+}
+
+const u8 *PhoneOffer_BeginTalkOffer(const u8 *resume)
+{
+    sTalkOfferResume = resume;
+    gWhichTrainerToFaceAfterBattle = 0;
+    return PhoneOffer_EventScript_TalkAgain;
+}
+
+// The end of the talk-again offer: carry on with the rest of the trainer's script.
+void PhoneOffer_Resume(struct ScriptContext *ctx)
+{
+    sOfferedContactPlusOne = DailyContacts_IndexOf(TRAINER_BATTLE_PARAM.opponentA) + 1;
+    if (sTalkOfferResume != NULL)
+        ctx->scriptPtr = sTalkOfferResume;
+    sTalkOfferResume = NULL;
+}
+
 // After a win against a contact without a registered number, with the Pokégear in hand.
 bool8 PhoneOffer_IsDue(u16 trainerId)
 {
@@ -271,13 +312,13 @@ bool8 PhoneOffer_IsDue(u16 trainerId)
 // For the offer script: VAR_0x8000 holds the trainer (any team) of the contact offering its number.
 u32 PhoneOffer_CanOffer(void)
 {
-    return PhoneOffer_IsDue(gSpecialVar_0x8000);
+    return PhoneOffer_IsDue(gSpecialVar_0x8000) && DailyContacts_IndexOf(gSpecialVar_0x8000) + 1 != sOfferedContactPlusOne;
 }
 
 // For the shared after-battle offer: the contact of the trainer just fought, by its first team.
 void PhoneOffer_BufferTarget(void)
 {
-    u8 contact = DailyContacts_IndexOf(TRAINER_BATTLE_PARAM.opponentA);
+    u8 contact = DailyContacts_IndexOf(gWhichTrainerToFaceAfterBattle == 1 ? TRAINER_BATTLE_PARAM.opponentB : TRAINER_BATTLE_PARAM.opponentA);
 
     gSpecialVar_0x8000 = contact == DAILY_NO_CONTACT ? TRAINER_NONE : DailyContacts_FirstTrainer(contact);
 }

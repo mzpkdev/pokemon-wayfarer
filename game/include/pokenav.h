@@ -460,6 +460,9 @@ int IsMatchCallListInitFinished(void);
 int GetNumberRegistered(void);
 struct PokenavMatchCallEntry *GetMatchCallList(void);
 mapsec_u16_t GetMatchCallMapSec(int index);
+#if IS_WAYFARER
+bool32 GetMatchCallContactPlaceName(int index, u8 *dest);
+#endif
 bool32 ShouldDrawRematchPokeballIcon(int index);
 void ClearRematchPokeballIcon(u16 windowId, u32 tileOffset);
 enum TrainerPicID GetMatchCallTrainerPic(int index);

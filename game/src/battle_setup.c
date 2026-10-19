@@ -1750,6 +1750,7 @@ static void NoteDailyTrainerBattle(void)
 const u8 *BattleSetup_ConfigureTrainerBattle(const u8 *data)
 {
 #if IS_WAYFARER
+    PhoneOffer_StartInteraction();
     NoteDailyTrainerBattle();
 #endif
 #if WAYFARER_LEAGUE_EVENTS
@@ -2437,6 +2438,12 @@ void ShowTrainerIntroSpeech(void)
 
 const u8 *BattleSetup_GetScriptAddrAfterBattle(void)
 {
+#if IS_WAYFARER
+    // Talking to a contact who never wanders again: it asks for its number if it hasn't been given, before the rest of
+    // its script. (A contact that does wander asks after a later win instead.)
+    if (sTrainerBattleEndScript != NULL && PhoneOffer_IsDueOnTalk(TRAINER_BATTLE_PARAM.opponentA))
+        return PhoneOffer_BeginTalkOffer(sTrainerBattleEndScript);
+#endif
     if (sTrainerBattleEndScript != NULL)
         return sTrainerBattleEndScript;
     else
@@ -2448,6 +2455,15 @@ const u8 *BattleSetup_GetTrainerPostBattleScript(void)
     if (sShouldCheckTrainerBScript)
     {
         sShouldCheckTrainerBScript = FALSE;
+#if IS_WAYFARER
+        // The second trainer of a two-trainer battle is offered its number the same way as the first.
+        if (PhoneOffer_IsDue(TRAINER_BATTLE_PARAM.opponentB)
+         && (TRAINER_BATTLE_PARAM.battleScriptRetAddrB == NULL || DailyTrainers_NotedRotating(1)))
+        {
+            gWhichTrainerToFaceAfterBattle = 1;
+            return PhoneOffer_EventScript_AfterBattle;
+        }
+#endif
         if (TRAINER_BATTLE_PARAM.battleScriptRetAddrB != NULL
 #if IS_WAYFARER
          && !DailyTrainers_NotedRotating(1)
@@ -3074,6 +3090,9 @@ static bool32 IsRematchStepCounterMaxed(void)
 
 void TryUpdateRandomTrainerRematches(u16 mapGroup, u16 mapNum)
 {
+    // Wayfarer's only readiness source is the region's 255 steps (PhoneReadiness_OnRegionSteps), not entering a map.
+    if (IS_WAYFARER)
+        return;
     if (IsRematchStepCounterMaxed() && UpdateRandomTrainerRematches(gRematchTable, mapGroup, mapNum) == TRUE)
         gSaveBlock1Ptr->trainerRematchStepCounter = 0;
 }

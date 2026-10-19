@@ -8,6 +8,7 @@
 #include "match_call.h"
 #include "overworld.h"
 #include "pokemon.h"
+#include "region_map.h"
 #include "pokenav.h"
 #include "sound.h"
 #include "string_util.h"
@@ -335,6 +336,21 @@ struct PokenavMatchCallEntry *GetMatchCallList(void)
     return state->matchCallEntries;
 }
 
+#if IS_WAYFARER
+// The place a contact calls home, named from its home map: section ids are only meaningful within one region.
+bool32 GetMatchCallContactPlaceName(int index, u8 *dest)
+{
+    struct Pokenav_MatchCallMenu *state = GetSubstructPtr(POKENAV_SUBSTRUCT_MATCH_CALL_MAIN);
+    u8 mapGroup, mapNum;
+
+    if (state->matchCallEntries[index].isSpecialTrainer
+     || !DailyContacts_GetHome(state->matchCallEntries[index].headerId, &mapGroup, &mapNum))
+        return FALSE;
+    WayfarerGetPlaceNameOfMap(dest, mapGroup, mapNum);
+    return TRUE;
+}
+#endif
+
 mapsec_u16_t GetMatchCallMapSec(int index)
 {
     struct Pokenav_MatchCallMenu *state = GetSubstructPtr(POKENAV_SUBSTRUCT_MATCH_CALL_MAIN);
@@ -346,12 +362,16 @@ bool32 ShouldDrawRematchPokeballIcon(int index)
 #if FREE_MATCH_CALL == FALSE
     struct Pokenav_MatchCallMenu *state = GetSubstructPtr(POKENAV_SUBSTRUCT_MATCH_CALL_MAIN);
     if (!state->matchCallEntries[index].isSpecialTrainer)
+    {
+        // A contact number: for the Sevii and coast families it reaches past REMATCH_TABLE_ENTRIES.
         index = state->matchCallEntries[index].headerId;
+    }
     else
+    {
         index = MatchCall_GetRematchTableIdx(state->matchCallEntries[index].headerId);
-
-    if (index == REMATCH_TABLE_ENTRIES)
-        return FALSE;
+        if (index == REMATCH_TABLE_ENTRIES)
+            return FALSE;
+    }
 
     return IsRematchReady(index);
 #else

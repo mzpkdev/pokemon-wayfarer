@@ -30,7 +30,14 @@ PhoneOffer_EventScript_AfterBattle::
 	waitmovement 0
 	special PhoneOffer_BufferTarget
 	callstd STD_REGISTER_MATCH_CALL
-	releaseall
+	@ Another trainer of a two-trainer battle may be next.
+	goto EventScript_TryGetTrainerScript
+
+@ Talking again to a contact that never wanders, which has not been given its number: ask, then go on with its script.
+PhoneOffer_EventScript_TalkAgain::
+	special PhoneOffer_BufferTarget
+	callstd STD_REGISTER_MATCH_CALL
+	callnative PhoneOffer_Resume
 	end
 
 gText_OfferTrainerNumber::

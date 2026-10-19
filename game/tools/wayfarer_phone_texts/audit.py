@@ -125,6 +125,14 @@ def coast_contacts(root):
     return [match.group(1) for match in re.finditer(r'\{\{(TRAINER_\w+),', source)]
 
 
+def placed_trainers(root):
+    """First trainers that have a daily slot, and those that have a fixed home (src/data/trainer_slots/slots.h)."""
+    source = read(root, 'src/data/trainer_slots/slots.h')
+    split = source.index('sWorldTrainerFixedHomes')
+    pattern = r'^\s*\{ (TRAINER_\w+), MAP_GROUP'
+    return (set(re.findall(pattern, source[:split], re.M)), set(re.findall(pattern, source[split:], re.M)))
+
+
 def audit(root=ROOT):
     errors = []
     texts = {}
@@ -174,6 +182,12 @@ def audit(root=ROOT):
         errors.append('the coast contact list is not the coast families in registry order')
     if len(coast) != 9:
         errors.append(f'{len(coast)} coast contacts, the spec has 9')
+
+    # Every contact stands somewhere: in a daily slot or at a fixed home, or its calls could never name a place.
+    slotted, fixed = placed_trainers(root)
+    firsts = set(hns_rows) | set(hoenn_rows) | set(sevii_contacts(root)) | set(coast_contacts(root))
+    for trainer in sorted(firsts - slotted - fixed):
+        errors.append(f'{trainer} is a phone contact with neither a daily slot nor a fixed home')
 
     for group, contacts in zip(GROUPS, (hoenn, sevii, coast)):
         names = [name for name, _ in contacts]

@@ -588,7 +588,8 @@ def build(root=ROOT):
     errors = []
     maps = R.load_maps(root)
     labels = R.label_index(root)
-    slots, family_of, numbers = C.collect_slots(maps, labels, root)
+    talk_only = []
+    slots, family_of, numbers = C.collect_slots(maps, labels, root, talk_only)
     units, loose = form_units(slots, errors)
     classify(units, reviewed, errors)
     flagged, resolutions = run_audit(units, labels, errors, reviewed)
@@ -600,6 +601,11 @@ def build(root=ROOT):
     daily = sorted((u for u in units if u.status == 'daily'), key=lambda u: u.index)
     fixed_homes = [u for u in units if u.status == 'not-daily' and u.policy == 'ORDINARY' and u.home in family_of
                    and family_of[u.home][0] == u.home]
+    # A talk-only rematch lead (Route 42's Tully) never sights the player, so there is no slot to rotate: it stays at home.
+    for unit in form_units([s for s in talk_only if s.home is not None], errors)[0]:
+        if unit.policy == 'ORDINARY' and unit.home in family_of and family_of[unit.home][0] == unit.home:
+            unit.status, unit.reason = 'not-daily', 'talk-only: no sight line to rotate'
+            fixed_homes.append(unit)
     per_map = Counter(u.map_const for u in daily)
     per_map_max = max(per_map.values()) if per_map else 0
     group_max = max((len(m) for m in members.values()), default=0)
