@@ -19,6 +19,7 @@
 #include <fcntl.h>
 #include <math.h>
 #include <poll.h>
+#include <dirent.h>
 #include <signal.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -35,6 +36,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include "elf.h"
+#include "output_cap.h"
 #include "worker_count.h"
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
@@ -58,6 +60,9 @@ struct Runner
     size_t output_buffer_size;
     size_t output_buffer_capacity;
     char *output_buffer;
+    size_t output_dropped;
+    size_t unparsed_size;
+    size_t unparsed_dropped;
     int passes;
     int knownFails;
     int knownFailsPassing;
@@ -436,6 +441,44 @@ static void write_report(const char *path, int exit_code, int passes, int expect
         perror("close report failed");
 }
 
+static void append_output(struct Runner *runner, const char *output, size_t size)
+{
+    if (runner->output_buffer_size + size >= runner->output_buffer_capacity)
+    {
+        runner->output_buffer_capacity *= 2;
+        if (runner->output_buffer_capacity < runner->output_buffer_size + size)
+            runner->output_buffer_capacity = runner->output_buffer_size + size;
+        runner->output_buffer = realloc(runner->output_buffer, runner->output_buffer_capacity);
+        if (!runner->output_buffer)
+        {
+            perror("realloc output_buffer failed");
+            exit(2);
+        }
+    }
+    memcpy(runner->output_buffer + runner->output_buffer_size, output, size);
+    runner->output_buffer_size += size;
+}
+
+// Notes what the cap dropped since the previous result, so it shows with the test.
+static void flush_dropped_output(int i, struct Runner *runner)
+{
+    char note[160];
+    int n;
+
+    if (runner->output_dropped)
+    {
+        n = snprintf(note, sizeof(note), "[hydra: dropped %zu bytes of test output past the %d-byte cap]\n", runner->output_dropped, HYDRA_OUTPUT_CAP);
+        append_output(runner, note, n);
+        runner->output_dropped = 0;
+    }
+    if (runner->unparsed_dropped)
+    {
+        fprintf(stdout, "[%0*d] [hydra: dropped %zu bytes of mgba output past the %d-byte cap]\n", runners_digits, i, runner->unparsed_dropped, HYDRA_OUTPUT_CAP);
+        runner->unparsed_dropped = 0;
+    }
+    runner->unparsed_size = 0;
+}
+
 static void handle_read(int i, struct Runner *runner)
 {
     char *sol = runner->input_buffer;
@@ -527,6 +570,7 @@ static void handle_read(int i, struct Runner *runner)
                     runner->fails++;
 add_to_results:
                     runner->results++;
+                    flush_dropped_output(i, runner);
                     record_result(i, runner, soc[1], soc + 2, eol - soc - 2);
                     if (!quiet_successes || soc[1] != 'P' || runner->output_buffer_size != 0)
                     {
@@ -550,26 +594,21 @@ add_to_results:
             else
             {
 buffer_output:
-                if (runner->output_buffer_size + eol - soc >= runner->output_buffer_capacity)
-                {
-                    runner->output_buffer_capacity *= 2;
-                    if (runner->output_buffer_capacity < runner->output_buffer_size + eol - soc)
-                        runner->output_buffer_capacity = runner->output_buffer_size + eol - soc;
-                    runner->output_buffer = realloc(runner->output_buffer, runner->output_buffer_capacity);
-                    if (!runner->output_buffer)
-                    {
-                        perror("realloc output_buffer failed");
-                        exit(2);
-                    }
-                }
-                memcpy(runner->output_buffer + runner->output_buffer_size, soc, eol - soc);
-                runner->output_buffer_size += eol - soc;
+                if (output_line_fits(runner->output_buffer_size, eol - soc, HYDRA_OUTPUT_CAP))
+                    append_output(runner, soc, eol - soc);
+                else
+                    runner->output_dropped += eol - soc;
             }
+        }
+        else if (output_line_fits(runner->unparsed_size, n, HYDRA_OUTPUT_CAP))
+        {
+            runner->unparsed_size += n;
+            record_diagnostic(i, "unparsed_stdout", sol, eol - sol);
+            fwrite(sol, 1, eol - sol, stdout);
         }
         else
         {
-            record_diagnostic(i, "unparsed_stdout", sol, eol - sol);
-            fwrite(sol, 1, eol - sol, stdout);
+            runner->unparsed_dropped += n;
         }
         sol += n;
         consumed += n;
@@ -579,7 +618,14 @@ buffer_output:
     memcpy(runner->input_buffer, sol, remaining);
     runner->input_buffer_size -= consumed;
 
-    if (runner->input_buffer_size == runner->input_buffer_capacity)
+    if (runner->input_buffer_size == runner->input_buffer_capacity
+     && runner->input_buffer_capacity >= HYDRA_OUTPUT_CAP)
+    {
+        // A line this long without a newline is dropped rather than grown.
+        runner->output_dropped += runner->input_buffer_size;
+        runner->input_buffer_size = 0;
+    }
+    else if (runner->input_buffer_size == runner->input_buffer_capacity)
     {
         runner->input_buffer_capacity *= 2;
         runner->input_buffer = realloc(runner->input_buffer, runner->input_buffer_capacity);
@@ -610,13 +656,55 @@ static void unlink_roms(void)
         perror("rmdir rom_dir failed");
 }
 
+// Removes ROM directories left by runs that were killed before they could clean
+// up (SIGKILL, the OOM killer): ours, named after a pid that no longer exists.
+static void remove_stale_rom_dirs(const char *tmpdir)
+{
+    DIR *dir = opendir(tmpdir);
+    struct dirent *entry;
+
+    if (dir == NULL)
+        return;
+    while ((entry = readdir(dir)) != NULL)
+    {
+        char path[FILENAME_MAX], file[FILENAME_MAX];
+        struct stat st;
+        DIR *roms;
+        struct dirent *rom;
+        pid_t pid;
+
+        if (!parse_rom_dir_pid(entry->d_name, &pid))
+            continue;
+        if (kill(pid, 0) == 0 || errno != ESRCH)
+            continue;
+        if (snprintf(path, sizeof(path), "%s/%s", tmpdir, entry->d_name) >= (int)sizeof(path))
+            continue;
+        if (lstat(path, &st) == -1 || !S_ISDIR(st.st_mode) || st.st_uid != getuid())
+            continue;
+        if ((roms = opendir(path)) == NULL)
+            continue;
+        while ((rom = readdir(roms)) != NULL)
+        {
+            if (rom->d_name[0] == '.')
+                continue;
+            if (snprintf(file, sizeof(file), "%s/%s", path, rom->d_name) < (int)sizeof(file))
+                unlink(file);
+        }
+        closedir(roms);
+        if (rmdir(path) == 0)
+            fprintf(stderr, "mgba-rom-test-hydra: removed stale %s\n", path);
+    }
+    closedir(dir);
+}
+
 static void create_rom_dir(void)
 {
     const char *tmpdir = getenv("TMPDIR");
     if (tmpdir == NULL || tmpdir[0] == '\0')
         tmpdir = "/tmp";
 
-    int n = snprintf(rom_dir, sizeof(rom_dir), "%s/mgba-rom-test-hydra-XXXXXX", tmpdir);
+    remove_stale_rom_dirs(tmpdir);
+    int n = snprintf(rom_dir, sizeof(rom_dir), "%s/" HYDRA_ROM_DIR_PREFIX "%d-XXXXXX", tmpdir, (int)getpid());
     if (n < 0 || n >= sizeof(rom_dir))
     {
         fprintf(stderr, "ROM temporary directory path is too long\n");
@@ -793,6 +881,7 @@ int main(int argc, char *argv[])
     fflush(stdout);
     atexit(unlink_roms);
     signal(SIGINT, exit2);
+    signal(SIGHUP, exit2);
     signal(SIGTERM, exit2);
     create_rom_dir();
 
