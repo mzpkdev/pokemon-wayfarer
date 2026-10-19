@@ -1021,6 +1021,11 @@ static void PrintMatchCallLocation(struct Pokenav_MatchCallGfx *gfx, int delta)
     int x;
     int index = PokenavList_GetSelectedIndex() + delta;
     mapsec_s32_t mapSec = GetMatchCallMapSec(index);
+#if IS_WAYFARER
+    if (GetMatchCallContactPlaceName(index, mapName))
+        ;
+    else
+#endif
     if (mapSec != MAPSEC_NONE)
         GetMapName(mapName, mapSec, 0);
     else

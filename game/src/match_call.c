@@ -29,6 +29,11 @@
 #include "task.h"
 #include "wild_encounter.h"
 #include "window.h"
+#include "wayfarer_coast_trainers.h"
+#include "wayfarer_daily_slots.h"
+#include "wayfarer_persistence.h"
+#include "wayfarer_phone.h"
+#include "wayfarer_sevii_rematches.h"
 #include "field_name_box.h"
 #include "constants/abilities.h"
 #include "constants/battle_frontier.h"
@@ -229,6 +234,110 @@ bool8 MatchCall_HnsTrainerHasGift(u16 trainerId)
     }
     return FALSE;
 }
+
+// The 1 in 5 gift roll of the region step (phone-rematches.md, Gifts): a gift contact picked by the step event holds a
+// gift from now on, and its call announces it from the next day. The caller supplies both rolls.
+bool8 MatchCall_HnsRollGift(u16 trainerId, u32 giftRoll, u32 itemRoll)
+{
+    u32 i;
+
+    for (i = 0; i < ARRAY_COUNT(sHnsMatchCallTrainers); i++)
+    {
+        const struct HnsMatchCallTrainerInfo *info = &sHnsMatchCallTrainers[i];
+
+        if (info->trainerId == trainerId)
+        {
+            if (info->itemFlag == 0 || giftRoll % 5 != 0)
+                return FALSE;
+            VarSet(info->itemVar, info->giftItems[itemRoll % info->numGiftItems]);
+            FlagSet(info->itemFlag);
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+#if IS_WAYFARER
+// The call texts of the Hoenn, Sevii and coast contacts, each keyed by the contact's first trainer. The lists are in
+// src/data/wayfarer_phone_*.h; a contact whose texts are missing fails the link, and a contact missing from a list fails
+// the phone texts audit (tools/wayfarer_phone_texts).
+#define PHONE_EXTERNS(group, name) \
+    extern const u8 MatchCall_##group##_##name##_General1[]; \
+    extern const u8 MatchCall_##group##_##name##_General2[]; \
+    extern const u8 MatchCall_##group##_##name##_General3[]; \
+    extern const u8 MatchCall_##group##_##name##_Battle[];
+#define PHONE_ENTRY(group, name, trId) { \
+    .trainerId = trId, \
+    .generalTexts = { MatchCall_##group##_##name##_General1, MatchCall_##group##_##name##_General2, MatchCall_##group##_##name##_General3 }, \
+    .numGeneralTexts = 3, \
+    .battleRequestText = MatchCall_##group##_##name##_Battle },
+
+#define PHONE_CONTACT(name, trId) PHONE_EXTERNS(HOENN, name)
+#include "data/wayfarer_phone_hoenn.h"
+#undef PHONE_CONTACT
+#define PHONE_CONTACT(name, trId) PHONE_EXTERNS(SEVII, name)
+#include "data/wayfarer_phone_sevii.h"
+#undef PHONE_CONTACT
+#define PHONE_CONTACT(name, trId) PHONE_EXTERNS(COAST, name)
+#include "data/wayfarer_phone_coast.h"
+#undef PHONE_CONTACT
+
+static const struct HnsMatchCallTrainerInfo sHoennMatchCallTrainers[] =
+{
+#define PHONE_CONTACT(name, trId) PHONE_ENTRY(HOENN, name, trId)
+#include "data/wayfarer_phone_hoenn.h"
+#undef PHONE_CONTACT
+};
+
+static const struct HnsMatchCallTrainerInfo sSeviiMatchCallTrainers[] =
+{
+#define PHONE_CONTACT(name, trId) PHONE_ENTRY(SEVII, name, trId)
+#include "data/wayfarer_phone_sevii.h"
+#undef PHONE_CONTACT
+};
+
+static const struct HnsMatchCallTrainerInfo sCoastMatchCallTrainers[] =
+{
+#define PHONE_CONTACT(name, trId) PHONE_ENTRY(COAST, name, trId)
+#include "data/wayfarer_phone_coast.h"
+#undef PHONE_CONTACT
+};
+
+static const struct HnsMatchCallTrainerInfo *FindTexts(const struct HnsMatchCallTrainerInfo *table, u32 count, u16 trainerId)
+{
+    u32 i;
+
+    for (i = 0; i < count; i++)
+    {
+        if (table[i].trainerId == trainerId)
+            return &table[i];
+    }
+    return NULL;
+}
+
+// The call texts of the contact whose first trainer this is.
+static const struct HnsMatchCallTrainerInfo *GetContactTexts(u16 firstTrainer)
+{
+    const struct HnsMatchCallTrainerInfo *info = FindTexts(sHnsMatchCallTrainers, ARRAY_COUNT(sHnsMatchCallTrainers), firstTrainer);
+
+    if (info == NULL)
+        info = FindTexts(sHoennMatchCallTrainers, ARRAY_COUNT(sHoennMatchCallTrainers), firstTrainer);
+    if (info == NULL)
+        info = FindTexts(sSeviiMatchCallTrainers, ARRAY_COUNT(sSeviiMatchCallTrainers), firstTrainer);
+    if (info == NULL)
+        info = FindTexts(sCoastMatchCallTrainers, ARRAY_COUNT(sCoastMatchCallTrainers), firstTrainer);
+    return info;
+}
+
+// Whether a contact has call texts, for the tests.
+bool8 MatchCall_ContactHasTexts(u8 contact)
+{
+    const struct HnsMatchCallTrainerInfo *info = GetContactTexts(DailyContacts_FirstTrainer(contact));
+
+    return info != NULL && info->numGeneralTexts >= 2 && info->battleRequestText != NULL
+        && info->generalTexts[0] != NULL && info->generalTexts[1] != NULL;
+}
+#endif
 #endif
 
 struct MatchCallText
@@ -259,7 +368,9 @@ static u32 GetActiveMatchCallTrainerId(u32);
 static int GetTrainerMatchCallId(int);
 #endif
 static mapsec_u16_t GetRematchTrainerLocation(int);
+#if !IS_WAYFARER
 static bool32 TrainerIsEligibleForRematch(int);
+#endif
 static void StartMatchCall(void);
 static void ExecuteMatchCall(u8);
 static void DrawMatchCallTextBoxBorder_Internal(u32, u32, u32);
@@ -1166,6 +1277,33 @@ void InitMatchCallCounters(void)
 #if IS_HNS
 #define ROUTE_STEP_COUNTER_MAX 255
 
+#if IS_WAYFARER
+// Wayfarer counts steps anywhere (phone-rematches.md, Readiness and teams): every 255 steps one registered, already
+// fought contact of the region the player is in becomes ready. There is no call at that moment.
+bool32 HnsUpdateRouteStepCounter(void)
+{
+    u16 steps;
+
+    if (!FlagGet(FLAG_HAS_MATCH_CALL))
+        return FALSE;
+    if (gSaveBlock3Ptr->challengeSettings.disableMatchCall)
+        return FALSE;
+    if (!HasEnoughBadgesForRematch())
+        return FALSE;
+
+    steps = VarGet(VAR_ROUTE_STEP_COUNTER_HNS) + 1;
+    if (steps >= ROUTE_STEP_COUNTER_MAX)
+    {
+        VarSet(VAR_ROUTE_STEP_COUNTER_HNS, 0);
+        PhoneReadiness_OnRegionSteps();
+    }
+    else
+    {
+        VarSet(VAR_ROUTE_STEP_COUNTER_HNS, steps);
+    }
+    return FALSE;
+}
+#else
 static EWRAM_DATA u16 sRouteStepLastMap = 0;
 
 bool32 HnsUpdateRouteStepCounter(void)
@@ -1192,14 +1330,16 @@ bool32 HnsUpdateRouteStepCounter(void)
     {
         u16 mapGroup = gSaveBlock1Ptr->location.mapGroup;
         u16 mapNum = gSaveBlock1Ptr->location.mapNum;
-        u16 candidates[REMATCH_SPECIAL_TRAINER_START];
+        u16 candidates[REMATCH_NORMAL_ENTRIES];
         u32 numCandidates = 0;
         s32 i;
 
         VarSet(VAR_ROUTE_STEP_COUNTER_HNS, 0);
 
-        for (i = 0; i < REMATCH_SPECIAL_TRAINER_START; i++)
+        for (i = 0; i < REMATCH_TABLE_ENTRIES; i++)
         {
+            if (!REMATCH_IS_NORMAL(i))
+                continue;
             if (gRematchTable[i].mapGroup != mapGroup || gRematchTable[i].mapNum != mapNum)
                 continue;
             if (!TrainerIsMatchCallRegistered(i))
@@ -1249,6 +1389,7 @@ bool32 HnsUpdateRouteStepCounter(void)
 
     return FALSE;
 }
+#endif // IS_WAYFARER
 #endif
 
 static u32 GetCurrentTotalMinutes(struct Time *time)
@@ -1346,6 +1487,14 @@ static bool32 SelectMatchCallTrainer(void)
 
     sMatchCallState.trainerId = GetActiveMatchCallTrainerId(Random() % numRegistered);
     sMatchCallState.triggeredFromScript = FALSE;
+#if IS_WAYFARER
+    if (sMatchCallState.trainerId == TRAINER_NONE)
+        return FALSE;
+    matchCallId = DailyContacts_IndexOf(sMatchCallState.trainerId);
+    if (matchCallId == DAILY_NO_CONTACT)
+        return FALSE;
+    return !(PhoneContact_IsInHomeSection(matchCallId) && !PhoneContact_IsReady(matchCallId));
+#else
     if (sMatchCallState.trainerId == REMATCH_TABLE_ENTRIES)
         return FALSE;
 
@@ -1360,17 +1509,27 @@ static bool32 SelectMatchCallTrainer(void)
         return FALSE;
 
     return TRUE;
+#endif // IS_WAYFARER
 }
 
-// Ignores registrable non-trainer NPCs, and special trainers like Wally and the gym leaders.
+// Ignores registrable non-trainer NPCs, and special trainers like Wally and the gym leaders. In Wayfarer the contacts are
+// the normal rematch table rows (HNS, Hoenn and the appended Hoenn rows) and the Sevii and coast families.
 static u32 GetNumRegisteredTrainers(void)
 {
     u32 i, count;
-    for (i = 0, count = 0; i < REMATCH_SPECIAL_TRAINER_START; i++)
+#if IS_WAYFARER
+    for (i = 0, count = 0; i <= DAILY_CONTACT_LAST; i++)
     {
-        if (FlagGet(TRAINER_REGISTERED_FLAGS_START + i))
+        if (PhoneContact_IsRegistered(i))
             count++;
     }
+#else
+    for (i = 0, count = 0; i < REMATCH_TABLE_ENTRIES; i++)
+    {
+        if (REMATCH_IS_NORMAL(i) && FlagGet(PhoneContact_RegisteredFlag(i)))
+            count++;
+    }
+#endif
 
     return count;
 }
@@ -1378,9 +1537,25 @@ static u32 GetNumRegisteredTrainers(void)
 static u32 GetActiveMatchCallTrainerId(u32 activeMatchCallId)
 {
     u32 i;
-    for (i = 0; i < REMATCH_SPECIAL_TRAINER_START; i++)
+#if IS_WAYFARER
+    for (i = 0; i <= DAILY_CONTACT_LAST; i++)
     {
-        if (FlagGet(TRAINER_REGISTERED_FLAGS_START + i))
+        if (PhoneContact_IsRegistered(i))
+        {
+            if (!activeMatchCallId)
+                return DailyContacts_FirstTrainer(i);
+
+            activeMatchCallId--;
+        }
+    }
+
+    return TRAINER_NONE;
+#else
+    for (i = 0; i < REMATCH_TABLE_ENTRIES; i++)
+    {
+        if (!REMATCH_IS_NORMAL(i))
+            continue;
+        if (FlagGet(PhoneContact_RegisteredFlag(i)))
         {
             if (!activeMatchCallId)
                 return gRematchTable[i].trainerIds[0];
@@ -1390,6 +1565,7 @@ static u32 GetActiveMatchCallTrainerId(u32 activeMatchCallId)
     }
 
     return REMATCH_TABLE_ENTRIES;
+#endif
 }
 
 /*
@@ -1401,10 +1577,37 @@ static u32 GetActiveMatchCallTrainerId(u32 activeMatchCallId)
     - If in a valid outdoor map (not Safari Zone, not underwater, not Mt Chimney with Team Magma, not Sootopolis with legendaries)
     - If an eligible trainer to call the player is selected
 */
+#if TESTING || defined(E2E_TESTING)
+// Debug and E2E builds can force the next call to a contact (a contact number plus one in the low byte, bit 8 to also make
+// it ready; zero is none), so a journey does not wait out the call timers and the chance.
+EWRAM_DATA u16 gMatchCallDebugContact = 0;
+#endif
+
 bool32 TryStartMatchCall(void)
 {
     if (gSaveBlock3Ptr->challengeSettings.disableMatchCall)
         return FALSE;
+
+#if IS_WAYFARER && (TESTING || defined(E2E_TESTING))
+    if (gMatchCallDebugContact != 0)
+    {
+        if (!HnsMapAllowsMatchCall())
+            return FALSE;
+        u8 contact = (gMatchCallDebugContact & 0xFF) - 1;
+
+        // Bit 8 also makes the contact ready now and as the day began, as a Battle call needs.
+        if (gMatchCallDebugContact & 0x100)
+        {
+            PhoneContact_SetReady(contact);
+            DailyContacts_DebugMarkReadyAtDayStart(contact);
+        }
+        sMatchCallState.trainerId = DailyContacts_FirstTrainer(contact);
+        sMatchCallState.triggeredFromScript = FALSE;
+        gMatchCallDebugContact = 0;
+        StartMatchCall();
+        return TRUE;
+    }
+#endif
 
 #if IS_HNS
     if (FlagGet(FLAG_HAS_MATCH_CALL)
@@ -1763,6 +1966,7 @@ static void Task_SpinPokenavIcon(u8 taskId)
 #undef tSpinStage
 #undef tTileNum
 
+#if !IS_WAYFARER
 static bool32 TrainerIsEligibleForRematch(int matchCallId)
 {
 #if FREE_MATCH_CALL == FALSE
@@ -1771,6 +1975,7 @@ static bool32 TrainerIsEligibleForRematch(int matchCallId)
     return FALSE;
 #endif //FREE_MATCH_CALL
 }
+#endif
 
 static mapsec_u16_t GetRematchTrainerLocation(int matchCallId)
 {
@@ -1813,6 +2018,55 @@ static u32 GetNthRematchTrainerFought(int n)
 }
 #endif
 
+#if IS_WAYFARER
+// What a contact says (phone-rematches.md, Calls). A Battle text needs the contact to have been ready when the day
+// began, and a FoundItem text needs it to have held a gift then; both also need the contact to stand somewhere
+// unbeaten today, and name that place in {STR_VAR_2}. A contact whose slot is fixed battles and hands over gifts through
+// its home script, so it also needs the live readiness or gift. Everything else is a General call.
+bool32 SelectMatchCallMessage(int trainerId, u8 *str)
+{
+    u8 contact = DailyContacts_IndexOf(trainerId);
+    const struct HnsMatchCallTrainerInfo *info;
+    const u8 *text;
+    bool32 newRematchRequest = FALSE;
+    bool32 placed;
+    u16 first, lastBeatenId;
+    u8 mapGroup, mapNum, localId;
+
+    str[0] = EOS;
+    if (contact == DAILY_NO_CONTACT)
+        return FALSE;
+    first = DailyContacts_FirstTrainer(contact);
+    info = GetContactTexts(first);
+    if (info == NULL)
+        return FALSE;
+
+    placed = DailyTrainers_WhereIsTrainerToday(first, &mapGroup, &mapNum, &localId);
+    if (placed)
+        WayfarerGetPlaceNameOfMap(gStringVar2, mapGroup, mapNum);
+    if (placed && DailyContacts_ReadyAtDayStart(contact) && (!DailyContacts_IsFixed(contact) || PhoneContact_IsReady(contact)))
+    {
+        text = info->battleRequestText;
+        newRematchRequest = TRUE;
+    }
+    else if (placed && info->itemFlag != 0 && DailyContacts_GiftAtDayStart(contact) && FlagGet(info->itemFlag))
+    {
+        text = info->foundItemText;
+    }
+    else
+    {
+        text = info->generalTexts[Random() % info->numGeneralTexts];
+    }
+
+    lastBeatenId = PhoneContact_LatestTeam(contact);
+    if (GetTrainerPartyFromId(lastBeatenId) != NULL && GetTrainerPartySizeFromId(lastBeatenId) != 0)
+        StringCopy(gStringVar3, GetSpeciesName(GetTrainerPartyFromId(lastBeatenId)[Random() % GetTrainerPartySizeFromId(lastBeatenId)].species));
+    else
+        StringCopy(gStringVar3, GetSpeciesName(SPECIES_NONE));
+    StringExpandPlaceholders(str, text);
+    return newRematchRequest;
+}
+#else
 bool32 SelectMatchCallMessage(int trainerId, u8 *str)
 {
 #if IS_HNS
@@ -1899,6 +2153,7 @@ bool32 SelectMatchCallMessage(int trainerId, u8 *str)
     return newRematchRequest;
 #endif
 }
+#endif // IS_WAYFARER
 
 #if !IS_HNS
 static int GetTrainerMatchCallId(int trainerId)

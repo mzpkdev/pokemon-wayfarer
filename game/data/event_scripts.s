@@ -1974,6 +1974,10 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/scripts/lilycove_lady.inc"
 	.include "data/text/match_call.inc"
 	.include "data/text/match_call_hns.inc"
+#if IS_WAYFARER
+	.include "data/text/match_call_hoenn.inc"
+	.include "data/text/match_call_sevii_coast.inc"
+#endif
 #if IS_HNS
 	.include "data/scripts/mom_savings.inc"
 #endif

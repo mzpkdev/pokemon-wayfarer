@@ -4,7 +4,7 @@
 
 #define WORLD_TRAINER_SLOT_COUNT        659
 #define WORLD_TRAINER_GROUP_COUNT       138
-#define WORLD_TRAINER_FIXED_HOME_COUNT  4
+#define WORLD_TRAINER_FIXED_HOME_COUNT  5
 #define WORLD_TRAINER_MAP_SLOTS_MAX     17   // most daily slots on one map
 #define WORLD_TRAINER_GROUP_SLOTS_MAX   25   // most slots in one group
 #define WORLD_TRAINER_SEVII_FAMILIES    64

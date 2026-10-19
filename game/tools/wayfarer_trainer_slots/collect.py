@@ -225,8 +225,9 @@ def rematch_families(root=ROOT):
     return result
 
 
-def collect_slots(maps, labels, root=ROOT):
-    """Every trainer object of the compiled maps as an unclassified Slot row (status, reason and group are set later)."""
+def collect_slots(maps, labels, root=ROOT, talk_only=None):
+    """Every trainer object of the compiled maps as an unclassified Slot row (status, reason and group are set later).
+    A talk-only trainer (no sight line, so nothing for a daily slot to rotate) goes to `talk_only` when it is given."""
     ordinary_names = set(policies(root))
     families = rematch_families(root)
     all_names = set(ordinary_names) | {n for fam in families for n in fam}
@@ -245,7 +246,7 @@ def collect_slots(maps, labels, root=ROOT):
     slots = []
     for const, info in maps.items():
         for obj in info.events['objects']:
-            if obj.get('kind') != 'object' or obj['trainer_type'] not in TRAINER_TYPES:
+            if obj.get('kind') != 'object' or (obj['trainer_type'] not in TRAINER_TYPES and (talk_only is None or obj['trainer_type'] != 'TRAINER_TYPE_NONE')):
                 continue
             if not R.TRAINERBATTLE.search('\n'.join(labels.get(l, '') for l in analyzer.closure(obj['script']))):
                 continue
@@ -264,5 +265,5 @@ def collect_slots(maps, labels, root=ROOT):
             slot.family_ids = [by_number[n] for n in sorted(facts['trainers']) if n in by_number]
             cls, battle_type = classes.get(home, ('', ''))
             slot.klass = cls
-            slots.append(slot)
+            (slots if obj['trainer_type'] in TRAINER_TYPES else talk_only).append(slot)
     return slots, family_of, numbers

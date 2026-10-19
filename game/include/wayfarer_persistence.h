@@ -34,6 +34,7 @@ enum WayfarerDiveMapContext
 enum Region WayfarerGetRegionForMap(s16 mapGroup, s16 mapNum);
 enum Region WayfarerGetCurrentMapRegion(void);
 void WayfarerUpdateHnsRegionContextForMap(s16 mapGroup, s16 mapNum);
+bool8 WayfarerIsMapHoennSource(s16 mapGroup, s16 mapNum);
 bool8 WayfarerIsCurrentMapHoennSource(void);
 enum WayfarerDiveMapContext WayfarerGetDiveMapContext(s16 mapGroup, s16 mapNum);
 bool8 WayfarerIsDiveAuthorizedForMap(s16 mapGroup, s16 mapNum);

@@ -220,6 +220,9 @@ class SourceBoundaryTests(unittest.TestCase):
             value = self.hoenn[flag]
             if value == 0:
                 continue
+            if flag in GENERATOR_MODULE.ENGINE_SHARED_FLAGS:
+                self.assertEqual(value, self.engine[flag], flag)
+                continue
             self.assertTrue(value <= 0x1F or 0x6000 <= value <= 0x6FFF or value >= 0x4000, flag)
         for var in variables:
             self.assertIn(var, self.hoenn)

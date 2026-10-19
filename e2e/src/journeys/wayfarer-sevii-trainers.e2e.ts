@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from "webanvil/test"
 
 import { GameSession } from "../harness/game-session"
+import { decodeFieldMessageText } from "../harness/game-session/features/state"
 import { type RunningSkyEmu } from "../harness/skyemu/server"
 import { readSkyEmuSymbols } from "../harness/skyemu/symbols"
 import { requireSymbolsPath } from "../harness/skyemu/utils"
@@ -93,24 +94,35 @@ const finishBlackout = async (game: GameSession): Promise<void> => {
   )
 }
 
-const chargeVsSeekerOnKindleRoad = async (game: GameSession): Promise<void> => {
-  // Map loads reset the in-bag counter, so charge on Sharon's nearby
-  // north-south lane. Staying off their sight line also lets both response
-  // animations finish before the player initiates the rematch.
+// Sharon's contact number (the second Sevii contact after Finn and the registry's order): the next call is forced to her,
+// and she is made ready as the day began, as a day of steps in Sevii would have done.
+const sharonContact = 119
+const sharonReady = async (game: GameSession, day: number): Promise<void> => {
+  const symbols = await readSkyEmuSymbols(requireSymbolsPath())
+  const client = (game as unknown as { running: RunningSkyEmu }).running.client
+  await game.dailySlots.pin({ day, seed: 0x51ab1e5, noEmpty: true })
   await game.player.warp(kindleRoad, 10, 55, "up")
-  for (let step = 1; step <= 100; step++) {
-    const direction = step % 2 === 1 ? "up" : "down"
-    const y = direction === "up" ? 54 : 55
-    await game.wait.until(async (state) => {
-      if (state.ready && state.player.x === 10 && state.player.y === y) return true
-      // A tap can only turn the player or land during the previous step's
-      // animation. Keep walking until the next tile is actually reached.
-      if (state.ready) await game.player.move(direction)
-      return false
-    }, `Vs Seeker charge step ${step}`)
-    await game.wait.frames(16)
+  await game.wait.forReady()
+  await client.writeBytes(
+    symbols.address("gMatchCallDebugContact"),
+    new Uint8Array([sharonContact + 1, 1]),
+  )
+  await game.player.move("up")
+  // The call window waits for a button before it prints, and again before it hangs up. Her Battle text names her.
+  let heard = false
+  let wasOnTheCall = false
+  for (let attempt = 0; attempt < 80; attempt++) {
+    const text = decodeFieldMessageText(
+      Array.from(await client.readBytes(symbols.address("gStringVar4"), 200)),
+    )
+    if (text.includes("SHARON")) heard = true
+    const state = await game.state.read()
+    wasOnTheCall ||= state.controlsLocked
+    if (heard && wasOnTheCall && state.ready && !state.controlsLocked) return
+    await game.controls.press("a", { holdFrames: 1, releaseFrames: 1 })
+    await game.wait.frames(10)
   }
-  await game.wait.frames(120)
+  throw new Error(heard ? "the call did not end" : "Sharon's call never came")
 }
 
 const approachSharon = async (game: GameSession): Promise<void> => {
@@ -136,73 +148,6 @@ const approachSharon = async (game: GameSession): Promise<void> => {
   }
   // Enter Sharon's south-facing sight line from the adjacent lane.
   await game.controls.press("left", { holdFrames: 10, releaseFrames: 10 })
-}
-
-const waitForVsSeekerResponses = async (game: GameSession): Promise<void> => {
-  const symbols = await readSkyEmuSymbols(requireSymbolsPath())
-  const client = (game as unknown as { running: RunningSkyEmu }).running.client
-  let idleSamples = 0
-  for (let attempt = 0; attempt < 300; attempt++) {
-    let responseTaskActive = false
-    for (let index = 0; index < 16; index++) {
-      const task = await client.readBytes(symbols.address("gTasks") + index * 0x28, 5)
-      const func = new DataView(task.buffer, task.byteOffset, task.byteLength).getUint32(0, true)
-      if (task[4] !== 0 && (func & ~1) === symbols.address("ScriptMovement_MoveObjects")) {
-        responseTaskActive = true
-        break
-      }
-    }
-
-    let responseIconActive = false
-    for (let index = 0; index < 65; index++) {
-      const sprite = await client.readBytes(symbols.address("gSprites") + index * 0x44 + 0x1c, 4)
-      const callback = new DataView(sprite.buffer, sprite.byteOffset, 4).getUint32(0, true)
-      if ((callback & ~1) === symbols.address("SpriteCB_TrainerIcons")) {
-        responseIconActive = true
-        break
-      }
-    }
-
-    let sharonMovementActive = false
-    for (let index = 0; index < 16; index++) {
-      const object = await client.readBytes(symbols.address("gObjectEvents") + index * 0x24, 9)
-      if ((object[0]! & 1) !== 0 && object[8] === 6) {
-        sharonMovementActive = (object[0]! & 0x42) !== 0
-        break
-      }
-    }
-
-    if (!responseTaskActive && !responseIconActive && !sharonMovementActive) idleSamples++
-    else idleSamples = 0
-    if (idleSamples >= 30) return
-    await game.wait.frames(4)
-  }
-  throw new Error("Vs Seeker response animations did not finish")
-}
-
-const useVsSeekerFromBag = async (game: GameSession, firstUse: boolean): Promise<void> => {
-  await game.controls.press("start", { releaseFrames: 30 })
-  await game.wait.until((state) => state.ui.mode === "pause-menu", "open Vs Seeker pause menu")
-  await game.wait.frames(30)
-
-  // A fresh checkpoint opens the pause menu on POKéMON. Once BAG has been
-  // selected, both the pause-menu cursor and Key Items pocket are retained.
-  if (firstUse) {
-    await game.controls.press("down", { releaseFrames: 30 })
-  }
-  await game.controls.press("a", { releaseFrames: 60 })
-  await game.wait.frames(120)
-  if (firstUse) {
-    await game.controls.press("left", { releaseFrames: 30 })
-    await game.wait.frames(90)
-  }
-
-  // Select the sole arranged Key Item, then USE from its context menu.
-  await game.controls.press("a", { releaseFrames: 30 })
-  await game.wait.frames(30)
-  await game.controls.press("a", { releaseFrames: 60 })
-  await game.wait.frames(180)
-  await finishFieldScript(game, "Vs Seeker use")
 }
 
 describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
@@ -319,14 +264,14 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
     }
   })
 
-  it("charges the Vs Seeker and advances through every authored Sharon party", async () => {
+  it("advances through every authored Sharon party as she is ready for rematches", async () => {
     const rematchGame = await GameSession.launch()
     try {
       await rematchGame.arrange({
         checkpoint: "new-bark-after-intro",
         player: { facing: "left", position: { map: kindleRoad, x: 10, y: 55 } },
         party: [{ species: "lapras", level: 100, moves: ["surf"] }],
-        bag: { items: { vsSeeker: 1 } },
+        story: { flags: { hasMatchCall: true } },
         determinism: { rngSeed: 1, textSpeed: "instant" },
       })
 
@@ -337,9 +282,9 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
       const baseOpponentId = await readTrainerOpponentId(rematchGame)
       await finishTrainerVictory(rematchGame, "clear that you’re skilled", "base Sharon battle")
 
-      await chargeVsSeekerOnKindleRoad(rematchGame)
-      await useVsSeekerFromBag(rematchGame, true)
-      await waitForVsSeekerResponses(rematchGame)
+      // The first win offered her number and the journey said yes.
+      expect(await rematchGame.story.flag("phoneSharonRegistered")).toBe(true)
+      await sharonReady(rematchGame, 24_001)
       await approachSharon(rematchGame)
       await waitForTrainerBattle(rematchGame, "first Sharon rematch", false)
       const firstRematch = await rematchGame.state.read()
@@ -351,9 +296,7 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
       expect(firstRematchOpponentId).not.toBe(baseOpponentId)
       await finishTrainerVictory(rematchGame, "clear that you’re skilled", "first Sharon rematch")
 
-      await chargeVsSeekerOnKindleRoad(rematchGame)
-      await useVsSeekerFromBag(rematchGame, false)
-      await waitForVsSeekerResponses(rematchGame)
+      await sharonReady(rematchGame, 24_002)
       await approachSharon(rematchGame)
       await waitForTrainerBattle(rematchGame, "final Sharon rematch", false)
       const finalRematch = await rematchGame.state.read()

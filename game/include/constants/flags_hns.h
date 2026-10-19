@@ -1297,6 +1297,13 @@
 #define FLAG_SYS_PYRAMID_SILVER                     (SYS_FLAGS + 0x5C)
 #define FLAG_SYS_PYRAMID_GOLD                       (SYS_FLAGS + 0x5D)
 
+// Wayfarer phone registration for the appended rematch rows (indexes REMATCH_APPENDED_START and up, 28 rows). The
+// 0x310 block can't grow, so they use this window instead: it sits between the Battle Frontier symbols above and the
+// Trainer Tower flags, and no other flag uses it. PHONE_APPENDED_FLAG_COUNT must stay the number of appended rows.
+// Every registered-flag access goes through PhoneContact_RegisteredFlag (wayfarer_phone.h), never base plus index.
+#define TRAINER_REGISTERED_APPENDED_FLAGS_START     (SYS_FLAGS + 0x5E)
+#define TRAINER_REGISTERED_APPENDED_FLAGS_COUNT     28
+
 // Visited / World Map flags
 #define FLAG_VISITED_NEWBARK_TOWN                   (SYS_FLAGS + 0x90)
 #define FLAG_VISITED_CHERRYGROVE_CITY               (SYS_FLAGS + 0x91)
