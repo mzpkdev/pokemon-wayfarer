@@ -3,7 +3,11 @@
 PRDs: [Hoenn phone rematches](../prds/hoenn-phone-rematches.md),
 [Sevii and Kanto coast phone rematches](../prds/sevii-coast-phone-rematches.md),
 [Daily world slots](../prds/daily-world-slots.md#phone-numbers-and-rematches)
-Implemented: No
+Implemented: Yes. Code: `game/src/wayfarer_phone.c` (flags, team tiers, region step, number offer),
+`wayfarer_daily_trainers.c` (contact index space), `match_call.c` (calls), the Pokénav list files, `vs_seeker.c`
+(retired). Call texts: `game/data/text/match_call_{hns,hoenn,sevii_coast}.inc`, keyed by the lists in
+`game/src/data/wayfarer_phone_*.h`; `game/tools/wayfarer_phone_texts` audits them. Where the build differs from the
+rules below, the rules were corrected: see [Build notes](#build-notes).
 
 ## Scope
 
@@ -206,6 +210,34 @@ rematches; the item itself is left unobtainable.
 - A contact whose slot is fixed still gets Battle and FoundItem calls, naming
   its home map, and makes only General calls after that day's rematch or gift.
 - Every Battle and FoundItem text contains `{STR_VAR_2}`, and every text fits the text box.
+
+## Build notes
+
+Resolutions made while implementing; the rules above already reflect them.
+
+- **Hoenn indexes.** The 36 Hoenn contacts whose Emerald names HNS does not reuse (`REMATCH_JERRY` .. `REMATCH_KIRA_AND_DAN`,
+  contacts 29-64) keep those names in the empty indexes 28-63. The 28 whose names HNS reuses (`ROSE` .. `KAREN`, contacts
+  1-28) are appended at 90-117 as `REMATCH_<NAME>_HOENN`. This keeps the standalone Emerald table compiling unchanged.
+- **Gift hand-off.** There is no separate shared script: an occupant's own authored script already carries the hand-off
+  (as [daily world slots](daily-world-slots.md#battles) says), and the daily slot code reads the gift flag as done so the
+  script reaches it before any battle.
+- **FoundItem needs the gift still held.** A FoundItem call needs the live gift flag for every contact, not only fixed
+  ones: handing a gift over does not clear the slot, so a rotating gift contact would otherwise keep announcing it.
+- **Next team.** With team numbers (1 is the team met first), a ready contact's next team is
+  `min(max(fought, unlocked) + 1, last)`, where `unlocked` is 1 plus the rating steps reached (40, 80, 120, 160). A
+  Sevii or coast family's teams share one defeat flag, so its fought teams are the rematches won in its registry (a win at
+  a team the rating chose is not recorded for them).
+- **Region.** Hoenn is told by the map's source (its section ids are Emerald's and clash with HNS's); the Sevii sections
+  by their own lists; Kanto (which includes the coast) and Johto by section range. The region counter is the existing
+  step counter (`VAR_ROUTE_STEP_COUNTER_HNS`), no longer reset on map change. The pick, the gift roll and the gift item
+  use the daily rolls `DAILY_ROLL_PHONE_PICK`, `_GIFT` and `_ITEM`, keyed by the game's step count and the contact.
+- **Place names.** `WayfarerGetPlaceNameOfMap` names a map in any region. A name longer than 16 characters ("OLIVINE
+  LIGHTHOUSE", Jeffrey's and Huey's home) drops its first word.
+- **Number offer.** `SetMatchCallRegisteredFlag` no longer registers; `STD_REGISTER_MATCH_CALL` asks (needs the Pokégear),
+  so the scripts' `register_matchcall` keeps their flavour text and then offers. A win with no after-battle script of the
+  trainer's own (a wanderer, or a Sevii or coast contact) runs `PhoneOffer_EventScript_AfterBattle`.
+- **Save.** `SAVE_VERSION` is 15. E2E and test builds can force the next call with `gMatchCallDebugContact`.
+- **Rematch tooling.** The Hoenn rows are compiled, so `tools/trainer_scaling/reach.py` reads them from the Wayfarer table.
 
 ## Hoenn call texts
 
