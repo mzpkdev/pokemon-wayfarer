@@ -534,6 +534,8 @@ TEST("Phone: contacts belong to their home's region")
             continue;
         region = PhoneContact_Region(contact);
         EXPECT(region != PHONE_REGION_OTHER);
+        // The step event's region (no home lookup) is the same.
+        EXPECT_EQ(PhoneContact_HomeRegion(contact), region);
         if (contact >= DAILY_CONTACT_COAST_FIRST)
             EXPECT_EQ(region, PHONE_REGION_KANTO);
         else if (contact >= DAILY_CONTACT_SEVII_FIRST)
@@ -874,6 +876,7 @@ TEST("Phone: a win against an unregistered contact is followed by the number off
     // An earlier test's battle can leave a rotating occupant noted (EWRAM is not reset between tests); noting a battle
     // with no object (local id 0) clears it, so this battle is a home trainer's.
     DailyTrainers_NoteBattle(0, 0, TRAINER_ANTHONY_HNS);
+    gBattleTypeFlags = 0;
     FlagSet(FLAG_HAS_MATCH_CALL);
     TRAINER_BATTLE_PARAM.opponentA = TRAINER_ANTHONY_HNS;
     EXPECT(PhoneOffer_IsDue(TRAINER_ANTHONY_HNS));
@@ -889,6 +892,11 @@ TEST("Phone: a win against an unregistered contact is followed by the number off
     gBattleOutcome = B_OUTCOME_WON;
     gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_PYRAMID;
     EXPECT(!PhoneOffer_IsDue(TRAINER_ANTHONY_HNS));
+    gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_TRAINER_HILL;
+    EXPECT(!PhoneOffer_IsDue(TRAINER_ANTHONY_HNS));
+    // The offer script itself does not look at the last battle: talking again has none of its own.
+    gSpecialVar_0x8000 = TRAINER_ANTHONY_HNS;
+    EXPECT_EQ(PhoneOffer_CanOffer(), TRUE);
     gBattleTypeFlags = 0;
     EXPECT(PhoneOffer_IsDue(TRAINER_ANTHONY_HNS));
     TRAINER_BATTLE_PARAM.battleScriptRetAddrA = sOwnScript;
@@ -934,6 +942,10 @@ TEST("Phone: a contact that never wanders asks again when talked to, once, then 
     EXPECT(!DailyContacts_IsFixed(wade));
     EXPECT(PhoneOffer_IsDueOnTalk(TRAINER_LAO_1));
     EXPECT(PhoneOffer_IsDueOnTalk(TRAINER_TULLY_HNS));
+    // A Frontier battle before the talk does not stop it: the talk has no battle of its own.
+    gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_FRONTIER;
+    EXPECT(PhoneOffer_IsDueOnTalk(TRAINER_TULLY_HNS));
+    gBattleTypeFlags = 0;
     EXPECT(!PhoneOffer_IsDueOnTalk(TRAINER_WADE_HNS));
     EXPECT(!PhoneOffer_IsDueOnTalk(TRAINER_FALKNER_1_HNS));
     // Declined, it asks again on the next talk; the offer then hands over to the script that was running.

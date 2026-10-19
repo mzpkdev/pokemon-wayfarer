@@ -215,6 +215,17 @@ enum PhoneRegion PhoneContact_Region(u8 contact)
     return PhoneRegion_OfMap(mapGroup, mapNum);
 }
 
+// The same region without a home lookup, for the step event: a table row's map is the contact's home, a Sevii family lives
+// on Sevii and a coast family on the Kanto coast. A test holds it equal to PhoneContact_Region for every contact.
+enum PhoneRegion PhoneContact_HomeRegion(u8 contact)
+{
+    if (contact < DAILY_CONTACT_SEVII_FIRST)
+        return PhoneRegion_OfMap(gRematchTable[contact].mapGroup, gRematchTable[contact].mapNum);
+    if (contact < DAILY_CONTACT_COAST_FIRST)
+        return PHONE_REGION_SEVII;
+    return PHONE_REGION_KANTO;
+}
+
 // Whether the player stands in the map section a contact calls home. Hoenn's section ids are Emerald's, so they only mean
 // the same section to a player who is in Hoenn too.
 bool8 PhoneContact_IsInHomeSection(u8 contact)
@@ -226,9 +237,9 @@ bool8 PhoneContact_IsInHomeSection(u8 contact)
         && Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum)->regionMapSectionId == gMapHeader.regionMapSectionId;
 }
 
-// A registered contact the player has met, who isn't ready yet, in the region. The registered flag goes first: it is one
-// flag read, and it leaves the lookups of a contact's first trainer, its home and its region to the few contacts that have
-// a number.
+// A registered contact the player has met, who isn't ready yet, in the region. The registered flag and the region go
+// first: late in the game most contacts have a number, and the region (no home lookup) leaves the first-trainer and gift
+// lookups to the contacts of one region.
 static bool8 IsReadinessCandidate(u8 contact, enum PhoneRegion region)
 {
     u16 first;
@@ -237,12 +248,13 @@ static bool8 IsReadinessCandidate(u8 contact, enum PhoneRegion region)
         return FALSE;
     if (!FlagGet(PhoneContact_RegisteredFlag(contact)))
         return FALSE;
+    if (PhoneContact_HomeRegion(contact) != region)
+        return FALSE;
     first = DailyContacts_FirstTrainer(contact);
     return first != TRAINER_NONE
         && HasTrainerBeenFought(first)
         && !PhoneContact_IsReady(contact)
-        && !MatchCall_HnsTrainerHasGift(first)   // a gift is not rolled again
-        && PhoneContact_Region(contact) == region;
+        && !MatchCall_HnsTrainerHasGift(first);  // a gift is not rolled again
 }
 
 // Every 255 steps (match_call.c): one registered, already-fought contact of the region the player is in who isn't ready
@@ -252,30 +264,24 @@ void PhoneReadiness_OnRegionSteps(void)
 {
     enum PhoneRegion region = PhoneRegion_OfMap(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum);
     u32 steps = GetGameStat(GAME_STAT_STEPS);
-    u32 candidates = 0, pick;
+    u32 count = 0;
+    u8 candidates[DAILY_CONTACT_LAST + 1];
     u8 contact;
 
     if (region == PHONE_REGION_OTHER)
         return;
+    // One pass, in contact order, so the pick is the same as counting first and walking again.
     for (contact = 0; contact <= DAILY_CONTACT_LAST; contact++)
     {
         if (IsReadinessCandidate(contact, region))
-            candidates++;
+            candidates[count++] = contact;
     }
-    if (candidates == 0)
+    if (count == 0)
         return;
-    pick = DailySlots_Roll(DAILY_ROLL_PHONE_PICK, steps, 0) % candidates;
-    for (contact = 0; contact <= DAILY_CONTACT_LAST; contact++)
-    {
-        if (!IsReadinessCandidate(contact, region))
-            continue;
-        if (pick-- != 0)
-            continue;
-        if (!MatchCall_HnsRollGift(DailyContacts_FirstTrainer(contact), DailySlots_Roll(DAILY_ROLL_PHONE_GIFT, steps, contact),
-                                   DailySlots_Roll(DAILY_ROLL_PHONE_ITEM, steps, contact)))
-            PhoneContact_SetReady(contact);
-        return;
-    }
+    contact = candidates[DailySlots_Roll(DAILY_ROLL_PHONE_PICK, steps, 0) % count];
+    if (!MatchCall_HnsRollGift(DailyContacts_FirstTrainer(contact), DailySlots_Roll(DAILY_ROLL_PHONE_GIFT, steps, contact),
+                               DailySlots_Roll(DAILY_ROLL_PHONE_ITEM, steps, contact)))
+        PhoneContact_SetReady(contact);
 }
 
 // ---------- the number offer ----------
@@ -289,12 +295,15 @@ void PhoneOffer_StartInteraction(void)
     sOfferedContactPlusOne = 0;
 }
 
+static bool8 PhoneOffer_IsDueIn(u16 trainerId, bool8 afterBattle);
+
 // A contact with no daily slot never gets a later win, so talking to it again is how it asks again.
 bool8 PhoneOffer_IsDueOnTalk(u16 trainerId)
 {
     u8 contact = DailyContacts_IndexOf(trainerId);
 
-    return PhoneOffer_IsDue(trainerId) && DailyContacts_IsFixed(contact);
+    // No battle has run in this interaction, so the last battle's type says nothing about this trainer.
+    return PhoneOffer_IsDueIn(trainerId, FALSE) && DailyContacts_IsFixed(contact);
 }
 
 const u8 *PhoneOffer_BeginTalkOffer(const u8 *resume)
@@ -313,23 +322,34 @@ void PhoneOffer_Resume(struct ScriptContext *ctx)
     sTalkOfferResume = NULL;
 }
 
-// After a win against a contact without a registered number, with the Pokégear in hand.
-bool8 PhoneOffer_IsDue(u16 trainerId)
+// A contact without a registered number, with the Pokégear in hand. After a battle, not in a facility: the Battle Pyramid,
+// Trainer Hill (Hoenn's sets its own copy of the challenge var, so the battle type is checked too) and the Frontier battle
+// with indexes that are not trainer ids, which can equal a contact's.
+static bool8 PhoneOffer_IsDueIn(u16 trainerId, bool8 afterBattle)
 {
     u8 contact;
 
-    // The Battle Pyramid, Trainer Hill and the Frontier battle with indexes that are not trainer ids, which can equal a
-    // contact's.
-    if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || InTrainerHillChallenge() || (gBattleTypeFlags & BATTLE_TYPE_FRONTIER))
+    if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || InTrainerHillChallenge())
+        return FALSE;
+    if (afterBattle && (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL)))
         return FALSE;
     contact = DailyContacts_IndexOf(trainerId);
     return contact != DAILY_NO_CONTACT && FlagGet(FLAG_HAS_MATCH_CALL) && !PhoneContact_IsRegistered(contact);
 }
 
-// For the offer script: VAR_0x8000 holds the trainer (any team) of the contact offering its number.
+// After a win against a contact without a registered number.
+bool8 PhoneOffer_IsDue(u16 trainerId)
+{
+    return PhoneOffer_IsDueIn(trainerId, TRUE);
+}
+
+// For the offer script: VAR_0x8000 holds the trainer (any team) of the contact offering its number. Every way into the
+// script (the after-battle choice, talking again, a trainer's own script) has already ruled out facility battles, and a
+// talk has no battle of its own, so the last battle's type is not checked here.
 u32 PhoneOffer_CanOffer(void)
 {
-    return PhoneOffer_IsDue(gSpecialVar_0x8000) && DailyContacts_IndexOf(gSpecialVar_0x8000) + 1 != sOfferedContactPlusOne;
+    return PhoneOffer_IsDueIn(gSpecialVar_0x8000, FALSE)
+        && DailyContacts_IndexOf(gSpecialVar_0x8000) + 1 != sOfferedContactPlusOne;
 }
 
 // For the shared after-battle offer: the contact of the trainer just fought, by its first team.

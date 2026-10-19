@@ -105,9 +105,9 @@ automatic registration in `RegisterTrainerInMatchCall` for Wayfarer. A trainer w
 ## Readiness and teams
 
 - **Readiness.** HNS makes a trainer ready after 255 steps on their home map.
-  Wayfarer counts steps anywhere in the trainer's region instead: every 255
-  steps in a region, one registered, already-fought trainer of that region
-  who isn't ready becomes ready (chosen by `roll`, as in
+  Wayfarer counts steps anywhere instead: every 255 steps, one registered,
+  already-fought trainer of the region the player is in who isn't ready
+  becomes ready (none if that step is outside Kanto, Johto, Hoenn and Sevii) (chosen by `roll`, as in
   [daily world slots](daily-world-slots.md#deterministic-draws)). There is no
   call at that moment: the trainer is placed and calls from the next day (see
   [Placement](#readiness-and-teams)).
@@ -253,13 +253,21 @@ Resolutions made while implementing, kept as the record of why the rules above r
   which slowed the walker heartbeat enough to delay input after a seamless map change.
 - **Badges.** Region readiness and random calls wait for `OW_REMATCH_BADGE_COUNT` (5) badges of any region
   (`GetGlobalBadgeCount`), not only Johto's, which is all HNS's `HasEnoughBadgesForRematch` counted.
-- **Facilities.** No offer is made in the Battle Pyramid, Trainer Hill or Frontier battles (their trainer indexes can equal
-  a contact's trainer id), nor after a loss.
+- **Facilities.** No offer is made in the Battle Pyramid, Trainer Hill (Hoenn's sets its own copy of the challenge var, so
+  the battle type is checked too) or Frontier battles (their trainer indexes can equal a contact's trainer id), nor after
+  a loss. Only the after-battle choice looks at the last battle's type: talking again has no battle of its own.
+- **Hoenn home trainers ask again on talk.** Emerald's own scripts offer again whenever an unregistered Hoenn contact is
+  talked to at home (`IsTrainerRegistered`), on top of the after-a-win rule. They are kept: it is the same offer.
+- **Calls in Hoenn's special places.** Calls follow HNS's place rule (outdoors and caves) everywhere, so Emerald's
+  exceptions (the Safari Zone, Sootopolis during the weather crisis, Mt. Chimney before Team Magma is beaten) do not apply.
+  A call only starts while the player walks freely, never inside a scene.
 - **Vs. Seeker.** Clearing rematch state when a map loads with a Vs. Seeker in the Bag is inert in Wayfarer.
 - **Nicole.** Her row is empty in Wayfarer (`REMATCH_NICOLE_HNS` stays only so the index keeps its meaning), so she is not a
   contact and can't be registered.
 - **Readiness sources.** The 255 region steps are the only one: entering a map no longer readies a contact
-  (`TryUpdateRandomTrainerRematches` returns at once), and a contact already holding a gift is not picked again.
+  (`TryUpdateRandomTrainerRematches` returns at once), and a contact already holding a gift is not picked again. The step
+  event tells a contact's region without a home lookup (`PhoneContact_HomeRegion`, held equal to `PhoneContact_Region`
+  by a test) and gathers the candidates in one pass, so it stays cheap with every contact registered.
 - **Wanderer teams.** A registered, not-ready wanderer brings the higher of its latest fought team and the team its rating
   unlocks, so registering never lowers its everyday team (the same for Sevii and coast families).
 - **Talk-only contacts.** Tully has no sight line, so the slot generator makes no slot for him; it records him as a

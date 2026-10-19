@@ -45,6 +45,7 @@ u16 PhoneContact_RatingTeam(u8 contact);
 
 enum PhoneRegion PhoneRegion_OfMap(u8 mapGroup, u8 mapNum);
 enum PhoneRegion PhoneContact_Region(u8 contact);
+enum PhoneRegion PhoneContact_HomeRegion(u8 contact);  // the same, without a home lookup (the step event)
 bool8 PhoneContact_IsInHomeSection(u8 contact);
 void PhoneReadiness_OnRegionSteps(void);
 

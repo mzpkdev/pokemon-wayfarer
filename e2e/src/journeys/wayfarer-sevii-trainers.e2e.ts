@@ -282,7 +282,6 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
       const baseOpponentId = await readTrainerOpponentId(rematchGame)
       await finishTrainerVictory(rematchGame, "clear that you’re skilled", "base Sharon battle")
 
-      // The first win offered her number and the journey said yes; she is ready from the next day.
       // The first win offered her number and the journey said yes.
       expect(await rematchGame.story.flag("phoneSharonRegistered")).toBe(true)
       await sharonReady(rematchGame, 24_001)
