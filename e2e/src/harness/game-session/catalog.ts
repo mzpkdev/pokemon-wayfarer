@@ -547,6 +547,7 @@ export const storyFlags = {
   wadeDefeated: 0x5a8, // TRAINER_FLAGS_START + TRAINER_WADE_HNS (168)
   phoneRoseRegistered: 0x8be, // the first appended rematch row, contact 90
   phoneDaltonRegistered: 0x8d1, // contact 109
+  phoneSharonRegistered: 0xc09f, // Sevii bank slot 159, contact 119
   hideMtSilverRed: 0x0a9,
   defeatedRed: 0x23b,
   endNuzlocke: 0x964,

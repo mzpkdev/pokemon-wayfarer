@@ -46,9 +46,6 @@ static u16 ResolveWayfarerCommonFlagId(u16 id)
 {
     u16 index;
 
-    // Having the Pokégear is one fact: Hoenn scripts read Emerald's flag, the phone reads HNS's (phone-rematches.md).
-    if (id == HOENN_FLAG_ID(0x12F))
-        return FLAG_HAS_MATCH_CALL;
     if (!IS_WAYFARER_COMMON_FLAG_ID(id))
         return id;
     index = WAYFARER_COMMON_ID_INDEX(id);

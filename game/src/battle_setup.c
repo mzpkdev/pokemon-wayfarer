@@ -2457,7 +2457,7 @@ const u8 *BattleSetup_GetTrainerPostBattleScript(void)
         sShouldCheckTrainerBScript = FALSE;
 #if IS_WAYFARER
         // The second trainer of a two-trainer battle is offered its number the same way as the first.
-        if (PhoneOffer_IsDue(TRAINER_BATTLE_PARAM.opponentB)
+        if (gBattleOutcome == B_OUTCOME_WON && PhoneOffer_IsDue(TRAINER_BATTLE_PARAM.opponentB)
          && (TRAINER_BATTLE_PARAM.battleScriptRetAddrB == NULL || DailyTrainers_NotedRotating(1)))
         {
             gWhichTrainerToFaceAfterBattle = 1;
@@ -2479,7 +2479,7 @@ const u8 *BattleSetup_GetTrainerPostBattleScript(void)
 #if IS_WAYFARER
         // A win against a contact without a registered number offers it, unless the trainer's own after-battle script
         // does (its first win at home). A wanderer runs no such script: this one asks in its place.
-        if (PhoneOffer_IsDue(TRAINER_BATTLE_PARAM.opponentA)
+        if (gBattleOutcome == B_OUTCOME_WON && PhoneOffer_IsDue(TRAINER_BATTLE_PARAM.opponentA)
          && (TRAINER_BATTLE_PARAM.battleScriptRetAddrA == NULL || DailyTrainers_NotedRotating(0)))
         {
             gWhichTrainerToFaceAfterBattle = 0;
@@ -3044,6 +3044,10 @@ static bool8 WasSecondRematchWon(const struct RematchTrainer *table, u16 firstBa
 #if FREE_MATCH_CALL == FALSE
 bool32 HasEnoughBadgesForRematch(void)
 {
+#if IS_WAYFARER
+    // Badges of any region count (the Johto flags below are only Johto's).
+    return GetGlobalBadgeCount() >= OW_REMATCH_BADGE_COUNT;
+#else
     s32 i, count;
 
     for (count = 0, i = 0; i < ARRAY_COUNT(gBadgeFlags); i++)
@@ -3056,6 +3060,7 @@ bool32 HasEnoughBadgesForRematch(void)
     }
 
     return FALSE;
+#endif
 }
 #endif //FREE_MATCH_CALL
 

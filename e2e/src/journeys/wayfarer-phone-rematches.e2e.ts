@@ -96,65 +96,74 @@ describe.sequential("Wayfarer phone rematches", () => {
   })
 
   it("offers a number after a win (yes registers an appended Hoenn contact, no does not), then calls with a Battle text naming today's place", async () => {
-    await game.dailySlots.pin({ day: firstDay, seed, noEmpty: true })
-    await arrangeAt(game, route118, 7, 13)
-    expect(await game.story.flag("phoneRoseRegistered")).toBe(false)
+    try {
+      await game.dailySlots.pin({ day: firstDay, seed, noEmpty: true })
+      await arrangeAt(game, route118, 7, 13)
+      expect(await game.story.flag("phoneRoseRegistered")).toBe(false)
 
-    // Rose: win, hear her out, and accept the offer.
-    await toActionMenu(game, true)
-    await game.battle.win()
-    const said = await toPrompt(game)
-    expect(said).toContain("Register")
-    expect(await game.story.flag("phoneRoseRegistered")).toBe(false)
-    await game.controls.press("a", { holdFrames: 1, releaseFrames: 1 })
-    expect((await settle(game)).join("\n")).toContain("Registered")
-    expect(await game.story.flag("phoneRoseRegistered")).toBe(true)
-    // Registering her touched no other contact's flag.
-    expect(await game.story.flag("phoneDaltonRegistered")).toBe(false)
+      // Rose: win, hear her out, and accept the offer.
+      await toActionMenu(game, true)
+      await game.battle.win()
+      const said = await toPrompt(game)
+      expect(said).toContain("Register")
+      expect(await game.story.flag("phoneRoseRegistered")).toBe(false)
+      await game.controls.press("a", { holdFrames: 1, releaseFrames: 1 })
+      expect((await settle(game)).join("\n")).toContain("Registered")
+      expect(await game.story.flag("phoneRoseRegistered")).toBe(true)
+      // Registering her touched no other contact's flag.
+      expect(await game.story.flag("phoneDaltonRegistered")).toBe(false)
 
-    // Dalton: win and say no.
-    await arrangeAt(game, route118, 16, 11, { phoneRoseRegistered: true }, {}, "right")
-    await toActionMenu(game, true)
-    await game.battle.win()
-    await toPrompt(game)
-    await game.controls.press("down", { holdFrames: 2, releaseFrames: 6 })
-    await game.wait.until((current) => current.choice.cursor === 1, "the cursor on No", 120)
-    await game.controls.press("a", { holdFrames: 1, releaseFrames: 1 })
-    await settle(game)
-    expect(await game.story.flag("phoneDaltonRegistered")).toBe(false)
-    expect(await game.story.flag("phoneRoseRegistered")).toBe(true)
+      // Dalton: win and say no.
+      await arrangeAt(game, route118, 16, 11, { phoneRoseRegistered: true }, {}, "right")
+      await toActionMenu(game, true)
+      await game.battle.win()
+      await toPrompt(game)
+      // The menu takes input a few frames after it draws, so press until the cursor is on No.
+      for (let attempt = 0; (await game.state.read()).choice.cursor !== 1; attempt++) {
+        if (attempt === 10) throw new Error("the cursor never reached No")
+        await game.controls.press("down", { holdFrames: 2, releaseFrames: 6 })
+      }
+      await game.controls.press("a", { holdFrames: 1, releaseFrames: 1 })
+      await settle(game)
+      expect(await game.story.flag("phoneDaltonRegistered")).toBe(false)
+      expect(await game.story.flag("phoneRoseRegistered")).toBe(true)
 
-    // The next day Rose is a wanderer, ready as the day begins: force her next call (bit 8 also makes her ready).
-    const symbols = await readSkyEmuSymbols(requireSymbolsPath())
-    const client = gameOf(game).client
-    await game.dailySlots.pin({ day: firstDay + 1, seed, noEmpty: true })
-    await game.player.warp("littleroot-town", 10, 12, "up")
-    await game.wait.forReady()
-    await client.writeBytes(
-      symbols.address("gMatchCallDebugContact"),
-      new Uint8Array([roseContact + 1, 1]),
-    )
-    await game.player.move("up")
-    let text = ""
-    for (let attempt = 0; attempt < 200 && !text.includes("rematch"); attempt++) {
-      await game.wait.frames(10)
-      // The call window waits for a button before it prints.
-      if (attempt % 5 === 4) await game.controls.press("a", { holdFrames: 1, releaseFrames: 1 })
-      text = decodeFieldMessageText(
-        Array.from(await client.readBytes(symbols.address("gStringVar4"), 320)),
+      // The next day Rose is a wanderer, ready as the day begins: force her next call (bit 8 also makes her ready).
+      const symbols = await readSkyEmuSymbols(requireSymbolsPath())
+      const client = gameOf(game).client
+      await game.dailySlots.pin({ day: firstDay + 1, seed, noEmpty: true })
+      await game.player.warp("littleroot-town", 10, 12, "up")
+      await game.wait.forReady()
+      await client.writeBytes(
+        symbols.address("gMatchCallDebugContact"),
+        new Uint8Array([roseContact + 1, 1]),
       )
+      await game.player.move("up")
+      let text = ""
+      for (let attempt = 0; attempt < 200 && !text.includes("rematch"); attempt++) {
+        await game.wait.frames(10)
+        // The call window waits for a button before it prints.
+        if (attempt % 5 === 4) await game.controls.press("a", { holdFrames: 1, releaseFrames: 1 })
+        text = decodeFieldMessageText(
+          Array.from(await client.readBytes(symbols.address("gStringVar4"), 320)),
+        )
+      }
+      expect(text).toContain("please give me a rematch")
+      // The Battle text ends "be around {STR_VAR_2}.": today's place is filled in, whichever slot she stands in.
+      const place = /be around ([A-Z0-9 .'-]+)\./.exec(text.replace(/\s+/g, " "))
+      expect(place?.[1]?.length).toBeGreaterThan(0)
+      expect(place?.[1]?.length).toBeLessThanOrEqual(16)
+      expect(text).not.toContain("{")
+      await settle(game) // hang up
+    } finally {
+      // The pinned day lives in EWRAM and stamps the save; the next test starts from its own arrangement and pin.
+      await game.dailySlots.unpin()
     }
-    expect(text).toContain("please give me a rematch")
-    // The Battle text ends "be around {STR_VAR_2}.": today's place is filled in, whichever slot she stands in.
-    const place = /be around ([A-Z0-9 .'-]+)\./.exec(text.replace(/\s+/g, " "))
-    expect(place?.[1]?.length).toBeGreaterThan(0)
-    expect(place?.[1]?.length).toBeLessThanOrEqual(16)
-    expect(text).not.toContain("{")
-    await settle(game) // hang up
   })
 
   // Wade is beaten and holds a gift as the day starts, so he is placed and his own script hands it over before any
-  // battle: wherever the slot draw puts him, and with a full Bag he keeps it (NoRoom).
+  // battle; with a full Bag he keeps it (NoRoom). Route 31 has a single slot, so he stands in his own: the hand-off from a
+  // slot on another map is covered by the daily trainers mechanics tests, not here.
   const talkToWade = async (): Promise<string> => {
     await game.player.interact()
     return (await settle(game)).join("\n")
@@ -183,7 +192,7 @@ describe.sequential("Wayfarer phone rematches", () => {
     expect(occupants.map((entry) => entry.occupant)).toContain(wadeSlotRow)
   }
 
-  it("hands a gift over from a rotating slot before any battle, and keeps it when the Bag is full", async () => {
+  it("hands a gift over from his daily slot before any battle, and keeps it when the Bag is full", async () => {
     await startGiftDay(firstDay + 100, { fullPockets: ["items"] })
     const noRoom = await talkToWade()
     expect(noRoom).toContain("BAG")

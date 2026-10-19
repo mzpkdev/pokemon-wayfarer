@@ -7,7 +7,7 @@ Implemented: Yes. Code: `game/src/wayfarer_phone.c` (flags, team tiers, region s
 `wayfarer_daily_trainers.c` (contact index space), `match_call.c` (calls), the Pokénav list files, `vs_seeker.c`
 (retired). Call texts: `game/data/text/match_call_{hns,hoenn,sevii_coast}.inc`, keyed by the lists in
 `game/src/data/wayfarer_phone_*.h`; `game/tools/wayfarer_phone_texts` audits them. Where the build differs from the
-rules below, the rules were corrected: see [Build notes](#build-notes).
+rules below, the rules were corrected; [Build notes](#build-notes) records why.
 
 ## Scope
 
@@ -33,8 +33,10 @@ Pairs share one contact and battle together.
 - **Hoenn rows.** Wayfarer compiles HNS's `gRematchTable`, which reuses
   Emerald's entry names for different people (Emerald's Rose slot holds Joey).
   Hoenn trainers get new entries and never reuse an HNS index. Indexes 28–63
-  are empty and take the first 36; the table grows past its 90 entries for the
-  other 28. Entries are appended, never inserted, so existing indexes keep
+  are empty and take the 36 Hoenn contacts whose Emerald names HNS doesn't
+  reuse (`REMATCH_JERRY` to `REMATCH_KIRA_AND_DAN`, contacts 29–64); the table
+  grows past its 90 entries for the other 28 (contacts 1–28, `REMATCH_<NAME>_HOENN`
+  at 90–117). Entries are appended, never inserted, so existing indexes keep
   their meaning.
 - **Appended range.** The 28 appended indexes 90–117 are normal trainers. The
   special rows (from `REMATCH_WALLY_VR`) and the Elite Four rows (from
@@ -153,9 +155,10 @@ automatic registration in `RegisterTrainerInMatchCall` for Wayfarer. A trainer w
   ready or got a gift later in the day, whose slot is cleared today, or who
   `WhereIsTrainerToday` can't place, makes a General call: calls never name a
   trainer who isn't standing somewhere unbeaten today. A contact whose slot is
-  fixed battles and hands over gifts through its home script, so its Battle
-  text also needs live readiness and its FoundItem text the live gift flag;
-  after its rematch or gift today it makes General calls.
+  fixed battles through its home script, so its Battle text also needs live
+  readiness; after its rematch today it makes General calls. A FoundItem text
+  needs the gift flag to be still set for every contact, because handing a gift
+  over clears the flag but not the slot; after the hand-off the call is General.
 - **Today's place.** Before a call, `{STR_VAR_2}` is set to the map name from
   `WhereIsTrainerToday`. Every Battle and FoundItem text names it; HNS's
   existing Battle texts gain a line that does, and its FoundItem texts are
@@ -175,11 +178,12 @@ longer runs once the home slot rotates, so:
 
 - **Placement.** A contact whose gift flag is set when the day starts is in
   `giftAtDayStart` and is placed that day, like a ready rematch.
-- **Hand-off.** The shared rotating-trainer script runs the hand-off whenever
-  the player talks to, or is spotted by, an occupant whose gift flag is set:
-  the `HasItem` text, `giveitem`, clearing the flag and the `GaveItem` or
-  `NoRoom` text, exactly as the home script does. The hand-off comes before
-  the battle.
+- **Hand-off.** The occupant's own authored script runs the hand-off whenever
+  the player talks to an occupant whose gift flag is set (it doesn't approach
+  by sight): the `HasItem` text, `giveitem`, clearing the flag and the
+  `GaveItem` or `NoRoom` text, exactly as the home script does. The daily
+  slots read the flag as done, so the script reaches the hand-off before any
+  battle. There is no separate shared script.
 - **Text.** The FoundItem call names today's place with `{STR_VAR_2}` instead
   of the home route (the new texts are [below](#hns-battle-and-gift-texts)).
 - **Roll.** The gift roll keeps HNS's 1-in-5 chance. It sets the flag when the
@@ -213,7 +217,7 @@ rematches; the item itself is left unobtainable.
 
 ## Build notes
 
-Resolutions made while implementing; the rules above already reflect them.
+Resolutions made while implementing, kept as the record of why the rules above read as they do.
 
 - **Hoenn indexes.** The 36 Hoenn contacts whose Emerald names HNS does not reuse (`REMATCH_JERRY` .. `REMATCH_KIRA_AND_DAN`,
   contacts 29-64) keep those names in the empty indexes 28-63. The 28 whose names HNS reuses (`ROSE` .. `KAREN`, contacts
@@ -239,9 +243,21 @@ Resolutions made while implementing; the rules above already reflect them.
 - **Asking again.** A contact that wanders is asked again after a later win. A contact with no daily slot (Joey, Tully,
   Lao, Shelby, Sawyer) never gets one, so it asks again when talked to: the talk path (`gotopostbattlescript`) runs
   `PhoneOffer_EventScript_TalkAgain` before the rest of its script, and the script's own offer in that interaction is
-  skipped. In a two-trainer battle both trainers are offered in turn.
-- **Pokégear.** Every offer is gated on the HNS `FLAG_HAS_MATCH_CALL`; Emerald's flag (`0x612F`, set by the Rustboro
-  Devon scene) is the same flag in Wayfarer.
+  skipped. In a two-trainer battle both trainers are offered in turn when neither has an after-battle script of its own (or
+  both are wanderers); a trainer whose own script ends the interaction (its first win at home) does not chain to the
+  second.
+- **Pokégear.** Every offer is gated on the HNS `FLAG_HAS_MATCH_CALL`. Emerald's flag of that name (set by the Rustboro
+  Devon scene) is the same flag in Wayfarer. The source-constant generator gives Hoenn scripts the HNS id at assembly
+  time (`ENGINE_SHARED_FLAGS` in `tools/wayfarer_source_constants/generate.py`), so shared scripts need no common
+  dispatch entry for it. Remapping it in `ResolveWayfarerCommonFlagId` instead would put a check on every flag read,
+  which slowed the walker heartbeat enough to delay input after a seamless map change.
+- **Badges.** Region readiness and random calls wait for `OW_REMATCH_BADGE_COUNT` (5) badges of any region
+  (`GetGlobalBadgeCount`), not only Johto's, which is all HNS's `HasEnoughBadgesForRematch` counted.
+- **Facilities.** No offer is made in the Battle Pyramid, Trainer Hill or Frontier battles (their trainer indexes can equal
+  a contact's trainer id), nor after a loss.
+- **Vs. Seeker.** Clearing rematch state when a map loads with a Vs. Seeker in the Bag is inert in Wayfarer.
+- **Nicole.** Her row is empty in Wayfarer (`REMATCH_NICOLE_HNS` stays only so the index keeps its meaning), so she is not a
+  contact and can't be registered.
 - **Readiness sources.** The 255 region steps are the only one: entering a map no longer readies a contact
   (`TryUpdateRandomTrainerRematches` returns at once), and a contact already holding a gift is not picked again.
 - **Wanderer teams.** A registered, not-ready wanderer brings the higher of its latest fought team and the team its rating

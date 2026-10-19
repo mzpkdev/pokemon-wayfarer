@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from "webanvil/test"
 
 import { GameSession } from "../harness/game-session"
+import { decodeFieldMessageText } from "../harness/game-session/features/state"
 import { type RunningSkyEmu } from "../harness/skyemu/server"
 import { readSkyEmuSymbols } from "../harness/skyemu/symbols"
 import { requireSymbolsPath } from "../harness/skyemu/utils"
@@ -102,16 +103,26 @@ const sharonReady = async (game: GameSession, day: number): Promise<void> => {
   await game.dailySlots.pin({ day, seed: 0x51ab1e5, noEmpty: true })
   await game.player.warp(kindleRoad, 10, 55, "up")
   await game.wait.forReady()
-  await client.writeBytes(symbols.address("gMatchCallDebugContact"), new Uint8Array([sharonContact + 1, 1]))
+  await client.writeBytes(
+    symbols.address("gMatchCallDebugContact"),
+    new Uint8Array([sharonContact + 1, 1]),
+  )
   await game.player.move("up")
-  // The call window waits for a button before it prints, and again before it hangs up.
-  for (let attempt = 0; attempt < 60; attempt++) {
+  // The call window waits for a button before it prints, and again before it hangs up. Her Battle text names her.
+  let heard = false
+  let wasOnTheCall = false
+  for (let attempt = 0; attempt < 80; attempt++) {
+    const text = decodeFieldMessageText(
+      Array.from(await client.readBytes(symbols.address("gStringVar4"), 200)),
+    )
+    if (text.includes("SHARON")) heard = true
     const state = await game.state.read()
-    if (state.ready && !state.controlsLocked && attempt > 3) return
+    wasOnTheCall ||= state.controlsLocked
+    if (heard && wasOnTheCall && state.ready && !state.controlsLocked) return
     await game.controls.press("a", { holdFrames: 1, releaseFrames: 1 })
     await game.wait.frames(10)
   }
-  throw new Error("the call did not end")
+  throw new Error(heard ? "the call did not end" : "Sharon's call never came")
 }
 
 const approachSharon = async (game: GameSession): Promise<void> => {
@@ -260,7 +271,7 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
         checkpoint: "new-bark-after-intro",
         player: { facing: "left", position: { map: kindleRoad, x: 10, y: 55 } },
         party: [{ species: "lapras", level: 100, moves: ["surf"] }],
-        story: { flags: { hasMatchCall: true }, vars: { trainerRating: 0 } },
+        story: { flags: { hasMatchCall: true } },
         determinism: { rngSeed: 1, textSpeed: "instant" },
       })
 
@@ -272,7 +283,8 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
       await finishTrainerVictory(rematchGame, "clear that you’re skilled", "base Sharon battle")
 
       // The first win offered her number and the journey said yes; she is ready from the next day.
-      expect(await rematchGame.story.var("trainerRating")).toBe(0)
+      // The first win offered her number and the journey said yes.
+      expect(await rematchGame.story.flag("phoneSharonRegistered")).toBe(true)
       await sharonReady(rematchGame, 24_001)
       await approachSharon(rematchGame)
       await waitForTrainerBattle(rematchGame, "first Sharon rematch", false)

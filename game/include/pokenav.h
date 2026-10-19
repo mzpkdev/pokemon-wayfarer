@@ -14,6 +14,14 @@ struct PokenavMonListItem
     u16 data;
 };
 
+#if IS_WAYFARER
+// The Match Call list holds every contact (the rematch table's rows, then the Sevii and coast families) plus the special
+// headers; the list builder stops there.
+#define MATCH_CALL_ENTRIES_MAX (MC_HEADER_COUNT + 160)
+#else
+#define MATCH_CALL_ENTRIES_MAX (MAX_REMATCH_ENTRIES - 1)
+#endif
+
 struct PokenavMatchCallEntry
 {
     bool8 isSpecialTrainer;

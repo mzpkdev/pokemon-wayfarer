@@ -1,4 +1,5 @@
 #include "global.h"
+#include "battle.h"
 #include "battle_setup.h"
 #include "constants/battle_setup.h"
 #include "event_data.h"
@@ -10,6 +11,7 @@
 #include "pokemon_storage_system.h"
 #include "pokenav.h"
 #include "region_map.h"
+#include "task.h"
 #include "script.h"
 #include "string_util.h"
 #include "strings.h"
@@ -178,6 +180,12 @@ TEST("Phone: the contacts are the normal rematch rows, the Sevii families that c
     EXPECT_EQ(table, 39 + 64);
     EXPECT_EQ(sevii, 32);
     EXPECT_EQ(coast, 9);
+    // Nicole's row is empty in Wayfarer: not a contact, never offered or registered.
+    EXPECT(!PhoneContact_IsContact(REMATCH_NICOLE_HNS));
+    EXPECT_EQ(DailyContacts_IndexOf(TRAINER_NICOLE_HNS), DAILY_NO_CONTACT);
+    FlagSet(FLAG_HAS_MATCH_CALL);
+    EXPECT(!PhoneOffer_IsDue(TRAINER_NICOLE_HNS));
+    EXPECT(!PhoneOffer_IsDueOnTalk(TRAINER_NICOLE_HNS));
     // Special rows (Wally, gym leaders, Elite Four) are not contacts.
     EXPECT(!PhoneContact_IsContact(REMATCH_WALLY_VR));
     EXPECT(!PhoneContact_IsContact(REMATCH_ROXANNE));
@@ -671,12 +679,14 @@ TEST("Phone: a gift contact picked by the step event may hold a gift instead of 
 // ---------- call text selection ----------
 // Whether the call text for `trainerId` is the text `expected` expanded with today's place, or (for a General call)
 // one of the contact's General texts.
-static bool32 CallIs(u16 trainerId, const u8 *expected)
+static bool32 CallIs(u16 trainerId, const u8 *expected, u8 mapGroup, u8 mapNum)
 {
     u8 *actual = Alloc(400), *wanted = Alloc(400);
     bool32 same;
 
     SelectMatchCallMessage(trainerId, actual);
+    // The place is named here, from the map the contact stands in, not read back from what the call just set.
+    WayfarerGetPlaceNameOfMap(gStringVar2, mapGroup, mapNum);
     StringExpandPlaceholders(wanted, expected);
     same = StringCompare(actual, wanted) == 0;
     Free(actual);
@@ -727,7 +737,7 @@ TEST("Phone: a Battle call needs the day-start ready set and a place, and names 
     SetBit(gPokemonStoragePtr->dailySlots.readyAtDayStart, contact);
     ASSUME(DailyTrainers_WhereIsTrainerToday(TRAINER_WADE_HNS, &mapGroup, &mapNum, &localId));
     EXPECT(SelectMatchCallMessage(TRAINER_WADE_HNS, text));
-    EXPECT(CallIs(TRAINER_WADE_HNS, MatchCall_HNS_Wade_Battle));
+    EXPECT(CallIs(TRAINER_WADE_HNS, MatchCall_HNS_Wade_Battle, mapGroup, mapNum));
     WayfarerGetPlaceNameOfMap(place, mapGroup, mapNum);
     EXPECT(StringLength(place) > 0);
     EXPECT_EQ(StringCompare(gStringVar2, place), 0);
@@ -763,7 +773,7 @@ TEST("Phone: a FoundItem call needs the day-start gift set, a place and the gift
     // Held as the day began: the FoundItem text, naming where he stands.
     SetBit(gPokemonStoragePtr->dailySlots.giftAtDayStart, contact);
     ASSUME(DailyTrainers_WhereIsTrainerToday(TRAINER_WADE_HNS, &mapGroup, &mapNum, &localId));
-    EXPECT(CallIs(TRAINER_WADE_HNS, MatchCall_HNS_Wade_FoundItem));
+    EXPECT(CallIs(TRAINER_WADE_HNS, MatchCall_HNS_Wade_FoundItem, mapGroup, mapNum));
     EXPECT(!SelectMatchCallMessage(TRAINER_WADE_HNS, text));    // a gift is not a rematch request
     // Handed over: the gift is gone, so the call goes back to chatting.
     FlagClear(FLAG_WADE_HAS_ITEM_HNS);
@@ -791,12 +801,20 @@ TEST("Phone: a contact whose slot is fixed calls from its home map, and goes Gen
     EXPECT(DailyTrainers_WhereIsTrainerToday(TRAINER_LAO_1, &mapGroup, &mapNum, &localId));
     EXPECT_EQ(mapGroup, MAP_GROUP(MAP_ROUTE113));
     EXPECT_EQ(mapNum, MAP_NUM(MAP_ROUTE113));
-    WayfarerGetPlaceNameOfMap(gStringVar2, mapGroup, mapNum);
-    EXPECT(CallIs(TRAINER_LAO_1, MatchCall_HOENN_Lao_Battle));
+    // A fixed contact's call names its home map, which is Route 113.
+    {
+        u8 *name = Alloc(40);
+        static const u8 sRoute113[] = _("ROUTE 113");
+
+        WayfarerGetPlaceNameOfMap(name, mapGroup, mapNum);
+        EXPECT_EQ(StringCompare(name, sRoute113), 0);
+        Free(name);
+    }
+    EXPECT(CallIs(TRAINER_LAO_1, MatchCall_HOENN_Lao_Battle, mapGroup, mapNum));
     // The rematch through its home script cleared its readiness: only General calls for the rest of the day.
     gSaveBlock1Ptr->trainerRematches[contact] = 0;
     EXPECT(CallIsOneOf(TRAINER_LAO_1, general, 3));
-    EXPECT(!CallIs(TRAINER_LAO_1, MatchCall_HOENN_Lao_Battle));
+    EXPECT(!CallIs(TRAINER_LAO_1, MatchCall_HOENN_Lao_Battle, mapGroup, mapNum));
 
     RestoreSnapshot(snapshot);
 }
@@ -821,14 +839,11 @@ TEST("Phone: Hoenn, Sevii and coast contacts call with their own Battle texts")
     WayfarerCoastRematchSetReady(TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ALICE);
     UpdateRematchIfDefeated(rose);
     EXPECT(DailyTrainers_WhereIsTrainerToday(TRAINER_ROSE_1, &mapGroup, &mapNum, &localId));
-    WayfarerGetPlaceNameOfMap(gStringVar2, mapGroup, mapNum);
-    EXPECT(CallIs(TRAINER_ROSE_1, MatchCall_HOENN_Rose_Battle));
+    EXPECT(CallIs(TRAINER_ROSE_1, MatchCall_HOENN_Rose_Battle, mapGroup, mapNum));
     EXPECT(DailyTrainers_WhereIsTrainerToday(TRAINER_WAYFARER_SEVII_SWIMMER_MALE_FINN, &mapGroup, &mapNum, &localId));
-    WayfarerGetPlaceNameOfMap(gStringVar2, mapGroup, mapNum);
-    EXPECT(CallIs(TRAINER_WAYFARER_SEVII_SWIMMER_MALE_FINN, MatchCall_SEVII_Finn_Battle));
+    EXPECT(CallIs(TRAINER_WAYFARER_SEVII_SWIMMER_MALE_FINN, MatchCall_SEVII_Finn_Battle, mapGroup, mapNum));
     EXPECT(DailyTrainers_WhereIsTrainerToday(TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ALICE, &mapGroup, &mapNum, &localId));
-    WayfarerGetPlaceNameOfMap(gStringVar2, mapGroup, mapNum);
-    EXPECT(CallIs(TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ALICE, MatchCall_COAST_Alice_Battle));
+    EXPECT(CallIs(TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ALICE, MatchCall_COAST_Alice_Battle, mapGroup, mapNum));
 
     RestoreSnapshot(snapshot);
 }
@@ -856,6 +871,9 @@ TEST("Phone: a win against an unregistered contact is followed by the number off
     static u8 sOwnScript[] = { 0 };
 
     ClearPhoneState();
+    // An earlier test's battle can leave a rotating occupant noted (EWRAM is not reset between tests); noting a battle
+    // with no object (local id 0) clears it, so this battle is a home trainer's.
+    DailyTrainers_NoteBattle(0, 0, TRAINER_ANTHONY_HNS);
     FlagSet(FLAG_HAS_MATCH_CALL);
     TRAINER_BATTLE_PARAM.opponentA = TRAINER_ANTHONY_HNS;
     EXPECT(PhoneOffer_IsDue(TRAINER_ANTHONY_HNS));
@@ -863,7 +881,16 @@ TEST("Phone: a win against an unregistered contact is followed by the number off
     EXPECT(PhoneOffer_IsDue(gRematchTable[contact].trainerIds[2]));
     // A trainer without an after-battle script is followed by the shared one; with its own it runs its own, which asks.
     TRAINER_BATTLE_PARAM.battleScriptRetAddrA = NULL;
+    gBattleOutcome = B_OUTCOME_WON;
     EXPECT_EQ(BattleSetup_GetTrainerPostBattleScript(), PhoneOffer_EventScript_AfterBattle);
+    // A lost battle offers nothing, and neither does a Frontier one, whose trainer indexes can equal a contact's id.
+    gBattleOutcome = B_OUTCOME_LOST;
+    EXPECT(BattleSetup_GetTrainerPostBattleScript() != PhoneOffer_EventScript_AfterBattle);
+    gBattleOutcome = B_OUTCOME_WON;
+    gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_PYRAMID;
+    EXPECT(!PhoneOffer_IsDue(TRAINER_ANTHONY_HNS));
+    gBattleTypeFlags = 0;
+    EXPECT(PhoneOffer_IsDue(TRAINER_ANTHONY_HNS));
     TRAINER_BATTLE_PARAM.battleScriptRetAddrA = sOwnScript;
     EXPECT_EQ(BattleSetup_GetTrainerPostBattleScript(), sOwnScript);
     // The shared script names the contact by its first trainer.
@@ -931,17 +958,11 @@ TEST("Phone: a contact that never wanders asks again when talked to, once, then 
     RestoreSnapshot(snapshot);
 }
 
-TEST("Phone: Hoenn scripts and the phone share one Pokégear flag, and a gift holder is not rolled for again")
+// Hoenn scripts read the engine's Pokégear flag directly: tools/wayfarer_source_constants (ENGINE_SHARED_FLAGS).
+TEST("Phone: a gift holder is not rolled for again")
 {
     struct Snapshot *snapshot = TakeSnapshot();
     u8 wade = ContactOf(TRAINER_WADE_HNS);
-
-    FlagClear(FLAG_HAS_MATCH_CALL);
-    EXPECT(!FlagGet(HOENN_FLAG_ID(0x12F)));
-    FlagSet(HOENN_FLAG_ID(0x12F));
-    EXPECT(FlagGet(FLAG_HAS_MATCH_CALL));
-    FlagClear(FLAG_HAS_MATCH_CALL);
-    EXPECT(!FlagGet(HOENN_FLAG_ID(0x12F)));
 
     // A contact that already holds a gift is not picked by the step event again.
     ClearPhoneState();
@@ -954,6 +975,128 @@ TEST("Phone: Hoenn scripts and the phone share one Pokégear flag, and a gift ho
     EXPECT(!PhoneContact_IsReady(wade));
     EXPECT_EQ(VarGet(VAR_WADE_ITEM_HNS), ITEM_NUGGET);
     FlagClear(FLAG_WADE_HAS_ITEM_HNS);
+
+    RestoreSnapshot(snapshot);
+}
+
+extern const u8 MatchCall_HNS_Tully_General1[];
+extern const u8 MatchCall_HNS_Tully_General2[];
+extern const u8 MatchCall_HNS_Tully_General3[];
+extern const u8 MatchCall_HNS_Tully_FoundItem[];
+
+TEST("Phone: a fixed-home gift contact (Tully) calls from his home with FoundItem, and goes General after the gift")
+{
+    struct Snapshot *snapshot = TakeSnapshot();
+    u8 tully = ContactOf(TRAINER_TULLY_HNS);
+    u8 mapGroup, mapNum, localId;
+    static const u8 *const general[] = { MatchCall_HNS_Tully_General1, MatchCall_HNS_Tully_General2, MatchCall_HNS_Tully_General3 };
+    static const u8 sRoute42[] = _("ROUTE 42");
+    u8 *name = Alloc(40);
+
+    EXPECT(DailyContacts_IsFixed(tully));
+    ClearPhoneState();
+    StartDay(8400);
+    MeetAndRegister(tully);
+    // A gift found mid-day is announced from tomorrow.
+    FlagSet(FLAG_TULLY_HAS_ITEM_HNS);
+    EXPECT(CallIsOneOf(TRAINER_TULLY_HNS, general, 3));
+    // Held as the day began: FoundItem, naming his home map, Route 42.
+    SetBit(gPokemonStoragePtr->dailySlots.giftAtDayStart, tully);
+    EXPECT(DailyTrainers_WhereIsTrainerToday(TRAINER_TULLY_HNS, &mapGroup, &mapNum, &localId));
+    EXPECT_EQ(mapGroup, MAP_GROUP(MAP_ROUTE42_HNS));
+    EXPECT_EQ(mapNum, MAP_NUM(MAP_ROUTE42_HNS));
+    WayfarerGetPlaceNameOfMap(name, mapGroup, mapNum);
+    EXPECT_EQ(StringCompare(name, sRoute42), 0);
+    EXPECT(CallIs(TRAINER_TULLY_HNS, MatchCall_HNS_Tully_FoundItem, mapGroup, mapNum));
+    // His home script handed it over today: only General calls for the rest of the day.
+    FlagClear(FLAG_TULLY_HAS_ITEM_HNS);
+    EXPECT(CallIsOneOf(TRAINER_TULLY_HNS, general, 3));
+    EXPECT(!CallIs(TRAINER_TULLY_HNS, MatchCall_HNS_Tully_FoundItem, mapGroup, mapNum));
+    Free(name);
+
+    RestoreSnapshot(snapshot);
+}
+
+// The Match Call list as the Pokénav builds it, run to its end. The resources struct is private to pokenav.c, so this is
+// its layout.
+struct PokenavResourcesView
+{
+    u32 (*currentMenuCb1)(void);
+    u32 currentMenuIndex;
+    u16 mode;
+    u16 conditionSearchId;
+    bool32 hasAnyRibbons;
+    void *substructPtrs[POKENAV_SUBSTRUCT_COUNT];
+};
+extern struct PokenavResourcesView *gPokenavResources;
+
+static u32 BuildMatchCallList(void)
+{
+    u32 frames;
+
+    gPokenavResources = AllocZeroed(sizeof(*gPokenavResources));
+    ASSUME(gPokenavResources != NULL);
+    ASSUME(PokenavCallback_Init_MatchCall());
+    for (frames = 0; frames < 600 && !IsMatchCallListInitFinished(); frames++)
+        RunTasks();
+    return IsMatchCallListInitFinished();
+}
+
+static void FreeMatchCallList(void)
+{
+    FreePokenavSubstruct(POKENAV_SUBSTRUCT_MATCH_CALL_MAIN);
+}
+
+TEST("Phone: every registered contact is in the Pokénav list once, and the list never overflows")
+{
+    struct Snapshot *snapshot = TakeSnapshot();
+    u8 contact;
+    u32 contacts = 0, entries, found;
+    struct PokenavMatchCallEntry *list;
+
+    ClearPhoneState();
+    for (contact = 0; contact <= DAILY_CONTACT_LAST; contact++)
+    {
+        if (!PhoneContact_IsContact(contact))
+            continue;
+        FlagSet(PhoneContact_RegisteredFlag(contact));
+        contacts++;
+    }
+    EXPECT_EQ(contacts, 39 + 64 + 32 + 9);
+    // The list has room for every header and every contact.
+    EXPECT(MATCH_CALL_ENTRIES_MAX >= MC_HEADER_COUNT + 39 + 64 + 32 + 9);
+    ASSUME(BuildMatchCallList());
+    entries = GetNumberRegistered();
+    EXPECT(entries <= MATCH_CALL_ENTRIES_MAX);
+    list = GetMatchCallList();
+    for (contact = 0; contact <= DAILY_CONTACT_LAST; contact++)
+    {
+        u32 i;
+
+        if (!PhoneContact_IsContact(contact))
+            continue;
+        for (found = 0, i = 0; i < entries; i++)
+        {
+            if (!list[i].isSpecialTrainer && list[i].headerId == contact)
+                found++;
+        }
+        EXPECT_EQ(found, 1);
+    }
+    // A contact's place, and whether it is ready, are read from its own home and registry.
+    PhoneContact_SetReady(ContactOf(TRAINER_WAYFARER_SEVII_SWIMMER_MALE_FINN));
+    {
+        u32 i;
+        u8 finn = ContactOf(TRAINER_WAYFARER_SEVII_SWIMMER_MALE_FINN);
+
+        for (i = 0; i < entries; i++)
+        {
+            if (!list[i].isSpecialTrainer && list[i].headerId == finn)
+                EXPECT(ShouldDrawRematchPokeballIcon(i));
+        }
+    }
+    FreeMatchCallList();
+    Free(gPokenavResources);
+    gPokenavResources = NULL;
 
     RestoreSnapshot(snapshot);
 }

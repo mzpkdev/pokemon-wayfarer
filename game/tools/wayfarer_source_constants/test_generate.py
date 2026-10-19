@@ -24,6 +24,23 @@ class SourceConstantTests(unittest.TestCase):
         self.assertEqual(GENERATOR.hoenn_value("VAR_LITTLEROOT_TOWN_STATE", 0x4050), 0x7050)
         self.assertEqual(GENERATOR.hoenn_value("VAR_RESULT", 0x800D), 0x800D)
 
+    def test_engine_shared_flag_takes_the_engine_id(self):
+        engine = {"FLAG_HAS_MATCH_CALL": 0x1F3}
+        self.assertEqual(GENERATOR.source_value_for_hoenn("FLAG_HAS_MATCH_CALL", 0x12F, engine), 0x1F3)
+        self.assertEqual(GENERATOR.source_value_for_hoenn("FLAG_RESCUED_BIRCH", 0x52, engine), 0x6052)
+        with self.assertRaises(ValueError):
+            GENERATOR.source_value_for_hoenn("FLAG_HAS_MATCH_CALL", 0x12F, {})
+
+    def test_engine_shared_flag_needs_no_common_dispatch(self):
+        table, data = GENERATOR.render_common_tables(
+            {"FLAG_HAS_MATCH_CALL", "FLAG_RESCUED_BIRCH"},
+            {"FLAG_HAS_MATCH_CALL": 0x12F, "FLAG_RESCUED_BIRCH": 0x52},
+            {"FLAG_HAS_MATCH_CALL": 0x1F3, "FLAG_RESCUED_BIRCH": 0x52},
+        )
+        self.assertIn("#define FLAG_HAS_MATCH_CALL 0x1F3", table)
+        self.assertNotIn("// FLAG_HAS_MATCH_CALL", data)
+        self.assertIn("// FLAG_RESCUED_BIRCH", data)
+
     def test_macro_aliases_resolve_to_integers(self):
         values, skipped = GENERATOR.resolve_constants(
             {

@@ -14,10 +14,10 @@ trainers the scaling classification keeps out of the daily slots (Gym members, b
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Kanto | 77 | 7 | 7 | 86 | 30 |
 | Sevii | 60 | 1 | 20 | 4 | 6 |
-| Johto | 116 | 5 | 22 | 66 | 30 |
+| Johto | 116 | 5 | 22 | 67 | 30 |
 | Alola | 10 | 1 | 8 | 0 | 0 |
 | Hoenn | 276 | 8 | 41 | 86 | 53 |
-| total | 539 | 22 | 98 | 242 | 119 |
+| total | 539 | 22 | 98 | 243 | 119 |
 
 659 daily slots. Absence chances (default 25%): 25%: 652, 0%: 7. 7 slot(s) at 0% (someone is always there).
 
@@ -45,6 +45,7 @@ trainers the scaling classification keeps out of the daily slots (Gym members, b
 | dialogue audit: a line is about the place (resolved below) | 6 |
 | Jake and Joyce are authored on both Route 26 and its north half: one trainer, one place, so both stay at home | 4 |
 | buried trainer: it reveals itself out of the ground | 2 |
+| talk-only: no sight line, so nothing for a slot to rotate | 1 |
 
 ## Trainer groups
 
@@ -1090,6 +1091,7 @@ Every trainer slot with an `ORDINARY` trainer: daily slots by index, then the on
 | - | Route34_hns local id 10 | TRAINER_KEITH_HNS | OFFICER | - | - | not daily: hidden by a flag (FLAG_NIGHT_POKEMON): a story or time-of-day trainer |
 | - | Route35_hns local id 8 | TRAINER_DIRK_HNS | OFFICER | - | - | not daily: hidden by a flag (FLAG_NIGHT_POKEMON): a story or time-of-day trainer |
 | - | Route39_hns local id 18 | TRAINER_JAMIE_HNS | PARASOL_LADY | - | - | not daily: hidden by a flag (FLAG_NIGHT_POKEMON): a story or time-of-day trainer |
+| - | Route42_hns local id 4 | TRAINER_TULLY_HNS | FISHERMAN | - | - | not daily: talk-only: no sight line, so nothing for a slot to rotate |
 | - | Route1_hns local id 1 | TRAINER_QUINN_HNS | COOLTRAINER | - | - | not daily: hidden by a flag (FLAG_TEMP_1): a story or time-of-day trainer |
 | - | Route1_hns local id 2 | TRAINER_DANNY_HNS | SCHOOL_KID | - | - | not daily: hidden by a flag (FLAG_TEMP_1): a story or time-of-day trainer |
 | - | Route25_hns local id 1 | TRAINER_DUDLEY_HNS | SCHOOL_KID | - | - | not daily: dialogue audit: Route 25's six-trainer challenge numbers its opponents ("No. 3", "second", "last in line", "the six of us"); the line is about this trainer's place in the sequence, so it stays at home. |

@@ -31,13 +31,29 @@ def read(root, relative):
     return (root / relative).read_text(encoding='utf-8')
 
 
+def parse_strings(source):
+    """label -> the list of its .string lines' contents, escapes kept as written (\\n, \\l, \\p)."""
+    strings = {}
+    for match in re.finditer(r'^(MatchCall_\w+)::\n((?:[ \t]+\.string ".*"\n)+)', source, re.M):
+        strings[match.group(1)] = re.findall(r'\.string "(.*)"', match.group(2))
+    return strings
+
+
 def parse_texts(source):
     """label -> the text of its .string lines, escapes kept as written (\\n, \\l, \\p)."""
-    texts = {}
-    for match in re.finditer(r'^(MatchCall_\w+)::\n((?:[ \t]+\.string ".*"\n)+)', source, re.M):
-        parts = re.findall(r'\.string "(.*)"', match.group(2))
-        texts[match.group(1)] = ''.join(parts)
-    return texts
+    return {label: ''.join(parts) for label, parts in parse_strings(source).items()}
+
+
+def format_problems(label, parts):
+    """One terminating $ at the very end, and every other .string line ends where the text can continue: a line break or box."""
+    problems = []
+    text = ''.join(parts)
+    if text.count('$') != 1 or not text.endswith('$'):
+        problems.append(f'{label}: needs exactly one $, at the end of the last line')
+    for index, part in enumerate(parts[:-1]):
+        if not re.search(r'\\[nlp]$', part):
+            problems.append(f'{label}: line {index + 1} does not end in \\n, \\l or \\p')
+    return problems
 
 
 def split_boxes(text):
@@ -136,8 +152,11 @@ def placed_trainers(root):
 def audit(root=ROOT):
     errors = []
     texts = {}
+    strings = {}
     for name in ('hns', 'hoenn', 'sevii_coast'):
-        texts.update(parse_texts(read(root, f'data/text/match_call_{name}.inc')))
+        source = read(root, f'data/text/match_call_{name}.inc')
+        texts.update(parse_texts(source))
+        strings.update(parse_strings(source))
 
     def need(label, place=True, fit=True, box_lines=BOX_LINES):
         if label not in texts:
@@ -147,6 +166,7 @@ def audit(root=ROOT):
             errors.append(f'{label} does not name today\'s place with {{STR_VAR_2}}')
         if fit:
             errors.extend(fit_problems(label, texts[label], box_lines))
+            errors.extend(format_problems(label, strings[label]))
 
     # HNS: the table rows and the call table describe the same contacts.
     hns_rows, hoenn_rows = table_rows(root)

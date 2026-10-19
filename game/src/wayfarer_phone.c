@@ -9,7 +9,10 @@
 #include "wayfarer_phone.h"
 
 #if IS_WAYFARER
+#include "battle.h"
+#include "battle_pyramid.h"
 #include "battle_setup.h"
+#include "trainer_hill.h"
 #include "event_data.h"
 #include "match_call.h"
 #include "overworld.h"
@@ -223,13 +226,22 @@ bool8 PhoneContact_IsInHomeSection(u8 contact)
         && Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum)->regionMapSectionId == gMapHeader.regionMapSectionId;
 }
 
-// A registered contact the player has met, who isn't ready yet, in the region.
+// A registered contact the player has met, who isn't ready yet, in the region. The registered flag goes first: it is one
+// flag read, and it leaves the lookups of a contact's first trainer, its home and its region to the few contacts that have
+// a number.
 static bool8 IsReadinessCandidate(u8 contact, enum PhoneRegion region)
 {
-    return PhoneContact_IsRegistered(contact)
-        && HasTrainerBeenFought(DailyContacts_FirstTrainer(contact))
+    u16 first;
+
+    if (contact < REMATCH_TABLE_ENTRIES && !REMATCH_IS_NORMAL(contact))
+        return FALSE;
+    if (!FlagGet(PhoneContact_RegisteredFlag(contact)))
+        return FALSE;
+    first = DailyContacts_FirstTrainer(contact);
+    return first != TRAINER_NONE
+        && HasTrainerBeenFought(first)
         && !PhoneContact_IsReady(contact)
-        && !MatchCall_HnsTrainerHasGift(DailyContacts_FirstTrainer(contact))   // a gift is not rolled again
+        && !MatchCall_HnsTrainerHasGift(first)   // a gift is not rolled again
         && PhoneContact_Region(contact) == region;
 }
 
@@ -247,7 +259,7 @@ void PhoneReadiness_OnRegionSteps(void)
         return;
     for (contact = 0; contact <= DAILY_CONTACT_LAST; contact++)
     {
-        if (PhoneContact_IsContact(contact) && IsReadinessCandidate(contact, region))
+        if (IsReadinessCandidate(contact, region))
             candidates++;
     }
     if (candidates == 0)
@@ -255,7 +267,7 @@ void PhoneReadiness_OnRegionSteps(void)
     pick = DailySlots_Roll(DAILY_ROLL_PHONE_PICK, steps, 0) % candidates;
     for (contact = 0; contact <= DAILY_CONTACT_LAST; contact++)
     {
-        if (!PhoneContact_IsContact(contact) || !IsReadinessCandidate(contact, region))
+        if (!IsReadinessCandidate(contact, region))
             continue;
         if (pick-- != 0)
             continue;
@@ -304,8 +316,13 @@ void PhoneOffer_Resume(struct ScriptContext *ctx)
 // After a win against a contact without a registered number, with the Pokégear in hand.
 bool8 PhoneOffer_IsDue(u16 trainerId)
 {
-    u8 contact = DailyContacts_IndexOf(trainerId);
+    u8 contact;
 
+    // The Battle Pyramid, Trainer Hill and the Frontier battle with indexes that are not trainer ids, which can equal a
+    // contact's.
+    if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || InTrainerHillChallenge() || (gBattleTypeFlags & BATTLE_TYPE_FRONTIER))
+        return FALSE;
+    contact = DailyContacts_IndexOf(trainerId);
     return contact != DAILY_NO_CONTACT && FlagGet(FLAG_HAS_MATCH_CALL) && !PhoneContact_IsRegistered(contact);
 }
 

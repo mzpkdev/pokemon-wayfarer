@@ -36,6 +36,16 @@ def classified(*objects, reviewed=None):
 
 
 class Units(unittest.TestCase):
+    def test_a_talk_only_trainer_is_never_daily_and_other_exclusions_win(self):
+        units, errors = classified(obj(trainer_type='TRAINER_TYPE_NONE'))
+        self.assertEqual(units[0].status, 'not-daily')
+        self.assertTrue(units[0].reason.startswith('talk-only'))
+        # An exclusion that applies to any trainer is reported first.
+        units, errors = classified(obj(trainer_type='TRAINER_TYPE_NONE', hide='FLAG_HIDE_X'))
+        self.assertTrue(units[0].reason.startswith('hidden by a flag'))
+        units, errors = classified(obj(trainer_type='TRAINER_TYPE_NONE', problems=('additem',)))
+        self.assertTrue(units[0].reason.startswith('script does more than battle'))
+
     def test_a_plain_trainer_is_daily(self):
         units, errors = classified(obj())
         self.assertEqual(errors, [])
@@ -533,6 +543,12 @@ class Repository(unittest.TestCase):
         for trainer, row in resolutions.items():
             if row.get('not_daily'):
                 self.assertEqual(homes[trainer].status, 'not-daily')
+
+    def test_a_talk_only_rematch_lead_stays_at_a_fixed_home(self):
+        tully = [u for u in self.state['fixed_homes'] if u.home == 'TRAINER_TULLY_HNS']
+        self.assertEqual(len(tully), 1)
+        self.assertTrue(tully[0].reason.startswith('talk-only'))
+        self.assertIn('talk-only', (G.ROOT / 'src/data/trainer_slots/report.md').read_text())
 
     def test_fixed_contacts_keep_a_home(self):
         homes = {u.home for u in self.state['fixed_homes']}

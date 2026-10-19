@@ -19,6 +19,18 @@ class Parsing(unittest.TestCase):
         self.assertEqual(len(A.expand('{PLAYER} {STR_VAR_2} {STR_VAR_3}')), 7 + 1 + 16 + 1 + 10)
 
 
+class Format(unittest.TestCase):
+    def test_one_dollar_at_the_end(self):
+        self.assertEqual(A.format_problems('T', ['a\\n', 'b$']), [])
+        self.assertEqual(len(A.format_problems('T', ['a\\n', 'b'])), 1)
+        self.assertEqual(len(A.format_problems('T', ['a$\\n', 'b$'])), 1)
+        self.assertEqual(len(A.format_problems('T', ['a$'] * 2)), 2)
+
+    def test_every_line_but_the_last_ends_in_a_break(self):
+        self.assertEqual(A.format_problems('T', ['a\\l', 'b\\p', 'c$']), [])
+        self.assertEqual(len(A.format_problems('T', ['a ', 'b$'])), 1)
+
+
 class Fit(unittest.TestCase):
     def test_a_line_of_exactly_the_width_fits(self):
         self.assertEqual(A.fit_problems('T', 'x' * A.LINE_WIDTH + '$'), [])
@@ -58,6 +70,11 @@ class Repository(unittest.TestCase):
         self.assertGreater(len(authored), 400)
         for label, text in authored.items():
             self.assertEqual(compiled.get(label), text, label)
+        # And the other way: every phone text of the three new groups and every rewritten HNS text is in the spec.
+        extra = [label for label in compiled if label not in authored
+                 and (label.startswith(('MatchCall_HOENN_', 'MatchCall_SEVII_', 'MatchCall_COAST_'))
+                      or label.endswith(('_FoundItem', '_Battle')) and label.startswith('MatchCall_HNS_'))]
+        self.assertEqual(extra, ['MatchCall_HNS_Nicole_Battle'])  # kept for the standalone HNS build, which compiles her
 
     def test_a_contact_without_a_place_is_reported(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -757,6 +757,10 @@ static void ClearAllTrainerRematchStates(void)
 #if FREE_MATCH_CALL == FALSE
     u32 i;
 
+    // Vs. Seeker is retired in Wayfarer: a stray one in the Bag must not wipe the phone's readiness.
+    if (IS_WAYFARER)
+        return;
+
     if (!CheckBagHasItem(ITEM_VS_SEEKER, 1))
         return;
 

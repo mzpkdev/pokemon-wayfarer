@@ -19,11 +19,9 @@
 #include "constants/songs.h"
 
 #if IS_WAYFARER
-// Every contact (the rematch table's rows, then the Sevii and coast families) plus the special headers.
-#define MATCH_CALL_ENTRIES_MAX (MC_HEADER_COUNT + DAILY_CONTACT_LAST + 1)
 #define MATCH_CALL_LAST_CONTACT DAILY_CONTACT_LAST
+STATIC_ASSERT(MATCH_CALL_ENTRIES_MAX >= MC_HEADER_COUNT + DAILY_CONTACT_LAST + 1, MatchCallListFitsEveryContact);
 #else
-#define MATCH_CALL_ENTRIES_MAX (MAX_REMATCH_ENTRIES - 1)
 #define MATCH_CALL_LAST_CONTACT (REMATCH_TABLE_ENTRIES - 1)
 #endif
 
