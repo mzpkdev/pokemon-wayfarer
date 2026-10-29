@@ -1350,4 +1350,19 @@ TEST("Wayfarer Hoenn persistent state stays under one KiB")
     EXPECT_LE(sizeof(struct SaveBlock3), 1624);
 }
 
+TEST("Wayfarer friendship state rides in SaveBlock3 and an impossible first-win bit invalidates the save")
+{
+    // 38 scores and 5 first-win bytes, padded to a word, in the Wayfarer members.
+    EXPECT_EQ(sizeof(gSaveBlock3Ptr->notableFriendship), 44);
+    WayfarerInitPersistentState();
+    gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_NEW_BARK;
+    gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation = HEAL_LOCATION_NEW_BARK_TOWN_HNS;
+    gSaveBlock3Ptr->wayfarerHoenn.initialized = TRUE;
+    EXPECT(WayfarerPersistentStateIsValid());
+    gSaveBlock3Ptr->notableFriendship.firstWin[0] = 1;
+    EXPECT(!WayfarerPersistentStateIsValid());
+    gSaveBlock3Ptr->notableFriendship.score[0] = 10;
+    EXPECT(WayfarerPersistentStateIsValid());
+}
+
 #endif
