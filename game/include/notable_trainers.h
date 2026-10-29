@@ -37,6 +37,18 @@ enum NotableTrainerPlayStyle
     NOTABLE_STYLE_BOMBER,
 };
 
+// The voice bits the talk flow speaks (notable-haunts.md#talk-flow), as message text with line breaks.
+// {PLAYER} is the player's name; {STR_VAR_1} is the buddy slot's species, set by the talk code.
+struct NotableVoice
+{
+    const u8 *meet;
+    const u8 *heard;
+    const u8 *again;
+    const u8 *hello;
+    const u8 *close;
+    const u8 *bye;
+};
+
 struct NotableMovePoolEntry
 {
     u16 move;
@@ -58,6 +70,7 @@ struct NotableTrainer
     struct TrainerMon roster[PARTY_SIZE];
     s8 levelOffsets[PARTY_SIZE];
     u8 aceMask;
+    u8 buddySlot; // 1-6: the roster slot {BUDDY} names in voice lines
     const struct NotableMovePoolEntry *movePool;
     u8 movePoolCount;
 };
@@ -73,6 +86,8 @@ struct NotableTrainerSnapshot
     u8 teamSize;
     u8 aceCount;
 };
+
+extern const struct NotableVoice gNotableVoices[NOTABLE_TRAINER_COUNT];
 
 const struct NotableTrainer *GetNotableTrainerById(u32 characterId);
 const struct NotableTrainer *GetNotableTrainerForEncounter(u16 trainerId);
