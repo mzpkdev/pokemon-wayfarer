@@ -18,6 +18,7 @@ BUILD_INPUT_DOCS = frozenset({
     ".product/specs/notable-ambience.md",
     ".product/specs/notable-spots.md",
     ".product/specs/notable-world-simulation.md",
+    ".product/specs/phone-rematches.md",
     ".product/specs/prowlers.md",
     ".product/specs/reach-assignments.md",
     ".product/specs/wayfarer-hoenn-content-port.md",

@@ -26,6 +26,7 @@
 #include "overworld.h"
 #include "pokemon_storage_system.h"
 #include "wayfarer_coast_trainers.h"
+#include "wayfarer_phone.h"
 #include "wayfarer_sevii_rematches.h"
 #include "constants/event_objects.h"
 #include "constants/maps.h"
@@ -33,15 +34,15 @@
 #include "constants/rematches.h"
 #include "data/trainer_slots/slots.h"
 
-// The phone contact index space of phone-rematches.md: rematch table rows first, then the Sevii
-// families that carry a stronger team, then the coast families.
-#define CONTACT_TABLE_COUNT     118
-#define CONTACT_SEVII_FIRST     118
-#define CONTACT_COAST_FIRST     150
+// The phone contact index space of phone-rematches.md: rematch table rows first (the normal ones are contacts), then the
+// Sevii families that carry a stronger team, then the coast families.
+#define CONTACT_SEVII_FIRST     DAILY_CONTACT_SEVII_FIRST
+#define CONTACT_COAST_FIRST     DAILY_CONTACT_COAST_FIRST
 
-STATIC_ASSERT(REMATCH_TABLE_ENTRIES <= CONTACT_TABLE_COUNT, DailyContactTableRows);
+STATIC_ASSERT(REMATCH_TABLE_ENTRIES == CONTACT_SEVII_FIRST, DailyContactTableRows);
 STATIC_ASSERT(WORLD_TRAINER_SEVII_FAMILIES == WAYFARER_SEVII_REMATCH_FAMILY_COUNT, DailyContactSeviiFamilies);
-STATIC_ASSERT(CONTACT_COAST_FIRST + WAYFARER_COAST_REMATCH_FAMILY_COUNT <= DAILY_CONTACT_COUNT, DailyContactCoastFamilies);
+STATIC_ASSERT(WAYFARER_COAST_REMATCH_FAMILY_COUNT == DAILY_CONTACT_COAST_COUNT, DailyContactCoastCount);
+STATIC_ASSERT(DAILY_CONTACT_LAST < DAILY_CONTACT_COUNT, DailyContactCoastFamilies);
 STATIC_ASSERT(WORLD_TRAINER_GROUP_SLOTS_MAX <= 255, DailyTrainerGroupSize);
 
 // The rotating slots of the current map and what stands in them today.
@@ -148,14 +149,14 @@ static void SetHomeBeaten(u16 slot)
 }
 
 // ---------- phone contacts ----------
-// Where a trainer id sits in the contact index space, or DAILY_NO_CONTACT. Hoenn rows join when the
-// rematch table grows (phone-rematches.md); this finds them then with no change.
+// Where a trainer id sits in the contact index space, or DAILY_NO_CONTACT. Every normal rematch table row is a contact
+// (HNS's, Hoenn's and the appended Hoenn rows); the special and Elite Four rows are not.
 u8 DailyContacts_IndexOf(u16 trainerId)
 {
     s32 index = TrainerIdToRematchTableId(gRematchTable, trainerId);
 
     if (index >= 0)
-        return index < REMATCH_SPECIAL_TRAINER_START ? index : DAILY_NO_CONTACT;
+        return REMATCH_IS_NORMAL(index) ? index : DAILY_NO_CONTACT;
     index = WayfarerSeviiRematchFamilyIndex(trainerId);
     if (index >= 0)
         return sWorldTrainerSeviiContacts[index] == 255 ? DAILY_NO_CONTACT : sWorldTrainerSeviiContacts[index];
@@ -180,6 +181,14 @@ static void SetContactBit(u8 *bits, u8 contact)
     bits[contact / 8] |= 1 << (contact % 8);
 }
 
+#if TESTING || defined(E2E_TESTING)
+// A journey makes a contact ready as the day began, so its next call is a Battle call.
+void DailyContacts_DebugMarkReadyAtDayStart(u8 contact)
+{
+    SetContactBit(Daily()->readyAtDayStart, contact);
+}
+#endif
+
 // The contacts that are ready for a rematch, and those that hold a gift, right now. They are fixed for the day.
 void DailyContacts_TakeSnapshots(void)
 {
@@ -188,8 +197,10 @@ void DailyContacts_TakeSnapshots(void)
 
     memset(daily->readyAtDayStart, 0, sizeof(daily->readyAtDayStart));
     memset(daily->giftAtDayStart, 0, sizeof(daily->giftAtDayStart));
-    for (i = 0; i < REMATCH_SPECIAL_TRAINER_START && i < MAX_REMATCH_ENTRIES; i++)
+    for (i = 0; i < REMATCH_TABLE_ENTRIES && i < MAX_REMATCH_ENTRIES; i++)
     {
+        if (!REMATCH_IS_NORMAL(i))
+            continue;
         if (gSaveBlock1Ptr->trainerRematches[i] != 0)
             SetContactBit(daily->readyAtDayStart, i);
         if (MatchCall_HnsTrainerHasGift(gRematchTable[i].trainerIds[0]))
@@ -205,6 +216,106 @@ void DailyContacts_TakeSnapshots(void)
         if (WayfarerCoastRematchFamilyIsReady(i))
             SetContactBit(daily->readyAtDayStart, CONTACT_COAST_FIRST + i);
     }
+}
+
+static s32 SeviiFamilyOf(u8 contact)
+{
+    s32 family;
+
+    for (family = 0; family < WAYFARER_SEVII_REMATCH_FAMILY_COUNT; family++)
+    {
+        if (sWorldTrainerSeviiContacts[family] == contact)
+            return family;
+    }
+    return -1;
+}
+
+// The first team (the one the trainer is met with) of a contact, or TRAINER_NONE.
+u16 DailyContacts_FirstTrainer(u8 contact)
+{
+    s32 family;
+
+    if (contact < REMATCH_TABLE_ENTRIES)
+        return REMATCH_IS_NORMAL(contact) ? gRematchTable[contact].trainerIds[0] : TRAINER_NONE;
+    if (contact >= CONTACT_COAST_FIRST && contact <= DAILY_CONTACT_LAST)
+        return WayfarerCoastRematchFamilyFirst(contact - CONTACT_COAST_FIRST);
+    family = SeviiFamilyOf(contact);
+    return family >= 0 ? gWayfarerSeviiRematchFamilies[family].trainerIds[0] : TRAINER_NONE;
+}
+
+// A contact's rematch teams in authored order, with the number of teams the family has (repeats of the last team
+// are not counted), or NULL for a number that is not a contact.
+const u16 *DailyContacts_Teams(u8 contact, u8 *count)
+{
+    const u16 *ids;
+    u8 slots, n;
+    s32 family;
+
+    if (contact < REMATCH_TABLE_ENTRIES && REMATCH_IS_NORMAL(contact))
+    {
+        ids = gRematchTable[contact].trainerIds;
+        slots = REMATCHES_COUNT;
+    }
+    else if (contact >= CONTACT_COAST_FIRST && contact <= DAILY_CONTACT_LAST)
+    {
+        ids = WayfarerCoastRematchFamilyTeams(contact - CONTACT_COAST_FIRST, &slots);
+    }
+    else if ((family = SeviiFamilyOf(contact)) >= 0)
+    {
+        ids = gWayfarerSeviiRematchFamilies[family].trainerIds;
+        slots = WAYFARER_SEVII_REMATCH_STAGES;
+    }
+    else
+    {
+        return NULL;
+    }
+    for (n = 1; n < slots && ids[n] != TRAINER_NONE && ids[n] != ids[n - 1]; n++);
+    *count = n;
+    return ids;
+}
+
+static u16 SlotOfTrainer(u16 trainerId);
+
+// Where a contact lives: the map of its first trainer's slot or fixed home, else its rematch table row's map.
+bool8 DailyContacts_GetHome(u8 contact, u8 *mapGroup, u8 *mapNum)
+{
+    u16 first = DailyContacts_FirstTrainer(contact);
+    u16 slot;
+    u16 i;
+
+    if (first == TRAINER_NONE)
+        return FALSE;
+    slot = SlotOfTrainer(first);
+    if (slot != NO_TRAINER_SLOT)
+    {
+        *mapGroup = sWorldTrainerSlots[slot].mapGroup;
+        *mapNum = sWorldTrainerSlots[slot].mapNum;
+        return TRUE;
+    }
+    for (i = 0; i < WORLD_TRAINER_FIXED_HOME_COUNT; i++)
+    {
+        if (sWorldTrainerFixedHomes[i].trainerId == first)
+        {
+            *mapGroup = sWorldTrainerFixedHomes[i].mapGroup;
+            *mapNum = sWorldTrainerFixedHomes[i].mapNum;
+            return TRUE;
+        }
+    }
+    if (contact < REMATCH_TABLE_ENTRIES)
+    {
+        *mapGroup = gRematchTable[contact].mapGroup;
+        *mapNum = gRematchTable[contact].mapNum;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+// A fixed contact's slot is excluded from rotation: it battles and hands over gifts through its home script.
+bool8 DailyContacts_IsFixed(u8 contact)
+{
+    u16 first = DailyContacts_FirstTrainer(contact);
+
+    return first != TRAINER_NONE && SlotOfTrainer(first) == NO_TRAINER_SLOT;
 }
 
 // A wanderer who is ready or holds a gift as the day starts is always placed.
@@ -587,12 +698,18 @@ bool8 DailyTrainers_ObjectIsDone(u8 objectEventId)
         || DailyTrainers_ObjectOffersRematch(objectEventId);
 }
 
-// The latest rematch team the occupant has fought: the team a wanderer brings, or its own trainer if it has no rematches.
+// The team a wanderer brings. A contact with a registered number brings the latest rematch team it has fought (or its
+// own trainer if it has no rematches); one without brings the team its rating unlocks, derived now (phone-rematches.md,
+// Readiness and teams). Everyone else brings the latest team its rematch family has fought.
 u16 DailyTrainers_LatestTeam(u16 trainerId)
 {
-    s32 index = TrainerIdToRematchTableId(gRematchTable, trainerId);
+    u8 contact = DailyContacts_IndexOf(trainerId);
+    s32 index;
     u16 latest;
 
+    if (contact != DAILY_NO_CONTACT)
+        return PhoneContact_IsRegistered(contact) ? PhoneContact_LatestTeam(contact) : PhoneContact_RatingTeam(contact);
+    index = TrainerIdToRematchTableId(gRematchTable, trainerId);
     if (index >= 0 && index < MAX_REMATCH_ENTRIES)
     {
         latest = GetLastBeatenRematchTrainerId(gRematchTable[index].trainerIds[0]);

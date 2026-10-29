@@ -19,6 +19,10 @@ struct ScriptContext;
 
 #define DAILY_SLOT_COUNT        (WORLD_ITEM_SPOT_COUNT + WORLD_TRAINER_SLOT_COUNT)  // item spots, then trainer slots
 #define DAILY_CONTACT_COUNT     160                     // phone contact index space (phone-rematches.md)
+#define DAILY_CONTACT_SEVII_FIRST 118                   // the contacts: rematch table rows 0-117, then Sevii, then the coast
+#define DAILY_CONTACT_COAST_FIRST 150
+#define DAILY_CONTACT_COAST_COUNT 9
+#define DAILY_CONTACT_LAST      (DAILY_CONTACT_COAST_FIRST + DAILY_CONTACT_COAST_COUNT - 1)
 #define DAILY_STAMP_NONE        0xFFFF                  // a day no real stamp equals: the first map load starts a fresh day
 
 struct WayfarerDailySlots
@@ -39,6 +43,9 @@ enum DailyRollKind
     DAILY_ROLL_ITEM_GROUP,
     DAILY_ROLL_TRAINER_EMPTY,
     DAILY_ROLL_TRAINER_GROUP,
+    DAILY_ROLL_PHONE_PICK,      // which contact a region's steps make ready
+    DAILY_ROLL_PHONE_GIFT,      // whether the picked contact finds a gift instead
+    DAILY_ROLL_PHONE_ITEM,      // which of its gifts
 };
 
 // Shape of a spot row's attrs.
@@ -193,6 +200,11 @@ bool8 DailyContacts_GiftAtDayStart(u8 contact);
 void DailyContacts_TakeSnapshots(void);
 u16 DailyTrainers_LatestTeam(u16 trainerId);
 
+u16 DailyContacts_FirstTrainer(u8 contact);
+const u16 *DailyContacts_Teams(u8 contact, u8 *count);
+bool8 DailyContacts_GetHome(u8 contact, u8 *mapGroup, u8 *mapNum);
+bool8 DailyContacts_IsFixed(u8 contact);
+
 // Natives of the shared ball script (item_ball_scripts_wayfarer.inc).
 void DailyItems_ResolveBall(struct ScriptContext *ctx);
 void DailyItems_MarkBallCleared(struct ScriptContext *ctx);
@@ -202,6 +214,7 @@ void DailyItems_ClearPendingHidden_NativeCall(struct ScriptContext *ctx);
 #define DAILY_DEBUG_DAY     (1 << 0)
 #define DAILY_DEBUG_SEED    (1 << 1)
 #define DAILY_DEBUG_NO_EMPTY (1 << 2)   // no spot has an empty day: a journey needs the find to be there
+void DailyContacts_DebugMarkReadyAtDayStart(u8 contact);
 #define DAILY_DEBUG_ABSENCE (1 << 3)    // every trainer slot's absence chance is gDailySlotsDebugAbsence
 // Debug and E2E builds can pin the day and the save seed so any draw is reproducible.
 extern u32 gDailySlotsDebugDay;

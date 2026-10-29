@@ -127,6 +127,9 @@ void CreateRegionMapPlayerIcon(u16 tileTag, u16 paletteTag);
 void CreateRegionMapCursor(u16 tileTag, u16 paletteTag);
 bool32 IsEventIslandMapSecId(mapsec_u8_t mapSecId);
 u8 *GetMapName(u8 *dest, mapsec_u16_t regionMapId, u16 padLength);
+#if IS_WAYFARER
+u8 *WayfarerGetPlaceNameOfMap(u8 *dest, u8 mapGroup, u8 mapNum);
+#endif
 u8 *GetMapNameGeneric(u8 *dest, mapsec_u16_t mapSecId);
 u8 *GetMapNameHandleAquaHideout(u8 *dest, mapsec_u16_t mapSecId);
 mapsec_u16_t CorrectSpecialMapSecId(mapsec_u16_t mapSecId);

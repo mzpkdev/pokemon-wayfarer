@@ -128,7 +128,7 @@ def classify(units, reviewed, errors):
         problems = sorted({p for o in objects for p in o.commands['problems']})
         if unit.policy != 'ORDINARY':
             reason = f'classification {unit.policy or "none"}, not ORDINARY (trainer party scaling)'
-        elif any(o.trainer_type not in C.ROTATING_TYPES for o in objects):
+        elif any(o.trainer_type not in C.ROTATING_TYPES and o.trainer_type != 'TRAINER_TYPE_NONE' for o in objects):
             reason = 'buried trainer: it reveals itself out of the ground'
         elif any(o.hide_flag not in C.NO_FLAG for o in objects):
             flags = sorted({o.hide_flag for o in objects if o.hide_flag not in C.NO_FLAG})
@@ -143,6 +143,8 @@ def classify(units, reviewed, errors):
             reason = 'variable graphics'
         elif not unit.klass:
             reason = 'no trainer class in the inventory'
+        elif any(o.trainer_type == 'TRAINER_TYPE_NONE' for o in objects):
+            reason = 'talk-only: no sight line, so nothing for a slot to rotate'
         if reason is None:
             for row in fixed_maps:
                 if unit.map_name.startswith(row['prefix']):
@@ -588,8 +590,12 @@ def build(root=ROOT):
     errors = []
     maps = R.load_maps(root)
     labels = R.label_index(root)
-    slots, family_of, numbers = C.collect_slots(maps, labels, root)
-    units, loose = form_units(slots, errors)
+    talk_only = []
+    slots, family_of, numbers = C.collect_slots(maps, labels, root, talk_only)
+    # A talk-only rematch lead (no sight line, so a phone contact with nothing to rotate) is classified like any other
+    # trainer: never daily, and it stays at home. Other talk-only trainers (bosses, story) are not in the slot table.
+    leads = [s for s in talk_only if s.home in family_of and family_of[s.home][0] == s.home]
+    units, loose = form_units(slots + leads, errors)
     classify(units, reviewed, errors)
     flagged, resolutions = run_audit(units, labels, errors, reviewed)
     for unit in units:

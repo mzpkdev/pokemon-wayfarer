@@ -1,6 +1,6 @@
 # Hoenn phone rematches
 
-Implemented: No
+Implemented: Yes
 
 Specification: [Phone rematches](../specs/phone-rematches.md)
 

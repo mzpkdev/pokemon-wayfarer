@@ -8,11 +8,22 @@
 #include "match_call.h"
 #include "overworld.h"
 #include "pokemon.h"
+#include "region_map.h"
 #include "pokenav.h"
 #include "sound.h"
 #include "string_util.h"
 #include "strings.h"
+#include "wayfarer_daily_slots.h"
+#include "wayfarer_phone.h"
+#include "constants/region_map_sections.h"
 #include "constants/songs.h"
+
+#if IS_WAYFARER
+#define MATCH_CALL_LAST_CONTACT DAILY_CONTACT_LAST
+STATIC_ASSERT(MATCH_CALL_ENTRIES_MAX >= MC_HEADER_COUNT + DAILY_CONTACT_LAST + 1, MatchCallListFitsEveryContact);
+#else
+#define MATCH_CALL_LAST_CONTACT (REMATCH_TABLE_ENTRIES - 1)
+#endif
 
 struct Pokenav_MatchCallMenu
 {
@@ -25,7 +36,7 @@ struct Pokenav_MatchCallMenu
     bool32 initFinished;
     u32 loopedTaskId;
     u32 (*callback)(struct Pokenav_MatchCallMenu *);
-    struct PokenavMatchCallEntry matchCallEntries[MAX_REMATCH_ENTRIES - 1];
+    struct PokenavMatchCallEntry matchCallEntries[MATCH_CALL_ENTRIES_MAX];
 };
 
 static u32 CB2_HandleMatchCallInput(struct Pokenav_MatchCallMenu *);
@@ -218,7 +229,7 @@ static u32 LoopedTask_BuildMatchCallList(s32 taskState)
         // Load special trainers (e.g. Rival, gym leaders)
         for (i = 0, j = state->headerId; i < 30; i++, j++)
         {
-            if (MatchCall_GetEnabled(j))
+            if (MatchCall_GetEnabled(j) && state->numRegistered < MATCH_CALL_ENTRIES_MAX)
             {
                 state->matchCallEntries[state->numRegistered].headerId = j;
                 state->matchCallEntries[state->numRegistered].isSpecialTrainer = TRUE;
@@ -239,7 +250,8 @@ static u32 LoopedTask_BuildMatchCallList(s32 taskState)
         // Load normal trainers
         for (i = 0, j = state->headerId; i < 30; i++, j++)
         {
-            if (!MatchCall_HasRematchId(state->headerId) && IsRematchEntryRegistered(state->headerId))
+            if (!MatchCall_HasRematchId(state->headerId) && IsRematchEntryRegistered(state->headerId)
+             && state->numRegistered < MATCH_CALL_ENTRIES_MAX)
             {
                 state->matchCallEntries[state->numRegistered].headerId = state->headerId;
                 state->matchCallEntries[state->numRegistered].isSpecialTrainer = FALSE;
@@ -247,7 +259,7 @@ static u32 LoopedTask_BuildMatchCallList(s32 taskState)
                 state->numRegistered++;
             }
 
-            if (++state->headerId > REMATCH_TABLE_ENTRIES - 1)
+            if (++state->headerId > MATCH_CALL_LAST_CONTACT)
                 return LT_INC_AND_CONTINUE;
         }
 
@@ -262,10 +274,24 @@ static u32 LoopedTask_BuildMatchCallList(s32 taskState)
 
 bool32 IsRematchEntryRegistered(int rematchIndex)
 {
+#if IS_WAYFARER
+    return rematchIndex >= 0 && rematchIndex <= MATCH_CALL_LAST_CONTACT && PhoneContact_IsRegistered(rematchIndex);
+#else
     if (rematchIndex < REMATCH_TABLE_ENTRIES)
-        return FlagGet(TRAINER_REGISTERED_FLAGS_START + rematchIndex);
+        return FlagGet(PhoneContact_RegisteredFlag(rematchIndex));
 
     return FALSE;
+#endif
+}
+
+// Whether a list entry's trainer is ready for a rematch: a rematch table row, or a Sevii or coast family.
+static bool32 IsRematchReady(int index)
+{
+#if IS_WAYFARER
+    if (index >= REMATCH_TABLE_ENTRIES)
+        return PhoneContact_IsReady(index);
+#endif
+    return gSaveBlock1Ptr->trainerRematches[index] != 0;
 }
 
 int IsMatchCallListInitFinished(void)
@@ -308,6 +334,21 @@ struct PokenavMatchCallEntry *GetMatchCallList(void)
     return state->matchCallEntries;
 }
 
+#if IS_WAYFARER
+// The place a contact calls home, named from its home map: section ids are only meaningful within one region.
+bool32 GetMatchCallContactPlaceName(int index, u8 *dest)
+{
+    struct Pokenav_MatchCallMenu *state = GetSubstructPtr(POKENAV_SUBSTRUCT_MATCH_CALL_MAIN);
+    u8 mapGroup, mapNum;
+
+    if (state->matchCallEntries[index].isSpecialTrainer
+     || !DailyContacts_GetHome(state->matchCallEntries[index].headerId, &mapGroup, &mapNum))
+        return FALSE;
+    WayfarerGetPlaceNameOfMap(dest, mapGroup, mapNum);
+    return TRUE;
+}
+#endif
+
 mapsec_u16_t GetMatchCallMapSec(int index)
 {
     struct Pokenav_MatchCallMenu *state = GetSubstructPtr(POKENAV_SUBSTRUCT_MATCH_CALL_MAIN);
@@ -319,14 +360,18 @@ bool32 ShouldDrawRematchPokeballIcon(int index)
 #if FREE_MATCH_CALL == FALSE
     struct Pokenav_MatchCallMenu *state = GetSubstructPtr(POKENAV_SUBSTRUCT_MATCH_CALL_MAIN);
     if (!state->matchCallEntries[index].isSpecialTrainer)
+    {
+        // A contact number: for the Sevii and coast families it reaches past REMATCH_TABLE_ENTRIES.
         index = state->matchCallEntries[index].headerId;
+    }
     else
+    {
         index = MatchCall_GetRematchTableIdx(state->matchCallEntries[index].headerId);
+        if (index == REMATCH_TABLE_ENTRIES)
+            return FALSE;
+    }
 
-    if (index == REMATCH_TABLE_ENTRIES)
-        return FALSE;
-
-    return gSaveBlock1Ptr->trainerRematches[index] != 0;
+    return IsRematchReady(index);
 #else
     return FALSE;
 #endif //FREE_MATCH_CALL
@@ -432,6 +477,17 @@ void BufferMatchCallNameAndDesc(struct PokenavMatchCallEntry *matchCallEntry, u8
 
 mapsec_u8_t GetMatchTableMapSectionId(int rematchIndex)
 {
+#if IS_WAYFARER
+    if (rematchIndex >= REMATCH_TABLE_ENTRIES)
+    {
+        u8 homeGroup, homeNum;
+
+        // A Sevii or coast family has no rematch table row: its home is where its first trainer lives.
+        if (!DailyContacts_GetHome(rematchIndex, &homeGroup, &homeNum))
+            return MAPSEC_NONE;
+        return Overworld_GetMapHeaderByGroupAndId(homeGroup, homeNum)->regionMapSectionId;
+    }
+#endif
     int mapGroup = gRematchTable[rematchIndex].mapGroup;
     int mapNum = gRematchTable[rematchIndex].mapNum;
     return Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum)->regionMapSectionId;
@@ -499,9 +555,13 @@ static bool32 ShouldDoNearbyMessage(void)
     int selection = PokenavList_GetSelectedIndex();
     if (!state->matchCallEntries[selection].isSpecialTrainer)
     {
+#if IS_WAYFARER
+        if (PhoneContact_IsInHomeSection(state->matchCallEntries[selection].headerId))
+#else
         if (GetMatchCallMapSec(selection) == gMapHeader.regionMapSectionId)
+#endif
         {
-            if (!gSaveBlock1Ptr->trainerRematches[state->matchCallEntries[selection].headerId])
+            if (!IsRematchReady(state->matchCallEntries[selection].headerId))
                 return TRUE;
         }
     }

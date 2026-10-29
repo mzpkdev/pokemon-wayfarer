@@ -834,4 +834,7 @@ gSpecials::
     def_special WayfarerSevii_IsMoltresEligible
     def_special WayfarerSevii_ResolveMoltresBattle
     def_special WayfarerRedGameClear
+    def_special PhoneOffer_CanOffer
+    def_special PhoneOffer_BufferTarget
+    def_special PhoneOffer_Accept
 #endif

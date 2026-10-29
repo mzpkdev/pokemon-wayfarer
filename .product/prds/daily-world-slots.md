@@ -1,8 +1,8 @@
 # Daily world slots
 
-Implemented: Partial. The item slots ([Item slots](#item-slots)), the trainer slots,
-the trainer ranges and the dialogue audit are implemented; phone numbers, calls and
-rematches ([Phone rematches](../specs/phone-rematches.md)) are not.
+Implemented: Yes. The item slots ([Item slots](#item-slots)), the trainer slots,
+the trainer ranges, the dialogue audit, and phone numbers, calls and
+rematches ([Phone rematches](../specs/phone-rematches.md)) are implemented.
 
 Specifications: [Daily world slots](../specs/daily-world-slots.md),
 [World items](../specs/world-items.md),

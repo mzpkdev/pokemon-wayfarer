@@ -28,6 +28,7 @@ u16 WayfarerCoastRematchGetOpponent(u16 trainerId);
 void WayfarerCoastRematchAdvance(u16 trainerId);
 s32 WayfarerCoastRematchFamilyIndex(u16 trainerId);
 u16 WayfarerCoastRematchFamilyFirst(s32 family);
+const u16 *WayfarerCoastRematchFamilyTeams(s32 family, u8 *slots);
 bool8 WayfarerCoastRematchFamilyIsReady(s32 family);
 u16 WayfarerCoastRematchGetLatest(u16 trainerId);
 

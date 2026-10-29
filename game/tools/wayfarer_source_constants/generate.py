@@ -18,6 +18,10 @@ VAR_START = 0x4000
 VAR_END = 0x40FF
 HOENN_FLAG_NAMESPACE = 0x6000
 HOENN_VAR_NAMESPACE = 0x7000
+# Emerald flags that are the same fact as an engine flag. Hoenn scripts get the
+# engine's id at assembly time, so reading one costs nothing at run time
+# (phone-rematches.md: having the Pokégear is one flag).
+ENGINE_SHARED_FLAGS = frozenset({"FLAG_HAS_MATCH_CALL"})
 
 MACRO_RE = re.compile(r"^#define\s+([A-Za-z_][A-Za-z0-9_]*)\s+(.+)$")
 IDENT_RE = re.compile(r"\b[A-Za-z_][A-Za-z0-9_]*\b")
@@ -178,6 +182,14 @@ def hoenn_value(name, source_value):
     return source_value
 
 
+def source_value_for_hoenn(name, source_value, engine_values):
+    if name in ENGINE_SHARED_FLAGS:
+        if engine_values.get(name) is None:
+            raise ValueError(f"{name} is shared with the engine but the engine does not define it")
+        return engine_values[name]
+    return hoenn_value(name, source_value)
+
+
 def render_table(source_name, values):
     lines = [
         "@",
@@ -265,7 +277,7 @@ def render_common_tables(common_names, emerald_values, engine_values):
         if source_value is None:
             hoenn_mapped_value = engine_value
         else:
-            hoenn_mapped_value = hoenn_value(name, source_value)
+            hoenn_mapped_value = source_value_for_hoenn(name, source_value, engine_values)
 
         if engine_value == hoenn_mapped_value:
             aliases[name] = engine_value
@@ -325,7 +337,10 @@ def main():
     emerald_values = dump_values(args.cc, args.include_dir, "POKEMON_EMERALD", source_names)
     engine_values = dump_values(args.cc, args.include_dir, "POKEMON_WAYFARER", engine_names)
 
-    hoenn_values = {name: hoenn_value(name, emerald_values[name]) for name in source_names}
+    hoenn_values = {
+        name: source_value_for_hoenn(name, emerald_values[name], engine_values)
+        for name in source_names
+    }
     restore_values = {name: engine_values.get(name) for name in set(source_names) | set(engine_names)}
     common_names = collect_common_names(args.event_scripts, args.scripts_dir)
     common_table, common_data = render_common_tables(common_names, emerald_values, engine_values)

@@ -1,16 +1,16 @@
 # Daily world slots
 
 PRD: [Daily world slots](../prds/daily-world-slots.md)
-Implemented: Yes, apart from the phone itself. The item half: the day, deterministic
+Implemented: Yes. The item half: the day, deterministic
 draws, the saved daily state, the item spot generator and tables, the map-load and
 Continue hooks for item balls, the spawn check, hidden items and the Itemfinder, and the
 debug and E2E day and seed override. The trainer half: the trainer slot and group
 generator (`game/tools/wayfarer_trainer_slots`), the dialogue audit with its reviewed
 resolutions, who stands where today, the map-load and Continue hook, the battle and sight
 paths, the day-start phone snapshots and `WhereIsTrainerToday`. Calls, phone numbers,
-readiness and the rematch table growth belong to [Phone rematches](phone-rematches.md)
-and are not implemented; [what the trainer half leaves for it](#what-the-trainer-half-leaves-for-the-phone)
-lists the seams.
+readiness and the rematch table growth are in [Phone rematches](phone-rematches.md), also
+implemented; [what the trainer half left for it](#what-the-trainer-half-leaves-for-the-phone)
+lists the seams it used.
 
 Design status: draft. Numbers are placeholders for playtesting. Item pools and
 static prizes are in [World items](world-items.md); trainer levels are in
