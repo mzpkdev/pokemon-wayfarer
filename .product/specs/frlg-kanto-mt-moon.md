@@ -4,9 +4,11 @@ PRD: [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md)
 
 Dependencies: [FRLG Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md), [trainer party scaling](trainer-party-scaling.md), [trainer-only story encounters](trainer-only-story-encounters.md), [HNS open-world traversal](hns-open-world-region-traversal.md)
 
-Delivery: Ported to the `kanto-local-adventures` task for current Wayfarer.
+Implemented: Yes ([PR #125](https://github.com/mzpkdev/pokemon-wayfarer/pull/125))
+
+Delivery: [PR #125](https://github.com/mzpkdev/pokemon-wayfarer/pull/125), ported for current Wayfarer.
 The donor implementation in [PR #86](https://github.com/mzpkdev/pokemon-wayfarer/pull/86)
-is source evidence. Current validation is reported with this task.
+is source evidence, not validation.
 
 ## Scope
 

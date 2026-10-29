@@ -1,10 +1,11 @@
 # Player Trainer Rating
 
 PRD: [Player Trainer Rating](../prds/player-trainer-rating.md)
-Implemented: Partial. Today's formula, its saved high-water value, and every
-consumer below except notable-trainer world progress and league invitations
-(v0) exist; the rescaled formula, uncapped TR, and the player-TR
-scalers are v0.
+Implemented: Partial. Wayfarer runs the v0 formula, the uncapped saved high-water
+value, and the level cap and notable-trainer world progress consumers
+([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)). Phone league invitations remain; lobby acceptance with the TR 80
+gate stands in for them. Mart tier acceptance is tracked in
+[Global TR Poké Marts](global-tr-pokemarts.md).
 Design status: v0 accepted. The v0 formula is approved; every scaler anchor
 is a placeholder tuned by playtesting.
 

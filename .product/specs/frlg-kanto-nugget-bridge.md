@@ -4,7 +4,9 @@ PRD: [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md)
 
 Dependencies: [FRLG Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md), [Wayfarer runtime foundation](wayfarer-runtime-foundation.md), [Trainer-only story encounters](trainer-only-story-encounters.md), [Trainer party scaling](trainer-party-scaling.md)
 
-Delivery: `task/kanto-local-adventures`, adapted from the earlier donor milestone
+Implemented: Yes ([PR #125](https://github.com/mzpkdev/pokemon-wayfarer/pull/125))
+
+Delivery: [PR #125](https://github.com/mzpkdev/pokemon-wayfarer/pull/125), adapted from the earlier donor milestone
 to the current Wayfarer trainer and flag allocations.
 
 ## Scope and map integration

@@ -1,7 +1,7 @@
 # Trainer-only story encounters
 
 PRD: [Trainer-only encounters](../prds/trainer-only-encounters.md)
-Status: no story-scene integration.
+Implemented: No. There is no story-scene integration; the mechanic is the author-owned one in the core specification.
 
 Trainer-only is only the explicit, map-local wild-encounter mechanic described in
 [the core specification](trainer-only-encounters.md). This project has no

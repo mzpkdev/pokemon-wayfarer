@@ -1,7 +1,7 @@
 # Wayfarer regional start choice
 
 PRD: [Johto, Hoenn, and Kanto starting regions](../prds/wayfarer-regional-start-choice.md)
-Implemented: No
+Implemented: Yes ([PR #75](https://github.com/mzpkdev/pokemon-wayfarer/pull/75); the Kanto start came with [PR #135](https://github.com/mzpkdev/pokemon-wayfarer/pull/135))
 
 ## Scope
 

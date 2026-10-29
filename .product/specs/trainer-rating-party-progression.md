@@ -1,7 +1,7 @@
 # Trainer Rating party progression
 
 PRD: [Trainer Rating wild encounter and party progression](../prds/trainer-rating-wild-encounter-scaling.md)
-Implemented: Partial
+Implemented: Partial. The v0 level cap curve is live in Wayfarer ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)).
 
 Today's [circuit producer](../../game/src/league_circuit.c) implements +8/+8/+8
 first-league-win contributions for Indigo, Masters, and Hoenn. The badge formula

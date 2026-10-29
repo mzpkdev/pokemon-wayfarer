@@ -4,7 +4,9 @@ PRD: [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md)
 
 Dependencies: [FRLG Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md), [HM field use](hm-field-use.md), [Wayfarer runtime foundation](wayfarer-runtime-foundation.md)
 
-Implementation: `task/kanto-local-adventures`. This local adventure is independent of the other Kanto adventures and of Celadon Hideout. Validation evidence belongs in the task note and delivery report.
+Implemented: Yes ([PR #125](https://github.com/mzpkdev/pokemon-wayfarer/pull/125))
+
+Implementation: [PR #125](https://github.com/mzpkdev/pokemon-wayfarer/pull/125). This local adventure is independent of the other Kanto adventures and of Celadon Hideout.
 
 ## Scope and integration
 

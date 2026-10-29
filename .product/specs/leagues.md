@@ -1,7 +1,7 @@
 # Leagues
 
 PRD: [Leagues](../prds/leagues.md)
-Implemented: Partial. The [runtime slice](../../game/docs/wayfarer-trainer-runtime.md)
+Implemented: Partial ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)). The [runtime slice](../../game/docs/wayfarer-trainer-runtime.md)
 provides lobby acceptance, selected and saved teams, event resolution, and hall
 conditions. Clock-driven invitations, call rotation, decline resolution, phone
 presentation, reigning-champion lobby text, and the Gallery wall remain deferred.

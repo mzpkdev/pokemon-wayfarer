@@ -2,7 +2,9 @@
 
 Dependencies: [Silph Co. liberation](frlg-kanto-silph-liberation.md), [Wayfarer runtime foundation](wayfarer-runtime-foundation.md)
 
-Delivery: `task/kanto-local-adventures`, as part of Silph liberation. Validation evidence belongs to this delivery; the donor implementation is not a validation result for current main.
+Implemented: Yes ([PR #125](https://github.com/mzpkdev/pokemon-wayfarer/pull/125))
+
+Delivery: [PR #125](https://github.com/mzpkdev/pokemon-wayfarer/pull/125), as part of Silph liberation. The donor implementation is not a validation result for current main.
 
 ## Scope
 

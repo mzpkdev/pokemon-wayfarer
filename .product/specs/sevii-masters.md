@@ -1,7 +1,7 @@
 # Sevii Masters
 
 PRD: [Sevii Masters](../prds/sevii-masters.md)
-Implemented: No
+Implemented: Partial. The Masters league registry, lobby acceptance, Master seats, and Gallery counts shipped in [PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139). The partner, phone contacts, tag matches, and final remain.
 Design status: v0 approved: the Sevii Masters as an off-the-record club, one
 of the three [Leagues](leagues.md), that calls the player once they are a
 **Master** (lifetime wins at both Indigo and Hoenn). Its lineup has eight

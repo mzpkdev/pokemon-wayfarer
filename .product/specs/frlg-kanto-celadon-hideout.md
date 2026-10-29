@@ -1,5 +1,7 @@
 # Celadon Rocket Hideout
 
+Implemented: Yes ([PR #124](https://github.com/mzpkdev/pokemon-wayfarer/pull/124))
+
 This adventure restores the five existing FRLG Hideout interiors in Wayfarer:
 B1F–B4F and the elevator. It is independent of badges, other regions, Pokémon
 Tower, Silph Co., Mt. Moon, and rival scenes. Tower/Fuji/Flute, Silph, Bill,
