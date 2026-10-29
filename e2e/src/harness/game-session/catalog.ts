@@ -740,6 +740,7 @@ export const storyFlags = {
   sharedPokegear: 0x892,
   sharedMatchCall: 0x1f3,
   disableEncounters: 0x965,
+  disableTrainers: 0x966,
   hideSilverInNewBark: 0x04a,
   hideElmLabAide: 0x04b,
   adventureStarted: 0x1d4,
