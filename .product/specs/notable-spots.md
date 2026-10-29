@@ -1,7 +1,7 @@
 # Notable spots
 
 PRD: [Notable spots](../prds/notable-spots.md)
-Implemented: Partial. Build-time spot extraction, named spots, capacity, home bases, favourites, and the behaviour templates shipped with [PR #147](https://github.com/mzpkdev/pokemon-wayfarer/pull/147). The talk flow at spots and friendship remain.
+Implemented: Partial. Build-time spot extraction, named spots, capacity, home bases, favourites, and the behaviour templates shipped with [PR #147](https://github.com/mzpkdev/pokemon-wayfarer/pull/147). The talk flow shipped for walkers on the road: greeting by friendship stage (with fame), the activity line of the spot kind or the named-spot activity, and the farewell. The follow-ups (Courier, Egg sitting) are not built, and a Gym Leader's own-Gym talk is pending.
 Design status: the everyday layer of the future **routine and travel**
 design. Spots switch on together with routines and travel; v0 haunt
 placement is unchanged, and nothing in this spec runs before then. Spots

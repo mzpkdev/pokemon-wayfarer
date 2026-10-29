@@ -2,8 +2,11 @@
 
 PRD: [Notable trainers](../prds/notable-trainers.md)
 Implemented: Partial. Wayfarer runs the v0 catalog, trainer TR growth, rosters,
-move pools, battle snapshot, and league lineups ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)). Friendship, phone
-numbers, and fame remain. The browser explorer is placeholder tooling.
+move pools, battle snapshot, and league lineups ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)). Friendship
+shipped: the saved score and first-win bit, first wins from every battle kind (Gym, story, rematch, league event, tag
+matches), the quest-points API for haunts, and the number handover (one system line at the first Friend crossing; it
+registers no phone contact yet). Phone numbers as contacts and the Masters partner remain. The browser explorer is
+placeholder tooling.
 Design status: v0 contract. The model is accepted. Rosters are approved
 content (draft v1: species, order, and aces); their battle content (move
 pools, and items where a slot doesn't match its source party) is still
