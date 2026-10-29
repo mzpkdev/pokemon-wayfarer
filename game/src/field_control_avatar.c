@@ -1,6 +1,9 @@
 #include "global.h"
 #if IS_WAYFARER
 #include "wayfarer_daily_slots.h"
+#include "notable_friendship.h"
+#include "notable_talk.h"
+#include "wayfarer_walkers.h"
 #endif
 #include "battle_setup.h"
 #include "bike.h"
@@ -213,6 +216,12 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
 
     if (TryRunOnFrameMapScript() == TRUE)
         return TRUE;
+
+#if IS_WAYFARER
+    // A friendship crossing (the end of a battle, a quest) hands the number over once the field has control.
+    if (NotableFriendship_TryStartPendingNumberScript())
+        return TRUE;
+#endif
 
     if (input->pressedBButton && TrySetupDiveEmergeScript() == TRUE)
         return TRUE;
@@ -469,6 +478,11 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
         script = GetTrainerHillTrainerScript();
     else if (PlayerHasFollowerNPC() && objectEventId == GetFollowerNPCObjectId())
         script = GetFollowerNPCScriptPointer();
+#if IS_WAYFARER
+    // A walker has no map template; talking to a notable on the road runs the shared talk flow.
+    else if (WayfarerWalkers_IsActorObject(&gObjectEvents[objectEventId]))
+        script = NotableTalk_EventScript_WalkerTalk;
+#endif
     else
         script = GetObjectEventScriptPointerByObjectEventId(objectEventId);
 

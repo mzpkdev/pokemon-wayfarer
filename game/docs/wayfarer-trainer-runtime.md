@@ -29,6 +29,8 @@ content must preserve the existing regional HM acquisition requirements.
 | `league_halls.c` | Ordered hall locations, names, conditions, and their battle starting statuses. |
 | `league_events.c` | Accepted events, saved teams, content validation, reigning champions, reign records, and Gallery counts. |
 | `league_circuit.c` | Room admission, battle progress, event resolution, recovery, and first-win integration. |
+| `notable_friendship.c` | The saved friendship score and first-win bit of each notable (`SaveBlock3`), the first-win and quest events, the Friend-crossing handover queue (RAM only; the field starts its script when it regains control), and the load validation. `battle_setup.c` credits wins at the end of a trainer, rematch or league event battle. |
+| `notable_talk.c` | The talk flow outside haunts: the greeting by stage and fame, the activity lines, the farewell, and the specials that buffer them. Voice lines are game data generated from `tools/notable_trainers/catalog.json` (`voice`, `buddySlot`) into `src/data/notable_trainers/voices.h`. |
 | `wayfarer_daily_trainers.c` | Daily trainer slots: who stands in each rotating slot today, the map-load and Continue hook that gives a slot its occupant's sprite and script, the spawn check for empty slots, the day-start phone snapshots and contact index, `WhereIsTrainerToday`, and the battle notes that clear a slot after a win. Tables come from `tools/wayfarer_trainer_slots`. |
 | `battle_main.c` | Eligible opponent preparation, battle snapshot lifetime, and construction through the existing Pokémon constructor. |
 | `battle_ai_main.c` | Applying frozen notable flags after the engine's normal AI setup, including prediction slots. |

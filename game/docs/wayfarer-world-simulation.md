@@ -122,7 +122,8 @@ Engine hooks, all `IS_WAYFARER` only:
 | `WayfarerWorld_FinishHeartbeatEarly` | `CopyPartyAndObjectsToSave` | A save never holds half a heartbeat or half a walker's routine advance (it completes the walkers' world jobs first). |
 | `WayfarerWalkers_IsActorObject` | `RemoveObjectEventIfOutsideView` | Actors aren't culled off view while the walker layer owns them. |
 | `WayfarerWalkers_HideTemplate` | `TrySpawnObjectEvents` | A Gym Leader's own object stays hidden (also on scroll) while the leader is out. |
-| null template guard | `GetObjectEventScriptPointerByLocalIdAndMap` | Runtime actors have no template; talking to one does nothing until stage 4. |
+| null template guard | `GetObjectEventScriptPointerByLocalIdAndMap` | Runtime actors have no template, so the engine finds no map script for one. |
+| `WayfarerWalkers_IsActorObject` | `GetInteractedObjectEventScript` | A walker the player talks to runs `NotableTalk_EventScript_WalkerTalk` (see "Talking to a walker"). |
 
 Actors are runtime objects (`SpawnSpecialObjectEventParameterized`) with the
 dynamic local ids `0xF5`-`0xF8`, looked up without a map, so a camera seam
@@ -162,6 +163,17 @@ Exits commit a hop like the heartbeat's: a walker checks `WorldSim_HopAllowed`
 before stepping out through a map side or a door, and while the next map is
 full it waits once, then hands off. A strip actor that can't walk straight on
 (a 1-wide lane into a wall) is removed after 30 frames.
+
+## Talking to a walker
+
+`field_control_avatar.c` gives a walker actor the script `NotableTalk_EventScript_WalkerTalk`
+(`data/scripts/wayfarer_notable_talk.inc`): `lock` (which suspends the walker's AI), `faceplayer` (walkers use
+`MOVEMENT_TYPE_NONE`), then `NotableTalk_PrepareWalker` reads the object's slot (`WayfarerWalkers_ObjectSlot`) and
+puts the character in `VAR_0x8004`. The talk is the stage greeting (`NotableTalk_EventScript_Greeting`), the
+activity line, and `BYE` (`NotableTalk_EventScript_Farewell`). The activity line comes from the slot's world
+record, so a travelling walker names the activity it is heading for: `NotableTalk_ActivityLineFor(destKind,
+destId, activity)` takes the spot kind's line, or the activity's line at a named spot or on the way home. Talking
+adds no friendship. Follow-ups (Courier, Egg sitting) are not built.
 
 ## Beats
 
