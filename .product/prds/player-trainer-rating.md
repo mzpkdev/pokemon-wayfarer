@@ -241,7 +241,7 @@ changes yours.
   hall ([tag matches](../specs/sevii-masters.md#tag-matches)).
 - **Friendship score:** a saved number from 0 to 255 that each notable
   trainer has for the player. It only goes up, through a few bounded events:
-  a first talk, a win, a finished haunt quest
+  a first win over them, a finished haunt quest
   ([friendship](../specs/notable-trainers.md#friendship)).
 - **Fame:** whether a stranger has heard of you: your TR is 80 or more, or
   within 10 of theirs, or you hold a league title or are a Master
