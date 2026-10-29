@@ -15,7 +15,9 @@
 #include "constants/items.h"
 #include "constants/maps.h"
 #include "event_data.h"
+#include "event_object_movement.h"
 #include "field_control_avatar.h"
+#include "fieldmap.h"
 #include "overworld.h"
 #include "pokemon_storage_system.h"
 #include "rtc.h"
@@ -41,6 +43,10 @@ EWRAM_DATA u16 gDailySlotsDebugFoundCount = 0;
 static EWRAM_DATA u16 sPendingHiddenPlusOne = 0;
 static EWRAM_DATA u16 sPendingHiddenItem = 0;
 static EWRAM_DATA u16 sPendingHiddenFlag = 0;
+// Whether the last map load started a new day (read by the camera-transition refresh).
+static EWRAM_DATA bool8 sDayChangedOnLoad = FALSE;
+// The current map's item ball templates, by template index: spots whether or not they spawn today.
+static EWRAM_DATA u8 sBallTemplates[(OBJECT_EVENT_TEMPLATES_COUNT + 7) / 8] = {0};
 
 // ---------- the day and the draws ----------
 static u32 RotateRight(u32 value, u32 bits)
@@ -121,14 +127,48 @@ void DailySlots_OnMapLoad(void)
     struct WayfarerDailySlots *daily = Daily();
 
     sPendingHiddenPlusOne = 0;
+    sDayChangedOnLoad = FALSE;
     if (daily->stampDay != day)
     {
+        sDayChangedOnLoad = TRUE;
         memset(daily->clearedToday, 0, sizeof(daily->clearedToday));
         memset(daily->homeBeatenToday, 0, sizeof(daily->homeBeatenToday));
         daily->stampDay = day;
         // Who is ready for a rematch and who holds a gift is fixed for the whole day.
         DailyContacts_TakeSnapshots();
     }
+}
+
+// A seamless (camera-transition) load keeps the objects of the maps it crosses, and they were drawn
+// under the stamp the load just replaced: an occupant, a ball or an empty slot of the old day. When
+// the load started a new day, every object that belongs to a trainer slot or a ball spot is removed:
+// the new map's own respawn at once from today's templates (TrySpawnObjectEvents runs next); an
+// object of the map left behind goes with them, as it would when it scrolls out of view, and
+// returns with the map. A load that kept the day leaves them alone.
+void DailySlots_OnCameraTransition(void)
+{
+    u8 i;
+
+    if (!sDayChangedOnLoad)
+        return;
+    sDayChangedOnLoad = FALSE;
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    {
+        struct ObjectEvent *object = &gObjectEvents[i];
+
+        if (!object->active || object->isPlayer)
+            continue;
+        if (DailyTrainers_FindSlot(object->mapGroup, object->mapNum, object->localId) != NO_TRAINER_SLOT
+         || DailyItems_FindSpot(object->mapGroup, object->mapNum, FALSE, object->localId) != NO_ITEM_SPOT)
+            RemoveObjectEvent(object);
+    }
+}
+
+// Whether a tile (MAP_OFFSET coordinates) of the current map belongs to a trainer slot or a ball spot,
+// whatever stands there today and whether or not its object is on camera.
+bool8 DailySlots_IsSlotTile(s16 x, s16 y)
+{
+    return DailyTrainers_IsSlotTile(x, y) || DailyItems_IsSlotTile(x, y);
 }
 
 // ---------- item spots ----------
@@ -254,6 +294,7 @@ void DailyItems_RewriteTemplates(void)
 {
     u16 index = LowerBound(MakeKey(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, FALSE, 0));
 
+    memset(sBallTemplates, 0, sizeof(sBallTemplates));
     for (; index < WORLD_ITEM_SPOT_COUNT; index++)
     {
         const struct WorldItemSpot *spot = &sWorldItemSpots[index];
@@ -264,6 +305,8 @@ void DailyItems_RewriteTemplates(void)
         if (IsHidden(spot) || spot->id > gMapHeader.events->objectEventCount)
             continue;
         template = &gSaveBlock1Ptr->objectEventTemplates[spot->id - 1];
+        if (spot->id <= OBJECT_EVENT_TEMPLATES_COUNT)
+            sBallTemplates[(spot->id - 1) / 8] |= 1 << ((spot->id - 1) % 8);
         template->script = DailyItems_EventScript_Ball;
         // The generated flag is the one the map assembled; an untaken prize keeps it, any other spot has none.
         template->flagId = (IsPrize(spot) && !FlagGet(spot->flag)) ? spot->flag : 0;
@@ -283,6 +326,29 @@ bool8 DailyItems_HideTemplate(const struct ObjectEventTemplate *template)
     if (index == NO_ITEM_SPOT)
         return FALSE;
     return DailyItems_IsCleared(index) || DailyItems_ResolveSpot(index) == ITEM_NONE;
+}
+
+// Walkers never stand on a ball spot's tile (MAP_OFFSET coordinates), picked up or not.
+bool8 DailyItems_IsSlotTile(s16 x, s16 y)
+{
+    u8 i;
+
+    for (i = 0; i < OBJECT_EVENT_TEMPLATES_COUNT; i++)
+    {
+        const struct ObjectEventTemplate *template;
+
+        if (sBallTemplates[i / 8] == 0)
+        {
+            i |= 7;
+            continue;
+        }
+        if (!((sBallTemplates[i / 8] >> (i % 8)) & 1))
+            continue;
+        template = &gSaveBlock1Ptr->objectEventTemplates[i];
+        if (template->x + MAP_OFFSET == x && template->y + MAP_OFFSET == y)
+            return TRUE;
+    }
+    return FALSE;
 }
 
 // The item a ball gives now: the prize until it is taken, then today's find.

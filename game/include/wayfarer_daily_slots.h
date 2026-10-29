@@ -153,6 +153,8 @@ u32 DailySlots_GetSeed(void);
 u32 DailySlots_Roll(enum DailyRollKind kind, u32 a, u32 b);
 void DailySlots_InitNewGame(void);
 void DailySlots_OnMapLoad(void);
+void DailySlots_OnCameraTransition(void);
+bool8 DailySlots_IsSlotTile(s16 x, s16 y);
 
 // Item spots.
 u16 DailyItems_FindSpot(u8 mapGroup, u8 mapNum, bool8 hidden, u8 id);
@@ -162,6 +164,7 @@ u16 DailyItems_ResolveSpotTier(u16 index, u8 *poolTier);
 bool8 DailyItems_IsCleared(u16 index);
 void DailyItems_SetCleared(u16 index);
 void DailyItems_RewriteTemplates(void);
+bool8 DailyItems_IsSlotTile(s16 x, s16 y);
 bool8 DailyItems_HideTemplate(const struct ObjectEventTemplate *template);
 bool8 DailyItems_ResolveHidden(u8 mapGroup, u8 mapNum, const struct BgEvent *bgEvent, u16 *item, u16 *flagId, u16 *spotIndex);
 void DailyItems_SetPendingHidden(u16 spotIndex, u16 item, u16 flagId);

@@ -517,9 +517,12 @@ static bool8 IsStandable(s16 x, s16 y)
     return !IsBarrier(MapGridGetMetatileBehaviorAt(x, y));
 }
 
+// A trainer slot's or a ball spot's tile is the slot's, whoever stands there today and whether or not its
+// object is on camera (daily world slots): walkers neither spawn on it nor step onto it.
 static bool8 IsFreeTile(s16 x, s16 y)
 {
-    return IsStandable(x, y) && GetObjectEventIdByXY(x, y) == OBJECT_EVENTS_COUNT && !IsPlayerTile(x, y);
+    return IsStandable(x, y) && GetObjectEventIdByXY(x, y) == OBJECT_EVENTS_COUNT && !IsPlayerTile(x, y)
+        && !DailySlots_IsSlotTile(x, y);
 }
 
 // Where a walker may appear: free, not beside the player and not straight
@@ -532,9 +535,6 @@ static bool8 IsSpawnTile(s16 x, s16 y)
     u8 i;
 
     if (!IsFreeTile(x, y) || Distance(x, y, px, py) < WALKER_SPAWN_CLEARANCE)
-        return FALSE;
-    // A trainer slot's tile is the slot's, whoever stands there today (daily world slots).
-    if (DailyTrainers_IsSlotTile(x, y))
         return FALSE;
     if (facing >= DIR_SOUTH && facing <= DIR_EAST)
     {
@@ -593,6 +593,9 @@ static u8 ProbeStep(struct ObjectEvent *obj, s16 x, s16 y, u8 elevation, u8 dir)
         if (move > DIR_NORTHEAST || MapGridGetCollisionAt(dx, dy) != 0 || IsBarrier(MapGridGetMetatileBehaviorAt(dx, dy)))
             move = DIR_NONE;
     }
+    // Daily world slots: the step may not land on a slot's tile, spawned there today or not.
+    if (move != DIR_NONE && DailySlots_IsSlotTile(x + sDx[move], y + sDy[move]))
+        move = DIR_NONE;
     return move;
 }
 
@@ -2894,7 +2897,7 @@ static const u8 sCompanionDirs[5][4] = {
 // A free tile with nobody on it, not the player's (MAP_OFFSET coords).
 static bool8 IsEmptyTile(s16 x, s16 y)
 {
-    return IsStandable(x, y) && GetObjectEventIdByXY(x, y) == OBJECT_EVENTS_COUNT && !IsPlayerTile(x, y);
+    return IsFreeTile(x, y);
 }
 
 // A 64x64 follower sprite stands bottom-aligned and centred on its tile,
@@ -3736,7 +3739,8 @@ static bool8 IsTileTaken(s16 x, s16 y)
 {
     return !IsStandable(x + MAP_OFFSET, y + MAP_OFFSET)
         || GetObjectEventIdByXY(x + MAP_OFFSET, y + MAP_OFFSET) != OBJECT_EVENTS_COUNT
-        || IsPlayerTile(x + MAP_OFFSET, y + MAP_OFFSET);
+        || IsPlayerTile(x + MAP_OFFSET, y + MAP_OFFSET)
+        || DailySlots_IsSlotTile(x + MAP_OFFSET, y + MAP_OFFSET);
 }
 
 static void WanderMove(struct WalkerActor *actor, struct ObjectEvent *obj, const struct WayfarerWorldSpot *spot)

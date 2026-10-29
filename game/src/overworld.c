@@ -1007,6 +1007,10 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
                         || GetNumTilesInPrimary(previousLayout) != GetNumTilesInPrimary(gMapHeader.mapLayout)
                         || GetNumPalsInPrimary(previousLayout) != GetNumPalsInPrimary(gMapHeader.mapLayout);
     LoadObjEventTemplatesFromHeader();
+#if IS_WAYFARER
+    // A new day reaches the objects the crossing keeps on screen too.
+    DailySlots_OnCameraTransition();
+#endif
     TrySetMapSaveWarpStatus();
     ClearTempFieldEventData();
     ResetDexNavSearch();
