@@ -4,7 +4,9 @@ PRD: [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md)
 
 Dependencies: [FRLG Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md), [trainer party scaling](trainer-party-scaling.md), [trainer-only story encounters](trainer-only-story-encounters.md), [Wayfarer runtime foundation](wayfarer-runtime-foundation.md), [compressed map-layout runtime loading](compressed-map-layout-runtime-loading.md), [Wayfarer Hoenn entry](wayfarer-hoenn-entry.md), [Wayfarer interregional League circuit](wayfarer-interregional-league-circuit.md)
 
-Delivery: `task/kanto-local-adventures`, alongside the Mt. Moon, Safari, and Nugget Bridge local adventures. Validation evidence belongs to this delivery; the donor implementation is not a validation result for current main.
+Implemented: Yes ([PR #125](https://github.com/mzpkdev/pokemon-wayfarer/pull/125))
+
+Delivery: [PR #125](https://github.com/mzpkdev/pokemon-wayfarer/pull/125), alongside the Mt. Moon, Safari, and Nugget Bridge local adventures. The donor implementation is not a validation result for current main.
 
 ## Scope
 

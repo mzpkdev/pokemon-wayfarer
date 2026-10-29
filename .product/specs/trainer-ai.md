@@ -1,8 +1,9 @@
 # Trainer AI
 
 PRD: [Trainer AI](../prds/trainer-ai.md)
-Implemented: No. Today, every trainer battles with the AI line authored in
-its party data; the
+Implemented: Yes (Wayfarer, [PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)). Notable trainers battle with the resolved play style,
+AI skill tier, ace protection, and boss flag; other trainers keep the AI line
+authored in their party data. The tier thresholds stay placeholders. The
 [balance explorer](../../devtools/ui/README.md#trainer-balance-explorer)
 resolves the flags below as placeholder tooling.
 Design status: v0 contract, fitted to the engine's existing AI flags. The

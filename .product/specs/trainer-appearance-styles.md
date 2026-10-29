@@ -1,7 +1,7 @@
 # Trainer appearance styles
 
 PRD: [Trainer appearance styles](../prds/trainer-appearance-styles.md)
-Implemented: No
+Implemented: Yes ([PR #88](https://github.com/mzpkdev/pokemon-wayfarer/pull/88)). Four styles shipped; Red and Leaf stay deferred, as the approved v1 scope says.
 Scope: Approved four-style v1 (2026-09-09); Red and Leaf deferred.
 
 ## Scope

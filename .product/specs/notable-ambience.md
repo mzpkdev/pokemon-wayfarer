@@ -1,7 +1,7 @@
 # Notable ambience
 
 PRD: [Notable ambience](../prds/notable-ambience.md)
-Implemented: No
+Implemented: Yes ([PR #151](https://github.com/mzpkdev/pokemon-wayfarer/pull/151)). Fame and friendship reactions stay under Later.
 
 Design status: builds on the on-screen walkers implemented by
 [notable world simulation](notable-world-simulation.md) and the

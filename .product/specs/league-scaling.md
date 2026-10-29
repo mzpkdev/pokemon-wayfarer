@@ -1,7 +1,7 @@
 # League scaling
 
 PRD: [League scaling](../prds/league-scaling.md)
-Implemented: Partial
+Implemented: Partial. Wayfarer's v0 league events ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)) replace this scaling there; it still describes Today.
 
 Everything below describes Today; the v0 successor is
 [Leagues](leagues.md).

@@ -1,7 +1,7 @@
 # Trainer-only wild encounters
 
 PRD: [Trainer-only encounters](../prds/trainer-only-encounters.md)
-Status: implemented, author-owned safe-scenario mechanic.
+Implemented: Yes. An author-owned safe-scenario mechanic.
 
 ## Activation
 

@@ -1,7 +1,7 @@
 # Notable spots
 
 PRD: [Notable spots](../prds/notable-spots.md)
-Implemented: No
+Implemented: Partial. Build-time spot extraction, named spots, capacity, home bases, favourites, and the behaviour templates shipped with [PR #147](https://github.com/mzpkdev/pokemon-wayfarer/pull/147). The talk flow at spots and friendship remain.
 Design status: the everyday layer of the future **routine and travel**
 design. Spots switch on together with routines and travel; v0 haunt
 placement is unchanged, and nothing in this spec runs before then. Spots

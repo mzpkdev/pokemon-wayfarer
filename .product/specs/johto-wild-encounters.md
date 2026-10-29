@@ -1,7 +1,7 @@
 # Johto wild encounters
 
 **Retired.** Replaced by [Wild encounters v2](../prds/wild-encounters-v2.md).
-It still describes today's game until v2 ships; don't build new work from it.
+v2 shipped in Wayfarer; don't build new work from this document.
 
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes this document's permanent named native-HM anchors,
@@ -12,7 +12,7 @@ remains pending. Unrelated ecology, authored encounter rules, scaling and
 standalone-build contracts remain unchanged.
 
 PRD: [Johto wild encounter ecology](../prds/johto-wild-encounters.md)
-Implemented: Outdated
+Implemented: No. Retired and replaced in Wayfarer by wild encounters v2 ([PR #156](https://github.com/mzpkdev/pokemon-wayfarer/pull/156)).
 
 The campaign validation samples now follow +8/+8/+8 League rewards. Existing
 implementation and validation evidence must be refreshed for those milestones.

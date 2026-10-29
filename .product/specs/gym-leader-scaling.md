@@ -1,10 +1,9 @@
 # Gym Leader scaling
 
 PRD: [Notable trainers](../prds/notable-trainers.md)
-Implemented: No for the v0 model. The earlier player Trainer Rating (TR)
-scaler is present in code but `B_GYM_LEADER_SCALING` defaults to `FALSE`;
-Giovanni's Wayfarer finale uses a separate implemented projection. Today's
-code keeps that behavior until adoption.
+Implemented: Yes (Wayfarer, [PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)). Gym badge encounters resolve through the notable
+trainer catalog at the leader's TR. The earlier player Trainer Rating (TR)
+scaler stays in code, but `B_GYM_LEADER_SCALING` defaults to `FALSE`.
 Design status: v0 contract for all 24 badge encounters.
 
 ## Scope and authority

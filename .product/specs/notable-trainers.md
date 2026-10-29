@@ -1,8 +1,9 @@
 # Notable trainers
 
 PRD: [Notable trainers](../prds/notable-trainers.md)
-Implemented: No. Today, the ROM keeps its existing Gym and league scaling
-until adoption; the browser explorer is placeholder tooling.
+Implemented: Partial. Wayfarer runs the v0 catalog, trainer TR growth, rosters,
+move pools, battle snapshot, and league lineups ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)). Friendship, phone
+numbers, and fame remain. The browser explorer is placeholder tooling.
 Design status: v0 contract. The model is accepted. Rosters are approved
 content (draft v1: species, order, and aces); their battle content (move
 pools, and items where a slot doesn't match its source party) is still

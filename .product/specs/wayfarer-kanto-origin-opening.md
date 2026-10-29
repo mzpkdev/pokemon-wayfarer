@@ -1,7 +1,7 @@
 # Wayfarer Kanto origin opening
 
 PRD: [Pallet Town Kanto origin opening](../prds/wayfarer-kanto-origin-opening.md)
-Implemented: No
+Implemented: Yes ([PR #135](https://github.com/mzpkdev/pokemon-wayfarer/pull/135))
 
 ## Scope
 
