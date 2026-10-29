@@ -405,15 +405,36 @@ static u8 GetWayfarerMapPopUpTheme(mapsec_u16_t mapSectionId)
 {
     // Map types cover most locations; these sections need a more specific
     // Emerald frame, including sea routes marked as ordinary routes.
-    // Pokémon Mansion's section ID aliases zero in the HNS catalog, so use
-    // its layouts rather than styling every map with that placeholder ID.
+    // Pokémon Mansion, Pokémon Tower, and Silph Co. section IDs alias zero in
+    // the HNS catalog, so use their layouts rather than styling every map
+    // with that placeholder ID.
     switch (gMapHeader.mapLayoutId)
     {
     case LAYOUT_POKEMON_MANSION_1F:
     case LAYOUT_POKEMON_MANSION_2F:
     case LAYOUT_POKEMON_MANSION_3F:
     case LAYOUT_POKEMON_MANSION_B1F:
+    case LAYOUT_POKEMON_TOWER_1F:
+    case LAYOUT_POKEMON_TOWER_2F:
+    case LAYOUT_POKEMON_TOWER_3F:
+    case LAYOUT_POKEMON_TOWER_4F:
+    case LAYOUT_POKEMON_TOWER_5F:
+    case LAYOUT_POKEMON_TOWER_6F:
+    case LAYOUT_POKEMON_TOWER_7F:
         return MAPPOPUP_THEME_STONE;
+    case LAYOUT_SILPH_CO_1F:
+    case LAYOUT_SILPH_CO_2F:
+    case LAYOUT_SILPH_CO_3F:
+    case LAYOUT_SILPH_CO_4F:
+    case LAYOUT_SILPH_CO_5F:
+    case LAYOUT_SILPH_CO_6F:
+    case LAYOUT_SILPH_CO_7F:
+    case LAYOUT_SILPH_CO_8F:
+    case LAYOUT_SILPH_CO_9F:
+    case LAYOUT_SILPH_CO_10F:
+    case LAYOUT_SILPH_CO_11F:
+    case LAYOUT_SILPH_CO_ELEVATOR:
+        return MAPPOPUP_THEME_MARBLE;
     }
 
     switch (mapSectionId)
@@ -426,6 +447,11 @@ static u8 GetWayfarerMapPopUpTheme(mapsec_u16_t mapSectionId)
     case MAPSEC_ALOLA_OCEAN:
     case MAPSEC_WATER_LABYRINTH:
     case MAPSEC_WATER_PATH:
+    case MAPSEC_KINDLE_ROAD:
+    case MAPSEC_TREASURE_BEACH:
+    case MAPSEC_BOND_BRIDGE:
+    case MAPSEC_RESORT_GORGEOUS:
+    case MAPSEC_OUTCAST_ISLAND:
     case MAPSEC_SINNOH_ROUTE_220:
     case MAPSEC_SINNOH_ROUTE_223:
     case MAPSEC_SINNOH_ROUTE_230:
@@ -442,6 +468,7 @@ static u8 GetWayfarerMapPopUpTheme(mapsec_u16_t mapSectionId)
     case MAPSEC_SPROUT_TOWER:
     case MAPSEC_TIN_TOWER:
     case MAPSEC_TANOBY_RUINS:
+    case MAPSEC_MT_EMBER:
         return MAPPOPUP_THEME_STONE;
     case MAPSEC_PEWTER_CITY:
     case MAPSEC_VIOLET_CITY:
@@ -450,7 +477,10 @@ static u8 GetWayfarerMapPopUpTheme(mapsec_u16_t mapSectionId)
     case MAPSEC_SINNOH_OREBURGH_CITY:
     case MAPSEC_SINNOH_ETERNA_CITY:
     case MAPSEC_ROCKET_WAREHOUSE:
+    case MAPSEC_ROCKET_HIDEOUT:
         return MAPPOPUP_THEME_BRICK;
+    case MAPSEC_POWER_PLANT:
+    case MAPSEC_TRAINER_TOWER:
     case MAPSEC_SINNOH_VEILSTONE_CITY:
     case MAPSEC_SINNOH_POKEMON_LEAGUE:
         return MAPPOPUP_THEME_MARBLE;
