@@ -85,7 +85,14 @@ SootopolisCity_Gym_1F_EventScript_Juan::
 	goto_if_eq VAR_RESULT, TRUE, SootopolisCity_Gym_1F_EventScript_JuanRematch
 	goto_if_unset FLAG_RECEIVED_TM_WATER_PULSE, SootopolisCity_Gym_1F_EventScript_GiveWaterPulse2
 	goto_if_unset FLAG_BADGE06_GET, SootopolisCity_Gym_1F_EventScript_GoGetFortreeBadge
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_JUAN
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox SootopolisCity_Gym_1F_Text_JuanPostBattle, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	release
 	end
 

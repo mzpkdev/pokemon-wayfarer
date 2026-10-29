@@ -138,7 +138,14 @@ MahoganyTown_Gym_EventScript_Pryce_Battle3::
 	goto MahoganyTown_Gym_EventScript_PryceVictory
 
 MahoganyTown_Gym_EventScript_Pryce_Defeated::
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_PRYCE
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox MahoganyTown_Gym_Text_CherishPokemon, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	closemessage
 	release
 	end

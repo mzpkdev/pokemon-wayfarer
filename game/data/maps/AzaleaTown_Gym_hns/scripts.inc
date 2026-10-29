@@ -549,7 +549,14 @@ AzaleaTown_Gym_EventScript_Bugsy::
 	end
 
 AzaleaTown_Gym_EventScript_Bugsy_Defeated::
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_BUGSY
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox AzaleaTown_Gym_Text_BugsyAdvice, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	closemessage
 	release
 	end

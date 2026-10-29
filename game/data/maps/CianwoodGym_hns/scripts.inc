@@ -123,7 +123,14 @@ CianwoodGym_EventScript_Chuck_Battle3::
 	goto CianwoodGym_EventScript_ChuckVictory
 
 CianwoodGym_EventScript_Chuck_Defeated::
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_CHUCK
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox CianwoodGym_Text_ChuckAfter, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	closemessage
 	release
 	end

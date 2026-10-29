@@ -226,7 +226,14 @@ BlackthornGym_EventScript_ClairDuringChallenge::
 	end
 
 BlackthornGym_EventScript_Clair_Defeated::
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_CLAIR
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox BlackthornGym_Text_ClairText_League, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	closemessage
 	release
 	end

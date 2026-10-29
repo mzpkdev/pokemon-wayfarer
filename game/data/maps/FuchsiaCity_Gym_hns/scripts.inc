@@ -80,7 +80,14 @@ FuchsiaCity_Gym_EventScript_Janine::
 	end
 
 FuchsiaCity_Gym_EventScript_Janine_Defeated::
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_JANINE
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox FuchsiaCity_Gym_Text_Janine_ApplyMyself, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	closemessage
 	release
 	end

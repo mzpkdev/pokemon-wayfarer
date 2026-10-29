@@ -58,7 +58,14 @@ MossdeepCity_Gym_EventScript_TateAndLiza::
 	specialvar VAR_RESULT, ShouldTryRematchBattle
 	goto_if_eq VAR_RESULT, TRUE, MossdeepCity_Gym_EventScript_TateAndLizaRematch
 	goto_if_unset FLAG_RECEIVED_TM_CALM_MIND, MossdeepCity_Gym_EventScript_GiveCalmMind2
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_TATE_LIZA
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox MossdeepCity_Gym_Text_TateAndLizaPostBattle, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	release
 	end
 

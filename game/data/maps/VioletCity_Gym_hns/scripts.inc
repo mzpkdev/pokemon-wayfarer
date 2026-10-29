@@ -49,7 +49,14 @@ VioletCity_Gym_EventScript_Falkner::
 	end
 
 VioletCity_Gym_EventScript_Falkner_Defeated::
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_FALKNER
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox VioletGym_Text_Falkner_AfterFight, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	closemessage
 	release
 	end

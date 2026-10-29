@@ -57,7 +57,14 @@ EcruteakCity_Gym_EventScript_Morty::
 	end
 
 EcruteakCity_Gym_EventScript_Morty_Defeated::
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_MORTY
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox MortyFightDoneText, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	closemessage
 	release
 	end

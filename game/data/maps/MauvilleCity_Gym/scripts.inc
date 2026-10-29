@@ -79,7 +79,14 @@ MauvilleCity_Gym_EventScript_Wattson::
 	goto_if_eq VAR_RESULT, TRUE, MauvilleCity_Gym_EventScript_WattsonRematch
 	goto_if_unset FLAG_RECEIVED_TM_SHOCK_WAVE, MauvilleCity_Gym_EventScript_GiveShockWave2
 	goto_if_eq VAR_NEW_MAUVILLE_STATE, 2, MauvilleCity_Gym_EventScript_CompletedNewMauville
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_WATTSON
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox MauvilleCity_Gym_Text_WattsonPostBattle, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	release
 	end
 

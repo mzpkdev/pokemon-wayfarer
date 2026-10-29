@@ -6,7 +6,14 @@ RustboroCity_Gym_EventScript_Roxanne::
 	specialvar VAR_RESULT, ShouldTryRematchBattle
 	goto_if_eq VAR_RESULT, TRUE, RustboroCity_Gym_EventScript_RoxanneRematch
 	goto_if_unset FLAG_RECEIVED_TM_ROCK_TOMB, RustboroCity_Gym_EventScript_GiveRockTomb
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_ROXANNE
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox RustboroCity_Gym_Text_RoxannePostBattle, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	release
 	end
 

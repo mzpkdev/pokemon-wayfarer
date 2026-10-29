@@ -168,7 +168,10 @@ CinnabarIsland_Gym_OnLoadOpenDoor6::
 CinnabarIsland_Gym_EventScript_Blaine::
 	trainerbattle_single TRAINER_LEADER_BLAINE, CinnabarIsland_Gym_Text_BlaineIntro, CinnabarIsland_Gym_Text_BlaineDefeat, CinnabarIsland_Gym_EventScript_DefeatedBlaine, NO_MUSIC
 	goto_if_unset FLAG_WAYFARER_CINNABAR_TM38_CLAIMED, CinnabarIsland_Gym_EventScript_GiveTM38
+	setvar VAR_0x8004, NOTABLE_TRAINER_BLAINE
+	call NotableTalk_EventScript_Greeting
 	msgbox CinnabarIsland_Gym_Text_BlainePostBattle
+	call NotableTalk_EventScript_Farewell
 	release
 	end
 CinnabarIsland_Gym_EventScript_DefeatedBlaine::
