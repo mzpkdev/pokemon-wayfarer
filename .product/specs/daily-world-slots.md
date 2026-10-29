@@ -136,6 +136,15 @@ clock's day instead, with no other change.
 A new day takes effect on the next map load. The current map keeps its
 occupants until then.
 
+A seamless load (walking across a map border, a camera transition) is a map
+load, and it keeps the objects of the maps it crosses on screen. When it starts
+a new day, it removes every object that belongs to a trainer slot or an item
+ball spot, whichever map it is from, so none keeps showing the old day's draw.
+The new map's objects spawn again at once from today's templates. An object of
+the map left behind is not respawned: it goes as it would on scrolling out of
+view, and returns with that map. A seamless load that keeps the day touches
+nothing. A warp resets every object anyway.
+
 ## Deterministic draws
 
 Every draw comes from a hash, never from the game's random number generator:
@@ -285,8 +294,9 @@ occupants again, which also rebuilds the per-map occupant table the
 still applied only by the map-load rule in [The day](#the-day).
 
 The [notable walkers' hook](../../game/src/event_object_movement.c) uses the
-same seam. Walkers never spawn on a trainer slot's tile, and slot rewriting
-runs before walker placement. The Battle Pyramid rewrites templates the same
+same seam. Walkers never spawn on, or step onto, the tile of a trainer slot or an
+item ball spot, whoever stands there today and whether or not the slot's object
+is on camera, and slot rewriting runs before walker placement. The Battle Pyramid rewrites templates the same
 way and is the precedent.
 
 ### Battles
@@ -521,6 +531,8 @@ reproduced. Tests cover:
   walks into the sight line);
 - dynamic and taken-prize spots staying visible after a reload on the same day, and refilling the next day, with no permanent flag set;
 - a picked-up ball (dynamic or taken prize) not respawning on later camera steps, a reload or leaving and re-entering the map the same day, and an empty slot's template never spawning;
+- a day change on a camera-transition load removing the slot objects left on screen, and a load that keeps the day leaving them;
+- a walker's step onto a trainer slot's or a ball spot's tile being refused, with the slot's object absent, empty today or cleared;
 - a prize spot giving the prize item, never its authored item, for both balls and hidden spots;
 - empty odds and tier odds over many days within tolerance;
 - prize pickup becoming dynamic the next day;
@@ -530,12 +542,6 @@ reproduced. Tests cover:
 - a rematch family reporting its top team as the latest once every rematch is won (coast two- and three-team families, Sevii);
 - the generated reports: slot status, exclusions, the dialogue audit and pool
   validation.
-
-## Known limitations
-
-- A day change on a camera-transition map load can leave the previous map's
-  still-visible objects stale until the map is reloaded.
-- Walkers may walk onto the tile of a slot that is off camera.
 
 ## Generation and reports
 

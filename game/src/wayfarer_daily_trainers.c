@@ -64,6 +64,8 @@ static EWRAM_DATA u8 sNumMapOccupants = 0;
 #endif
 // The slot rows (plus one; zero is none) of the battle being set up, one per opponent, and whether each was a rotating occupant.
 static EWRAM_DATA u16 sNotedSlotsPlusOne[2] = {0};
+// The current map's trainer slot templates, by template index: every slot object, occupied or not.
+static EWRAM_DATA u8 sSlotTemplates[(OBJECT_EVENT_TEMPLATES_COUNT + 7) / 8] = {0};
 static EWRAM_DATA u8 sNotedRotating = 0;
 
 static struct WayfarerDailySlots *Daily(void)
@@ -553,6 +555,7 @@ void DailyTrainers_RewriteTemplates(void)
     u8 group;
 
     memset(groups, 0, sizeof(groups));
+    memset(sSlotTemplates, 0, sizeof(sSlotTemplates));
     sNumMapOccupants = 0;
     for (slot = first; slot < WORLD_TRAINER_SLOT_COUNT && SlotMapKey(slot) == key; slot++)
     {
@@ -567,6 +570,7 @@ void DailyTrainers_RewriteTemplates(void)
                 continue;
             template->graphicsId = row->gfx[object];
             template->script = row->script[object];
+            sSlotTemplates[(row->localId[object] - 1) / 8] |= 1 << ((row->localId[object] - 1) % 8);
         }
         if (row->group != WORLD_TRAINER_GROUP_HOME)
             groups[row->group / 8] |= 1 << (row->group % 8);
@@ -630,23 +634,26 @@ bool8 DailyTrainers_HideTemplate(const struct ObjectEventTemplate *template)
     return entry != NULL && entry->occupant == DAILY_OCCUPANT_AWAY;
 }
 
-// Walkers never spawn on a trainer slot's tile, whoever stands there today.
+// Walkers never stand on a trainer slot's tile (MAP_OFFSET coordinates), whoever stands there today and
+// whether or not the slot's object is on camera.
 bool8 DailyTrainers_IsSlotTile(s16 x, s16 y)
 {
-    u16 key = CurrentMapKey();
-    u16 slot;
+    u8 i;
 
-    for (slot = MapLowerBound(key); slot < WORLD_TRAINER_SLOT_COUNT && SlotMapKey(slot) == key; slot++)
+    for (i = 0; i < OBJECT_EVENT_TEMPLATES_COUNT; i++)
     {
-        u8 object;
+        const struct ObjectEventTemplate *template;
 
-        for (object = 0; object < 2; object++)
+        if (sSlotTemplates[i / 8] == 0)
         {
-            const struct ObjectEventTemplate *template = SlotTemplate(sWorldTrainerSlots[slot].localId[object]);
-
-            if (template != NULL && template->x + MAP_OFFSET == x && template->y + MAP_OFFSET == y)
-                return TRUE;
+            i |= 7;
+            continue;
         }
+        if (!((sSlotTemplates[i / 8] >> (i % 8)) & 1))
+            continue;
+        template = &gSaveBlock1Ptr->objectEventTemplates[i];
+        if (template->x + MAP_OFFSET == x && template->y + MAP_OFFSET == y)
+            return TRUE;
     }
     return FALSE;
 }
