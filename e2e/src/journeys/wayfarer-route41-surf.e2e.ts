@@ -1,9 +1,6 @@
-import { afterEach, beforeAll, beforeEach, describe, expect, it } from "webanvil/test"
+import { afterEach, beforeEach, describe, expect, it } from "webanvil/test"
 
 import { GameSession, type Direction } from "../harness/game-session"
-import { type RunningSkyEmu } from "../harness/skyemu/server"
-import { readSkyEmuSymbols, type SkyEmuSymbols } from "../harness/skyemu/symbols"
-import { requireSymbolsPath } from "../harness/skyemu/utils"
 
 // Route 40's bottom row (12-20, 60) is a row of warps on water into Route
 // 41's open water (37-45, 12), which reaches Cianwood City's seam. The walker
@@ -11,10 +8,8 @@ import { requireSymbolsPath } from "../harness/skyemu/utils"
 // can make the same crossing: Surf south from Route 40 over the warp row,
 // land on Route 41, and surf on into Cianwood City.
 //
-// The route avoids New Game objects; trainers are marked as already battled
-// so their sight lines don't stop the journey, and wild encounters are off.
-const TRAINER_FLAGS_START = 0x500
-const TRAINER_FLAGS_END = 0x85f
+// The route avoids New Game objects. Trainer sight and wild encounters are
+// off, so no trainer stops the journey whoever the day's slots put on the water.
 
 type Segment = [Direction, number, number]
 
@@ -43,28 +38,13 @@ const route41: Segment[] = [
 
 describe.sequential("Wayfarer Route 40 water warps to Cianwood", () => {
   let game: GameSession
-  let symbols: SkyEmuSymbols
 
-  beforeAll(async () => {
-    symbols = await readSkyEmuSymbols(requireSymbolsPath())
-  })
   beforeEach(async () => {
     game = await GameSession.launch()
   })
   afterEach(async () => {
     await game?.close()
   })
-
-  const markTrainersBattled = async () => {
-    const client = (game as unknown as { running: RunningSkyEmu }).running.client
-    const abi = await client.readBytes(symbols.address("gE2ETestAbi"), 16)
-    const flagsOffset = new DataView(abi.buffer, abi.byteOffset, abi.byteLength).getUint16(12, true)
-    const pointer = await client.readBytes(symbols.address("gSaveBlock1Ptr"), 4)
-    const saveBlock1 = new DataView(pointer.buffer, pointer.byteOffset, pointer.byteLength).getUint32(0, true)
-    const first = TRAINER_FLAGS_START >> 3
-    const last = TRAINER_FLAGS_END >> 3
-    await client.writeBytes(saveBlock1 + flagsOffset + first, new Uint8Array(last - first + 1).fill(0xff))
-  }
 
   // One tile in a direction, retrying while a wandering swimmer is in the way.
   const step = async (direction: Direction) => {
@@ -93,11 +73,10 @@ describe.sequential("Wayfarer Route 40 water warps to Cianwood", () => {
     await game.arrange({
       checkpoint: "new-bark-after-intro",
       player: { facing: "down", position: { map: "route-40", x: 14, y: 22 } },
-      story: { flags: { disableEncounters: true } },
+      story: { flags: { disableEncounters: true, disableTrainers: true } },
       party: [{ species: "lapras", level: 50, moves: ["surf"] }],
       determinism: { textSpeed: "instant", rngSeed: 1 },
     })
-    await markTrainersBattled()
 
     // Mount Surf facing the water south of the beach.
     await game.player.interact()
@@ -108,7 +87,10 @@ describe.sequential("Wayfarer Route 40 water warps to Cianwood", () => {
     )
     await game.wait.frames(12)
     await game.controls.press("a")
-    await game.wait.until((state) => state.dialogue.message === "player-used-surf", "Surf confirmation")
+    await game.wait.until(
+      (state) => state.dialogue.message === "player-used-surf",
+      "Surf confirmation",
+    )
     await game.dialogue.waitForClosed()
     await game.wait.frames(60)
     await game.controls.press("a")
