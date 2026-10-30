@@ -192,11 +192,11 @@ TEST("Rematch wins and story battles count the first win, and a lost rematch doe
 }
 
 #if WAYFARER_LEAGUE_EVENTS
-TEST("A league event win credits the accepted opponent, and a lost one does not")
+// Starts Indigo's first room battle and returns the accepted opponent's character.
+static u8 StartIndigoRoomBattle(void)
 {
     const struct LeagueSavedTeam *team;
     u8 badge;
-    u8 first;
 
     ResetFriendship();
     for (badge = 0; badge < 8; badge++)
@@ -214,12 +214,26 @@ TEST("A league event win credits the accepted opponent, and a lost one does not"
     BattleSetup_ConfigureTrainerBattle(NULL);
     EXPECT(IsLeagueEventBattleInProgress());
     EXPECT(GetAcceptedLeagueEventMember(0, &team));
-    first = team->characterId;
-    EXPECT(first != NOTABLE_TRAINER_NONE);
+    EXPECT(team->characterId != NOTABLE_TRAINER_NONE);
+    return team->characterId;
+}
+
+TEST("A league event win credits the accepted opponent")
+{
+    u8 opponent = StartIndigoRoomBattle();
 
     gBattleOutcome = B_OUTCOME_WON;
     Test_EndTrainerBattle();
-    EXPECT_EQ(NotableFriendship_GetScore(first), 10);
+    EXPECT_EQ(NotableFriendship_GetScore(opponent), 10);
+}
+
+TEST("A lost league event battle credits nothing")
+{
+    u8 opponent = StartIndigoRoomBattle();
+
+    gBattleOutcome = B_OUTCOME_LOST;
+    Test_EndTrainerBattle();
+    EXPECT_EQ(NotableFriendship_GetScore(opponent), 0);
 }
 #endif // WAYFARER_LEAGUE_EVENTS
 

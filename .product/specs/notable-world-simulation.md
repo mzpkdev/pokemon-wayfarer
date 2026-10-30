@@ -676,7 +676,8 @@ When a dwell runs out (in a heartbeat, or locally while watched):
   existing post-battle line in place of the activity line: the greeting by
   [friendship](notable-trainers.md#friendship), that line, and the
   farewell. The leader greets the player the same way at home as on the
-  road.
+  road. Norman is the one exception: in the native Hoenn household he is the
+  player's father, so his Gym lines play without a greeting there.
 - **Follow-ups go where the trainer is.** The
   [Courier delivery](notable-haunts.md#delivery), the
   [Egg sitting follow-up](notable-haunts.md#the-follow-up), and the

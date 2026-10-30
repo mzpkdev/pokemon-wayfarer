@@ -14,7 +14,8 @@
 extern const u8 NotableFriendship_EventScript_NumberRegistered[];
 
 // Handovers waiting for the field, one bit per character. RAM only: the score is the saved fact, and a
-// crossing is shown at the next frame the field has control, before any save can happen.
+// crossing is shown at the next frame the field has control. A script that saves before handing control
+// back (the Hall of Fame after a champion battle) loses the line, never the number.
 static EWRAM_DATA u8 sPendingNumber[(NOTABLE_FRIENDSHIP_COUNT + 7) / 8] = {0};
 // True while any bit above is set: the field polls every frame, so the common case must not scan the bits.
 static EWRAM_DATA bool8 sAnyPendingNumber = FALSE;
