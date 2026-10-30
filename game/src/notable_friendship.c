@@ -16,6 +16,8 @@ extern const u8 NotableFriendship_EventScript_NumberRegistered[];
 // Handovers waiting for the field, one bit per character. RAM only: the score is the saved fact, and a
 // crossing is shown at the next frame the field has control, before any save can happen.
 static EWRAM_DATA u8 sPendingNumber[(NOTABLE_FRIENDSHIP_COUNT + 7) / 8] = {0};
+// True while any bit above is set: the field polls every frame, so the common case must not scan the bits.
+static EWRAM_DATA bool8 sAnyPendingNumber = FALSE;
 
 static bool8 IsCharacterId(u8 characterId)
 {
@@ -36,6 +38,7 @@ void NotableFriendship_Reset(void)
 {
     memset(&gSaveBlock3Ptr->notableFriendship, 0, sizeof(gSaveBlock3Ptr->notableFriendship));
     memset(sPendingNumber, 0, sizeof(sPendingNumber));
+    sAnyPendingNumber = FALSE;
 }
 
 bool8 NotableFriendship_IsValid(void)
@@ -83,7 +86,10 @@ static void AddPoints(u8 characterId, u8 points)
     // The number is handed over once, when the score first reaches Friend; Tate & Liza give none.
     if (before < NOTABLE_FRIENDSHIP_FRIEND && *score >= NOTABLE_FRIENDSHIP_FRIEND
      && characterId != NOTABLE_TRAINER_TATE_LIZA)
+    {
         SetBit(sPendingNumber, characterId);
+        sAnyPendingNumber = TRUE;
+    }
 }
 
 void NotableFriendship_AddQuestPoints(u8 characterId)
@@ -129,10 +135,16 @@ bool8 NotableFriendship_HasPendingNumber(void)
 
 bool8 NotableFriendship_TryStartPendingNumberScript(void)
 {
-    u8 characterId = NextPendingNumber();
+    u8 characterId;
 
-    if (characterId == NOTABLE_TRAINER_NONE)
+    if (!sAnyPendingNumber)
         return FALSE;
+    characterId = NextPendingNumber();
+    if (characterId == NOTABLE_TRAINER_NONE)
+    {
+        sAnyPendingNumber = FALSE;
+        return FALSE;
+    }
     sPendingNumber[(characterId - 1) / 8] &= ~(1 << ((characterId - 1) % 8));
     gSpecialVar_0x8004 = characterId;
     ScriptContext_SetupScript(NotableFriendship_EventScript_NumberRegistered);
