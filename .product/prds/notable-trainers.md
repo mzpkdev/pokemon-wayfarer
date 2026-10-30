@@ -187,10 +187,10 @@ knows everything about your party ([Trainer AI](trainer-ai.md)).
 ### Friendship
 
 Every notable trainer has a friendship with you that only grows. It starts
-at Stranger and moves to **Met** when you first talk, **Friend** once you
-have won against them or helped them with a few quests, and **Close** after
-a lot more of both. Nothing else moves it, and chatting again and again adds
-nothing ([friendship](../specs/notable-trainers.md#friendship)). A trainer
+at Stranger and moves to **Met** once you have beaten them or helped them
+with a quest, **Friend** once you have done both (or helped them twice), and
+**Close** after a lot more helping. Talking never moves it: a trainer you have
+only chatted with is still a stranger, and beating them again adds nothing ([friendship](../specs/notable-trainers.md#friendship)). A trainer
 who becomes a Friend gives you their phone number, which the
 [Sevii Masters](sevii-masters.md#design) uses to find you a partner.
 

@@ -95,7 +95,14 @@ GoldenrodCity_Gym_EventScript_WhitneyBadgeDone::
 GoldenrodCity_Gym_EventScript_WhitneyDefeated::
 	lock
 	faceplayer
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_WHITNEY
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox GoldenrodCity_Gym_Text_WhitneyGoodCry, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	closemessage
 	release
 	end

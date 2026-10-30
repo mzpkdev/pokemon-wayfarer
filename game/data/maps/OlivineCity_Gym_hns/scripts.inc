@@ -272,7 +272,14 @@ OlivineCity_Gym_EventScript_Jasmine_Battle3::
 
 OlivineCity_Gym_EventScript_Jasmine_Defeated::
 	goto_if_unset FLAG_HIDE_DOJO_JASMINE, OlivineCity_Gym_EventScript_Jasmine_Trade
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_JASMINE
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox OlivineCity_Gym_Text_JasmineGoodLuck, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	closemessage
 	release
 	end
@@ -368,7 +375,14 @@ OlivineCity_Gym_EventScript_JasmineDeclineTrade::
 	end
 
 OlivineCity_Gym_EventScript_JasmineTradeCompleted::
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_JASMINE
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox OlivineCity_Gym_Text_JasmineTradeCompleted, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	release
 	end
 

@@ -837,4 +837,9 @@ gSpecials::
     def_special PhoneOffer_CanOffer
     def_special PhoneOffer_BufferTarget
     def_special PhoneOffer_Accept
+    def_special NotableTalk_BufferGreeting
+    def_special NotableTalk_BufferFarewell
+    def_special NotableTalk_PrepareWalker
+    def_special NotableTalk_BufferWalkerActivityLine
+    def_special NotableFriendship_BufferTrainerName
 #endif

@@ -111,6 +111,15 @@
         "presentationId": 1,
         "objectGraphicsId": "OBJ_EVENT_GFX_BROCK_HNS",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I'm BROCK. I train Rock types, and I cook for them too!",
+        "heard": "So you're {PLAYER}? Word's out! Have you eaten yet?",
+        "again": "Oh, hi again! Still getting to know each other, huh?",
+        "hello": "Hey, {PLAYER}! Good to see you. Eating well, I hope?",
+        "close": "{PLAYER}! Good to see you, friend. There is always a plate for you.",
+        "bye": "Take care! And keep your POKéMON well fed!"
       }
     },
     {
@@ -221,6 +230,15 @@
         "presentationId": 2,
         "objectGraphicsId": "OBJ_EVENT_GFX_MISTY_HNS",
         "enabled": true
+      },
+      "buddySlot": 2,
+      "voice": {
+        "meet": "I'm MISTY! My policy? An all-out offensive with Water types!",
+        "heard": "You're {PLAYER}? I've heard things. They'd better be true!",
+        "again": "Oh, it's you again. Fine, I guess I'm getting used to you.",
+        "hello": "Hey, {PLAYER}! Took you long enough!",
+        "close": "Hey, {PLAYER}! Best friend alert! Don't tell anyone I said so.",
+        "bye": "See ya! ...{BUDDY}, get back in your ball! Not again!"
       }
     },
     {
@@ -334,6 +352,15 @@
         "presentationId": 3,
         "objectGraphicsId": "OBJ_EVENT_GFX_SURGE_HNS",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "Name's LT. SURGE, the Lightning American! Nice to meet ya!",
+        "heard": "Hey, kid! You're {PLAYER}, right? I heard you're tough!",
+        "again": "Hey, kid! You again! Starting to grow on me, ya know!",
+        "hello": "Hey, kid! {PLAYER}! Still standing? Good!",
+        "close": "Hey there, {PLAYER}! My favorite soldier! At ease, friend!",
+        "bye": "Dismissed, kid! Stay sharp!"
       }
     },
     {
@@ -443,6 +470,15 @@
         "presentationId": 4,
         "objectGraphicsId": "OBJ_EVENT_GFX_ERIKA_HNS",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "Pleased to meet you. I am ERIKA. I teach flower arranging.",
+        "heard": "Oh... you are {PLAYER}? I have heard such lovely things.",
+        "again": "Oh, hello again. I remember you. Please, relax a while.",
+        "hello": "Oh... {PLAYER}? Forgive me, I was nearly asleep. Hello!",
+        "close": "Dear {PLAYER}. Your company is a joy. Please, stay a moment.",
+        "bye": "Farewell. Oh... I think I'll close my eyes a moment..."
       }
     },
     {
@@ -559,6 +595,15 @@
         "presentationId": 5,
         "objectGraphicsId": "OBJ_EVENT_GFX_JANINE_HNS",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I'm JANINE, daughter of KOGA, and a ninja in training!",
+        "heard": "Fufufu! You're {PLAYER}! My spies told me all about you!",
+        "again": "Fufufu! You again! I'm starting to see through you!",
+        "hello": "Fufufufu... Surprised? It's just me! Hello, {PLAYER}!",
+        "close": "{PLAYER}! Fufufu, there's no need to hide from you anymore!",
+        "bye": "Farewell! (Poof!) ...I'm still working on that part."
       }
     },
     {
@@ -668,6 +713,15 @@
         "presentationId": 6,
         "objectGraphicsId": "OBJ_EVENT_GFX_SABRINA_HNS",
         "enabled": true
+      },
+      "buddySlot": 4,
+      "voice": {
+        "meet": "I am SABRINA. I have had psychic powers since childhood.",
+        "heard": "You are {PLAYER}. Your name reached me before you did.",
+        "again": "We meet again. I remember you. That is rare.",
+        "hello": "{PLAYER}. I foresaw that you would come.",
+        "close": "{PLAYER}. I see you clearly now. You are a true friend.",
+        "bye": "We will meet again. I have seen it."
       }
     },
     {
@@ -781,6 +835,15 @@
         "presentationId": 7,
         "objectGraphicsId": "OBJ_EVENT_GFX_BLAINE_HNS",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "Hah! I am BLAINE! Quizmaster and red-hot Fire trainer!",
+        "heard": "Hah! You're {PLAYER}! Heard you're a real hot shot!",
+        "again": "Hah! Back again! You're getting to be a familiar face!",
+        "hello": "Hah! {PLAYER}! Got your BURN HEAL handy?",
+        "close": "Hah! {PLAYER}, my friend! Always a hot time with you!",
+        "bye": "Hah! Better have BURN HEAL next time!"
       }
     },
     {
@@ -892,6 +955,15 @@
         "presentationId": 8,
         "objectGraphicsId": "OBJ_EVENT_GFX_GIOVANNI_HNS",
         "enabled": true
+      },
+      "buddySlot": 4,
+      "voice": {
+        "meet": "I am GIOVANNI. Remember the name. Others have learned to.",
+        "heard": "So. You are {PLAYER}. I have heard your name. Often.",
+        "again": "You again. I am beginning to remember your face.",
+        "hello": "So. {PLAYER}. You keep turning up.",
+        "close": "{PLAYER}. You have earned my trust. Do not waste it.",
+        "bye": "Go. We will meet again."
       }
     },
     {
@@ -1009,6 +1081,15 @@
         "presentationId": 9,
         "objectGraphicsId": "OBJ_EVENT_GFX_BLUE",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I'm BLUE! Remember it, 'cause I'm the best there is!",
+        "heard": "You're {PLAYER}? Everyone's talking about you. Not me, though.",
+        "again": "Oh, you again. Keep this up and I'll remember you!",
+        "hello": "Yo, {PLAYER}! Miss me? Course you did.",
+        "close": "Yo, {PLAYER}! My rival and my friend. Don't let it go to your head.",
+        "bye": "Smell ya later!"
       }
     },
     {
@@ -1117,6 +1198,15 @@
         "presentationId": 10,
         "objectGraphicsId": "OBJ_EVENT_GFX_LORELEI",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I am LORELEI. No one can best me with icy POKéMON.",
+        "heard": "You're {PLAYER}? I have heard so much about you.",
+        "again": "Ah, you again. I am beginning to know you.",
+        "hello": "Ah, {PLAYER}. Come to see me? How refreshing.",
+        "close": "Dear {PLAYER}. I am truly glad to see you. Stay a while.",
+        "bye": "Come along, {BUDDY}. Until next time."
       }
     },
     {
@@ -1228,6 +1318,15 @@
         "presentationId": 11,
         "objectGraphicsId": "OBJ_EVENT_GFX_BRUNO",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I am BRUNO! I train with my POKéMON, body and soul!",
+        "heard": "Hoo hah! You are {PLAYER}! I have heard of your strength!",
+        "again": "Hoo hah! You again! Your face is familiar now!",
+        "hello": "Hoo hah! {PLAYER}! Still training hard?",
+        "close": "Hoo hah! {PLAYER}! My friend! Our bond is strong as steel!",
+        "bye": "Train hard! Hoo hah!"
       }
     },
     {
@@ -1338,6 +1437,15 @@
         "presentationId": 12,
         "objectGraphicsId": "OBJ_EVENT_GFX_AGATHA",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I am AGATHA. Remember that name, child. OAK surely does.",
+        "heard": "Hmph. So you're {PLAYER}. I've heard the rumors, child.",
+        "again": "Hmph. You again, child. You're persistent, I'll give you that.",
+        "hello": "Hmph. {PLAYER}. Still kicking, are you?",
+        "close": "Hmph. {PLAYER}. Fine, you're all right, child. Don't tell anyone.",
+        "bye": "Off with you, child. {BUDDY} and I have things to do."
       }
     },
     {
@@ -1458,6 +1566,15 @@
         "presentationId": 13,
         "objectGraphicsId": "OBJ_EVENT_GFX_KOGA_HNS",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I am KOGA. I live in shadows, a ninja!",
+        "heard": "Fwahaha! You are {PLAYER}. My shadows spoke of you.",
+        "again": "Fwahaha! You again. Your steps are familiar to me now.",
+        "hello": "Fwahahaha! {PLAYER}. You did not sense me, did you?",
+        "close": "Fwahaha! {PLAYER}. I trust few. You are one of them.",
+        "bye": "Until our paths cross again. Fwahahaha!"
       }
     },
     {
@@ -1571,6 +1688,15 @@
         "presentationId": 14,
         "objectGraphicsId": "OBJ_EVENT_GFX_LANCE",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I'm LANCE, a trainer of dragons. It's a pleasure.",
+        "heard": "So you're {PLAYER}. Your name has reached even me.",
+        "again": "Good to see you again. I'm glad our paths crossed.",
+        "hello": "{PLAYER}. Good to see you. You're looking strong.",
+        "close": "{PLAYER}! My friend. It's always good to see you.",
+        "bye": "Until next time. {BUDDY}, let's go!"
       }
     },
     {
@@ -1682,6 +1808,15 @@
         "presentationId": 15,
         "objectGraphicsId": "OBJ_EVENT_GFX_FALKNER_HNS",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I'm FALKNER. I carry on my father's work with bird POKéMON.",
+        "heard": "You're {PLAYER}? My father would want to hear of you!",
+        "again": "Oh, hello again! We keep running into each other, don't we?",
+        "hello": "{PLAYER}! Good timing. My birds are itching to fly.",
+        "close": "{PLAYER}! You're a true friend. My birds love you, too!",
+        "bye": "Take care! Keep your spirits soaring!"
       }
     },
     {
@@ -1790,6 +1925,15 @@
         "presentationId": 16,
         "objectGraphicsId": "OBJ_EVENT_GFX_BUGSY_HNS",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I'm BUGSY! I never lose when it comes to Bug POKéMON!",
+        "heard": "You're {PLAYER}? I've read about you! Can I study you?",
+        "again": "Hi again! I'm starting to learn your habits. For research!",
+        "hello": "Hi, {PLAYER}! Seen any interesting Bug POKéMON lately?",
+        "close": "{PLAYER}! My best research partner! I saved you a note!",
+        "bye": "Bye! If you spot a rare bug, tell me first!"
       }
     },
     {
@@ -1900,6 +2044,15 @@
         "presentationId": 17,
         "objectGraphicsId": "OBJ_EVENT_GFX_WHITNEY_HNS",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "Hi! I'm WHITNEY! Everyone got into POKéMON, so I did too!",
+        "heard": "Wait, you're {PLAYER}? Everyone's talking about you!",
+        "again": "Hiii again! I remember you! We should hang out more!",
+        "hello": "Hiii, {PLAYER}! I'm so glad to see you!",
+        "close": "{PLAYER}! Yay! You're my bestest friend! Come on, hang out!",
+        "bye": "Bye-bye! Call me sometime, 'kay?"
       }
     },
     {
@@ -2015,6 +2168,15 @@
         "presentationId": 18,
         "objectGraphicsId": "OBJ_EVENT_GFX_MORTY_HNS",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I'm MORTY. I train to see what others cannot.",
+        "heard": "You are {PLAYER}. I saw your name in a vision.",
+        "again": "We meet again. I sense we will grow close.",
+        "hello": "{PLAYER}. I had a feeling you'd come.",
+        "close": "{PLAYER}. I see a bright bond between us. I'm glad you came.",
+        "bye": "Until we meet again. Keep your eyes open."
       }
     },
     {
@@ -2130,6 +2292,15 @@
         "presentationId": 19,
         "objectGraphicsId": "OBJ_EVENT_GFX_CHUCK_HNS",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I'm CHUCK! My POKéMON crush stones and shatter bones!",
+        "heard": "WAHAHAH! You're {PLAYER}! I heard you've got guts!",
+        "again": "WAHAHAH! You again! I'm getting used to that face!",
+        "hello": "WAHAHAH! {PLAYER}! Good to see you, buddy!",
+        "close": "WAHAHAH! {PLAYER}! My buddy! Pals train together, right?",
+        "bye": "See you! Keep training! Hah!"
       }
     },
     {
@@ -2245,6 +2416,15 @@
         "presentationId": 20,
         "objectGraphicsId": "OBJ_EVENT_GFX_JASMINE_HNS",
         "enabled": true
+      },
+      "buddySlot": 3,
+      "voice": {
+        "meet": "Um... I'm JASMINE. I use... the Steel type. Nice to meet you.",
+        "heard": "Um... you're {PLAYER}? I have... heard about you.",
+        "again": "Oh... um... hello again. I remember you.",
+        "hello": "Oh... {PLAYER}. Um... hello. It's nice to see you.",
+        "close": "{PLAYER}... I'm so happy to see you. You're my friend.",
+        "bye": "Goodbye... Please take care."
       }
     },
     {
@@ -2358,6 +2538,15 @@
         "presentationId": 21,
         "objectGraphicsId": "OBJ_EVENT_GFX_PRYCE_HNS",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I am PRYCE. I've been with POKéMON since before you were born.",
+        "heard": "Hm. So you're {PLAYER}. Even an old man hears the talk.",
+        "again": "Ah, you again. An old man remembers a good face.",
+        "hello": "Ah, {PLAYER}. Good. An old man enjoys some company.",
+        "close": "{PLAYER}! My dear friend. An old man treasures such company.",
+        "bye": "Go on, then. Don't keep your POKéMON waiting."
       }
     },
     {
@@ -2477,6 +2666,15 @@
         "presentationId": 22,
         "objectGraphicsId": "OBJ_EVENT_GFX_CLAIR_HNS",
         "enabled": true
+      },
+      "buddySlot": 2,
+      "voice": {
+        "meet": "I am CLAIR. The world's best dragon master.",
+        "heard": "You're {PLAYER}? Hmph. I've heard. Don't get cocky.",
+        "again": "You again? Hmph. I suppose I'm used to you now.",
+        "hello": "Oh, it's you, {PLAYER}. Hmph. Fine, I'll say hello.",
+        "close": "{PLAYER}. Hmph. Fine, you're a friend. Don't make it weird.",
+        "bye": "Go on. And don't tell LANCE I was nice to you."
       }
     },
     {
@@ -2587,6 +2785,15 @@
         "presentationId": 23,
         "objectGraphicsId": "OBJ_EVENT_GFX_WILL_HNS",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I am WILL. I have trained all around the world.",
+        "heard": "So you are {PLAYER}. Your name has reached me, mask and all.",
+        "again": "We meet again. I am beginning to know you.",
+        "hello": "{PLAYER}. We meet again. As expected.",
+        "close": "{PLAYER}. I trust you more than most. Do not tell anyone.",
+        "bye": "Farewell. Do not keep me waiting next time."
       }
     },
     {
@@ -2702,6 +2909,15 @@
         "presentationId": 24,
         "objectGraphicsId": "OBJ_EVENT_GFX_KAREN_HNS",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I'm KAREN. I use Dark types. Remember that.",
+        "heard": "You're {PLAYER}? I've heard you trust your POKéMON.",
+        "again": "Oh, you again. You're growing on me. A little.",
+        "hello": "Oh, {PLAYER}. Good. I was getting bored.",
+        "close": "Oh, {PLAYER}. Good. I really did hope you'd come.",
+        "bye": "Go on. Keep battling with your favorites."
       }
     },
     {
@@ -2822,6 +3038,15 @@
         "presentationId": 25,
         "objectGraphicsId": "OBJ_EVENT_GFX_ROXANNE",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I'm ROXANNE. I study POKéMON battles, and I love to teach!",
+        "heard": "You're {PLAYER}? Your name is in all my notes!",
+        "again": "Hello again! I remember you. Your progress is fascinating!",
+        "hello": "Hello, {PLAYER}! Ready for another lesson?",
+        "close": "{PLAYER}! My favorite student! I kept a page for you!",
+        "bye": "Goodbye! Don't forget to review your notes!"
       }
     },
     {
@@ -2935,6 +3160,15 @@
         "presentationId": 26,
         "objectGraphicsId": "OBJ_EVENT_GFX_BRAWLY",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I'm BRAWLY! Fighting and surfing, that's my whole deal!",
+        "heard": "Dude, you're {PLAYER}? Everyone's buzzing about you!",
+        "again": "Hey, you again! Getting to know you is a total wave!",
+        "hello": "Hey, {PLAYER}! Totally stoked to see you!",
+        "close": "{PLAYER}! My bro! Always stoked to ride with you!",
+        "bye": "Later! Stay stoked!"
       }
     },
     {
@@ -3049,6 +3283,15 @@
         "presentationId": 27,
         "objectGraphicsId": "OBJ_EVENT_GFX_WATTSON",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "Wahahahah! I'm WATTSON! Old, but still full of sparks!",
+        "heard": "Wahahahah! You're {PLAYER}! I heard you're a live wire!",
+        "again": "Wahahahah! You again! Your face is getting familiar!",
+        "hello": "Wahahahah! {PLAYER}! You look fully charged!",
+        "close": "Wahahahah! {PLAYER}! My dear friend! You light me up!",
+        "bye": "Wahahahah! Off you go! Stay charged!"
       }
     },
     {
@@ -3164,6 +3407,15 @@
         "presentationId": 28,
         "objectGraphicsId": "OBJ_EVENT_GFX_FLANNERY",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I'm FLANNERY! My grandfather taught me all about fire!",
+        "heard": "Wait, you're {PLAYER}? Gramps told me all about you!",
+        "again": "Oh, hi again! I'm starting to get to know you!",
+        "hello": "Oh, {PLAYER}! Hi! I mean... Ahem. Greetings!",
+        "close": "{PLAYER}! You're my friend! I can be myself with you!",
+        "bye": "See you! Stay fired up!"
       }
     },
     {
@@ -3280,6 +3532,15 @@
         "presentationId": 29,
         "objectGraphicsId": "OBJ_EVENT_GFX_NORMAN",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I'm NORMAN. A GYM LEADER, but a father first.",
+        "heard": "So you're {PLAYER}. I've heard a lot about you.",
+        "again": "Ah, hello again. I'm glad to see you back.",
+        "hello": "Ah, {PLAYER}. Good to see you. Keeping strong?",
+        "close": "{PLAYER}. You're like family. I am always glad to see you.",
+        "bye": "Take care. And keep training hard."
       }
     },
     {
@@ -3394,6 +3655,15 @@
         "presentationId": 30,
         "objectGraphicsId": "OBJ_EVENT_GFX_WINONA",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I am WINONA. I have become one with bird POKéMON.",
+        "heard": "You are {PLAYER}? Word of you has travelled far.",
+        "again": "Ah, hello again. I remember you well.",
+        "hello": "Hello, {PLAYER}. It's always a pleasure.",
+        "close": "{PLAYER}. I'm truly glad of your company, dear friend.",
+        "bye": "Farewell. May you soar ever higher."
       }
     },
     {
@@ -3510,6 +3780,15 @@
         "objectGraphicsId": "OBJ_EVENT_GFX_TATE",
         "enabled": false,
         "disabledReason": "Doubles-only; leagues are singles."
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "TATE: I'm TATE! LIZA: And I'm LIZA! We're twins!",
+        "heard": "TATE: You're {PLAYER}! LIZA: We've heard all about you!",
+        "again": "TATE: Oh, it's you again! LIZA: We remember you!",
+        "hello": "TATE: Hey, {PLAYER}! LIZA: We knew you'd come!",
+        "close": "TATE: {PLAYER}! LIZA: Our best friend! We're so happy!",
+        "bye": "TATE: See you... LIZA: ...later!"
       }
     },
     {
@@ -3631,6 +3910,15 @@
         "presentationId": 32,
         "objectGraphicsId": "OBJ_EVENT_GFX_JUAN",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I am JUAN. It was I who taught WALLACE all he knows.",
+        "heard": "Ah, you are {PLAYER}! Your fame precedes you.",
+        "again": "Ah, hello again! Our paths cross gracefully.",
+        "hello": "Ah, {PLAYER}. How delightful to see you again.",
+        "close": "Ah, dear {PLAYER}! My friend! What a delight!",
+        "bye": "Farewell! Go forth with elegance!"
       }
     },
     {
@@ -3744,6 +4032,15 @@
         "presentationId": 33,
         "objectGraphicsId": "OBJ_EVENT_GFX_SIDNEY",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I'm SIDNEY of the ELITE FOUR. Let's enjoy ourselves, huh?",
+        "heard": "Hey, you're {PLAYER}? I've heard you're a blast!",
+        "again": "Hey, it's you again! I like where this is going!",
+        "hello": "Hey, {PLAYER}! I like that look you're giving me!",
+        "close": "Hey, {PLAYER}! My partner in trouble! Let's have a blast!",
+        "bye": "Later! Let's have another blast sometime!"
       }
     },
     {
@@ -3855,6 +4152,15 @@
         "presentationId": 34,
         "objectGraphicsId": "OBJ_EVENT_GFX_PHOEBE",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "Ahahaha! I'm PHOEBE! I can commune with Ghost POKéMON!",
+        "heard": "Ahahaha! You're {PLAYER}! The ghosts whispered your name!",
+        "again": "Ahahaha! You again! The ghosts remember you, too!",
+        "hello": "Ahahaha! {PLAYER}! Hi! The ghosts said you'd drop by!",
+        "close": "Ahahaha! {PLAYER}! My friend! Even the ghosts adore you!",
+        "bye": "Bye-bye! Ahahaha! Watch out for ghosts!"
       }
     },
     {
@@ -3966,6 +4272,15 @@
         "presentationId": 35,
         "objectGraphicsId": "OBJ_EVENT_GFX_GLACIA",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I am GLACIA. I traveled from afar to hone my icy skills.",
+        "heard": "So you are {PLAYER}. I have heard of you. Barely.",
+        "again": "You again. I may remember you after all.",
+        "hello": "{PLAYER}. So you've come. I hope you won't bore me.",
+        "close": "{PLAYER}. You do not bore me. I count that as friendship.",
+        "bye": "Go. Come back when you're worth the chill."
       }
     },
     {
@@ -4074,6 +4389,15 @@
         "presentationId": 36,
         "objectGraphicsId": "OBJ_EVENT_GFX_DRAKE",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I am DRAKE. I raise dragons. Do you know what that takes?",
+        "heard": "You are {PLAYER}. Sailors speak of you. Rumors, at least.",
+        "again": "You again. I am beginning to take note of you.",
+        "hello": "{PLAYER}. Good. You've still got fire in your eyes.",
+        "close": "{PLAYER}. A friend of dragons is a friend of mine.",
+        "bye": "Go. And keep your heart strong."
       }
     },
     {
@@ -4188,6 +4512,15 @@
         "presentationId": 37,
         "objectGraphicsId": "OBJ_EVENT_GFX_WALLACE",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "Allow me to present myself. I am WALLACE. Elegance is my art.",
+        "heard": "Ah, you are {PLAYER}! Your reputation is quite elegant.",
+        "again": "Ah, hello again! I do remember you fondly.",
+        "hello": "Ah, {PLAYER}. Elegant as ever, I see.",
+        "close": "Dear {PLAYER}! A friend as elegant as you is rare.",
+        "bye": "Farewell! May your style shine ever brighter."
       }
     },
     {
@@ -4301,6 +4634,15 @@
         "presentationId": 38,
         "objectGraphicsId": "OBJ_EVENT_GFX_STEVEN",
         "enabled": true
+      },
+      "buddySlot": 1,
+      "voice": {
+        "meet": "I'm STEVEN. I'm crazy about rare stones. Nice to meet you.",
+        "heard": "You're {PLAYER}? I've heard of you! Like a rare gem!",
+        "again": "Oh, hello again! Good to see you back.",
+        "hello": "{PLAYER}! Good to see you. Found any rare stones?",
+        "close": "{PLAYER}! My friend! I saved you a special stone to see.",
+        "bye": "I'll see you around. Take care."
       }
     }
   ]

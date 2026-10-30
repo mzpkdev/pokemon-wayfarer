@@ -1,7 +1,7 @@
 # Notable world simulation
 
 PRD: [Notable world simulation](../prds/notable-world-simulation.md)
-Implemented: Partial. Walkers on routines, the heartbeat, travel, the saved record, and the local actor shipped in [PR #147](https://github.com/mzpkdev/pokemon-wayfarer/pull/147). Haunts as destinations, the Masters partner, momentum, and talking to walkers remain; Bruno, Koga, and the face-only-sprite trainers keep their fixed spots.
+Implemented: Partial. Walkers on routines, the heartbeat, travel, the saved record, and the local actor shipped in [PR #147](https://github.com/mzpkdev/pokemon-wayfarer/pull/147). Talking to a walker shipped: the greeting by friendship, the line of the activity it is doing or heading for, and the farewell; talking adds nothing, and the follow-ups are not built. A Gym Leader's own-Gym talk shipped: the Gym's script runs unchanged while it owes the player something, and once nothing is owed the talk is the greeting, the Gym's existing post-battle line, and the farewell. Haunts as destinations, the Masters partner, and momentum remain; Bruno, Koga, and the face-only-sprite trainers keep their fixed spots.
 Design status: draft for review. The model is decided: a saved, abstract
 **world simulation** advanced by a map-change **heartbeat**, plus a
 **local actor** on the player's map, with a handoff both ways, as the
@@ -668,7 +668,16 @@ When a dwell runs out (in a heartbeat, or locally while watched):
   [spots talk flow](notable-spots.md#talk-flow): greeting by friendship,
   a follow-up or the activity line, farewell. Talking to a travelling
   actor runs the same flow with the line of the activity they are heading
-  for. A first talk anywhere is the "first talk" friendship event.
+  for. Talking adds no friendship anywhere.
+- **Own Gym.** Talking to a Gym Leader's own Gym object runs the Gym's
+  script while the Gym still owes the player something: the badge battle,
+  a gift the player couldn't take with a full bag, or a leader rematch.
+  Once nothing is owed, the talk runs the spots talk flow with the Gym's
+  existing post-battle line in place of the activity line: the greeting by
+  [friendship](notable-trainers.md#friendship), that line, and the
+  farewell. The leader greets the player the same way at home as on the
+  road. Norman is the one exception: in the native Hoenn household he is the
+  player's father, so his Gym lines play without a greeting there.
 - **Follow-ups go where the trainer is.** The
   [Courier delivery](notable-haunts.md#delivery), the
   [Egg sitting follow-up](notable-haunts.md#the-follow-up), and the
@@ -757,7 +766,7 @@ saved league teams (`LeagueSavedTeams`, 1,456 bytes, 288 per team) to
 
 | State | Owner | Size | Intended home |
 | --- | --- | ---: | --- |
-| Friendship scores, first-win and repeat-win bits | [Notable trainers](notable-trainers.md#friendship) | 48 | SaveBlock3 (haunt and notable state) |
+| Friendship scores and first-win bits | [Notable trainers](notable-trainers.md#friendship) | 43 | SaveBlock3 (haunt and notable state) |
 | Reward counters | [Haunts](notable-haunts.md#saved-state) | 19 | SaveBlock3 |
 | Egg sitting outstanding bits and counts | Haunts | 24 | SaveBlock3 |
 | Handicap bits | Haunts | 10 | SaveBlock3 |
@@ -1026,8 +1035,6 @@ their haunt.
   waiting.
 - **Story-gated walls:** whether the walker graph reads flagged blockers
   at New Game only (placeholder) or rebuilds edges as story flags change.
-- **Own-Gym talk:** whether talking to a beaten leader at home in their
-  Gym keeps the Gym's script or runs the spots talk flow.
 
 ## Later
 

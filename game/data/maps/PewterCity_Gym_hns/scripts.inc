@@ -32,7 +32,14 @@ PewterCity_Gym_EventScript_Brock::
 
 PewterCity_Gym_EventScript_Brock_Defeated::
 	goto_if_unset FLAG_HIDE_DOJO_BROCK, PewterCity_Gym_EventScript_Brock_Trade
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_BROCK
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox PewterCity_Gym_Text_Brock_FightDone, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	closemessage
 	release
 	end
@@ -161,7 +168,14 @@ PewterCity_Gym_EventScript_BrockNotRequestedMon::
 	end
 
 PewterCity_Gym_EventScript_BrockTradeCompleted::
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_BROCK
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox PewterCity_Gym_Text_BrockTradeCompleted, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	release
 	end
 

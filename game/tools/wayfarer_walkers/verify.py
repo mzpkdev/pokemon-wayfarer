@@ -2222,6 +2222,55 @@ def scenario_greet(game: Game) -> dict:
     return result
 
 
+def decode_gba_text(raw: bytes) -> str:
+    """The Western charmap subset the talk lines use (0xFE newline, 0xFB paragraph, 0xFF end)."""
+    out = []
+    for b in raw:
+        if b == 0xFF:
+            break
+        if b == 0x00:
+            out.append(" ")
+        elif 0xA1 <= b <= 0xAA:
+            out.append(str(b - 0xA1))
+        elif 0xBB <= b <= 0xD4:
+            out.append(chr(ord("A") + b - 0xBB))
+        elif 0xD5 <= b <= 0xEE:
+            out.append(chr(ord("a") + b - 0xD5))
+        elif b in (0xFE, 0xFA, 0xFB):
+            out.append(" ")
+        else:
+            out.append({0xAB: "!", 0xAC: "?", 0xAD: ".", 0xAE: "-", 0xB0: "...", 0xB4: "'", 0xB8: ",", 0xF0: ":", 0x34: "'"}.get(b, "?"))
+    return "".join(out)
+
+
+def scenario_talk(game: Game) -> dict:
+    """Talking to a walker (notable-world-simulation.md#interactions): Lance, a Stranger, dwelling at
+    Viridian's pond; the player stands beside him and presses A. The talk shows the Stranger greeting
+    (MEET, or HEARD when fame reaches him), the line of the activity, and the farewell."""
+    boot(game, VIRIDIAN, 13, 43, DIR_NORTH)
+    place_dwelling(game, SLOT_LANCE, SPOT_VIRIDIAN_WATER, NODE_VIRIDIAN)
+    game.warp(VIRIDIAN, 13, 43, DIR_NORTH)
+    actor = game.wait_for(lambda: (game.actor_for(SLOT_LANCE) or {}).get("atSpot"), 600, what="Lance at the pond")
+    actor = game.actor_for(SLOT_LANCE)
+    px, py = actor["x"], actor["y"] + 1
+    game.warp(VIRIDIAN, px, py, DIR_NORTH)
+    game.emu.step(30)
+    hide_map_name_popup(game)
+    seen, shots = [], []
+    game.emu.press("A")
+    for _ in range(40):
+        game.emu.step(24)
+        text = decode_gba_text(game.emu.read(game.sym["gStringVar4"], 160)).strip()
+        if text and (not seen or seen[-1] != text):
+            seen.append(text)
+            shots.append(game.shot(f"talk-walker-{len(seen)}"))
+        if len(seen) >= 3 and not game.controls_locked():
+            break
+        game.emu.press("A")
+    return {"player": game.player(), "lance": actor, "texts": seen, "screenshots": shots,
+            "pass": len(seen) == 3 and "LANCE" in seen[0] and "bite" in seen[1] and "Until next time" in seen[2]}
+
+
 def scenario_beatpush(game: Game) -> dict:
     """Acceptance 6: Lance stares the player down (a long beat); the player
     presses into him: the beat stops at once, his facing comes back, and he
@@ -3375,7 +3424,7 @@ SCENARIOS = {"spot": scenario_spot, "bridge": scenario_bridge, "walkoff": scenar
              "decoys": scenario_decoys, "perf": scenario_perf, "seam": scenario_seam,
              "recross": scenario_recross, "longtrip": scenario_longtrip, "striplane": scenario_striplane,
              "beatspot": scenario_beatspot, "arrive": scenario_arrive, "leave": scenario_leave, "notice": scenario_notice, "greet": scenario_greet,
-             "beatpush": scenario_beatpush, "beatlock": scenario_beatlock, "determinism": scenario_determinism,
+             "beatpush": scenario_beatpush, "talk": scenario_talk, "beatlock": scenario_beatlock, "determinism": scenario_determinism,
              "humwalk": scenario_humwalk,
              "companion": scenario_companion, "companionslots": scenario_companionslots,
              "companionfollower": scenario_companionfollower, "companionpush": scenario_companionpush,

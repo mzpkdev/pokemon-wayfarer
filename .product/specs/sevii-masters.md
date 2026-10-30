@@ -12,8 +12,8 @@ the eight pair up in ascending order. Four **tag matches** (the player and
 partner against a pair, three Pokémon each, the player picking three at each
 door with damage carrying over) lead to a full-team singles final against
 the partner after a full heal. A notable trainer's phone number comes when their
-[friendship](notable-trainers.md#friendship) reaches Friend, which a first
-win over them does. The **Masters Gallery** tallies every
+[friendship](notable-trainers.md#friendship) reaches Friend, which takes a
+first win over them and a haunt quest, or two quests. The **Masters Gallery** tallies every
 Masters winner; the partner reigns when the player loses the final.
 
 ## Scope
@@ -83,8 +83,8 @@ phone ([phone calls](../../game/src/match_call.c)) when their
 the player then holds their phone number. The number is handed over when the
 score first crosses the Friend threshold, by any route: the first committed
 win against them (a Gym, rematch, story, or league battle, singles or a tag
-match, where both opponents count) is enough, and so are finished haunt
-quests. Nothing else sets it: a loss, a draw, fleeing, a declined league
+match, where both opponents count) and finished haunt quests each add to it,
+and a win alone never reaches it. Nothing else adds: a loss, a draw, fleeing, a declined league
 event, a battle beside the trainer as a partner, and debug battles add no
 friendship. Friendship never decreases, so a contact stays one. Tate & Liza
 keep a score but give no number, since in v0 a contact's only use is being
@@ -471,9 +471,10 @@ Required implementation evidence (not yet run), alongside
    an accepted Masters event including its partner.
 4. **Contacts.** A trainer is a contact exactly when their friendship stage
    is Friend or above; the number is handed over once, when the score first
-   crosses the Friend threshold, by a first win in each kind of battle (both
-   opponents after a won tag match) or by finished haunt quests; a loss, a
-   decline, partnering, and debug battles add none; Tate & Liza give no
+   crosses the Friend threshold, from a first win in each kind of battle (both
+   opponents after a won tag match) together with finished haunt quests; a
+   win alone never crosses it; talks, a loss, a decline, partnering, and
+   debug battles add none; Tate & Liza give no
    number.
 5. **Partner.** With no ask, the partner is Lorelei, with or without her
    number; asking any contact always succeeds and sets the partner, the latest

@@ -25,7 +25,14 @@ CeladonCity_Gym_EventScript_Erika::
 	end
 
 CeladonCity_Gym_EventScript_Erika_Defeated::
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_ERIKA
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox CeladonCity_Gym_Text_ErikaAfterBattle, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	closemessage
 	release
 	end

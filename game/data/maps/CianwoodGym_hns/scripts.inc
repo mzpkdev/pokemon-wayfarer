@@ -93,7 +93,14 @@ CianwoodGym_Text_ChuckGotoDojo:
 	.string "the FIGHTING DOJO in SAFFRON!$"	
 
 CianwoodGym_EventScript_ChuckAtDojo::
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_CHUCK
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox CianwoodGym_Text_ChuckAtDojo, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	closemessage
 	release
 	end
@@ -123,7 +130,14 @@ CianwoodGym_EventScript_Chuck_Battle3::
 	goto CianwoodGym_EventScript_ChuckVictory
 
 CianwoodGym_EventScript_Chuck_Defeated::
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_CHUCK
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox CianwoodGym_Text_ChuckAfter, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	closemessage
 	release
 	end

@@ -1,14 +1,14 @@
 # Notable spots
 
 PRD: [Notable spots](../prds/notable-spots.md)
-Implemented: Partial. Build-time spot extraction, named spots, capacity, home bases, favourites, and the behaviour templates shipped with [PR #147](https://github.com/mzpkdev/pokemon-wayfarer/pull/147). The talk flow at spots and friendship remain.
+Implemented: Partial. Build-time spot extraction, named spots, capacity, home bases, favourites, and the behaviour templates shipped with [PR #147](https://github.com/mzpkdev/pokemon-wayfarer/pull/147). The talk flow shipped for walkers on the road: greeting by friendship stage (with fame), the activity line of the spot kind or the named-spot activity, and the farewell, and a Gym Leader's own-Gym talk wraps the Gym's post-battle line in the same greeting and farewell. The follow-ups (Courier, Egg sitting) are not built.
 Design status: the everyday layer of the future **routine and travel**
 design. Spots switch on together with routines and travel; v0 haunt
 placement is unchanged, and nothing in this spec runs before then. Spots
 are found automatically from map data, plus a short authored list of
 [named spots](#named-spots), in one pool for every region, and carry no
-quests. Home bases are decided, and a first talk at a spot counts
-for friendship. Capacity values, the search radius, and the activity lines
+quests. Home bases are decided; talking at a spot greets by
+friendship but adds none. Capacity values, the search radius, and the activity lines
 are placeholders.
 
 ## Scope
@@ -667,9 +667,11 @@ Talking to a trainer at a spot runs three steps, with no menu:
 
 1. **Greeting**, by friendship stage, exactly as the haunt
    [talk flow](notable-haunts.md#talk-flow) picks it (`MEET` or `HEARD`,
-   `AGAIN`, `HELLO`, `CLOSE`). A first talk at a spot is the +1 "first
-   talk" [friendship](notable-trainers.md#friendship) event, as at a haunt:
-   friendship lives on the trainer, so meeting them anywhere counts.
+   `AGAIN`, `HELLO`, `CLOSE`). Talking adds no
+   [friendship](notable-trainers.md#friendship): a trainer the player has
+   only talked to stays a Stranger and keeps greeting with `MEET` or
+   `HEARD`. Friendship lives on the trainer, so a win or a quest anywhere
+   changes the greeting everywhere.
 2. **Follow-up or activity line.** The follow-ups play at spots as at
    haunts, in the same order, at most one per talk:
    1. [Courier delivery](notable-haunts.md#delivery), while the trainer is

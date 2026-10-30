@@ -74,8 +74,8 @@ partner their whole team.
 
 **Phone numbers.** When a notable trainer becomes a Friend
 ([friendship](notable-trainers.md#friendship)), they give the player their
-phone number and join the phone's contacts for good. The first win over them,
-in any battle, is enough, and so are finished quests at haunts. Tate and Liza, a
+phone number and join the phone's contacts for good. A first win over them,
+in any battle, gets halfway; finished quests at haunts do the rest. Tate and Liza, a
 duo, give none. Here a contact is for one thing: asking them to be the
 player's partner. [Notable haunts](notable-haunts.md) read the same
 friendship for their greetings.

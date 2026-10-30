@@ -11,6 +11,9 @@ CATALOG = Path(__file__).with_name("catalog.json")
 DATA_OUTPUT = ROOT / "src/data/notable_trainers/catalog.h"
 REGISTRY_OUTPUT = ROOT / "src/data/notable_trainers/league_registry.h"
 IDS_OUTPUT = ROOT / "include/constants/notable_trainers.h"
+VOICE_OUTPUT = ROOT / "src/data/notable_trainers/voices.h"
+CHARMAP = ROOT / "charmap.txt"
+FONTS = ROOT / "src/fonts.c"
 BADGE_ENCOUNTERS = {
     "TRAINER_BROCK_HNS", "TRAINER_MISTY_HNS", "TRAINER_LTSURGE_HNS",
     "TRAINER_ERIKA_HNS", "TRAINER_JANINE_HNS", "TRAINER_SABRINA_HNS",
@@ -38,6 +41,79 @@ FRUSTRATION = {move: category for category, moves in {
                               "Teeter Dance", "Dynamic Punch"],
 }.items() for move in moves}
 TOXIC_MOVES = ("Toxic", "Toxic Spikes")
+
+
+# Voice bits the friendship talk flow wires (notable-haunts.md#talk-flow). The remaining bits of the voices research
+# draft (ASK, YES, QUIRK, ...) belong to haunts and are not game data yet.
+VOICE_BITS = ("meet", "heard", "again", "hello", "close", "bye")
+# A field message box holds two lines of this many pixels (the 27-tile standard text box, less a safety margin).
+MESSAGE_LINE_PIXELS = 208
+MESSAGE_BOX_LINES = 2
+# Worst-case characters a placeholder prints: a player name, and a species name (the voices research counts both so).
+PLACEHOLDER_CHARS = {"PLAYER": 7, "BUDDY": 10}
+# {BUDDY} is the buddy slot's current species: the talk code copies it into gStringVar1 before the line prints.
+PLACEHOLDER_TOKEN = {"PLAYER": "{PLAYER}", "BUDDY": "{STR_VAR_1}"}
+PLACEHOLDER = re.compile(r"\{(\w+)\}")
+
+
+def glyph_widths() -> dict[str, int]:
+    """Pixel width of every single-byte charmap character in the normal message font."""
+    table = re.search(r"gFontNormalLatinGlyphWidths\[\] = \{(.*?)\};", FONTS.read_text(), re.S)
+    widths = [int(n) for n in re.findall(r"\d+", table.group(1))]
+    result = {}
+    for line in CHARMAP.read_text().splitlines():
+        match = re.match(r"^'(\\'|.)'\s*=\s*([0-9A-F]{2})\s*$", line)
+        if match:
+            result[match.group(1).replace("\\'", "'")] = widths[int(match.group(2), 16)]
+    return result
+
+
+def text_pixels(text: str, widths: dict[str, int]) -> int:
+    """Width of a line with each placeholder counted as that many of the widest letter."""
+    widest = max(widths[c] for c in "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+    total = 0
+    for index, part in enumerate(re.split(r"\{(\w+)\}", text)):
+        if index % 2:
+            total += PLACEHOLDER_CHARS[part] * widest
+        else:
+            total += sum(widths[c] for c in part)
+    return total
+
+
+def wrap_voice(text: str, widths: dict[str, int]) -> list[list[str]]:
+    """Break a voice line into message boxes of lines, without changing a word. Tate & Liza's halves break at LIZA."""
+    if " LIZA: " in text:
+        first, second = text.split(" LIZA: ", 1)
+        halves = [first, "LIZA: " + second]
+        if all(text_pixels(h, widths) <= MESSAGE_LINE_PIXELS for h in halves):
+            return [halves]
+    lines, current = [], ""
+    for word in text.split(" "):
+        candidate = word if not current else current + " " + word
+        if text_pixels(candidate, widths) <= MESSAGE_LINE_PIXELS:
+            current = candidate
+        else:
+            lines.append(current)
+            current = word
+    lines.append(current)
+    return [lines[i:i + MESSAGE_BOX_LINES] for i in range(0, len(lines), MESSAGE_BOX_LINES)]
+
+
+def validate_voice(name: str, voice: dict, widths: dict[str, int]) -> None:
+    if set(voice) != set(VOICE_BITS):
+        raise ValueError(f"{name}: voice needs exactly {', '.join(VOICE_BITS)}")
+    for bit, text in voice.items():
+        if not isinstance(text, str) or not text.strip() or text != text.strip() or "  " in text:
+            raise ValueError(f"{name}: voice {bit} must be plain text with single spaces")
+        if set(PLACEHOLDER.findall(text)) - set(PLACEHOLDER_CHARS):
+            raise ValueError(f"{name}: voice {bit} may use only {{PLAYER}} and {{BUDDY}}")
+        if bit == "heard" and "{PLAYER}" not in text:
+            raise ValueError(f"{name}: voice heard must address {{PLAYER}}")
+        for char in PLACEHOLDER.sub("", text):
+            if char not in widths:
+                raise ValueError(f"{name}: voice {bit} has {char!r}, which the game charmap cannot print")
+        if len(wrap_voice(text, widths)) != 1:
+            raise ValueError(f"{name}: voice {bit} does not fit one message box")
 
 
 def symbol(prefix: str, name: str) -> str:
@@ -89,6 +165,7 @@ def validate(data: dict) -> None:
     opponent_headers += list((ROOT / "include/constants").glob("wayfarer_*trainers.h"))
     opponents = set().union(*(set(re.findall(r"^#define (TRAINER_[A-Z0-9_]+)", p.read_text(), re.M)) for p in opponent_headers))
     ids, aliases = set(), set()
+    widths = glyph_widths()
     for trainer in trainers:
         name = trainer["name"]
         character_id = trainer["characterId"]
@@ -133,6 +210,9 @@ def validate(data: dict) -> None:
                                          or not 1 <= entry["fromLevel"] <= 100):
                 raise ValueError(f"{name}: fromLevel must be an integer from 1 to 100")
         validate_frustration(name, trainer["movePool"])
+        if type(trainer["buddySlot"]) is not int or not 1 <= trainer["buddySlot"] <= 6:
+            raise ValueError(f"{name}: buddy must be a roster slot from 1 to 6")
+        validate_voice(name, trainer["voice"], widths)
         for alias in trainer["encounterIds"]:
             if alias not in opponents or alias in aliases:
                 raise ValueError(f"{name}: unknown or duplicate encounter alias {alias}")
@@ -158,11 +238,31 @@ def validate(data: dict) -> None:
         raise ValueError(f"Wayfarer badge coverage incomplete: {sorted(BADGE_ENCOUNTERS - aliases)}")
 
 
+def generate_voices(data: dict) -> str:
+    widths = glyph_widths()
+    trainers = sorted(data["trainers"], key=lambda t: t["characterId"])
+    lines = ["// Generated from game/tools/notable_trainers/catalog.json. Do not edit by hand.", ""]
+    for t in trainers:
+        for bit in VOICE_BITS:
+            (box,) = wrap_voice(t["voice"][bit], widths)
+            text = PLACEHOLDER.sub(lambda m: PLACEHOLDER_TOKEN[m.group(1)], "\\n".join(box))
+            lines.append(f"static const u8 {symbol('sNotableVoice_', t['slug'] + '_' + bit)}[] = _(\"{text}\");")
+        lines.append("")
+    lines += ["const struct NotableVoice gNotableVoices[NOTABLE_TRAINER_COUNT] =", "{"]
+    for t in trainers:
+        lines.append(f"    [{symbol('NOTABLE_TRAINER_', t['slug'])} - 1] =")
+        lines.append("    {")
+        lines += [f"        .{bit} = {symbol('sNotableVoice_', t['slug'] + '_' + bit)}," for bit in VOICE_BITS]
+        lines.append("    },")
+    lines += ["};", ""]
+    return "\n".join(lines)
+
+
 def generate(data: dict) -> tuple[str, str, str]:
     trainers = sorted(data["trainers"], key=lambda t: t["characterId"])
-    ids = ["#ifndef GUARD_CONSTANTS_NOTABLE_TRAINERS_H", "#define GUARD_CONSTANTS_NOTABLE_TRAINERS_H", "", "// Stable v0 character identities; encounter IDs are mapped separately.", "enum NotableTrainerId", "{", "    NOTABLE_TRAINER_NONE = 0,"]
-    ids += [f"    {symbol('NOTABLE_TRAINER_', t['slug'])} = {t['characterId']}," for t in trainers]
-    ids += ["};", "", "#endif // GUARD_CONSTANTS_NOTABLE_TRAINERS_H", ""]
+    ids = ["#ifndef GUARD_CONSTANTS_NOTABLE_TRAINERS_H", "#define GUARD_CONSTANTS_NOTABLE_TRAINERS_H", "", "// Stable v0 character identities; encounter IDs are mapped separately.", "// Plain defines, so event scripts can name a character too.", "", "#define NOTABLE_TRAINER_NONE 0"]
+    ids += [f"#define {symbol('NOTABLE_TRAINER_', t['slug'])} {t['characterId']}" for t in trainers]
+    ids += ["", "#endif // GUARD_CONSTANTS_NOTABLE_TRAINERS_H", ""]
     lines = ["// Generated from game/tools/notable_trainers/catalog.json. Do not edit by hand.", ""]
     for t in trainers:
         key = symbol("sNotableMovePool_", t["slug"])
@@ -184,7 +284,7 @@ def generate(data: dict) -> tuple[str, str, str]:
             if slot.get("nature") is not None:
                 fields.append(f".nature = {symbol('NATURE_', slot['nature'])}")
             lines.append("            {" + ", ".join(fields) + "},")
-        lines += ["        },", "        .levelOffsets = {" + ", ".join(str(s["levelOffset"]) for s in t["roster"]) + "},", f"        .aceMask = {sum((1 << i) for i, s in enumerate(t['roster']) if s['isAce'])},", f"        .movePool = {key},", f"        .movePoolCount = ARRAY_COUNT({key}),", "    },"]
+        lines += ["        },", "        .levelOffsets = {" + ", ".join(str(s["levelOffset"]) for s in t["roster"]) + "},", f"        .aceMask = {sum((1 << i) for i, s in enumerate(t['roster']) if s['isAce'])},", f"        .buddySlot = {t['buddySlot']},", f"        .movePool = {key},", f"        .movePoolCount = ARRAY_COUNT({key}),", "    },"]
     lines += ["};", "", "struct NotableEncounterAlias", "{", "    u16 trainerId;", "    u8 characterId;", "};", "", "static const struct NotableEncounterAlias sNotableEncounterAliases[] =", "{"]
     for t in trainers:
         for alias in t["encounterIds"]:
@@ -217,13 +317,16 @@ def main() -> None:
     data = json.loads(CATALOG.read_text())
     validate(data)
     ids, table, registry = generate(data)
+    voices = generate_voices(data)
     if args.check:
-        if IDS_OUTPUT.read_text() != ids or DATA_OUTPUT.read_text() != table or REGISTRY_OUTPUT.read_text() != registry:
+        if (IDS_OUTPUT.read_text() != ids or DATA_OUTPUT.read_text() != table or REGISTRY_OUTPUT.read_text() != registry
+                or VOICE_OUTPUT.read_text() != voices):
             raise SystemExit("notable trainer generated data is stale; run tools/notable_trainers/generate.py")
     else:
         IDS_OUTPUT.write_text(ids)
         DATA_OUTPUT.write_text(table)
         REGISTRY_OUTPUT.write_text(registry)
+        VOICE_OUTPUT.write_text(voices)
     print(f"{len(data['trainers'])} trainers, {sum(len(t['encounterIds']) for t in data['trainers'])} encounter aliases")
 
 

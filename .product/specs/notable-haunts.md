@@ -296,9 +296,10 @@ Every talk runs three steps:
 3. **Farewell:** `BYE`. A talk that starts a walk ends at `YES` instead;
    the walk's own `BYE` comes at the exit ([walk](#walk-with-me)).
 
-The first talk makes a Stranger Met (+1) at its start, after the greeting
-is picked, so a first meeting introduces the trainer (`MEET` or `HEARD`)
-**and** proposes the quest in the same talk. After the quest is completed
+Talking adds no friendship, so a trainer stays a Stranger, greeting with
+`MEET` or `HEARD` on every talk, until the player beats them or completes a
+quest. Strangers get the quest proposal like anyone else, so a first meeting
+introduces the trainer **and** proposes the quest in the same talk. After the quest is completed
 during this placement, every talk is the greeting, `QUIRK`, and `BYE`, until
 the placement changes and the claim bit clears, except a talk a follow-up
 takes.
@@ -312,14 +313,14 @@ heard of them; below it, a trainer notices the player once the player's TR
 comes within 10 of their own, read at the moment of the meeting. Titles
 count because league wins give no TR. Fame needs no saved data and only
 changes a Stranger's greeting: `HEARD` is one line per trainer, with no
-levels, since it plays at most once per trainer.
+levels.
 
 **Points.** A haunt adds [friendship](notable-trainers.md#friendship)
-through two events only: the first talk (+1) and a completed quest (+10).
+through one event only: a completed quest (+10).
 An Egg sitting quest completes at its hatched follow-up, not when the egg
 is given, and a Courier quest at its delivery, which adds +10 with both
 the sender and the recipient.
-Repeat talks, declining, and quirks add nothing. Haunts offer no battles
+Talks, declining, and quirks add nothing. Haunts offer no battles
 of their own, so no battle win happens here: One on one, Swap battle, and
 Handicap are quests, and their wins count as the completed quest, not as a
 battle won. A Handicap loss counts as the completed quest too.
@@ -331,10 +332,9 @@ becomes the partner stops being placed, so they leave their haunt.
 
 ## Quests
 
-Each haunt has one quest type. Only a trainer at Met or above gives quests,
-which every talk reaches, since the first talk makes the trainer Met before
-the proposal ([talk flow](#talk-flow)); every trainer can give every quest
-type. Each type has one proposal
+Each haunt has one quest type. Every trainer gives their haunt's quest at
+any friendship stage, Strangers included ([talk flow](#talk-flow)); every
+trainer can give every quest type. Each type has one proposal
 line, written so it never implies the trainer needs help or is asking a
 favour ([dialogue](#dialogue)), except Egg sitting's and Courier's, which
 ask one by design:
@@ -692,7 +692,7 @@ player faces their own pick.
 - **Win:** the haunt's done line (default "You made it listen. Not bad at
   all."), `PRAISE`, the [reward](#rewards-and-claims) (an item through
   `GIFT`), and `BYE`. The win counts as the completed quest (+10), never as
-  a battle won (+20) ([talk flow](#talk-flow)).
+  a first win ([talk flow](#talk-flow)).
 - **Loss:** the haunt's loss line (default "It had a mind of its own. Try
   again?"), then `BYE`. There is no penalty; the claim bit stays clear, so
   the quest stays open this placement and the next talk proposes it again.
@@ -1331,8 +1331,7 @@ only when it can have changed.
 
 At any talk with the recipient, at any haunt, while the parcel is active,
 the delivery takes the place of the proposal or `QUIRK`. It works at a
-first meeting too: the greeting (`MEET` or `HEARD`) and the Stranger's +1,
-then the delivery. The recipient says "A parcel from {SENDER}? For me?
+first meeting too: the greeting (`MEET` or `HEARD`), then the delivery. The recipient says "A parcel from {SENDER}? For me?
 Thank you!", where `{SENDER}` is the sender's name; then the recipient's
 `PRAISE`, the recipient's [reward](#rewards-and-claims) (their next
 reward-pool entry through `GIFT`, or their fallback), and `BYE`.
@@ -1447,8 +1446,7 @@ singles trainer battle against the placed trainer.
   a loss the whole party is fainted and no whiteout heals it, so the party
   is fully healed (`HealPlayerParty`) before the loss line.
 
-Win or loss counts as the completed quest (+10), never as a battle won
-(+20), even as a first win over the trainer ([talk flow](#talk-flow)).
+Win or loss counts as the completed quest (+10), never as a first win, even as a first win over the trainer ([talk flow](#talk-flow)).
 
 #### The handicap outcome
 
@@ -1701,8 +1699,8 @@ from each trainer's
 **Scene 1: Giovanni's first meeting** (world progress 10, assuming Giovanni
 holds the cave, as his top score there suggests; the player's TR 10 is below
 `min(80, 24 − 10) = 14`, so his fame hasn't reached him and he greets with
-`MEET`). The talk makes him Met (+1) at its start, so the quest is proposed
-at once:
+`MEET`). Talking adds nothing, so he stays a Stranger, and the quest is
+proposed at once:
 
 ```text
 GIOVANNI: I am GIOVANNI. Remember the name. Others have       MEET
@@ -1714,11 +1712,12 @@ GIOVANNI: Hmph. You'll regret wasting my time.                NO
 GIOVANNI: Go. We will meet again.                             BYE
 ```
 
-Declining costs nothing. The next talk greets the player as Met and
-proposes again:
+Declining costs nothing. Giovanni is still a Stranger, so the next talk
+introduces him again and proposes again:
 
 ```text
-GIOVANNI: You again. I am beginning to remember your face.    AGAIN
+GIOVANNI: I am GIOVANNI. Remember the name. Others have       MEET
+          learned to.
 GIOVANNI: I have a proposition.                               ASK
 GIOVANNI: Walk it with me, out to the VERMILION side?         quest line
 > Yes
@@ -1747,7 +1746,7 @@ The walk ends with no reward and the claim bit clear, and Giovanni is back
 at his standing tile; answering No steps the player back one tile and the walk
 goes on. A whiteout in a tag battle ends the walk the same way, silently:
 the player wakes at the POKéMON Center, and the next talk at the cave is
-`AGAIN` and the proposal again. Stepping through the Vermilion exit with
+`MEET` and the proposal again. Stepping through the Vermilion exit with
 Giovanni following completes it:
 
 ```text
@@ -1762,7 +1761,7 @@ The NUGGET is the first entry of Giovanni's
 [pool](../research/notable-trainer-rewards.md#giovanni) (from world progress
 0); the walk plays no part. His reward counter is now 1, so his next quest,
 here after a placement change or at any other haunt, pays SOFT SAND. The
-quest adds 10 points (1 + 10 = 11), so he is still Met.
+quest adds 10 points (0 + 10 = 10), so he is now Met.
 
 **Scene 3: talking after completion.** The claim bit is set for this
 placement, so every talk is the greeting, `QUIRK`, and `BYE`:
@@ -1781,9 +1780,9 @@ progress 40 (team level 39) it says PERSIAN. Repeat talks add no points.
 placement is recomputed, and say Misty now takes the cave (an illustration:
 the real placement depends on the whole fill). The haunt's trainer changed,
 so its claim bit cleared and the walk is open again. The player beat Misty
-at Cerulean, and that first win made her a Friend (20 points) and gave her
-number. Her stage is Friend when the talk starts, so she greets with
-`HELLO`, and this first talk adds nothing (only a Stranger's does):
+at Cerulean (+10) and finished a quest with her at another haunt (+10), so
+she is a Friend (20 points) and gave her number. Her stage is Friend when the talk starts, so she greets with
+`HELLO`, and talking adds nothing:
 
 ```text
 MISTY: Hey, {PLAYER}! Took you long enough!                   HELLO
@@ -1813,11 +1812,10 @@ MISTY: See ya! ...{BUDDY}, get back in your ball! Not again!  BYE
 `{BUDDY}` is her slot 2 at its current stage: PSYDUCK early, GOLDUCK later.
 
 **Scene 5: Brock, Close, late game** (world progress 60, if Brock stands
-here). The player met him at a haunt before his Gym (+1), beat him at Pewter
-(+20), and finished four quests with him at haunts (+40), so his score is
-61: Close. The first two paid PEWTER CRUNCHIES and the HARD STONE; the next
-two came before world progress 40, while his third entry was still gated,
-so they paid the fallback prize money and left his reward counter at 2.
+here). The player beat him at Pewter (+10) and finished five quests with
+him at haunts (+50), so his score is 60: Close. The first two paid PEWTER
+CRUNCHIES and the HARD STONE; the next three came before world progress
+40, while his third entry was still gated, so they paid the fallback prize money and left his reward counter at 2.
 
 ```text
 BROCK: {PLAYER}! Good to see you, friend. There is always a   CLOSE
@@ -1875,7 +1873,7 @@ tiles are free of collision and of the room's existing objects.
 choose-3 screen limited to one, and the trainer sends their signature ace
 alone at its current stage, the one `{ACE}` just named. A win is the done
 line, `PRAISE`, the next reward-pool entry through `GIFT`, and `BYE`, worth
-+10 friendship as a completed quest (not +20 as a battle won). A loss is the
++10 friendship as a completed quest (not as a first win). A loss is the
 loss line and `BYE`: no penalty, no coins, and the quest stays open this
 placement. `NO` is the trainer's `NO`, as anywhere.
 
@@ -1905,8 +1903,8 @@ candidate.
   here, but v0 has no distance; that also waits for the routine design.
 
 **Lt. Surge, a Friend, early** (world progress 10, if Surge holds the Game
-Corner). The player's one badge so far is Surge's, and that first win made
-him a Friend (20 points). At world progress 10 his TR is 40 and his team
+Corner). The player's one badge so far is Surge's, and that first win (+10)
+and a quest with him at another haunt (+10) made him a Friend (20 points). At world progress 10 his TR is 40 and his team
 level 28, so his signature Raichu (slot 1) steps down to PIKACHU (Raichu
 needs Lv 30): `{ACE}` says PIKACHU, and PIKACHU, Lv 28, is what he sends.
 His stage is Friend, so he greets with `HELLO`:
@@ -1987,7 +1985,7 @@ GIOVANNI: Go. We will meet again.                             BYE
 SOFT SAND is the second entry of Giovanni's
 [pool](../research/notable-trainer-rewards.md#giovanni), as Diglett's Cave
 promised: the pool follows the trainer, whichever haunt he is at. The quest
-adds 10 points (11 + 10 = 21), which crosses the Friend threshold, so he
+adds 10 points (10 + 10 = 20), which crosses the Friend threshold, so he
 hands over his number with the one system line
 [Notable trainers](notable-trainers.md#friendship) describes.
 
@@ -2135,15 +2133,16 @@ MYSTIC WATER is the first entry of her
 0). The quest adds 10 points (20 + 10 = 30), and she stays a Friend; from
 now on every talk this placement is `HELLO`, her `QUIRK`, and `BYE`.
 
-**Lorelei at Met: no, then yes** (world progress 36, where `36 mod 18 = 0`:
+**Lorelei, a Stranger: no, then yes** (world progress 36, where `36 mod 18 = 0`:
 Pallet Town's turn comes first and takes Misty, and Lorelei holds the Cape
-with 4). The player met her once at a haunt (+1), so she is Met, and her
-reward counter is 0. Her lost spot is near the fence. Her buddy is slot 1,
+with 4). The player has only talked to her, so she is still a Stranger, and
+her reward counter is 0. Her TR is 69 at world progress 36, so her fame
+threshold is `min(80, 69 − 10) = 59`, above the player's TR 36. Her lost spot is near the fence. Her buddy is slot 1,
 Lapras, which never evolves, so `{BUDDY}` is always LAPRAS. She greets with
-`AGAIN`, and the player declines first:
+`MEET`, and the player declines first:
 
 ```text
-LORELEI: Ah, you again. I am beginning to know you.           AGAIN
+LORELEI: I am LORELEI. No one can best me with icy POKéMON.   MEET
 LORELEI: Hmph. I have something to say.                       ASK
 LORELEI: Something valuable went missing around here, near    quest line
          the fence. Find it?
@@ -2155,7 +2154,7 @@ LORELEI: Come along, LAPRAS. Until next time.                 BYE
 Declining arms nothing and costs nothing. The next talk proposes again:
 
 ```text
-LORELEI: Ah, you again. I am beginning to know you.           AGAIN
+LORELEI: I am LORELEI. No one can best me with icy POKéMON.   MEET
 LORELEI: Hmph. I have something to say.                       ASK
 LORELEI: Something valuable went missing around here, near    quest line
          the fence. Find it?
@@ -2170,7 +2169,7 @@ The player searches inside the cape's west fence, then talks to her:
   (the player faces the grass at (97, 18), inside the west
    fence, and presses A)
 HAUNT: {PLAYER} found the lost keepsake!
-LORELEI: Ah, you again. I am beginning to know you.           AGAIN
+LORELEI: I am LORELEI. No one can best me with icy POKéMON.   MEET
 LORELEI: That's the one. Good eyes.                           done line
 LORELEI: Impressive. You kept your cool. I respect that.      PRAISE
 LORELEI: Take this NEVER-MELT ICE. Consider it a cool         GIFT
@@ -2181,8 +2180,8 @@ LORELEI: Come along, LAPRAS. Until next time.                 BYE
 NEVER-MELT ICE is the first entry of Lorelei's
 [pool](../research/notable-trainer-rewards.md#lorelei) (from world progress
 0). Her next entry, a lesson, opens at world progress 45, so a quest with
-her before then pays the fallback prize money. The quest adds 10 points (1 +
-10 = 11), and she is still Met.
+her before then pays the fallback prize money. The quest adds 10 points (0 +
+10 = 10), and she is now Met.
 
 **What this example shows.** Exploration is the quest: the proposal points
 at a place, the player walks the cape and its lower path looking for it,
@@ -2314,8 +2313,8 @@ questions teach the matchups of the ONIX the player just faced at his Gym.
 
 **Blue at Met: a wrong answer, then all right** (world progress 30, where
 `30 mod 18 = 12`: Viridian City's turn comes first and takes Brock with 6,
-and Blue holds the Museum with 2). The player met him once at a haunt (+1)
-and hasn't beaten him, so he is Met, and his reward counter is 0. At world
+and Blue holds the Museum with 2). The player beat him once in a rival
+battle (+10), so he is Met, and his reward counter is 0. At world
 progress 30 his TR is 37 and his team level 26, and his team is PIDGEOTTO,
 KADABRA, and EEVEE in battle order: his aces are KADABRA (Alakazam, Lv 26,
 stepped down below Lv 42) and EEVEE (his signature Umbreon, Lv 26, stepped
@@ -2381,7 +2380,8 @@ BLUE: Smell ya later!                                         BYE
 SILK SCARF is the first entry of Blue's
 [pool](../research/notable-trainer-rewards.md#blue) (from world progress
 0); his next, BLACK GLASSES, is open too (from world progress 20). The quest
-adds 10 points (1 + 10 = 11), and he is still Met.
+adds 10 points (10 + 10 = 20), which crosses the Friend threshold, so he
+hands over his number.
 
 **What this example shows.** Knowledge is the challenge: the quiz is about
 the POKéMON the trainer actually uses right now, so it teaches the matchups
@@ -2511,8 +2511,8 @@ His buddy is slot 1, so the `QUIRK` names SCYTHER until his team level
 reaches 40.
 
 **Erika at Met** (world progress 50, where `50 mod 18 = 14`: Bugsy and
-Erika both score 4, and she wins the tie on catalog order). The player met
-her once at a haunt (+1), so she is Met, and her reward counter is 0. The
+Erika both score 4, and she wins the tie on catalog order). The player beat
+her at Celadon (+10), so she is Met, and her reward counter is 0. The
 PIKACHU caught for Bugsy is in a box by now. She greets with `AGAIN`:
 
 ```text
@@ -2544,7 +2544,8 @@ ERIKA: Farewell. Oh... I think I'll close my eyes a           BYE
 
 ROSE INCENSE is the first entry of Erika's
 [pool](../research/notable-trainer-rewards.md#erika) (from world progress
-0). The quest adds 10 points (1 + 10 = 11), and she is still Met. A player
+0). The quest adds 10 points (10 + 10 = 20), which crosses the Friend
+threshold, so she hands over her number. A player
 with no PIKACHU would have heard her `NOT_READY` instead ("Perhaps not
 yet. Patience helps flowers bloom, too.") and could come back after
 catching one.
@@ -3352,13 +3353,13 @@ Required implementation evidence (not yet run):
    offer, or team-up at any stage. The greeting follows the stage: a Stranger
    gets `MEET`, or `HEARD` when the player's fame reaches them (the player's TR
    at least `min(80, their TR − 10)`, a reign at any league, or being a Master),
-   Met gets `AGAIN`, Friend `HELLO`, Close `CLOSE`. A first talk makes the
-   trainer Met and proposes the quest in the same talk; while the claim bit is
+   Met gets `AGAIN`, Friend `HELLO`, Close `CLOSE`. Talks never change the
+   stage, and a Stranger is proposed the quest like anyone else; while the claim bit is
    clear every talk proposes it (`ASK`, the proposal, [YES / NO]), `NO` changes
    nothing and the next talk proposes again, and a talk that starts a walk ends
    at `YES`; once the claim bit is set every talk is the greeting, `QUIRK`, and
-   `BYE`. No haunt line uses `NOT_YET` or `NEWS`. Only the first talk (+1) and a
-   completed quest (+10) add points at a haunt; a quest that crosses the Friend
+   `BYE`. No haunt line uses `NOT_YET` or `NEWS`. Only a completed quest (+10) adds
+   points at a haunt; a quest that crosses the Friend
    threshold hands over the number once.
 6. **Quests.** Each quest completes, fails, and retries as specified; a walk
    ends unfinished on whiteout and on reload, and a wrong exit asks "Giving up
@@ -3376,7 +3377,7 @@ Required implementation evidence (not yet run):
    loss line and no penalty, and the same stages give the same questions on
    every attempt; a One on one loss plays the haunt's loss line (or
    `NOT_READY`), costs nothing, and leaves the claim bit clear, and a win adds
-   +10 as a quest, never +20. Lost something picks the same active spot for the
+   +10 as a quest, never as a first win. Lost something picks the same active spot for the
    same placed trainer (catalog position mod spot count) and names its hint in
    the proposal; the spot is inert before `YES`, after it is found, and once the
    claim bit is set; after `YES` it is found by facing it and pressing A, stays
@@ -3400,7 +3401,7 @@ Required implementation evidence (not yet run):
    level the ace can disobey, and at or above it never does; neither side
    gains experience; afterwards the party equals the parked one exactly
    (HP, PP, status, held items, friendship) after a win and after a loss;
-   a win adds +10 as a quest, never +20; a loss plays the loss line, costs
+   a win adds +10 as a quest, never as a first win; a loss plays the loss line, costs
    nothing, and leaves the claim bit clear; a reset mid-swap reloads a
    whole party with the quest open, and a save written mid-swap is
    recovered on load with the parked party.
@@ -3519,7 +3520,7 @@ Required implementation evidence (not yet run):
     prize money is paid and a loss never blacks out, leaving the party
     fully healed. A win plays "…Six against one, and you actually did
     it.", `PRAISE`, the next reward-pool entry, and `BYE`, sets the
-    attempted and beaten bits, and adds +10, never +20; a loss plays "Not
+    attempted and beaten bits, and adds +10, never as a first win; a loss plays "Not
     bad for being outnumbered. Take this anyway.", the reward with no
     `PRAISE`, and `BYE`, sets only the attempted bit, and adds +10. It is
     the only quest that isn't retryable: after either outcome no Handicap

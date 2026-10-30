@@ -101,10 +101,10 @@ and every talk goes the same way:
    the recipient was last seen.
 3. **A goodbye.**
 
-The first talk makes the trainer Met, so a first meeting both introduces them
-and proposes the quest. Friendship grows through that first talk, through
-finished quests, and through battles won against them elsewhere (Gym, story,
-league); haunts offer none of their own. The player can revisit a haunt as often
+Strangers get the quest too, so a first meeting both introduces them and
+proposes it. Talking adds no friendship; it grows through finished quests and
+through a first win against them elsewhere (Gym, story, league); haunts offer
+no battles of their own. The player can revisit a haunt as often
 as they like while the trainer is placed there.
 
 ### Quests

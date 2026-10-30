@@ -218,7 +218,14 @@ CeruleanCity_Gym_SetSuicuneScene::
 	return
 
 CeruleanCity_Gym_EventScript_Misty_Defeated::
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_MISTY
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox CeruleanGym_Text_MistyFightDone, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	closemessage
 	release
 	end

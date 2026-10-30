@@ -58,6 +58,7 @@
 #include "wayfarer_coast_trainers.h"
 #include "wayfarer_daily_slots.h"
 #include "wayfarer_phone.h"
+#include "notable_friendship.h"
 #include "wayfarer_coast_trainer_defeats.h"
 #include "wayfarer_ss_anne.h"
 #include "wayfarer_ss_anne_trainer_defeats.h"
@@ -1934,6 +1935,20 @@ static void SetBattledTrainersFlags(void)
     SetTrainerFlag(TRAINER_BATTLE_PARAM.opponentA);
 }
 
+#if IS_WAYFARER
+// First wins over notable trainers (notable-trainers.md#friendship). Only an explicit win counts: a loss, a draw,
+// fleeing and debug battles add nothing, and the opponents are the only ones credited, so the player's in-game
+// partner never is. A tag match credits both opponents.
+static void CountNotableTrainerWins(bool8 wasDebugBattle)
+{
+    if (gBattleOutcome != B_OUTCOME_WON || wasDebugBattle)
+        return;
+    NotableFriendship_CountTrainerWin(TRAINER_BATTLE_PARAM.opponentA);
+    if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+        NotableFriendship_CountTrainerWin(TRAINER_BATTLE_PARAM.opponentB);
+}
+#endif
+
 static void UNUSED SetBattledTrainerFlag(void)
 {
     SetTrainerFlag(TRAINER_BATTLE_PARAM.opponentA);
@@ -2290,6 +2305,10 @@ static void HandleBattleVariantEndParty(void)
 
 static void CB2_EndTrainerBattle(void)
 {
+#if IS_WAYFARER
+    // gIsDebugBattle is cleared below, before the win is known to count.
+    bool8 wasDebugBattle = gIsDebugBattle;
+#endif
 #if WAYFARER_LEAGUE_EVENTS
     bool8 wasLeagueEventBattle = sLeagueEventBattle.active;
 
@@ -2299,6 +2318,8 @@ static void CB2_EndTrainerBattle(void)
         sLeagueEventBattle.active = FALSE;
         if (gBattleOutcome == B_OUTCOME_WON && GetAcceptedLeagueEventId() == eventId)
         {
+            if (!gIsDebugBattle)
+                NotableFriendship_CountTrainerWin(sLeagueEventBattle.sourceTrainerId);
             sLeagueEventVictoryProof.eventId = eventId;
             sLeagueEventVictoryProof.match = sLeagueEventBattle.match;
             sLeagueEventVictoryProof.valid = TRUE;
@@ -2345,6 +2366,9 @@ static void CB2_EndTrainerBattle(void)
         DowngradeBadPoison();
         SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
         SetBattledTrainerFlag();
+#if IS_WAYFARER
+        CountNotableTrainerWins(wasDebugBattle);
+#endif
     }
     else if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_SECRET_BASE)
     {
@@ -2377,9 +2401,33 @@ static void CB2_EndTrainerBattle(void)
         {
             RegisterTrainerInMatchCall();
             SetBattledTrainersFlags();
+#if IS_WAYFARER
+            CountNotableTrainerWins(wasDebugBattle);
+#endif
         }
     }
 }
+
+static void CB2_EndRematchBattle(void);
+#if TESTING
+// The ends of the trainer and rematch battles, run by the mechanics tests with the battle outcome they set.
+// The test runner is the main callback, so it is put back after the end picks the field's own.
+void Test_EndTrainerBattle(void)
+{
+    MainCallback runner = gMain.callback2;
+
+    CB2_EndTrainerBattle();
+    gMain.callback2 = runner;
+}
+
+void Test_EndRematchBattle(void)
+{
+    MainCallback runner = gMain.callback2;
+
+    CB2_EndRematchBattle();
+    gMain.callback2 = runner;
+}
+#endif
 
 static void CB2_EndRematchBattle(void)
 {
@@ -2397,6 +2445,9 @@ static void CB2_EndRematchBattle(void)
         SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
         RegisterTrainerInMatchCall();
         SetBattledTrainersFlags();
+#if IS_WAYFARER
+        CountNotableTrainerWins(FALSE);
+#endif
         HandleRematchVarsOnBattleEnd();
         DowngradeBadPoison();
     }

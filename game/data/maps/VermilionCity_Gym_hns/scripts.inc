@@ -283,7 +283,14 @@ VermilionCity_Gym_EventScript_GiveTM::
 	return
 
 VermilionCity_Gym_EventScript_Surge_Defeated::
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_LT_SURGE
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox VermilionGym_Text_LtSurgePostBattle, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	closemessage
 	release
 	end

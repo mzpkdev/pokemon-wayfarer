@@ -4,6 +4,7 @@
 #include "config/league_circuit.h"
 #include "event_data.h"
 #include "heal_location.h"
+#include "notable_friendship.h"
 #include "map_layout.h"
 #include "overworld.h"
 #include "regions.h"
@@ -162,6 +163,7 @@ void WayfarerInitPersistentState(void)
     memset(&gSaveBlock3Ptr->wayfarerCoast, 0, sizeof(gSaveBlock3Ptr->wayfarerCoast));
     gSaveBlock3Ptr->wayfarerCoast.magic = WAYFARER_COAST_STATE_MAGIC;
     gSaveBlock3Ptr->wayfarerTowerTrainerDefeats = 0;
+    NotableFriendship_Reset();
     FlagSet(FLAG_WAYFARER_SS_ANNE_HIDE_BLUE);
 #endif
 }
@@ -366,6 +368,7 @@ bool8 WayfarerPersistentStateIsValid(void)
         && gSaveBlock3Ptr->wayfarerCoast.magic == WAYFARER_COAST_STATE_MAGIC
         && WayfarerGetOriginProfile(WayfarerGetStartingOriginId()) != NULL
         && IsPalletOpeningStateValid()
+        && NotableFriendship_IsValid()
         && GetHealLocation(gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation) != NULL
         && gSaveBlock3Ptr->wayfarerHoenn.initialized <= TRUE
         && (!WayfarerUsesNativeHoennOpening() || gSaveBlock3Ptr->wayfarerHoenn.initialized == TRUE);

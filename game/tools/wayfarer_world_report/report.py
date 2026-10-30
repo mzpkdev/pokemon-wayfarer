@@ -41,7 +41,7 @@ def map_names():
 
 def notable_names():
     text = (GAME / "include/constants/notable_trainers.h").read_text()
-    return {int(v): n.replace("NOTABLE_TRAINER_", "") for n, v in re.findall(r"(NOTABLE_TRAINER_\w+) = (\d+)", text)}
+    return {int(v): n.replace("NOTABLE_TRAINER_", "") for n, v in re.findall(r"#define (NOTABLE_TRAINER_\w+) (\d+)", text)}
 
 
 def resolve_ids(values, names):

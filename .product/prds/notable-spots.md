@@ -117,8 +117,8 @@ routines in [notable trainer routines](../research/notable-trainer-routines.md).
 Talking to a trainer at a spot is short:
 
 1. **A greeting**, by friendship, exactly as at a haunt
-   ([haunts](notable-haunts.md#meeting-a-trainer)). Meeting a trainer for
-   the first time at a spot makes them Met, just as at a haunt.
+   ([haunts](notable-haunts.md#meeting-a-trainer)). Talking adds no
+   friendship: a trainer stays a stranger until you beat them or help them.
 2. **What they are doing**, one line shared by every trainer at that kind
    of spot, such as "Just stocking up on supplies." or "Taking a breather."
    If a follow-up from an earlier quest is waiting, it plays here instead:

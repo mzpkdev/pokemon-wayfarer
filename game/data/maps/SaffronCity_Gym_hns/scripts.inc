@@ -54,7 +54,14 @@ SaffronCity_Gym_EventScript_Sabrina::
 	end
 
 SaffronCity_Gym_EventScript_Sabrina_Defeated::
+#if IS_WAYFARER
+	setvar VAR_0x8004, NOTABLE_TRAINER_SABRINA
+	call NotableTalk_EventScript_Greeting
+#endif
 	msgbox SaffronCity_Gym_Text_SabrinaPostBattle, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call NotableTalk_EventScript_Farewell
+#endif
 	closemessage
 	release
 	end

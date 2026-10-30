@@ -2,8 +2,11 @@
 
 PRD: [Notable trainers](../prds/notable-trainers.md)
 Implemented: Partial. Wayfarer runs the v0 catalog, trainer TR growth, rosters,
-move pools, battle snapshot, and league lineups ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)). Friendship, phone
-numbers, and fame remain. The browser explorer is placeholder tooling.
+move pools, battle snapshot, and league lineups ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)). Friendship
+shipped: the saved score and first-win bit, first wins from every battle kind (Gym, story, rematch, league event, tag
+matches), the quest-points API for haunts, and the number handover (one system line at the first Friend crossing; it
+registers no phone contact yet). Phone numbers as contacts and the Masters partner remain. The browser explorer is
+placeholder tooling.
 Design status: v0 contract. The model is accepted. Rosters are approved
 content (draft v1: species, order, and aces); their battle content (move
 pools, and items where a slot doesn't match its source party) is still
@@ -189,55 +192,56 @@ nothing else moves a stage.
 
 | Stage | Score at least | Notes |
 | --- | ---: | --- |
-| Stranger | 0 | The player has not talked to them. |
-| Met | 1 | They know the player. |
+| Stranger | 0 | They don't know the player, however often the player has talked to them. |
+| Met | 10 | The player has beaten them or helped them once. |
 | Friend | 20 | They give their phone number. |
 | Close | 60 | The warmest stage. |
 
 The thresholds are the same for every trainer in v0, and they are
 placeholder data like the weights below.
 
-Events only add weighted points (placeholders):
+Recognition is earned, never chatted into: talking to a trainer adds
+nothing, however often, so a trainer the player has only talked to stays a
+Stranger. Events only add weighted points (placeholders):
 
 | Event | Points | Bounds |
 | --- | ---: | --- |
-| First talk | +1 | Once: when a talk starts with the trainer at Stranger, at a [haunt](notable-haunts.md#talk-flow) or anywhere they are met, such as a [spot](notable-spots.md#talk-flow). |
-| Battle won | +20 | The first win over them, in any kind of battle. After that, a repeat win counts at most once per step of world progress: only if no repeat win over them has counted since world progress last rose. |
-| Haunt quest completed | +10 | Each completed [quest](notable-haunts.md#quests), at most once per placement. |
+| First win | +10 | Once: the first win over them, in any kind of battle. Later wins add nothing. |
+| Haunt quest completed | +10 | Each completed [quest](notable-haunts.md#quests), at most once per placement. Strangers can take quests too. |
+
+So Met means the player has beaten or helped them once, and Friend takes
+both, or two quests: battles alone never make a friend.
 
 Rules:
 
 - **Points come only from explicit, bounded events.** Nothing passive adds
-  any: repeat chats, time, world progress, and visits give nothing.
+  any: talks, time, world progress, visits, and repeat wins give nothing.
 - **A first win always counts**, whatever the kind of battle (Gym, rematch,
   story, league, singles or a tag match, where both opponents count). A loss,
   a draw, fleeing, a declined league event, a battle beside the trainer as a
   partner, a One on one, Swap battle, or Handicap quest battle (each
   counts as the quest, win or lose), and debug
-  battles add nothing. The first win alone reaches Friend.
-- **Which battles count.** Haunts offer no battles of their own, so wins come
-  from Gym, story, and league battles, and later from rematch spots. Only
-  battles that can come again (league events, and future rematch spots) give
-  repeat wins, and the step cap keeps them from being farmed: a repeat win
-  counts only if world progress has risen since the last repeat win that
-  counted.
-- **Consumers read only the stage, never the events or the score.** They are the
-  [haunts](notable-haunts.md#talk-flow) (greetings and quests) and [Sevii
+  battles add nothing.
+- **Consumers read only the stage, never the events or the score.** They are
+  the greetings of every talk (at [haunts](notable-haunts.md#talk-flow),
+  [spots](notable-spots.md#talk-flow), on the road, and in a leader's
+  [own Gym](notable-world-simulation.md#interactions)) and [Sevii
   Masters](sevii-masters.md#phone-contacts): a trainer at Friend or above is a
   contact, and any contact can be the partner. The number is handed over when
-  the score first crosses the Friend threshold, by any route (a win, or quests),
-  with one system line that names the trainer. Tate & Liza keep a score, but
-  they give no number and cannot be the partner, and they are not placed at
-  haunts in v0.
+  the score first crosses the Friend threshold, by any route (a win and a
+  quest, or quests), with one system line that names the trainer. Tate & Liza
+  keep a score, but they give no number and cannot be the partner, and they
+  are not placed at haunts in v0.
+- **Until haunts ship**, the first win is the only event, so every trainer
+  stops at Met and nobody reaches Friend. That is expected: the number
+  handover is built and tested, and quests open the way to it.
 
-Saved state: one score byte per notable trainer, one **first-win bit** per
-notable trainer (the bit records that the first win was counted), and one
-**repeat-win bit** per notable trainer (set when a repeat win counts, and
-cleared for every trainer whenever world progress rises). New Game saves every
-score at 0 and every bit clear. On load, drop the scores and bits of characters
-no longer in the registry; a first-win bit set with a score under the Friend
-threshold, a repeat-win bit set without the first-win bit, or a score for an
-unknown character, is an invalid save.
+Saved state: one score byte per notable trainer and one **first-win bit** per
+notable trainer (the bit records that the first win was counted). New Game
+saves every score at 0 and every bit clear. On load, drop the scores and bits
+of characters no longer in the registry; a first-win bit set with a score
+under the Met threshold, or a score for an unknown character, is an invalid
+save.
 
 Later sources of points (gifts, tag battles beside the trainer, trades,
 partnering) are not in v0.
@@ -646,11 +650,9 @@ a partner.
   slots, then aces, each in reverse list order; slot 1 last), matching the
   Brock example at every team size.
 - Friendship: scores start at 0 and never decrease, cap at 255, and the stage
-  follows the thresholds (0, 1, 20, 60); a first win adds 20 once in every kind
-  of battle (both opponents of a tag match), a repeat win adds 20 at most once
-  per step of world progress and nothing more until world progress rises; a
-  first talk adds 1 once; a quest adds 10; losses, declines, and partnering add
-  nothing; the number is handed over once, at the Friend crossing; scores
+  follows the thresholds (0, 10, 20, 60); a first win adds 10 once in every
+  kind of battle (both opponents of a tag match), and repeat wins add nothing;
+  a quest adds 10; talks, losses, declines, and partnering add nothing; the number is handed over once, at the Friend crossing; scores
   survive reloads and prune with removed characters.
 - Determinism: trainer TR and resolution are pure functions of world progress
   and content, independent of party, badges or league wins beyond their effect

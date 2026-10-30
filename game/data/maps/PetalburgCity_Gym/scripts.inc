@@ -458,7 +458,10 @@ PetalburgCity_Gym_EventScript_NormanPostBattle::
 #if IS_WAYFARER
 	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
 	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowDadGoingToKeepTrainingNative
+	setvar VAR_0x8004, NOTABLE_TRAINER_NORMAN
+	call NotableTalk_EventScript_Greeting
 	msgbox PetalburgCity_Gym_Text_VisitorDadGoingToKeepTraining, MSGBOX_DEFAULT
+	call NotableTalk_EventScript_Farewell
 	goto PetalburgCity_Gym_EventScript_ShowDadGoingToKeepTrainingDone
 PetalburgCity_Gym_EventScript_ShowDadGoingToKeepTrainingNative::
 #endif
@@ -948,7 +951,10 @@ PetalburgCity_Gym_EventScript_NoAmountOfTrainingIsEnough::
 #if IS_WAYFARER
 	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
 	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowDadNoAmountOfTrainingIsEnoughNative
+	setvar VAR_0x8004, NOTABLE_TRAINER_NORMAN
+	call NotableTalk_EventScript_Greeting
 	msgbox PetalburgCity_Gym_Text_VisitorDadNoAmountOfTrainingIsEnough, MSGBOX_DEFAULT
+	call NotableTalk_EventScript_Farewell
 	goto PetalburgCity_Gym_EventScript_ShowDadNoAmountOfTrainingIsEnoughDone
 PetalburgCity_Gym_EventScript_ShowDadNoAmountOfTrainingIsEnoughNative::
 #endif
