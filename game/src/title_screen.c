@@ -71,7 +71,6 @@ enum
 #define WAYFARER_PASS_WAIT_MIN 900
 #define WAYFARER_PASS_WAIT_SPAN 601
 #define CLEAR_SAVE_BUTTON_COMBO (B_BUTTON | SELECT_BUTTON | DPAD_UP)
-#define RESET_RTC_BUTTON_COMBO (B_BUTTON | SELECT_BUTTON | DPAD_LEFT)
 
 static void MainCB2_WayfarerTitleScreen(void);
 static void VBlankCB_WayfarerTitleScreen(void);
@@ -81,7 +80,6 @@ static void Task_WayfarerTitleInput(u8 taskId);
 static void Task_WayfarerPokemonPass(u8 taskId);
 static void CB2_GoToMainMenu(void);
 static void CB2_GoToClearSaveDataScreen(void);
-static void CB2_GoToResetRtcScreen(void);
 static void SpriteCB_PressStart(struct Sprite *sprite);
 static void SpriteCB_WayfarerTitleRise(struct Sprite *sprite);
 static void Task_WayfarerLogoShine(u8 taskId);
@@ -753,13 +751,6 @@ static void Task_WayfarerTitleInput(u8 taskId)
         StopWayfarerLogoShine();
         SetMainCallback2(CB2_GoToClearSaveDataScreen);
     }
-    else if (JOY_HELD(RESET_RTC_BUTTON_COMBO) == RESET_RTC_BUTTON_COMBO && CanResetRTC())
-    {
-        StopWayfarerLogoShine();
-        FadeOutBGM(4);
-        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
-        SetMainCallback2(CB2_GoToResetRtcScreen);
-    }
     else if ((gMPlayInfo_BGM.status & 0xFFFF) == 0)
     {
         // A music end must keep this held composition; never return to intro.
@@ -777,12 +768,6 @@ static void CB2_GoToClearSaveDataScreen(void)
 {
     if (!UpdatePaletteFade())
         SetMainCallback2(CB2_InitClearSaveDataScreen);
-}
-
-static void CB2_GoToResetRtcScreen(void)
-{
-    if (!UpdatePaletteFade())
-        SetMainCallback2(CB2_InitResetRtcScreen);
 }
 
 // Auxiliary screens still use this public entry point.  Reload Scene 1, then

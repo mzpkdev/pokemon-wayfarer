@@ -318,9 +318,7 @@ void NewGameInitData(void)
         StringCopy(gSaveBlock1Ptr->rivalName, rivalName);
 #endif
 #if IS_WAYFARER
-    if (UseFakeRtc())
-        RtcCalcLocalTimeOffset(0, 10, 0, 0);
-    InitTimeBasedEvents();
+    InGameClock_StartNewGame();
 #endif
     ResetMiniGamesRecords();
     InitUnionRoomChatRegisteredTexts();

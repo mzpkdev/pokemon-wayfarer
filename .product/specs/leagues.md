@@ -211,15 +211,12 @@ is a league's phone call inviting the player to its next event; the player
 **accepts** or **declines** it. At most one invitation or accepted event
 exists at a time.
 
-Days come from the game's in-game day clock; leagues add no clock of their own.
-**Dependency:** Today the day counter (`VAR_DAYS`, kept by the daily update in
-[clock.c](../../game/src/clock.c)) follows the real-time clock (RTC). The game
-is moving to an in-game clock with no RTC, and this design depends on it:
-adopting Leagues requires that clock, and every day below is an in-game day from
-it. All Leagues needs from that clock is a **day count** that advances with
-play, which Leagues reads only through the forward-counting
-[countdown](#countdown); the length of a day is owned by the in-game clock
-design, which is not yet written. **Days never affect anyone's strength**: every TR stays a function of world
+Days come from the [in-game clock](in-game-clock.md); leagues add no clock of
+their own. The **day counter** is `VAR_DAYS`, kept by the daily update in
+[clock.c](../../game/src/clock.c): it advances with play (one day per 90
+minutes of play) and can't be set back. Leagues reads it only through the
+forward-counting [countdown](#countdown); the length of a day is owned by the
+in-game clock. **Days never affect anyone's strength**: every TR stays a function of world
 progress, and days only schedule invitations. The order of calls never reads
 days: it comes from a monotonic [call counter](#which-league-calls), so a day
 counter that goes backwards cannot reorder the leagues.
@@ -251,8 +248,9 @@ if today > lastCountedDay: daysRemaining = max(0, daysRemaining - (today - lastC
 lastCountedDay = today
 ```
 
-The call is due once the days remaining reach 0. A day counter that goes
-backwards (a clock turned back) neither advances nor resets the countdown: it
+The call is due once the days remaining reach 0. The in-game clock can't be
+set back, but the countdown stays safe if it ever were: a day counter that goes
+backwards neither advances nor resets the countdown: it
 only moves the last counted day down, and counting resumes from there. A
 counter far ahead brings one call, never a backlog: missed days leave no
 trace.
@@ -653,7 +651,7 @@ never generates a lineup or places a call.
   [Master](sevii-masters.md#master)); badges are not rechecked, since badges
   never decrease.
 - A stored day is never a reason to reject a save. A last counted day ahead
-  of the day counter (a clock turned back) is clamped to the day counter,
+  of the day counter is clamped to the day counter,
   which neither advances nor resets the countdown.
 - Each league's last call number is none or a number from 1 to the call
   counter; no two leagues share a number, and when the counter is above 0 one
@@ -773,8 +771,8 @@ Existing code to review, not new APIs:
 
 - [Save ownership and initialization](../../game/src/wayfarer_persistence.c)
   and [run/save structures](../../game/include/global.h).
-- The planned in-game clock's day count (no design yet; Today's RTC day
-  counter and daily update live in [clock.c](../../game/src/clock.c)) and
+- The [in-game clock](in-game-clock.md)'s day counter (`VAR_DAYS`, kept by
+  the daily update in [clock.c](../../game/src/clock.c)) and
   [phone calls](../../game/src/match_call.c).
 - [Circuit admission and lifecycle](../../game/src/league_circuit.c),
   [script wrappers](../../game/src/league_circuit_scripts.c),

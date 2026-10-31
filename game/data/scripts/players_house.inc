@@ -40,6 +40,14 @@ PlayersHouse_1F_EventScript_MomGoSeeRoom::
 	releaseall
 	end
 
+#if IS_WAYFARER
+@ Wayfarer's in-game clock can't be set (.product/specs/in-game-clock.md): the wall clock only shows the time.
+LittlerootTown_BrendansHouse_2F_EventScript_WallClock::
+LittlerootTown_MaysHouse_2F_EventScript_WallClock::
+	lockall
+	goto PlayersHouse_2F_EventScript_CheckWallClock
+	end
+#else
 LittlerootTown_BrendansHouse_2F_EventScript_WallClock::
 	lockall
 	setvar VAR_0x8004, MALE
@@ -55,6 +63,7 @@ LittlerootTown_MaysHouse_2F_EventScript_WallClock::
 	msgbox PlayersHouse_2F_Text_ClockChange, MSGBOX_DEFAULT
 	goto PlayersHouse_2F_EventScript_WallClock
 	end
+#endif
 
 PlayersHouse_2F_Text_ClockChange:
 	.string "Press the R Button to set the\n"

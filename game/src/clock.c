@@ -10,6 +10,7 @@
 #include "overworld.h"
 #include "pokerus.h"
 #include "rtc.h"
+#include "fake_rtc.h"
 #include "time_events.h"
 #include "tv.h"
 #include "wallclock.h"
@@ -26,6 +27,18 @@ void InitTimeBasedEvents(void)
     gSaveBlock2Ptr->lastBerryTreeUpdate = gLocalTime;
     VarSet(VAR_DAYS, gLocalTime.days);
 }
+
+#if IS_WAYFARER
+// A new game starts on day 1 at 10:00 (.product/specs/in-game-clock.md#new-game). The local
+// time is the clock itself: with no offset, the daily update's day (gLocalTime.days) and the
+// daily slots' day (RtcGetLocalDayCount) are the same number, and nothing ever sets an offset.
+void InGameClock_StartNewGame(void)
+{
+    FakeRtc_ManuallySetTime(0, WAYFARER_CLOCK_START_HOUR, 0, 0);
+    memset(&gSaveBlock2Ptr->localTimeOffset, 0, sizeof(gSaveBlock2Ptr->localTimeOffset));
+    InitTimeBasedEvents();
+}
+#endif
 
 void DoTimeBasedEvents(void)
 {

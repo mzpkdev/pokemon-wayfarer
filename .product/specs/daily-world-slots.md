@@ -129,9 +129,9 @@ six-trainer challenge, whose lines number its members, is not daily.
 
 ## The day
 
-`day = RtcGetLocalDayCount()`, the same real-time calendar day berry trees use.
-A later change moves Wayfarer to an in-game clock; this spec then reads that
-clock's day instead, with no other change.
+`day = RtcGetLocalDayCount()`, the [in-game clock](in-game-clock.md)'s day
+number, the same day berry trees and the daily update use. The clock runs only
+while the game is played, 90 minutes of play a day, and can't be set back.
 
 A new day takes effect on the next map load. The current map keeps its
 occupants until then.

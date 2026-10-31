@@ -65,13 +65,14 @@ and travel stays light because some spots are empty.
 
 ### Days
 
-A day is the game clock's local calendar day, the same clock berries and other
-daily events use. A new day only reaches a map the next time that map loads.
+A day is a day of the [in-game clock](in-game-clock.md), the same clock
+berries and other daily events use. It runs only while you play, 90 minutes
+of play a day. A new day only reaches a map the next time that map loads.
 
 A slot's draw is fixed for the whole day. It depends on the save, the day, the
 map and the slot. Reloading the map, saving and resetting, or leaving and
-coming back on the same day gives the same draw. Changing the game clock
-changes the day, as it does for every other daily event. Wayfarer will later move to an in-game clock; the day then follows that clock.
+coming back on the same day gives the same draw. The clock can't be set, so
+the only way to a new draw is to play into the next day.
 
 ### Authored first
 

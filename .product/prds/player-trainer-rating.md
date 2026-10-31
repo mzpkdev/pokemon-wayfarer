@@ -173,10 +173,9 @@ changes yours.
   leagues taking turns
   ([which league calls](../specs/leagues.md#which-league-calls)). Days only
   schedule calls; they never change anyone's strength.
-- **In-game day:** a day on the game's in-game day clock, which is what
-  league invitations count. Today the game's day counter follows the
-  real-time clock (RTC); Leagues depends on the planned in-game clock, which
-  has no RTC.
+- **In-game day:** a day on the [in-game clock](in-game-clock.md), which is
+  what league invitations count. The clock runs only while you play, 90
+  minutes of play a day.
 - **Accept / decline:** your answer to an invitation. Accepting fixes the
   event lineup and the event waits for you, with one attempt; declining lets
   the event run without you.

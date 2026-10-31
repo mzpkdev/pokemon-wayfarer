@@ -83,7 +83,7 @@ The catch: if the player stands still, the off-screen world waits too,
 and a trainer inside a building can't come out while the player waits at
 the door. Trainers on the player's map still finish what they're doing
 and walk on, so the ones the player can see don't freeze. A gameplay
-timer or the planned in-game clock can take over later.
+timer or the [in-game clock](in-game-clock.md) can take over later.
 
 ### Routines
 
