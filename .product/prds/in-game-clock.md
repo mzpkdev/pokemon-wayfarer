@@ -119,8 +119,8 @@ Shoal Cave tide lasts 30 minutes instead of 22.5.
 ## Later
 
 - **S.S. ferries.** The S.S. Aqua, Anne and Tidal will sail between regions,
-  and ports shared by two ships will host one by day and the other by night.
-  Their design builds on this clock's halves.
+  and ports shared by two ships will host one by day and the other by night
+  ([S.S. ferries](ss-ferries.md)). Their design builds on this clock's halves.
 
 ## References
 
