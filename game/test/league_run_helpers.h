@@ -40,6 +40,10 @@ static inline bool8 Test_AdmitCircuitRun(enum CircuitStage stage)
     }
     gSaveBlock1Ptr->saveVersionMagic = SAVE_VERSION_MAGIC;
     gSaveBlock1Ptr->saveVersion = SAVE_VERSION;
+    // Indigo and Hoenn accept only their phone invitation: the test places the call that league would make.
+    if (GetAcceptedLeagueEventId() == 0 && stage != CIRCUIT_STAGE_MASTERS
+     && GetLeagueInvitationLeague() == LEAGUE_ID_NONE)
+        ForceLeagueInvitationForTesting((enum LeagueId)stage);
     if (GetAcceptedLeagueEventId() == 0
      && AcceptLeagueEvent((enum LeagueId)stage) != LEAGUE_ACCEPT_OK)
         return FALSE;

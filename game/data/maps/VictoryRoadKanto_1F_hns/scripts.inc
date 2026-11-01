@@ -17,7 +17,7 @@ VictoryRoadKanto_1F_Trigger::
 #endif
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 	specialvar VAR_0x8004, LeagueCircuit_GetRequiredRegion
-	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+	specialvar VAR_RESULT, LeagueCircuit_IsKnownThere
 	goto_if_eq VAR_RESULT, TRUE, LeagueCircuit_EventScript_TravelAllowed
 #endif
 	lock

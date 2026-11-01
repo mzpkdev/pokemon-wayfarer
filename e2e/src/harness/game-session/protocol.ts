@@ -289,6 +289,9 @@ export type StateSnapshot = {
   battleWeather: number
   overworldWeather: number
   battleHazardMasks: number[]
+  leagueInvitedLeague: number
+  leagueDaysRemaining: number
+  leagueResultCall: number
   caughtSpecies: number
   lastUsedItem: number
   catchSwapState: number
@@ -952,6 +955,9 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     battleWeather: uint16(bytes, 1744),
     overworldWeather: bytes[1746]!,
     battleHazardMasks: Array.from(bytes.slice(1747, 1749)),
+    leagueInvitedLeague: bytes[1749]!,
+    leagueDaysRemaining: bytes[1750]!,
+    leagueResultCall: bytes[1751]!,
     catchSwapState: bytes[320]!,
     catchSwapCursor: bytes[321]!,
     catchSwapSelectedParty: bytes[322]!,

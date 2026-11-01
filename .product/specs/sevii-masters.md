@@ -1,7 +1,7 @@
 # Sevii Masters
 
 PRD: [Sevii Masters](../prds/sevii-masters.md)
-Implemented: Partial. The Masters league registry, lobby acceptance, Master seats, and Gallery counts shipped in [PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139). Phone contacts shipped, owned by [Notable trainers](notable-trainers.md#phone-contacts). The partner (and asking for one by phone, [later](#later)), tag matches, and final remain.
+Implemented: Partial. The Masters league registry, lobby acceptance, Master seats, and Gallery counts shipped in [PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139). Phone contacts shipped, owned by [Notable trainers](notable-trainers.md#phone-contacts). Indigo and Hoenn invitations by phone shipped; the Masters stays out of the call rotation, keeping its lobby acceptance, until this format ships ([Which league calls](leagues.md#which-league-calls)). The partner (and asking for one by phone, [later](#later)), tag matches, final, and the caretaker's calls remain.
 Design status: v0 approved: the Sevii Masters as an off-the-record club, one
 of the three [Leagues](leagues.md), that calls the player once they are a
 **Master** (lifetime wins at both Indigo and Hoenn). Its lineup has eight
@@ -71,8 +71,10 @@ A Masters title never counts ([it sets no reign
 flag](leagues.md#reign-records)), and a lifetime win at only one of Indigo and
 Hoenn, or a Masters win, never makes anyone a Master.
 Being a Master changes only the Masters: it knows the player and may call
-them ([Which league calls](leagues.md#which-league-calls)), the player can
-ask a partner, and notable trainers who are Masters get guaranteed seats.
+them ([Which league calls](leagues.md#which-league-calls); until this format
+ships it never calls, and a Master accepts its event from the caretaker at
+the house instead), the player can ask a partner, and notable trainers who
+are Masters get guaranteed seats.
 Winning the Masters adds a Gallery win and gives no new status.
 
 ## Phone contacts
@@ -412,7 +414,10 @@ The Masters adds to [Load validation](leagues.md#load-validation):
 
 ## Presentation
 
-The Masters' calls come from the caretaker, not from an official league.
+The Masters' calls come from the caretaker, not from an official league,
+once the Masters joins the call rotation with this format; until then the
+caretaker offers the event at the house, and names the Masters' reigning
+champion there.
 Her first call says that Lorelei, retired to Four Island, spoke of the
 player; beyond being the default [partner](#partner), Lorelei stays an
 ordinary notable trainer with no guaranteed seat. Accepting names the four

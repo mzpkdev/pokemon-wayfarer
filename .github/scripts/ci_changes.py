@@ -16,6 +16,7 @@ BUILD_INPUT_DOCS = frozenset({
     ".product/research/notable-trainer-routines.md",
     ".product/specs/daily-world-slots.md",
     ".product/specs/in-game-clock.md",
+    ".product/specs/leagues.md",
     ".product/specs/notable-ambience.md",
     ".product/specs/notable-spots.md",
     ".product/specs/notable-trainers.md",

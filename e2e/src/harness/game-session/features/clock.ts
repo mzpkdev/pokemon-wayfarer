@@ -34,6 +34,11 @@ export type ClockApi = {
    * journey sees a day start. It never changes the date, so the day count can't go backwards.
    */
   setTimeOfDay: (time: { hour: number; minute: number; second: number }) => Promise<void>
+  /**
+   * Moves the clock's date forward by whole days, keeping the time of day, as if that much play had
+   * passed. The field's daily update then starts the new day (`VAR_DAYS`) within 512 frames.
+   */
+  advanceDays: (days: number) => Promise<void>
 }
 
 const daysInMonth = (year: number, month: number): number => {
@@ -96,6 +101,29 @@ export const createClockApi = (runtime: SessionRuntime): ClockApi => {
       )
         throw new Error(`Not a time of day: ${hour}:${minute}:${second}`)
       await runtime.writeBytes((await clockAddress()) + 4, new Uint8Array([hour, minute, second]))
+    },
+    advanceDays: async (days) => {
+      if (!Number.isInteger(days) || days < 0) throw new Error(`Not a forward day count: ${days}`)
+      const address = await clockAddress()
+      let [year, month, day, dayOfWeek] = Array.from(await runtime.readBytes(address, 4)) as [
+        number,
+        number,
+        number,
+        number,
+      ]
+      for (let step = 0; step < days; step++) {
+        dayOfWeek = (dayOfWeek + 1) % 7
+        if (day < daysInMonth(year, month)) day++
+        else if (month < 12) {
+          day = 1
+          month++
+        } else {
+          day = 1
+          month = 1
+          year++
+        }
+      }
+      await runtime.writeBytes(address, new Uint8Array([year, month, day, dayOfWeek]))
     },
   }
 }

@@ -2,6 +2,7 @@
 #if IS_WAYFARER
 #include "wayfarer_daily_slots.h"
 #include "notable_friendship.h"
+#include "league_phone.h"
 #include "notable_talk.h"
 #include "wayfarer_walkers.h"
 #endif
@@ -197,6 +198,15 @@ void FieldGetPlayerInput(struct FieldInput *input, u16 newKeys, u16 heldKeys)
     }
 }
 
+// A call or the number handover starts only while the player stands still, between steps: started mid-step,
+// its lock would end the step under the script and skip that tile's warp, trigger and step counters, and on a
+// forced-movement tile it would stop the slide partway.
+static bool8 CanStartFieldCall(struct FieldInput *input)
+{
+    return !input->tookStep && gPlayerAvatar.tileTransitionState == T_NOT_MOVING
+        && gPlayerAvatar.runningState == NOT_MOVING;
+}
+
 int ProcessPlayerFieldInput(struct FieldInput *input)
 {
     struct MapPosition position;
@@ -218,8 +228,13 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         return TRUE;
 
 #if IS_WAYFARER
-    // A friendship crossing (the end of a battle, a quest) hands the number over once the field has control.
-    if (NotableFriendship_TryStartPendingNumberScript())
+    // A friendship crossing (the end of a battle, a quest) hands the number over once the field has control,
+    // while the player stands still, so it never swallows a step's warp or trigger script.
+    if (CanStartFieldCall(input) && NotableFriendship_TryStartPendingNumberScript())
+        return TRUE;
+    // A league's invitation or result call rings once the field has control (.product/specs/leagues.md),
+    // likewise only while the player stands still.
+    if (CanStartFieldCall(input) && LeaguePhone_TryStartCall())
         return TRUE;
 #endif
 

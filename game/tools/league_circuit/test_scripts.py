@@ -274,12 +274,23 @@ class CircuitScriptTests(unittest.TestCase):
         hall = json.loads((GAME / "data/maps/PokemonLeague_HallOfFame_Frlg/map.json").read_text())
         self.assertTrue(hall["object_events"][0]["wayfarer_exclude"])
 
+    def test_field_calls_never_swallow_a_step_script(self):
+        # The number handover and league calls start scripts from ProcessPlayerFieldInput before the step
+        # block; started mid-step, their lock would skip that step's warp or trigger script. They start only
+        # while the player stands still.
+        field = (GAME / "src/field_control_avatar.c").read_text()
+        for call in ("NotableFriendship_TryStartPendingNumberScript()", "LeaguePhone_TryStartCall()"):
+            self.assertIn(f"if (CanStartFieldCall(input) && {call})", field)
+            self.assertLess(field.index(call), field.index("if (input->tookStep)"))
+        self.assertIn("gPlayerAvatar.tileTransitionState == T_NOT_MOVING", field)
+
     def test_corridor_bypass_leaves_story_unwritten(self):
         gate = script("ReceptionGate_hns").split("ReceptionGate_Trigger::\n", 1)[1].split("#endif", 1)[0]
         self.assertIn("\tend", gate)
         self.assertNotIn("setvar", gate)
         rival = block(script("VictoryRoadKanto_1F_hns"), "VictoryRoadKanto_1F_Trigger").split("\tlock\n", 1)[0]
-        self.assertIn("LeagueCircuit_IsEligible", rival)
+        # Story gates ask whether a league knows the player, never whether an event is accepted there.
+        self.assertIn("LeagueCircuit_IsKnownThere", rival)
         self.assertNotIn("setflag", rival)
 
     def test_johto_opening_establishes_the_complete_interregional_ferry_loop(self):

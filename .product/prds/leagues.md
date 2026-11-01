@@ -1,8 +1,11 @@
 # Leagues
 
-Implemented: Partial. Lobby acceptance, selected and saved teams, event
-resolution, and hall conditions are playable. Timed phone invitations, call
-rotation, declined events, and championship-history presentation remain.
+Implemented: Partial. Selected and saved teams, event resolution, hall
+conditions, and Indigo and Hoenn invitations by phone (the seven-day
+countdown, taking turns, accepting and declining, result calls, and the
+lobbies naming each reigning champion) are playable. The Sevii Masters doesn't
+call yet: until its tag format ships it keeps its lobby acceptance.
+Championship-history presentation remains.
 Design status: v0 approved: once the player qualifies (TR 80), a league
 phones with an invitation every seven in-game days; only leagues that know
 them call (where they hold a badge; the [Sevii Masters](sevii-masters.md)
@@ -73,7 +76,8 @@ that has never called goes first. When that is a tie, the league where they
 have earned the most badges calls (Indigo counts Kanto and Johto badges,
 Hoenn counts Hoenn badges), and on equal counts, Indigo. The Masters is never
 in such a tie: it knows the player only after Indigo and Hoenn have both
-called. So the first call comes from where they have the most badges, and a
+called. Until the Masters' own format ships, it stays out of the turns and
+never calls; a Master accepts its event at its door instead. So the first call comes from where they have the most badges, and a
 player known in only one region hears from that league every time until
 another league knows them. If the player qualifies while no league knows
 them (possible only with a future source of TR), no call comes: the call
@@ -188,7 +192,8 @@ still adds TR for a first league win until that design is adopted.
 
 **Presentation.** Invitations and results come by phone call, on a
 Pokégear/PokéNav-style phone as in HeartGold/SoulSilver and Emerald; the exact
-phone screens are an implementation detail. The Masters' calls come from its
+phone screens are an implementation detail. Indigo's and Hoenn's calls come
+from their front desks; the Masters' calls, once it calls, come from its
 caretaker ([Sevii Masters](sevii-masters.md#presentation)). The lobby, or a
 sign at each hall's door, names the hall and its condition, so the player
 knows what's ahead before the match starts, and a snow or sandstorm hall

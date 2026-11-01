@@ -127,6 +127,12 @@ export type GameState = {
       acceptedLeague: (typeof circuitStages)[number] | null
       worldProgress: number
       invitationState: number
+      /** The league whose invitation call waits for an answer (.product/specs/leagues.md#invitations). */
+      invitedLeague: (typeof circuitStages)[number] | null
+      /** The invitation countdown's days remaining while it counts down, else 0. */
+      daysRemaining: number
+      /** The league whose result call is owed, and whether the player won it. */
+      resultCall: { league: (typeof circuitStages)[number] | "invalid"; won: boolean } | null
       lineup: {
         characterId: number
         leadSpecies: Species | "unknown"
@@ -552,6 +558,15 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
           acceptedLeague: circuitStages[snapshot.leagueEventAcceptedLeague - 1] ?? null,
           worldProgress: snapshot.leagueEventWorldProgress,
           invitationState: snapshot.leagueEventInvitationState,
+          invitedLeague: circuitStages[snapshot.leagueInvitedLeague - 1] ?? null,
+          daysRemaining: snapshot.leagueDaysRemaining,
+          resultCall:
+            snapshot.leagueResultCall === 0
+              ? null
+              : {
+                  league: circuitStages[(snapshot.leagueResultCall & 3) - 1] ?? "invalid",
+                  won: (snapshot.leagueResultCall & 4) !== 0,
+                },
           lineup: snapshot.leagueEventCharacterIds.map((characterId, index) => ({
             characterId,
             leadSpecies: nameByValue(species, snapshot.leagueEventLeadSpecies[index] ?? 0),

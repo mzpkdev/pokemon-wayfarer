@@ -54,6 +54,7 @@ TEST("League acceptance preserves RNG and rejects a second event without changin
     rng_value_t firstRng, secondRng;
     u32 eventId;
     PrepareLeagueEventTest(8, 0, 80);
+    EXPECT(ForceLeagueInvitationForTesting(LEAGUE_ID_INDIGO));
     firstRng = gRngValue;
     secondRng = gRng2Value;
     EXPECT_EQ(AcceptLeagueEvent(LEAGUE_ID_INDIGO), LEAGUE_ACCEPT_OK);
@@ -80,6 +81,7 @@ TEST("Accepted League teams remain frozen through player growth and full save re
     const struct LeagueSavedTeam *team;
     u32 eventId;
     PrepareLeagueEventTest(8, 0, 80);
+    EXPECT(ForceLeagueInvitationForTesting(LEAGUE_ID_INDIGO));
     EXPECT_EQ(AcceptLeagueEvent(LEAGUE_ID_INDIGO), LEAGUE_ACCEPT_OK);
     eventId = GetAcceptedLeagueEventId();
     EXPECT(GetAcceptedLeagueEventMember(0, &team));
@@ -207,6 +209,7 @@ TEST("Corrupt League state and team fail closed; content changes return acceptan
     u32 eventId, oldVersion;
     u8 oldLevel;
     PrepareLeagueEventTest(8, 0, 80);
+    EXPECT(ForceLeagueInvitationForTesting(LEAGUE_ID_INDIGO));
     EXPECT_EQ(AcceptLeagueEvent(LEAGUE_ID_INDIGO), LEAGUE_ACCEPT_OK);
     state = &gSaveBlock3Ptr->leagueEvent;
     teams = &gPokemonStoragePtr->leagueEventTeams;

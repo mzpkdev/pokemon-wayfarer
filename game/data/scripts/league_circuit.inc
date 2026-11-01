@@ -1,45 +1,48 @@
 #if IS_WAYFARER
 #if WAYFARER_LEAGUE_EVENTS
+@ Indigo and Hoenn lobbies: the staff name the reigning champion, then admit an event accepted by phone or turn
+@ the player away with the immediate reason. Their invitations come only by phone (league_phone.inc).
 LeagueEvent_EventScript_Entrance::
 	lockall
-	specialvar VAR_RESULT, LeagueEvent_GetAcceptedLeague
-	goto_if_eq VAR_RESULT, LEAGUE_ID_NONE, LeagueEvent_EventScript_EntranceNew
+	call LeagueEvent_EventScript_ReigningChampion
 	specialvar VAR_RESULT, LeagueCircuit_IsEligible
 	goto_if_eq VAR_RESULT, FALSE, LeagueEvent_EventScript_EntranceDenied
-	goto LeagueEvent_EventScript_EntranceAccepted
-
-LeagueEvent_EventScript_EntranceNew::
-	specialvar VAR_RESULT, LeagueCircuit_IsEligible
-	goto_if_eq VAR_RESULT, FALSE, LeagueEvent_EventScript_EntranceDenied
-	msgbox LeagueEvent_Text_Offer, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, LeagueEvent_EventScript_EntranceDeclined
-	specialvar VAR_RESULT, LeagueEvent_Accept
-	goto_if_ne VAR_RESULT, LEAGUE_ACCEPT_OK, LeagueEvent_EventScript_EntranceDenied
-	specialvar VAR_RESULT, LeagueEvent_BufferLineup
-	goto_if_eq VAR_RESULT, FALSE, LeagueEvent_EventScript_EntranceDenied
-	msgbox gStringVar4
-	msgbox LeagueEvent_Text_Accepted
-	setvar VAR_TEMP_F, 1
-	releaseall
-	end
-
-LeagueEvent_EventScript_EntranceAccepted::
 	special LeagueEvent_BufferChampion
 	msgbox LeagueEvent_Text_AlreadyAccepted
 	setvar VAR_TEMP_F, 1
 	releaseall
 	end
 
-LeagueEvent_EventScript_EntranceDeclined::
-	msgbox LeagueEvent_Text_Declined
-	releaseall
-	end
+@ The Hoenn door guards' refusal: the reigning champion, then the immediate reason.
+LeagueEvent_EventScript_TurnedAway::
+	lockall
+	call LeagueEvent_EventScript_ReigningChampion
+	goto LeagueEvent_EventScript_EntranceDenied
 
 LeagueEvent_EventScript_EntranceDenied::
+	@ A waiting invitation the player can't take by phone is handed over here instead.
+	specialvar VAR_RESULT, LeaguePhone_ShouldDeliverAtDesk
+	goto_if_eq VAR_RESULT, TRUE, LeaguePhone_EventScript_DeskInvitation
 	special LeagueCircuit_BufferAdmissionDenial
 	msgbox gStringVar4
 	releaseall
 	end
+
+@ VAR_0x8004 is the league's circuit stage, which is its league id.
+LeagueEvent_EventScript_ReigningChampion::
+	specialvar VAR_RESULT, LeaguePhone_BufferReigningChampion
+	goto_if_eq VAR_RESULT, LEAGUE_PHONE_CHAMPION_PLAYER, LeagueEvent_EventScript_ReigningChampionPlayer
+	goto_if_eq VAR_RESULT, LEAGUE_PHONE_CHAMPION_TRAINER, LeagueEvent_EventScript_ReigningChampionTrainer
+	msgbox LeagueEvent_Text_NoReigningChampion
+	return
+
+LeagueEvent_EventScript_ReigningChampionPlayer:
+	msgbox LeagueEvent_Text_PlayerReigns
+	return
+
+LeagueEvent_EventScript_ReigningChampionTrainer:
+	msgbox LeagueEvent_Text_TrainerReigns
+	return
 
 LeagueEvent_EventScript_SetRoomGraphics::
 	special LeagueEvent_SetRoomGraphics
@@ -134,16 +137,22 @@ LeagueEvent_Text_Offer::
 	.string "An event is ready. Accept this\n"
 	.string "LEAGUE challenge?$"
 
-LeagueEvent_Text_Accepted::
-	.string "Event accepted!\p"
-	.string "Five opponents wait inside.$"
-
 LeagueEvent_Text_AlreadyAccepted::
 	.string "Your event is waiting.\p"
 	.string "Final opponent: {STR_VAR_1}.$"
 
-LeagueEvent_Text_Declined::
-	.string "Come back when you're ready.$"
+LeagueEvent_Text_NoReigningChampion::
+	.string "Welcome! The {STR_VAR_1} has\n"
+	.string "no reigning CHAMPION yet.$"
+
+LeagueEvent_Text_PlayerReigns::
+	.string "Welcome back, CHAMPION!\p"
+	.string "You are the reigning CHAMPION\n"
+	.string "of the {STR_VAR_1}.$"
+
+LeagueEvent_Text_TrainerReigns::
+	.string "Welcome! The reigning CHAMPION of\n"
+	.string "the {STR_VAR_1} is {STR_VAR_3}.$"
 
 LeagueEvent_Text_HallsOffer::
 	.string "Want to see each HALL'S\n"
@@ -236,10 +245,6 @@ LeagueCircuit_Text_NeedQualification::
 	.string "A TRAINER RATING of at least 80\n"
 	.string "is needed for LEAGUE events.$"
 
-LeagueCircuit_Text_NeedRegionalBadge::
-	.string "Earn a BADGE in this LEAGUE'S\n"
-	.string "region before entering.$"
-
 LeagueCircuit_Text_NeedMaster::
 	.string "Clear both INDIGO and HOENN\n"
 	.string "before entering the MASTERS.$"
@@ -251,4 +256,31 @@ LeagueCircuit_Text_EventElsewhere::
 LeagueCircuit_Text_NoAcceptedEvent::
 	.string "Accept this LEAGUE event at the\n"
 	.string "entrance before going in.$"
+
+LeagueCircuit_Text_CallPending::
+	.string "A LEAGUE invitation is waiting for\n"
+	.string "you. Please answer it first.$"
+
+LeagueCircuit_Text_NoInvitation::
+	.string "Only invited TRAINERS may enter.\p"
+	.string "The next LEAGUE invitation should\n"
+	.string "come in {STR_VAR_1} days.$"
+
+LeagueCircuit_Text_NoInvitationTomorrow::
+	.string "Only invited TRAINERS may enter.\p"
+	.string "The next LEAGUE invitation should\n"
+	.string "come tomorrow.$"
+
+LeagueCircuit_Text_NotKnown::
+	.string "Only invited TRAINERS may enter.\p"
+	.string "This LEAGUE invites TRAINERS with\n"
+	.string "a BADGE from its region.$"
+
+LeagueCircuit_Text_NoInvitationDue::
+	.string "Only invited TRAINERS may enter.\p"
+	.string "The next LEAGUE invitation should\n"
+	.string "come any time now.$"
 #endif
+
+@ The invitation and result calls (src/league_phone.c).
+	.include "data/scripts/league_phone.inc"

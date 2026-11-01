@@ -113,6 +113,7 @@ STATIC_ASSERT(offsetof(struct E2ETestState, battleFieldStatuses) == 1732, E2ETes
 STATIC_ASSERT(offsetof(struct E2ETestState, battleWeather) == 1744, E2ETestBattleWeatherOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, overworldWeather) == 1746, E2ETestOverworldWeatherOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, battleHazardMasks) == 1747, E2ETestBattleHazardMasksOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, leagueInvitedLeague) == 1749, E2ETestLeagueInvitedLeagueOffset);
 STATIC_ASSERT(sizeof(struct E2ETestAbi) == 16, E2ETestAbiSize);
 
 enum E2ETestInternalStage
@@ -1496,8 +1497,6 @@ static void UpdateState(void)
     gE2ETestState.overworldWeather = 0;
     gE2ETestState.battleHazardMasks[0] = 0;
     gE2ETestState.battleHazardMasks[1] = 0;
-    for (i = 0; i < 3; i++)
-        gE2ETestState.reservedHallDiagnostics[i] = 0;
     if (gMain.inBattle && gBattleStruct != NULL)
     {
         for (i = 0; i < 2; i++)
@@ -1538,6 +1537,9 @@ static void UpdateState(void)
     gE2ETestState.leagueEventWorldProgress = 0;
     gE2ETestState.leagueEventAcceptedLeague = 0;
     gE2ETestState.leagueEventInvitationState = 0;
+    gE2ETestState.leagueInvitedLeague = 0;
+    gE2ETestState.leagueDaysRemaining = 0;
+    gE2ETestState.leagueResultCall = 0;
     for (i = 0; i < E2E_TEST_LEAGUE_LINEUP_SIZE; i++)
     {
         gE2ETestState.leagueEventCharacterIds[i] = 0;
@@ -1610,7 +1612,7 @@ static void UpdateState(void)
         gE2ETestState.leagueClears[i] = HasClearedCircuitStage(stage);
         if (gE2ETestState.leagueClears[i])
             gE2ETestState.leagueStatuses[i] = E2E_TEST_LEAGUE_CLEARED;
-        else if (IsEligibleForCircuitStage(stage))
+        else if (IsCircuitStageAvailable(stage))
             gE2ETestState.leagueStatuses[i] = E2E_TEST_LEAGUE_AVAILABLE;
         if (GetChampionStateForRegion(region))
             gE2ETestState.regionalChampionMask |= 1 << i;
@@ -1650,6 +1652,9 @@ static void UpdateState(void)
         gE2ETestState.leagueEventWorldProgress = GetAcceptedLeagueEventWorldProgress();
         gE2ETestState.leagueEventAcceptedLeague = GetAcceptedLeagueEventLeagueId();
         gE2ETestState.leagueEventInvitationState = gSaveBlock3Ptr->leagueEvent.invitationState;
+        gE2ETestState.leagueInvitedLeague = GetLeagueInvitationLeague();
+        gE2ETestState.leagueDaysRemaining = GetLeagueInvitationDaysRemaining();
+        gE2ETestState.leagueResultCall = GetLeagueResultCall();
         if (gE2ETestState.leagueEventId != 0)
         {
             for (i = 0; i < E2E_TEST_LEAGUE_LINEUP_SIZE; i++)

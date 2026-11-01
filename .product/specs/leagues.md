@@ -1,17 +1,22 @@
 # Leagues
 
 PRD: [Leagues](../prds/leagues.md)
-Implemented: Partial ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)). The [runtime slice](../../game/docs/wayfarer-trainer-runtime.md)
-provides lobby acceptance, selected and saved teams, event resolution, and hall
-conditions. Clock-driven invitations, call rotation, decline resolution, phone
-presentation, reigning-champion lobby text, and the Gallery wall remain deferred.
+Implemented: Partial ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)
+and [PR #172](https://github.com/mzpkdev/pokemon-wayfarer/pull/172)). The [runtime slice](../../game/docs/wayfarer-trainer-runtime.md)
+provides selected and saved teams, event resolution, and hall conditions; Indigo
+and Hoenn invitations by phone on the in-game clock (the countdown, call
+rotation, accepting and declining, decline resolution, result calls) and the
+reigning-champion lobby text. The Sevii Masters stays out of the call rotation
+and keeps its lobby acceptance until [its format](sevii-masters.md) ships; the
+Gallery wall remains deferred.
 Design status: v0 approved: leagues as locations whose **league events** reach
 the player as **invitations** by phone. From player TR 80 a league calls every 7
 in-game days (restarted when each invitation resolves, stopped while an accepted
 event waits); only a league that knows the player calls (Indigo with a Kanto or
-Johto badge, Hoenn with a Hoenn badge, the Sevii Masters once the player is a
-[Master](sevii-masters.md#master)), round-robin by a call counter: the eligible
-league that called least recently, ties to the most badges, then Indigo.
+Johto badge, Hoenn with a Hoenn badge; the Sevii Masters, which will call once
+the player is a [Master](sevii-masters.md#master), stays out of the rotation
+until its format ships), round-robin by a call counter: the eligible league
+that called least recently, ties to the most badges, then Indigo.
 Accepting freezes a lineup that waits for the player, with one attempt;
 declining runs the event without them. A league score per eligible trainer
 (Trainer Rating (TR) scaled by willingness, from travel cost and fatigue),
@@ -264,8 +269,14 @@ badges and lifetime wins then. A league calls only where the player is known
 - **Indigo** is eligible once the player holds at least one Kanto or Johto
   badge;
 - **Hoenn** is eligible once the player holds at least one Hoenn badge; and
-- the **Sevii Masters** is eligible once the player is a
-  [Master](sevii-masters.md#master).
+- the **Sevii Masters** will be eligible once the player is a
+  [Master](sevii-masters.md#master). **Until its tag format ships it is out
+  of the rotation**: it never calls, and is never chosen, so in v0 only
+  Indigo and Hoenn call. Meanwhile a Master accepts a Masters event at its
+  lobby, as before invitations: only while no other invitation or accepted
+  event waits, and that acceptance takes the next call number as a call
+  would (so the call-number rules below hold unchanged), stops the countdown,
+  and restarts it when the event ends.
 
 The TR 80 gate still applies to every call. A league's **badges** are the
 player's badges from its regions: Indigo counts Kanto and Johto badges, Hoenn
@@ -279,9 +290,9 @@ number**. Among the eligible leagues, the last call numbers decide,
 1. The eligible league whose last call has the **lowest number** calls. A
    league that has never called has no number and counts as lowest.
 2. A tie (only possible between leagues that have never called) goes to the
-   league with the **most badges**. The Masters is never in a tie: it
-   becomes eligible only after lifetime wins at Indigo and Hoenn, so both
-   have called by then.
+   league with the **most badges**. The Masters, once it calls, is never in a
+   tie: it becomes eligible only after lifetime wins at Indigo and Hoenn, so
+   both have called by then.
 3. A remaining tie (Indigo and Hoenn with equal badges) goes to **Indigo**.
 
 So the very first call comes from the eligible league with the most badges,
@@ -289,8 +300,8 @@ and each eligible league then calls in turn. When only one league is
 eligible, it calls every time, repeating as often as needed; a league that
 becomes eligible later (a first badge in its regions, or the Masters after
 the second of the two regional first wins) has never called, so it calls
-next. Badges from any region count
-toward the gate; which regions they come from decides who may call and breaks
+next (the Masters' turn waits for its format). Badges from any
+region count toward the gate; which regions they come from decides who may call and breaks
 ties.
 
 **No eligible league.** If the player qualifies while no league knows them
@@ -307,6 +318,10 @@ to arrive at that league. The player has **one attempt**: a loss, or leaving
 midway, ends the event. The player cannot enter a league that has no
 accepted event of theirs, and the countdown stays stopped until the event
 ends.
+
+A **Masters** event (until the Masters calls) is accepted at its lobby
+instead: the same selection, frozen lineup, and one attempt, with no
+invitation before it.
 
 ### Decline
 
@@ -444,7 +459,13 @@ Add:
 - per notable trainer, the two [reign flags](#reign-records) (has reigned at
   Indigo, has reigned at Hoenn); and
 - the **active run**, only while the player is fighting their accepted event:
-  the defeated prefix.
+  the defeated prefix; and
+- the **owed result call**: none, or the league (Indigo or Hoenn) whose
+  accepted event ended most recently and whether the player won it, until
+  that league's result call plays ([Presentation](#presentation)); none when
+  the event ended while the player had no phone. A Masters
+  event's end leaves it as it is, and declining at that league drops it (the
+  decline's own call names the new champion).
 
 The Sevii Masters adds its own fields to this state ([Sevii
 Masters](sevii-masters.md#saved-state)), covered by the same content versions
@@ -454,8 +475,8 @@ There is no seed, rotation history, or lineup history beyond the most recent
 resolved lineup, the reign flags, and the Masters' Gallery counts, and no stored
 day other than the countdown's last counted day. At most one accepted event and
 one active run exist. New Game saves the not-qualified state, a call counter of
-0, no last call number, reigning champion, or most recent resolved lineup, every
-reign flag clear, and the build's content versions. Save an explicit schema
+0, no last call number, reigning champion, most recent resolved lineup, or owed
+result call, every reign flag clear, and the build's content versions. Save an explicit schema
 discriminator for this layout; prerelease saves need no migration.
 
 ## Lifecycle
@@ -468,11 +489,23 @@ current day as the last counted day.
 
 When the countdown is due, choose the calling league
 ([Which league calls](#which-league-calls)); with no eligible league, nothing
-happens until a later check. Otherwise, in one transaction, save the invited
+happens until a later check. Otherwise, in one transaction, set the invited
 state with that league, advance the call counter, and give that league the
-new number as its last call number. The phone rings at the next moment the
+new number as its last call number. These reach flash with the next save
+(the answer saves); a crash before then places the call again by the same
+rule, from the badges held then. A played result call is
+likewise cleared in memory, so loading an older save may play it again. The phone rings at the next moment the
 player can take a call (in the overworld, with no script, battle, or ceremony
-running); an invitation not yet answered rings again after a reload.
+running, with the player standing still between steps, once they have the
+phone, and where they could save: not in a
+link or Union Room session, the Safari Zone, the Bug-Catching Contest, a
+Battle Pike, Battle Pyramid, Trainer Hill or Sevii Trainer Tower challenge,
+or the multi-battle
+partner room, since answering saves); an invitation not yet answered rings
+again after a reload. The countdown and the call are checked whenever the
+field has control, which covers each day advance, each player TR change, and
+a load. A call whose answer fails rings again on the next map or after a
+reload, never in a loop on the same map.
 
 ### Answering
 
@@ -490,8 +523,12 @@ The call asks the player to accept or decline; there is no "later".
   the lineup as the most recent resolved lineup, and restart the countdown
   (7 days remaining from today).
 
-A failure leaves the invited state intact, so the call rings again; a crash
-exposes either the invited state or the complete result. Answering creates no
+Both answers are saved before the call reveals their result. A decline's
+life events for the [overworld simulation](notable-world-simulation.md)
+follow that save and reach flash with the next one, so a crash in between
+keeps the result and loses only those events. A failure
+leaves the invited state intact, so the call rings again; a crash exposes
+either the invited state or the complete result. Answering creates no
 battle, reward, or record.
 
 ### Entering the accepted event
@@ -511,8 +548,8 @@ event, in one transaction: the frozen lineup's strongest becomes the league's
 reigning champion (with their reign flag at Indigo or Hoenn; the Masters follows
 [its title rules](sevii-masters.md#title)); the event's lineup becomes the most
 recent resolved lineup, the run and the accepted event are released, the
-countdown restarts (7 days remaining from today), and nothing is recorded or
-rewarded.
+countdown restarts (7 days remaining from today), the league's result call
+is owed (Indigo or Hoenn), and nothing is recorded or rewarded.
 
 ### Win
 
@@ -525,8 +562,8 @@ After five victories, one transaction atomically:
   never changes, and queues Today's ceremony; a repeat win instead gives its
   [repeat-win reward](#first-and-repeat-wins);
 - saves the event's lineup as the most recent resolved lineup, releases the run
-  and the accepted event, and restarts the countdown (7 days remaining from
-  today).
+  and the accepted event, restarts the countdown (7 days remaining from
+  today), and owes the league's result call (Indigo or Hoenn).
 
 Stale or duplicate callbacks are rejected. Individual victories, losses, and
 Red add no TR.
@@ -648,8 +685,12 @@ never generates a lineup or places a call.
   days remaining (0 to 7) and a last counted day; invited and accepted name a
   league whose last call number equals the call counter (the league that
   called most recently; the Masters only once the player is a
-  [Master](sevii-masters.md#master)); badges are not rechecked, since badges
-  never decrease.
+  [Master](sevii-masters.md#master)); an invitation names Indigo or Hoenn,
+  since the Masters never calls until its format ships; badges are not
+  rechecked, since badges never decrease.
+- An owed result call names Indigo or Hoenn and the outcome, and agrees with
+  that league's reigning champion: the player after a win, a trainer after a
+  loss or leaving.
 - A stored day is never a reason to reject a save. A last counted day ahead
   of the day counter is clamped to the day counter,
   which neither advances nor resets the countdown.
@@ -676,12 +717,16 @@ never generates a lineup or places a call.
 On every load, first run the Masters' [mid-tag
 recovery](sevii-masters.md#load-validation). Then, before the checks above,
 drop the reign flags of characters no longer in the registry, keeping the
-rest, and clear a reigning champion who is no longer in the registry; this
+rest, and clear a reigning champion who is no longer in the registry (and an
+owed loss call that would name them); this
 runs whatever the versions say, so a save that crossed several content builds
 still loads. If any saved league content version differs from the build's,
 also, still before those checks, turn an accepted event back into an
 unanswered invitation from the same league (dropping its lineup and any run),
-so the call rings again; clear the most recent resolved lineup, so the next
+so the call rings again (an accepted Masters event, which has no call, goes
+back to a due countdown instead, so the next Indigo or Hoenn call comes at
+once; once that resolves, the player may accept a Masters event at its lobby
+again); clear the most recent resolved lineup, so the next
 selection has no fatigue; clear a reigning champion who is no longer an
 eligible character; then rewrite the saved content versions as the build's.
 The Masters' own pruning and checks run at the same points. This is the
@@ -696,21 +741,39 @@ load or synthesize results.
 ## Presentation
 
 Invitations and results arrive by **phone call**, on the Pokégear/PokéNav
-phone in the HNS/Emerald style; the exact phone UI is implementation. The
-invitation call names the league and asks the player to accept or decline.
+phone in the HNS/Emerald style; the exact phone UI is implementation. Each
+league's **front desk** calls: Indigo Plateau's for the Indigo League, Ever
+Grande City's for the Hoenn League, with the league's name on the call. The
+invitation call names the league and its place and asks the player to accept
+or decline; the answer is a yes/no prompt after the call, with no "later",
+and a decline is confirmed once more, since it can't be taken back.
 Accepting names the lineup and its battle order (moves and items hidden by
-default) and says the event waits for the player; declining says the event
-goes ahead without them and names its reigning champion. A win or a loss is
-followed by the league's call or lobby word on the result and the title.
-Before an answer, lineups are unavailable and inspection generates nothing.
+default) and says the event waits for the player at that place; declining
+says the event goes ahead without them and names its reigning champion. A
+win or a loss is followed by the league's **result call**, once the field
+settles after the ceremony or blackout: a win congratulates the player as
+the league's champion, a loss or leaving names the reigning champion, and
+both say the next invitation will come. Before an answer, lineups are
+unavailable and inspection generates nothing.
 
-The Masters' calls, its caretaker, asking a partner by phone, and its
-Gallery are presented as [Sevii Masters](sevii-masters.md#presentation)
-describes.
+The Masters' calls (once it calls), its caretaker, asking a partner by
+phone, and its Gallery are presented as [Sevii
+Masters](sevii-masters.md#presentation) describes.
 
-Each lobby names the league's reigning champion (or none yet). Without an
-accepted event there, staff turn the player away with the immediate reason
-([Entering the accepted event](#entering-the-accepted-event)).
+Each lobby names the league's reigning champion (or none yet; at the
+Masters, its caretaker does). Without an accepted event there, Indigo's and
+Hoenn's staff turn the player away with the immediate reason
+([Entering the accepted event](#entering-the-accepted-event)): below TR 80,
+the TR needed; an unanswered call; an event accepted at another league;
+that this league invites only trainers with a badge from its regions (when
+it doesn't know the player); or that only invited trainers may enter, and how
+many days until the next call is due. Lobby acceptance is retired for them; the Masters' caretaker still
+offers its event to a Master (with the same refusals). A player who has no
+phone yet, or whose call is held after a failed answer, is handed the waiting
+invitation (from either league) by Indigo's or Hoenn's lobby staff, or the
+Masters' caretaker, instead, and answers it there the same way. Answers save
+with the map view, as the start menu's save does. A player without the phone
+is owed no result call: the lobby names the reigning champion instead.
 
 Graphics, portraits, dialogue, battle metadata, and names follow the selected
 character even in historical rooms; a displaced fixed resident must not remain
@@ -860,10 +923,10 @@ evidence (not yet run):
    world progress.
 5. **Which league calls.** Known-there eligibility: with no badge in a league's
    regions that league never calls (Indigo counting Kanto and Johto), and the
-   Masters never calls before lifetime wins at both Indigo and Hoenn: not after
-   wins at only one, in either order. Among the eligible leagues the least
+   Masters never calls in v0, even for a Master (until its format ships, it
+   keeps lobby acceptance, refused while a call waits). Among the eligible leagues the least
    recently called calls, a never-called league first: with three eligible
-   leagues they call in a fixed rotation. Ties go to the most badges, then to
+   leagues (once the Masters calls) they call in a fixed rotation. Ties go to the most badges, then to
    Indigo; the very first call comes from the most-badges eligible league. A
    single eligible league calls repeatedly; a league that becomes eligible later
    calls next. With no eligible league, a due call waits and is checked again
@@ -905,7 +968,10 @@ evidence (not yet run):
     the saved event lineup. Names, sprites, portraits, text, music, AI, money,
     XP, and parties match the lineup's matches, including a Gym Leader in
     match 5. The phone rings only when the player can take a call, and rings
-    again after a reload until answered; lobbies name the reigning champion.
+    again after a reload until answered; a result call follows each win, loss,
+    or leaving at Indigo and Hoenn, after the ceremony; lobbies name the
+    reigning champion, and Indigo's and Hoenn's turn away a player without an
+    accepted event there with the immediate reason.
 12. **Halls.** Every match is fought in its hall and starts with that hall's
     condition on both sides: snow and sandstorm last until a move or ability
     replaces them; rooms and terrains end after 5 turns; Tailwind and Sea
@@ -926,10 +992,12 @@ evidence (not yet run):
 13. **Load validation.** Corrupt invitation state, call numbers, accepted
     events, runs, lineups, most recent resolved lineups, reign flags, schema,
     or callbacks are rejected without regenerating, calling, advancing, or
-    rewarding; a Masters invitation before the player is a Master is
-    rejected, and so is the player reigning at a league without its lifetime
-    win. A content version change turns an accepted event back into an
-    unanswered invitation, clears the most recent resolved lineup, drops the
+    rewarding; a Masters invitation is rejected (while the Masters stays out
+    of the rotation, even for a Master), and so is the player reigning at a
+    league without its lifetime win, and an owed result call that disagrees
+    with the reigning champion. A content version change turns an accepted
+    Indigo or Hoenn event back into an unanswered invitation (an accepted
+    Masters event into a due countdown), clears the most recent resolved lineup, drops the
     reign flags of removed characters, and rewrites the saved content
     versions. A double update loads too: a save that went through one content
     change and was saved again before the next event resolved, then loaded

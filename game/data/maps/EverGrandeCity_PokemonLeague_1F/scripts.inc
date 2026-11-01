@@ -65,7 +65,11 @@ EverGrandeCity_PokemonLeague_1F_EventScript_DoorGuard::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
 	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+#if WAYFARER_LEAGUE_EVENTS
+	goto_if_eq VAR_RESULT, FALSE, LeagueEvent_EventScript_TurnedAway
+#else
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_EntryDenied
+#endif
 #endif
 	lockall
 	goto_if_set FLAG_ENTERED_ELITE_FOUR, EverGrandeCity_PokemonLeague_1F_EventScript_GoForth

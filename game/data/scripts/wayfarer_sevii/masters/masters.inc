@@ -3,7 +3,7 @@
 
 WayfarerSevii_Masters_Room1OnTransition::
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
-	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+	specialvar VAR_RESULT, LeagueCircuit_IsKnownThere
 	call_if_eq VAR_RESULT, TRUE, WayfarerSevii_Masters_OpenBox
 	end
 
@@ -17,6 +17,9 @@ WayfarerSevii_Masters_OldWoman::
 	lock
 	faceplayer
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_ReigningChampion
+#endif
 	specialvar VAR_RESULT, LeagueCircuit_IsEligible
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Masters_Denied
 #if WAYFARER_LEAGUE_EVENTS
@@ -47,6 +50,11 @@ WayfarerSevii_Masters_Proceed:
 	end
 
 WayfarerSevii_Masters_Denied::
+#if WAYFARER_LEAGUE_EVENTS
+	@ The caretaker hands over a waiting Indigo or Hoenn invitation the player can't take by phone.
+	specialvar VAR_RESULT, LeaguePhone_ShouldDeliverAtDesk
+	goto_if_eq VAR_RESULT, TRUE, LeaguePhone_EventScript_DeskInvitation
+#endif
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
 	special LeagueCircuit_BufferAdmissionDenial
 	msgbox gStringVar4
@@ -60,7 +68,7 @@ WayfarerSevii_Masters_Declined::
 
 WayfarerSevii_Masters_Box::
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
-	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+	specialvar VAR_RESULT, LeagueCircuit_IsKnownThere
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Masters_BoxClosed
 #if WAYFARER_LEAGUE_EVENTS
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
