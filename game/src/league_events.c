@@ -492,7 +492,7 @@ enum LeagueAcceptResult AcceptLeagueEvent(enum LeagueId league)
     Free(prepared);
     gRngValue = savedRng;
     gRng2Value = savedRng2;
-    if (TrySavingData(SAVE_NORMAL) != SAVE_STATUS_OK)
+    if (SaveLeagueProgressFromField() != SAVE_STATUS_OK)
     {
         *state = previous;
         memset(&gPokemonStoragePtr->leagueEventTeams, 0, sizeof(gPokemonStoragePtr->leagueEventTeams));
@@ -765,7 +765,7 @@ bool32 DeclineLeagueInvitation(void)
         state->resultCall = 0;
     StartCountdown(state);
     SealState();
-    if (TrySavingData(SAVE_NORMAL) != SAVE_STATUS_OK)
+    if (SaveLeagueProgressFromField() != SAVE_STATUS_OK)
     {
         *state = previous;
         return FALSE;

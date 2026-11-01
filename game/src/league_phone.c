@@ -253,6 +253,9 @@ u16 LeaguePhone_BufferResult(void)
 void LeaguePhone_FinishResult(void)
 {
     ClearLeagueResultCall();
+    // A result that couldn't be cleared (a state failing its checksum) must not ring again every frame.
+    if (GetLeagueResultCall() != 0)
+        HoldRing();
 }
 
 // Special: the lobby's word on the reigning champion of the league in VAR_0x8004 (a circuit stage, which is

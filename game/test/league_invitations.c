@@ -582,6 +582,23 @@ TEST("A first Masters or Indigo win holds no call once the run has ended")
     FinishInvitationTest();
 }
 
+TEST("A result call that can't be cleared holds the ring instead of ringing every frame")
+{
+    PrepareInvitationTest(8, 0, 0, 80, 3);
+    FlagSet(FLAG_HAS_MATCH_CALL);
+    EXPECT(Test_AdmitCircuitRun(CIRCUIT_STAGE_INDIGO));
+    EXPECT(ResolveLeagueEvent(LEAGUE_EVENT_LOST, GetAcceptedLeagueEventId()));
+    EndLeagueRun();
+    AcknowledgeLeagueProgressSave();
+    EXPECT(Rings());
+    State()->daysRemaining = 2; // corrupted, not resealed
+    LeaguePhone_FinishResult();
+    EXPECT_EQ(GetLeagueResultCall(), LEAGUE_ID_INDIGO);
+    EXPECT(!Rings());
+    FlagClear(FLAG_HAS_MATCH_CALL);
+    FinishInvitationTest();
+}
+
 TEST("A failed save leaves the invitation, its state and the RNG as they were, for accept and decline")
 {
     struct LeagueEventState before;

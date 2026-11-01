@@ -70,6 +70,7 @@ bool32 GetLeagueRunBattleRating(u32 region, u32 encounterIndex, u32 *rating);
 void EndLeagueRun(void);
 void ResetLeagueCircuitTransientState(void);
 bool8 SavePendingLeagueProgress(void);
+u8 SaveLeagueProgressFromField(void);
 void AcknowledgeLeagueProgressSave(void);
 void LeagueRunHandleWarp(const struct WarpData *source, struct WarpData *destination);
 void LeagueRunValidateSavedLocation(void);

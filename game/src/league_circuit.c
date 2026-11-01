@@ -1,6 +1,8 @@
 #include "global.h"
 #include "event_data.h"
+#include "fieldmap.h"
 #include "heal_location.h"
+#include "new_game.h"
 #include "load_save.h"
 #include "overworld.h"
 #include "config/league_circuit.h"
@@ -190,6 +192,27 @@ void AcknowledgeLeagueProgressSave(void)
     sLeagueSavePending = FALSE;
 }
 
+// A league save made from the field (an answered call, a settled league step). Like the start menu's save, it
+// records the map view that Continue restores around the player, and a first save over another game's file
+// replaces that file.
+u8 SaveLeagueProgressFromField(void)
+{
+    u8 status;
+
+    SaveMapView();
+    if (gDifferentSaveFile)
+    {
+        status = TrySavingData(SAVE_OVERWRITE_DIFFERENT_FILE);
+        if (status == SAVE_STATUS_OK)
+            gDifferentSaveFile = FALSE;
+    }
+    else
+    {
+        status = TrySavingData(SAVE_NORMAL);
+    }
+    return status;
+}
+
 bool8 SavePendingLeagueProgress(void)
 {
 #if WAYFARER_LEAGUE_EVENTS
@@ -200,7 +223,7 @@ bool8 SavePendingLeagueProgress(void)
         // On a flash failure the normal failure screen owns the retry, using
         // this same already-resolved state rather than applying the result again.
         sLeagueSavePending = FALSE;
-        TrySavingData(SAVE_NORMAL);
+        SaveLeagueProgressFromField();
         return TRUE;
     }
 #endif

@@ -276,11 +276,13 @@ class CircuitScriptTests(unittest.TestCase):
 
     def test_field_calls_never_swallow_a_step_script(self):
         # The number handover and league calls start scripts from ProcessPlayerFieldInput before the step
-        # block; on a frame with a finished step they would skip that step's warp or trigger script.
+        # block; started mid-step, their lock would skip that step's warp or trigger script. They start only
+        # while the player stands still.
         field = (GAME / "src/field_control_avatar.c").read_text()
         for call in ("NotableFriendship_TryStartPendingNumberScript()", "LeaguePhone_TryStartCall()"):
-            self.assertIn(f"if (!input->tookStep && {call})", field)
+            self.assertIn(f"if (CanStartFieldCall(input) && {call})", field)
             self.assertLess(field.index(call), field.index("if (input->tookStep)"))
+        self.assertIn("gPlayerAvatar.tileTransitionState == T_NOT_MOVING", field)
 
     def test_corridor_bypass_leaves_story_unwritten(self):
         gate = script("ReceptionGate_hns").split("ReceptionGate_Trigger::\n", 1)[1].split("#endif", 1)[0]

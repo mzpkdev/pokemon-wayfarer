@@ -50,6 +50,11 @@ WayfarerSevii_Masters_Proceed:
 	end
 
 WayfarerSevii_Masters_Denied::
+#if WAYFARER_LEAGUE_EVENTS
+	@ The caretaker hands over a waiting Indigo or Hoenn invitation the player can't take by phone.
+	specialvar VAR_RESULT, LeaguePhone_ShouldDeliverAtDesk
+	goto_if_eq VAR_RESULT, TRUE, LeaguePhone_EventScript_DeskInvitation
+#endif
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
 	special LeagueCircuit_BufferAdmissionDenial
 	msgbox gStringVar4

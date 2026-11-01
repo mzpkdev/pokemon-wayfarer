@@ -495,9 +495,11 @@ new number as its last call number. These reach flash with the next save
 rule, from the badges held then. A played result call is
 likewise cleared in memory, so loading an older save may play it again. The phone rings at the next moment the
 player can take a call (in the overworld, with no script, battle, or ceremony
-running, once they have the phone, and where they could save: not in a
+running, with the player standing still between steps, once they have the
+phone, and where they could save: not in a
 link or Union Room session, the Safari Zone, the Bug-Catching Contest, a
-Battle Pike, Battle Pyramid or Trainer Hill challenge, or the multi-battle
+Battle Pike, Battle Pyramid, Trainer Hill or Sevii Trainer Tower challenge,
+or the multi-battle
 partner room, since answering saves); an invitation not yet answered rings
 again after a reload. The countdown and the call are checked whenever the
 field has control, which covers each day advance, each player TR change, and
@@ -766,8 +768,9 @@ that only invited trainers may enter, and how many days until the next call
 is due. Lobby acceptance is retired for them; the Masters' caretaker still
 offers its event to a Master (with the same refusals). A player who has no
 phone yet, or whose call is held after a failed answer, is handed the waiting
-invitation (from either league) by Indigo's or Hoenn's lobby staff instead,
-and answers it there the same way.
+invitation (from either league) by Indigo's or Hoenn's lobby staff, or the
+Masters' caretaker, instead, and answers it there the same way. Answers save
+as the start menu does, map view included.
 
 Graphics, portraits, dialogue, battle metadata, and names follow the selected
 character even in historical rooms; a displaced fixed resident must not remain
@@ -986,10 +989,12 @@ evidence (not yet run):
 13. **Load validation.** Corrupt invitation state, call numbers, accepted
     events, runs, lineups, most recent resolved lineups, reign flags, schema,
     or callbacks are rejected without regenerating, calling, advancing, or
-    rewarding; a Masters invitation before the player is a Master is
-    rejected, and so is the player reigning at a league without its lifetime
-    win, and an owed result call that disagrees with the reigning champion. A content version change turns an accepted event back into an
-    unanswered invitation, clears the most recent resolved lineup, drops the
+    rewarding; a Masters invitation is rejected (while the Masters stays out
+    of the rotation, even for a Master), and so is the player reigning at a
+    league without its lifetime win, and an owed result call that disagrees
+    with the reigning champion. A content version change turns an accepted
+    Indigo or Hoenn event back into an unanswered invitation (an accepted
+    Masters event into a due countdown), clears the most recent resolved lineup, drops the
     reign flags of removed characters, and rewrites the saved content
     versions. A double update loads too: a save that went through one content
     change and was saved again before the next event resolved, then loaded
