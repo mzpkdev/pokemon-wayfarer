@@ -11,12 +11,26 @@ const billPosition = { map: "route25-bills-house", x: 5, y: 6, facing: "left" } 
 // saved receipt, scene, and Trainer victory has already been claimed.
 // One-time content only: the ship's other item spots are daily world slots and never set their flags.
 const allAnneContentFlags = [
-  "ssAnneItemTm31", "ssAnneItemTm44", "ssAnneCaptainRewarded",
-  "ssAnneBlueMet", "ssAnneTrainerTyler", "ssAnneTrainerAnn",
-  "ssAnneTrainerArthur", "ssAnneTrainerThomas", "ssAnneTrainerDale", "ssAnneTrainerBrooks",
-  "ssAnneTrainerLamar", "ssAnneTrainerDawn", "ssAnneTrainerBarny", "ssAnneTrainerPhillip",
-  "ssAnneTrainerHuey", "ssAnneTrainerDylan", "ssAnneTrainerLeonard", "ssAnneTrainerDuncan",
-  "ssAnneTrainerEdmond", "ssAnneTrainerTrevor",
+  "ssAnneItemTm31",
+  "ssAnneItemTm44",
+  "ssAnneCaptainRewarded",
+  "ssAnneBlueMet",
+  "ssAnneTrainerTyler",
+  "ssAnneTrainerAnn",
+  "ssAnneTrainerArthur",
+  "ssAnneTrainerThomas",
+  "ssAnneTrainerDale",
+  "ssAnneTrainerBrooks",
+  "ssAnneTrainerLamar",
+  "ssAnneTrainerDawn",
+  "ssAnneTrainerBarny",
+  "ssAnneTrainerPhillip",
+  "ssAnneTrainerHuey",
+  "ssAnneTrainerDylan",
+  "ssAnneTrainerLeonard",
+  "ssAnneTrainerDuncan",
+  "ssAnneTrainerEdmond",
+  "ssAnneTrainerTrevor",
 ] as const
 
 const settleField = async (game: GameSession, description: string): Promise<void> => {
@@ -42,7 +56,9 @@ const settleField = async (game: GameSession, description: string): Promise<void
       await game.controls.press("a")
     else await game.wait.frames(12)
   }
-  throw new Error(`${description} did not release the field: ${JSON.stringify(await game.state.read())}`)
+  throw new Error(
+    `${description} did not release the field: ${JSON.stringify(await game.state.read())}`,
+  )
 }
 
 const waitForMap = async (game: GameSession, map: GameMap, description: string): Promise<void> => {
@@ -54,6 +70,10 @@ const waitForMap = async (game: GameSession, map: GameMap, description: string):
   throw new Error(`${description}: ${JSON.stringify(await game.state.read())}`)
 }
 
+// Rows of the Vermilion sailor's menu: the ship in port (when one is in service), SEVII ISLANDS, BOARD S.S. ANNE
+// (only before the captain's reward) and CANCEL. These tests start from the Johto start before its maiden voyage
+// ends, so the Aqua is out of service and there is no ship row: SEVII ISLANDS is row 0, the adventure's entry row 1
+// and CANCEL row 2.
 const chooseVermilionTopLevel = async (game: GameSession, result: 0 | 1 | 2 | 3) => {
   await game.player.interact()
   await game.wait.frames(30)
@@ -81,10 +101,10 @@ const arrangeAtDock = async (game: GameSession, ticket: boolean) => {
 }
 
 const boardAnne = async (game: GameSession) => {
-  await chooseVermilionTopLevel(game, 2)
+  await chooseVermilionTopLevel(game, 1)
   await game.wait.frames(30)
   await game.controls.press("a")
-  await waitForMap(game, "ss-anne-1f-corridor", "S.S. Anne did not board from top-level result 2")
+  await waitForMap(game, "ss-anne-1f-corridor", "S.S. Anne did not board from the adventure's row")
 }
 
 const rescueBill = async (game: GameSession, description: string) => {
@@ -130,26 +150,29 @@ describe.sequential("Wayfarer S.S. Anne persistent adventure", () => {
     return () => game.close()
   })
 
-  it("keeps regular Aqua unavailable, then handles no-ticket, Cancel, and B without travel state", async () => {
+  it("keeps the Aqua out of the menu before the maiden voyage ends, then handles no-ticket, Cancel, and B without travel state", async () => {
     await arrangeAtDock(game, true)
-    const beforeOtherDestinations = await dockTravelState(game)
-    await chooseVermilionTopLevel(game, 1)
-    await settleField(game, "ineligible Other Destinations refusal")
+    const beforeSevii = await dockTravelState(game)
+    // No ship row: row 0 is SEVII ISLANDS, and its menu cancels back to the dock.
+    await chooseVermilionTopLevel(game, 0)
+    await game.wait.frames(30)
+    await game.controls.press("b")
+    await settleField(game, "Sevii menu cancellation")
     await expect(game.state.read()).resolves.toMatchObject({
       map: { name: vermilionDock.map },
       player: { x: vermilionDock.x, y: vermilionDock.y },
     })
-    expect(await dockTravelState(game)).toEqual(beforeOtherDestinations)
+    expect(await dockTravelState(game)).toEqual(beforeSevii)
 
     await arrangeAtDock(game, false)
     const beforeNoTicket = await dockTravelState(game)
-    await chooseVermilionTopLevel(game, 2)
+    await chooseVermilionTopLevel(game, 1)
     await settleField(game, "S.S. Anne ticket refusal")
     expect(await dockTravelState(game)).toEqual(beforeNoTicket)
 
     await arrangeAtDock(game, true)
     const beforeCancel = await dockTravelState(game)
-    await chooseVermilionTopLevel(game, 3)
+    await chooseVermilionTopLevel(game, 2)
     await settleField(game, "top-level Cancel")
     expect(await dockTravelState(game)).toEqual(beforeCancel)
 
@@ -209,7 +232,7 @@ describe.sequential("Wayfarer S.S. Anne persistent adventure", () => {
     await expect(game.state.read()).resolves.toMatchObject({ player: { x: 19, y: 2 } })
   })
 
-  it("keeps the completed captain accessible while any independent Anne content remains", async () => {
+  it("boards the rewarded Anne through the ferry by night, with the adventure's row gone", async () => {
     await game.arrange({
       checkpoint: "new-bark-after-intro",
       player: { facing: "down", position: vermilionDock },
@@ -217,12 +240,23 @@ describe.sequential("Wayfarer S.S. Anne persistent adventure", () => {
       bag: { items: { ssTicket: 1 } },
       determinism: { textSpeed: "instant" },
     })
+    // Vermilion's night ship is the Anne (the Aqua is out of service for this Johto start). Her row comes first.
+    await game.clock.setTimeOfDay({ hour: 20, minute: 30, second: 0 })
+    await game.wait.frames(60)
 
-    await boardAnne(game)
+    await game.player.interact()
+    await game.wait.frames(30)
+    await game.controls.press("a")
+    await waitForMap(
+      game,
+      "ss-anne-1f-corridor",
+      "S.S. Anne did not board through the ferry at night",
+    )
+    await expect(game.state.read()).resolves.toMatchObject({ player: { x: 19, y: 2 } })
     await expect(game.story.flag("ssAnneCaptainRewarded")).resolves.toBe(true)
   })
 
-  it("refuses result 2 after every one-time Anne receipt is complete without touching transport state", async () => {
+  it("offers no adventure row after every one-time Anne receipt is complete, without touching transport state", async () => {
     await game.arrange({
       checkpoint: "new-bark-after-intro",
       player: { facing: "down", position: vermilionDock },
@@ -233,8 +267,9 @@ describe.sequential("Wayfarer S.S. Anne persistent adventure", () => {
     for (const flag of allAnneContentFlags) await game.story.setFlag(flag, true)
     const before = await dockTravelState(game)
 
-    await chooseVermilionTopLevel(game, 2)
-    await settleField(game, "completed Anne refusal")
+    // The captain's reward is among the receipts, so the menu is SEVII ISLANDS and CANCEL: row 1 cancels.
+    await chooseVermilionTopLevel(game, 1)
+    await settleField(game, "completed Anne menu cancellation")
 
     await expect(game.state.read()).resolves.toMatchObject({
       map: { name: vermilionDock.map },
