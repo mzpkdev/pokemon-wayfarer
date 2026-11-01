@@ -462,7 +462,8 @@ Add:
   the defeated prefix; and
 - the **owed result call**: none, or the league (Indigo or Hoenn) whose
   accepted event ended most recently and whether the player won it, until
-  that league's result call plays ([Presentation](#presentation)). A Masters
+  that league's result call plays ([Presentation](#presentation)); none when
+  the event ended while the player had no phone. A Masters
   event's end leaves it as it is, and declining at that league drops it (the
   decline's own call names the new champion).
 
@@ -763,14 +764,16 @@ Each lobby names the league's reigning champion (or none yet; at the
 Masters, its caretaker does). Without an accepted event there, Indigo's and
 Hoenn's staff turn the player away with the immediate reason
 ([Entering the accepted event](#entering-the-accepted-event)): below TR 80,
-the TR needed; an unanswered call; an event accepted at another league; or
-that only invited trainers may enter, and how many days until the next call
-is due. Lobby acceptance is retired for them; the Masters' caretaker still
+the TR needed; an unanswered call; an event accepted at another league;
+that this league invites only trainers with a badge from its regions (when
+it doesn't know the player); or that only invited trainers may enter, and how
+many days until the next call is due. Lobby acceptance is retired for them; the Masters' caretaker still
 offers its event to a Master (with the same refusals). A player who has no
 phone yet, or whose call is held after a failed answer, is handed the waiting
 invitation (from either league) by Indigo's or Hoenn's lobby staff, or the
 Masters' caretaker, instead, and answers it there the same way. Answers save
-as the start menu does, map view included.
+with the map view, as the start menu's save does. A player without the phone
+is owed no result call: the lobby names the reigning champion instead.
 
 Graphics, portraits, dialogue, battle metadata, and names follow the selected
 character even in historical rooms; a displaced fixed resident must not remain

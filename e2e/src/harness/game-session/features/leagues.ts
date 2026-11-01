@@ -81,9 +81,11 @@ export const createLeaguesApi = (
       ) {
         // A prompt's yes/no box opens by itself after its text: pressing now would answer it blind.
         await runtime.advance(4)
-      } else if (busy) {
+      } else if (busy || current.battle.active) {
+        // B never talks to anyone on the field, but a battle (such as a lost match before its blackout
+        // and result call) only moves on with A.
         await runtime.advance(20)
-        await controls.press("b")
+        await controls.press(current.battle.active ? "a" : "b")
       } else await runtime.advance(10)
     }
     throw new Error(`The league call did not finish: ${JSON.stringify(await state.read())}`)

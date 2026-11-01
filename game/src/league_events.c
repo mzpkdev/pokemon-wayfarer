@@ -14,6 +14,7 @@
 #include "config/league_circuit.h"
 #include "wayfarer_world.h"
 #include "constants/abilities.h"
+#include "constants/flags.h"
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "constants/pokemon.h"
@@ -567,8 +568,10 @@ bool32 ResolveLeagueEvent(enum LeagueEventOutcome outcome, u32 expectedEventId)
     StartCountdown(state);
     // The league's word on the result rings once the field settles; it replaces any older owed call. The
     // Masters' word stays at its Gallery, so a Masters result leaves an owed Indigo or Hoenn call alone.
+    // A player without the phone gets no result call: it would only ring, late, whenever they got one.
     if (IsCallingLeague(league))
-        state->resultCall = league | (outcome == LEAGUE_EVENT_WON ? LEAGUE_RESULT_CALL_WON : 0);
+        state->resultCall = FlagGet(FLAG_HAS_MATCH_CALL)
+                          ? league | (outcome == LEAGUE_EVENT_WON ? LEAGUE_RESULT_CALL_WON : 0) : 0;
     ClearAcceptedTeams();
     SealState();
     return TRUE;

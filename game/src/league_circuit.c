@@ -618,8 +618,9 @@ enum LeagueAdmissionRequirement GetCircuitAdmissionRequirement(enum CircuitStage
         return LEAGUE_ADMISSION_CALL_PENDING;
     if (stage == CIRCUIT_STAGE_MASTERS)
         return LEAGUE_ADMISSION_AVAILABLE;
-    // Indigo and Hoenn admit only an event accepted by phone (.product/specs/leagues.md#entering-the-accepted-event).
-    return LEAGUE_ADMISSION_NO_INVITATION;
+    // Indigo and Hoenn admit only an event accepted by phone (.product/specs/leagues.md#entering-the-accepted-event);
+    // a league that doesn't know the player won't be the one calling.
+    return IsKnownAtCircuitStage(stage) ? LEAGUE_ADMISSION_NO_INVITATION : LEAGUE_ADMISSION_NOT_KNOWN;
 #else
     if (HasClearedCircuitStage(stage))
         return LEAGUE_ADMISSION_AVAILABLE;

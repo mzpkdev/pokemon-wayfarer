@@ -28,6 +28,7 @@ enum LeagueAdmissionRequirement
     LEAGUE_ADMISSION_NO_ACCEPTED_EVENT,
     LEAGUE_ADMISSION_CALL_PENDING, // a league's call waits for an answer
     LEAGUE_ADMISSION_NO_INVITATION, // no event accepted here; the lobby says when the next call is due
+    LEAGUE_ADMISSION_NOT_KNOWN, // this league invites only TRAINERS holding a badge from its regions
 };
 
 enum CircuitCommitResult

@@ -29,6 +29,7 @@ extern const u8 LeagueCircuit_Text_CallPending[];
 extern const u8 LeagueCircuit_Text_NoInvitation[];
 extern const u8 LeagueCircuit_Text_NoInvitationTomorrow[];
 extern const u8 LeagueCircuit_Text_NoInvitationDue[];
+extern const u8 LeagueCircuit_Text_NotKnown[];
 #endif
 
 #if WAYFARER_LEAGUE_EVENTS
@@ -226,6 +227,9 @@ u16 LeagueCircuit_BufferAdmissionDenial(void)
         text = LeagueCircuit_Text_CallPending;
         break;
 #if WAYFARER_LEAGUE_EVENTS
+    case LEAGUE_ADMISSION_NOT_KNOWN:
+        text = LeagueCircuit_Text_NotKnown;
+        break;
     case LEAGUE_ADMISSION_NO_INVITATION:
     {
         // The lobby says when the next call is due: the countdown's days remaining.

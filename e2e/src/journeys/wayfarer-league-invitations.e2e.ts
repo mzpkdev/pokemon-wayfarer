@@ -156,10 +156,11 @@ describe.sequential("Wayfarer league invitations by phone", () => {
     })
     expect(new Set(event.lineup.map((member) => member.characterId)).size).toBe(5)
 
-    // The accepted event waits across days and a reload, and no call rings again.
+    // The answer saved the accepted event itself: reset and continue from that save, with no harness
+    // save first. It then waits across days, and no call rings again.
+    await game.reloadSavedGame()
     await game.clock.advanceDays(10)
     await game.wait.frames(600)
-    await game.saveAndReload()
     expect((await game.leagues.answerCall()).length).toBe(0)
     expect((await game.state.read()).circuit.event).toMatchObject({
       id: event.id,
@@ -174,8 +175,6 @@ describe.sequential("Wayfarer league invitations by phone", () => {
     await walkNorthToMap(game, "indigo-lorelei")
     expect((await game.state.read()).circuit.run).toMatchObject({ active: true, stage: "indigo" })
 
-    // Lose the first match without the phone, so the owed result call waits for it.
-    await game.story.setFlag("hasMatchCall", false)
     await walkTo(game, 6, 6)
     await game.player.interact()
     for (let attempt = 0; attempt < 360; attempt++) {
@@ -190,14 +189,14 @@ describe.sequential("Wayfarer league invitations by phone", () => {
     }
     expect((await game.state.read()).battle.ui).toBe("action-menu")
     await game.battle.lose()
-    for (let attempt = 0; attempt < 900; attempt++) {
+    // The blackout returns the player to the lobby; the owed result call rings once they stand there.
+    const afterLoss: string[] = []
+    for (let attempt = 0; attempt < 6; attempt++) {
+      afterLoss.push(...(await game.leagues.answerCall()))
       const state = await game.state.read()
-      if (state.ready && !state.scriptActive && state.map.name === "indigo-league-lobby") break
-      await game.wait.frames(30)
-      await game.controls.press("a")
+      if (state.map.name === "indigo-league-lobby" && state.circuit.event.resultCall === null) break
     }
-    const lost = (await game.state.read()).circuit
-    expect(lost).toMatchObject({
+    expect((await game.state.read()).circuit).toMatchObject({
       run: { active: false },
       clears: { indigo: false },
       event: {
@@ -205,17 +204,10 @@ describe.sequential("Wayfarer league invitations by phone", () => {
         acceptedLeague: null,
         invitationState: countingDown,
         daysRemaining: 7,
-        resultCall: { league: "indigo", won: false },
+        resultCall: null,
       },
     })
-    // The owed call survives a reload, and rings once the player has the phone.
-    await game.saveAndReload()
-    expect((await game.state.read()).circuit.event.resultCall).toEqual({
-      league: "indigo",
-      won: false,
-    })
-    await game.story.setFlag("hasMatchCall", true)
-    const result = (await game.leagues.answerCall()).join("\n")
+    const result = afterLoss.join("\n")
     expect(result).toContain("thank you for taking")
     const champion = /\n?([A-Z][A-Z. &é'-]+) won it, and reigns/.exec(result)?.[1]
     expect(champion, result).toBeTruthy()
@@ -242,7 +234,16 @@ describe.sequential("Wayfarer league invitations by phone", () => {
       (state) => state.circuit.event.invitationState === countingDown,
       "the countdown starts",
     )
+    // A call placed while the player has no phone waits, survives a reload, and rings once they do.
     await game.leagues.forceInvitation("hoenn")
+    await game.story.setFlag("hasMatchCall", false)
+    await game.wait.until(
+      (state) => state.circuit.event.invitedLeague === "hoenn",
+      "the Hoenn League's call is placed",
+    )
+    await game.saveAndReload()
+    expect((await game.state.read()).circuit.event.invitedLeague).toBe("hoenn")
+    await game.story.setFlag("hasMatchCall", true)
     const call = (await game.leagues.answerCall("decline")).join("\n")
     expect(call).toContain("desk at EVER GRANDE CITY")
     expect(call).toContain("Accept the HOENN LEAGUE’s")

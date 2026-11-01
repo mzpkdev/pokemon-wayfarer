@@ -24,6 +24,7 @@ extern const u8 LeagueCircuit_Text_NeedMaster[];
 extern const u8 LeagueCircuit_Text_EventElsewhere[];
 extern const u8 LeagueCircuit_Text_NoInvitationDue[];
 extern const u8 LeagueCircuit_Text_CallPending[];
+extern const u8 LeagueCircuit_Text_NotKnown[];
 extern u16 LeagueCircuit_GetRequiredStage(void);
 extern u16 LeagueCircuit_IsEligible(void);
 extern u16 LeagueCircuit_GetAdmissionRequirement(void);
@@ -60,7 +61,8 @@ TEST("Circuit script specials expose current admission and independent league cl
     ExpectDenial(CIRCUIT_STAGE_INDIGO, LEAGUE_ADMISSION_NEEDS_QUALIFICATION, LeagueCircuit_Text_NeedQualification);
     SetTrainerRating(80);
     // Indigo and Hoenn admit only an event accepted by phone; before the countdown runs, the call is due.
-    ExpectDenial(CIRCUIT_STAGE_HOENN, LEAGUE_ADMISSION_NO_INVITATION, LeagueCircuit_Text_NoInvitationDue);
+    ExpectDenial(CIRCUIT_STAGE_INDIGO, LEAGUE_ADMISSION_NO_INVITATION, LeagueCircuit_Text_NoInvitationDue);
+    ExpectDenial(CIRCUIT_STAGE_HOENN, LEAGUE_ADMISSION_NOT_KNOWN, LeagueCircuit_Text_NotKnown);
     ExpectDenial(CIRCUIT_STAGE_MASTERS, LEAGUE_ADMISSION_NEEDS_MASTER, LeagueCircuit_Text_NeedMaster);
     gSpecialVar_0x8004 = CIRCUIT_STAGE_INDIGO;
     EXPECT(!LeagueCircuit_IsEligible());

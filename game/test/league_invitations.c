@@ -69,6 +69,7 @@ static void PrepareInvitationTest(u8 kanto, u8 johto, u8 hoenn, u32 trainerTR, u
     SetTrainerRating(trainerTR);
     VarSet(VAR_DAYS, today);
     LeaguePhone_ReleaseRingForTesting();
+    FlagSet(FLAG_HAS_MATCH_CALL); // the player has the phone unless a test says otherwise
     WayfarerWorld_InitNewGame();  // a saved game always has a seeded world state
 }
 
@@ -376,6 +377,19 @@ TEST("A decline drops an owed result call for its league, which would no longer 
     EXPECT(DeclineLeagueInvitation());
     EXPECT_EQ(GetLeagueResultCall(), 0);
     EXPECT_NE(GetLeagueReigningChampion(LEAGUE_ID_INDIGO), LEAGUE_EVENT_PLAYER_CHAMPION);
+    EXPECT(ValidateLeagueEventState());
+    FinishInvitationTest();
+}
+
+TEST("A player without the phone is owed no result call")
+{
+    PrepareInvitationTest(8, 0, 0, 80, 3);
+    FlagClear(FLAG_HAS_MATCH_CALL);
+    EXPECT(Test_AdmitCircuitRun(CIRCUIT_STAGE_INDIGO));
+    EXPECT(ResolveLeagueEvent(LEAGUE_EVENT_LOST, GetAcceptedLeagueEventId()));
+    EndLeagueRun();
+    EXPECT_EQ(GetLeagueResultCall(), 0);
+    EXPECT_EQ(State()->invitationState, LEAGUE_INVITATION_COUNTING_DOWN);
     EXPECT(ValidateLeagueEventState());
     FinishInvitationTest();
 }

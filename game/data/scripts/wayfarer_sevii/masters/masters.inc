@@ -3,7 +3,7 @@
 
 WayfarerSevii_Masters_Room1OnTransition::
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
-	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+	specialvar VAR_RESULT, LeagueCircuit_IsKnownThere
 	call_if_eq VAR_RESULT, TRUE, WayfarerSevii_Masters_OpenBox
 	end
 
@@ -68,7 +68,7 @@ WayfarerSevii_Masters_Declined::
 
 WayfarerSevii_Masters_Box::
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
-	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+	specialvar VAR_RESULT, LeagueCircuit_IsKnownThere
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Masters_BoxClosed
 #if WAYFARER_LEAGUE_EVENTS
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS

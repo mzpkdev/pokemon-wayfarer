@@ -271,6 +271,11 @@ LeagueCircuit_Text_NoInvitationTomorrow::
 	.string "The next LEAGUE invitation should\n"
 	.string "come tomorrow.$"
 
+LeagueCircuit_Text_NotKnown::
+	.string "Only invited TRAINERS may enter.\p"
+	.string "This LEAGUE invites TRAINERS with\n"
+	.string "a BADGE from its region.$"
+
 LeagueCircuit_Text_NoInvitationDue::
 	.string "Only invited TRAINERS may enter.\p"
 	.string "The next LEAGUE invitation should\n"

@@ -86,7 +86,7 @@ TEST("Circuit admission follows qualification, regional badges and lifetime wins
     SetTrainerRating(80);
     // Indigo and Hoenn admit only an event accepted by phone; the league still knows the player by badges.
     EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_INDIGO), LEAGUE_ADMISSION_NO_INVITATION);
-    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_HOENN), LEAGUE_ADMISSION_NO_INVITATION);
+    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_HOENN), LEAGUE_ADMISSION_NOT_KNOWN);
     EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_MASTERS), LEAGUE_ADMISSION_NEEDS_MASTER);
     EXPECT(IsKnownAtCircuitStage(CIRCUIT_STAGE_INDIGO));
     EXPECT(!IsKnownAtCircuitStage(CIRCUIT_STAGE_HOENN));
