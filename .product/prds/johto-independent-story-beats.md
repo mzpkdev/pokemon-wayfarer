@@ -257,14 +257,18 @@ the current scene leaves that scene retryable; earlier scenes stay retired.
 
 His chapters span Johto and Kanto: New Bark, Cherrygrove, Sprout Tower, Azalea,
 Burned Tower, Olivine, the Mahogany hideout, the Goldenrod Underground,
-Ecruteak, Mt. Moon, and his Indigo rematches. The Route 22 scene stays with
+Ecruteak, Victory Road, Mt. Moon, and his Indigo rematches. The Route 22 scene stays with
 the optional Celebi adventure the
 [Kanto story PRD](frlg-kanto-story-on-hns-maps.md#selected-hns-story-adaptations)
 owns.
 
-His Victory Road scene is dropped. It never fires under the League circuit
-today, and Wayfarer does not restore it. Victory Road keeps no Silver trigger,
-and later lines must not recall a Victory Road battle.
+Restore his Victory Road battle. It is his last main-story fight and the turn
+in his arc: he loses, admits Lance was right, and sets up his calmer Mt. Moon
+and Indigo scenes. Today it never fires, because the League circuit skips the
+Reception Gate step it waits for. It plays on a Johto-origin player's first
+trip through Victory Road, whether or not they already compete at Indigo, and
+follows the same forward-retire rule. Adjust his opening line, which assumes a
+first League challenge, when the player has already competed there.
 
 No host adventure waits on Silver. The Burned Tower release, the Radio Tower
 Underground, the Mahogany hideout, and the Kimono ceremony all continue
