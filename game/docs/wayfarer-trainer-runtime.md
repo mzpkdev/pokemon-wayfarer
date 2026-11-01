@@ -10,8 +10,9 @@ use the existing league rooms and first-win ceremonies. This slice offers an
 explicit acceptance prompt at each lobby: player TR 80 and a badge from that
 league's regions qualify for Indigo or Hoenn, and lifetime wins at both qualify
 for the Masters. Only one accepted event may wait at a time. Phone invitations
-and the in-game day clock remain follow-up work; lobby acceptance does not wait
-for a countdown. League wins award no player TR.
+remain follow-up work; lobby acceptance does not wait for a countdown. The
+in-game clock they will count days on is in place
+([in-game clock](../../.product/specs/in-game-clock.md)). League wins award no player TR.
 
 Wild encounters use the v0 curve and shared evolution policy. Their encounter
 content must preserve the existing regional HM acquisition requirements.
@@ -91,8 +92,8 @@ once. Battle completion carries the event identity and match index, so an old
 callback cannot advance a new event. First Indigo Hall of Fame rollback restores
 the event metadata and saved teams together with its existing ceremony state.
 
-The future clock integration must initialize countdown timestamps from its own
-in-game day count; this slice does not read RTC days or schedule calls. The
+Invitations must initialize countdown timestamps from the in-game clock's day
+counter (`VAR_DAYS`); this slice does not read days or schedule calls. The
 Masters Gallery counts are persisted; the full Gallery presentation and phone
 results remain separate work.
 

@@ -12,6 +12,18 @@ import {
   enterOpeningMap,
 } from "../playbooks/regional-opening"
 
+const expectClockOnlyLookedAt = async (game: GameSession): Promise<void> => {
+  // The bedroom clock scene only shows the clock (.product/specs/in-game-clock.md): the clock keeps
+  // New Game's day 1, and no local offset splits the day readers see from the clock's.
+  const clock = await game.clock.read()
+  expect({ dayNumber: clock.dayNumber, localDay: clock.localDay }).toEqual({
+    dayNumber: 1,
+    localDay: 1,
+  })
+  expect(clock.hour).toBeGreaterThanOrEqual(10)
+  expect(await game.story.var("days")).toBe(1)
+}
+
 describe.sequential("Wayfarer native New Bark household", () => {
   it("plays the clock and Mom handoff before receiving Elm's first partner", async () => {
     const game = await GameSession.launch()
@@ -23,6 +35,7 @@ describe.sequential("Wayfarer native New Bark household", () => {
       await walkOpeningTo(game, 10, 4)
       await walkOpeningTo(game, 10, 3)
       await finishOpeningDialogue(game)
+      await expectClockOnlyLookedAt(game)
       await game.saveAndReload()
       await walkOpeningTo(game, 10, 2)
       await enterOpeningMap(game, "left", "players-house-1f")

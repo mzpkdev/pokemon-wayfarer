@@ -37,9 +37,19 @@ static bool8 NewBarkAqua(void) { return VarGet(VAR_SSAQUA_STATE) >= 8; }
 static bool8 LittlerootAqua(void) { return FlagGet(FLAG_HOENN_STARTER_RECEIVED); }
 static bool8 NoTicket(void) { return FALSE; }
 static void InitializeNewBark(void) { Dex_SetActiveRegion(DEX_REGION_JOHTO); }
+// Only the Johto origin plays New Bark's bedroom-clock scene. The HnS-map wall clocks (Johto and
+// Kanto Pokemon Centers and a few houses) share Littleroot's clock script and read this HnS flag,
+// so the other origins start with it set: those clocks only show the time
+// (.product/specs/in-game-clock.md).
+static void MarkSharedWallClocksSet(void)
+{
+    FlagSet(FLAG_SET_WALL_CLOCK);
+}
+
 static void InitializeLittleroot(void)
 {
     Dex_SetActiveRegion(DEX_REGION_HOENN);
+    MarkSharedWallClocksSet();
     VarSet(VAR_NEWBARK_TOWN_STATE, 2);
     VarSet(VAR_NEWBARKTOWN_LABSTATE, 0);
     FlagSet(FLAG_HIDE_LAB_POLICEMAN);
@@ -50,6 +60,7 @@ static void InitializeLittleroot(void)
 static void InitializePallet(void)
 {
     Dex_SetActiveRegion(DEX_REGION_KANTO);
+    MarkSharedWallClocksSet();
     WayfarerKanto_InitializeOpening();
 }
 

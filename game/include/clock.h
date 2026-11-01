@@ -6,5 +6,8 @@
 void InitTimeBasedEvents(void);
 void DoTimeBasedEvents(void);
 void FormChangeTimeUpdate();
+#if IS_WAYFARER
+void InGameClock_StartNewGame(void);
+#endif
 
 #endif // GUARD_CLOCK_H

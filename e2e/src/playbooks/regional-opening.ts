@@ -41,8 +41,6 @@ export const advanceOpeningUntil = async (
     await game.wait.frames(45)
     const state = await game.state.read()
     if (predicate(state)) return
-    if (state.phase === "boot" && state.dialogue.text.includes("clock is stopped"))
-      await game.controls.press("up")
     await game.controls.press(button)
   }
   throw new Error(`${description}: ${JSON.stringify(await game.state.read())}`)

@@ -72,7 +72,8 @@ describe.sequential("Wayfarer startup without legacy multiboot", () => {
     )
   })
 
-  it("keeps the disabled reset-RTC chord inactive on a fresh save", async () => {
+  // Wayfarer has no reset-RTC screen: its in-game clock can't be set (.product/specs/in-game-clock.md).
+  it("leaves the old reset-RTC chord inactive", async () => {
     await press({ B: 1, Select: 1, Left: 1 }, 30)
     expect(await taskAddress("Task_WayfarerTitleInput")).toBeDefined()
   })

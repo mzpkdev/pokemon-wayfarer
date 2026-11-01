@@ -109,8 +109,13 @@ void FakeRtc_ManuallySetTime(u32 day, u32 hour, u32 minute, u32 second)
     FakeRtc_AdvanceTimeBy(day, hour, minute, second);
 }
 
+STATIC_ASSERT(HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE / WAYFARER_CLOCK_SECONDS_RATIO == 90 * SECONDS_PER_MINUTE, WayfarerDayLastsNinetyMinutes);
+
 u32 FakeRtc_GetSecondsRatio(void)
 {
+    if (IS_WAYFARER)
+        return WAYFARER_CLOCK_SECONDS_RATIO;
+
     if (UseFakeRtc() && OW_ALTERED_TIME_RATIO == GEN_LATEST)
         return 24;
 

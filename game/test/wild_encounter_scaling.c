@@ -1511,11 +1511,9 @@ TEST("Wild encounters: the clock selects the day table in the morning and by day
         { 7, TIME_MORNING, FALSE }, { 12, TIME_DAY, FALSE }, { 18, TIME_EVENING, TRUE }, { 22, TIME_NIGHT, TRUE },
     };
     u32 header = GetWildMonHeaderIdForMap(MAP_GROUP(MAP_ROUTE1_HNS), MAP_NUM(MAP_ROUTE1_HNS));
-    bool8 savedRtc = gSaveBlock3Ptr->challengeSettings.tx_Features_RTCType;
     u32 i;
 
     EXPECT_NE(header, HEADER_NONE);
-    gSaveBlock3Ptr->challengeSettings.tx_Features_RTCType = TRUE;
     for (i = 0; i < ARRAY_COUNT(sClocks); i++)
     {
         struct WildEncounterProfileContext context = { .headerId = header, .area = WILD_AREA_LAND, .fishingRod = WILD_ENCOUNTER_FISHING_ROD_NONE };
@@ -1528,14 +1526,12 @@ TEST("Wild encounters: the clock selects the day table in the morning and by day
         EXPECT_EQ(view.wildMonsInfo, sClocks[i].night ? gWildMonHeaders[header].encounterTypes[TIME_NIGHT].landMonsInfo
                                                        : gWildMonHeaders[header].encounterTypes[TIME_DAY].landMonsInfo);
     }
-    gSaveBlock3Ptr->challengeSettings.tx_Features_RTCType = savedRtc;
 }
 
 TEST("Bug-Catching Contest: Tuesday, Thursday and Saturday each choose their own table, and other days hold no contest")
 {
     static const enum Weekday sDays[] = { WEEKDAY_SUN, WEEKDAY_MON, WEEKDAY_TUE, WEEKDAY_WED, WEEKDAY_THU, WEEKDAY_FRI, WEEKDAY_SAT };
     u32 first = GetWildMonHeaderIdForMap(MAP_GROUP(MAP_NATIONAL_PARK_BUG_CONTEST_HNS), MAP_NUM(MAP_NATIONAL_PARK_BUG_CONTEST_HNS));
-    bool8 savedRtc = gSaveBlock3Ptr->challengeSettings.tx_Features_RTCType;
     struct WarpData savedLocation = gSaveBlock1Ptr->location;
     u32 i, day;
     u32 held = 0;
@@ -1548,7 +1544,6 @@ TEST("Bug-Catching Contest: Tuesday, Thursday and Saturday each choose their own
     EXPECT(gWildMonHeaders[first].encounterTypes[TIME_DAY].landMonsInfo != gWildMonHeaders[first + 1].encounterTypes[TIME_DAY].landMonsInfo);
     EXPECT(gWildMonHeaders[first + 1].encounterTypes[TIME_DAY].landMonsInfo != gWildMonHeaders[first + 2].encounterTypes[TIME_DAY].landMonsInfo);
 
-    gSaveBlock3Ptr->challengeSettings.tx_Features_RTCType = TRUE;
     gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_NATIONAL_PARK_BUG_CONTEST_HNS);
     gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_NATIONAL_PARK_BUG_CONTEST_HNS);
     for (i = 0; i < ARRAY_COUNT(sDays); i++)
@@ -1594,7 +1589,6 @@ TEST("Bug-Catching Contest: Tuesday, Thursday and Saturday each choose their own
     }
     EXPECT_EQ(held, 3);
     gSaveBlock1Ptr->location = savedLocation;
-    gSaveBlock3Ptr->challengeSettings.tx_Features_RTCType = savedRtc;
 }
 
 TEST("Pokemon Tower: the ghost Marowak takes its floor's place level, with no spread")

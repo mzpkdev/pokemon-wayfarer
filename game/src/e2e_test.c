@@ -69,6 +69,10 @@ const struct E2ETestAbi gE2ETestAbi =
     .varsOffset = offsetof(struct SaveBlock1, vars),
 };
 
+// Where the saved in-game clock (SaveBlock3's fake RTC) sits, so a journey can read and set it
+// (e2e/src/harness/game-session/features/clock.ts).
+const u16 gE2EInGameClockOffset = offsetof(struct SaveBlock3, fakeRTC);
+
 STATIC_ASSERT(sizeof(struct E2ETestRequest) == 380, E2ETestRequestSize);
 STATIC_ASSERT(offsetof(struct E2ETestRequest, trainerRating) == 372, E2ETestRequestTrainerRatingOffset);
 STATIC_ASSERT(offsetof(struct E2ETestRequest, appearanceId) == 369, E2ETestRequestAppearanceOffset);
@@ -872,6 +876,7 @@ static void ApplyCheckpointDefaults(void)
     case E2E_TEST_CHECKPOINT_NEW_BARK_AFTER_INTRO:
         VarSet(VAR_NEWBARK_TOWN_STATE, 2);
         VarSet(VAR_NEWBARKTOWN_LABSTATE, 0);
+        FlagSet(FLAG_SET_WALL_CLOCK); // as New Bark's bedroom-clock scene, which this skips, leaves it
 #if IS_WAYFARER
         FlagSet(FLAG_JOHTO_STARTER_CHOICE_COMMITTED);
 #endif
@@ -879,6 +884,7 @@ static void ApplyCheckpointDefaults(void)
     case E2E_TEST_CHECKPOINT_ELM_LAB_BEFORE_INTRO:
         VarSet(VAR_NEWBARK_TOWN_STATE, 2);
         VarSet(VAR_NEWBARKTOWN_LABSTATE, 0);
+        FlagSet(FLAG_SET_WALL_CLOCK); // as New Bark's bedroom-clock scene, which this skips, leaves it
         break;
     }
 }

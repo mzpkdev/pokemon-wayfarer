@@ -161,7 +161,9 @@ static void Task_RunPerStepCallback(u8 taskId)
 #define tAmbientCryState data[1]
 #define tAmbientCryDelay data[2]
 
-#define TIME_UPDATE_INTERVAL (1 << 12)
+// Wayfarer's in-game clock runs 16 times as fast as a real one, so the daily update checks
+// every 512 frames (about 2 in-game minutes) instead of every 8192.
+#define TIME_UPDATE_INTERVAL (IS_WAYFARER ? (1 << 8) : (1 << 12))
 
 static void RunTimeBasedEvents(s16 *data)
 {

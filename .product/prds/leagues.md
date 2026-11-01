@@ -59,12 +59,11 @@ and only schedule calls: nobody grows stronger or weaker with time, only with
 the world's progress. Only days going forward count: if the day counter ever
 goes backwards, the countdown neither moves on nor starts over.
 
-**Depends on the in-game clock.** Today the game's day counter follows the
-cartridge's real-time clock (RTC). The game is moving to an in-game clock with
-no RTC, and Leagues depends on it: league days are in-game days, and Leagues
-can't be adopted before that clock is. Leagues needs only a day count from it
-that moves forward as you play; how long a day lasts is up to the in-game
-clock's design, which hasn't been written yet.
+**Runs on the in-game clock.** League days are days of the
+[in-game clock](in-game-clock.md), which runs only while you play: a day lasts
+90 minutes of play, so an invitation comes about every ten and a half hours
+of play. Leagues needs only the clock's day count, which moves forward as you
+play and can't be set back.
 
 **Who calls.** Only a league that knows the player calls: Indigo once they
 hold a Kanto or Johto badge, Hoenn once they hold a Hoenn badge, and the Sevii

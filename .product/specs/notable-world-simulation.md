@@ -35,8 +35,8 @@ determinism, the debug and balance report, and acceptance.
   reigning champions; [Sevii Masters](sevii-masters.md) owns the partner.
   This spec reads their state and adds one hook at event resolution
   ([life events](#life-events)).
-- The planned in-game clock (named in [Leagues](leagues.md#invitations))
-  is not designed yet; this spec runs on map changes until it exists.
+- The [in-game clock](in-game-clock.md) exists, but this spec does not
+  run on it yet: it runs on map changes ([later](#later)).
 
 ## Behavior
 
@@ -452,9 +452,10 @@ Its known limits:
 
 The local dwell on the player's map ([local to
 world](#handoff-local-to-world)) softens the first limit for the trainers
-the player can see. A gameplay timer, or the planned in-game clock, can
-later replace or add to the heartbeat without changing the record: a
-clock tick would run the same step 2.
+the player can see. A gameplay timer, or the
+[in-game clock](in-game-clock.md), can later replace or add to the
+heartbeat without changing the record: a clock tick would run the same
+step 2.
 
 ### Priority
 
@@ -1038,7 +1039,7 @@ their haunt.
 
 ## Later
 
-- **In-game clock:** a gameplay timer or the planned in-game clock driving
+- **In-game clock:** a gameplay timer or the [in-game clock](in-game-clock.md) driving
   ticks between map changes, so dwelling and interiors move while the
   player stands still.
 - **Haunts as destinations** ([above](#haunts-later)).

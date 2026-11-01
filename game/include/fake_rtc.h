@@ -4,14 +4,14 @@
 #include "siirtc.h"
 #include "config/overworld.h"
 
+// Wayfarer's in-game clock (.product/specs/in-game-clock.md): 16 in-game seconds
+// pass for every second of play, so an in-game day lasts 90 minutes of play.
+#define WAYFARER_CLOCK_SECONDS_RATIO 16
+#define WAYFARER_CLOCK_START_HOUR 10
+
 static inline bool32 UseFakeRtc(void)
 {
-    if (OW_USE_FAKE_RTC)
-        return TRUE;
-    extern struct SaveBlock3 *gSaveBlock3Ptr;
-    if (gSaveBlock3Ptr != NULL)
-        return gSaveBlock3Ptr->challengeSettings.tx_Features_RTCType;
-    return FALSE;
+    return OW_USE_FAKE_RTC;
 }
 
 void FakeRtc_Reset(void);

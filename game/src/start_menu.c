@@ -521,6 +521,7 @@ static void ShowTimeWindow(void)
     u8 *ptr;
     u8 convertedHours;
 
+    RtcCalcLocalTime(); // The in-game clock moves while the menu is open.
     sStartClockWindowId = AddWindow(&sWindowTemplate_StartClock);
     PutWindowTilemap(sStartClockWindowId);
     DrawStdWindowFrame(sStartClockWindowId, FALSE);

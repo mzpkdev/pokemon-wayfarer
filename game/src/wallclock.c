@@ -877,7 +877,8 @@ static void Task_ViewClock_HandleInput(u8 taskId)
     InitClockWithRtc(taskId);
     if (JOY_NEW(A_BUTTON | B_BUTTON))
         gTasks[taskId].func = Task_ViewClock_FadeOut;
-    if (JOY_NEW(R_BUTTON))
+    // Wayfarer's in-game clock can't be set (.product/specs/in-game-clock.md): the clock only shows the time.
+    if (!IS_WAYFARER && JOY_NEW(R_BUTTON))
     {
         PlaySE(SE_SELECT);
         DecompressDataWithHeaderVram(gWallClockStart_Tilemap, (u16 *)BG_SCREEN_ADDR(7));

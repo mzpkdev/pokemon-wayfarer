@@ -4,6 +4,7 @@ import { readSkyEmuSymbols } from "../skyemu/symbols"
 import { requireRomPath, requireSymbolsPath } from "../skyemu/utils"
 import { createArrangeApi, type ArrangeApi } from "./features/arrange"
 import { createBattleApi, type BattleApi } from "./features/battle"
+import { createClockApi, type ClockApi } from "./features/clock"
 import { createControlsApi, type ControlsApi } from "./features/controls"
 import { createDailySlotsApi, type DailySlotsApi } from "./features/daily-slots"
 import { createDialogueApi, type DialogueApi } from "./features/dialogue"
@@ -28,6 +29,7 @@ export class GameSession {
   readonly arrange: ArrangeApi["arrange"]
   readonly checkpoint: ArrangeApi["checkpoint"]
   readonly battle: BattleApi
+  readonly clock: ClockApi
   readonly controls: ControlsApi
   readonly dailySlots: DailySlotsApi
   readonly dialogue: DialogueApi
@@ -56,6 +58,7 @@ export class GameSession {
     this.arrange = arrange.arrange
     this.checkpoint = arrange.checkpoint
     this.battle = createBattleApi(runtime, mailbox)
+    this.clock = createClockApi(runtime)
     this.controls = createControlsApi(runtime)
     this.dailySlots = createDailySlotsApi(runtime)
     this.dialogue = createDialogueApi(state, wait)

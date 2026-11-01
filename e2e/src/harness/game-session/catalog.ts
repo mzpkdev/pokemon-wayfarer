@@ -502,6 +502,7 @@ export const seviiImportedMaps = [
 ] as const
 
 export const storyVars = {
+  days: 0x4040, // VAR_DAYS: the in-game day the daily update last ran on
   wadeItem: 0x4097,
   silphElevatorFloor: 0x40da,
   silphGiovanniScene: 0x40db,

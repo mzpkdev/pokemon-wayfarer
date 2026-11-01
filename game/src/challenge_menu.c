@@ -63,7 +63,6 @@ enum {
 };
 
 enum {
-    ITEM_FEATURES_RTC_TYPE,
     ITEM_FEATURES_SHINY_CHANCE,
     ITEM_FEATURES_SHINY_COLOR,
     ITEM_FEATURES_ITEM_DROP,
@@ -520,11 +519,6 @@ static const u8 *const sChoices_BanUnban[] = {
     COMPOUND_STRING("UNBAN"),
 };
 
-static const u8 *const sChoices_RtcFake[] = {
-    COMPOUND_STRING("RTC"),
-    COMPOUND_STRING("FAKE RTC"),
-};
-
 static const u8 *const sChoices_ShinyChance[] = {
     COMPOUND_STRING("8192"),
     COMPOUND_STRING("4096"),
@@ -615,10 +609,6 @@ static const u8 *const sChoices_BstEqual[] = {
 // FEATURES descriptions + table
 // =============================================================================
 
-static const u8 *const sDesc_RtcType[] = {
-    COMPOUND_STRING("Use vanilla Real Time Clock."),
-    COMPOUND_STRING("Use a fake Real Time Clock.\n1h in real life = 1 day in-game."),
-};
 static const u8 *const sDesc_ShinyChance[] = {
     COMPOUND_STRING("Very low chance of SHINY encounter.\nDefault chance from Generation III."),
     COMPOUND_STRING("Low chance of SHINY encounter.\nDefault chance from Generation VI+."),
@@ -643,12 +633,6 @@ static const u8 *const sDesc_FeaturesNext[] = {
 };
 
 static const struct ChallengeMenuItem sTabItems_Features[] = {
-    [ITEM_FEATURES_RTC_TYPE] = {
-        .name         = COMPOUND_STRING("CLOCK TYPE"),
-        .descriptions = sDesc_RtcType,
-        .numChoices   = 2,
-        .choiceNames  = sChoices_RtcFake,
-    },
     [ITEM_FEATURES_SHINY_CHANCE] = {
         .name         = COMPOUND_STRING("SHINY CHANCE"),
         .descriptions = sDesc_ShinyChance,
@@ -1957,7 +1941,6 @@ static void Task_ConfirmSaveYes(u8 taskId)
     cs->genOneRecharge             = *GetSelectionPtr(TAB_MODE, ITEM_MODE_GEN_ONE_RECHARGE);
 
     // Features tab
-    cs->tx_Features_RTCType        = *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_RTC_TYPE);
     cs->tx_Features_ShinyChance    = *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_SHINY_CHANCE);
     cs->tx_Features_WildMonDropItems = *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_ITEM_DROP);
     cs->tx_Features_FrontierBans   = *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_FRONTIER_BANS);
@@ -2194,7 +2177,6 @@ void CB2_InitChallengeMenu(void)
                 *GetSelectionPtr(TAB_MODE, ITEM_MODE_GAMEMODE) = 1; // CUSTOM
 
             // Features tab
-            *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_RTC_TYPE)     = cs->tx_Features_RTCType;
             *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_SHINY_CHANCE) = cs->tx_Features_ShinyChance;
             *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_ITEM_DROP)    = cs->tx_Features_WildMonDropItems;
             *GetSelectionPtr(TAB_FEATURES, ITEM_FEATURES_FRONTIER_BANS)= cs->tx_Features_FrontierBans;
