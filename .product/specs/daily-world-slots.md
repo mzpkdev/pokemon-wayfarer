@@ -131,7 +131,7 @@ six-trainer challenge, whose lines number its members, is not daily.
 
 `day = RtcGetLocalDayCount()`, the [in-game clock](in-game-clock.md)'s day
 number, the same day berry trees and the daily update use. The clock runs only
-while the game is played, 90 minutes of play a day, and can't be set back.
+while the game is played, 2 hours of play a day, and can't be set back.
 
 A new day takes effect on the next map load. The current map keeps its
 occupants until then.

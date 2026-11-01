@@ -66,7 +66,7 @@ and travel stays light because some spots are empty.
 ### Days
 
 A day is a day of the [in-game clock](in-game-clock.md), the same clock
-berries and other daily events use. It runs only while you play, 90 minutes
+berries and other daily events use. It runs only while you play, 2 hours
 of play a day. A new day only reaches a map the next time that map loads.
 
 A slot's draw is fixed for the whole day. It depends on the save, the day, the

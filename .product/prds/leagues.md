@@ -64,8 +64,8 @@ goes backwards, the countdown neither moves on nor starts over.
 
 **Runs on the in-game clock.** League days are days of the
 [in-game clock](in-game-clock.md), which runs only while you play: a day lasts
-90 minutes of play, so an invitation comes about every ten and a half hours
-of play. Leagues needs only the clock's day count, which moves forward as you
+2 hours of play, so an invitation comes about every fourteen hours of
+play. Leagues needs only the clock's day count, which moves forward as you
 play and can't be set back.
 
 **Who calls.** Only a league that knows the player calls: Indigo once they
