@@ -129,9 +129,14 @@ class CatalogValidationTests(unittest.TestCase):
         self.assertIn("{STR_VAR_1}", voices)
         self.assertNotIn("{BUDDY}", voices)
         self.assertIn("\\n", voices)
-        self.assertEqual(voices.count("_(\""), 38 * len(generate.VOICE_BITS) + 37 * len(generate.PHONE_BITS))
+        contacts = sum("phone" in t for t in self.catalog["trainers"])
+        self.assertEqual(voices.count("_(\""),
+                         len(self.catalog["trainers"]) * len(generate.VOICE_BITS) + contacts * len(generate.PHONE_BITS))
 
     def test_every_contact_has_phone_lines_and_tate_liza_none(self):
+        # The game treats everyone but Tate & Liza as a possible contact (notable_phone.c), so the trainers without
+        # phone lines must be exactly them.
+        self.assertEqual([t["slug"] for t in self.catalog["trainers"] if "phone" not in t], ["tate-liza"])
         for trainer in self.catalog["trainers"]:
             if trainer["league"]["enabled"]:
                 self.assertEqual(set(trainer["phone"]), set(generate.PHONE_BITS), trainer["name"])

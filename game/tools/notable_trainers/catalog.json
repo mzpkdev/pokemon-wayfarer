@@ -628,7 +628,7 @@
       "phone": {
         "hello": "Fufufu! A ninja always answers! Hello, {PLAYER}!",
         "close": "{PLAYER}! Fufufu, I'd never hide from your calls!",
-        "bye": "Farewell! (Click!) ...That part works, at least."
+        "bye": "Farewell! (Poof!) ...Did that sound cool over the phone?"
       }
     },
     {
@@ -1001,7 +1001,7 @@
         "bye": "Go. We will meet again."
       },
       "phone": {
-        "hello": "...{PLAYER}. Few have this number. Speak.",
+        "hello": "...{PLAYER}. Speak. I am listening.",
         "close": "{PLAYER}. You have earned this line. Use it well.",
         "bye": "Enough. We will speak again."
       }
@@ -1765,7 +1765,7 @@
       },
       "phone": {
         "hello": "{PLAYER}. Good to hear from you.",
-        "close": "{PLAYER}! My friend. It's always good to hear from you.",
+        "close": "{PLAYER}! My friend. I was hoping you'd call.",
         "bye": "Until next time. Stay strong."
       }
     },
@@ -2012,7 +2012,7 @@
       },
       "phone": {
         "hello": "Hi, {PLAYER}! Seen any interesting Bug POKéMON lately?",
-        "close": "{PLAYER}! My best research partner! I have notes for you!",
+        "close": "{PLAYER}! My best research partner! How are the bugs treating you?",
         "bye": "Bye! If you spot a rare bug, call me first!"
       }
     },
@@ -3036,7 +3036,7 @@
       },
       "phone": {
         "hello": "Oh, {PLAYER}. Good. I was getting bored.",
-        "close": "Oh, {PLAYER}. Good. I really did hope you'd call.",
+        "close": "Oh, {PLAYER}. I really did hope you'd call.",
         "bye": "Go on. Keep battling with your favorites."
       }
     },
@@ -3170,7 +3170,7 @@
       },
       "phone": {
         "hello": "Hello, {PLAYER}! Calling for another lesson?",
-        "close": "{PLAYER}! My favorite student! I kept a page for you!",
+        "close": "{PLAYER}! My favorite student! Studying hard, I hope?",
         "bye": "Goodbye! Don't forget to review your notes!"
       }
     },
@@ -4826,7 +4826,7 @@
       },
       "phone": {
         "hello": "{PLAYER}! Good to hear from you. Found any rare stones?",
-        "close": "{PLAYER}! My friend! I found a special stone to show you.",
+        "close": "{PLAYER}! My friend! I was just polishing a rare stone.",
         "bye": "I'll talk to you later. Take care."
       }
     }

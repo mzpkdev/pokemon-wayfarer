@@ -391,6 +391,20 @@ TEST("Becoming a contact registers no route contact, so notables never make a ra
         EXPECT(!PhoneContact_IsRegistered(contact));
 }
 
+static bool32 Contains(const u8 *haystack, const u8 *needle)
+{
+    u32 i, j;
+
+    for (i = 0; haystack[i] != EOS; i++)
+    {
+        for (j = 0; needle[j] != EOS && haystack[i + j] == needle[j]; j++)
+            ;
+        if (needle[j] == EOS)
+            return TRUE;
+    }
+    return FALSE;
+}
+
 // The Match Call list as the Pokénav builds it, run to its end. The resources struct is private to pokenav.c, so
 // this is its layout (as in test/wayfarer_phone.c).
 struct PokenavResourcesView
@@ -467,6 +481,10 @@ TEST("Notable contacts are listed once each, after the headers and before the ro
             EXPECT_EQ(GetMatchCallTrainerPic(i), GetTrainerPicFromId(NotablePhone_GetTrainerId(characterId)));
             EXPECT(GetMatchCallContactPlaceName(i, gStringVar1));
             EXPECT(gStringVar1[0] != EOS);
+            // The name line is the character's own trainer, and there is no CHECK page text to read.
+            BufferMatchCallNameAndDesc(&list[i], call);
+            EXPECT(Contains(call, GetTrainerNameFromId(NotablePhone_GetTrainerId(characterId))));
+            EXPECT_EQ(GetMatchCallFlavorText(i, 0)[0], EOS);
             GetMatchCallMessageText(i, &rematch);
             EXPECT(!rematch);
             StringCopy(call, gStringVar4);

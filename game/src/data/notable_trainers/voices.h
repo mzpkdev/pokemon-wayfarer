@@ -48,7 +48,7 @@ static const u8 sNotableVoice_JANINE_CLOSE[] = _("{PLAYER}! Fufufu, there's no n
 static const u8 sNotableVoice_JANINE_BYE[] = _("Farewell! (Poof!) ...I'm still working on\nthat part.");
 static const u8 sNotableVoice_JANINE_CALL_HELLO[] = _("Fufufu! A ninja always answers!\nHello, {PLAYER}!");
 static const u8 sNotableVoice_JANINE_CALL_CLOSE[] = _("{PLAYER}! Fufufu, I'd never hide from\nyour calls!");
-static const u8 sNotableVoice_JANINE_CALL_BYE[] = _("Farewell! (Click!) ...That part works,\nat least.");
+static const u8 sNotableVoice_JANINE_CALL_BYE[] = _("Farewell! (Poof!) ...Did that sound\ncool over the phone?");
 
 static const u8 sNotableVoice_SABRINA_MEET[] = _("I am SABRINA. I have had psychic powers\nsince childhood.");
 static const u8 sNotableVoice_SABRINA_HEARD[] = _("You are {PLAYER}. Your name reached me\nbefore you did.");
@@ -76,7 +76,7 @@ static const u8 sNotableVoice_GIOVANNI_AGAIN[] = _("You again. I am beginning to
 static const u8 sNotableVoice_GIOVANNI_HELLO[] = _("So. {PLAYER}. You keep turning up.");
 static const u8 sNotableVoice_GIOVANNI_CLOSE[] = _("{PLAYER}. You have earned my trust. Do\nnot waste it.");
 static const u8 sNotableVoice_GIOVANNI_BYE[] = _("Go. We will meet again.");
-static const u8 sNotableVoice_GIOVANNI_CALL_HELLO[] = _("...{PLAYER}. Few have this number.\nSpeak.");
+static const u8 sNotableVoice_GIOVANNI_CALL_HELLO[] = _("...{PLAYER}. Speak. I am listening.");
 static const u8 sNotableVoice_GIOVANNI_CALL_CLOSE[] = _("{PLAYER}. You have earned this line.\nUse it well.");
 static const u8 sNotableVoice_GIOVANNI_CALL_BYE[] = _("Enough. We will speak again.");
 
@@ -137,7 +137,7 @@ static const u8 sNotableVoice_LANCE_HELLO[] = _("{PLAYER}. Good to see you. You'
 static const u8 sNotableVoice_LANCE_CLOSE[] = _("{PLAYER}! My friend. It's always good to\nsee you.");
 static const u8 sNotableVoice_LANCE_BYE[] = _("Until next time. {STR_VAR_1}, let's go!");
 static const u8 sNotableVoice_LANCE_CALL_HELLO[] = _("{PLAYER}. Good to hear from you.");
-static const u8 sNotableVoice_LANCE_CALL_CLOSE[] = _("{PLAYER}! My friend. It's always good\nto hear from you.");
+static const u8 sNotableVoice_LANCE_CALL_CLOSE[] = _("{PLAYER}! My friend. I was hoping\nyou'd call.");
 static const u8 sNotableVoice_LANCE_CALL_BYE[] = _("Until next time. Stay strong.");
 
 static const u8 sNotableVoice_FALKNER_MEET[] = _("I'm FALKNER. I carry on my father's work\nwith bird POKéMON.");
@@ -157,7 +157,7 @@ static const u8 sNotableVoice_BUGSY_HELLO[] = _("Hi, {PLAYER}! Seen any interest
 static const u8 sNotableVoice_BUGSY_CLOSE[] = _("{PLAYER}! My best research partner! I\nsaved you a note!");
 static const u8 sNotableVoice_BUGSY_BYE[] = _("Bye! If you spot a rare bug, tell me\nfirst!");
 static const u8 sNotableVoice_BUGSY_CALL_HELLO[] = _("Hi, {PLAYER}! Seen any interesting\nBug POKéMON lately?");
-static const u8 sNotableVoice_BUGSY_CALL_CLOSE[] = _("{PLAYER}! My best research partner!\nI have notes for you!");
+static const u8 sNotableVoice_BUGSY_CALL_CLOSE[] = _("{PLAYER}! My best research partner!\nHow are the bugs treating you?");
 static const u8 sNotableVoice_BUGSY_CALL_BYE[] = _("Bye! If you spot a rare bug, call me\nfirst!");
 
 static const u8 sNotableVoice_WHITNEY_MEET[] = _("Hi! I'm WHITNEY! Everyone got into\nPOKéMON, so I did too!");
@@ -237,7 +237,7 @@ static const u8 sNotableVoice_KAREN_HELLO[] = _("Oh, {PLAYER}. Good. I was getti
 static const u8 sNotableVoice_KAREN_CLOSE[] = _("Oh, {PLAYER}. Good. I really did hope\nyou'd come.");
 static const u8 sNotableVoice_KAREN_BYE[] = _("Go on. Keep battling with your\nfavorites.");
 static const u8 sNotableVoice_KAREN_CALL_HELLO[] = _("Oh, {PLAYER}. Good. I was getting\nbored.");
-static const u8 sNotableVoice_KAREN_CALL_CLOSE[] = _("Oh, {PLAYER}. Good. I really did hope\nyou'd call.");
+static const u8 sNotableVoice_KAREN_CALL_CLOSE[] = _("Oh, {PLAYER}. I really did hope you'd\ncall.");
 static const u8 sNotableVoice_KAREN_CALL_BYE[] = _("Go on. Keep battling with your\nfavorites.");
 
 static const u8 sNotableVoice_ROXANNE_MEET[] = _("I'm ROXANNE. I study POKéMON battles,\nand I love to teach!");
@@ -247,7 +247,7 @@ static const u8 sNotableVoice_ROXANNE_HELLO[] = _("Hello, {PLAYER}! Ready for an
 static const u8 sNotableVoice_ROXANNE_CLOSE[] = _("{PLAYER}! My favorite student! I kept a\npage for you!");
 static const u8 sNotableVoice_ROXANNE_BYE[] = _("Goodbye! Don't forget to review your\nnotes!");
 static const u8 sNotableVoice_ROXANNE_CALL_HELLO[] = _("Hello, {PLAYER}! Calling for another\nlesson?");
-static const u8 sNotableVoice_ROXANNE_CALL_CLOSE[] = _("{PLAYER}! My favorite student! I\nkept a page for you!");
+static const u8 sNotableVoice_ROXANNE_CALL_CLOSE[] = _("{PLAYER}! My favorite student!\nStudying hard, I hope?");
 static const u8 sNotableVoice_ROXANNE_CALL_BYE[] = _("Goodbye! Don't forget to review your\nnotes!");
 
 static const u8 sNotableVoice_BRAWLY_MEET[] = _("I'm BRAWLY! Fighting and surfing, that's\nmy whole deal!");
@@ -374,7 +374,7 @@ static const u8 sNotableVoice_STEVEN_HELLO[] = _("{PLAYER}! Good to see you. Fou
 static const u8 sNotableVoice_STEVEN_CLOSE[] = _("{PLAYER}! My friend! I saved you a\nspecial stone to see.");
 static const u8 sNotableVoice_STEVEN_BYE[] = _("I'll see you around. Take care.");
 static const u8 sNotableVoice_STEVEN_CALL_HELLO[] = _("{PLAYER}! Good to hear from you.\nFound any rare stones?");
-static const u8 sNotableVoice_STEVEN_CALL_CLOSE[] = _("{PLAYER}! My friend! I found a\nspecial stone to show you.");
+static const u8 sNotableVoice_STEVEN_CALL_CLOSE[] = _("{PLAYER}! My friend! I was just\npolishing a rare stone.");
 static const u8 sNotableVoice_STEVEN_CALL_BYE[] = _("I'll talk to you later. Take care.");
 
 const struct NotableVoice gNotableVoices[NOTABLE_TRAINER_COUNT] =
