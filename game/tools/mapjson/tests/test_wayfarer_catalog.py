@@ -1663,7 +1663,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
         ]
         self.assertEqual(exterior_warps, [("SSAnne_1F_Corridor_Frlg", 2), ("SSAnne_1F_Corridor_Frlg", 3)])
         self.assertIn('resolved["dest_map"] = "MAP_DYNAMIC";', source)
-        self.assertIn("setdynamicwarp MAP_VERMILION_CITY_PORT_INSIDE_HNS, 8, 9", (GAME_ROOT / "data/maps/SSAnne_1F_Corridor_Frlg/scripts.inc").read_text())
+        self.assertIn("special Ferry_RefreshAnneWarp", (GAME_ROOT / "data/maps/SSAnne_1F_Corridor_Frlg/scripts.inc").read_text())
         map_names_by_id = {entry["id"]: name for name, entry in map_data.items()}
         graph = {name: set() for name in expected_maps}
         for name, entry in map_data.items():
