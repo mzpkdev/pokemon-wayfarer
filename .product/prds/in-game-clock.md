@@ -2,9 +2,9 @@
 
 Specifications: [In-game clock](../specs/in-game-clock.md)
 
-Design status: agreed. The 90-minute day with the engine's hours shipped first;
-the 2-hour day with Wayfarer's own times of day below is agreed and replaces
-it. Both lengths are placeholders for playtesting.
+Design status: agreed and implemented. The 90-minute day with the engine's
+hours shipped first; the 2-hour day with Wayfarer's own times of day below
+replaced it. Both lengths are placeholders for playtesting.
 
 ## Intent
 

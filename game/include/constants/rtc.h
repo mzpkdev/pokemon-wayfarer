@@ -15,8 +15,22 @@
 
 #define RTC_ERR_FLAG_MASK      0x0FF0
 
+// Wayfarer sets its own times of day (.product/specs/in-game-clock.md#times-of-day).
+// EVENING_HOUR_END is 24, not 0: the lighting blend divides by the period's length.
+#if IS_WAYFARER
+    #define MORNING_HOUR_BEGIN 4
+    #define MORNING_HOUR_END   8
+
+    #define DAY_HOUR_BEGIN     8
+    #define DAY_HOUR_END       20
+
+    #define EVENING_HOUR_BEGIN 20
+    #define EVENING_HOUR_END   24
+
+    #define NIGHT_HOUR_BEGIN   0
+    #define NIGHT_HOUR_END     4
 //Evening doesn't exist in Gen 2
-#if OW_TIMES_OF_DAY == GEN_2
+#elif OW_TIMES_OF_DAY == GEN_2
     #define MORNING_HOUR_BEGIN 4
     #define MORNING_HOUR_END   10
 

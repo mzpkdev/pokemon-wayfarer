@@ -6,6 +6,8 @@
 #include "rtc.h"
 #include "wayfarer_daily_slots.h"
 #include "new_game.h"
+#include "overworld.h"
+#include "palette.h"
 #include "wayfarer_appearance.h"
 #include "wayfarer_origin.h"
 #include "test/test.h"
@@ -14,8 +16,11 @@
 
 #if IS_WAYFARER
 
-// The in-game clock (.product/specs/in-game-clock.md): the clock runs with play at 16 in-game
-// seconds a second, a new game starts on day 1 at 10:00, and every daily system reads one day.
+// A script special with no header.
+void SetTimeBasedEncounters(void);
+
+// The in-game clock (.product/specs/in-game-clock.md): the clock runs with play at 12 in-game
+// seconds a second, a new game starts on day 1 at 8:00, and every daily system reads one day.
 
 // One daily flag of each bank the daily update clears: the shared one and Hoenn's.
 #define TEST_DAILY_FLAG       FLAG_DAILY_PICKED_LOTO_TICKET
@@ -100,10 +105,10 @@ TEST("In-game clock: the clock is always on and can't fail")
 {
     EXPECT(UseFakeRtc());
     EXPECT_EQ(RtcGetErrorStatus(), 0);
-    EXPECT_EQ(FakeRtc_GetSecondsRatio(), 16);
+    EXPECT_EQ(FakeRtc_GetSecondsRatio(), 12);
 }
 
-TEST("In-game clock: a new game starts on day 1 at 10:00 with every daily system on the same day")
+TEST("In-game clock: a new game starts on day 1 at 8:00 with every daily system on the same day")
 {
     struct ClockSnapshot snapshot;
 
@@ -117,7 +122,7 @@ TEST("In-game clock: a new game starts on day 1 at 10:00 with every daily system
 
     RtcCalcLocalTime();
     EXPECT_EQ(gLocalTime.days, 1);
-    EXPECT_EQ(gLocalTime.hours, 10);
+    EXPECT_EQ(gLocalTime.hours, 8);
     EXPECT_EQ(gLocalTime.minutes, 0);
     EXPECT_EQ(gLocalTime.seconds, 0);
     EXPECT_EQ(gSaveBlock2Ptr->localTimeOffset.days, 0);
@@ -138,7 +143,7 @@ TEST("In-game clock: a new game starts on day 1 at 10:00 with every daily system
     RestoreSnapshot(&snapshot);
 }
 
-TEST("In-game clock: a second of play moves the clock 16 seconds, so a day lasts 90 minutes of play")
+TEST("In-game clock: a second of play moves the clock 12 seconds, so a day lasts 120 minutes of play")
 {
     struct ClockSnapshot snapshot;
     u32 start, i;
@@ -154,18 +159,129 @@ TEST("In-game clock: a second of play moves the clock 16 seconds, so a day lasts
         PlayTimeCounter_Update();
     EXPECT_EQ(ClockSeconds(), start);
     PlayTimeCounter_Update();
-    EXPECT_EQ(ClockSeconds(), start + 16);
+    EXPECT_EQ(ClockSeconds(), start + 12);
     PlayTimeCounter_Stop();
     for (i = 0; i < 60; i++)
         PlayTimeCounter_Update();
-    EXPECT_EQ(ClockSeconds(), start + 16);
+    EXPECT_EQ(ClockSeconds(), start + 12);
 
-    // 90 minutes of play are one in-game day to the second.
-    for (i = 1; i < 90 * 60; i++)
+    // 120 minutes of play are one in-game day to the second.
+    for (i = 1; i < 120 * 60; i++)
         FakeRtc_TickTimeForward();
     EXPECT_EQ(ClockSeconds(), start + HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
     EXPECT_EQ(gLocalTime.days, 2);
-    EXPECT_EQ(gLocalTime.hours, 10);
+    EXPECT_EQ(gLocalTime.hours, 8);
+    RestoreSnapshot(&snapshot);
+}
+
+TEST("In-game clock: every hour belongs to one time of day, and evening counts as night for wild Pokemon")
+{
+    struct ClockSnapshot snapshot;
+    bool8 nightFlag = FlagGet(FLAG_NIGHT_POKEMON), dayFlag = FlagGet(FLAG_DAY_POKEMON);
+    u16 encounter = VarGet(VAR_TIME_BASED_ENCOUNTER);
+    u32 hour, half;
+
+    TakeSnapshot(&snapshot);
+    for (hour = 0; hour < 24; hour++)
+    {
+        // Morning 4-8, Day 8-20, Evening 20-24, Night 0-4.
+        enum TimeOfDay expected = hour < 4 ? TIME_NIGHT : hour < 8 ? TIME_MORNING : hour < 20 ? TIME_DAY : TIME_EVENING;
+        bool32 night = expected == TIME_EVENING || expected == TIME_NIGHT;
+
+        for (half = 0; half < 2; half++)
+        {
+            FakeRtc_ManuallySetTime(1, hour, half * 30, 0);
+            EXPECT_EQ(GetTimeOfDay(), expected);
+            // The night overworld Pokemon and the night encounter variable follow the night table.
+            SetTimeBasedEncounters();
+            EXPECT_EQ(VarGet(VAR_TIME_BASED_ENCOUNTER), night ? 2 : 1);
+            EXPECT_EQ(FlagGet(FLAG_DAY_POKEMON), night);
+            EXPECT_EQ(FlagGet(FLAG_NIGHT_POKEMON), !night);
+        }
+    }
+    if (nightFlag)
+        FlagSet(FLAG_NIGHT_POKEMON);
+    else
+        FlagClear(FLAG_NIGHT_POKEMON);
+    if (dayFlag)
+        FlagSet(FLAG_DAY_POKEMON);
+    else
+        FlagClear(FLAG_DAY_POKEMON);
+    VarSet(VAR_TIME_BASED_ENCOUNTER, encounter);
+    RestoreSnapshot(&snapshot);
+}
+
+static void SetBlendAt(u32 hour, u32 minute)
+{
+    FakeRtc_ManuallySetTime(1, hour, minute, 0);
+    UpdateTimeOfDay();
+}
+
+static bool32 SameBlend(const struct BlendSettings *a, const struct BlendSettings *b)
+{
+    return a->blendColor == b->blendColor && a->isTint == b->isTint && a->coeff == b->coeff;
+}
+
+TEST("In-game clock: the lighting blend stays in range and joins up across the times of day")
+{
+    static const struct { u8 hour, minute; } sPoints[] =
+    {
+        { 4, 0 }, { 5, 59 }, { 6, 0 }, { 7, 59 }, { 20, 0 }, { 23, 59 }, { 0, 0 }, { 0, 59 }, { 1, 0 },
+    };
+    struct ClockSnapshot snapshot;
+    struct TimeBlendSettings before = gTimeBlend;
+    u8 timeOfDay = gTimeOfDay;
+    struct TimeBlendSettings last;
+    u32 i;
+
+    TakeSnapshot(&snapshot);
+    for (i = 0; i < ARRAY_COUNT(sPoints); i++)
+    {
+        SetBlendAt(sPoints[i].hour, sPoints[i].minute);
+        EXPECT_LE(gTimeBlend.weight, 256);
+    }
+
+    // A weight of 256 is all start blend, 0 all end blend. Each period's last minute must land
+    // on the blend the next period starts from, so the light never jumps.
+    // Night -> morning ends where morning -> day begins (6:00).
+    SetBlendAt(4, 0);
+    EXPECT_EQ(gTimeBlend.weight, 256);
+    EXPECT(SameBlend(&gTimeBlend.startBlend, &gTimeOfDayBlend[TIME_NIGHT]));
+    SetBlendAt(5, 59);
+    last = gTimeBlend;
+    EXPECT(SameBlend(&last.endBlend, &gTimeOfDayBlend[TIME_MORNING]));
+    EXPECT_LT(last.weight, 32);
+    SetBlendAt(6, 0);
+    EXPECT_EQ(gTimeBlend.weight, 256);
+    EXPECT(SameBlend(&gTimeBlend.startBlend, &last.endBlend));
+    SetBlendAt(7, 59);
+    EXPECT(SameBlend(&gTimeBlend.endBlend, &gTimeOfDayBlend[TIME_DAY]));
+    EXPECT_LT(gTimeBlend.weight, 32);
+
+    // Day -> evening runs 20:00-24:00 and ends where evening -> night begins (0:00).
+    SetBlendAt(20, 0);
+    EXPECT_EQ(gTimeBlend.weight, 256);
+    EXPECT(SameBlend(&gTimeBlend.startBlend, &gTimeOfDayBlend[TIME_DAY]));
+    SetBlendAt(23, 59);
+    last = gTimeBlend;
+    EXPECT(SameBlend(&last.endBlend, &gTimeOfDayBlend[TIME_EVENING]));
+    EXPECT_LT(last.weight, 32);
+    SetBlendAt(0, 0);
+    EXPECT_EQ(gTimeBlend.weight, 256);
+    EXPECT(SameBlend(&gTimeBlend.startBlend, &last.endBlend));
+
+    // Evening -> night takes 0:00-1:00 and ends where plain night begins (1:00).
+    SetBlendAt(0, 59);
+    last = gTimeBlend;
+    EXPECT(SameBlend(&last.endBlend, &gTimeOfDayBlend[TIME_NIGHT]));
+    EXPECT_LT(last.weight, 32);
+    SetBlendAt(1, 0);
+    EXPECT_EQ(gTimeBlend.weight, 256);
+    EXPECT(SameBlend(&gTimeBlend.startBlend, &last.endBlend));
+    EXPECT(SameBlend(&gTimeBlend.endBlend, &last.endBlend));
+
+    gTimeBlend = before;
+    gTimeOfDay = timeOfDay;
     RestoreSnapshot(&snapshot);
 }
 
@@ -179,22 +295,23 @@ TEST("In-game clock: passing midnight on the field starts the next day for the d
     FlagSet(TEST_DAILY_FLAG);
     FlagSet(TEST_HOENN_DAILY_FLAG);
 
-    // 23:59:50 is still day 1.
-    FakeRtc_AdvanceTimeBy(0, 13, 59, 50);
+    // 23:59:50 is still day 1, in the evening.
+    FakeRtc_AdvanceTimeBy(0, 15, 59, 50);
     DoTimeBasedEvents();
     EXPECT_EQ(gLocalTime.hours, 23);
     EXPECT_EQ(VarGet(VAR_DAYS), 1);
     EXPECT(FlagGet(TEST_DAILY_FLAG));
     EXPECT(FlagGet(TEST_HOENN_DAILY_FLAG));
     EXPECT_EQ(DailySlots_GetDay(), 1);
-    EXPECT_EQ(GetTimeOfDay(), TIME_NIGHT);
+    EXPECT_EQ(GetTimeOfDay(), TIME_EVENING);
 
-    // One second of play later it is 00:00:06 on day 2.
+    // One second of play later it is 00:00:02 on day 2, at night.
     FakeRtc_TickTimeForward();
     DoTimeBasedEvents();
     EXPECT_EQ(gLocalTime.days, 2);
     EXPECT_EQ(gLocalTime.hours, 0);
-    EXPECT_EQ(gLocalTime.seconds, 6);
+    EXPECT_EQ(gLocalTime.seconds, 2);
+    EXPECT_EQ(GetTimeOfDay(), TIME_NIGHT);
     EXPECT_EQ(VarGet(VAR_DAYS), 2);
     EXPECT(!FlagGet(TEST_DAILY_FLAG));
     EXPECT(!FlagGet(TEST_HOENN_DAILY_FLAG));
@@ -260,7 +377,7 @@ TEST("In-game clock: the day count only goes forward, one day at a time, across 
         FakeRtc_AdvanceTimeBy(1, 0, 0, 0);
         DoTimeBasedEvents();
         EXPECT_EQ(gLocalTime.days, day);
-        EXPECT_EQ(gLocalTime.hours, 10);
+        EXPECT_EQ(gLocalTime.hours, 8);
         EXPECT_EQ(RtcGetLocalDayCount(), day);
         EXPECT_EQ(DailySlots_GetDay(), day);
         EXPECT_EQ(VarGet(VAR_DAYS), day);

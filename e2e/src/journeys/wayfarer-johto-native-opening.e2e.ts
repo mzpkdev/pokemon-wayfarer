@@ -20,7 +20,10 @@ const expectClockOnlyLookedAt = async (game: GameSession): Promise<void> => {
     dayNumber: 1,
     localDay: 1,
   })
-  expect(clock.hour).toBeGreaterThanOrEqual(10)
+  // New Game starts at 8:00 and 12 in-game seconds pass per second of play, so the opening's
+  // first minutes stay well short of noon (4 in-game hours are 20 minutes of play).
+  expect(clock.hour).toBeGreaterThanOrEqual(8)
+  expect(clock.hour).toBeLessThan(12)
   expect(await game.story.var("days")).toBe(1)
 }
 

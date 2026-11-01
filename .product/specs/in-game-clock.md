@@ -1,12 +1,12 @@
 # In-game clock
 
 PRD: [In-game clock](../prds/in-game-clock.md)
-Implemented: Partial. The clock, what play time counts, the new game, a new
-day and the removed ways of setting time shipped in
+Implemented: Yes. The clock, what play time counts, the new game, a new day
+and the removed ways of setting time shipped in
 [PR #170](https://github.com/mzpkdev/pokemon-wayfarer/pull/170) with a
-90-minute day (16×), a 10:00 start and the engine's hours. The 2-hour day
-(12×), the 8:00 start and [Wayfarer's times of day](#times-of-day) are not
-built.
+90-minute day (16×), a 10:00 start and the engine's hours; the 2-hour day
+(12×), the 8:00 start and [Wayfarer's times of day](#times-of-day) replaced
+those afterwards.
 
 ## Scope
 

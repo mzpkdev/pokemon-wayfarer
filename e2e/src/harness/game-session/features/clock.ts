@@ -26,7 +26,7 @@ export type ClockReading = {
 export type ClockApi = {
   /**
    * The saved in-game clock (.product/specs/in-game-clock.md), the one source of every day and
-   * time of day. It runs 16 in-game seconds per 60 frames of play.
+   * time of day. It runs 12 in-game seconds per 60 frames of play.
    */
   read: () => Promise<ClockReading>
   /**

@@ -706,7 +706,9 @@ void SetWalkingIntoSignVars(void)
 
 void SetTimeBasedEncounters(void)
 {   
-    if (GetTimeOfDay() != TIME_NIGHT)
+    // Wayfarer's night table covers evening and night; morning and day use the day table.
+    enum TimeOfDay timeOfDay = GetTimeOfDay();
+    if (timeOfDay != TIME_NIGHT && !(IS_WAYFARER && timeOfDay == TIME_EVENING))
 	{
 		VarSet(VAR_TIME_BASED_ENCOUNTER, 1); // Day
 	}

@@ -1917,10 +1917,10 @@ void UpdateTimeOfDay(void)
 
 #if IS_HNS
     {
-        // HnS wild encounter tables only define Day and Night variants, so TIME_MORNING
-        // and TIME_EVENING both fall back to the Day table (OW_TIME_OF_DAY_FALLBACK).
-        // The overworld mons must swap on the same boundary, i.e. only at TIME_NIGHT.
-        if (gTimeOfDay == TIME_NIGHT)
+        // HnS wild encounter tables only define Day and Night variants. In Wayfarer the
+        // night table covers evening and night (20:00-4:00), so the overworld mons swap on
+        // the same boundary (.product/specs/in-game-clock.md#wild-pokémon-by-time-of-day).
+        if (gTimeOfDay == TIME_NIGHT || (IS_WAYFARER && gTimeOfDay == TIME_EVENING))
         {
             FlagClear(FLAG_NIGHT_POKEMON);
             FlagSet(FLAG_DAY_POKEMON);
