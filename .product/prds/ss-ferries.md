@@ -73,14 +73,52 @@ berth's sailor says which ship comes next and when.
 
 ### Riding
 
-The trip is played out aboard, in real time. Each leg to the next port takes
-an in-game hour, 5 minutes of play, and you can walk the decks, visit the
-cabins and battle the passengers on the way. The clock keeps running.
+Sailing is a commitment. Each leg to the next port takes **6 in-game hours**,
+a quarter of a day, so a whole loop takes a day. While you sail, the world
+moves on: you arrive at another time of day, maybe after your connection's
+window has closed, and the day's slots and rematches may have turned over.
 
-**The cabin bed.** Every ship has a cabin with a bed. It heals your party,
-and while the ship is at sea it lets you sleep until the next port, which
-moves the clock to the arrival time. It never skips more than the rest of the
-current time at sea, and never the time in port.
+You spend a leg one of two ways:
+
+- **Awake on deck.** The 6 hours play out in real time, about 30 minutes of
+  play. You walk the decks and battle the passengers. The clock keeps running.
+- **In a cabin.** You sleep and wake as the ship reaches the next port. The
+  clock jumps to the arrival time, so the world still moves on 6 hours, but it
+  costs you only seconds of play. Sleeping never skips time in port.
+
+**Earning a cabin.** Cabins aren't sold. When you board, **two random
+passengers** aboard each offer their cabin, and each wants something in
+return. Meet either request and that cabin is yours until you go ashore: you
+can sleep in it every leg until then. Leave the ship and it's gone; the next
+time you board, two new hosts are drawn. If you can't meet either request, you
+spend the trip awake on deck. A cabin gives nothing but the sleep: no healing,
+no gifts.
+
+Each ship draws its hosts from its own crowd: the Anne carries tourists and
+well-off guests, the Aqua sailors and merchants, the Tidal families and
+fishermen. Requests vary widely and don't need to be equally hard, for
+example:
+
+- a gentleman: "Beat me, and my cabin is yours";
+- a chef: bring a particular berry for tomorrow's menu;
+- a little girl: show her a Pokémon of a given colour, type or species;
+- a sailor: help load cargo with a Pokémon that knows Strength, or light the
+  hold with Flash;
+- a seasick passenger: bring an Antidote or a Full Heal;
+- a tourist from Alola: show a Pokémon from your own region;
+- a lost-and-found lady: find the brooch she dropped somewhere on deck;
+- a fisherman: show a Pokémon you caught with a rod;
+- a scientist: show a fully evolved Pokémon;
+- a rich kid: trade the cabin for a Nugget;
+- an old sea dog: answer a sailor's quiz about the ports;
+- an insomniac: play the Poké Flute;
+- a gambler: win a coin flip;
+- a stowaway kid: bring a snack and share the hiding spot;
+- a breeder: show a Pokémon with high friendship;
+- honeymooners: win a double battle against them.
+
+Nothing outside the ship tells you who's aboard: you find the hosts by
+walking the corridors.
 
 **Arriving.** When the ship reaches a port, an announcement names it and the
 ship stays in port for a short while. Nothing asks you anything: to get off,
@@ -89,9 +127,9 @@ if you're still aboard when it does, you're on the next trip, and so on round
 the loop. Arrival is never limited by the table: once aboard, you can ride
 the whole loop and get off anywhere on it, at any hour.
 
-**In port and at sea.** Each leg is an in-game hour at sea (5 minutes of play)
-followed by half an in-game hour in port (2.5 minutes), and a ship you've just
-boarded stays the same half hour before it casts off.
+**In port and at sea.** Each leg is 6 in-game hours at sea (30 minutes of
+play) followed by half an in-game hour in port (2.5 minutes), and a ship
+you've just boarded stays the same half hour before it casts off.
 
 ### Ticket and service
 
@@ -115,7 +153,7 @@ Before a ship is in service, its slots in the table stay empty.
 Every port with an S.S. berth has a departure board: which ship is in port by
 day and by night, the hours a single-ship port's berth is empty, and where
 each ship sails next. That is the only timetable; the Pokégear and Town Map
-don't show ships.
+don't show ships, and nothing ashore shows who's aboard.
 
 ## Boundaries
 
@@ -133,7 +171,7 @@ don't show ships.
   daily world slots ([world items](../specs/world-items.md), [daily world
   slots](daily-world-slots.md)). The Anne's Alolan flavour is lines, not new
   trainers.
-- **The cabin bed is the only time skip**, and it only skips the rest of a
+- **Sleeping in a cabin is the only time skip**, and it only skips the rest of a
   leg. There is no waiting bench at the harbors.
 - **No change to the S.S. Ticket's source**, the Anne's captain's adventure or
   the Aqua's maiden voyage, other than what happens after them.
@@ -141,9 +179,19 @@ don't show ships.
 
 ## Balance
 
-- A leg is 7.5 minutes of play aboard: 5 at sea and 2.5 in port. The longest
-  loop trip, three legs, takes about 22 minutes from boarding to the last
-  arrival, or about 8 if you sleep through the time at sea.
+- A leg is 6 in-game hours at sea and half an hour in port. Awake, that is
+  about 30 minutes of play at sea; in a cabin, seconds. Either way the world
+  moves on a quarter of a day per leg.
+
+  | Trip | Legs | In-game time | Awake | In a cabin |
+  | --- | --- | --- | --- | --- |
+  | Vermilion → One Island | 1 | about 6.5 h | about 33 min | about 3 min |
+  | Vermilion → Melemele | 2 | about 13 h | about 1 h 5 min | about 5 min |
+  | Olivine → Melemele, changing at Vermilion | 3 | about 20 h | about 1 h 40 min | about 8 min |
+  | A whole loop | 4 | about a day | about 2 h | about 10 min |
+
+  The minutes in a cabin are the stops in port along the way. Waiting for a
+  connection comes on top.
 - The longest wait for a particular ship at a shared port is an hour of play;
   at One Island or Melemele it is 20 minutes. Five shared ports mean another
   ship is often in that gets you somewhere useful, so a wait is rarely forced.
@@ -166,6 +214,11 @@ don't show ships.
   and at Melemele's landing, which were drawn for small boats.
 - Whether the Route 13 boat to Alola keeps its Strange Souvenir check now that
   the Anne also sails there.
+- Staying aboard asleep round and round skips a day every 4 legs, about 10
+  minutes of play, for one cabin. Ashore that gains little, since going ashore
+  gives up the cabin, but the ship's own daily trainers and items refresh
+  while you sleep. Whether a ship's daily slots should refresh only once you
+  have been ashore, or whether that's fine.
 - Which interior maps each ship uses for the voyage, and how the decks look at
   sea.
 
