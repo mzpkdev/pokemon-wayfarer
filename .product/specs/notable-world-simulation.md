@@ -1,7 +1,7 @@
 # Notable world simulation
 
 PRD: [Notable world simulation](../prds/notable-world-simulation.md)
-Implemented: Partial. Walkers on routines, the heartbeat, travel, the saved record, and the local actor shipped in [PR #147](https://github.com/mzpkdev/pokemon-wayfarer/pull/147). Talking to a walker shipped: the greeting by friendship, the line of the activity it is doing or heading for, and the farewell; talking adds nothing, and the follow-ups are not built. A Gym Leader's own-Gym talk shipped: the Gym's script runs unchanged while it owes the player something, and once nothing is owed the talk is the greeting, the Gym's existing post-battle line, and the farewell. Haunts as destinations, the Masters partner, and momentum remain; Bruno, Koga, and the face-only-sprite trainers keep their fixed spots.
+Implemented: Partial. Walkers on routines, the heartbeat, travel, the saved record, and the local actor shipped in [PR #147](https://github.com/mzpkdev/pokemon-wayfarer/pull/147). Talking to a walker shipped: the greeting by friendship, the line of the activity it is doing or heading for, and the farewell; talking adds nothing, and the follow-ups are not built. A phone call to a notable contact reads the record to say where they are ([phone](#interactions)). A Gym Leader's own-Gym talk shipped: the Gym's script runs unchanged while it owes the player something, and once nothing is owed the talk is the greeting, the Gym's existing post-battle line, and the farewell. Haunts as destinations, the Masters partner, and momentum remain; Bruno, Koga, and the face-only-sprite trainers keep their fixed spots.
 Design status: draft for review. The model is decided: a saved, abstract
 **world simulation** advanced by a map-change **heartbeat**, plus a
 **local actor** on the player's map, with a handoff both ways, as the
@@ -698,6 +698,13 @@ When a dwell runs out (in a heartbeat, or locally while watched):
   a badge battle ([just leaving](notable-spots.md#just-leaving)).
 - **Leagues.** The simulation never changes selection, lineups, or
   battles; it only reads league state and adds the resolution hook.
+- **Phone.** A call to a notable contact says where they are right now
+  ([phone contacts](notable-trainers.md#phone-contacts)), from their record
+  as it stands: the map of their node while travelling or dwelling (with
+  the activity line at a spot), their Gym while home-locked or at home in
+  it, their home base while still marked Away: league after the event
+  ended. A call only reads the record: it never writes it or finishes a
+  pending heartbeat, which hasn't moved anyone yet.
 
 ### The world record
 

@@ -6,6 +6,8 @@
 #include "international_string_util.h"
 #include "main.h"
 #include "match_call.h"
+#include "notable_phone.h"
+#include "notable_trainers.h"
 #include "overworld.h"
 #include "pokemon.h"
 #include "region_map.h"
@@ -15,15 +17,25 @@
 #include "strings.h"
 #include "wayfarer_daily_slots.h"
 #include "wayfarer_phone.h"
+#include "constants/notable_trainers.h"
 #include "constants/region_map_sections.h"
 #include "constants/songs.h"
 
 #if IS_WAYFARER
 #define MATCH_CALL_LAST_CONTACT DAILY_CONTACT_LAST
-STATIC_ASSERT(MATCH_CALL_ENTRIES_MAX >= MC_HEADER_COUNT + DAILY_CONTACT_LAST + 1, MatchCallListFitsEveryContact);
+STATIC_ASSERT(MATCH_CALL_ENTRIES_MAX >= MC_HEADER_COUNT + NOTABLE_TRAINER_COUNT + DAILY_CONTACT_LAST + 1,
+              MatchCallListFitsEveryContact);
+STATIC_ASSERT(MATCH_CALL_NOTABLE_HEADER_BASE > DAILY_CONTACT_LAST, NotableHeadersPastEveryRouteContact);
+// A notable contact's entry: its character, or NOTABLE_TRAINER_NONE (0) for a header or a route contact.
+#define EntryNotable(entry) \
+    (!(entry)->isSpecialTrainer && (entry)->headerId > MATCH_CALL_NOTABLE_HEADER_BASE \
+     && (entry)->headerId <= MATCH_CALL_NOTABLE_HEADER(NOTABLE_TRAINER_COUNT) \
+     ? (entry)->headerId - MATCH_CALL_NOTABLE_HEADER_BASE : NOTABLE_TRAINER_NONE)
 #else
 #define MATCH_CALL_LAST_CONTACT (REMATCH_TABLE_ENTRIES - 1)
+#define EntryNotable(entry) 0
 #endif
+STATIC_ASSERT(sizeof(struct PokenavListItem) == sizeof(struct PokenavMonListItem), PokenavListItemsShareOneSize);
 
 struct Pokenav_MatchCallMenu
 {
@@ -46,8 +58,10 @@ static u32 CB2_HandleCheckPageInput(struct Pokenav_MatchCallMenu *);
 static u32 CB2_HandleCallExitInput(struct Pokenav_MatchCallMenu *);
 static u32 LoopedTask_BuildMatchCallList(s32);
 static bool32 ShouldDoNearbyMessage(void);
+static bool32 EntryHasCheckPage(const struct PokenavMatchCallEntry *entry);
 
 static const u8 gText_CallCantBeMadeHere[] = _("A call can't be made from here.");
+static const u8 gText_EmptyCheckPageEntry[] = _("");
 
 #include "data/text/match_call_messages.h"
 
@@ -107,7 +121,7 @@ static u32 CB2_HandleMatchCallInput(struct Pokenav_MatchCallMenu *state)
         state->optionCursorPos = 0;
         selection = PokenavList_GetSelectedIndex();
 
-        if (MatchCall_HasCheckPage(state->matchCallEntries[selection].headerId))
+        if (EntryHasCheckPage(&state->matchCallEntries[selection]))
         {
             state->matchCallOptions = sMatchCallOptionsHasCheckPage;
             state->maxOptionId = ARRAY_COUNT(sMatchCallOptionsHasCheckPage) - 1;
@@ -247,6 +261,23 @@ static u32 LoopedTask_BuildMatchCallList(s32 taskState)
 
         return LT_CONTINUE;
     case 2:
+#if IS_WAYFARER
+        // Notable contacts (notable_phone.h), in character order: everyone at Friend or above but Tate & Liza.
+        for (i = 1; i <= NOTABLE_TRAINER_COUNT; i++)
+        {
+            u8 homeGroup, homeNum;
+
+            if (!NotablePhone_IsContact(i) || state->numRegistered >= MATCH_CALL_ENTRIES_MAX)
+                continue;
+            state->matchCallEntries[state->numRegistered].headerId = MATCH_CALL_NOTABLE_HEADER(i);
+            state->matchCallEntries[state->numRegistered].isSpecialTrainer = FALSE;
+            state->matchCallEntries[state->numRegistered].mapSec = NotablePhone_GetHome(i, &homeGroup, &homeNum)
+                ? Overworld_GetMapHeaderByGroupAndId(homeGroup, homeNum)->regionMapSectionId : MAPSEC_NONE;
+            state->numRegistered++;
+        }
+#endif
+        return LT_INC_AND_CONTINUE;
+    case 3:
         // Load normal trainers
         for (i = 0, j = state->headerId; i < 30; i++, j++)
         {
@@ -264,7 +295,7 @@ static u32 LoopedTask_BuildMatchCallList(s32 taskState)
         }
 
         return LT_CONTINUE;
-    case 3:
+    case 4:
         state->initFinished = TRUE;
         break;
     }
@@ -341,9 +372,16 @@ bool32 GetMatchCallContactPlaceName(int index, u8 *dest)
     struct Pokenav_MatchCallMenu *state = GetSubstructPtr(POKENAV_SUBSTRUCT_MATCH_CALL_MAIN);
     u8 mapGroup, mapNum;
 
-    if (state->matchCallEntries[index].isSpecialTrainer
+    if (EntryNotable(&state->matchCallEntries[index]))
+    {
+        if (!NotablePhone_GetHome(EntryNotable(&state->matchCallEntries[index]), &mapGroup, &mapNum))
+            return FALSE;
+    }
+    else if (state->matchCallEntries[index].isSpecialTrainer
      || !DailyContacts_GetHome(state->matchCallEntries[index].headerId, &mapGroup, &mapNum))
+    {
         return FALSE;
+    }
     WayfarerGetPlaceNameOfMap(dest, mapGroup, mapNum);
     return TRUE;
 }
@@ -359,6 +397,8 @@ bool32 ShouldDrawRematchPokeballIcon(int index)
 {
 #if FREE_MATCH_CALL == FALSE
     struct Pokenav_MatchCallMenu *state = GetSubstructPtr(POKENAV_SUBSTRUCT_MATCH_CALL_MAIN);
+    if (EntryNotable(&state->matchCallEntries[index]))
+        return FALSE;  // notable contacts have no rematch
     if (!state->matchCallEntries[index].isSpecialTrainer)
     {
         // A contact number: for the Sevii and coast families it reaches past REMATCH_TABLE_ENTRIES.
@@ -381,6 +421,10 @@ enum TrainerPicID GetMatchCallTrainerPic(int index)
 {
     int headerId;
     struct Pokenav_MatchCallMenu *state = GetSubstructPtr(POKENAV_SUBSTRUCT_MATCH_CALL_MAIN);
+#if IS_WAYFARER
+    if (EntryNotable(&state->matchCallEntries[index]))
+        return GetTrainerPicFromId(NotablePhone_GetTrainerId(EntryNotable(&state->matchCallEntries[index])));
+#endif
     if (!state->matchCallEntries[index].isSpecialTrainer)
     {
         index = GetTrainerIdxByRematchIdx(state->matchCallEntries[index].headerId);
@@ -406,6 +450,11 @@ const u8 *GetMatchCallMessageText(int index, bool8 *newRematchRequest)
     if (!Overworld_MapTypeAllowsTeleportAndFly(gMapHeader.mapType))
         return gText_CallCantBeMadeHere;
 
+#if IS_WAYFARER
+    if (EntryNotable(&state->matchCallEntries[index]))
+        NotablePhone_BufferCall(EntryNotable(&state->matchCallEntries[index]), gStringVar4);
+    else
+#endif
     if (!state->matchCallEntries[index].isSpecialTrainer)
         *newRematchRequest = SelectMatchCallMessage(GetTrainerIdxByRematchIdx(state->matchCallEntries[index].headerId), gStringVar4);
     else
@@ -418,6 +467,8 @@ const u8 *GetMatchCallFlavorText(int index, int checkPageEntry)
 {
     int rematchId;
     struct Pokenav_MatchCallMenu *state = GetSubstructPtr(POKENAV_SUBSTRUCT_MATCH_CALL_MAIN);
+    if (EntryNotable(&state->matchCallEntries[index]))
+        return gText_EmptyCheckPageEntry;  // no check page (EntryHasCheckPage)
     if (state->matchCallEntries[index].isSpecialTrainer)
     {
         rematchId = MatchCall_GetRematchTableIdx(state->matchCallEntries[index].headerId);
@@ -451,6 +502,15 @@ void BufferMatchCallNameAndDesc(struct PokenavMatchCallEntry *matchCallEntry, u8
 {
     const u8 *trainerName;
     const u8 *className;
+#if IS_WAYFARER
+    if (EntryNotable(matchCallEntry))
+    {
+        const struct Trainer *trainer = GetTrainerStructFromId(NotablePhone_GetTrainerId(EntryNotable(matchCallEntry)));
+        className = gTrainerClasses[trainer->trainerClass].name;
+        trainerName = trainer->trainerName;
+    }
+    else
+#endif
     if (!matchCallEntry->isSpecialTrainer)
     {
         int index = GetTrainerIdxByRematchIdx(matchCallEntry->headerId);
@@ -499,7 +559,7 @@ int GetIndexDeltaOfNextCheckPageDown(int index)
     int count = 1;
     while (++index < state->numRegistered)
     {
-        if (MatchCall_HasCheckPage(state->matchCallEntries[index].headerId))
+        if (EntryHasCheckPage(&state->matchCallEntries[index]))
             return count;
 
         count++;
@@ -514,7 +574,7 @@ int GetIndexDeltaOfNextCheckPageUp(int index)
     int count = -1;
     while (--index >= 0)
     {
-        if (MatchCall_HasCheckPage(state->matchCallEntries[index].headerId))
+        if (EntryHasCheckPage(&state->matchCallEntries[index]))
             return count;
 
         count--;
@@ -553,6 +613,8 @@ static bool32 ShouldDoNearbyMessage(void)
 #if FREE_MATCH_CALL == FALSE
     struct Pokenav_MatchCallMenu *state = GetSubstructPtr(POKENAV_SUBSTRUCT_MATCH_CALL_MAIN);
     int selection = PokenavList_GetSelectedIndex();
+    if (EntryNotable(&state->matchCallEntries[selection]))
+        return FALSE;  // a notable contact always takes the call
     if (!state->matchCallEntries[selection].isSpecialTrainer)
     {
 #if IS_WAYFARER
@@ -579,4 +641,12 @@ static bool32 ShouldDoNearbyMessage(void)
     }
 #endif //FREE_MATCH_CALL
     return FALSE;
+}
+
+// Whether an entry offers CHECK: by its header id, as the list always did, but never for a notable contact.
+static bool32 EntryHasCheckPage(const struct PokenavMatchCallEntry *entry)
+{
+    if (EntryNotable(entry))
+        return FALSE;
+    return MatchCall_HasCheckPage(entry->headerId);
 }

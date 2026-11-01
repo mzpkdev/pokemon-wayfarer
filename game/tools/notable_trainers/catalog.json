@@ -120,6 +120,11 @@
         "hello": "Hey, {PLAYER}! Good to see you. Eating well, I hope?",
         "close": "{PLAYER}! Good to see you, friend. There is always a plate for you.",
         "bye": "Take care! And keep your POKéMON well fed!"
+      },
+      "phone": {
+        "hello": "Hey, {PLAYER}! BROCK here. Have you been eating well?",
+        "close": "{PLAYER}! Always glad to hear from you, friend!",
+        "bye": "Talk soon! Keep your POKéMON well fed!"
       }
     },
     {
@@ -239,6 +244,11 @@
         "hello": "Hey, {PLAYER}! Took you long enough!",
         "close": "Hey, {PLAYER}! Best friend alert! Don't tell anyone I said so.",
         "bye": "See ya! ...{BUDDY}, get back in your ball! Not again!"
+      },
+      "phone": {
+        "hello": "Hello? Oh, {PLAYER}! About time you called!",
+        "close": "{PLAYER}! I was just about to call you!",
+        "bye": "Gotta go! Don't be a stranger, OK?"
       }
     },
     {
@@ -361,6 +371,11 @@
         "hello": "Hey, kid! {PLAYER}! Still standing? Good!",
         "close": "Hey there, {PLAYER}! My favorite soldier! At ease, friend!",
         "bye": "Dismissed, kid! Stay sharp!"
+      },
+      "phone": {
+        "hello": "LT. SURGE here! {PLAYER}! Still standing, kid?",
+        "close": "{PLAYER}! My favorite soldier, calling in!",
+        "bye": "Over and out, kid!"
       }
     },
     {
@@ -479,6 +494,11 @@
         "hello": "Oh... {PLAYER}? Forgive me, I was nearly asleep. Hello!",
         "close": "Dear {PLAYER}. Your company is a joy. Please, stay a moment.",
         "bye": "Farewell. Oh... I think I'll close my eyes a moment..."
+      },
+      "phone": {
+        "hello": "Hello...? Oh, {PLAYER}. Forgive me, I was dozing.",
+        "close": "Dear {PLAYER}. Hearing your voice is a joy.",
+        "bye": "Farewell... I think I'll rest my eyes a moment..."
       }
     },
     {
@@ -604,6 +624,11 @@
         "hello": "Fufufufu... Surprised? It's just me! Hello, {PLAYER}!",
         "close": "{PLAYER}! Fufufu, there's no need to hide from you anymore!",
         "bye": "Farewell! (Poof!) ...I'm still working on that part."
+      },
+      "phone": {
+        "hello": "Fufufu! A ninja always answers! Hello, {PLAYER}!",
+        "close": "{PLAYER}! Fufufu, I'd never hide from your calls!",
+        "bye": "Farewell! (Poof!) ...Did that sound cool over the phone?"
       }
     },
     {
@@ -722,6 +747,11 @@
         "hello": "{PLAYER}. I foresaw that you would come.",
         "close": "{PLAYER}. I see you clearly now. You are a true friend.",
         "bye": "We will meet again. I have seen it."
+      },
+      "phone": {
+        "hello": "{PLAYER}. I knew you would call.",
+        "close": "{PLAYER}. I sensed your call before it came, friend.",
+        "bye": "We will speak again. I have seen it."
       }
     },
     {
@@ -844,6 +874,11 @@
         "hello": "Hah! {PLAYER}! Got your BURN HEAL handy?",
         "close": "Hah! {PLAYER}, my friend! Always a hot time with you!",
         "bye": "Hah! Better have BURN HEAL next time!"
+      },
+      "phone": {
+        "hello": "Hah! {PLAYER}! Calling me? You're a hot one!",
+        "close": "Hah! {PLAYER}, my friend! Your call warms me up!",
+        "bye": "Hah! Keep that BURN HEAL handy!"
       }
     },
     {
@@ -964,6 +999,11 @@
         "hello": "So. {PLAYER}. You keep turning up.",
         "close": "{PLAYER}. You have earned my trust. Do not waste it.",
         "bye": "Go. We will meet again."
+      },
+      "phone": {
+        "hello": "...{PLAYER}. Speak. I am listening.",
+        "close": "{PLAYER}. You have earned this line. Use it well.",
+        "bye": "Enough. We will speak again."
       }
     },
     {
@@ -1090,6 +1130,11 @@
         "hello": "Yo, {PLAYER}! Miss me? Course you did.",
         "close": "Yo, {PLAYER}! My rival and my friend. Don't let it go to your head.",
         "bye": "Smell ya later!"
+      },
+      "phone": {
+        "hello": "Yo, {PLAYER}! Calling me? Guess you miss me.",
+        "close": "Yo, {PLAYER}! My rival and my friend, on the line!",
+        "bye": "Gotta go. Smell ya later!"
       }
     },
     {
@@ -1207,6 +1252,11 @@
         "hello": "Ah, {PLAYER}. Come to see me? How refreshing.",
         "close": "Dear {PLAYER}. I am truly glad to see you. Stay a while.",
         "bye": "Come along, {BUDDY}. Until next time."
+      },
+      "phone": {
+        "hello": "Ah, {PLAYER}. A call from you. How refreshing.",
+        "close": "Dear {PLAYER}. I'm truly glad you called.",
+        "bye": "Until next time. Stay cool."
       }
     },
     {
@@ -1327,6 +1377,11 @@
         "hello": "Hoo hah! {PLAYER}! Still training hard?",
         "close": "Hoo hah! {PLAYER}! My friend! Our bond is strong as steel!",
         "bye": "Train hard! Hoo hah!"
+      },
+      "phone": {
+        "hello": "Hoo hah! {PLAYER}! Still training hard?",
+        "close": "Hoo hah! {PLAYER}! A call from my friend!",
+        "bye": "Train hard! Hoo hah!"
       }
     },
     {
@@ -1446,6 +1501,11 @@
         "hello": "Hmph. {PLAYER}. Still kicking, are you?",
         "close": "Hmph. {PLAYER}. Fine, you're all right, child. Don't tell anyone.",
         "bye": "Off with you, child. {BUDDY} and I have things to do."
+      },
+      "phone": {
+        "hello": "Hmph. {PLAYER}. Calling an old woman, eh?",
+        "close": "Hmph. {PLAYER}. Fine, I'm glad you called, child.",
+        "bye": "Off with you, child. I've things to do."
       }
     },
     {
@@ -1575,6 +1635,11 @@
         "hello": "Fwahahaha! {PLAYER}. You did not sense me, did you?",
         "close": "Fwahaha! {PLAYER}. I trust few. You are one of them.",
         "bye": "Until our paths cross again. Fwahahaha!"
+      },
+      "phone": {
+        "hello": "Fwahahaha! {PLAYER}. Did you think I would not answer?",
+        "close": "Fwahaha! {PLAYER}. Few have this number. You are one.",
+        "bye": "Until our paths cross again. Fwahahaha!"
       }
     },
     {
@@ -1697,6 +1762,11 @@
         "hello": "{PLAYER}. Good to see you. You're looking strong.",
         "close": "{PLAYER}! My friend. It's always good to see you.",
         "bye": "Until next time. {BUDDY}, let's go!"
+      },
+      "phone": {
+        "hello": "{PLAYER}. Good to hear from you.",
+        "close": "{PLAYER}! My friend. I was hoping you'd call.",
+        "bye": "Until next time. Stay strong."
       }
     },
     {
@@ -1817,6 +1887,11 @@
         "hello": "{PLAYER}! Good timing. My birds are itching to fly.",
         "close": "{PLAYER}! You're a true friend. My birds love you, too!",
         "bye": "Take care! Keep your spirits soaring!"
+      },
+      "phone": {
+        "hello": "{PLAYER}! Good timing. My birds are itching to fly.",
+        "close": "{PLAYER}! A call from a true friend! My birds say hi!",
+        "bye": "Take care! Keep your spirits soaring!"
       }
     },
     {
@@ -1934,6 +2009,11 @@
         "hello": "Hi, {PLAYER}! Seen any interesting Bug POKéMON lately?",
         "close": "{PLAYER}! My best research partner! I saved you a note!",
         "bye": "Bye! If you spot a rare bug, tell me first!"
+      },
+      "phone": {
+        "hello": "Hi, {PLAYER}! Seen any interesting Bug POKéMON lately?",
+        "close": "{PLAYER}! My best research partner! How are the bugs treating you?",
+        "bye": "Bye! If you spot a rare bug, call me first!"
       }
     },
     {
@@ -2053,6 +2133,11 @@
         "hello": "Hiii, {PLAYER}! I'm so glad to see you!",
         "close": "{PLAYER}! Yay! You're my bestest friend! Come on, hang out!",
         "bye": "Bye-bye! Call me sometime, 'kay?"
+      },
+      "phone": {
+        "hello": "Hiii, {PLAYER}! You called! I'm so happy!",
+        "close": "{PLAYER}! Yay! My bestest friend called me!",
+        "bye": "Bye-bye! Call me again soon, 'kay?"
       }
     },
     {
@@ -2177,6 +2262,11 @@
         "hello": "{PLAYER}. I had a feeling you'd come.",
         "close": "{PLAYER}. I see a bright bond between us. I'm glad you came.",
         "bye": "Until we meet again. Keep your eyes open."
+      },
+      "phone": {
+        "hello": "{PLAYER}. I had a feeling you'd call.",
+        "close": "{PLAYER}. I sensed a friend on the line. I'm glad.",
+        "bye": "Until we speak again. Keep your eyes open."
       }
     },
     {
@@ -2301,6 +2391,11 @@
         "hello": "WAHAHAH! {PLAYER}! Good to see you, buddy!",
         "close": "WAHAHAH! {PLAYER}! My buddy! Pals train together, right?",
         "bye": "See you! Keep training! Hah!"
+      },
+      "phone": {
+        "hello": "WAHAHAH! {PLAYER}! Calling your buddy, huh?",
+        "close": "WAHAHAH! {PLAYER}! My buddy! Pals call each other, right?",
+        "bye": "Gotta go! Keep training! Hah!"
       }
     },
     {
@@ -2425,6 +2520,11 @@
         "hello": "Oh... {PLAYER}. Um... hello. It's nice to see you.",
         "close": "{PLAYER}... I'm so happy to see you. You're my friend.",
         "bye": "Goodbye... Please take care."
+      },
+      "phone": {
+        "hello": "Oh... {PLAYER}. Um... hello. Thank you for calling.",
+        "close": "{PLAYER}... I'm so happy you called. You're my friend.",
+        "bye": "Goodbye... Please take care."
       }
     },
     {
@@ -2546,6 +2646,11 @@
         "again": "Ah, you again. An old man remembers a good face.",
         "hello": "Ah, {PLAYER}. Good. An old man enjoys some company.",
         "close": "{PLAYER}! My dear friend. An old man treasures such company.",
+        "bye": "Go on, then. Don't keep your POKéMON waiting."
+      },
+      "phone": {
+        "hello": "Ah, {PLAYER}. Good. An old man enjoys a call.",
+        "close": "{PLAYER}! My dear friend. An old man treasures such calls.",
         "bye": "Go on, then. Don't keep your POKéMON waiting."
       }
     },
@@ -2675,6 +2780,11 @@
         "hello": "Oh, it's you, {PLAYER}. Hmph. Fine, I'll say hello.",
         "close": "{PLAYER}. Hmph. Fine, you're a friend. Don't make it weird.",
         "bye": "Go on. And don't tell LANCE I was nice to you."
+      },
+      "phone": {
+        "hello": "Oh, it's you, {PLAYER}. Hmph. Fine, I'll answer.",
+        "close": "{PLAYER}. Hmph. Fine, I'm glad you called. Don't make it weird.",
+        "bye": "I'm hanging up. And don't tell LANCE I was nice."
       }
     },
     {
@@ -2793,6 +2903,11 @@
         "again": "We meet again. I am beginning to know you.",
         "hello": "{PLAYER}. We meet again. As expected.",
         "close": "{PLAYER}. I trust you more than most. Do not tell anyone.",
+        "bye": "Farewell. Do not keep me waiting next time."
+      },
+      "phone": {
+        "hello": "{PLAYER}. You called. As expected.",
+        "close": "{PLAYER}. I answer few calls. Yours, always.",
         "bye": "Farewell. Do not keep me waiting next time."
       }
     },
@@ -2917,6 +3032,11 @@
         "again": "Oh, you again. You're growing on me. A little.",
         "hello": "Oh, {PLAYER}. Good. I was getting bored.",
         "close": "Oh, {PLAYER}. Good. I really did hope you'd come.",
+        "bye": "Go on. Keep battling with your favorites."
+      },
+      "phone": {
+        "hello": "Oh, {PLAYER}. Good. I was getting bored.",
+        "close": "Oh, {PLAYER}. I really did hope you'd call.",
         "bye": "Go on. Keep battling with your favorites."
       }
     },
@@ -3047,6 +3167,11 @@
         "hello": "Hello, {PLAYER}! Ready for another lesson?",
         "close": "{PLAYER}! My favorite student! I kept a page for you!",
         "bye": "Goodbye! Don't forget to review your notes!"
+      },
+      "phone": {
+        "hello": "Hello, {PLAYER}! Calling for another lesson?",
+        "close": "{PLAYER}! My favorite student! Studying hard, I hope?",
+        "bye": "Goodbye! Don't forget to review your notes!"
       }
     },
     {
@@ -3169,6 +3294,11 @@
         "hello": "Hey, {PLAYER}! Totally stoked to see you!",
         "close": "{PLAYER}! My bro! Always stoked to ride with you!",
         "bye": "Later! Stay stoked!"
+      },
+      "phone": {
+        "hello": "Hey, {PLAYER}! Totally stoked you called!",
+        "close": "{PLAYER}! My bro! Always stoked to hear from you!",
+        "bye": "Later! Stay stoked!"
       }
     },
     {
@@ -3290,6 +3420,11 @@
         "heard": "Wahahahah! You're {PLAYER}! I heard you're a live wire!",
         "again": "Wahahahah! You again! Your face is getting familiar!",
         "hello": "Wahahahah! {PLAYER}! You look fully charged!",
+        "close": "Wahahahah! {PLAYER}! My dear friend! You light me up!",
+        "bye": "Wahahahah! Off you go! Stay charged!"
+      },
+      "phone": {
+        "hello": "Wahahahah! {PLAYER}! Your call came in loud and clear!",
         "close": "Wahahahah! {PLAYER}! My dear friend! You light me up!",
         "bye": "Wahahahah! Off you go! Stay charged!"
       }
@@ -3416,6 +3551,11 @@
         "hello": "Oh, {PLAYER}! Hi! I mean... Ahem. Greetings!",
         "close": "{PLAYER}! You're my friend! I can be myself with you!",
         "bye": "See you! Stay fired up!"
+      },
+      "phone": {
+        "hello": "Oh, {PLAYER}! Hi! I mean... Ahem. Greetings!",
+        "close": "{PLAYER}! You called! I can be myself with you!",
+        "bye": "See you! Stay fired up!"
       }
     },
     {
@@ -3541,6 +3681,11 @@
         "hello": "Ah, {PLAYER}. Good to see you. Keeping strong?",
         "close": "{PLAYER}. You're like family. I am always glad to see you.",
         "bye": "Take care. And keep training hard."
+      },
+      "phone": {
+        "hello": "Ah, {PLAYER}. Good to hear from you. Keeping strong?",
+        "close": "{PLAYER}. You're like family. I'm always glad you call.",
+        "bye": "Take care. And keep training hard."
       }
     },
     {
@@ -3663,6 +3808,11 @@
         "again": "Ah, hello again. I remember you well.",
         "hello": "Hello, {PLAYER}. It's always a pleasure.",
         "close": "{PLAYER}. I'm truly glad of your company, dear friend.",
+        "bye": "Farewell. May you soar ever higher."
+      },
+      "phone": {
+        "hello": "Hello, {PLAYER}. A call from you is always a pleasure.",
+        "close": "{PLAYER}. I'm truly glad you called, dear friend.",
         "bye": "Farewell. May you soar ever higher."
       }
     },
@@ -3919,6 +4069,11 @@
         "hello": "Ah, {PLAYER}. How delightful to see you again.",
         "close": "Ah, dear {PLAYER}! My friend! What a delight!",
         "bye": "Farewell! Go forth with elegance!"
+      },
+      "phone": {
+        "hello": "Ah, {PLAYER}. How delightful to hear from you.",
+        "close": "Ah, dear {PLAYER}! My friend! What a delight!",
+        "bye": "Farewell! Go forth with elegance!"
       }
     },
     {
@@ -4041,6 +4196,11 @@
         "hello": "Hey, {PLAYER}! I like that look you're giving me!",
         "close": "Hey, {PLAYER}! My partner in trouble! Let's have a blast!",
         "bye": "Later! Let's have another blast sometime!"
+      },
+      "phone": {
+        "hello": "Hey, {PLAYER}! Calling me? I like your style!",
+        "close": "Hey, {PLAYER}! My partner in trouble! What's up?",
+        "bye": "Later! Let's have another blast sometime!"
       }
     },
     {
@@ -4159,6 +4319,11 @@
         "heard": "Ahahaha! You're {PLAYER}! The ghosts whispered your name!",
         "again": "Ahahaha! You again! The ghosts remember you, too!",
         "hello": "Ahahaha! {PLAYER}! Hi! The ghosts said you'd drop by!",
+        "close": "Ahahaha! {PLAYER}! My friend! Even the ghosts adore you!",
+        "bye": "Bye-bye! Ahahaha! Watch out for ghosts!"
+      },
+      "phone": {
+        "hello": "Ahahaha! {PLAYER}! Hi! The ghosts said you'd call!",
         "close": "Ahahaha! {PLAYER}! My friend! Even the ghosts adore you!",
         "bye": "Bye-bye! Ahahaha! Watch out for ghosts!"
       }
@@ -4281,6 +4446,11 @@
         "hello": "{PLAYER}. So you've come. I hope you won't bore me.",
         "close": "{PLAYER}. You do not bore me. I count that as friendship.",
         "bye": "Go. Come back when you're worth the chill."
+      },
+      "phone": {
+        "hello": "{PLAYER}. So you've called. I hope you won't bore me.",
+        "close": "{PLAYER}. You do not bore me. I count that as friendship.",
+        "bye": "I'll hang up now. Stay worth the chill."
       }
     },
     {
@@ -4396,6 +4566,11 @@
         "heard": "You are {PLAYER}. Sailors speak of you. Rumors, at least.",
         "again": "You again. I am beginning to take note of you.",
         "hello": "{PLAYER}. Good. You've still got fire in your eyes.",
+        "close": "{PLAYER}. A friend of dragons is a friend of mine.",
+        "bye": "Go. And keep your heart strong."
+      },
+      "phone": {
+        "hello": "{PLAYER}. Good. You've still got fire in your voice.",
         "close": "{PLAYER}. A friend of dragons is a friend of mine.",
         "bye": "Go. And keep your heart strong."
       }
@@ -4521,6 +4696,11 @@
         "hello": "Ah, {PLAYER}. Elegant as ever, I see.",
         "close": "Dear {PLAYER}! A friend as elegant as you is rare.",
         "bye": "Farewell! May your style shine ever brighter."
+      },
+      "phone": {
+        "hello": "Ah, {PLAYER}. Your call is as elegant as ever.",
+        "close": "Dear {PLAYER}! A friend as elegant as you is rare.",
+        "bye": "Farewell! May your style shine ever brighter."
       }
     },
     {
@@ -4643,6 +4823,11 @@
         "hello": "{PLAYER}! Good to see you. Found any rare stones?",
         "close": "{PLAYER}! My friend! I saved you a special stone to see.",
         "bye": "I'll see you around. Take care."
+      },
+      "phone": {
+        "hello": "{PLAYER}! Good to hear from you. Found any rare stones?",
+        "close": "{PLAYER}! My friend! I was just polishing a rare stone.",
+        "bye": "I'll talk to you later. Take care."
       }
     }
   ]

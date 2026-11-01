@@ -73,6 +73,13 @@ const struct E2ETestAbi gE2ETestAbi =
 // (e2e/src/harness/game-session/features/clock.ts).
 const u16 gE2EInGameClockOffset = offsetof(struct SaveBlock3, fakeRTC);
 
+#if IS_WAYFARER
+// Where the notable friendship scores and number-shown bits sit, so a journey can make a phone contact directly
+// (nobody reaches Friend until haunts ship): e2e/src/journeys/wayfarer-notable-phone-contacts.e2e.ts.
+const u16 gE2ENotableFriendshipScoreOffset = offsetof(struct SaveBlock3, notableFriendship.score);
+const u16 gE2ENotableNumberShownOffset = offsetof(struct SaveBlock3, notableFriendship.numberShown);
+#endif
+
 STATIC_ASSERT(sizeof(struct E2ETestRequest) == 380, E2ETestRequestSize);
 STATIC_ASSERT(offsetof(struct E2ETestRequest, trainerRating) == 372, E2ETestRequestTrainerRatingOffset);
 STATIC_ASSERT(offsetof(struct E2ETestRequest, appearanceId) == 369, E2ETestRequestAppearanceOffset);

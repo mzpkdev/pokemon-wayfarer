@@ -9,16 +9,10 @@
 #include "script.h"
 #include "string_util.h"
 #include "text.h"
+#include "constants/flags.h"
 #include "constants/notable_trainers.h"
 
 extern const u8 NotableFriendship_EventScript_NumberRegistered[];
-
-// Handovers waiting for the field, one bit per character. RAM only: the score is the saved fact, and a
-// crossing is shown at the next frame the field has control. A script that saves before handing control
-// back (the Hall of Fame after a champion battle) loses the line, never the number.
-static EWRAM_DATA u8 sPendingNumber[(NOTABLE_FRIENDSHIP_COUNT + 7) / 8] = {0};
-// True while any bit above is set: the field polls every frame, so the common case must not scan the bits.
-static EWRAM_DATA bool8 sAnyPendingNumber = FALSE;
 
 static bool8 IsCharacterId(u8 characterId)
 {
@@ -38,8 +32,11 @@ static void SetBit(u8 *bits, u8 characterId)
 void NotableFriendship_Reset(void)
 {
     memset(&gSaveBlock3Ptr->notableFriendship, 0, sizeof(gSaveBlock3Ptr->notableFriendship));
-    memset(sPendingNumber, 0, sizeof(sPendingNumber));
-    sAnyPendingNumber = FALSE;
+}
+
+static bool8 GivesNumber(u8 characterId)
+{
+    return characterId != NOTABLE_TRAINER_TATE_LIZA;
 }
 
 bool8 NotableFriendship_IsValid(void)
@@ -51,9 +48,14 @@ bool8 NotableFriendship_IsValid(void)
     {
         if (GetBit(state->firstWin, characterId) && state->score[characterId - 1] < NOTABLE_FRIENDSHIP_MET)
             return FALSE;
+        // The handover's line is shown only to a trainer who gave their number, so at Friend or above.
+        if (GetBit(state->numberShown, characterId)
+         && (!GivesNumber(characterId) || state->score[characterId - 1] < NOTABLE_FRIENDSHIP_FRIEND))
+            return FALSE;
     }
     // The bits past the last character are padding and stay clear.
-    return (state->firstWin[sizeof(state->firstWin) - 1] >> (NOTABLE_FRIENDSHIP_COUNT % 8)) == 0;
+    return (state->firstWin[sizeof(state->firstWin) - 1] >> (NOTABLE_FRIENDSHIP_COUNT % 8)) == 0
+        && (state->numberShown[sizeof(state->numberShown) - 1] >> (NOTABLE_FRIENDSHIP_COUNT % 8)) == 0;
 }
 
 u8 NotableFriendship_GetScore(u8 characterId)
@@ -83,14 +85,9 @@ static void AddPoints(u8 characterId, u8 points)
         return;
     score = &gSaveBlock3Ptr->notableFriendship.score[characterId - 1];
     before = *score;
+    // Crossing Friend makes the trainer a contact (NotablePhone_IsContact reads the stage); the field then owes
+    // the handover's line until it is shown, which the saved number-shown bit records.
     *score = points > 255 - before ? 255 : before + points;
-    // The number is handed over once, when the score first reaches Friend; Tate & Liza give none.
-    if (before < NOTABLE_FRIENDSHIP_FRIEND && *score >= NOTABLE_FRIENDSHIP_FRIEND
-     && characterId != NOTABLE_TRAINER_TATE_LIZA)
-    {
-        SetBit(sPendingNumber, characterId);
-        sAnyPendingNumber = TRUE;
-    }
 }
 
 void NotableFriendship_AddQuestPoints(u8 characterId)
@@ -117,13 +114,18 @@ void NotableFriendship_CountTrainerWin(u16 trainerId)
         NotableFriendship_CountFirstWin(trainer->characterId);
 }
 
-static u8 NextPendingNumber(void)
+// The first character whose number is owed: at Friend or above, giving a number, and the line not shown yet.
+// The field polls this every frame it has control; it reads 38 saved bytes at most, so it needs no RAM cache,
+// and a save anywhere between the crossing and the line keeps the line owed.
+static u8 NextOwedNumber(void)
 {
+    const struct NotableFriendshipState *state = &gSaveBlock3Ptr->notableFriendship;
     u8 characterId;
 
     for (characterId = 1; characterId <= NOTABLE_FRIENDSHIP_COUNT; characterId++)
     {
-        if (GetBit(sPendingNumber, characterId))
+        if (state->score[characterId - 1] >= NOTABLE_FRIENDSHIP_FRIEND && GivesNumber(characterId)
+         && !GetBit(state->numberShown, characterId))
             return characterId;
     }
     return NOTABLE_TRAINER_NONE;
@@ -131,25 +133,31 @@ static u8 NextPendingNumber(void)
 
 bool8 NotableFriendship_HasPendingNumber(void)
 {
-    return NextPendingNumber() != NOTABLE_TRAINER_NONE;
+    return NextOwedNumber() != NOTABLE_TRAINER_NONE;
 }
 
 bool8 NotableFriendship_TryStartPendingNumberScript(void)
 {
     u8 characterId;
 
-    if (!sAnyPendingNumber)
+    // The line says the number went into the POKéGEAR: it waits until the player has the phone (as the route
+    // contacts' number offers do), still owed.
+    if (!FlagGet(FLAG_HAS_MATCH_CALL))
         return FALSE;
-    characterId = NextPendingNumber();
+    characterId = NextOwedNumber();
     if (characterId == NOTABLE_TRAINER_NONE)
-    {
-        sAnyPendingNumber = FALSE;
         return FALSE;
-    }
-    sPendingNumber[(characterId - 1) / 8] &= ~(1 << ((characterId - 1) % 8));
     gSpecialVar_0x8004 = characterId;
     ScriptContext_SetupScript(NotableFriendship_EventScript_NumberRegistered);
     return TRUE;
+}
+
+// Special: the handover's line has played for the character in VAR_0x8004.
+void NotableFriendship_MarkNumberShown(void)
+{
+    if (IsCharacterId(gSpecialVar_0x8004) && GivesNumber(gSpecialVar_0x8004)
+     && NotableFriendship_GetScore(gSpecialVar_0x8004) >= NOTABLE_FRIENDSHIP_FRIEND)
+        SetBit(gSaveBlock3Ptr->notableFriendship.numberShown, gSpecialVar_0x8004);
 }
 
 void NotableFriendship_BufferTrainerName(void)

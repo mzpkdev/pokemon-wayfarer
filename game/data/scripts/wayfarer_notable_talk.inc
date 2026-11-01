@@ -36,8 +36,9 @@ NotableTalk_EventScript_Farewell::
 NotableTalk_EventScript_NothingToSay:
 	return
 
-@ The number handover: shown by the field when it regains control after a score crossed the Friend threshold.
-@ NotableFriendship_TryStartPendingNumberScript puts the character in VAR_0x8004.
+@ The number handover: shown by the field when it has control while a trainer at Friend or above is still owed the
+@ line. NotableFriendship_TryStartPendingNumberScript puts the character in VAR_0x8004. The saved number-shown bit is
+@ set once the line has played, so a save or reset before then shows it again later.
 NotableFriendship_EventScript_NumberRegistered::
 	lockall
 	special NotableFriendship_BufferTrainerName
@@ -45,6 +46,7 @@ NotableFriendship_EventScript_NumberRegistered::
 	playfanfare MUS_REGISTER_MATCH_CALL
 	msgbox NotableFriendship_Text_NumberRegistered, MSGBOX_DEFAULT
 	waitfanfare
+	special NotableFriendship_MarkNumberShown
 	closemessage
 	delay 30
 	releaseall

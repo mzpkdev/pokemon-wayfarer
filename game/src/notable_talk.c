@@ -212,9 +212,19 @@ void NotableTalk_BufferFarewellText(u8 characterId)
     BufferVoice(characterId, GetNotableTrainerById(characterId) != NULL ? gNotableVoices[characterId - 1].bye : NULL);
 }
 
+const u8 *NotableTalk_GetActivityLine(enum NotableActivityLine line)
+{
+    return line < NOTABLE_LINE_COUNT ? sActivityLines[line] : sActivityLine_Square;
+}
+
 void NotableTalk_BufferActivityLineText(enum NotableActivityLine line)
 {
-    StringCopy(gStringVar4, line < NOTABLE_LINE_COUNT ? sActivityLines[line] : sActivityLine_Square);
+    StringCopy(gStringVar4, NotableTalk_GetActivityLine(line));
+}
+
+void NotableTalk_BufferBuddy(u8 characterId)
+{
+    BufferBuddySpecies(GetNotableTrainerById(characterId));
 }
 
 u32 NotableTalk_BufferGreeting(void)

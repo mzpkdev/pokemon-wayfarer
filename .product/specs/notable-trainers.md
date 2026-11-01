@@ -4,9 +4,10 @@ PRD: [Notable trainers](../prds/notable-trainers.md)
 Implemented: Partial. Wayfarer runs the v0 catalog, trainer TR growth, rosters,
 move pools, battle snapshot, and league lineups ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)). Friendship
 shipped: the saved score and first-win bit, first wins from every battle kind (Gym, story, rematch, league event, tag
-matches), the quest-points API for haunts, and the number handover (one system line at the first Friend crossing; it
-registers no phone contact yet). Phone numbers as contacts and the Masters partner remain. The browser explorer is
-placeholder tooling.
+matches), the quest-points API for haunts, and the number handover (one system line at the first Friend crossing, owed
+until it has played). [Phone contacts](#phone-contacts) shipped: a trainer at Friend or above is in the contact list,
+and a call is their phone greeting, where they are right now, and their farewell. The Masters partner remains. The
+browser explorer is placeholder tooling.
 Design status: v0 contract. The model is accepted. Rosters are approved
 content (draft v1: species, order, and aces); their battle content (move
 pools, and items where a slot doesn't match its source party) is still
@@ -225,23 +226,32 @@ Rules:
 - **Consumers read only the stage, never the events or the score.** They are
   the greetings of every talk (at [haunts](notable-haunts.md#talk-flow),
   [spots](notable-spots.md#talk-flow), on the road, and in a leader's
-  [own Gym](notable-world-simulation.md#interactions)) and [Sevii
-  Masters](sevii-masters.md#phone-contacts): a trainer at Friend or above is a
-  contact, and any contact can be the partner. The number is handed over when
-  the score first crosses the Friend threshold, by any route (a win and a
-  quest, or quests), with one system line that names the trainer. Tate & Liza
-  keep a score, but they give no number and cannot be the partner, and they
-  are not placed at haunts in v0.
+  [own Gym](notable-world-simulation.md#interactions)), and the
+  [phone](#phone-contacts): a trainer at Friend or above is a contact. The
+  number is handed over when the score first crosses the Friend threshold, by
+  any route (a win and a quest, or quests), with one system line that names
+  the trainer ("Registered BROCK's number in the POKéGEAR."). The line plays
+  the next time the field has control (after the battle, the quest, or a
+  scene) once the player has the Pokégear's phone (the flag the route
+  contacts' number offers wait for), and stays owed until it has played to
+  its end: a save or reset before then keeps it owed, and it plays after the
+  reload. Several owed at
+  once play one at a time, in character order. Tate & Liza keep a score, but
+  they give no number and cannot be the partner, and they are not placed at
+  haunts in v0.
 - **Until haunts ship**, the first win is the only event, so every trainer
   stops at Met and nobody reaches Friend. That is expected: the number
   handover is built and tested, and quests open the way to it.
 
-Saved state: one score byte per notable trainer and one **first-win bit** per
-notable trainer (the bit records that the first win was counted). New Game
+Saved state: one score byte per notable trainer, one **first-win bit** per
+notable trainer (the bit records that the first win was counted), and one
+**number-shown bit** per notable trainer (the handover's line has played).
+A contact is read from the score; nothing else registers one. New Game
 saves every score at 0 and every bit clear. On load, drop the scores and bits
 of characters no longer in the registry; a first-win bit set with a score
-under the Met threshold, or a score for an unknown character, is an invalid
-save.
+under the Met threshold, a number-shown bit set with a score under the Friend
+threshold or for Tate & Liza, a set bit past the last character, or a score
+for an unknown character, is an invalid save.
 
 Later sources of points (gifts, tag battles beside the trainer, trades,
 partnering) are not in v0.
@@ -589,11 +599,78 @@ TR, another trainer, or a random team.
 
 ## Phone contacts
 
-A notable trainer's phone number comes when their [friendship](#friendship)
-first reaches Friend, and a contact is a trainer at Friend or above. Sevii
-Masters owns the phone side
-([phone contacts](sevii-masters.md#phone-contacts)): it uses contacts to ask
-a partner.
+A notable trainer other than Tate & Liza is a **contact** while their
+[friendship](#friendship) stage is Friend or above. Nothing registers them:
+the score is the saved fact, and friendship never decreases, so a contact
+stays one. The number arrives with the handover line above. `IS_WAYFARER`
+only.
+
+**Contact list.** Contacts are listed in the phone's contact list (the
+Pokégear's Match Call list, shared with the [route
+contacts](phone-rematches.md#contacts)), after the special headers and before
+the route contacts, in character order. An entry shows the trainer's class
+and name from the character's own encounter (the league registry's source
+trainer), and their home: a simulated trainer's
+[home base](notable-world-simulation.md#home-base) map, or the fixed place
+below. A notable contact has no rematch Poké Ball, no CHECK page, and never
+gets the "close by" message: the call always goes through. The list has room
+for every special header, every notable contact, and every route contact at
+once.
+
+**Calls.** Calling a contact, from wherever a call can be made, plays three
+message boxes, or four at a spot:
+
+1. **Greeting**, by stage: the trainer's phone `HELLO` at Friend, their phone
+   `CLOSE` at Close.
+2. **Where they are right now**, one shared line by where they are (below),
+   naming the place: the location name of the map's region-map section, as
+   [Courier `{PLACE}`](notable-world-simulation.md#interactions) does
+   ("CERULEAN CITY", "ROUTE 2"). At a spot, the
+   [activity line](notable-spots.md#talk-flow) of what they are doing
+   follows in its own box.
+3. **Farewell:** their phone `BYE`.
+
+A call adds no friendship, changes nothing, and has no follow-ups or asks.
+
+**Phone voice bits.** Each contact has three phone lines beside their
+[voice bits](notable-haunts.md#dialogue): phone `HELLO`,
+phone `CLOSE`, and phone `BYE`. They carry the same personality as the
+in-person lines but suit a call (no "good to see you"). They are catalog
+content (`phone` in the catalog), may use `{PLAYER}` and `{BUDDY}`, and each
+fits one box of the phone's narrower call window (192 pixels a line, two
+lines). Tate & Liza have none. Placeholders for review.
+
+**Where they are.** The first row that applies:
+
+| Where | Applies when | Line (placeholder) |
+| --- | --- | --- |
+| League | They are in the accepted league event's [lineup](leagues.md#event-lineup), from acceptance until the event ends. Read live, for every trainer. | "I'm at the POKéMON LEAGUE, getting ready for you!" |
+| Partner | Their record is Away: partner ([Sevii Masters](sevii-masters.md#partner); not reachable until the partner ships). | "I'm right here with you, remember?" |
+| Own Gym | A Gym Leader whose record is Home-locked, or Dwelling at home in their Gym; or a face-only Hoenn Gym Leader (below). | "I'm at my GYM in {PLACE} right now." |
+| League hall | A face-only Elite Four member (below). | "I'm at the POKéMON LEAGUE in {PLACE}." |
+| Travelling | Their record is Travelling: the map of their current node. | "I'm on the road right now, passing through {PLACE}." |
+| At a spot | Their record is Dwelling (not at home in their own Gym): the map of their current node, then the activity line. | "I'm around {PLACE} right now." |
+| Around | Their record is Pinned (the map of their node), or still Away: league after the event ended (their home base map, where they reappear at the next heartbeat). | "I'm around {PLACE} right now." |
+| Unknown | No place can be named. | "I'm out and about right now." |
+
+The call reads the [world record](notable-world-simulation.md#the-world-record)
+as it stands and never writes it or finishes a pending heartbeat: a
+heartbeat still running after a map change hasn't moved anyone yet, so the
+record still says where they are.
+
+**Fixed places.** The twelve trainers with no world record (a face-only
+sprite: [walking
+sprites](notable-world-simulation.md#known-limitation-walking-sprites)) say
+an authored fixed place: Roxanne, Brawly, Wattson, Flannery, and Winona
+their Gym's town (Own Gym); Sidney, Phoebe, Glacia, and Drake Ever Grande
+City, and Agatha, Bruno, and Koga Indigo Plateau (League hall).
+
+**No calls from them.** Notable contacts never make a random call: they are
+not route contacts, and random calls choose only among those. They have no
+rematches, readiness, gifts, or Battle and FoundItem texts.
+
+**Partner.** Asking a contact to be the Masters partner is
+[later](sevii-masters.md#later); until then a call only talks.
 
 ## Validation
 
@@ -716,6 +793,10 @@ implementations stay active until then.
 
 ## Later
 
+- Calls from notable contacts: random calls, news, and invitations by
+  stage.
+- Asking a contact to be the Masters partner by phone
+  ([Sevii Masters](sevii-masters.md#partner)).
 - Notable trainer status for more characters, such as Red.
 - Difficulty signposting: in-world hints about who is too strong (Gym guides,
   NPC gossip, a Trainer Card line), since TR is hidden.
