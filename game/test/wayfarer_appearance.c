@@ -4,6 +4,7 @@
 #include "new_game.h"
 #include "overworld.h"
 #include "field_player_avatar.h"
+#include "constants/heal_locations.h"
 #include "constants/maps.h"
 #include "wayfarer_appearance.h"
 #include "wayfarer_origin.h"
@@ -140,7 +141,7 @@ TEST("Wayfarer all styles retain identity through first Hoenn arrival and region
             EXPECT(WayfarerConfirmPendingAppearance(id));
             EXPECT(WayfarerConfirmPendingOrigin(origin));
             NewGameInitData();
-            EXPECT(WayfarerPrepareHoennEntry());
+            EXPECT(WayfarerPrepareHoennEntry(MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR), MAP_NUM(MAP_SLATEPORT_CITY_HARBOR), 9, 11, HEAL_LOCATION_SLATEPORT_CITY));
             EXPECT_EQ(WayfarerGetPlayerAppearanceId(), id);
             for (destination = 0; destination < ARRAY_COUNT(destinations); destination++)
             {

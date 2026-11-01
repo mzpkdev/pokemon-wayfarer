@@ -114,6 +114,9 @@ STATIC_ASSERT(sizeof(struct WayfarerWorldState) == WORLD_STATE_SIZE, WayfarerWor
 // Save state); SaveBlock1 does not grow.
 STATIC_ASSERT(sizeof(struct WayfarerDailySlots) == ((2 + (DAILY_SLOT_COUNT + 7) / 8 + (WORLD_TRAINER_SLOT_COUNT + 7) / 8 + 2 * (DAILY_CONTACT_COUNT / 8) + 3) / 4) * 4, WayfarerDailySlotsSize);
 STATIC_ASSERT(sizeof(struct WayfarerDailySlots) <= 330, WayfarerDailySlotsBudget);
+// The ferry voyage state (S.S. ferries spec, Voyage state): packed, at most 16 bytes, saved after the daily slots.
+STATIC_ASSERT(sizeof(struct WayfarerVoyage) == 12, WayfarerVoyageSize);
+STATIC_ASSERT(sizeof(struct WayfarerVoyage) <= 16, WayfarerVoyageBudget);
 STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn) < 1024, WayfarerHoennStateRuntimeBudget);
 STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn.vars) == 512, WayfarerHoennVarBankSize);
 STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn.persistentFlags) == 188, WayfarerHoennFlagBankSize);

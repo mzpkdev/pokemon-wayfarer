@@ -10,6 +10,9 @@ void DrawWayfarerVermilionSeviiDestinationMenu(void);
 u16 GetWayfarerVermilionSeviiDestination(void);
 u16 WayfarerCanSailToBirthIsland(void);
 u16 WayfarerCanSailToNavelRock(void);
+u16 GetFerryLilycoveCharterCount(void);
+void DrawFerryLilycoveCharterMenu(void);
+u16 GetFerryLilycoveCharter(void);
 #endif
 
 #endif // GUARD_WAYFARER_SEVII_FERRY_H

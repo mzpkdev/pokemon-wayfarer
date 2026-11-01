@@ -43,7 +43,7 @@ static const struct WayfarerOriginProfile sCustomOrigin =
     .scenePolicies = {ORIGIN_SCENE_AUTHORED, ORIGIN_SCENE_VISITOR, ORIGIN_SCENE_VISITOR, ORIGIN_SCENE_VISITOR},
     .initialRecovery = CustomRecovery, .initialize = CustomSetup,
     .openingCallback = CustomOpening, .authoredScene = CustomScene,
-    .regularAqua = CustomTravel, .slateportTicket = CustomTravel,
+    .slateportTicket = CustomTravel,
 };
 
 TEST("Wayfarer pending origin requires explicit confirmation and fresh flow resets it")
@@ -130,7 +130,7 @@ TEST("Wayfarer test-only same-region origin owns setup scenes travel and replace
     EXPECT(!WayfarerUsesNativeJohtoHousehold());
     EXPECT(!WayfarerUsesNativeJohtoOpening());
     EXPECT_EQ(WayfarerGetOriginScenePolicy(ORIGIN_SCENE_JOHTO_HOUSEHOLD), ORIGIN_SCENE_AUTHORED);
-    EXPECT(!WayfarerCanUseRegularAqua());
+    EXPECT(!WayfarerCanReceiveSlateportTicket());
     ScriptContext_SetupScript(Test_WayfarerOrigin_InterceptScene);
     ScriptContext_RunScript();
     EXPECT_EQ(VarGet(TEST_ORIGIN_MILESTONE), 2);
@@ -140,7 +140,7 @@ TEST("Wayfarer test-only same-region origin owns setup scenes travel and replace
     EXPECT_EQ(VarGet(VAR_UNUSED_HNS_0x40FD), 0);
     ScriptContext_RunScript();
     EXPECT_EQ(VarGet(TEST_ORIGIN_MILESTONE), 2);
-    EXPECT(WayfarerCanUseRegularAqua());
+    EXPECT(WayfarerCanReceiveSlateportTicket());
     EXPECT_EQ(VarGet(VAR_SSAQUA_STATE), 0);
     EXPECT(!FlagGet(FLAG_JOHTO_STARTER_RECEIVED));
     EXPECT(!FlagGet(FLAG_HOENN_STARTER_RECEIVED));

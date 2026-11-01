@@ -1,4 +1,5 @@
 #include "global.h"
+#include "wayfarer_ferry.h"
 #if IS_WAYFARER
 #include "wayfarer_daily_slots.h"
 #endif
@@ -350,6 +351,10 @@ void ResetSSTidalFlag(void)
 // Returns TRUE if the Cruise is over
 bool32 CountSSTidalStep(u16 delta)
 {
+#if IS_WAYFARER
+    // The Tidal's cruise state machine is retired: the ferry voyage casts off and arrives by the clock.
+    return FALSE;
+#endif
     if (!FlagGet(FLAG_SYS_CRUISE_MODE) || (*GetVarPointer(VAR_CRUISE_STEP_COUNT) += delta) < SS_TIDAL_MAX_STEPS)
         return FALSE;
 
@@ -358,6 +363,23 @@ bool32 CountSSTidalStep(u16 delta)
 
 enum SSTidalLocation GetSSTidalLocation(s8 *mapGroup, s8 *mapNum, s16 *x, s16 *y)
 {
+#if IS_WAYFARER
+    // The Tidal maps are MAPSEC_DYNAMIC, and a Hoenn-source map's Town Map shows only Hoenn, so the voyage state
+    // picks a Hoenn place: Slateport for the port the ship is at or sailing to (and for Olivine), Lilycove for
+    // Lilycove (and for Seven Island), Slateport with no voyage.
+    const struct WayfarerVoyage *voyage = Ferry_GetVoyage();
+
+    if (voyage->ship == FERRY_SHIP_NONE)
+        return SS_TIDAL_LOCATION_SLATEPORT;
+    switch (Ferry_GetLoopPort(voyage->ship, voyage->stop))
+    {
+    case FERRY_PORT_LILYCOVE:
+    case FERRY_PORT_SEVEN_ISLAND:
+        return SS_TIDAL_LOCATION_LILYCOVE;
+    default:
+        return SS_TIDAL_LOCATION_SLATEPORT;
+    }
+#endif
     u16 *varCruiseStepCount = GetVarPointer(VAR_CRUISE_STEP_COUNT);
 
     switch ((enum SSTidalState)(*GetVarPointer(VAR_SS_TIDAL_STATE)))

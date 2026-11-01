@@ -1293,7 +1293,7 @@ static const struct WayfarerOriginProfile sSavedCustomOrigin =
     .scenePolicies = {ORIGIN_SCENE_VISITOR, ORIGIN_SCENE_VISITOR, ORIGIN_SCENE_VISITOR, ORIGIN_SCENE_VISITOR},
     .initialRecovery = SavedCustomRecovery, .initialize = SavedCustomInitialize,
     .openingCallback = FieldCB_WarpExitFadeFromBlack,
-    .regularAqua = SavedCustomTravel, .slateportTicket = SavedCustomTravel,
+    .slateportTicket = SavedCustomTravel,
 };
 
 TEST("Wayfarer save loader resumes a registered custom origin without reapplying its initialization")
@@ -1329,7 +1329,7 @@ TEST("Wayfarer save loader resumes a registered custom origin without reapplying
         && gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_OLIVINE_CITY_HNS)
         && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_OLIVINE_CITY_HNS)
         && gSaveBlock1Ptr->location.x == 20 && gSaveBlock1Ptr->location.y == 20;
-    travel = WayfarerCanUseRegularAqua();
+    travel = WayfarerCanReceiveSlateportTicket();
 
     ClearSaveData();
     Save_ResetSaveCounters();

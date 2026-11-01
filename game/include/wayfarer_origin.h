@@ -18,7 +18,6 @@ struct WayfarerOriginProfile
     void (*initialize)(void);
     void (*openingCallback)(void);
     const u8 *(*authoredScene)(u8 scene);
-    bool8 (*regularAqua)(void);
     bool8 (*slateportTicket)(void);
     bool8 maidenVoyage;
 };
@@ -38,7 +37,6 @@ u16 WayfarerUsesNativeJohtoHousehold(void);
 u16 WayfarerUsesNativeHoennHousehold(void);
 u16 WayfarerUsesNativeJohtoOpening(void);
 u16 WayfarerUsesNativeHoennOpening(void);
-u16 WayfarerCanUseRegularAqua(void);
 u16 WayfarerCanReceiveSlateportTicket(void);
 u16 WayfarerCanUseAquaMaidenVoyage(void);
 void WayfarerGrantSharedEquipment(void);
