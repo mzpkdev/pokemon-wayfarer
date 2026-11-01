@@ -88,8 +88,8 @@ can't happen.
 
 - Only the Wayfarer build. The standalone Emerald, FRLG and HNS builds are
   not kept working with their old clocks.
-- No time skipping in v0 (no sleeping, no waiting at a clock). A later design
-  may add one; the S.S. ferries' cabin bed is expected to be the first.
+- No time skipping in v0 (no sleeping, no waiting at a clock), except sleeping
+  through a voyage in an S.S. ferry cabin ([S.S. ferries](ss-ferries.md)).
 - The times of day keep their names and their meaning to every system that
   reads them; only their hours change. No system gains or loses a time of day.
 - The notable world simulation keeps running on map changes; the clock does

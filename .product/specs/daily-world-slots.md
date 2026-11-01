@@ -97,7 +97,8 @@ is a buried trainer, has non-static graphics, or its script (followed through
 gotos, calls and fall-through) does anything beyond battling, rematching,
 registering a phone number, handing over a gift and speaking. The reviewed
 lists add the S.S. Anne, S.S. Aqua and S.S. Tidal trainers (one-time ship
-content), Pokemon Tower, the Trick House puzzle rooms, Silph Co., the Rocket
+content, until the [S.S. ferries](ss-ferries.md#passengers) put them in the
+rotation), Pokemon Tower, the Trick House puzzle rooms, Silph Co., the Rocket
 Hideouts, the Game Corner hideout entrance, the villain grunt classes, and the
 two Route 26 trainers authored on two maps. Of 901 `ORDINARY` trainer slots
 (1,051 trainer objects in all, pairs counting once per trainer), 659 are daily
