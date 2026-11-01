@@ -111,6 +111,11 @@ A Johto starter visiting Hoenn keeps the existing visitor version of Birch's
 rescue: use the current party, choose a local starter branch, and optionally
 accept the selected Hoenn starter. Do not run the truck or household setup.
 
+The revised [Johto story design](johto-independent-story-beats.md#who-plays-which-story)
+supersedes the next paragraph once it is implemented. Visitors then receive no
+Elm errand, no Johto starter choice or gift, and no Silver story. Until then,
+the shipped behavior below stands.
+
 A Hoenn starter visiting Johto can meet Elm and begin the local errand and
 Silver story with their existing party. Elm offers a Johto starter choice
 for that story and an optional Pokémon gift. The player may postpone the

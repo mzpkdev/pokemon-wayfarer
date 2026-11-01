@@ -1,14 +1,23 @@
 # Johto independent story beats
 
-Status: Draft product design. Not implemented. The open questions below require
-scene-level design before an implementation specification is complete.
+Status: Draft product design, revised 2026-11-02 against current main and the
+Kanto story rules settled since the first draft. Not implemented. The open
+questions below need scene-level answers before the implementation
+specifications are complete.
+
+HNS Johto is already Wayfarer's live map and story base, so unlike Kanto
+there is no separate map-adaptation PRD. This document owns Johto's story
+contract, and per-adventure specifications follow it. The
+[gate audit](../research/johto-story-beat-gates.md) records what the scripts
+do today.
 
 ## Intent
 
 Let players discover and complete Johto's local adventures in different orders
 while the journey remains coherent. Preserve the original stories wherever
-possible: their NPCs, locations, objectives, battles, rewards, and most dialogue.
-Remove unrelated prerequisites between adventures rather than replace the stories.
+possible: their NPCs, locations, objectives, battles, rewards, and most
+dialogue. Remove unrelated prerequisites between adventures rather than replace
+the stories.
 
 A story beat here means a complete small adventure, not an individual cutscene.
 It may span several locations and contain an ordered sequence. The lighthouse
@@ -19,12 +28,13 @@ medicine errand and the Lake of Rage investigation are each one adventure.
 ### Independence with minimal changes
 
 An independent adventure introduces its problem where the player discovers it,
-provides enough context to act, and ends with a clear local result. Its starting
-conditions do not require unrelated Gym badges, league wins, or distant story
-flags. Geography and existing field-move preparation still apply unless another
-approved traversal requirement removes them.
+gives enough context to act, and ends with a clear local result. Its start does
+not require unrelated Gym badges, league wins, distant story flags, the
+player's starter choice, or a scene with Silver. Geography and existing
+field-move preparation still apply.
 
-Use the smallest change that makes an adventure coherent in the supported orders:
+Use the smallest change that makes an adventure coherent in the supported
+orders:
 
 1. Remove unrelated activation requirements.
 2. Reuse existing NPCs and interactions to introduce the adventure locally.
@@ -33,277 +43,391 @@ Use the smallest change that makes an adventure coherent in the supported orders
 4. Keep a necessary narrative dependency when removing it would require a
    substantial rewrite. Hide the successor scene until its predecessor finishes.
 
-A hidden successor must leave travel and unrelated interactions available. Visiting
-its location early must not consume it, award its rewards, or mark its predecessor
-complete. Returning after the prerequisite is satisfied makes it available normally.
-Existing characters may remain present with appropriate ordinary dialogue; it is
-the premature story scene that must be unavailable.
+A hidden successor must leave travel and unrelated interactions available.
+Visiting its location early must not consume it, award its rewards, or mark its
+predecessor complete. Returning after the prerequisite is satisfied makes it
+available normally. Existing characters may remain present with ordinary
+dialogue; only the premature story scene is unavailable.
 
-Do not add NPCs, new factions, new maps, replacement plots, or a quest-selection
-interface. Cohesion comes from the existing setting and characters, truthful
-callbacks, and visible local consequences.
+Do not add NPCs, new factions, new maps, replacement plots, or a
+quest-selection interface. Cohesion comes from the existing setting and
+characters, truthful callbacks, and visible local consequences.
 
 ### Late-game reward exception
 
 Adventures may be discovered early. Final stages granting late-game rewards may
 require Trainer Rating (TR), earned through different regional routes. Short,
-direct story prerequisites may remain where they preserve the original narrative
-with minimal changes. Explain both requirements before the player commits to the
-final stage.
+direct story prerequisites may remain where they preserve the original
+narrative with minimal changes. Explain both requirements before the player
+commits to the final stage.
 
-Apply this exception deliberately to legendary captures and similarly consequential
-rewards. It does not authorize blanket TR gates on ordinary adventures, useful
-items, field-move rewards, or Gym access. Each application must name its reward,
-its gated stage, and any retained story prerequisites. Future regional PRDs can
-use this rule without inheriting Johto's particular storyline.
+Apply this exception deliberately to legendary captures and similarly
+consequential rewards. It does not authorize blanket TR gates on ordinary
+adventures, useful items, field-move rewards, or Gym access. Each application
+must name its reward, its gated stage, and any retained story prerequisites.
+Other regional PRDs use this rule without inheriting Johto's storyline; Kanto's
+Power Plant set Zapdos's battle threshold at TR 55, which is a reference point
+for Johto's thresholds, not a decision.
 
-### Kimono trial and legendary encounters
+In Johto the exception covers:
 
-Keep the existing branch selection, characters, five-dancer challenge, Bell reward,
-ceremony, and legendary encounter. The selected main legendary is Lugia or Ho-Oh;
-the other legendary remains available through Pewter's existing Wing giver.
+| Reward | Gated stage | Retained story prerequisite |
+| --- | --- | --- |
+| Main legendary (Lugia or Ho-Oh) | The five-Kimono-Girl trial | Radio Tower completed and its Wing received |
+| Other legendary | Pewter's old man giving the other Wing | Main legendary encounter resolved |
+| Elm's Master Ball | Elm's handoff after Clair's trial | Clair's trial completed |
 
-The main sequence is:
+The Master Ball is new to this list. Clair's eighth-badge position used to make
+it a late reward. Once Clair can be challenged first, it becomes an early one.
+Like Silph's Master Ball in Kanto, it waits for TR; Clair's badge and the rest
+of her sequence do not.
 
-1. Discover the ceremony through existing Ecruteak characters early. They explain
-   the Wing and TR requirements without requiring Clair or Elm's late-story visit.
-2. Complete the independently available Radio Tower adventure and receive the
-   selected legendary's Wing from the Director.
-3. With that Wing and sufficient TR, take the existing five-Kimono-Girl challenge.
-4. Win the challenge, receive its Bell, and continue to the existing ceremony and
-   selected legendary encounter. Do not introduce another unrelated readiness gate
-   between these stages.
+### Who plays which story
 
-Radio Tower completion and receipt of its selected Wing are an explicit retained
-story prerequisite. Meeting the TR requirement first does not replace that story;
-finishing Radio Tower early does not replace the TR requirement. Both orders work,
-and neither requires returning to an unrelated NPC merely to activate progress.
+Johto-origin players, who start in New Bark, play Johto's opening and Elm's
+errand. Silver's rivalry and Elm's later story role are theirs alone. Elm
+sends them for the Mystery Egg, Silver steals from the lab, and his scenes
+follow the rules under [Silver](#silver).
 
-Remove Clair, Dragon's Den, and Elm's Master Ball handoff as activation requirements
-for this sequence. Preserve their own stories and rewards. The Radio Tower Director
-keeps the Silver Wing for Lugia or Rainbow Wing for Ho-Oh; the Kimono Girls keep the
-Tidal Bell or Clear Bell respectively.
+Visitors, who start in Kanto or Hoenn, receive none of that. They get no
+Elm errand, no Johto starter choice or starter gift, no Mystery Egg or Togepi
+Egg, and no Silver scenes. Elm and Mr. Pokémon are ordinary residents to them.
+Every other Johto adventure, Gym, reward, and the legendary ceremony stays
+available. This mirrors Kanto, where visitors do not play the Parcel opening
+or Blue's rivalry.
 
-Pewter's existing old man grants the other legendary's Wing only after the selected
-main legendary encounter has been resolved and the same TR requirement is met.
-Finishing the ceremony alone, before resolving its encounter, is insufficient.
-Catching or defeating the main legendary counts; a non-loss flee/escape outcome
-that completes the encounter also counts. Losing or interrupting the encounter does
-not count. Capture is never mandatory. This unlock preserves the existing second
-encounter rather than adding another ceremony or moving its reward giver.
+This supersedes the start-choice PRD's
+[visiting-Johto rule](wayfarer-regional-start-choice.md#visiting-another-starting-region)
+and its specification's visitor Elm flow, which #75 implemented. Removing that
+flow is part of this feature, not a migration: prerelease saves need no
+compatibility.
 
-Explain an unmet requirement locally and leave the interaction available on return.
-A high encounter level is not a substitute for the readiness gate. Preserve existing
-retry behavior after a loss and one-time rewards through travel and save/reload.
-
-The exact TR threshold remains an open balance decision against the full 24-badge
-journey. Use one shared threshold for this main trial and the Pewter follow-up;
-do not invent a separate badge or League requirement.
+Visitors are the reason the "no starter choice, no Silver" clause appears
+throughout this document. A Johto adventure must play the same for a player
+who never meets Silver.
 
 ### Adventure boundaries
 
 | Adventure | Preserved story | Required change and retained order |
 | --- | --- | --- |
-| Slowpoke Well | Kurt investigates the harmed Slowpoke; the player confronts the Rockets and resolves the rescue. | Keep the local introduction, rescue, and reward sequence. Do not require another adventure. Later references to this rescue depend on actual completion. |
-| Burned Tower | Eusine introduces the ruins and legendary Pokémon; exploration leads to the beasts' release. | Keep the discovery locally available. A later Silver chapter must not block the discovery when that chapter is not yet eligible. Beast appearances that depend on their release retain that prerequisite. |
-| Dance Theater Rocket | The player helps a performer during the existing Rocket disturbance. | Keep it independently available with its existing reward. Do not require earlier Kimono Girl meetings. |
-| Lighthouse medicine | Jasmine needs medicine for Ampharos; the player obtains it in Cianwood and returns. | Keep this complete two-town errand and its connection to Jasmine's Gym return. Support medicine-first visits with a short, locally understandable introduction rather than pretending Jasmine already sent the player. |
-| Lake of Rage and Mahogany hideout | The disturbed lake leads to Lance, the shop investigation, the hideout, and shutting down the operation. | Keep these scenes in their existing internal sequence. Begin through the existing local introduction without unrelated adventures or badges. |
-| Radio Tower takeover | The player discovers the occupation, infiltrates the tower, rescues its staff, and defeats the takeover. | Remove Chuck, Jasmine, Pryce, and Mahogany completion as activation requirements. Introduce the available crisis through existing Goldenrod interactions. Keep the infiltration, keys, rescue, battles, and resolution in order. |
-| Clair and Dragon's Den | Clair challenges the player; the local trial resolves her badge sequence. | Remove the requirement for Chuck, Jasmine, and Pryce's badges. Keep Clair's challenge, Dragon's Den, and the deferred badge/reward sequence together. |
-| Kimono ceremony and legendary encounter | The existing dancers, ceremony, and associated legendary encounter remain the adventure. | Make its introduction available through existing Ecruteak characters instead of Clair's completion and Elm's handoff. Require Radio Tower completion, its selected Wing, and sufficient TR for the trial, then preserve the Bell and ceremony sequence. Gate Pewter's other Wing behind resolution of the first encounter and the same TR. |
+| Slowpoke Well | Kurt investigates the harmed Slowpoke; the player confronts the Rockets and resolves the rescue. | Keep the local introduction, rescue, and reward. Bugsy, Silver, Ilex Forest, and the GS Ball story must not rewind or skip the Well, whichever happens first. |
+| Burned Tower | Eusine introduces the ruins; exploration leads to the beasts' release. | The release no longer waits on Silver's Burned Tower scene. It plays for visitors and for Johto-origin players whose Burned Tower chapter has been retired. Morty's gym-door sage keeps its local tie to the release. |
+| Dance Theater Rocket | The player helps a performer during the Rocket disturbance and receives HM Surf. | Keep it independently available. The ceremony and Elm's calls must not hide the Surf giver or rewind the theater. |
+| Lighthouse medicine | Jasmine needs medicine for Ampharos; the player obtains it in Cianwood and returns. | Keep the two-town errand and its tie to Jasmine's Gym. Medicine-first visits get a short local introduction instead of Jasmine acting as if she sent the player. |
+| Lake of Rage and Mahogany hideout | The disturbed lake leads to Lance, the shop investigation, the hideout, and shutting down the operation. | Keep the internal sequence. Pryce's Gym, the Radio Tower, and the merchant's road must not rewind or skip it, whichever happens first. |
+| Radio Tower takeover | The player discovers the occupation, infiltrates the tower, rescues its staff, and defeats the takeover. | Remove Chuck's, Jasmine's, and Pryce's badges, Pryce's Gym victory, and Elm's phone call as activation requirements. The player starts it in Goldenrod; see [Radio Tower](#radio-tower-takeover). Keep the infiltration, keys, rescue, battles, and resolution in order. |
+| Clair and Dragon's Den | Clair challenges the player; the Den trial completes her badge sequence. | Remove the badge 5–7 check. Keep Clair's challenge, the Den, and the deferred badge handoff together. The road to Blackthorn opens independently; see [Mahogany road](#mahogany-road-and-blackthorn). |
+| Kimono ceremony and legendary encounter | The dancers, Bell, ceremony, and selected legendary encounter. | Introduce it through Ecruteak characters instead of Clair, Elm, and Silver's Ecruteak scene. Require Radio Tower completion, its Wing, and sufficient TR for the trial. Gate Pewter's other Wing behind resolution of the first encounter and the same TR. |
+| Suicune pursuit | Suicune's sightings, leading to the Kanto half of the chase. | Keep the sightings' order. Start the chase however the player first reaches Olivine, including by ship. Eusine's first meeting must not assume an earlier one. |
+
+### Radio Tower takeover
+
+The occupation begins only when the player chooses to start it through an
+existing Goldenrod interaction. Before that, the Radio Tower's ordinary
+services, radio quiz, and Pokégear radio work. Arriving in Goldenrod, winning
+Gyms, or receiving a phone call does not start it. Once started, the
+occupation persists through travel and save/reload until the player resolves
+it, and the radio quiz cannot regress it.
+
+Elm's takeover call stops being an activator. For Johto-origin players it may
+remain as an optional hint while the occupation is running, worded so it does
+not deny Rockets the player has already beaten.
+
+Silver's Goldenrod Underground scene is not required to continue. The Director
+keeps the Card Key and Wing handoffs. When the Tower is finished before Baoba's
+Route 39 choice has picked a branch, the Director keeps the selected Wing for
+the player and hands it over once the branch is chosen. That chance is never
+lost, and the Wing is never given twice.
+
+### Mahogany road and Blackthorn
+
+The RageCandyBar merchant stops blocking the road east of Mahogany. Route 44,
+Ice Path, and Blackthorn follow ordinary traversal and field-move rules, with no
+Radio Tower requirement. He keeps his shop, Wayfarer's TR-mart menu, and his
+local dialogue. The Ice Path Kimono push remains a one-time local interaction.
+
+This extends the [HNS traversal design](hns-open-world-region-traversal.md),
+which left Route 44, Ice Path, and Blackthorn outside its pass. Opening the
+road changes no other Mahogany, Lake of Rage, or hideout story.
+
+Pryce's Gym, the Lake of Rage, the hideout, and the takeover share Mahogany's
+progress today. Finishing any of them must not rewind another or bring the
+merchant's block back.
 
 ### Team Rocket
 
 Slowpoke Well, Mahogany, and Radio Tower must support every relative completion
-order. Preserve the existing crimes, organization, characters, and local objectives.
+order. Preserve the crimes, organization, characters, and local objectives.
 There is no new story about separately named Rocket cells or factions.
 
 First meetings use an introduction that does not claim the player defeated that
-character elsewhere. Where the earlier encounter was completed, retain the
-recognition line. For example, Proton may mention Slowpoke Well only after the
-player has completed that encounter.
+character elsewhere. Where the earlier encounter was completed, keep the
+recognition line. Examples that need conditional variants:
+
+- Proton's Radio Tower line recalling Slowpoke Well.
+- The hideout grunt who remembers the player "from the well".
+- Ariana recalling Mahogany in the Radio Tower, and her hideout boast about a
+  later broadcast plan.
+- The Radio Tower grunt asking whether the player got past the Underground.
 
 Each resolution must remain true while the other operations are unfinished.
-Preserve local defeat and rescue outcomes. Change claims that all of Team Rocket
-has disappeared, or that a later operation has already occurred, when those claims
-would contradict the player's remaining adventures. Use a short neutral line or a
-completion-conditioned variant; do not invent a replacement organization history.
+Backstory lines such as Rocket's disbandment three years ago are order-safe.
+Change claims that Team Rocket is finished, or that a later operation already
+happened, when they would contradict the player's remaining adventures.
+Archer's "I will disband Team Rocket here today" is the main case. Use a short
+neutral line or a completion-conditioned variant; do not invent a replacement
+organization history.
 
-Radio Tower's original broadcast motive and final dialogue need a scene-level
-wording review. The desired outcome is the same takeover adventure with truthful
-context, not a new plot. Its completion must not silently resolve Mahogany or the
-Well, unlock their rewards, or erase their participants.
+Radio Tower's broadcast motive and final dialogue need a scene-level wording
+review. Its completion must not silently resolve Mahogany or the Well, unlock
+their rewards, or erase their participants.
 
-### Silver and necessary continuing stories
+### Kimono trial and legendary encounters
 
-Keep Silver's existing scenes at their existing locations. Do not move chapters
-between locations or select a different chapter dynamically on arrival.
+Keep the branch selection, characters, five-dancer challenge, Bell reward,
+ceremony, and legendary encounter. Baoba's Route 39 choice selects Lugia or
+Ho-Oh as the main legendary; the other remains available through Pewter's Wing
+giver.
 
-Later scenes that require his earlier losses, recognition, or character growth
-remain unavailable until those narrative prerequisites are complete. Retain only
-the dependencies needed for that story; unrelated Gym and local-adventure flags
-must not substitute for Silver's actual progress.
+The main sequence is:
 
-An ineligible Silver scene must not block an independent adventure sharing its
-location. If Radio Tower can be played before an eligible underground Silver
-encounter, the takeover remains completable and the deferred rival scene remains
-recoverable later. The same principle applies to Burned Tower and travel routes.
+1. Discover the ceremony through existing Ecruteak characters. They explain
+   the Wing and TR requirements without requiring Clair, Elm, or Silver.
+2. Complete the independently available Radio Tower adventure and receive the
+   selected legendary's Wing from the Director.
+3. With that Wing and sufficient TR, take the five-Kimono-Girl challenge.
+4. Win the challenge, receive its Bell, and continue to the ceremony and the
+   selected legendary encounter. No other readiness gate sits between these
+   stages.
 
-The exact chapter chain and treatment of encounters embedded in temporary story
-scenes belong in the implementation specification. Do not promise independence by
-silently deleting a chapter. If preserving a particular scene would require moving
-it or substantially rewriting it, record that conflict for a product decision.
+Radio Tower completion and its Wing are an explicit retained story
+prerequisite. Meeting the TR requirement first does not replace that story;
+finishing Radio Tower early does not replace the TR requirement. Both orders
+work, and neither requires returning to an unrelated NPC to activate progress.
+The encounters currently follow ceremony progress, not Wing inventory, so the
+implementation must enforce the Wing and TR conditions itself.
 
-Releasing a legendary Pokémon before following its appearances is a valid retained
-dependency. The Suicune pursuit remains a continuing adventure rather than several
-independent sightings. Its Johto prerequisites must remain recoverable after travel.
+Remove Clair, Dragon's Den, Elm's Master Ball handoff, and Silver's Ecruteak
+scene from this sequence. Preserve their own stories and rewards. The Director
+keeps the Silver Wing for Lugia or the Rainbow Wing for Ho-Oh; the Kimono Girls
+keep the Tidal Bell or Clear Bell.
 
-The Kimono Girls' existing speeches recall help in several earlier towns and
-adventures. Preserve those lines when the referenced events happened; otherwise
-omit the callback or use a brief first-meeting variant. Those speeches must not
-reintroduce the old campaign as a set of hidden prerequisites.
+Pewter's old man grants the other legendary's Wing only after the main
+encounter has been resolved and the same TR requirement is met. Finishing the
+ceremony without resolving its encounter is insufficient. Catching or
+defeating the main legendary counts, as does a non-loss flee or escape that
+completes the encounter. Losing or interrupting it does not. Capture is never
+mandatory. Before Baoba's choice, Pewter's old man has ordinary dialogue.
+
+Explain an unmet requirement locally and leave the interaction available on
+return. A high encounter level is not a substitute for the readiness gate.
+Preserve retry after a loss and one-time rewards through travel and save/reload.
+
+The Kimono Girls' speeches recall the Mystery Egg, Ilex Forest, Slowpoke Well,
+the Theater Rocket, the Ice Path, the Dragon's Den, the Goldenrod Underground,
+and the Radio Tower. Keep each callback when the player lived it; otherwise
+omit it or use a brief first-meeting variant. Visitors never hear the Mystery
+Egg line. The speeches must not turn the old campaign into hidden
+prerequisites.
+
+Under the League circuit, Reception Gate already ignores the ceremony. The
+ceremony is not a League prerequisite and does not become one.
+
+### Silver
+
+Silver's rivalry belongs to Johto-origin players and follows the forward
+progression of
+[Blue's Kanto rivalry](frlg-kanto-story-on-hns-maps.md#blues-origin-specific-role-and-forward-progression).
+
+Keep his scenes at their existing locations in a stable chapter order that
+follows the original story and does not depend on map discovery order. His
+story moves forward when the player actually starts a later scene with him.
+That retires every earlier scene, so returning to an earlier location never
+starts an obsolete chapter. Entering a map, passing a deferred trigger, or
+declining an optional encounter before it begins does not advance him.
+
+Retiring a scene does not claim the player fought or beat Silver there. It
+awards no skipped battle money, experience, items, or victory credit. A loss in
+the current scene leaves that scene retryable; earlier scenes stay retired.
+
+His chapters span Johto and Kanto: New Bark, Cherrygrove, Sprout Tower, Azalea,
+Burned Tower, Olivine, the Mahogany hideout, the Goldenrod Underground,
+Ecruteak, Victory Road, Mt. Moon, and his Indigo rematches. The Route 22
+scene stays with the optional Celebi adventure the
+[Kanto story PRD](frlg-kanto-story-on-hns-maps.md#selected-hns-story-adaptations)
+owns.
+
+No host adventure waits on Silver. The Burned Tower release, the Radio Tower
+Underground, the Mahogany hideout, and the Kimono ceremony all continue
+whether his scene there is played, retired, or never offered. Playing or
+retiring his scene does not complete, rewind, or reward any of them.
+
+His dialogue refers only to what happened. His Azalea line asks about the Well,
+his Underground after-battle line recalls Lance, and his hideout and Ecruteak
+lines talk about the player beating Team Rocket. Each needs a variant for
+players who have not done those things.
+
+Silver keeps his current battle scaling. Whether he becomes a notable trainer
+like Blue is separate work.
 
 ### Local Gym relationships
 
-Keep direct story relationships such as healing Ampharos before Jasmine returns
-to her Gym and completing Clair's local trial before receiving her badge. This
-feature does not make every Gym independent of its own local adventure.
+Keep direct story relationships: healing Ampharos before Jasmine returns to her
+Gym, completing Clair's Den trial before her badge, and the Burned Tower release
+before Morty's gym-door sage steps aside. This feature does not make every Gym
+independent of its own local adventure.
 
-Remove the named unrelated badge prerequisites above. Do not replace them with a
-global badge total, TR threshold, league win, or another unrelated
-story check. Existing access to Blackthorn and other locations is governed by the
-traversal design; removing Clair's Gym check alone does not promise unrestricted
-geographic access.
+Remove the named unrelated badge requirements. Do not replace them with a
+global badge total, TR threshold, league win, or another unrelated story check.
+The Route 32 guard's Miracle Seed no longer depends on Silver, the Togepi Egg,
+or the Violet Gym.
 
 ## Boundaries
 
-- Apply this design to Wayfarer's Johto stories. Standalone HNS behavior is outside
-  scope.
-- Preserve existing NPCs, maps, encounter identities, battles, puzzles, and normal
-  rewards. Reward delivery may need adjustment when its old activation depended
-  on an unrelated story, but duplication or silent loss is not acceptable.
+- Apply this design to Wayfarer's Johto stories. Standalone HNS behavior is
+  outside scope.
+- Preserve existing NPCs, maps, encounter identities, battles, puzzles, and
+  normal rewards. Reward delivery may change where its old activation depended
+  on an unrelated story, but duplication or silent loss is not acceptable. The
+  one deliberate loss is that visitors no longer receive Elm's errand rewards.
 - No broad rewrite of Rocket, Silver, the Kimono Girls, or Johto's mythology.
 - No new quest journal, map redesign, regional opening, transportation system,
   battle scaling, or encounter balancing.
-- General Kanto and Hoenn adventure redesigns remain separate. Pewter's alternate
-  legendary Wing gate is the explicit Kanto exception in this PRD. Shared characters and
-  cross-region callbacks must be identified so this change does not claim full
-  journey cohesion while leaving known contradictions unaddressed.
-- The S.S. Aqua maiden voyage and its established travel entitlement remain intact.
+- Johto's opening up to Elm's errand stays as the start-choice design defines it
+  for Johto-origin players.
+- Kanto and Hoenn story designs stay separate. Pewter's Wing gate, Silver's
+  Kanto chapters, and the Route 22 boundary are the Kanto touchpoints named
+  here.
+- The S.S. Aqua maiden voyage and its travel entitlement stay as the
+  [S.S. ferries](ss-ferries.md) design keeps them.
 - This PRD defines player behavior. Script variables, event placement, state
-  ownership, and exact revised dialogue belong in a subsequent specification.
+  ownership, and exact dialogue belong in the specifications.
 
 ## Interactions
 
 ### State, rewards, and shared characters
 
-Completing one adventure must not move another adventure backward, suppress its
-start, replay its completed scenes, or duplicate its rewards. This includes
-finishing Slowpoke Well after later Azalea activity and completing Radio Tower
-before the Mahogany investigation.
+Completing one adventure must not move another backward, suppress its start,
+replay its completed scenes, or duplicate its rewards. Today several adventures
+share one progress value per town, and many scenes overwrite it. The audit
+records concrete cases:
+
+- Bugsy, the Well, and Silver share Azalea's progress.
+- Pryce, the Lake, the hideout, the merchant, and the takeover share
+  Mahogany's.
+- The Theater Rocket, the Surf giver, Elm, and the ceremony share the theater's.
+- Whitney, the radio quiz, and the takeover share Goldenrod's.
+
+Each of these must work in every supported order.
 
 When adventures share an NPC or location, each unfinished adventure must remain
-discoverable. Ceremony staging must not erase an unfinished theater rescue or its
-reward. A necessary local sequence may be retained where the same scene cannot
-coherently serve both events; document that dependency explicitly.
+discoverable. Ceremony staging must not erase an unfinished theater rescue or
+its Surf reward. A necessary local sequence may be retained where the same
+scene cannot coherently serve both events; document that dependency explicitly.
 
 Leaving for another region, losing a battle, saving, and reloading preserve the
-current step. Revisit checks must recognize prerequisites satisfied in any supported
-order. A full Bag or interrupted reward handoff must leave a way to claim the reward.
+current step. Revisit checks must recognize prerequisites satisfied in any
+supported order. A full Bag or interrupted handoff must leave the reward
+claimable.
 
-Preserve the original reward owners: the Radio Tower Director awards the main
-Wing, the Kimono finale awards the Bell, Pewter's old man awards the other Wing,
-and Elm awards the Master Ball. Local ceremony activation must not silently grant
-their rewards or mark their adventures complete.
-
-The [ceremony gate audit](../research/johto-legendary-ceremony-gates.md) confirms
-that the current main encounter uses ceremony progress rather than checking
-Wing/Bell inventory. The implementation must explicitly enforce the approved
-Radio Tower/Wing and TR readiness conditions when replacing the Clair/Elm bridge.
-Pewter's existing direct encounter activation must not bypass its new prerequisites.
-
-Silver's chapter completion must not stand in for progress in the hideout, Radio
-Tower, or ceremony. Those adventures can advance while his scene is deferred;
-playing it later cannot move their state backward. Shared Kimono Girl appearances
-likewise remain individually available or completed after another adventure changes
-their staging.
+Preserve the original reward owners. The Radio Tower Director awards the main
+Wing, the Kimono finale awards the Bell, Pewter's old man awards the other
+Wing, and Elm awards the Master Ball. Local ceremony activation must not
+silently grant their rewards or mark their adventures complete. Pewter's direct
+encounter activation must not bypass its new prerequisites.
 
 ### Related product contracts
 
-This proposed design revises the retained Johto story prerequisites described by
-the [League circuit PRD](wayfarer-interregional-league-circuit.md), specifically
-Radio Tower activation and Clair's three-badge requirement. It does not alter
-League admission, the TR calculation, or badge accounting. The
-legendary readiness gate consumes existing TR. The older specifications
-still describe the current implementation until this design is implemented.
-
-The [HNS traversal design](hns-open-world-region-traversal.md) opens routes without
-completing their stories. Preserve that separation. A hidden story scene must not
-restore an old roadblock, and walking past an adventure must not complete it.
+- [League circuit](wayfarer-interregional-league-circuit.md): this design
+  revises its retained Johto story prerequisites, namely Radio Tower activation
+  and Clair's three-badge requirement. It does not change League admission,
+  the TR calculation, or badge accounting.
+- [HNS traversal](hns-open-world-region-traversal.md): this design opens
+  Mahogany's east road, which that pass left in place. A hidden story scene
+  must not restore an old roadblock, and walking past an adventure must not
+  complete it.
+- [Regional start choice](wayfarer-regional-start-choice.md): visitors lose
+  Elm's errand, the Johto starter choice, and its gift.
+- [Kanto story on HNS maps](frlg-kanto-story-on-hns-maps.md): Silver's
+  forward progression follows Blue's rule. Silver's Mt. Moon battle stays
+  optional on the traversal lane.
+- [Notable trainers](notable-trainers.md): unchanged. Gym Leaders' victory
+  aftermath and phone contacts keep working when their Gyms are taken in a new
+  order.
+- [Native HM catch windows](native-hm-catch-windows.md): the Theater's Surf and
+  the hideout's Whirlpool remain local rewards. Field preparation for Cianwood
+  and the Lugia branch follows the current HM rules.
 
 ## Playtesting
 
-Acceptance should cover both understandable storytelling and recoverable state:
+Acceptance covers both understandable storytelling and recoverable state:
 
 - Complete the three Rocket adventures in all six relative orders. Each has a
-  truthful introduction and ending, and all unfinished operations remain available.
-- Begin Radio Tower without Chuck, Jasmine, Pryce, or Mahogany completion. Finish
-  it without acquiring an unrelated prerequisite during the adventure.
-- Reach Clair's Gym without those three badges and complete the preserved local
-  challenge and badge handoff, subject to the existing geographic access rules.
-- Discover the ceremony below the TR threshold without Clair or Elm's handoff.
-  The characters explain what is needed; discovery grants no Wing, Bell, or encounter.
-- Test the trial with neither requirement, only Radio Tower/Wing, only sufficient
-  TR, and both. Only both unlock it. Exercise both completion orders and the final
-  chosen TR boundary. Radio Tower itself remains playable below that boundary.
-- Complete the trial, Bell handoff, ceremony, and main encounter without Clair,
-  Dragon's Den, Elm's Master Ball handoff, or another unrelated activation event.
-- Speak to Pewter's old man before the trial, after the trial but before resolving
-  the encounter, and after resolving it. Only the last state with sufficient TR
-  grants the other Wing and activates its encounter. Cover both legendary branches.
-- Verify first-encounter capture, defeat, and a completing flee/escape outcome all
-  permit the follow-up. A loss or interruption does not. No capture requirement,
-  duplicate Wing, or early second-encounter activation may appear after save/reload.
-- Obtain medicine before visiting Jasmine, and also follow the original order.
-  Both versions explain the problem without asserting an earlier conversation.
-- Visit a later Silver location before its prerequisite chapter, complete the
-  available local adventure, then return after progressing Silver. His scene still
-  works and refers only to events that happened.
-- Release the beasts before their dependent appearances; visiting those locations
-  too early neither starts nor consumes a later encounter.
-- Complete unfinished local quests after unrelated Gym wins, regional travel, and
-  other story resolutions. Rewards and local aftermath occur once.
-- Interrupt multi-step adventures with a loss, save/reload, and regional travel.
-  The next step remains clear and available.
+  truthful introduction and ending, and the unfinished operations remain
+  available.
+- Interleave the Well with Bugsy and Ilex Forest, and the Lake and hideout
+  with Pryce and the Radio Tower. Nothing rewinds, skips, or returns the
+  merchant's block.
+- Start the Radio Tower with no Johto badges and no Mahogany progress. Use its
+  services before starting the occupation. Finish without gaining an unrelated
+  prerequisite. Finish it before Baoba's choice and collect the Wing later.
+- Walk from Mahogany to Blackthorn with no Radio Tower progress and beat Clair
+  and the Den without badges 5–7.
+- Play as a Hoenn- or Kanto-origin visitor: Elm offers no errand or starter,
+  Silver never appears, and every other adventure, including the Burned Tower
+  release and Morty's Gym, completes.
+- As a Johto-origin player, skip ahead to a later Silver chapter. Every earlier
+  chapter retires with no credit, a loss leaves only the current one
+  retryable, and his lines mention only what happened.
+- Discover the ceremony below the TR threshold without Clair or Elm. The
+  characters explain what is needed; discovery grants no Wing, Bell, or
+  encounter.
+- Test the trial with neither requirement, only the Radio Tower Wing, only
+  sufficient TR, and both. Only both unlock it.
+- Speak to Pewter's old man before Baoba's choice, before the trial, after the
+  trial but before resolving the encounter, and after resolving it. Only the
+  last, with sufficient TR, grants the other Wing. Cover both branches and
+  each completing encounter outcome.
+- Complete Clair's trial below the Master Ball threshold; her badge arrives,
+  and Elm's Master Ball arrives once the threshold is reached.
+- Obtain medicine before visiting Jasmine, and also in the original order.
+- Reach Olivine first by ship and by Route 39; Suicune's chase starts either
+  way.
+- Interrupt multi-step adventures with a loss, save/reload, and regional
+  travel. The next step remains clear and available.
 
-A player unfamiliar with the original campaign should understand each adventure's
-problem, motivation, and conclusion. A player familiar with it should recognize
-the same adventure without needing a new cast or replacement plot to explain it.
+A player unfamiliar with the original campaign should understand each
+adventure's problem, motivation, and conclusion. A player familiar with it
+should recognize the same adventure without a new cast or replacement plot.
 
 ## Open questions
 
 These are bounded scene decisions, not permission to expand the feature:
 
-1. Which existing Goldenrod interaction activates the takeover without making
-   ordinary first-visit Radio Tower services inaccessible? Preserve both normal
-   services and a locally discoverable start.
-2. What are the smallest truthful variants for the broadcast motive and Rocket
-   ending in each supported order? Review shared executives and later Kanto
-   dialogue before choosing a global disbandment outcome.
-3. Which existing Ecruteak interaction introduces the ceremony and explains the
-   agreed Wing/TR gate with the least dialogue change?
-4. What exact TR threshold places these legendary rewards appropriately in the
-   24-badge journey? This number must be decided before implementation; the story
-   sequence and use of the same threshold for both unlocks are settled.
-5. Which Silver chapters require which predecessors, and how can scenes inside
-   temporary occupations remain playable afterward at their existing locations?
-   Include the later Kanto appearances in the dependency review, without expanding
-   this into a general Kanto story rewrite.
+1. **Radio Tower start.** Which existing Goldenrod interaction starts the
+   occupation by player choice?
+2. **Rocket endings.** What are the smallest truthful variants for the
+   broadcast motive and Archer's ending in each order? Review shared executives
+   and later Kanto dialogue before choosing a global disbandment outcome.
+3. **Ceremony introduction.** Which Ecruteak interaction introduces the
+   ceremony and explains the Wing and TR gate with the least dialogue change?
+4. **Thresholds.** What TR places the shared legendary threshold, and Elm's
+   Master Ball threshold, in the 24-badge journey? Both must be decided
+   before implementation.
+5. **Elm's Master Ball for visitors.** Elm's later story role is Johto-origin
+   only, and visitors can claim Silph's Master Ball in Kanto. Confirm that
+   visitors receive no Master Ball from Elm, or name another Johto giver.
+6. **Silver's chapter list.** Fix the stable chapter order. Victory Road's
+   battle never fires under the League circuit today. Restore it on the
+   circuit's Victory Road, or drop it from the order?
 
 ## References
 
+- [Johto story beat gates](../research/johto-story-beat-gates.md)
+- [Johto legendary ceremony gates](../research/johto-legendary-ceremony-gates.md)
 - [Regional story independence audit](../research/regional-story-beat-independence.md)
+- [FRLG Kanto independent story beats](frlg-kanto-independent-story-beats.md)
+- [FRLG Kanto story on HNS maps](frlg-kanto-story-on-hns-maps.md)
 - [HNS open-world regional traversal](hns-open-world-region-traversal.md)
+- [Wayfarer regional start choice](wayfarer-regional-start-choice.md)
 - [Wayfarer interregional League circuit](wayfarer-interregional-league-circuit.md)
-- [HNS traversal specification](../specs/hns-open-world-region-traversal.md)

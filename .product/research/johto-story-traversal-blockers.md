@@ -1,5 +1,8 @@
 # Johto story traversal blockers
 
+Snapshot at `9ab8058a6e`. Several blockers listed here were already gone in
+the Wayfarer build; see the [2026-11 refresh](johto-story-beat-gates.md#corrections-to-the-september-inventory).
+
 ## Scope
 
 This inventory covers the HNS Johto implementation. A blocker is included when
