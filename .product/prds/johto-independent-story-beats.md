@@ -85,15 +85,20 @@ of her sequence do not.
 ### Who plays which story
 
 Johto-origin players, who start in New Bark, play Johto's opening and Elm's
-errand. Silver's rivalry and Elm's later story role are theirs alone. Elm
-sends them for the Mystery Egg, Silver steals from the lab, and his scenes
-follow the rules under [Silver](#silver).
+errand, and Silver's rivalry is theirs alone. Elm sends them for the Mystery
+Egg, Silver steals from the lab, and his scenes follow the rules under
+[Silver](#silver).
 
 Visitors, who start in Kanto or Hoenn, receive none of that. They get no
 Elm errand, no Johto starter choice or starter gift, no Mystery Egg or Togepi
-Egg, and no Silver scenes. Elm and Mr. Pokémon are ordinary residents to them.
-Every other Johto adventure, Gym, reward, and the legendary ceremony stays
-available. This mirrors Kanto, where visitors do not play the Parcel opening
+Egg, and no Silver scenes. Mr. Pokémon is an ordinary resident to them, and
+Elm is a professor they have not met. Every other Johto adventure, Gym,
+reward, and the legendary ceremony stays available.
+
+Visitors still receive Elm's Master Ball after Clair's trial, under the same
+TR threshold. With no errand or phone call behind them, Elm introduces himself
+and hands it over in person at his lab, and a local line after Clair's trial
+points them there. This mirrors Kanto, where visitors do not play the Parcel opening
 or Blue's rivalry.
 
 This supersedes the start-choice PRD's
@@ -252,10 +257,14 @@ the current scene leaves that scene retryable; earlier scenes stay retired.
 
 His chapters span Johto and Kanto: New Bark, Cherrygrove, Sprout Tower, Azalea,
 Burned Tower, Olivine, the Mahogany hideout, the Goldenrod Underground,
-Ecruteak, Victory Road, Mt. Moon, and his Indigo rematches. The Route 22
-scene stays with the optional Celebi adventure the
+Ecruteak, Mt. Moon, and his Indigo rematches. The Route 22 scene stays with
+the optional Celebi adventure the
 [Kanto story PRD](frlg-kanto-story-on-hns-maps.md#selected-hns-story-adaptations)
 owns.
+
+His Victory Road scene is dropped. It never fires under the League circuit
+today, and Wayfarer does not restore it. Victory Road keeps no Silver trigger,
+and later lines must not recall a Victory Road battle.
 
 No host adventure waits on Silver. The Burned Tower release, the Radio Tower
 Underground, the Mahogany hideout, and the Kimono ceremony all continue
@@ -389,7 +398,8 @@ Acceptance covers both understandable storytelling and recoverable state:
   last, with sufficient TR, grants the other Wing. Cover both branches and
   each completing encounter outcome.
 - Complete Clair's trial below the Master Ball threshold; her badge arrives,
-  and Elm's Master Ball arrives once the threshold is reached.
+  and Elm's Master Ball arrives once the threshold is reached. As a visitor,
+  follow the local lead to Elm's lab and receive it there once.
 - Obtain medicine before visiting Jasmine, and also in the original order.
 - Reach Olivine first by ship and by Route 39; Suicune's chase starts either
   way.
@@ -414,12 +424,6 @@ These are bounded scene decisions, not permission to expand the feature:
 4. **Thresholds.** What TR places the shared legendary threshold, and Elm's
    Master Ball threshold, in the 24-badge journey? Both must be decided
    before implementation.
-5. **Elm's Master Ball for visitors.** Elm's later story role is Johto-origin
-   only, and visitors can claim Silph's Master Ball in Kanto. Confirm that
-   visitors receive no Master Ball from Elm, or name another Johto giver.
-6. **Silver's chapter list.** Fix the stable chapter order. Victory Road's
-   battle never fires under the League circuit today. Restore it on the
-   circuit's Victory Road, or drop it from the order?
 
 ## References
 
