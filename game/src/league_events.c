@@ -654,6 +654,10 @@ static bool32 UpdateInvitations(enum LeagueId forcedLeague, bool32 forceDue)
     struct LeagueEventState *state = &gSaveBlock3Ptr->leagueEvent;
     bool32 changed = FALSE;
 
+    // Never reseal a state that no longer matches its checksum: that would make corruption look valid.
+    if (state->invitationState > LEAGUE_INVITATION_COUNTING_DOWN || state->stateChecksum != StateChecksum(state))
+        return FALSE;
+
     if (state->invitationState == LEAGUE_INVITATION_NOT_QUALIFIED)
     {
         // Player TR never decreases, so qualifying happens once.
@@ -779,7 +783,8 @@ u8 GetLeagueResultCall(void)
 
 void ClearLeagueResultCall(void)
 {
-    if (gSaveBlock3Ptr->leagueEvent.resultCall != 0)
+    if (gSaveBlock3Ptr->leagueEvent.resultCall != 0
+     && gSaveBlock3Ptr->leagueEvent.stateChecksum == StateChecksum(&gSaveBlock3Ptr->leagueEvent))
     {
         gSaveBlock3Ptr->leagueEvent.resultCall = 0;
         SealState();

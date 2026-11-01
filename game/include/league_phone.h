@@ -8,5 +8,8 @@ bool8 LeaguePhone_TryStartCall(void);
 #if TESTING || defined(E2E_TESTING)
 extern u8 gLeaguePhoneDebugInvitation;
 #endif
+#if TESTING
+void LeaguePhone_ReleaseRingForTesting(void);
+#endif
 
 #endif // GUARD_LEAGUE_PHONE_H

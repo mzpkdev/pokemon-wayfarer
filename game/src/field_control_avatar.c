@@ -219,11 +219,13 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         return TRUE;
 
 #if IS_WAYFARER
-    // A friendship crossing (the end of a battle, a quest) hands the number over once the field has control.
-    if (NotableFriendship_TryStartPendingNumberScript())
+    // A friendship crossing (the end of a battle, a quest) hands the number over once the field has control,
+    // on a frame without a finished step, so it never swallows that step's warp or trigger script.
+    if (!input->tookStep && NotableFriendship_TryStartPendingNumberScript())
         return TRUE;
-    // A league's invitation or result call rings once the field has control (.product/specs/leagues.md).
-    if (LeaguePhone_TryStartCall())
+    // A league's invitation or result call rings once the field has control (.product/specs/leagues.md), on
+    // a frame without a finished step, so it never swallows that step's warp or trigger.
+    if (!input->tookStep && LeaguePhone_TryStartCall())
         return TRUE;
 #endif
 

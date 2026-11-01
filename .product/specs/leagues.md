@@ -462,7 +462,9 @@ Add:
   the defeated prefix; and
 - the **owed result call**: none, or the league (Indigo or Hoenn) whose
   accepted event ended most recently and whether the player won it, until
-  that league's result call plays ([Presentation](#presentation)).
+  that league's result call plays ([Presentation](#presentation)). A Masters
+  event's end leaves it as it is, and declining at that league drops it (the
+  decline's own call names the new champion).
 
 The Sevii Masters adds its own fields to this state ([Sevii
 Masters](sevii-masters.md#saved-state)), covered by the same content versions
@@ -489,8 +491,8 @@ When the countdown is due, choose the calling league
 happens until a later check. Otherwise, in one transaction, set the invited
 state with that league, advance the call counter, and give that league the
 new number as its last call number. These reach flash with the next save
-(the answer saves); a crash before then only places the same call again,
-since the caller depends on nothing that changed. A played result call is
+(the answer saves); a crash before then places the call again by the same
+rule, from the badges held then. A played result call is
 likewise cleared in memory, so loading an older save may play it again. The phone rings at the next moment the
 player can take a call (in the overworld, with no script, battle, or ceremony
 running, once they have the phone, and where they could save: not in a
@@ -762,7 +764,10 @@ Hoenn's staff turn the player away with the immediate reason
 the TR needed; an unanswered call; an event accepted at another league; or
 that only invited trainers may enter, and how many days until the next call
 is due. Lobby acceptance is retired for them; the Masters' caretaker still
-offers its event to a Master (with the same refusals).
+offers its event to a Master (with the same refusals). A player who has no
+phone yet, or whose call is held after a failed answer, is handed the waiting
+invitation (from either league) by Indigo's or Hoenn's lobby staff instead,
+and answers it there the same way.
 
 Graphics, portraits, dialogue, battle metadata, and names follow the selected
 character even in historical rooms; a displaced fixed resident must not remain

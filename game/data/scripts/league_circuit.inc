@@ -20,6 +20,9 @@ LeagueEvent_EventScript_TurnedAway::
 	goto LeagueEvent_EventScript_EntranceDenied
 
 LeagueEvent_EventScript_EntranceDenied::
+	@ A waiting invitation the player can't take by phone is handed over here instead.
+	specialvar VAR_RESULT, LeaguePhone_ShouldDeliverAtDesk
+	goto_if_eq VAR_RESULT, TRUE, LeaguePhone_EventScript_DeskInvitation
 	special LeagueCircuit_BufferAdmissionDenial
 	msgbox gStringVar4
 	releaseall
@@ -255,8 +258,8 @@ LeagueCircuit_Text_NoAcceptedEvent::
 	.string "entrance before going in.$"
 
 LeagueCircuit_Text_CallPending::
-	.string "A LEAGUE called you with an\n"
-	.string "invitation. Please answer it first.$"
+	.string "A LEAGUE invitation is waiting for\n"
+	.string "you. Please answer it first.$"
 
 LeagueCircuit_Text_NoInvitation::
 	.string "Only invited TRAINERS may enter.\p"

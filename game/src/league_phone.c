@@ -23,6 +23,7 @@
 #include "overworld.h"
 #include "safari_zone.h"
 #include "trainer_hill.h"
+#include "trainer_tower.h"
 #include "field_name_box.h"
 #include "league_circuit.h"
 #include "league_events.h"
@@ -65,6 +66,13 @@ static void HoldRing(void)
     sRingHeldMap = CurrentMapKey();
 }
 
+#if TESTING
+void LeaguePhone_ReleaseRingForTesting(void)
+{
+    sRingHeld = FALSE;
+}
+#endif
+
 static bool32 IsRingHeld(void)
 {
     if (sRingHeld && sRingHeldMap != CurrentMapKey())
@@ -105,12 +113,13 @@ static void BufferCharacterName(u8 *dest, u32 characterId)
 
 // Answering saves the game, so a call rings only where the start menu would offer SAVE: never in a link or
 // Union Room session, the Safari Zone, the Bug-Catching Contest, a Battle Pike or Pyramid challenge, the
-// multi-battle partner room, or a Trainer Hill challenge. The call waits until the player leaves.
+// multi-battle partner room, or a Trainer Hill or Sevii Trainer Tower challenge. The call waits until the
+// player leaves.
 static bool32 CanTakeLeagueCallHere(void)
 {
     return !IsOverworldLinkActive() && !InUnionRoom() && !GetSafariZoneFlag() && !GetBugContestFlag()
         && !InBattlePike() && CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE
-        && !InMultiPartnerRoom() && !InTrainerHillChallenge();
+        && !InMultiPartnerRoom() && !InTrainerHillChallenge() && !WayfarerTrainerTowerIsChallengeActive();
 }
 
 // The field polls this every frame it has control (no script, battle or menu running). It counts the countdown
@@ -150,6 +159,22 @@ u16 LeaguePhone_BufferInvitation(void)
     enum LeagueId league = GetLeagueInvitationLeague();
 
     SetLeagueCaller(league);
+    return league;
+}
+
+// Special: whether Indigo's or Hoenn's lobby staff should hand over a waiting invitation in person: the player
+// has no phone to take the call on, or a failed answer is holding the ring.
+u16 LeaguePhone_ShouldDeliverAtDesk(void)
+{
+    return GetLeagueInvitationLeague() != LEAGUE_ID_NONE && (!FlagGet(FLAG_HAS_MATCH_CALL) || IsRingHeld());
+}
+
+// Special: words the invitation the lobby staff hand over (no caller name box: the staff speak).
+u16 LeaguePhone_BufferDeskInvitation(void)
+{
+    enum LeagueId league = GetLeagueInvitationLeague();
+
+    BufferLeagueNames(league);
     return league;
 }
 

@@ -40,11 +40,13 @@ export const createLeaguesApi = (
     )
   },
   answerCall: async (answer = "accept") => {
-    // A and B both advance a call; the answer's own button also picks YES (A) or NO (B), so a press
-    // that lands on the prompt as it opens still gives the intended answer.
-    const advance = answer === "accept" ? "a" : "b"
+    // Calls and replies advance with B, which never talks to whoever the player is facing once the
+    // call is over. Each yes/no prompt is answered on purpose: the invitation with the answer, and the
+    // decline's confirmation ("Decline? ...") with YES to decline or NO to go back and accept.
     const seen: string[] = []
     let rang = false
+    // The prompt last answered: its text can stay in the field box while the phone reply plays.
+    let answered = ""
     const note = (text: string): void => {
       if (text && seen.at(-1) !== text) seen.push(text)
     }
@@ -52,27 +54,36 @@ export const createLeaguesApi = (
       const current = await state.read()
       const busy = current.scriptActive || current.dialogueOpen || current.controlsLocked
       rang ||= busy
-      if (busy) note(current.dialogue.fullText)
-      if (busy)
+      if (busy) {
+        note(current.dialogue.fullText)
         note(
           decodeFieldMessageText(
             Array.from(await runtime.readBytes(runtime.address("gStringVar4"), 400)),
           ),
         )
+      }
       if (rang && current.ready && !busy && !current.battle.active) return seen
       if (!rang && attempt >= 60) return seen
       if (current.choice.kind === "yes-no") {
-        // A decline answers NO to the invitation, then YES to its confirmation ("Decline? ..."), so a
-        // stray press on either prompt only ever leads back to the same choice.
         const confirming = current.dialogue.fullText.startsWith("Decline?")
-        const wanted = answer === "decline" && !confirming ? 1 : 0
+        const yes = confirming ? answer === "decline" : answer === "accept"
+        const wanted = yes ? 0 : 1
         if (current.choice.cursor !== null && current.choice.cursor !== wanted)
           await controls.press(wanted === 0 ? "up" : "down")
-        else await controls.press(wanted === 0 ? "a" : "b")
+        else {
+          await controls.press(yes ? "a" : "b")
+          answered = current.dialogue.fullText
+        }
         await runtime.advance(10)
+      } else if (
+        /^(Accept the |Decline\?)/.test(current.dialogue.fullText) &&
+        current.dialogue.fullText !== answered
+      ) {
+        // A prompt's yes/no box opens by itself after its text: pressing now would answer it blind.
+        await runtime.advance(4)
       } else if (busy) {
         await runtime.advance(20)
-        await controls.press(advance)
+        await controls.press("b")
       } else await runtime.advance(10)
     }
     throw new Error(`The league call did not finish: ${JSON.stringify(await state.read())}`)

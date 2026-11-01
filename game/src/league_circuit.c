@@ -661,13 +661,12 @@ bool8 IsCircuitStageAvailable(enum CircuitStage stage)
 #endif
 }
 
-// A league call waits for these: a run, a save the league still owes, a recorded Indigo or Hoenn first clear
-// whose Hall of Fame (GameClear consumes the record) hasn't run, or the first Indigo Hall of Fame save. A
-// Masters first clear has no such ceremony and nothing consumes its record, so it never holds a call.
+// A league call waits for these: a run (its win commits inside the Hall of Fame scene, with the field never
+// in control), a save the league still owes, or the first Indigo Hall of Fame save. The recorded first clear
+// is no measure: only a Hoenn GameClear consumes it, so it outlives Indigo's and the Masters' ceremonies.
 bool8 IsLeagueCeremonyPending(void)
 {
     return gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active || sLeagueSavePending
-        || sRecordedCircuitClearStage == CIRCUIT_STAGE_INDIGO || sRecordedCircuitClearStage == CIRCUIT_STAGE_HOENN
         || IsIndigoHallOfFameSaveTransactionActive();
 }
 

@@ -10,6 +10,7 @@
 extern u16 LeaguePhone_Decline(void);
 extern u16 LeaguePhone_BufferResult(void);
 extern void LeaguePhone_FinishResult(void);
+extern u16 LeaguePhone_ShouldDeliverAtDesk(void);
 #include "league_run_helpers.h"
 #include "league_selection.h"
 #include "load_save.h"
@@ -67,6 +68,7 @@ static void PrepareInvitationTest(u8 kanto, u8 johto, u8 hoenn, u32 trainerTR, u
     SetBadges(kanto, johto, hoenn);
     SetTrainerRating(trainerTR);
     VarSet(VAR_DAYS, today);
+    LeaguePhone_ReleaseRingForTesting();
     WayfarerWorld_InitNewGame();  // a saved game always has a seeded world state
 }
 
@@ -551,7 +553,7 @@ TEST("An owed result call rings first and is cleared once it has played")
     FinishInvitationTest();
 }
 
-TEST("A first Masters win holds no call, while an Indigo first win waits for its Hall of Fame")
+TEST("A first Masters or Indigo win holds no call once the run has ended")
 {
     PrepareInvitationTest(8, 0, 8, 160, 1);
     FlagSet(FLAG_HAS_MATCH_CALL);
@@ -566,15 +568,65 @@ TEST("A first Masters win holds no call, while an Indigo first win waits for its
     FlagClear(FLAG_HAS_MATCH_CALL);
     FinishInvitationTest();
 
+    // Indigo's Hall of Fame never consumes the recorded clear in Wayfarer, so the record must not hold calls.
     PrepareInvitationTest(8, 0, 0, 80, 1);
     FlagSet(FLAG_HAS_MATCH_CALL);
     EXPECT_EQ(Test_CompleteAndCommitCircuit(CIRCUIT_STAGE_INDIGO), CIRCUIT_COMMIT_FIRST_CLEAR);
-    AcknowledgeLeagueProgressSave();
-    EXPECT(IsLeagueCeremonyPending());
+    EXPECT(IsLeagueCeremonyPending()); // its save is still owed
     EXPECT(!Rings());
-    EXPECT_EQ(ConsumeRecordedCircuitClearStage(), CIRCUIT_STAGE_INDIGO);
+    AcknowledgeLeagueProgressSave();
     EXPECT(!IsLeagueCeremonyPending());
     EXPECT(Rings()); // the winner's result call
+    ConsumeRecordedCircuitClearStage();
+    FlagClear(FLAG_HAS_MATCH_CALL);
+    FinishInvitationTest();
+}
+
+TEST("A failed save leaves the invitation, its state and the RNG as they were, for accept and decline")
+{
+    struct LeagueEventState before;
+
+    PrepareInvitationTest(8, 0, 0, 80, 1);
+    UpdateLeagueInvitations();
+    EXPECT_EQ(WaitForCall(), LEAGUE_ID_INDIGO);
+    before = *State();
+    gFlashMemoryPresent = FALSE;
+    EXPECT(!DeclineLeagueInvitation());
+    EXPECT_EQ(memcmp(State(), &before, sizeof(before)), 0);
+    EXPECT_EQ(AcceptLeagueInvitation(), LEAGUE_ACCEPT_SAVE_FAILED);
+    EXPECT_EQ(memcmp(State(), &before, sizeof(before)), 0);
+    EXPECT_EQ(GetAcceptedLeagueEventId(), 0);
+    gFlashMemoryPresent = TRUE;
+    EXPECT(ValidateLeagueEventState());
+    EXPECT_EQ(AcceptLeagueInvitation(), LEAGUE_ACCEPT_OK);
+    FinishInvitationTest();
+}
+
+TEST("A state that no longer matches its checksum is never resealed by the countdown")
+{
+    PrepareInvitationTest(8, 0, 0, 80, 1);
+    UpdateLeagueInvitations();
+    State()->daysRemaining = 3; // corrupted, not resealed
+    PassDays(10);
+    EXPECT_EQ(GetLeagueInvitationLeague(), LEAGUE_ID_NONE);
+    EXPECT(!ValidateLeagueEventState());
+    FinishInvitationTest();
+}
+
+TEST("Lobby staff hand a waiting invitation to a player without a phone, or whose ring is held")
+{
+    PrepareInvitationTest(8, 0, 0, 80, 1);
+    FlagClear(FLAG_HAS_MATCH_CALL);
+    EXPECT(!LeaguePhone_ShouldDeliverAtDesk()); // nothing waits yet
+    UpdateLeagueInvitations();
+    EXPECT_EQ(WaitForCall(), LEAGUE_ID_INDIGO);
+    EXPECT(LeaguePhone_ShouldDeliverAtDesk());
+    FlagSet(FLAG_HAS_MATCH_CALL);
+    EXPECT(!LeaguePhone_ShouldDeliverAtDesk()); // it rings instead
+    gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active = TRUE;
+    EXPECT(!LeaguePhone_Decline()); // a failed answer holds the ring
+    gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active = FALSE;
+    EXPECT(LeaguePhone_ShouldDeliverAtDesk());
     FlagClear(FLAG_HAS_MATCH_CALL);
     FinishInvitationTest();
 }

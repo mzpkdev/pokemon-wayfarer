@@ -766,6 +766,8 @@ gSpecials::
 	def_special LeagueEvent_BufferHallBoard
 	def_special LeaguePhone_BufferInvitation
 	def_special LeaguePhone_SetCaller
+	def_special LeaguePhone_ShouldDeliverAtDesk
+	def_special LeaguePhone_BufferDeskInvitation
 	def_special LeaguePhone_Accept
 	def_special LeaguePhone_Decline
 	def_special LeaguePhone_BufferResult
