@@ -6,7 +6,8 @@ SSAnne_1F_Corridor_Frlg_MapScripts::
 
 #if IS_WAYFARER
 SSAnne_1F_Corridor_EventScript_WayfarerInitialize::
-	setdynamicwarp MAP_VERMILION_CITY_PORT_INSIDE_HNS, 8, 9
+	@ The gangway leads to the port the Anne is at; with no voyage (the adventure) it is Vermilion (8,9).
+	special Ferry_RefreshAnneWarp
 	end
 #endif
 

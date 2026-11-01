@@ -20,17 +20,40 @@ VermilionPort_EventScript_Sailor::
 	lock
 	faceplayer
 #if IS_WAYFARER
+	@ One sailor runs the S.S. berth, the Seagallop, and (before the captain's reward) the S.S. Anne adventure.
 	special DrawWayfarerVermilionPortMenu
 	waitstate
 	specialvar VAR_RESULT, GetWayfarerVermilionPortChoice
 	switch VAR_RESULT
-	case 0, VermilionPort_EventScript_Sailor_Sevii
-	case 1, VermilionPort_EventScript_Sailor_OtherDestinations
+	case 0, VermilionPort_EventScript_Sailor_Ferry
+	case 1, VermilionPort_EventScript_Sailor_Sevii
 	case 2, VermilionPort_EventScript_Sailor_BoardSSAnne
 	case 3, VermilionPort_EventScript_Sailor_Cancel
 	case MULTI_B_PRESSED, VermilionPort_EventScript_Sailor_Cancel
 	release
 	end
+
+@ The ship in port (or the Anne's first departure): boards with no further question.
+VermilionPort_EventScript_Sailor_Ferry::
+	setvar VAR_0x8004, FERRY_BERTH_DOCK
+	call Ferry_EventScript_SailorTalk
+	goto_if_eq VAR_RESULT, FALSE, Ferry_EventScript_SailorEnd
+	call VermilionPort_EventScript_FerryBoardingWalk
+	special Ferry_WarpAboard
+	waitstate
+	release
+	end
+
+@ The ferry-only boarding walk: the gangway walk of EnterShip, without moving the boat and without setrespawn.
+VermilionPort_EventScript_FerryBoardingWalk::
+	applymovement LOCALID_VERMILIONMARINA_SAILOR, VermilionPort_Movement_SailorEnterBoat
+	waitmovement 0
+	playse SE_EXIT
+	applymovement OBJ_EVENT_ID_PLAYER, VermilionPort_Movement_PlayerEnterBoat
+	waitmovement 0
+	playse SE_EXIT
+	delay 20
+	return
 
 VermilionPort_EventScript_Sailor_Sevii::
 	setvar VAR_0x8004, SEAGALLOP_VERMILION_CITY
@@ -49,15 +72,7 @@ VermilionPort_EventScript_Sailor_SetSailToSeviiDestination::
 	goto WayfarerSevii_EventScript_SailToSelectedDestination
 	end
 
-VermilionPort_EventScript_Sailor_OtherDestinations::
-	specialvar VAR_RESULT, WayfarerCanUseRegularAqua
-	goto_if_eq VAR_RESULT, TRUE, VermilionPort_EventScript_Sailor_AfterKanto
-#else
-	goto_if_ge VAR_SSAQUA_STATE, 8, VermilionPort_EventScript_Sailor_AfterKanto
-#endif
-	goto VermilionPort_EventScript_SailorCantSail
-
-#if IS_WAYFARER
+@ The adventure's own entry, before the captain's reward: it is not the ferry's boarding.
 VermilionPort_EventScript_Sailor_BoardSSAnne::
 	specialvar VAR_RESULT, WayfarerSSAnne_HasUnfinishedContent
 	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_Sailor_SSAnneComplete
@@ -77,7 +92,14 @@ VermilionPort_EventScript_Sailor_SSAnneComplete::
 	closemessage
 	release
 	end
-#endif
+
+VermilionPort_EventScript_Sailor_Cancel::
+	closemessage
+	release
+	end
+#else
+	goto_if_ge VAR_SSAQUA_STATE, 8, VermilionPort_EventScript_Sailor_AfterKanto
+	goto VermilionPort_EventScript_SailorCantSail
 
 VermilionPort_EventScript_SailorCantSail::
 	msgbox VermilionPort_Text_SailorCantSail, MSGBOX_NPC
@@ -85,22 +107,11 @@ VermilionPort_EventScript_SailorCantSail::
 	release
 	end
 
-#if IS_WAYFARER
-VermilionPort_EventScript_Sailor_Cancel::
-	closemessage
-	release
-	end
-#endif
-
 VermilionPort_EventScript_Sailor_AfterKanto::
 	message VermilionPort_Text_WhereSail
 	multichoice 20, 0, MULTI_VERMILION_HARBOR, FALSE
 	switch VAR_RESULT
-#if IS_WAYFARER
-	case 0, VermilionPort_EventScript_ChoseSlateport
-#else
 	case 0, VermilionPort_EventScript_ChoseOlivine
-#endif
 	case 1, VermilionPort_EventScript_ChoseSouthernIsland
 	case 2, VermilionPort_EventScript_ChoseBirthIsland
 	case 3, VermilionPort_EventScript_ChoseFarawayIsland
@@ -109,33 +120,6 @@ VermilionPort_EventScript_Sailor_AfterKanto::
 	case MULTI_B_PRESSED, VermilionPort_EventScript_Sailor_Refused
 	release
 	end
-
-#if IS_WAYFARER
-VermilionPort_EventScript_ChoseSlateport::
-	closemessage
-	delay 20
-	specialvar VAR_RESULT, WayfarerCanUseRegularAqua
-	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_SailorCantBoard
-	checkitem ITEM_SS_TICKET
-	bufferitemname STR_VAR_1, ITEM_SS_TICKET
-	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_Sailor_NoCredentials
-	specialvar VAR_RESULT, WayfarerPrepareHoennEntry
-	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_SailorCantBoard
-	call VermilionPort_EventScript_EnterShip
-	@ EnterShip restores Vermilion as the safe location for special HNS trips.
-	@ The Hoenn leg must replace that presentation-side write before the warp.
-	setrespawn HEAL_LOCATION_SLATEPORT_CITY
-	warpsilent MAP_SLATEPORT_CITY_HARBOR, 9, 11
-	waitstate
-	release
-	end
-
-VermilionPort_EventScript_SailorCantBoard::
-	msgbox VermilionPort_Text_CantBoard, MSGBOX_DEFAULT
-	closemessage
-	release
-	end
-#endif
 
 VermilionPort_EventScript_ChoseOlivine::
 	closemessage
@@ -215,6 +199,7 @@ VermilionPort_EventScript_EnterShip::
 	waitmovement LOCALID_VERMILIONMARINA_BOAT
 	setrespawn HEAL_LOCATION_VERMILION_CITY_HNS
 	return
+#endif
 
 VermilionPort_EventScript_Sailor_Refused::
 	msgbox VermilionPort_Text_ComeAgain, MSGBOX_DEFAULT
@@ -299,3 +284,16 @@ VermilionPort_Text_NoTicket:
     .string "Sorry!\n"
     .string "You may board only\l"
     .string "if you have an S.S.TICKET.$"
+
+#if IS_WAYFARER
+VermilionPort_EventScript_DepartureBoard::
+	msgbox VermilionPort_Text_DepartureBoard, MSGBOX_SIGN
+	end
+
+VermilionPort_Text_DepartureBoard:
+	.string "DEPARTURES - VERMILION CITY\p"
+	.string "By day (8:00-20:00):\n"
+	.string "S.S. AQUA for SLATEPORT CITY\p"
+	.string "By night (20:00-8:00):\n"
+	.string "S.S. ANNE for ONE ISLAND$"
+#endif

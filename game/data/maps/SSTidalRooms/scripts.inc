@@ -23,7 +23,9 @@ SSTidalRooms_EventScript_Bed::
 	msgbox SSTidalRooms_Text_TakeRestOnBed, MSGBOX_DEFAULT
 	closemessage
 	call Common_EventScript_OutOfCenterPartyHeal
+#if !IS_WAYFARER
 	call SSTidalRooms_EventScript_ProgessCruiseAfterBed
+#endif
 	releaseall
 	end
 

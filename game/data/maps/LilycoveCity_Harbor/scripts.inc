@@ -9,7 +9,9 @@ LilycoveCity_Harbor_OnTransition:
 LilycoveCity_Harbor_EventScript_FerryAttendant::
 	lock
 	faceplayer
+#if !IS_WAYFARER
 	goto_if_unset FLAG_SYS_GAME_CLEAR, LilycoveCity_Harbor_EventScript_FerryUnavailable
+#endif
 	call LilycoveCity_Harbor_EventScript_GetEonTicketState
 	call LilycoveCity_Harbor_EventScript_GetAuroraTicketState
 	call LilycoveCity_Harbor_EventScript_GetOldSeaMapState
@@ -25,6 +27,56 @@ LilycoveCity_Harbor_EventScript_FerryAttendant::
 	goto LilycoveCity_Harbor_EventScript_NoFirstTimeEventTickets
 	end
 
+#if IS_WAYFARER
+@ With no charter available the attendant boards the ship in port (or says when the next one is) with no menu.
+LilycoveCity_Harbor_EventScript_NoFirstTimeEventTickets::
+	specialvar VAR_RESULT, GetFerryLilycoveCharterCount
+	goto_if_eq VAR_RESULT, 0, LilycoveCity_Harbor_EventScript_FerryBoard
+	msgbox LilycoveCity_Harbor_Text_MayISeeYourTicket, MSGBOX_DEFAULT
+	message LilycoveCity_Harbor_Text_FlashTicketWhereTo
+	waitmessage
+	goto LilycoveCity_Harbor_EventScript_FerryRegularLocationSelect
+	end
+
+LilycoveCity_Harbor_EventScript_FerryRegularLocationSelect::
+	special DrawFerryLilycoveCharterMenu
+	waitstate
+	specialvar VAR_RESULT, GetFerryLilycoveCharter
+	switch VAR_RESULT
+	case FERRY_CHARTER_SHIP, LilycoveCity_Harbor_EventScript_FerryBoard
+	case FERRY_CHARTER_SOUTHERN_ISLAND, LilycoveCity_Harbor_EventScript_GoToSouthernIsland
+	case FERRY_CHARTER_FARAWAY_ISLAND, LilycoveCity_Harbor_EventScript_GoToFarawayIsland
+	case FERRY_CHARTER_BATTLE_FRONTIER, LilycoveCity_Harbor_EventScript_GoToBattleFrontier
+	case FERRY_CHARTER_CANCEL, LilycoveCity_Harbor_EventScript_ExitSailSelect
+	case MULTI_B_PRESSED, LilycoveCity_Harbor_EventScript_ExitSailSelect
+	end
+
+LilycoveCity_Harbor_EventScript_FerryBoard::
+	setvar VAR_0x8004, FERRY_BERTH_DOCK
+	call Ferry_EventScript_SailorTalk
+	goto_if_eq VAR_RESULT, FALSE, Ferry_EventScript_SailorEnd
+	call LilycoveCity_Harbor_EventScript_FerryBoardingWalk
+	special Ferry_WarpAboard
+	waitstate
+	release
+	end
+
+@ The ferry-only boarding walk: LilycoveCity_Harbor_EventScript_BoardFerry without the boat's departure.
+LilycoveCity_Harbor_EventScript_FerryBoardingWalk::
+	applymovement VAR_LAST_TALKED, Common_Movement_WalkInPlaceFasterUp
+	waitmovement 0
+	delay 30
+	hideobjectat VAR_LAST_TALKED, MAP_LILYCOVE_CITY_HARBOR
+	call_if_eq VAR_FACING, DIR_NORTH, LilycoveCity_Harbor_EventScript_PlayerBoardFerryNorth
+	call_if_eq VAR_FACING, DIR_EAST, LilycoveCity_Harbor_EventScript_PlayerBoardFerryEast
+	delay 30
+	hideplayer
+	return
+
+LilycoveCity_Harbor_EventScript_DepartureBoard::
+	msgbox LilycoveCity_Harbor_Text_DepartureBoard, MSGBOX_SIGN
+	end
+#else
 @ First goto_if_eq is unnecessary; identical scripts
 LilycoveCity_Harbor_EventScript_NoFirstTimeEventTickets::
 	goto_if_eq VAR_TEMP_A, 0, LilycoveCity_Harbor_EventScript_NoEventTickets
@@ -49,6 +101,7 @@ LilycoveCity_Harbor_EventScript_FerryRegularLocationSelect::
 	case 6, LilycoveCity_Harbor_EventScript_ExitSailSelect
 	case MULTI_B_PRESSED, LilycoveCity_Harbor_EventScript_ExitSailSelect
 	end
+#endif
 
 LilycoveCity_Harbor_EventScript_GoToSouthernIsland::
 	call LilycoveCity_Harbor_EventScript_BoardFerry
@@ -57,6 +110,7 @@ LilycoveCity_Harbor_EventScript_GoToSouthernIsland::
 	release
 	end
 
+#if !IS_WAYFARER
 LilycoveCity_Harbor_EventScript_GoToNavelRock::
 	call LilycoveCity_Harbor_EventScript_BoardFerry
 	warp MAP_NAVEL_ROCK_HARBOR, 8, 4
@@ -64,12 +118,17 @@ LilycoveCity_Harbor_EventScript_GoToNavelRock::
 	release
 	end
 
+#endif
+
+#if !IS_WAYFARER
 LilycoveCity_Harbor_EventScript_GoToBirthIsland::
 	call LilycoveCity_Harbor_EventScript_BoardFerry
 	warp MAP_BIRTH_ISLAND_HARBOR, 8, 4
 	waitstate
 	release
 	end
+
+#endif
 
 LilycoveCity_Harbor_EventScript_GoToFarawayIsland::
 	call LilycoveCity_Harbor_EventScript_BoardFerry
@@ -78,6 +137,7 @@ LilycoveCity_Harbor_EventScript_GoToFarawayIsland::
 	release
 	end
 
+#if !IS_WAYFARER
 LilycoveCity_Harbor_EventScript_GoToSlateport::
 	msgbox LilycoveCity_Harbor_Text_SlateportItIs, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, LilycoveCity_Harbor_EventScript_FerryDestinationChangeMind
@@ -87,6 +147,8 @@ LilycoveCity_Harbor_EventScript_GoToSlateport::
 	waitstate
 	release
 	end
+
+#endif
 
 LilycoveCity_Harbor_EventScript_GoToBattleFrontier::
 	msgbox LilycoveCity_Harbor_Text_BattleFrontierItIs, MSGBOX_YESNO
@@ -99,7 +161,9 @@ LilycoveCity_Harbor_EventScript_GoToBattleFrontier::
 
 LilycoveCity_Harbor_EventScript_GetEonTicketState::
 	setvar VAR_TEMP_E, 0
+#if !IS_WAYFARER
 	goto_if_unset FLAG_ENABLE_SHIP_SOUTHERN_ISLAND, Common_EventScript_NopReturn
+#endif
 	checkitem ITEM_EON_TICKET
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_NopReturn
 	setvar VAR_TEMP_E, 1
@@ -109,6 +173,9 @@ LilycoveCity_Harbor_EventScript_GetEonTicketState::
 
 LilycoveCity_Harbor_EventScript_GetAuroraTicketState::
 	setvar VAR_TEMP_D, 0
+#if IS_WAYFARER
+	return
+#else
 	goto_if_unset FLAG_ENABLE_SHIP_BIRTH_ISLAND, Common_EventScript_NopReturn
 	checkitem ITEM_AURORA_TICKET
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_NopReturn
@@ -116,10 +183,13 @@ LilycoveCity_Harbor_EventScript_GetAuroraTicketState::
 	goto_if_set FLAG_SHOWN_AURORA_TICKET, Common_EventScript_NopReturn
 	setvar VAR_TEMP_D, 2
 	return
+#endif
 
 LilycoveCity_Harbor_EventScript_GetOldSeaMapState::
 	setvar VAR_TEMP_C, 0
+#if !IS_WAYFARER
 	goto_if_unset FLAG_ENABLE_SHIP_FARAWAY_ISLAND, Common_EventScript_NopReturn
+#endif
 	checkitem ITEM_OLD_SEA_MAP
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_NopReturn
 	setvar VAR_TEMP_C, 1
@@ -129,6 +199,9 @@ LilycoveCity_Harbor_EventScript_GetOldSeaMapState::
 
 LilycoveCity_Harbor_EventScript_GetMysticTicketState::
 	setvar VAR_TEMP_9, 0
+#if IS_WAYFARER
+	return
+#else
 	goto_if_unset FLAG_ENABLE_SHIP_NAVEL_ROCK, Common_EventScript_NopReturn
 	checkitem ITEM_MYSTIC_TICKET
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_NopReturn
@@ -136,6 +209,7 @@ LilycoveCity_Harbor_EventScript_GetMysticTicketState::
 	goto_if_set FLAG_SHOWN_MYSTIC_TICKET, Common_EventScript_NopReturn
 	setvar VAR_TEMP_9, 2
 	return
+#endif
 
 LilycoveCity_Harbor_EventScript_GetFirstTimeShowingTicket::
 	setvar VAR_TEMP_B, 0
@@ -585,3 +659,12 @@ LilycoveCity_Harbor_Text_SailorFerryAvailable:
 	.string "The folks at the SHIPYARD in SLATEPORT\n"
 	.string "must've worked extra hard.\p"
 	.string "Well, it's my turn to get busy now!$"
+
+#if IS_WAYFARER
+LilycoveCity_Harbor_Text_DepartureBoard:
+	.string "DEPARTURES - LILYCOVE CITY\p"
+	.string "By day (8:00-20:00):\n"
+	.string "S.S. AQUA for OLIVINE CITY\p"
+	.string "By night (20:00-8:00):\n"
+	.string "S.S. TIDAL for SEVEN ISLAND$"
+#endif

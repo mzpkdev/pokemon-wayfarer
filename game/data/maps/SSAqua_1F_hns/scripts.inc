@@ -24,6 +24,13 @@ SSAqua_1F_EventScript_Arrived::
 SSAqua_1F_EventScript_DoorSailor::
 	lock
 	faceplayer
+#if IS_WAYFARER
+	@ Aboard the ferry the exit leads to the port the voyage is at; with no voyage and no maiden voyage (a save
+	@ made aboard) it leads to Vermilion. The maiden voyage keeps its own exit below.
+	specialvar VAR_RESULT, Ferry_IsAboardForScript
+	goto_if_eq VAR_RESULT, TRUE, Ferry_EventScript_ExitSailor
+	goto_if_eq VAR_SSAQUA_STATE, 0, Ferry_EventScript_ExitSailor
+#endif
 	goto_if_ge VAR_SSAQUA_STATE, 7, SSAqua_1F_EventScript_DoorSailorArrived
 	msgbox SSAqua_1F_Text_Sailor1_ToVermilion, MSGBOX_NPC
 	end
@@ -54,6 +61,11 @@ SSAqua_1F_EventScript_Sailor3::
 	end
 
 SSAqua_1F_Trigger_Grandpa::
+#if IS_WAYFARER
+	@ The maiden voyage's scene never runs aboard the ferry.
+	specialvar VAR_RESULT, Ferry_IsAboardForScript
+	goto_if_eq VAR_RESULT, TRUE, Ferry_EventScript_Nop
+#endif
 	lock
 	clearflag FLAG_HIDE_SSAQUA_1F_GRANDPA
 	getplayerxy VAR_TEMP_0, VAR_TEMP_1

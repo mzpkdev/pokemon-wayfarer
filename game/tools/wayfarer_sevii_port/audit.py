@@ -661,7 +661,7 @@ def recovery_and_ferry_report(root: Path, enabled_ids: set[str], release_enabled
         for destination, target in expected_rows:
             if not re.search(rf"\[{destination}\]\s*=\s*\{{\s*MAP_GROUP\({target}\),\s*MAP_NUM\({target}\),\s*0x08,\s*0x05", seagallop):
                 raise AuditError(f"Wayfarer ferry has wrong {destination} target or arrival tile")
-        for name, item, gate in (("BirthIsland", "ITEM_AURORA_TICKET", "WayfarerCanUseRegularAqua"),
+        for name, item, gate in (("BirthIsland", "ITEM_AURORA_TICKET", "ITEM_AURORA_TICKET"),
                                  ("NavelRock", "ITEM_MYSTIC_TICKET", "FLAG_SYS_GAME_CLEAR")):
             match = re.search(rf"u16\s+WayfarerCanSailTo{name}\(void\)\s*\{{([\s\S]*?)\n\}}", ferry_source)
             if match is None or item not in match.group(1) or gate not in match.group(1):

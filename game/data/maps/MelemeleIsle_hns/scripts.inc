@@ -824,3 +824,15 @@ Alola_Melemele_Picnicker_Text_0:
 	.string "POKéMON!\p"
 	.string "I need to stock up on POKé BALLS so I\n"
 	.string "can catch them all!$"
+
+#if IS_WAYFARER
+Alola_Melemele_DepartureBoard::
+	msgbox Alola_Melemele_Text_DepartureBoard, MSGBOX_SIGN
+	end
+
+Alola_Melemele_Text_DepartureBoard:
+	.string "DEPARTURES - MELEMELE ISLAND\p"
+	.string "S.S. ANNE for SEVEN ISLAND,\n"
+	.string "all day and all night.\p"
+	.string "The berth is empty 0:00-4:00.$"
+#endif

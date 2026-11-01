@@ -13,11 +13,17 @@ BattleFrontier_OutsideWest_EventScript_FerryAttendant::
 	msgbox BattleFrontier_OutsideWest_Text_MayISeeYourTicket, MSGBOX_DEFAULT
 	checkitem ITEM_SS_TICKET
 	goto_if_eq VAR_RESULT, FALSE, BattleFrontier_OutsideWest_EventScript_NoSSTicket
+#if IS_WAYFARER
+	@ The ferry back sails to Lilycove only (S.S. ferries spec, Old menus and event islands).
+	goto BattleFrontier_OutsideWest_EventScript_FerryToLilycove
+#else
 	message BattleFrontier_OutsideWest_Text_WhereWouldYouLikeToGo
 	waitmessage
 	goto BattleFrontier_OutsideWest_EventScript_ChooseFerryDestination
+#endif
 	end
 
+#if !IS_WAYFARER
 BattleFrontier_OutsideWest_EventScript_ChooseFerryDestination::
 	multichoicedefault 18, 6, MULTI_SSTIDAL_BATTLE_FRONTIER, 2, FALSE
 	switch VAR_RESULT
@@ -27,11 +33,14 @@ BattleFrontier_OutsideWest_EventScript_ChooseFerryDestination::
 	case MULTI_B_PRESSED, BattleFrontier_OutsideWest_EventScript_CancelFerrySelect
 	end
 
+#endif
+
 BattleFrontier_OutsideWest_EventScript_NoSSTicket::
 	msgbox BattleFrontier_OutsideWest_Text_MustHaveTicketToBoard, MSGBOX_DEFAULT
 	release
 	end
 
+#if !IS_WAYFARER
 BattleFrontier_OutsideWest_EventScript_FerryToSlateport::
 	msgbox BattleFrontier_OutsideWest_Text_SlateportItIs, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, BattleFrontier_OutsideWest_EventScript_ChooseNewFerryDestination
@@ -42,9 +51,15 @@ BattleFrontier_OutsideWest_EventScript_FerryToSlateport::
 	release
 	end
 
+#endif
+
 BattleFrontier_OutsideWest_EventScript_FerryToLilycove::
 	msgbox BattleFrontier_OutsideWest_Text_LilycoveItIs, MSGBOX_YESNO
+#if IS_WAYFARER
+	goto_if_eq VAR_RESULT, NO, BattleFrontier_OutsideWest_EventScript_CancelFerrySelect
+#else
 	goto_if_eq VAR_RESULT, NO, BattleFrontier_OutsideWest_EventScript_ChooseNewFerryDestination
+#endif
 	msgbox BattleFrontier_OutsideWest_Text_PleaseBoardFerry, MSGBOX_DEFAULT
 	call BattleFrontier_OutsideWest_EventScript_BoardFerry
 	warp MAP_LILYCOVE_CITY_HARBOR, 8, 11
@@ -52,11 +67,14 @@ BattleFrontier_OutsideWest_EventScript_FerryToLilycove::
 	release
 	end
 
+#if !IS_WAYFARER
 BattleFrontier_OutsideWest_EventScript_ChooseNewFerryDestination::
 	message BattleFrontier_OutsideWest_Text_ThenWhereWouldYouLikeToGo
 	waitmessage
 	goto BattleFrontier_OutsideWest_EventScript_ChooseFerryDestination
 	end
+
+#endif
 
 BattleFrontier_OutsideWest_EventScript_BoardFerry::
 	closemessage
