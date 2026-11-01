@@ -16,22 +16,32 @@ Wayfarer build:
 - how each ship and port is wired.
 
 It builds on the [in-game clock](in-game-clock.md): 12 in-game seconds per
-second of play, and the by-day and by-night halves.
+second of play, and the by-day and by-night halves. **It depends on that
+clock change** (12×, Day 8–20, Night 0–4) being built first.
 
 **Left to other specs:**
 - the trainer-slot generator's rules, beyond the requirement under
   [Passengers](#passengers);
 - the maiden voyage of the S.S. Aqua ([HnS traversal](hns-open-world-region-traversal.md));
 - the Anne's adventure ([S.S. Anne adventure](frlg-kanto-ss-anne-adventure.md));
-- the Seagallop ([Sevii map port](sevii-exploration-map-port.md)).
+- the Seagallop ([Sevii map port](sevii-exploration-map-port.md)), apart
+  from the Vermilion sailor's menu and the Birth Island gate below.
 
-**This spec supersedes** the parts of those specs that say:
-- the Anne never transports anyone;
-- the Aqua circuit is a destination menu ([Wayfarer Hoenn entry](wayfarer-hoenn-entry.md#s-s-ticket-and-s-s-tidal));
-- the Tidal is unchanged;
-- ship trainers are one-time ([daily world slots](daily-world-slots.md)).
-
-Each of those specs gets a line pointing here when this ships.
+**This spec supersedes** these parts of other specs, and each gets a line
+pointing here when this ships:
+- [S.S. Anne adventure](frlg-kanto-ss-anne-adventure.md): boarding and
+  return through the Vermilion menu's "Board S.S. Anne" row, "leaving the ship
+  does not start a voyage", and "must not add destinations, voyages or
+  schedules";
+- [Wayfarer Hoenn entry](wayfarer-hoenn-entry.md): the Aqua circuit as a
+  destination menu, "the circuit is the only approved Hoenn-to-HNS route",
+  "S.S. Tidal remains unchanged" with its Champion gate, and the validation
+  items that check them;
+- [Sevii map port](sevii-exploration-map-port.md) "Ferry and recovery": the
+  Vermilion selector's fixed rows, the `WayfarerCanSailToBirthIsland`
+  predicate, and the audit order;
+- [Daily world slots](daily-world-slots.md): ship trainers as one-time
+  content.
 
 ## Behavior
 
@@ -119,10 +129,10 @@ The berth keeps the port's existing ship object and gangway sailor:
 
 | Port | Ship object | Sailor | Arrival tile |
 | --- | --- | --- | --- |
-| Olivine | the Aqua object at (8,20) | (8,17) | (8,16) |
+| Olivine | the Aqua object at (8,20) | (8,17) | (8,16), or (8,15) while Prof. Oak stands at (8,16) |
 | Vermilion | the Aqua object at (8,13) | (8,10) | (8,9) |
-| Slateport | the Tidal object at (8,9) | (8,10) | (9,11) |
-| Lilycove | the Tidal object at (8,9) | (8,10) | (8,11) |
+| Slateport | the Tidal object at (8,9) | the attendant at (8,10) | (9,11) |
+| Lilycove | the Tidal object at (8,9) | the attendant at (8,10) | (8,11) |
 
 **The ship object.** It becomes a variable-graphics object showing the
 scheduled ship, or nothing when the berth is empty.
@@ -137,17 +147,45 @@ scheduled ship, or nothing when the berth is empty.
   ship comes in next and at what hour. Nothing changes.
 - **A ship in but no S.S. Ticket:** the sailor asks for one. Nothing changes.
 - **A ship in and a Ticket:** the sailor says "Welcome aboard the S.S. Tidal,
-  next stop Seven Island." There's no question. The player plays the
-  port's existing boarding walk (the Olivine and Vermilion `EnterShip`
-  movement or Lilycove's `BoardFerry`, without sailing the ship sprite off),
-  then warps to the ship's [entry tile](#ships).
+  next stop Seven Island." There's no question. The player walks aboard (see
+  below), then warps to the ship's [entry tile](#ships).
 - **Boarding sets:**
   - `ship`;
   - `stop` = this port's index in that ship's loop;
   - `phase` = in port;
   - `eventAt` = now + 30 in-game minutes;
   - two fresh hosts;
-  - `slotDay` = today's daily-slot day.
+  - `slotDay` = the daily slots' current `stampDay`, so boarding never starts
+    a new day by itself.
+- **Boarding the Tidal, or any ship whose loop reaches Hoenn,** runs the Hoenn
+  first-entry setup before the warp if Hoenn hasn't been entered yet: the
+  ship maps of the Tidal are Hoenn-source maps (see
+  [Region and saves](#region-and-saves)).
+
+**The boarding walk.** A new ferry-only boarding subroutine per dock port
+plays the port's existing walk to the ship, without moving the boat sprite
+and without `setrespawn`:
+- Olivine and Vermilion: the walk from `EnterShip`;
+- Slateport: the walk from `SlateportCity_Harbor_EventScript_BoardFerry`;
+- Lilycove: the walk from `LilycoveCity_Harbor_EventScript_BoardFerry`.
+
+**Ports with more than one job.** Some sailors already do something else:
+- **Vermilion.** `LOCALID_VERMILIONMARINA_SAILOR` is both the S.S. berth's
+  sailor and the Seagallop's. Talking to him opens a short menu: "S.S. Aqua"
+  or "S.S. Anne" (whichever is in; the row is missing when the berth is
+  empty), "Sevii Islands" and Cancel. Choosing the ship boards it as above,
+  with no further question. "Sevii Islands" runs today's Seagallop flow.
+  Before the captain's reward, the row "Board S.S. Anne" also appears, as
+  today, whatever the table says. It's the adventure's entry and runs the
+  adventure's own boarding, not the ferry's.
+- **Lilycove.** The attendant also owns the [charters](#old-menus-and-event-islands).
+  When a charter is available, talking to her opens a menu: the ship in port
+  (if any), each available charter, and Cancel. With no charter available,
+  she boards with no menu.
+- **Slateport during the Aqua escape.** While `VAR_SLATEPORT_HARBOR_STATE` is 1,
+  the attendant is hidden and the berth is closed: the ship object stays
+  hidden whatever the table says, and nobody boards there. Arrivals still land
+  at (9,11), which is outside the scene's x=8 triggers.
 
 **The departure board.** Each dock port's existing sign, or a new sign event
 next to the sailor if there is none, reads the port's by-day and by-night
@@ -157,23 +195,34 @@ berth is empty 0:00–4:00. It shows no hosts.
 #### At a launch port
 
 At One Island, Seven Island and Melemele, the existing pier gains a **launch
-sailor**.
+sailor**, and the big ship isn't drawn:
 
-**Where he stands:**
-- One Island and Seven Island: in the Seagallop harbor room, on a tile beside
-  the Seagallop sailor at (8,6).
-- Melemele: near the Route 13 captain at (24,33), clear of the boat at (25,35).
-- In all three: on a walkable tile, outside every existing object, coordinate
-  event and warp, and on a path to the map's exit.
-- Each port has a fixed arrival tile next to him, chosen to the same rules.
-- The big ship isn't drawn.
+| Port | Launch sailor | Arrival tile |
+| --- | --- | --- |
+| One Island | (9,5) | (9,4) |
+| Seven Island | (9,5) | (9,4) |
+| Melemele | a tile near the Melemele captain at (24,33), clear of the boat at (25,35) and of the Samson Oak coordinate trigger at (20,31) and its path | a tile next to him, to the same rules |
+
+The Seagallop's own arrival tile (8,5) stays free. The Melemele tiles are
+picked in Porymap: walkable, outside every object, coordinate event and warp,
+and on a path to the map's exit.
 
 **Talking to him** gives the same lines and checks as at a dock, with
 "anchored offshore" wording. Boarding plays a fade with the ship's horn
 (`SE_RG_SS_ANNE_HORN`) instead of a walk.
 
 The Seagallop sailor, the Route 13 captain and the Melemele captain keep their
-own menus, checks and arrival tiles unchanged.
+own menus, checks and arrival tiles.
+
+**One Island's Bill scenes.** One Island Harbor's on-frame scenes for
+`VAR_MAP_SCENE_ONE_ISLAND_HARBOR` 1 and 4 walk the player out from the
+Seagallop's tile (8,5). They run only after a Seagallop arrival: a ferry
+arrival at (9,4) skips them and leaves the var unchanged.
+
+**Alola's first visit.** Going ashore at Melemele while `FLAG_VISITED_ALOLA`
+is clear first runs the same first-visit flag block as the Route 13 trip
+(hiding the totems, the Tapus, Samson Oak's intro object, the flyover and the
+phantoms), moved into a shared script that both paths call.
 
 ### Ships
 
@@ -188,10 +237,17 @@ Each ship keeps its own maps. Only the entry, the exit and the cabins change.
 **The exit.** While `phase` is in port, the exit takes you to the arrival tile
 of the port at `stop`.
 - **Anne:** the corridor's on-load `setdynamicwarp` picks that port from a
-  special instead of always Vermilion.
+  special instead of always Vermilion. Cast-off and arrival also refresh it,
+  since they can happen while the player stands in the corridor. At sea, a
+  coordinate event at (19,2) in front of the gangway says "We're at sea" and
+  turns the player back, so the gangway warps are never reached.
 - **Aqua and Tidal:** the exit sailor's script warps there, replacing the
   Aqua's fixed Vermilion exit and the Tidal's `VAR_SS_TIDAL_STATE` exit.
-- **While at sea,** the exit says "We're at sea" and does nothing.
+  At sea, the exit sailor says "We're at sea" and does nothing.
+- **With no voyage** (`ship` is none, for example a save made aboard before
+  this change), the exit takes you to a fixed home port: the Aqua and the Anne
+  to Vermilion (8,9), the Tidal to Slateport (9,11) with the Hoenn first-entry
+  setup.
 
 **Going ashore:**
 1. Run `WayfarerPrepareHoennEntry` when the port is in Hoenn and Hoenn hasn't
@@ -201,32 +257,57 @@ of the port at `stop`.
 3. Clear the voyage state.
 4. Warp.
 
-**Outside a voyage, ship interiors are not reachable.** The Aqua's maiden
-voyage (`VAR_SSAQUA_STATE` < 8) and the Anne's adventure before the captain's
-reward keep their current entry and exit scripts unchanged. The ferry's
-entry, exit and announcements apply only while `ship` is set.
+**The story trips keep their own scripts.**
+- **The maiden voyage is pending** when the player's start has a maiden voyage
+  (`WayfarerCanUseAquaMaidenVoyage()`, true only for the Johto start) and
+  `VAR_SSAQUA_STATE` < 8. While it's pending, the Olivine sailor runs today's
+  maiden-voyage script whatever the table says, the Aqua is out of service
+  everywhere, and its interior keeps its maiden-voyage entry, scenes and exit.
+- **For every other start, and once the voyage is over,** the maiden voyage
+  never runs. The maiden-voyage objects stay hidden on Aqua maps
+  (`FLAG_HIDE_SSAQUA_CAPTAINS_ROOM_GRANDDAUGHTER` and
+  `FLAG_HIDE_SSAQUA_ROOM_SSE_GRANDDAUGHTER` are set at New Game for the
+  Kanto and Hoenn starts), and the Aqua maps' maiden-voyage frame and
+  coordinate scripts do nothing while `ship` is set.
+- **The Anne's adventure** before the captain's reward keeps its entry (the
+  Vermilion menu row) and exit unchanged.
+- The ferry's entry, exit and announcements apply only while `ship` is set.
 
 **Retired in Wayfarer:**
 - the Tidal's cruise state machine (`VAR_SS_TIDAL_STATE`, `CountSSTidalStep`,
   the porthole walk and the bed's `ProgessCruiseAfterBed`);
 - the Aqua's fixed Vermilion exit.
 
+**The Tidal's Town Map location.** The Tidal maps are `MAPSEC_DYNAMIC`, and
+`GetSSTidalLocation` read the retired cruise state. In Wayfarer it reads the
+voyage state instead: in port, the port at `stop`; at sea, the port the ship
+is sailing to. With no voyage it returns Slateport.
+
+**Scott aboard the Tidal.** `SSTidalCorridor`'s Scott scene ("Congratulations,
+League Champion!") runs only once `FLAG_SYS_GAME_CLEAR` (Hoenn's League) is
+set. Until then Scott is hidden.
+
 Other builds keep them.
 
 ### Sailing
 
 A field task checks the voyage state at least once per in-game minute while
-the player is on a ship map with `ship` set. The check only acts when the
-field is free: no script running, no menu, no battle. If the clock has passed
-`eventAt` by more than one step while the player was busy, the event still
-happens once and catches up to the current time.
+the player is on a ship map with `ship` set, and once on loading a ship map.
+The check only acts when the field is free: no script running, no menu, no
+battle.
+
+**Catching up.** Events are scheduled, not reset by when they're noticed:
+cast-off sets `eventAt += 360` and arrival `eventAt += 30`. If the clock has
+passed several events while the player was busy (a long battle, a menu, or a
+save loaded later), each elapsed transition is applied in order, and only the
+last one is announced.
 
 **Cast-off** happens when `phase` is in port and now ≥ `eventAt`:
 1. The PA announces it: "All ashore that's going ashore! Next stop, Seven
    Island."
 2. `phase` becomes at sea.
 3. `stop` moves to the next port in the loop.
-4. `eventAt` = the cast-off minute + 360.
+4. `eventAt` += 360.
 
 There's no separate last-call timer: the announcement is the last call, and
 the exit closes as it plays.
@@ -234,7 +315,7 @@ the exit closes as it plays.
 **Arrival** happens when `phase` is at sea and now ≥ `eventAt`:
 1. The PA announces it: "Now arriving at Melemele Island."
 2. `phase` becomes in port.
-3. `eventAt` = the arrival minute + 30.
+3. `eventAt` += 30.
 
 The Anne's arrival at Melemele names Alola ("...the Alolan islands!"). She's
 the only ship that does.
@@ -280,6 +361,7 @@ replaces nothing and is just another bed.
 | --- | --- | --- | --- |
 | Battle | win a single trainer battle against the host | the host's party template | yes |
 | Double battle | win a double battle against the host pair | the pair's template | yes |
+
 | Bring an item | the Bag holds the item; it's removed on success | Oran, Pecha, Cheri Berry; Antidote, Full Heal; Nugget; Moomoo Milk | no |
 | Show a type | a party Pokémon, not an Egg, has the type | any of the 18 types | no |
 | Show a species | a party Pokémon is the species | per-host list | no |
@@ -291,6 +373,9 @@ replaces nothing and is just another bed.
 | Key item | the Bag holds the item, which isn't removed | Poké Flute | no |
 | Quiz | answer a three-choice question about the ferry schedule | a list of questions | yes |
 | Coin flip | `Random()` < 50% | none | yes |
+
+Host battles never white out: losing ends the battle with the party as it
+stands, settles the host, and leaves the player aboard.
 
 **Host pools:** v0 gives each ship about eight hosts spread across these kinds:
 - the Anne: tourists, well-off guests, an Alolan tourist (From your region), a
@@ -321,12 +406,17 @@ This is the clock's one sanctioned forward jump. The
 exception, and the daily update and berries catch up as they do for any
 passed time.
 
-**Which bed:**
-- Cabins that already have a bed (the Aqua's `SSAqua_PlayersRoom_hns` and the
-  Tidal's `SSTidalRooms` beds) reuse it.
-- A cabin with no bed uses the host's room bed metatile, if it has one, with a
-  new bed event. Otherwise the host offers to let you sleep: talking to them
-  again asks the same question.
+**Beds.** No ship bed heals in Wayfarer: the Aqua's `SSAqua_PlayersRoom_hns`
+and the Tidal's `SSTidalRooms` beds lose their free heal.
+- Each host is tied to one cabin room and, where the room has one, one bed
+  tile, listed in the host table.
+- On the Tidal, all eight cabins are rooms of the single `SSTidalRooms` map;
+  each Tidal host owns one cabin of it, and the existing bed at (15,11) and
+  (15,12) belongs to that cabin's host. Other Tidal cabins get a bed event on
+  their bed metatile.
+- The Aqua's `PlayersRoom` belongs to no host and is just a room.
+- Where a host's room has no bed, the host offers to let you sleep: talking to
+  them again asks the same question.
 
 ### Passengers
 
@@ -350,19 +440,27 @@ passed time.
   draw (ship and shore alike) doesn't change while you stay aboard.
 - When you go ashore, the state clears, and the next map load takes the real
   day as usual.
+- `DailySlots_GetDay` has one caller, `DailySlots_OnMapLoad`, so everything
+  stamped from it stays on `slotDay` while aboard: the phone's picks and gifts,
+  the ready and gift snapshots, and calls that name where a trainer is today.
 - The daily update (`DoTimeBasedEvents`: daily flags, berries, `VAR_DAYS`)
-  isn't frozen, and neither are leagues or phone calls that count days.
+  isn't frozen, and neither are leagues, which count `VAR_DAYS`.
 
 ### Service
 
 | Ship | In service when |
 | --- | --- |
-| Aqua | the Bag holds `ITEM_SS_TICKET` and `VAR_SSAQUA_STATE` is not between 1 and 7, so a maiden voyage that has started has also finished |
-| Anne | the captain's reward has been received |
+| Aqua | the Bag holds `ITEM_SS_TICKET` and no maiden voyage is pending (see [Ships](#ships)) |
+| Anne | `FLAG_WAYFARER_SS_ANNE_CAPTAIN_REWARDED` is set |
 | Tidal | always, for a Ticket holder |
 
 - `WayfarerCanUseRegularAqua` and its per-start policies go. The Ticket is
   the only gate for any start, including Kanto.
+- The Seagallop's Birth Island trip, which also read
+  `WayfarerCanUseRegularAqua`, now needs only the Aurora Ticket
+  (`WayfarerCanSailToBirthIsland` = the Bag holds `ITEM_AURORA_TICKET`), as in
+  FireRed and LeafGreen. Navel Rock keeps its league-win and Mystic Ticket
+  check.
 - The Tidal no longer checks `FLAG_SYS_GAME_CLEAR`. The Slateport and
   Lilycove ship objects no longer hide on it.
 - The Ticket is checked with `checkitem ITEM_SS_TICKET` at every gangway and
@@ -373,9 +471,10 @@ passed time.
 
 **The Anne's first departure:**
 1. When the captain gives his reward, `annePending` is armed.
-2. If the player is aboard the Anne then, or the next time they board her at
-   Vermilion, the voyage state is set as for boarding at Vermilion. The table
-   is ignored this once.
+2. If the player is aboard the Anne then, the voyage state is set as for
+   boarding at Vermilion, the table ignored this once. If they've already
+   left, the Vermilion sailor offers "S.S. Anne" the next time they talk to
+   him, whatever the table says, and boarding then does the same.
 3. The PA announces "We sail for One Island in half an hour."
 4. Walking down the gangway before cast-off leaves the player in Vermilion
    with `annePending` cleared. From then on the Anne follows the table.
@@ -392,26 +491,58 @@ passed time.
 - The Slateport and Lilycove Tidal menus.
 - The Battle Frontier ferry's departures from Slateport.
 
-**Lilycove's charters.** The Lilycove sailor keeps a charter menu that appears
-only when at least one charter is available. It has the same conditions,
-scenes and returns as today's Lilycove menu:
-- Southern Island with the Eon Ticket;
-- Faraway Island with the Old Sea Map;
-- the Battle Frontier.
+**Lilycove's charters.** The Lilycove attendant offers each charter while its
+condition holds:
 
-Returns from those trips land at Lilycove (8,11), as today. Birth Island and
-Navel Rock leave the Lilycove and Olivine menus and stay on the Seagallop
-only.
+| Charter | Condition |
+| --- | --- |
+| Southern Island | the Bag holds `ITEM_EON_TICKET` |
+| Faraway Island | the Bag holds `ITEM_OLD_SEA_MAP` |
+| Battle Frontier | `FLAG_MET_SCOTT_ON_SS_TIDAL` (Scott's invite, after Hoenn's League) |
+
+- No `FLAG_SYS_GAME_CLEAR` gate on the attendant and no `FLAG_ENABLE_SHIP_*`
+  flags. Wayfarer's real sources for the Eon Ticket and the Old Sea Map
+  (Steven at Fuchsia, the Vermilion find) never set those flags.
+- The first-time "may I see your ticket" scenes play as today and still set
+  their `FLAG_SHOWN_*` flags.
+- The trips use today's scenes. Returns land at Lilycove (8,11).
+- The Battle Frontier's ferry attendant returns to Lilycove only; its
+  Slateport option goes.
+
+Birth Island and Navel Rock leave the Lilycove and Olivine menus and stay on
+the Seagallop only.
 
 ### Region and saves
 
-- Arriving changes region through the normal map-load region context
-  (`WayfarerSetSavedCurrentRegion`).
+- **Region aboard.** Ship maps carry fixed regions (the Aqua's are Johto, the
+  Anne's Kanto, the Tidal's Hoenn-source). While `ship` is set, loading a ship
+  map doesn't change the saved current region or mark a region visited
+  (`WayfarerUpdateHnsRegionContextForMap` and the Hoenn equivalent skip ship
+  maps). Going ashore sets the region through the port's normal map load.
+- **Hoenn first entry.** `WayfarerPrepareHoennEntry` is generalized to take the
+  port, the arrival tile and the heal location (the shape of
+  `Test_WayfarerPrepareHoennEntryAt`). It runs before the first warp onto any
+  Hoenn-source map: boarding the Tidal, or going ashore at Slateport or
+  Lilycove, whichever comes first.
 - Ship maps keep their own map sections and music.
 - Ferry checks run in C specials, so Hoenn-bank and HnS-bank maps share the
   voyage state without common vars.
-- The Hoenn first-entry setup runs on the first ashore step into Hoenn, from
-  any ship.
+- **Saves.** `ship` none is encoded as 0, and the voyage struct is zeroed at
+  New Game. Prerelease saves aren't migrated (see the repo's save policy); a
+  save made aboard with no voyage leaves by the [home-port exit](#ships). The
+  struct has its own size assert.
+
+### Build audits
+
+Some build-time audits enforce the menus this spec removes, and change with it:
+- `game/tools/wayfarer_hoenn_entry/generate.py` (run by the build) and its
+  `test_generate.py` stop requiring `WayfarerCanUseRegularAqua`,
+  `MULTI_VERMILION_HARBOR`, the Slateport Aqua attendant and an unchanged
+  Tidal attendant. They assert instead that the Slateport and Lilycove berths
+  and the Vermilion and Olivine sailors call the ferry boarding specials.
+- `game/tools/league_circuit/test_scripts.py` stops slicing
+  `VermilionPort_EventScript_ChoseSlateport` and checks the maiden-voyage
+  scripts it still needs.
 
 ## Acceptance
 
@@ -435,6 +566,8 @@ only.
 - A Kanto start rides the Aqua with Bill's Ticket.
 - The Lilycove charters.
 - The berth graphics by day and by night, including the Anne at Vermilion.
+- A first Alola visit by the Anne, a host battle lost without whiting out,
+  and the Town Map opened aboard the Tidal.
 - Update these existing playbooks and journeys:
   - `wayfarer-ports`
   - `hns-ss-aqua-traversal`
@@ -442,6 +575,8 @@ only.
   - `wayfarer-ss-anne-adventure`
   - `wayfarer-hoenn-origin-travel`
   - `wayfarer-origin-hoenn-campaign`
+  - `hns-standard-rod-givers` (uses `beginWayfarerRegularAquaDeparture`)
+  - `wayfarer-sevii-exploration` (the Vermilion menu and Birth Island gate)
 
 **Builds:** the release, `make check` and RAM budget builds pass. The voyage
 state stays within `PokemonStorage`'s budget.
