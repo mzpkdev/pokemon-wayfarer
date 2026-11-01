@@ -392,6 +392,9 @@ Acceptance covers both understandable storytelling and recoverable state:
 - As a Johto-origin player, skip ahead to a later Silver chapter. Every earlier
   chapter retires with no credit, a loss leaves only the current one
   retryable, and his lines mention only what happened.
+- As a Johto-origin player, reach Victory Road for the first time both before
+  and after competing at Indigo. Silver's battle plays once, with an opener
+  that fits.
 - Discover the ceremony below the TR threshold without Clair or Elm. The
   characters explain what is needed; discovery grants no Wing, Bell, or
   encounter.
