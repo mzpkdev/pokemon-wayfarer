@@ -18,7 +18,8 @@ export type LeaguesApi = {
   forceInvitation: (league?: CallingLeague) => Promise<void>
   /**
    * Waits for a league call to ring, presses through it, answers the yes/no prompt when an
-   * invitation asks one, and presses through the reply until the field is free. Returns each distinct
+   * invitation asks one (a decline also confirms it at its confirmation), and presses through the
+   * reply until the field is free. Returns each distinct
    * text seen, in order: the field message box and the phone's call box (`gStringVar4`). When no
    * call rings within about ten seconds of play, it returns an empty list.
    */
@@ -61,10 +62,13 @@ export const createLeaguesApi = (
       if (rang && current.ready && !busy && !current.battle.active) return seen
       if (!rang && attempt >= 60) return seen
       if (current.choice.kind === "yes-no") {
-        const wanted = answer === "accept" ? 0 : 1
+        // A decline answers NO to the invitation, then YES to its confirmation ("Decline? ..."), so a
+        // stray press on either prompt only ever leads back to the same choice.
+        const confirming = current.dialogue.fullText.startsWith("Decline?")
+        const wanted = answer === "decline" && !confirming ? 1 : 0
         if (current.choice.cursor !== null && current.choice.cursor !== wanted)
           await controls.press(wanted === 0 ? "up" : "down")
-        else await controls.press(advance)
+        else await controls.press(wanted === 0 ? "a" : "b")
         await runtime.advance(10)
       } else if (busy) {
         await runtime.advance(20)

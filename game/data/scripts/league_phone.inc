@@ -8,8 +8,9 @@ LeaguePhone_EventScript_Invitation::
 	specialvar VAR_0x8004, LeaguePhone_BufferInvitation
 	pokenavcall LeaguePhone_Text_Invitation
 	waitmessage
+LeaguePhone_EventScript_AnswerPrompt:
 	msgbox LeaguePhone_Text_AnswerPrompt, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, LeaguePhone_EventScript_Decline
+	goto_if_eq VAR_RESULT, NO, LeaguePhone_EventScript_ConfirmDecline
 	specialvar VAR_RESULT, LeaguePhone_Accept
 	goto_if_ne VAR_RESULT, LEAGUE_ACCEPT_OK, LeaguePhone_EventScript_AnswerFailed
 	special LeaguePhone_SetCaller
@@ -18,7 +19,10 @@ LeaguePhone_EventScript_Invitation::
 	releaseall
 	end
 
-LeaguePhone_EventScript_Decline:
+@ Declining can't be taken back, so a NO (or a B press) asks once more.
+LeaguePhone_EventScript_ConfirmDecline:
+	msgbox LeaguePhone_Text_ConfirmDecline, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, LeaguePhone_EventScript_AnswerPrompt
 	specialvar VAR_RESULT, LeaguePhone_Decline
 	goto_if_eq VAR_RESULT, FALSE, LeaguePhone_EventScript_AnswerFailed
 	special LeaguePhone_SetCaller
@@ -61,6 +65,10 @@ LeaguePhone_Text_Invitation:
 LeaguePhone_Text_AnswerPrompt:
 	.string "Accept the {STR_VAR_1}'s\n"
 	.string "invitation?$"
+
+LeaguePhone_Text_ConfirmDecline:
+	.string "Decline? The event will go ahead\n"
+	.string "without you.$"
 
 LeaguePhone_Text_Accepted:
 	.string "Wonderful! Your opponents, in\n"

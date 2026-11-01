@@ -510,6 +510,8 @@ describe.sequential("Wayfarer League Circuit", () => {
       player: { position: { map: "hoenn-league-lobby", x: 9, y: 3 }, facing: "up" },
       circuit: { badges: { hoenn: 8 } },
     })
+    // The guards admit, and offer the board, only to a player with an accepted Hoenn event.
+    await acceptInvitation(game, "hoenn")
     await game.player.interact()
     await readHallBoard(game, "hoenn")
     await finishFieldScript(game, "Hoenn hall explanation")

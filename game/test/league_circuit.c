@@ -95,11 +95,12 @@ TEST("Circuit admission follows qualification, regional badges and lifetime wins
     SetDistribution(0, 0, 1);
     EXPECT(!IsKnownAtCircuitStage(CIRCUIT_STAGE_INDIGO));
     EXPECT(IsKnownAtCircuitStage(CIRCUIT_STAGE_HOENN));
-    // An unanswered call is the immediate reason everywhere, the Masters' lobby included.
+    // An unanswered call is the immediate reason at Indigo and Hoenn; a non-Master still hears that the
+    // Masters needs a Master.
     EXPECT(ForceLeagueInvitationForTesting(LEAGUE_ID_HOENN));
     EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_INDIGO), LEAGUE_ADMISSION_CALL_PENDING);
     EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_HOENN), LEAGUE_ADMISSION_CALL_PENDING);
-    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_MASTERS), LEAGUE_ADMISSION_CALL_PENDING);
+    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_MASTERS), LEAGUE_ADMISSION_NEEDS_MASTER);
     InitLeagueEventState();
     // Indigo and Hoenn wins are independent; neither orders the other.
     SetCircuitClearForTesting(CIRCUIT_STAGE_HOENN, TRUE);

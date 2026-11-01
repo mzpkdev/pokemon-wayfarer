@@ -13,8 +13,16 @@
 #endif
 
 #if IS_WAYFARER && WAYFARER_LEAGUE_EVENTS
+#include "battle_pike.h"
+#include "battle_pyramid.h"
+#include "bug_contest.h"
 #include "data.h"
 #include "event_data.h"
+#include "field_specials.h"
+#include "link.h"
+#include "overworld.h"
+#include "safari_zone.h"
+#include "trainer_hill.h"
 #include "field_name_box.h"
 #include "league_circuit.h"
 #include "league_events.h"
@@ -95,6 +103,16 @@ static void BufferCharacterName(u8 *dest, u32 characterId)
         StringCopy(dest, GetTrainerNameFromId(trainer->sourceTrainerId));
 }
 
+// Answering saves the game, so a call rings only where the start menu would offer SAVE: never in a link or
+// Union Room session, the Safari Zone, the Bug-Catching Contest, a Battle Pike or Pyramid challenge, the
+// multi-battle partner room, or a Trainer Hill challenge. The call waits until the player leaves.
+static bool32 CanTakeLeagueCallHere(void)
+{
+    return !IsOverworldLinkActive() && !InUnionRoom() && !GetSafariZoneFlag() && !GetBugContestFlag()
+        && !InBattlePike() && CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE
+        && !InMultiPartnerRoom() && !InTrainerHillChallenge();
+}
+
 // The field polls this every frame it has control (no script, battle or menu running). It counts the countdown
 // and places a due call first, then starts the owed result call or the waiting invitation's call.
 bool8 LeaguePhone_TryStartCall(void)
@@ -111,7 +129,7 @@ bool8 LeaguePhone_TryStartCall(void)
 #endif
     UpdateLeagueInvitations();
     // The call needs the phone, and waits for any league ceremony or save to finish.
-    if (!FlagGet(FLAG_HAS_MATCH_CALL) || IsLeagueCeremonyPending() || IsRingHeld())
+    if (!FlagGet(FLAG_HAS_MATCH_CALL) || IsLeagueCeremonyPending() || IsRingHeld() || !CanTakeLeagueCallHere())
         return FALSE;
     if (GetLeagueResultCall() != 0)
     {

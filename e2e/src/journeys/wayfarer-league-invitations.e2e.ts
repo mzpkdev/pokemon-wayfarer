@@ -225,7 +225,8 @@ describe.sequential("Wayfarer league invitations by phone", () => {
     await game.player.warp("indigo-league-lobby", 32, 4, "up")
     await game.wait.forMap("indigo-league-lobby")
     const lobby = await stepAndSettle(game, "Indigo lobby after the loss")
-    expect(lobby).toContain(`reigning CHAMPION is ${champion}`)
+    expect(lobby).toContain("reigning CHAMPION of")
+    expect(lobby).toContain(`INDIGO LEAGUE is ${champion}.`)
     expect(lobby).toContain("come in 7 days")
   }, 600_000)
 
@@ -245,6 +246,7 @@ describe.sequential("Wayfarer league invitations by phone", () => {
     const call = (await game.leagues.answerCall("decline")).join("\n")
     expect(call).toContain("desk at EVER GRANDE CITY")
     expect(call).toContain("Accept the HOENN LEAGUE’s")
+    expect(call).toContain("Decline? The event will go ahead")
     expect(call).toContain("go\nahead without you")
     const champion = /it’s over! ([A-Z][A-Z. &é'-]+) won,/.exec(call)?.[1]
     expect(champion, call).toBeTruthy()
@@ -261,7 +263,7 @@ describe.sequential("Wayfarer league invitations by phone", () => {
     await game.saveAndReload()
     await game.player.interact()
     const refusal = (await settle(game, "Hoenn guards' refusal")).join("\n")
-    expect(refusal).toContain(`reigning CHAMPION is ${champion}`)
+    expect(refusal).toContain(`HOENN LEAGUE is ${champion}.`)
     expect(refusal).toContain("Only invited TRAINERS may enter")
     expect((await game.state.read()).circuit.run.active).toBe(false)
   }, 300_000)

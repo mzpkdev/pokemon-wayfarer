@@ -486,11 +486,17 @@ current day as the last counted day.
 
 When the countdown is due, choose the calling league
 ([Which league calls](#which-league-calls)); with no eligible league, nothing
-happens until a later check. Otherwise, in one transaction, save the invited
+happens until a later check. Otherwise, in one transaction, set the invited
 state with that league, advance the call counter, and give that league the
-new number as its last call number. The phone rings at the next moment the
+new number as its last call number. These reach flash with the next save
+(the answer saves); a crash before then only places the same call again,
+since the caller depends on nothing that changed. A played result call is
+likewise cleared in memory, so loading an older save may play it again. The phone rings at the next moment the
 player can take a call (in the overworld, with no script, battle, or ceremony
-running, and once they have the phone); an invitation not yet answered rings
+running, once they have the phone, and where they could save: not in a
+link or Union Room session, the Safari Zone, the Bug-Catching Contest, a
+Battle Pike, Battle Pyramid or Trainer Hill challenge, or the multi-battle
+partner room, since answering saves); an invitation not yet answered rings
 again after a reload. The countdown and the call are checked whenever the
 field has control, which covers each day advance, each player TR change, and
 a load. A call whose answer fails rings again on the next map or after a
@@ -512,7 +518,10 @@ The call asks the player to accept or decline; there is no "later".
   the lineup as the most recent resolved lineup, and restart the countdown
   (7 days remaining from today).
 
-Both answers are saved before the call reveals their result. A failure
+Both answers are saved before the call reveals their result. A decline's
+life events for the [overworld simulation](notable-world-simulation.md)
+follow that save and reach flash with the next one, so a crash in between
+keeps the result and loses only those events. A failure
 leaves the invited state intact, so the call rings again; a crash exposes
 either the invited state or the complete result. Answering creates no
 battle, reward, or record.
@@ -710,8 +719,9 @@ still loads. If any saved league content version differs from the build's,
 also, still before those checks, turn an accepted event back into an
 unanswered invitation from the same league (dropping its lineup and any run),
 so the call rings again (an accepted Masters event, which has no call, goes
-back to a due countdown instead: the player may accept it again at the
-Masters lobby, or the next call comes); clear the most recent resolved lineup, so the next
+back to a due countdown instead, so the next Indigo or Hoenn call comes at
+once; once that resolves, the player may accept a Masters event at its lobby
+again); clear the most recent resolved lineup, so the next
 selection has no fatigue; clear a reigning champion who is no longer an
 eligible character; then rewrite the saved content versions as the build's.
 The Masters' own pruning and checks run at the same points. This is the
@@ -730,7 +740,8 @@ phone in the HNS/Emerald style; the exact phone UI is implementation. Each
 league's **front desk** calls: Indigo Plateau's for the Indigo League, Ever
 Grande City's for the Hoenn League, with the league's name on the call. The
 invitation call names the league and its place and asks the player to accept
-or decline; the answer is a yes/no prompt after the call, with no "later".
+or decline; the answer is a yes/no prompt after the call, with no "later",
+and a decline is confirmed once more, since it can't be taken back.
 Accepting names the lineup and its battle order (moves and items hidden by
 default) and says the event waits for the player at that place; declining
 says the event goes ahead without them and names its reigning champion. A

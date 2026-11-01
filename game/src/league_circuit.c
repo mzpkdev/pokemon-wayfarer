@@ -588,11 +588,13 @@ enum LeagueAdmissionRequirement GetCircuitAdmissionRequirement(enum CircuitStage
         return accepted == (enum LeagueId)stage ? LEAGUE_ADMISSION_AVAILABLE : LEAGUE_ADMISSION_EVENT_ELSEWHERE;
     if (GetTrainerRating() < LEAGUE_QUALIFYING_TR)
         return LEAGUE_ADMISSION_NEEDS_QUALIFICATION;
+    // The Masters keeps its lobby acceptance until its own format ships; it never phones.
+    if (stage == CIRCUIT_STAGE_MASTERS && !IsKnownAtCircuitStage(stage))
+        return LEAGUE_ADMISSION_NEEDS_MASTER;
     if (GetLeagueInvitationLeague() != LEAGUE_ID_NONE)
         return LEAGUE_ADMISSION_CALL_PENDING;
-    // The Masters keeps its lobby acceptance until its own format ships; it never phones.
     if (stage == CIRCUIT_STAGE_MASTERS)
-        return IsKnownAtCircuitStage(stage) ? LEAGUE_ADMISSION_AVAILABLE : LEAGUE_ADMISSION_NEEDS_MASTER;
+        return LEAGUE_ADMISSION_AVAILABLE;
     // Indigo and Hoenn admit only an event accepted by phone (.product/specs/leagues.md#entering-the-accepted-event).
     return LEAGUE_ADMISSION_NO_INVITATION;
 #else
@@ -659,12 +661,14 @@ bool8 IsCircuitStageAvailable(enum CircuitStage stage)
 #endif
 }
 
-// A league call waits for these: a run, a save the league still owes, a recorded first clear whose
-// ceremony hasn't run, or the first Indigo Hall of Fame save.
+// A league call waits for these: a run, a save the league still owes, a recorded Indigo or Hoenn first clear
+// whose Hall of Fame (GameClear consumes the record) hasn't run, or the first Indigo Hall of Fame save. A
+// Masters first clear has no such ceremony and nothing consumes its record, so it never holds a call.
 bool8 IsLeagueCeremonyPending(void)
 {
     return gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active || sLeagueSavePending
-        || sRecordedCircuitClearStage != CIRCUIT_STAGE_NONE || IsIndigoHallOfFameSaveTransactionActive();
+        || sRecordedCircuitClearStage == CIRCUIT_STAGE_INDIGO || sRecordedCircuitClearStage == CIRCUIT_STAGE_HOENN
+        || IsIndigoHallOfFameSaveTransactionActive();
 }
 
 bool8 BeginCircuitRun(enum CircuitStage stage)

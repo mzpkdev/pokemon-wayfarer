@@ -144,12 +144,12 @@ LeagueEvent_Text_NoReigningChampion::
 
 LeagueEvent_Text_PlayerReigns::
 	.string "Welcome back, CHAMPION!\p"
-	.string "You are the {STR_VAR_1}'s\n"
-	.string "reigning CHAMPION.$"
+	.string "You are the reigning CHAMPION\n"
+	.string "of the {STR_VAR_1}.$"
 
 LeagueEvent_Text_TrainerReigns::
-	.string "Welcome! The {STR_VAR_1}'s\n"
-	.string "reigning CHAMPION is {STR_VAR_3}.$"
+	.string "Welcome! The reigning CHAMPION of\n"
+	.string "the {STR_VAR_1} is {STR_VAR_3}.$"
 
 LeagueEvent_Text_HallsOffer::
 	.string "Want to see each HALL'S\n"

@@ -6,10 +6,16 @@
 #include "league_circuit.h"
 #include "league_events.h"
 #include "league_phone.h"
+
+extern u16 LeaguePhone_Decline(void);
+extern u16 LeaguePhone_BufferResult(void);
+extern void LeaguePhone_FinishResult(void);
 #include "league_run_helpers.h"
 #include "league_selection.h"
 #include "load_save.h"
 #include "random.h"
+#include "safari_zone.h"
+#include "script.h"
 #include "save.h"
 #include "trainer_rating.h"
 #include "wayfarer_persistence.h"
@@ -464,19 +470,122 @@ TEST("A content change returns an accepted Masters event to a due countdown, sin
     FinishInvitationTest();
 }
 
+// Starts a ring check and, when a call starts, stops its script again: the test only asks whether it rang.
+static bool8 Rings(void)
+{
+    bool8 rang = LeaguePhone_TryStartCall();
+    if (rang)
+        ScriptContext_Init();
+    return rang;
+}
+
 TEST("The phone rings only for a player who has it, and not while a league run is active")
 {
     PrepareInvitationTest(8, 0, 0, 80, 1);
     FlagClear(FLAG_HAS_MATCH_CALL);
     UpdateLeagueInvitations();
     EXPECT_EQ(WaitForCall(), LEAGUE_ID_INDIGO);
-    EXPECT(!LeaguePhone_TryStartCall());
+    EXPECT(!Rings());
     EXPECT_EQ(GetLeagueInvitationLeague(), LEAGUE_ID_INDIGO);
     FlagSet(FLAG_HAS_MATCH_CALL);
     gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active = TRUE;
-    EXPECT(!LeaguePhone_TryStartCall());
+    EXPECT(!Rings());
     gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active = FALSE;
+    EXPECT(Rings());
+    EXPECT(Rings()); // unanswered, it rings again
+    EXPECT_EQ(GetLeagueInvitationLeague(), LEAGUE_ID_INDIGO);
     FlagClear(FLAG_HAS_MATCH_CALL);
+    FinishInvitationTest();
+}
+
+TEST("No call rings where the player couldn't save, such as the Safari Zone")
+{
+    PrepareInvitationTest(8, 0, 0, 80, 1);
+    FlagSet(FLAG_HAS_MATCH_CALL);
+    UpdateLeagueInvitations();
+    EXPECT_EQ(WaitForCall(), LEAGUE_ID_INDIGO);
+    SetSafariZoneFlag();
+    EXPECT(!Rings());
+    ResetSafariZoneFlag();
+    EXPECT(Rings());
+    FlagClear(FLAG_HAS_MATCH_CALL);
+    FinishInvitationTest();
+}
+
+TEST("A failed answer holds the ring until the player is on another map")
+{
+    PrepareInvitationTest(8, 0, 0, 80, 1);
+    FlagSet(FLAG_HAS_MATCH_CALL);
+    gSaveBlock1Ptr->location.mapGroup = 1;
+    gSaveBlock1Ptr->location.mapNum = 2;
+    UpdateLeagueInvitations();
+    EXPECT_EQ(WaitForCall(), LEAGUE_ID_INDIGO);
+    // An answer that can't be saved fails; a stale state (here, a run) makes the decline fail the same way.
+    gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active = TRUE;
+    EXPECT_EQ(LeaguePhone_Decline(), FALSE);
+    gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active = FALSE;
+    EXPECT_EQ(GetLeagueInvitationLeague(), LEAGUE_ID_INDIGO);
+    EXPECT(!Rings());
+    EXPECT(!Rings());
+    gSaveBlock1Ptr->location.mapNum = 3;
+    EXPECT(Rings());
+    FlagClear(FLAG_HAS_MATCH_CALL);
+    FinishInvitationTest();
+}
+
+TEST("An owed result call rings first and is cleared once it has played")
+{
+    PrepareInvitationTest(8, 0, 0, 80, 3);
+    FlagSet(FLAG_HAS_MATCH_CALL);
+    EXPECT(Test_AdmitCircuitRun(CIRCUIT_STAGE_INDIGO));
+    EXPECT(ResolveLeagueEvent(LEAGUE_EVENT_LOST, GetAcceptedLeagueEventId()));
+    EndLeagueRun();
+    AcknowledgeLeagueProgressSave();
+    EXPECT_EQ(GetLeagueResultCall(), LEAGUE_ID_INDIGO);
+    EXPECT_EQ(LeaguePhone_BufferResult(), FALSE); // a loss
+    EXPECT(Rings());
+    LeaguePhone_FinishResult();
+    EXPECT_EQ(GetLeagueResultCall(), 0);
+    EXPECT(!Rings()); // nothing else is due yet
+    FlagClear(FLAG_HAS_MATCH_CALL);
+    FinishInvitationTest();
+}
+
+TEST("A first Masters win holds no call, while an Indigo first win waits for its Hall of Fame")
+{
+    PrepareInvitationTest(8, 0, 8, 160, 1);
+    FlagSet(FLAG_HAS_MATCH_CALL);
+    SetCircuitClearForTesting(CIRCUIT_STAGE_INDIGO, TRUE);
+    SetCircuitClearForTesting(CIRCUIT_STAGE_HOENN, TRUE);
+    EXPECT_EQ(Test_CompleteAndCommitCircuit(CIRCUIT_STAGE_MASTERS), CIRCUIT_COMMIT_FIRST_CLEAR);
+    AcknowledgeLeagueProgressSave();
+    EXPECT(!IsLeagueCeremonyPending());
+    EXPECT_EQ(WaitForCall(), LEAGUE_ID_INDIGO);
+    EXPECT(Rings());
+    ConsumeRecordedCircuitClearStage();
+    FlagClear(FLAG_HAS_MATCH_CALL);
+    FinishInvitationTest();
+
+    PrepareInvitationTest(8, 0, 0, 80, 1);
+    FlagSet(FLAG_HAS_MATCH_CALL);
+    EXPECT_EQ(Test_CompleteAndCommitCircuit(CIRCUIT_STAGE_INDIGO), CIRCUIT_COMMIT_FIRST_CLEAR);
+    AcknowledgeLeagueProgressSave();
+    EXPECT(IsLeagueCeremonyPending());
+    EXPECT(!Rings());
+    EXPECT_EQ(ConsumeRecordedCircuitClearStage(), CIRCUIT_STAGE_INDIGO);
+    EXPECT(!IsLeagueCeremonyPending());
+    EXPECT(Rings()); // the winner's result call
+    FlagClear(FLAG_HAS_MATCH_CALL);
+    FinishInvitationTest();
+}
+
+TEST("A player who isn't a Master hears that first at the Masters, even with a call waiting")
+{
+    PrepareInvitationTest(8, 0, 0, 80, 1);
+    UpdateLeagueInvitations();
+    EXPECT_EQ(WaitForCall(), LEAGUE_ID_INDIGO);
+    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_MASTERS), LEAGUE_ADMISSION_NEEDS_MASTER);
+    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_HOENN), LEAGUE_ADMISSION_CALL_PENDING);
     FinishInvitationTest();
 }
 
