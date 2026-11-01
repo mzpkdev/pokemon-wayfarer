@@ -120,6 +120,12 @@ example:
 Nothing outside the ship tells you who's aboard: you find the hosts by
 walking the corridors.
 
+**No farming in your sleep.** Staying aboard asleep, round and round, skips a
+day every 4 legs. So a ship's own daily trainers and items (its
+[daily world slots](daily-world-slots.md)) turn over only after you've been
+ashore: while you stay aboard, the ship keeps the passengers and finds it had
+when you boarded.
+
 **Arriving.** When the ship reaches a port, an announcement names it and the
 ship stays in port for a short while. Nothing asks you anything: to get off,
 walk down the gangway yourself. A last call comes before the ship casts off;
@@ -214,11 +220,6 @@ don't show ships, and nothing ashore shows who's aboard.
   and at Melemele's landing, which were drawn for small boats.
 - Whether the Route 13 boat to Alola keeps its Strange Souvenir check now that
   the Anne also sails there.
-- Staying aboard asleep round and round skips a day every 4 legs, about 10
-  minutes of play, for one cabin. Ashore that gains little, since going ashore
-  gives up the cabin, but the ship's own daily trainers and items refresh
-  while you sleep. Whether a ship's daily slots should refresh only once you
-  have been ashore, or whether that's fine.
 - Which interior maps each ship uses for the voyage, and how the decks look at
   sea.
 
