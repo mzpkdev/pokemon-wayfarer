@@ -65,9 +65,7 @@ Apply this exception deliberately to legendary captures and similarly
 consequential rewards. It does not authorize blanket TR gates on ordinary
 adventures, useful items, field-move rewards, or Gym access. Each application
 must name its reward, its gated stage, and any retained story prerequisites.
-Other regional PRDs use this rule without inheriting Johto's storyline; Kanto's
-Power Plant set Zapdos's battle threshold at TR 55, which is a reference point
-for Johto's thresholds, not a decision.
+Other regional PRDs use this rule without inheriting Johto's storyline.
 
 In Johto the exception covers:
 
@@ -81,6 +79,10 @@ The Master Ball is new to this list. Clair's eighth-badge position used to make
 it a late reward. Once Clair can be challenged first, it becomes an early one.
 Like Silph's Master Ball in Kanto, it waits for TR; Clair's badge and the rest
 of her sequence do not.
+
+Both legendary stages use TR 55, the same threshold as Kanto's Zapdos, so
+legendaries share one tier across regions. Elm's Master Ball threshold is set
+together with Silph's in one balance pass, so the two regions agree.
 
 ### Who plays which story
 
@@ -428,9 +430,8 @@ These are bounded scene decisions, not permission to expand the feature:
    and later Kanto dialogue before choosing a global disbandment outcome.
 3. **Ceremony introduction.** Which Ecruteak interaction introduces the
    ceremony and explains the Wing and TR gate with the least dialogue change?
-4. **Thresholds.** What TR places the shared legendary threshold, and Elm's
-   Master Ball threshold, in the 24-badge journey? Both must be decided
-   before implementation.
+4. **Master Ball threshold.** What TR gates Elm's and Silph's Master Balls?
+   Settle both in one balance pass before implementing Elm's handoff.
 
 ## References
 
