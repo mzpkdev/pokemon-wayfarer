@@ -88,6 +88,13 @@ describe.sequential("Hoenn-origin League admission without the maiden voyage", (
           circuit: { leagues: { [stage.stage]: "available" }, run: { active: false } },
         })
         expect(await game.inventory.contains("ssTicket")).toBe(false)
+        // Indigo and Hoenn take part only by invitation: place the league's call now and accept it
+        // (.product/specs/leagues.md#invitations). The Masters still accepts at its caretaker.
+        if (stage.stage !== "masters") {
+          await game.leagues.forceInvitation(stage.stage)
+          expect((await game.leagues.answerCall("accept")).join("\n")).toContain("you’re invited")
+          expect((await game.state.read()).circuit.event.acceptedLeague).toBe(stage.stage)
+        }
         if (stage.stage === "hoenn") {
           await game.player.interact()
           await advanceOpeningUntil(

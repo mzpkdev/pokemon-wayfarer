@@ -2,6 +2,7 @@
 #if IS_WAYFARER
 #include "wayfarer_daily_slots.h"
 #include "notable_friendship.h"
+#include "league_phone.h"
 #include "notable_talk.h"
 #include "wayfarer_walkers.h"
 #endif
@@ -220,6 +221,9 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
 #if IS_WAYFARER
     // A friendship crossing (the end of a battle, a quest) hands the number over once the field has control.
     if (NotableFriendship_TryStartPendingNumberScript())
+        return TRUE;
+    // A league's invitation or result call rings once the field has control (.product/specs/leagues.md).
+    if (LeaguePhone_TryStartCall())
         return TRUE;
 #endif
 

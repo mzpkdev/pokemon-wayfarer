@@ -9,6 +9,7 @@ import { createControlsApi, type ControlsApi } from "./features/controls"
 import { createDailySlotsApi, type DailySlotsApi } from "./features/daily-slots"
 import { createDialogueApi, type DialogueApi } from "./features/dialogue"
 import { createInventoryApi, type InventoryApi } from "./features/inventory"
+import { createLeaguesApi, type LeaguesApi } from "./features/leagues"
 import { createPlayerApi, type PlayerApi } from "./features/player"
 import { createRegionMapApi, type RegionMapApi } from "./features/region-map"
 import { createStateApi, type StateApi } from "./features/state"
@@ -34,6 +35,7 @@ export class GameSession {
   readonly dailySlots: DailySlotsApi
   readonly dialogue: DialogueApi
   readonly inventory: InventoryApi
+  readonly leagues: LeaguesApi
   readonly player: PlayerApi
   readonly regionMap: RegionMapApi
   readonly state: StateApi
@@ -68,6 +70,7 @@ export class GameSession {
     this.state = state
     this.storage = createStorageApi(state, wait, runtime, mailbox)
     this.story = createStoryApi(runtime, mailbox)
+    this.leagues = createLeaguesApi(runtime, state, this.story, this.controls)
     this.wait = wait
     this.measuredFrames = runtime.measuredFrames ?? (() => 0)
     this.continueSavedGame = async () => {
@@ -79,7 +82,9 @@ export class GameSession {
         await runtime.advance(2)
       }
       if (saveStatus !== 1)
-        throw new Error(`ROM did not read a valid flash save within 600 frames (status=${saveStatus})`)
+        throw new Error(
+          `ROM did not read a valid flash save within 600 frames (status=${saveStatus})`,
+        )
 
       // A reset cleared EWRAM, pins included: write them back before Continue loads the map.
       await this.dailySlots.reapply()

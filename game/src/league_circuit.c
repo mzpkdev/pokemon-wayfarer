@@ -586,17 +586,15 @@ enum LeagueAdmissionRequirement GetCircuitAdmissionRequirement(enum CircuitStage
         return LEAGUE_ADMISSION_UNAVAILABLE;
     if (accepted != LEAGUE_ID_NONE)
         return accepted == (enum LeagueId)stage ? LEAGUE_ADMISSION_AVAILABLE : LEAGUE_ADMISSION_EVENT_ELSEWHERE;
-    if (GetTrainerRating() < 80)
+    if (GetTrainerRating() < LEAGUE_QUALIFYING_TR)
         return LEAGUE_ADMISSION_NEEDS_QUALIFICATION;
+    if (GetLeagueInvitationLeague() != LEAGUE_ID_NONE)
+        return LEAGUE_ADMISSION_CALL_PENDING;
+    // The Masters keeps its lobby acceptance until its own format ships; it never phones.
     if (stage == CIRCUIT_STAGE_MASTERS)
-        return HasClearedCircuitStage(CIRCUIT_STAGE_INDIGO)
-            && HasClearedCircuitStage(CIRCUIT_STAGE_HOENN)
-            ? LEAGUE_ADMISSION_AVAILABLE : LEAGUE_ADMISSION_NEEDS_MASTER;
-    if (stage == CIRCUIT_STAGE_INDIGO)
-        return GetBadgeCountForRegion(REGION_KANTO) + GetBadgeCountForRegion(REGION_JOHTO) != 0
-            ? LEAGUE_ADMISSION_AVAILABLE : LEAGUE_ADMISSION_NEEDS_REGIONAL_BADGE;
-    return GetBadgeCountForRegion(REGION_HOENN) != 0
-        ? LEAGUE_ADMISSION_AVAILABLE : LEAGUE_ADMISSION_NEEDS_REGIONAL_BADGE;
+        return IsKnownAtCircuitStage(stage) ? LEAGUE_ADMISSION_AVAILABLE : LEAGUE_ADMISSION_NEEDS_MASTER;
+    // Indigo and Hoenn admit only an event accepted by phone (.product/specs/leagues.md#entering-the-accepted-event).
+    return LEAGUE_ADMISSION_NO_INVITATION;
 #else
     if (HasClearedCircuitStage(stage))
         return LEAGUE_ADMISSION_AVAILABLE;
@@ -626,6 +624,47 @@ enum LeagueAdmissionRequirement GetCircuitAdmissionRequirement(enum CircuitStage
 bool8 IsEligibleForCircuitStage(enum CircuitStage stage)
 {
     return GetCircuitAdmissionRequirement(stage) == LEAGUE_ADMISSION_AVAILABLE;
+}
+
+// Whether the league knows the player (qualified, with a badge from its regions, or a Master at the
+// Masters), whatever the invitation state. Travel and story gates read this, never admission.
+bool8 IsKnownAtCircuitStage(enum CircuitStage stage)
+{
+#if WAYFARER_LEAGUE_EVENTS
+    if (stage < CIRCUIT_STAGE_INDIGO || stage > CIRCUIT_STAGE_HOENN)
+        return FALSE;
+    if (GetAcceptedLeagueEventLeagueId() == (enum LeagueId)stage)
+        return TRUE;
+    if (GetTrainerRating() < LEAGUE_QUALIFYING_TR)
+        return FALSE;
+    if (stage == CIRCUIT_STAGE_MASTERS)
+        return HasClearedCircuitStage(CIRCUIT_STAGE_INDIGO) && HasClearedCircuitStage(CIRCUIT_STAGE_HOENN);
+    if (stage == CIRCUIT_STAGE_INDIGO)
+        return GetBadgeCountForRegion(REGION_KANTO) + GetBadgeCountForRegion(REGION_JOHTO) != 0;
+    return GetBadgeCountForRegion(REGION_HOENN) != 0;
+#else
+    return IsEligibleForCircuitStage(stage);
+#endif
+}
+
+// What the circuit status shows as available: with invitations, a league that knows the player and has no
+// event accepted elsewhere in the way (its call may come); without them, admission itself.
+bool8 IsCircuitStageAvailable(enum CircuitStage stage)
+{
+#if WAYFARER_LEAGUE_EVENTS
+    enum LeagueId accepted = GetAcceptedLeagueEventLeagueId();
+    return IsKnownAtCircuitStage(stage) && (accepted == LEAGUE_ID_NONE || accepted == (enum LeagueId)stage);
+#else
+    return IsEligibleForCircuitStage(stage);
+#endif
+}
+
+// A league call waits for these: a run, a save the league still owes, a recorded first clear whose
+// ceremony hasn't run, or the first Indigo Hall of Fame save.
+bool8 IsLeagueCeremonyPending(void)
+{
+    return gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active || sLeagueSavePending
+        || sRecordedCircuitClearStage != CIRCUIT_STAGE_NONE || IsIndigoHallOfFameSaveTransactionActive();
 }
 
 bool8 BeginCircuitRun(enum CircuitStage stage)

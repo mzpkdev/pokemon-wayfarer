@@ -5,6 +5,12 @@
 #define LEAGUE_EVENT_CONTENT_VERSION_COUNT 7
 #define LEAGUE_EVENT_NOTABLE_COUNT 38
 #define LEAGUE_EVENT_PLAYER_CHAMPION 0xFFFF
+// Invitations (.product/specs/leagues.md#invitations): placeholders the spec names.
+#define LEAGUE_QUALIFYING_TR 80
+#define LEAGUE_INVITATION_DAYS 7
+// The owed result call: the league in the low bits, and whether the player won.
+#define LEAGUE_RESULT_CALL_LEAGUE_MASK 0x03
+#define LEAGUE_RESULT_CALL_WON (1 << 2)
 #define LEAGUE_ACCEPT_OPTION_LEVEL_CAP (1 << 0)
 #define LEAGUE_ACCEPT_OPTION_EQUALIZER_SHIFT 1
 #define LEAGUE_ACCEPT_OPTION_EQUALIZER_MASK (3 << LEAGUE_ACCEPT_OPTION_EQUALIZER_SHIFT)
@@ -81,6 +87,8 @@ struct LeagueEventState
     u8 daysRemaining;
     u8 invitedLeague;
     u8 acceptedLeague;
+    u8 resultCall; // an owed result call: LEAGUE_RESULT_CALL_* league bits and outcome, or 0
+    u8 reserved; // zero
     u16 stateChecksum;
 };
 

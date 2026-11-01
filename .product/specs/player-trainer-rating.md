@@ -3,8 +3,9 @@
 PRD: [Player Trainer Rating](../prds/player-trainer-rating.md)
 Implemented: Partial. Wayfarer runs the v0 formula, the uncapped saved high-water
 value, and the level cap and notable-trainer world progress consumers
-([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)). Phone league invitations remain; lobby acceptance with the TR 80
-gate stands in for them. Mart tier acceptance is tracked in
+([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)), and
+the TR 80 gate for phone league invitations (Indigo and Hoenn; the Sevii
+Masters keeps its lobby acceptance until its format ships). Mart tier acceptance is tracked in
 [Global TR Poké Marts](global-tr-pokemarts.md).
 Design status: v0 accepted. The v0 formula is approved; every scaler anchor
 is a placeholder tuned by playtesting.

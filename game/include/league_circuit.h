@@ -23,10 +23,11 @@ enum LeagueAdmissionRequirement
     LEAGUE_ADMISSION_NEEDS_24_BADGES,
     LEAGUE_ADMISSION_UNAVAILABLE,
     LEAGUE_ADMISSION_NEEDS_QUALIFICATION,
-    LEAGUE_ADMISSION_NEEDS_REGIONAL_BADGE,
     LEAGUE_ADMISSION_NEEDS_MASTER,
     LEAGUE_ADMISSION_EVENT_ELSEWHERE,
     LEAGUE_ADMISSION_NO_ACCEPTED_EVENT,
+    LEAGUE_ADMISSION_CALL_PENDING, // a league's call waits for an answer
+    LEAGUE_ADMISSION_NO_INVITATION, // no event accepted here; the lobby says when the next call is due
 };
 
 enum CircuitCommitResult
@@ -58,6 +59,9 @@ bool8 HasCommittedFirstIndigoVictory(void);
 enum CircuitStage GetRequiredCircuitStage(void);
 enum LeagueAdmissionRequirement GetCircuitAdmissionRequirement(enum CircuitStage stage);
 bool8 IsEligibleForCircuitStage(enum CircuitStage stage);
+bool8 IsKnownAtCircuitStage(enum CircuitStage stage);
+bool8 IsCircuitStageAvailable(enum CircuitStage stage);
+bool8 IsLeagueCeremonyPending(void);
 
 // Region adapters are kept for existing script and test consumers.
 enum Region GetActiveLeagueRunRegion(void);

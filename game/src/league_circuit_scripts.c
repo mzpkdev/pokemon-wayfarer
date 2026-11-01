@@ -22,10 +22,13 @@ extern const u8 LeagueCircuit_Text_NeedMastersClear[];
 extern const u8 LeagueCircuit_Text_NeedTwentyFourBadges[];
 extern const u8 LeagueCircuit_Text_Unavailable[];
 extern const u8 LeagueCircuit_Text_NeedQualification[];
-extern const u8 LeagueCircuit_Text_NeedRegionalBadge[];
 extern const u8 LeagueCircuit_Text_NeedMaster[];
 extern const u8 LeagueCircuit_Text_EventElsewhere[];
 extern const u8 LeagueCircuit_Text_NoAcceptedEvent[];
+extern const u8 LeagueCircuit_Text_CallPending[];
+extern const u8 LeagueCircuit_Text_NoInvitation[];
+extern const u8 LeagueCircuit_Text_NoInvitationTomorrow[];
+extern const u8 LeagueCircuit_Text_NoInvitationDue[];
 #endif
 
 #if WAYFARER_LEAGUE_EVENTS
@@ -165,6 +168,16 @@ u16 LeagueCircuit_IsEligible(void)
 #endif
 }
 
+// Story and travel gates ask whether a league knows the player, never whether they may enter it now.
+u16 LeagueCircuit_IsKnownThere(void)
+{
+#if IS_WAYFARER
+    return IsKnownAtCircuitStage(gSpecialVar_0x8004);
+#else
+    return FALSE;
+#endif
+}
+
 u16 LeagueCircuit_RecordClear(void)
 {
 #if IS_WAYFARER
@@ -200,9 +213,6 @@ u16 LeagueCircuit_BufferAdmissionDenial(void)
     case LEAGUE_ADMISSION_NEEDS_QUALIFICATION:
         text = LeagueCircuit_Text_NeedQualification;
         break;
-    case LEAGUE_ADMISSION_NEEDS_REGIONAL_BADGE:
-        text = LeagueCircuit_Text_NeedRegionalBadge;
-        break;
     case LEAGUE_ADMISSION_NEEDS_MASTER:
         text = LeagueCircuit_Text_NeedMaster;
         break;
@@ -212,11 +222,25 @@ u16 LeagueCircuit_BufferAdmissionDenial(void)
     case LEAGUE_ADMISSION_NO_ACCEPTED_EVENT:
         text = LeagueCircuit_Text_NoAcceptedEvent;
         break;
+    case LEAGUE_ADMISSION_CALL_PENDING:
+        text = LeagueCircuit_Text_CallPending;
+        break;
+#if WAYFARER_LEAGUE_EVENTS
+    case LEAGUE_ADMISSION_NO_INVITATION:
+    {
+        // The lobby says when the next call is due: the countdown's days remaining.
+        u8 days = GetLeagueInvitationDaysRemaining();
+        text = days > 1 ? LeagueCircuit_Text_NoInvitation
+             : days == 1 ? LeagueCircuit_Text_NoInvitationTomorrow : LeagueCircuit_Text_NoInvitationDue;
+        ConvertIntToDecimalStringN(gStringVar1, days, STR_CONV_MODE_LEFT_ALIGN, 1);
+        break;
+    }
+#endif
     default:
         text = LeagueCircuit_Text_Unavailable;
         break;
     }
-    StringCopy(gStringVar4, text);
+    StringExpandPlaceholders(gStringVar4, text);
     return requirement;
 #else
     return 0;

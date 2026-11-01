@@ -89,6 +89,9 @@ describe("game-session v26 protocol", () => {
     stateBytes[1746] = 4
     stateBytes[1747] = 1
     stateBytes[1748] = 2
+    stateBytes[1749] = 3
+    stateBytes[1750] = 7
+    stateBytes[1751] = 5
 
     expect(parseStateSnapshot(stateBytes)).toMatchObject({
       battleFieldStatuses: 1 << 9,
@@ -96,6 +99,9 @@ describe("game-session v26 protocol", () => {
       battleWeather: 1 << 7,
       overworldWeather: 4,
       battleHazardMasks: [1, 2],
+      leagueInvitedLeague: 3,
+      leagueDaysRemaining: 7,
+      leagueResultCall: 5,
     })
   })
   it("round-trips 32-bit player and frozen league ratings without truncation", () => {

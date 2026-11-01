@@ -6,13 +6,17 @@ The default enables it for Wayfarer. Standalone products retain their existing
 progression and battles.
 
 League events select five canonical trainers, persist their resolved teams, and
-use the existing league rooms and first-win ceremonies. This slice offers an
-explicit acceptance prompt at each lobby: player TR 80 and a badge from that
-league's regions qualify for Indigo or Hoenn, and lifetime wins at both qualify
-for the Masters. Only one accepted event may wait at a time. Phone invitations
-remain follow-up work; lobby acceptance does not wait for a countdown. The
-in-game clock they will count days on is in place
-([in-game clock](../../.product/specs/in-game-clock.md)). League wins award no player TR.
+use the existing league rooms and first-win ceremonies. Indigo and Hoenn invite
+the player by phone ([leagues](../../.product/specs/leagues.md#invitations)):
+from player TR 80 a countdown of seven in-game days runs on the
+[in-game clock](../../.product/specs/in-game-clock.md)'s day counter
+(`VAR_DAYS`), and the league that knows the player and called least recently
+calls. The player accepts or declines on the call; a decline runs the event
+without them. Their lobbies admit only an accepted event and name the reigning
+champion. The Sevii Masters stays out of the rotation until its format ships:
+lifetime wins at both Indigo and Hoenn let the player accept a Masters event at
+the Seven Island house, as before. Only one invitation or accepted event may
+wait at a time. League wins award no player TR.
 
 Wild encounters use the v0 curve and shared evolution policy. Their encounter
 content must preserve the existing regional HM acquisition requirements.
@@ -28,7 +32,8 @@ content must preserve the existing regional HM acquisition requirements.
 | `notable_ai.c` | Play styles, skill tiers, ace protection, and boss flags. |
 | `league_selection.c` | League registry, willingness, fatigue, aloof eligibility, Masters seats, and deterministic lineup order. |
 | `league_halls.c` | Ordered hall locations, names, conditions, and their battle starting statuses. |
-| `league_events.c` | Accepted events, saved teams, content validation, reigning champions, reign records, and Gallery counts. |
+| `league_events.c` | Invitations (qualification, the countdown, which league calls, accepting and declining, the owed result call), accepted events, saved teams, content validation, reigning champions, reign records, and Gallery counts. |
+| `league_phone.c` | The league calls: the field polls `LeaguePhone_TryStartCall` when it has control, and it rings the owed result call or the waiting invitation once the player has the phone and no league run, save, or ceremony is pending. The front desk's call scripts are in `data/scripts/league_phone.inc`. |
 | `league_circuit.c` | Room admission, battle progress, event resolution, recovery, and first-win integration. |
 | `notable_friendship.c` | The saved friendship score, first-win bit and number-shown bit of each notable (`SaveBlock3`), the first-win and quest events, the number handover (owed while a trainer at Friend or above has no number-shown bit; the field starts its script whenever it has control, and the script's last special sets the bit), and the load validation. `battle_setup.c` credits wins at the end of a trainer, rematch or league event battle. |
 | `notable_phone.c` | Notable trainers as phone contacts: who is one (Friend or above, not Tate & Liza), their list entry's trainer and home, and the call (phone greeting, where they are from the world record or a fixed place, farewell). `pokenav_match_call_list.c` lists them after the special headers; they never random-call. Phone lines are the catalog's `phone` bits in `voices.h`. |
@@ -93,10 +98,16 @@ once. Battle completion carries the event identity and match index, so an old
 callback cannot advance a new event. First Indigo Hall of Fame rollback restores
 the event metadata and saved teams together with its existing ceremony state.
 
-Invitations must initialize countdown timestamps from the in-game clock's day
-counter (`VAR_DAYS`); this slice does not read days or schedule calls. The
-Masters Gallery counts are persisted; the full Gallery presentation and phone
-results remain separate work.
+The countdown saves its days remaining and the last counted day, and counts only
+forward advances of `VAR_DAYS`: a counter that went back moves the last counted
+day down, and a jump of many days brings one call. Each check runs where the
+field polls for calls, so it covers day advances, player TR changes, and loads;
+load validation clamps a last counted day ahead of the counter. Declining saves
+the champion, reign flag, recent lineup, and restarted countdown before the call
+names the champion, as accepting saves the lineup before revealing it. Each
+resolution of an Indigo or Hoenn event owes the league's result call in saved
+state (`leagueEvent.resultCall`). The Masters Gallery counts are persisted; the
+full Gallery presentation and the Masters' calls remain separate work.
 
 ## League halls
 

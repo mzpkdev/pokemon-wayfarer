@@ -17,6 +17,9 @@ WayfarerSevii_Masters_OldWoman::
 	lock
 	faceplayer
 	setvar VAR_0x8004, CIRCUIT_STAGE_MASTERS
+#if WAYFARER_LEAGUE_EVENTS
+	call LeagueEvent_EventScript_ReigningChampion
+#endif
 	specialvar VAR_RESULT, LeagueCircuit_IsEligible
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Masters_Denied
 #if WAYFARER_LEAGUE_EVENTS

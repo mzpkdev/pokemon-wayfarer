@@ -147,6 +147,21 @@ const finishGiovanniFinale = async (game: GameSession): Promise<void> => {
   await expect(game.inventory.count("tmEarthquake")).resolves.toBe(1)
 }
 
+// Indigo and Hoenn take part only by invitation (.product/specs/leagues.md#invitations): the journey
+// places the league's call now instead of waiting seven in-game days, and accepts it on the phone. The
+// phone is put back as it was, so the league's later result call stays out of these journeys
+// (wayfarer-league-invitations.e2e.ts covers it).
+const acceptInvitation = async (game: GameSession, league: "indigo" | "hoenn"): Promise<void> => {
+  const hadPhone = await game.story.flag("hasMatchCall")
+  await game.leagues.forceInvitation(league)
+  const call = await game.leagues.answerCall("accept")
+  expect(call.join("\n")).toContain("you’re invited")
+  await expect(game.state.read()).resolves.toMatchObject({
+    circuit: { event: { acceptedLeague: league } },
+  })
+  if (!hadPhone) await game.story.setFlag("hasMatchCall", false)
+}
+
 const walkTo = async (game: GameSession, x: number, y: number): Promise<void> => {
   const map = (await game.state.read()).map.name
   for (let attempt = 0; attempt < 240; attempt++) {
@@ -300,6 +315,8 @@ const readHallBoard = async (game: GameSession, stage: keyof typeof hallBoards):
   throw new Error(`${stage} hall board did not open: ${JSON.stringify(await game.state.read())}`)
 }
 const admitIndigo = async (game: GameSession, replay = false): Promise<number> => {
+  if ((await game.state.read()).circuit.event.acceptedLeague !== "indigo")
+    await acceptInvitation(game, "indigo")
   const start = await game.state.read()
   if (start.map.name === "indigo-league-lobby" && (start.player.x !== 32 || start.player.y !== 4)) {
     await walkTo(game, 19, 12)
@@ -976,6 +993,7 @@ describe.sequential("Wayfarer League Circuit", () => {
       circuit: { badges: { hoenn: 8 } },
     })
     const rating = (await game.state.read()).circuit.trainerRating
+    await acceptInvitation(game, "hoenn")
     await game.player.interact()
     await finishFieldScript(game, "Hoenn guards grant admission")
     await walkTo(game, 9, 2)
@@ -1220,6 +1238,7 @@ describe.sequential("Wayfarer League Circuit", () => {
       party: [{ species: "lapras", level: 100 }],
       circuit: { badges: { johto: 4, hoenn: 4 }, clears: { indigo: true, hoenn: true } },
     })
+    await acceptInvitation(game, "indigo")
     await walkTo(game, 32, 3)
     await finishFieldScript(game, "Indigo event acceptance")
     const accepted = (await game.state.read()).circuit.event

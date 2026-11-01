@@ -40,7 +40,7 @@ static const u8 *GetLeagueStateText(enum CircuitStage stage)
 #endif
     if (HasClearedCircuitStage(stage))
         return sCleared;
-    if (IsEligibleForCircuitStage(stage))
+    if (IsCircuitStageAvailable(stage))
         return sAvailable;
     return sLocked;
 }

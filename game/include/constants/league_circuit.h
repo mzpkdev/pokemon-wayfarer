@@ -1,6 +1,8 @@
 #ifndef GUARD_CONSTANTS_LEAGUE_CIRCUIT_H
 #define GUARD_CONSTANTS_LEAGUE_CIRCUIT_H
 
+#include "constants/league_phone.h"
+
 #define CIRCUIT_STAGE_NONE 0
 #define CIRCUIT_STAGE_INDIGO 1
 #define CIRCUIT_STAGE_MASTERS 2

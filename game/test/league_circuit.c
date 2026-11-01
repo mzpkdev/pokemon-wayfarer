@@ -3,6 +3,7 @@
 #include "config/league_circuit.h"
 #include "event_data.h"
 #include "league_circuit.h"
+#include "league_events.h"
 #include "league_event_battle.h"
 #include "league_run_helpers.h"
 #include "load_save.h"
@@ -83,18 +84,29 @@ TEST("Circuit admission follows qualification, regional badges and lifetime wins
     SetTrainerRating(79);
     EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_INDIGO), LEAGUE_ADMISSION_NEEDS_QUALIFICATION);
     SetTrainerRating(80);
-    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_INDIGO), LEAGUE_ADMISSION_AVAILABLE);
-    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_HOENN), LEAGUE_ADMISSION_NEEDS_REGIONAL_BADGE);
+    // Indigo and Hoenn admit only an event accepted by phone; the league still knows the player by badges.
+    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_INDIGO), LEAGUE_ADMISSION_NO_INVITATION);
+    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_HOENN), LEAGUE_ADMISSION_NO_INVITATION);
     EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_MASTERS), LEAGUE_ADMISSION_NEEDS_MASTER);
+    EXPECT(IsKnownAtCircuitStage(CIRCUIT_STAGE_INDIGO));
+    EXPECT(!IsKnownAtCircuitStage(CIRCUIT_STAGE_HOENN));
+    EXPECT(!IsKnownAtCircuitStage(CIRCUIT_STAGE_MASTERS));
 
     SetDistribution(0, 0, 1);
-    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_INDIGO), LEAGUE_ADMISSION_NEEDS_REGIONAL_BADGE);
-    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_HOENN), LEAGUE_ADMISSION_AVAILABLE);
+    EXPECT(!IsKnownAtCircuitStage(CIRCUIT_STAGE_INDIGO));
+    EXPECT(IsKnownAtCircuitStage(CIRCUIT_STAGE_HOENN));
+    // An unanswered call is the immediate reason everywhere, the Masters' lobby included.
+    EXPECT(ForceLeagueInvitationForTesting(LEAGUE_ID_HOENN));
+    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_INDIGO), LEAGUE_ADMISSION_CALL_PENDING);
+    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_HOENN), LEAGUE_ADMISSION_CALL_PENDING);
+    EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_MASTERS), LEAGUE_ADMISSION_CALL_PENDING);
+    InitLeagueEventState();
     // Indigo and Hoenn wins are independent; neither orders the other.
     SetCircuitClearForTesting(CIRCUIT_STAGE_HOENN, TRUE);
     EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_MASTERS), LEAGUE_ADMISSION_NEEDS_MASTER);
     SetCircuitClearForTesting(CIRCUIT_STAGE_INDIGO, TRUE);
     EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_MASTERS), LEAGUE_ADMISSION_AVAILABLE);
+    EXPECT(IsKnownAtCircuitStage(CIRCUIT_STAGE_MASTERS));
 #else
     SetTotalBadges(7);
     EXPECT_EQ(GetCircuitAdmissionRequirement(CIRCUIT_STAGE_INDIGO), LEAGUE_ADMISSION_NEEDS_8_BADGES);
@@ -182,7 +194,11 @@ TEST("Cleared venue replay captures fresh Rating and commits without another rew
               48);
 #endif
     SetTotalBadges(16);
+#if WAYFARER_LEAGUE_EVENTS
+    EXPECT(IsKnownAtCircuitStage(CIRCUIT_STAGE_INDIGO));
+#else
     EXPECT(IsEligibleForCircuitStage(CIRCUIT_STAGE_INDIGO));
+#endif
     EXPECT_EQ(GetRequiredCircuitStage(),
 #if WAYFARER_LEAGUE_EVENTS
               CIRCUIT_STAGE_HOENN);

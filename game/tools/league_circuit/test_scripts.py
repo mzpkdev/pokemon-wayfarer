@@ -279,7 +279,8 @@ class CircuitScriptTests(unittest.TestCase):
         self.assertIn("\tend", gate)
         self.assertNotIn("setvar", gate)
         rival = block(script("VictoryRoadKanto_1F_hns"), "VictoryRoadKanto_1F_Trigger").split("\tlock\n", 1)[0]
-        self.assertIn("LeagueCircuit_IsEligible", rival)
+        # Story gates ask whether a league knows the player, never whether an event is accepted there.
+        self.assertIn("LeagueCircuit_IsKnownThere", rival)
         self.assertNotIn("setflag", rival)
 
     def test_johto_opening_establishes_the_complete_interregional_ferry_loop(self):

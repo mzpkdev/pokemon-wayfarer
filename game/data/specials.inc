@@ -742,6 +742,7 @@ gSpecials::
 	def_special LeagueCircuit_MarkChampionDefeated
 	def_special LeagueCircuit_GetRequiredRegion
 	def_special LeagueCircuit_IsEligible
+	def_special LeagueCircuit_IsKnownThere
 	def_special LeagueCircuit_RecordClear
 	def_special LeagueCircuit_BufferAdmissionDenial
 	def_special LeagueCircuit_IsComplete
@@ -763,6 +764,13 @@ gSpecials::
 	def_special LeagueEvent_BufferChampion
 	def_special LeagueEvent_BufferLineup
 	def_special LeagueEvent_BufferHallBoard
+	def_special LeaguePhone_BufferInvitation
+	def_special LeaguePhone_SetCaller
+	def_special LeaguePhone_Accept
+	def_special LeaguePhone_Decline
+	def_special LeaguePhone_BufferResult
+	def_special LeaguePhone_FinishResult
+	def_special LeaguePhone_BufferReigningChampion
 #endif
 
 #if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED

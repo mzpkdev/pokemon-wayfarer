@@ -18,10 +18,11 @@
 #include "constants/moves.h"
 #include "constants/pokemon.h"
 #include "constants/regions.h"
+#include "constants/vars.h"
 
 #if WAYFARER_LEAGUE_EVENTS
 
-#define LEAGUE_EVENT_STATE_MAGIC 0x4C455631 // LEV1
+#define LEAGUE_EVENT_STATE_MAGIC 0x4C455632 // LEV2: invitations and the owed result call
 #define LEAGUE_EVENT_TEAMS_MAGIC 0x4C455654 // LEVT
 
 // Increment the relevant entry whenever accepted-lineup meaning changes.
@@ -39,6 +40,19 @@ static const u32 sLeagueContentVersions[LEAGUE_EVENT_CONTENT_VERSION_COUNT] =
 static bool32 IsLeagueId(enum LeagueId league)
 {
     return league >= LEAGUE_ID_INDIGO && league <= LEAGUE_ID_HOENN;
+}
+
+// Only Indigo and Hoenn phone invitations; the Sevii Masters keeps its lobby acceptance until its own
+// format ships (.product/specs/leagues.md#which-league-calls).
+static bool32 IsCallingLeague(enum LeagueId league)
+{
+    return league == LEAGUE_ID_INDIGO || league == LEAGUE_ID_HOENN;
+}
+
+// The in-game clock's day counter, kept by the daily update (clock.c). Leagues only count it forward.
+static u32 GetDayCounter(void)
+{
+    return VarGet(VAR_DAYS);
 }
 
 static u32 HashBytes(const void *data, u32 size)
@@ -60,6 +74,15 @@ static u16 StateChecksum(const struct LeagueEventState *state)
 static void SealState(void)
 {
     gSaveBlock3Ptr->leagueEvent.stateChecksum = StateChecksum(&gSaveBlock3Ptr->leagueEvent);
+}
+
+// The countdown (re)starts: 7 days remaining, counted from today.
+static void StartCountdown(struct LeagueEventState *state)
+{
+    state->invitationState = LEAGUE_INVITATION_COUNTING_DOWN;
+    state->invitedLeague = LEAGUE_ID_NONE;
+    state->daysRemaining = LEAGUE_INVITATION_DAYS;
+    state->lastCountedDay = GetDayCounter();
 }
 
 static void ClearAcceptedTeams(void)
@@ -94,6 +117,16 @@ static bool32 IsEligibleCharacter(u32 characterId)
     return entry != NULL && entry->enabled && entry->characterId == characterId;
 }
 
+// Prunes a league's reigning champion (index league - 1). A loss's owed result call names that champion, so
+// it goes too: with the champion pruned there is nothing to say.
+static void PruneChampion(struct LeagueEventState *state, u32 index)
+{
+    state->champions[index] = 0;
+    if (state->resultCall != 0 && !(state->resultCall & LEAGUE_RESULT_CALL_WON)
+     && (state->resultCall & LEAGUE_RESULT_CALL_LEAGUE_MASK) == index + 1)
+        state->resultCall = 0;
+}
+
 static void DropRemovedCharacters(struct LeagueEventState *state)
 {
     u32 i, league;
@@ -108,7 +141,7 @@ static void DropRemovedCharacters(struct LeagueEventState *state)
         if (state->champions[league] != 0
          && state->champions[league] != LEAGUE_EVENT_PLAYER_CHAMPION
          && !IsKnownCharacter(state->champions[league]))
-            state->champions[league] = 0;
+            PruneChampion(state, league);
 }
 
 static bool32 IsSavedMonValid(const struct LeagueSavedMon *mon)
@@ -223,8 +256,21 @@ bool32 ValidateLeagueEventState(void)
     {
         if (state->invitationState == LEAGUE_INVITATION_ACCEPTED)
         {
-            state->invitationState = LEAGUE_INVITATION_INVITED;
-            state->invitedLeague = state->acceptedLeague;
+            if (IsCallingLeague(state->acceptedLeague))
+            {
+                // The call rings again, from the same league.
+                state->invitationState = LEAGUE_INVITATION_INVITED;
+                state->invitedLeague = state->acceptedLeague;
+            }
+            else
+            {
+                // The Masters never phones: its event goes back to a due countdown, and the player can
+                // accept it again at its lobby or take the next call.
+                state->invitationState = LEAGUE_INVITATION_COUNTING_DOWN;
+                state->invitedLeague = LEAGUE_ID_NONE;
+                state->daysRemaining = 0;
+                state->lastCountedDay = GetDayCounter();
+            }
             ClearAcceptedTeams();
             memset(&gSaveBlock3Ptr->wayfarerHoenn.leagueRun, 0,
                    sizeof(gSaveBlock3Ptr->wayfarerHoenn.leagueRun));
@@ -233,9 +279,13 @@ bool32 ValidateLeagueEventState(void)
         for (i = 0; i < 3; i++)
             if (state->champions[i] != 0 && state->champions[i] != LEAGUE_EVENT_PLAYER_CHAMPION
              && !IsEligibleCharacter(state->champions[i]))
-                state->champions[i] = 0;
+                PruneChampion(state, i);
         memcpy(state->contentVersions, sLeagueContentVersions, sizeof(sLeagueContentVersions));
     }
+    // A stored day is never a reason to reject a save: a last counted day ahead of the day counter is
+    // clamped to it, which neither advances nor resets the countdown.
+    if (state->lastCountedDay > GetDayCounter())
+        state->lastCountedDay = GetDayCounter();
     // Removed historical characters are pruned even without a version bump.
     SealState();
 
@@ -281,6 +331,21 @@ bool32 ValidateLeagueEventState(void)
                            ? 0 : state->champions[LEAGUE_ID_MASTERS - 1]] == 0)
         return FALSE;
 
+    if (state->invitationState == LEAGUE_INVITATION_INVITED && !IsCallingLeague(state->invitedLeague))
+        return FALSE;
+    if (state->reserved != 0
+     || (state->resultCall & ~(LEAGUE_RESULT_CALL_LEAGUE_MASK | LEAGUE_RESULT_CALL_WON)) != 0)
+        return FALSE;
+    if (state->resultCall != 0)
+    {
+        enum LeagueId resultLeague = state->resultCall & LEAGUE_RESULT_CALL_LEAGUE_MASK;
+        bool32 playerReigns = IsCallingLeague(resultLeague)
+                           && state->champions[resultLeague - 1] == LEAGUE_EVENT_PLAYER_CHAMPION;
+        if (!IsCallingLeague(resultLeague)
+         || playerReigns != ((state->resultCall & LEAGUE_RESULT_CALL_WON) != 0)
+         || state->champions[resultLeague - 1] == 0)
+            return FALSE;
+    }
     if (state->invitationState == LEAGUE_INVITATION_INVITED
      || state->invitationState == LEAGUE_INVITATION_ACCEPTED)
     {
@@ -289,14 +354,14 @@ bool32 ValidateLeagueEventState(void)
         if (!IsLeagueId(invited) || state->lastCallNumber[invited - 1] != state->callCounter)
             return FALSE;
     }
-    if (state->invitationState == LEAGUE_INVITATION_COUNTING_DOWN && state->daysRemaining > 7)
+    if (state->invitationState == LEAGUE_INVITATION_COUNTING_DOWN && state->daysRemaining > LEAGUE_INVITATION_DAYS)
         return FALSE;
     if ((state->invitationState == LEAGUE_INVITATION_NOT_QUALIFIED
       || state->invitationState == LEAGUE_INVITATION_COUNTING_DOWN)
      && state->invitedLeague != LEAGUE_ID_NONE)
         return FALSE;
     if (state->invitationState == LEAGUE_INVITATION_ACCEPTED
-     && (state->invitedLeague != state->acceptedLeague || state->acceptedWorldProgress < 80))
+     && (state->invitedLeague != state->acceptedLeague || state->acceptedWorldProgress < LEAGUE_QUALIFYING_TR))
         return FALSE;
     if (state->invitationState == LEAGUE_INVITATION_ACCEPTED)
     {
@@ -382,7 +447,7 @@ enum LeagueAcceptResult AcceptLeagueEvent(enum LeagueId league)
     if (!IsLeagueId(league))
         return LEAGUE_ACCEPT_INELIGIBLE;
     worldProgress = GetTrainerRating();
-    if (worldProgress < 80)
+    if (worldProgress < LEAGUE_QUALIFYING_TR)
         return LEAGUE_ACCEPT_NOT_QUALIFIED;
     if (!IsLeagueEligible(league))
         return LEAGUE_ACCEPT_INELIGIBLE;
@@ -390,6 +455,9 @@ enum LeagueAcceptResult AcceptLeagueEvent(enum LeagueId league)
      || (state->invitationState == LEAGUE_INVITATION_INVITED && state->invitedLeague != league)
      || gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active)
         return LEAGUE_ACCEPT_BUSY;
+    // Indigo and Hoenn are accepted only by answering their call; the Masters still accepts at its lobby.
+    if (IsCallingLeague(league) && state->invitationState != LEAGUE_INVITATION_INVITED)
+        return LEAGUE_ACCEPT_NOT_INVITED;
     if (state->eventId == UINT_MAX
      || (state->invitationState != LEAGUE_INVITATION_INVITED && state->callCounter == UINT_MAX))
         return LEAGUE_ACCEPT_SELECTION_FAILED;
@@ -496,15 +564,236 @@ bool32 ResolveLeagueEvent(enum LeagueEventOutcome outcome, u32 expectedEventId)
     // Life events for the overworld simulation, in the same transaction.
     WayfarerWorld_OnLeagueResolved(state->recentIds, LEAGUE_EVENT_LINEUP_SIZE, outcome == LEAGUE_EVENT_WON,
                                    champion == LEAGUE_EVENT_PLAYER_CHAMPION ? 0 : champion);
-    state->invitationState = LEAGUE_INVITATION_COUNTING_DOWN;
-    state->invitedLeague = LEAGUE_ID_NONE;
-    state->daysRemaining = 7;
-    // Phone/day scheduling is deferred. Its first active tick must establish
-    // lastCountedDay from that feature's in-game counter before subtracting.
+    StartCountdown(state);
+    // The league's word on the result rings once the field settles; it replaces any older owed call. The
+    // Masters' word stays at its Gallery, so a Masters result leaves an owed Indigo or Hoenn call alone.
+    if (IsCallingLeague(league))
+        state->resultCall = league | (outcome == LEAGUE_EVENT_WON ? LEAGUE_RESULT_CALL_WON : 0);
     ClearAcceptedTeams();
     SealState();
     return TRUE;
 }
+
+static u32 GetLeagueBadgeCount(enum LeagueId league)
+{
+    if (league == LEAGUE_ID_INDIGO)
+        return GetBadgeCountForRegion(REGION_KANTO) + GetBadgeCountForRegion(REGION_JOHTO);
+    if (league == LEAGUE_ID_HOENN)
+        return GetBadgeCountForRegion(REGION_HOENN);
+    return 0;
+}
+
+// Which league calls (.product/specs/leagues.md#which-league-calls): among the eligible calling leagues,
+// the one whose last call has the lowest number (never called counts as lowest), then the most badges,
+// then Indigo. It reads no day, so a day counter that goes backwards can't reorder the leagues.
+static enum LeagueId ChooseCallingLeague(const struct LeagueEventState *state)
+{
+    static const u8 sCallingLeagues[] = {LEAGUE_ID_INDIGO, LEAGUE_ID_HOENN}; // a full tie goes to the first
+    enum LeagueId best = LEAGUE_ID_NONE;
+    u32 bestCall = 0, bestBadges = 0, i;
+
+    for (i = 0; i < ARRAY_COUNT(sCallingLeagues); i++)
+    {
+        enum LeagueId league = sCallingLeagues[i];
+        u32 call, badges;
+        if (!IsLeagueEligible(league))
+            continue;
+        call = state->lastCallNumber[league - 1];
+        badges = GetLeagueBadgeCount(league);
+        if (best == LEAGUE_ID_NONE || call < bestCall || (call == bestCall && badges > bestBadges))
+        {
+            best = league;
+            bestCall = call;
+            bestBadges = badges;
+        }
+    }
+    return best;
+}
+
+enum LeagueId GetNextCallingLeague(void)
+{
+    return ChooseCallingLeague(&gSaveBlock3Ptr->leagueEvent);
+}
+
+// The countdown counts only forward day advances; a counter that went backwards just moves the last
+// counted day down, and a jump of many days brings one call, never a backlog.
+static bool32 CountDays(struct LeagueEventState *state, u32 today)
+{
+    bool32 changed = FALSE;
+
+    if (today > state->lastCountedDay)
+    {
+        u32 elapsed = today - state->lastCountedDay;
+        u8 remaining = elapsed >= state->daysRemaining ? 0 : state->daysRemaining - elapsed;
+        changed = remaining != state->daysRemaining;
+        state->daysRemaining = remaining;
+    }
+    if (state->lastCountedDay != today)
+    {
+        state->lastCountedDay = today;
+        changed = TRUE;
+    }
+    return changed;
+}
+
+// The call: the invited state, the next call number, and that league's last call number, together.
+static bool32 PlaceCall(struct LeagueEventState *state, enum LeagueId league)
+{
+    if (!IsCallingLeague(league) || state->callCounter == UINT_MAX)
+        return FALSE;
+    state->callCounter++;
+    state->lastCallNumber[league - 1] = state->callCounter;
+    state->invitationState = LEAGUE_INVITATION_INVITED;
+    state->invitedLeague = league;
+    state->daysRemaining = 0;
+    return TRUE;
+}
+
+static bool32 UpdateInvitations(enum LeagueId forcedLeague, bool32 forceDue)
+{
+    struct LeagueEventState *state = &gSaveBlock3Ptr->leagueEvent;
+    bool32 changed = FALSE;
+
+    if (state->invitationState == LEAGUE_INVITATION_NOT_QUALIFIED)
+    {
+        // Player TR never decreases, so qualifying happens once.
+        if (GetTrainerRating() < LEAGUE_QUALIFYING_TR)
+            return FALSE;
+        StartCountdown(state);
+        changed = TRUE;
+    }
+    if (state->invitationState == LEAGUE_INVITATION_COUNTING_DOWN)
+    {
+        changed |= CountDays(state, GetDayCounter());
+        if (forceDue && state->daysRemaining != 0)
+        {
+            state->daysRemaining = 0;
+            changed = TRUE;
+        }
+        // With no league that knows the player, the countdown stays due and each check looks again.
+        if (state->daysRemaining == 0)
+        {
+            enum LeagueId league = forcedLeague != LEAGUE_ID_NONE && IsLeagueEligible(forcedLeague)
+                                 ? forcedLeague : ChooseCallingLeague(state);
+            changed |= PlaceCall(state, league);
+        }
+    }
+    if (changed)
+        SealState();
+    return changed;
+}
+
+bool32 UpdateLeagueInvitations(void)
+{
+    return UpdateInvitations(LEAGUE_ID_NONE, FALSE);
+}
+
+enum LeagueId GetLeagueInvitationLeague(void)
+{
+    const struct LeagueEventState *state = &gSaveBlock3Ptr->leagueEvent;
+    return state->invitationState == LEAGUE_INVITATION_INVITED ? state->invitedLeague : LEAGUE_ID_NONE;
+}
+
+enum LeagueInvitationState GetLeagueInvitationState(void)
+{
+    return gSaveBlock3Ptr->leagueEvent.invitationState;
+}
+
+u8 GetLeagueInvitationDaysRemaining(void)
+{
+    const struct LeagueEventState *state = &gSaveBlock3Ptr->leagueEvent;
+    return state->invitationState == LEAGUE_INVITATION_COUNTING_DOWN ? state->daysRemaining : 0;
+}
+
+enum LeagueAcceptResult AcceptLeagueInvitation(void)
+{
+    enum LeagueId league = GetLeagueInvitationLeague();
+
+    if (!IsCallingLeague(league))
+        return LEAGUE_ACCEPT_NOT_INVITED;
+    return AcceptLeagueEvent(league);
+}
+
+// Declining runs the event without the player at once (.product/specs/leagues.md#decline): its lineup is
+// selected with the same rule, its strongest reigns, it becomes the most recent resolved lineup, and the
+// countdown restarts, all saved before the call reveals the champion. A failure leaves the invitation.
+bool32 DeclineLeagueInvitation(void)
+{
+    struct LeagueEventState *state = &gSaveBlock3Ptr->leagueEvent;
+    struct LeagueEventState previous;
+    struct LeagueLineupSelection selection;
+    u32 recent[LEAGUE_EVENT_LINEUP_SIZE];
+    rng_value_t savedRng, savedRng2;
+    enum LeagueId league;
+    u16 champion;
+    u32 i;
+
+    if (!ValidateLeagueEventState() || state->invitationState != LEAGUE_INVITATION_INVITED
+     || !IsCallingLeague(state->invitedLeague) || gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active)
+        return FALSE;
+    league = state->invitedLeague;
+    for (i = 0; i < LEAGUE_EVENT_LINEUP_SIZE; i++)
+        recent[i] = state->recentIds[i];
+    savedRng = gRngValue;
+    savedRng2 = gRng2Value;
+    if (!SelectLeagueLineup(league, GetTrainerRating(), recent,
+                            state->reignedIndigoMask, state->reignedHoennMask, &selection)
+     || selection.count != LEAGUE_EVENT_LINEUP_SIZE)
+    {
+        gRngValue = savedRng;
+        gRng2Value = savedRng2;
+        return FALSE;
+    }
+    gRngValue = savedRng;
+    gRng2Value = savedRng2;
+    previous = *state;
+    // The battle order is ascending TR, so the strongest is last.
+    champion = selection.members[LEAGUE_EVENT_LINEUP_SIZE - 1].characterId;
+    state->champions[league - 1] = champion;
+    if (league == LEAGUE_ID_INDIGO)
+        state->reignedIndigoMask |= 1ull << (champion - 1);
+    else
+        state->reignedHoennMask |= 1ull << (champion - 1);
+    for (i = 0; i < LEAGUE_EVENT_LINEUP_SIZE; i++)
+        state->recentIds[i] = selection.members[i].characterId;
+    // The decline call names the new champion itself; an older result call for this league is out of date.
+    if ((state->resultCall & LEAGUE_RESULT_CALL_LEAGUE_MASK) == league)
+        state->resultCall = 0;
+    StartCountdown(state);
+    SealState();
+    if (TrySavingData(SAVE_NORMAL) != SAVE_STATUS_OK)
+    {
+        *state = previous;
+        return FALSE;
+    }
+    // The overworld's life events follow the committed result; losing them to a crash before the next
+    // save costs only flavour, while applying them first could not be rolled back on a failed save.
+    WayfarerWorld_OnLeagueResolved(state->recentIds, LEAGUE_EVENT_LINEUP_SIZE, FALSE, champion);
+    return TRUE;
+}
+
+u8 GetLeagueResultCall(void)
+{
+    return gSaveBlock3Ptr->leagueEvent.resultCall;
+}
+
+void ClearLeagueResultCall(void)
+{
+    if (gSaveBlock3Ptr->leagueEvent.resultCall != 0)
+    {
+        gSaveBlock3Ptr->leagueEvent.resultCall = 0;
+        SealState();
+    }
+}
+
+#if TESTING || defined(E2E_TESTING)
+// Makes a due countdown now (qualifying first if the player's TR allows) and places the call, from
+// forcedLeague when it knows the player, else by the rotation.
+bool32 ForceLeagueInvitationForTesting(enum LeagueId forcedLeague)
+{
+    return UpdateInvitations(forcedLeague, TRUE) && GetLeagueInvitationLeague() != LEAGUE_ID_NONE;
+}
+#endif
 
 u16 GetLeagueReigningChampion(enum LeagueId league)
 {
@@ -561,6 +850,18 @@ void GetLeagueRecentLineup(u16 outIds[LEAGUE_EVENT_LINEUP_SIZE])
     if (outIds != NULL)
         memset(outIds, 0, sizeof(u16) * LEAGUE_EVENT_LINEUP_SIZE);
 }
+bool32 UpdateLeagueInvitations(void) { return FALSE; }
+enum LeagueId GetNextCallingLeague(void) { return LEAGUE_ID_NONE; }
+enum LeagueId GetLeagueInvitationLeague(void) { return LEAGUE_ID_NONE; }
+enum LeagueInvitationState GetLeagueInvitationState(void) { return LEAGUE_INVITATION_NOT_QUALIFIED; }
+u8 GetLeagueInvitationDaysRemaining(void) { return 0; }
+enum LeagueAcceptResult AcceptLeagueInvitation(void) { return LEAGUE_ACCEPT_NOT_INVITED; }
+bool32 DeclineLeagueInvitation(void) { return FALSE; }
+u8 GetLeagueResultCall(void) { return 0; }
+void ClearLeagueResultCall(void) {}
+#if TESTING || defined(E2E_TESTING)
+bool32 ForceLeagueInvitationForTesting(enum LeagueId forcedLeague) { return FALSE; }
+#endif
 #if TESTING
 void SealLeagueEventStateForTesting(void) {}
 #endif
