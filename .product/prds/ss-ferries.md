@@ -65,10 +65,11 @@ It only says which ship you can **board** where and when.
 
 ### Boarding
 
-You board the ship that is in port by talking to its sailor at the gangway.
-Boarding means sailing: the sailor names the next stop and asks whether
-you're coming aboard. Yes takes you aboard and the ship casts off; No leaves
-you on the pier. An empty berth's sailor says which ship comes next and when.
+You board the ship that is in port by walking up its gangway. The sailor
+there checks your Ticket and tells you the next stop; there is no question
+to answer. Once you're aboard, the ship stays in port for a short while and
+then casts off. Until it does, you can walk back down the gangway. An empty
+berth's sailor says which ship comes next and when.
 
 ### Riding
 
@@ -79,13 +80,18 @@ cabins and battle the passengers on the way. The clock keeps running.
 **The cabin bed.** Every ship has a cabin with a bed. It heals your party,
 and while the ship is at sea it lets you sleep until the next port, which
 moves the clock to the arrival time. It never skips more than the rest of the
-current leg.
+current time at sea, and never the time in port.
 
-**Arriving.** When the ship reaches a port, the announcement names it and you
-choose: **go ashore** or **stay aboard**. Going ashore puts you on that port's
-pier. Staying aboard sails on to the next stop, and so on round the loop.
-Arrival is never limited by the table: once aboard, you can ride the whole
-loop and get off anywhere on it, at any hour.
+**Arriving.** When the ship reaches a port, an announcement names it and the
+ship stays in port for a short while. Nothing asks you anything: to get off,
+walk down the gangway yourself. A last call comes before the ship casts off;
+if you're still aboard when it does, you're on the next trip, and so on round
+the loop. Arrival is never limited by the table: once aboard, you can ride
+the whole loop and get off anywhere on it, at any hour.
+
+**In port and at sea.** Each leg is an in-game hour at sea (5 minutes of play)
+followed by half an in-game hour in port (2.5 minutes), and a ship you've just
+boarded stays the same half hour before it casts off.
 
 ### Ticket and service
 
@@ -135,8 +141,9 @@ don't show ships.
 
 ## Balance
 
-- A leg is 5 minutes of play aboard. The longest loop trip, three legs, is
-  15 minutes, or less with the cabin bed.
+- A leg is 7.5 minutes of play aboard: 5 at sea and 2.5 in port. The longest
+  loop trip, three legs, takes about 22 minutes from boarding to the last
+  arrival, or about 8 if you sleep through the time at sea.
 - The longest wait for a particular ship at a shared port is an hour of play;
   at One Island or Melemele it is 20 minutes. Five shared ports mean another
   ship is often in that gets you somewhere useful, so a wait is rarely forced.
@@ -145,10 +152,11 @@ don't show ships.
 
 ## Presentation
 
-- Gangway sailor: "This is the S.S. Tidal, sailing for Seven Island. Coming
-  aboard?" Without a Ticket: the sailor asks for one.
+- Gangway sailor, as you walk aboard: "Welcome aboard the S.S. Tidal, next
+  stop Seven Island." Without a Ticket, the sailor stops you and asks for one.
 - Empty berth: "The S.S. Anne's anchored offshore tonight. She's back at 4:00."
-- Arrival: "Now arriving at Melemele Island. Going ashore?"
+- Arrival: "Now arriving at Melemele Island." Last call: "All ashore that's
+  going ashore! Next stop, Seven Island."
 - The Anne's next-stop announcement for Melemele names Alola outright, the
   first time anyone does.
 
