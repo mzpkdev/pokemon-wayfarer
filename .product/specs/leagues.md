@@ -2,7 +2,7 @@
 
 PRD: [Leagues](../prds/leagues.md)
 Implemented: Partial ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)
-and the phone invitations PR). The [runtime slice](../../game/docs/wayfarer-trainer-runtime.md)
+and [PR #172](https://github.com/mzpkdev/pokemon-wayfarer/pull/172)). The [runtime slice](../../game/docs/wayfarer-trainer-runtime.md)
 provides selected and saved teams, event resolution, and hall conditions; Indigo
 and Hoenn invitations by phone on the in-game clock (the countdown, call
 rotation, accepting and declining, decline resolution, result calls) and the
