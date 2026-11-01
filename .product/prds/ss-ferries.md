@@ -74,7 +74,8 @@ out from the existing pier.
 
 You board the ship that is in port by walking up its gangway. The sailor
 there checks your Ticket and tells you the next stop; there is no question
-to answer. Once you're aboard, the ship stays in port for a short while and
+to answer. Where the same sailor also runs the Seagallop (Vermilion) or the
+event-island charters (Lilycove), a short menu picks which. Once you're aboard, the ship stays in port for a short while and
 then casts off. Until it does, you can walk back down the gangway. An empty
 berth's sailor says which ship comes next and when.
 

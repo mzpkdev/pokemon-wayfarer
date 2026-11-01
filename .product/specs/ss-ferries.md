@@ -157,10 +157,9 @@ scheduled ship, or nothing when the berth is empty.
   - two fresh hosts;
   - `slotDay` = the daily slots' current `stampDay`, so boarding never starts
     a new day by itself.
-- **Boarding the Tidal, or any ship whose loop reaches Hoenn,** runs the Hoenn
-  first-entry setup before the warp if Hoenn hasn't been entered yet: the
-  ship maps of the Tidal are Hoenn-source maps (see
-  [Region and saves](#region-and-saves)).
+- **Boarding the Tidal** runs the Hoenn state initialization before the warp
+  if Hoenn hasn't been entered yet: the Tidal's maps are Hoenn-source maps
+  (see [Region and saves](#region-and-saves)).
 
 **The boarding walk.** A new ferry-only boarding subroutine per dock port
 plays the port's existing walk to the ship, without moving the boat sprite
@@ -182,8 +181,10 @@ and without `setrespawn`:
   When a charter is available, talking to her opens a menu: the ship in port
   (if any), each available charter, and Cancel. With no charter available,
   she boards with no menu.
-- **Slateport during the Aqua escape.** While `VAR_SLATEPORT_HARBOR_STATE` is 1,
-  the attendant is hidden and the berth is closed: the ship object stays
+- **Slateport during the Aqua escape.** While
+  `FLAG_HIDE_SLATEPORT_CITY_HARBOR_PATRONS` is set (from the Aqua escape,
+  `VAR_SLATEPORT_HARBOR_STATE` 1, until the Mossdeep Gym clears it), the
+  attendant is hidden and the berth is closed: the ship object stays
   hidden whatever the table says, and nobody boards there. Arrivals still land
   at (9,11), which is outside the scene's x=8 triggers.
 
@@ -238,9 +239,10 @@ Each ship keeps its own maps. Only the entry, the exit and the cabins change.
 of the port at `stop`.
 - **Anne:** the corridor's on-load `setdynamicwarp` picks that port from a
   special instead of always Vermilion. Cast-off and arrival also refresh it,
-  since they can happen while the player stands in the corridor. At sea, a
-  coordinate event at (19,2) in front of the gangway says "We're at sea" and
-  turns the player back, so the gangway warps are never reached.
+  since they can happen while the player stands in the corridor. At sea, the
+  dynamic warp points back at the corridor's own (19,2), so taking the
+  gangway only returns the player there, and a coordinate event at (19,2)
+  says "We're at sea".
 - **Aqua and Tidal:** the exit sailor's script warps there, replacing the
   Aqua's fixed Vermilion exit and the Tidal's `VAR_SS_TIDAL_STATE` exit.
   At sea, the exit sailor says "We're at sea" and does nothing.
@@ -278,16 +280,18 @@ of the port at `stop`.
   the porthole walk and the bed's `ProgessCruiseAfterBed`);
 - the Aqua's fixed Vermilion exit.
 
+Other builds keep them.
+
 **The Tidal's Town Map location.** The Tidal maps are `MAPSEC_DYNAMIC`, and
-`GetSSTidalLocation` read the retired cruise state. In Wayfarer it reads the
-voyage state instead: in port, the port at `stop`; at sea, the port the ship
-is sailing to. With no voyage it returns Slateport.
+`GetSSTidalLocation` read the retired cruise state. A Hoenn-source map's Town
+Map shows only Hoenn, so in Wayfarer it reads the voyage state and shows a
+Hoenn place: Slateport or Lilycove when the ship is at, or sailing to, that
+port; Lilycove when it's at, or sailing to, Seven Island; Slateport when it's
+at, or sailing to, Olivine; Slateport with no voyage.
 
 **Scott aboard the Tidal.** `SSTidalCorridor`'s Scott scene ("Congratulations,
 League Champion!") runs only once `FLAG_SYS_GAME_CLEAR` (Hoenn's League) is
 set. Until then Scott is hidden.
-
-Other builds keep them.
 
 ### Sailing
 
@@ -373,8 +377,8 @@ replaces nothing and is just another bed.
 | Quiz | answer a three-choice question about the ferry schedule | a list of questions | yes |
 | Coin flip | `Random()` < 50% | none | yes |
 
-Host battles never white out: losing ends the battle with the party as it
-stands, settles the host, and leaves the player aboard.
+Host battles never white out: losing ends the battle, restores every fainted
+party Pokémon to 1 HP, settles the host, and leaves the player aboard.
 
 **Host pools:** v0 gives each ship about eight hosts spread across these kinds:
 - the Anne: tourists, well-off guests, an Alolan tourist (From your region), a
@@ -423,6 +427,8 @@ and the Tidal's `SSTidalRooms` beds lose their free heal.
 - The S.S. Anne, S.S. Aqua and S.S. Tidal trainers leave the reviewed
   "one-time ship content" exclusion in the trainer-slot generator.
 - Their decks and rooms become daily slot places of a new `liner` place type,
+  separate from the existing `ship` type (the Abandoned Ship), and the
+  [daily world slots](daily-world-slots.md) place-type list gains it,
   so they rotate like route trainers.
 - Other trainers whose class fits `liner` (sailors, gentlemen, ladies,
   swimmers, fishermen, tubers, beauties, rich boys) may be drawn there.
@@ -483,9 +489,9 @@ and the Tidal's `SSTidalRooms` beds lose their free heal.
 **Removed in Wayfarer:**
 - The Olivine port menu (`MULTI_OLIVINE_HARBOR`). The maiden voyage's
   boarding at Olivine stays.
-- Vermilion's "Other Destinations" and "Board S.S. Anne" rows in
-  `DrawWayfarerVermilionPortMenu`. The Vermilion sailor keeps Sevii Islands
-  and Cancel, and the Anne is boarded at the berth like any ship.
+- Vermilion's "Other Destinations" row in `DrawWayfarerVermilionPortMenu`.
+  The menu becomes the one under
+  [Ports with more than one job](#at-a-dock-port).
 - The Slateport Wayfarer Aqua attendant.
 - The Slateport and Lilycove Tidal menus.
 - The Battle Frontier ferry's departures from Slateport.
@@ -503,7 +509,10 @@ condition holds:
   flags. Wayfarer's real sources for the Eon Ticket and the Old Sea Map
   (Steven at Fuchsia, the Vermilion find) never set those flags.
 - The first-time "may I see your ticket" scenes play as today and still set
-  their `FLAG_SHOWN_*` flags.
+  their `FLAG_SHOWN_*` flags. Their first-time detection
+  (`GetEonTicketState` and its siblings in `LilycoveCity_Harbor`) and the C
+  menu builder in `script_menu.c` drop their `FLAG_ENABLE_SHIP_*` checks in
+  Wayfarer and read the conditions above.
 - The trips use today's scenes. Returns land at Lilycove (8,11).
 - The Battle Frontier's ferry attendant returns to Lilycove only; its
   Slateport option goes.
@@ -518,11 +527,19 @@ the Seagallop only.
   map doesn't change the saved current region or mark a region visited
   (`WayfarerUpdateHnsRegionContextForMap` and the Hoenn equivalent skip ship
   maps). Going ashore sets the region through the port's normal map load.
-- **Hoenn first entry.** `WayfarerPrepareHoennEntry` is generalized to take the
-  port, the arrival tile and the heal location (the shape of
-  `Test_WayfarerPrepareHoennEntryAt`). It runs before the first warp onto any
-  Hoenn-source map: boarding the Tidal, or going ashore at Slateport or
-  Lilycove, whichever comes first.
+- **Hoenn first entry** is split in two:
+  - **Initializing Hoenn's state** (the one-time Hoenn flags and vars) runs
+    before the first warp onto any Hoenn-source map: boarding the Tidal, or
+    going ashore at Slateport or Lilycove, whichever comes first. It sets
+    neither the saved region nor the respawn, so boarding the Tidal at Olivine
+    or Seven Island leaves both where they were.
+  - **Arriving in Hoenn** (`WayfarerPrepareHoennEntry`, generalized to take the
+    port, the arrival tile and the heal location, the shape of
+    `Test_WayfarerPrepareHoennEntryAt`) runs when going ashore at Slateport or
+    Lilycove: it validates the tile and heal location, sets the saved region
+    to Hoenn and sets the respawn.
+  - If either step fails, boarding or going ashore is refused with nothing
+    changed.
 - Ship maps keep their own map sections and music.
 - Ferry checks run in C specials, so Hoenn-bank and HnS-bank maps share the
   voyage state without common vars.
