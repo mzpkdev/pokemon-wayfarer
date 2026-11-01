@@ -218,8 +218,8 @@ exists at a time.
 
 Days come from the [in-game clock](in-game-clock.md); leagues add no clock of
 their own. The **day counter** is `VAR_DAYS`, kept by the daily update in
-[clock.c](../../game/src/clock.c): it advances with play (one day per 90
-minutes of play) and can't be set back. Leagues reads it only through the
+[clock.c](../../game/src/clock.c): it advances with play (one day per 2
+hours of play) and can't be set back. Leagues reads it only through the
 forward-counting [countdown](#countdown); the length of a day is owned by the
 in-game clock. **Days never affect anyone's strength**: every TR stays a function of world
 progress, and days only schedule invitations. The order of calls never reads

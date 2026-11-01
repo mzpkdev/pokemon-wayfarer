@@ -1,7 +1,12 @@
 # In-game clock
 
 PRD: [In-game clock](../prds/in-game-clock.md)
-Implemented: Yes
+Implemented: Partial. The clock, what play time counts, the new game, a new
+day and the removed ways of setting time shipped in
+[PR #170](https://github.com/mzpkdev/pokemon-wayfarer/pull/170) with a
+90-minute day (16×), a 10:00 start and the engine's hours. The 2-hour day
+(12×), the 8:00 start and [Wayfarer's times of day](#times-of-day) are not
+built.
 
 ## Scope
 
@@ -39,20 +44,24 @@ does not run on the clock yet.
 
 ### Rate
 
-The clock moves **16 in-game seconds for every second of play**
+The clock moves **12 in-game seconds for every second of play**
 (`WAYFARER_CLOCK_SECONDS_RATIO`, returned by `FakeRtc_GetSecondsRatio`). It
-advances once per second of play, in one 16-second step, when the play-time
-counter's frame count reaches 60.
+advances once per second of play, in one 12-second step, when the play-time
+counter's frame count reaches 60. Five steps make an in-game minute. The
+static assert in [fake_rtc.c](../../game/src/fake_rtc.c) checks that a day
+lasts 120 minutes of play.
 
 | In-game | Play time |
 | --- | --- |
-| 1 minute | 3.75 seconds |
-| 1 hour | 3 minutes 45 seconds |
-| 1 day | 90 minutes |
-| 1 week | 10 hours 30 minutes |
+| 1 minute | 5 seconds |
+| 1 hour | 5 minutes |
+| 1 day | 2 hours |
+| 1 week | 14 hours |
 
 The overworld refreshes the time of day (lighting, time-of-day forms) every
-`3600 / 16 = 225` frames, once per in-game minute.
+`3600 / 12 = 300` frames, once per in-game minute. That interval and the
+walkers' busy-frame check are computed from the ratio, so nothing else
+changes with it.
 
 ### What play time counts
 
@@ -82,9 +91,10 @@ from it.
 
 ### New game
 
-A new game sets the clock to **day 1 at 10:00:00** (`InGameClock_StartNewGame`
-in [clock.c](../../game/src/clock.c), from `NewGameInitData`): it resets the
-clock and advances it 10 hours, zeroes the local offset, then runs
+A new game sets the clock to **day 1 at 8:00:00**, the start of the day
+period (`InGameClock_StartNewGame` in [clock.c](../../game/src/clock.c), from
+`NewGameInitData`, with `WAYFARER_CLOCK_START_HOUR` 8): it resets the clock
+and advances it 8 hours, zeroes the local offset, then runs
 `InitTimeBasedEvents`, which sets `FLAG_SYS_CLOCK_SET`, stamps the berry
 update and sets `VAR_DAYS` to 1. Whatever an earlier file left in the clock or
 the offset is overwritten. The first map load stamps day 1 for the daily
@@ -92,17 +102,79 @@ world slots.
 
 ### Times of day
 
-The hours are the engine's current ones (`OW_TIMES_OF_DAY` is `GEN_LATEST`):
+Wayfarer sets its own hours. In
+[rtc.h](../../game/include/constants/rtc.h) an `IS_WAYFARER` block defines the
+eight `*_HOUR_BEGIN` and `*_HOUR_END` macros ahead of the engine's
+`OW_TIMES_OF_DAY` chain, which keeps serving the other builds.
+`OW_TIMES_OF_DAY` stays `GEN_LATEST`, so `GenConfigTimeOfDay` folds nothing and
+Morning Sun keeps its four-period rule.
 
-| Time of day | Hours | Play time per day |
-| --- | --- | --- |
-| Morning | 6:00–10:00 | 15 minutes |
-| Day | 10:00–18:00 | 30 minutes |
-| Evening | 18:00–19:00 | 3 minutes 45 seconds |
-| Night | 19:00–6:00 | 41 minutes 15 seconds |
+| Time of day | Hours | Macros (begin, end) | Play time per day |
+| --- | --- | --- | --- |
+| Morning | 4:00–8:00 | 4, 8 | 20 minutes |
+| Day | 8:00–20:00 | 8, 20 | 1 hour |
+| Evening | 20:00–24:00 | 20, **24** | 20 minutes |
+| Night | 0:00–4:00 | 0, 4 | 20 minutes |
 
-A new game starts at the start of the day period, with 30 minutes of daylight
+`EVENING_HOUR_END` is 24, not 0: the lighting blend divides by the period's
+length, which would be negative with 0. Every hour belongs to exactly one
+time of day, and `GetTimeOfDay` reports it from these macros alone.
+
+A new game starts at the start of the day period, with an hour of daylight
 ahead.
+
+#### By day and by night
+
+Systems that only need two halves use:
+
+- **by day**: `TIME_DAY`, 8:00–20:00;
+- **by night**: `TIME_EVENING`, `TIME_NIGHT` or `TIME_MORNING`, 20:00–8:00.
+
+Each lasts an hour of play. Nothing reads the halves yet; the S.S. ferries
+will be the first.
+
+#### Lighting
+
+The overworld tint (`UpdateTimeOfDay` in
+[overworld.c](../../game/src/overworld.c)) keeps its rules and follows the new
+macros:
+
+| Hours | Tint |
+| --- | --- |
+| 4:00–6:00 | blends from night to morning |
+| 6:00–8:00 | blends from morning to day |
+| 8:00–20:00 | day, no tint |
+| 20:00–24:00 | blends from day to evening |
+| 0:00–1:00 | blends from evening to night |
+| 1:00–4:00 | night |
+
+Morning and evening share one tint. Battle backgrounds show twilight in the
+morning, the evening and the first night hour (0:00–1:00), and night after it.
+
+#### Wild Pokémon by time of day
+
+Wild-encounter tables have a day and a night table
+([wild level scaling](wild-level-scaling.md)): morning and day use the day
+table, evening and night use the night table, so the night table covers
+20:00–4:00 (40 minutes of play) and the day table 4:00–20:00 (80 minutes).
+The HnS visible overworld Pokémon and `VAR_TIME_BASED_ENCOUNTER` follow the
+same rule in Wayfarer, so what the player sees matches what they meet:
+
+- `UpdateTimeOfDay` shows the night overworld Pokémon (`FLAG_DAY_POKEMON`
+  set, `FLAG_NIGHT_POKEMON` clear) in the evening and at night, and the day
+  ones in the morning and by day. Before this, evening showed the day ones.
+- `SetTimeBasedEncounters` sets night (2) in the evening and at night, and
+  day (1) otherwise.
+
+The Pokédex area screen already folds evening into night.
+
+#### Everything else keeps its period rules
+
+Readers of `GetTimeOfDay` keep their own rules and only see new hours:
+evolutions and forms by time of day (forms keep counting morning and evening
+as day), Moonlight, Morning Sun, Synthesis and the Dusk Ball, fog, light
+objects, follower chatter, Oak's radio show, and the Alola map scripts that
+read `gettimeofday`.
 
 ### A new day
 
@@ -119,7 +191,7 @@ its own moment:
   grows berry trees by the in-game minutes passed. It runs on every map load
   (warps and camera transitions), on Continue, and on the field every 512
   frames (`TIME_UPDATE_INTERVAL` in
-  [field_tasks.c](../../game/src/field_tasks.c), about 2 in-game minutes; the
+  [field_tasks.c](../../game/src/field_tasks.c), about 1.7 in-game minutes; the
   other builds keep 8192). So a player standing on a map sees the new day's
   daily flags within about 9 seconds of play.
 - **In the Centers `InPokemonCenter` lists** the daily update does not run, as
@@ -167,22 +239,23 @@ Nothing a player can reach sets or moves the clock back:
 The day number and `VAR_DAYS` therefore only increase. The daily update and
 the league countdown keep their guards against a day that goes backwards.
 `gLocalTime.days` is an `s16`, so the day number stays valid for 32,767 days,
-about 5.6 years of continuous play.
+about 7.5 years of continuous play.
 
 ### Other readers
 
 Every other system reads time through `gLocalTime`, `GetTimeOfDay` or
 `GetDayOfWeek`, all from the same clock, so they speed up with it:
 
-| System | Reads | At 16× |
+| System | Reads | At 12× |
 | --- | --- | --- |
 | Wild tables, battle backgrounds, fishing, DexNav, evolutions and forms by time of day | time of day | as in the table above |
 | Lighting and tint | time of day, refreshed every in-game minute | as in the table above |
 | Start menu clock | `gLocalTime`, recalculated whenever the window is drawn | the minutes move while the menu is open |
 | Map name popup clock | `gLocalTime`, recalculated | |
-| Phone random calls | in-game minutes since the last chance (`UpdateMatchCallMinutesCounter`) | a chance every 180 in-game minutes, about 11 minutes of play (the first comes right after New Game or Continue) |
-| Shoal Cave tides | hour of day | each 6-hour tide lasts 22.5 minutes of play |
-| Bug-Catching Contest | weekday | held Tuesday, Thursday and Saturday, each 90 minutes of play |
+| Phone random calls | in-game minutes since the last chance (`UpdateMatchCallMinutesCounter`) | a chance every 180 in-game minutes, about 15 minutes of play (the first comes right after New Game or Continue) |
+| Shoal Cave tides | hour of day, from a fixed 24-hour table | each 6-hour tide lasts 30 minutes of play |
+| Bug-Catching Contest | weekday | held Tuesday, Thursday and Saturday, each 2 hours of play |
+| PokéNews and Game Corner roulette | raw hours (PokéNews' 20:00 cutoff, roulette's hour checks) | the same hours, at 12× |
 | Berry trees | in-game minutes | grow the same number of in-game days as before |
 
 Phone rematch readiness counts steps, not time
@@ -195,6 +268,12 @@ Phone rematch readiness counts steps, not time
 - E2E builds export `gE2EInGameClockOffset`, the offset of the clock in
   SaveBlock3, so a journey can read the clock and set the time of day
   (`game.clock`).
+- Tests that pin the new values: the in-game clock mechanics test (12×, a
+  2-hour day, the 8:00 start, the time of day at each period boundary,
+  including 20:00 as evening and 0:00 as night, and a midnight crossing that
+  lands on 00:00:02), the wild-encounter time-of-day test (the day table at
+  7:00 and 12:00, the night table at 22:00 and 2:00), and the clock and native
+  opening journeys, which expect the clock at or after 8:00.
 
 ## References
 
