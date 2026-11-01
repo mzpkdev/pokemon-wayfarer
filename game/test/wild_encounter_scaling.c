@@ -1508,7 +1508,7 @@ TEST("Wild encounters: the clock selects the day table in the morning and by day
 {
     static const struct { u8 hour; enum TimeOfDay time; bool8 night; } sClocks[] =
     {
-        { 7, TIME_MORNING, FALSE }, { 12, TIME_DAY, FALSE }, { 18, TIME_EVENING, TRUE }, { 22, TIME_NIGHT, TRUE },
+        { 7, TIME_MORNING, FALSE }, { 12, TIME_DAY, FALSE }, { 22, TIME_EVENING, TRUE }, { 2, TIME_NIGHT, TRUE },
     };
     u32 header = GetWildMonHeaderIdForMap(MAP_GROUP(MAP_ROUTE1_HNS), MAP_NUM(MAP_ROUTE1_HNS));
     u32 i;

@@ -20,7 +20,7 @@ const expectClockOnlyLookedAt = async (game: GameSession): Promise<void> => {
     dayNumber: 1,
     localDay: 1,
   })
-  expect(clock.hour).toBeGreaterThanOrEqual(10)
+  expect(clock.hour).toBeGreaterThanOrEqual(8)
   expect(await game.story.var("days")).toBe(1)
 }
 

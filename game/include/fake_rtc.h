@@ -4,10 +4,10 @@
 #include "siirtc.h"
 #include "config/overworld.h"
 
-// Wayfarer's in-game clock (.product/specs/in-game-clock.md): 16 in-game seconds
-// pass for every second of play, so an in-game day lasts 90 minutes of play.
-#define WAYFARER_CLOCK_SECONDS_RATIO 16
-#define WAYFARER_CLOCK_START_HOUR 10
+// Wayfarer's in-game clock (.product/specs/in-game-clock.md): 12 in-game seconds
+// pass for every second of play, so an in-game day lasts 120 minutes of play.
+#define WAYFARER_CLOCK_SECONDS_RATIO 12
+#define WAYFARER_CLOCK_START_HOUR 8
 
 static inline bool32 UseFakeRtc(void)
 {

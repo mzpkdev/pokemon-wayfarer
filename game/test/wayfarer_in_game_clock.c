@@ -14,8 +14,11 @@
 
 #if IS_WAYFARER
 
-// The in-game clock (.product/specs/in-game-clock.md): the clock runs with play at 16 in-game
-// seconds a second, a new game starts on day 1 at 10:00, and every daily system reads one day.
+// A script special with no header.
+void SetTimeBasedEncounters(void);
+
+// The in-game clock (.product/specs/in-game-clock.md): the clock runs with play at 12 in-game
+// seconds a second, a new game starts on day 1 at 8:00, and every daily system reads one day.
 
 // One daily flag of each bank the daily update clears: the shared one and Hoenn's.
 #define TEST_DAILY_FLAG       FLAG_DAILY_PICKED_LOTO_TICKET
@@ -100,10 +103,10 @@ TEST("In-game clock: the clock is always on and can't fail")
 {
     EXPECT(UseFakeRtc());
     EXPECT_EQ(RtcGetErrorStatus(), 0);
-    EXPECT_EQ(FakeRtc_GetSecondsRatio(), 16);
+    EXPECT_EQ(FakeRtc_GetSecondsRatio(), 12);
 }
 
-TEST("In-game clock: a new game starts on day 1 at 10:00 with every daily system on the same day")
+TEST("In-game clock: a new game starts on day 1 at 8:00 with every daily system on the same day")
 {
     struct ClockSnapshot snapshot;
 
@@ -117,7 +120,7 @@ TEST("In-game clock: a new game starts on day 1 at 10:00 with every daily system
 
     RtcCalcLocalTime();
     EXPECT_EQ(gLocalTime.days, 1);
-    EXPECT_EQ(gLocalTime.hours, 10);
+    EXPECT_EQ(gLocalTime.hours, 8);
     EXPECT_EQ(gLocalTime.minutes, 0);
     EXPECT_EQ(gLocalTime.seconds, 0);
     EXPECT_EQ(gSaveBlock2Ptr->localTimeOffset.days, 0);
@@ -138,7 +141,7 @@ TEST("In-game clock: a new game starts on day 1 at 10:00 with every daily system
     RestoreSnapshot(&snapshot);
 }
 
-TEST("In-game clock: a second of play moves the clock 16 seconds, so a day lasts 90 minutes of play")
+TEST("In-game clock: a second of play moves the clock 12 seconds, so a day lasts 120 minutes of play")
 {
     struct ClockSnapshot snapshot;
     u32 start, i;
@@ -154,18 +157,55 @@ TEST("In-game clock: a second of play moves the clock 16 seconds, so a day lasts
         PlayTimeCounter_Update();
     EXPECT_EQ(ClockSeconds(), start);
     PlayTimeCounter_Update();
-    EXPECT_EQ(ClockSeconds(), start + 16);
+    EXPECT_EQ(ClockSeconds(), start + 12);
     PlayTimeCounter_Stop();
     for (i = 0; i < 60; i++)
         PlayTimeCounter_Update();
-    EXPECT_EQ(ClockSeconds(), start + 16);
+    EXPECT_EQ(ClockSeconds(), start + 12);
 
-    // 90 minutes of play are one in-game day to the second.
-    for (i = 1; i < 90 * 60; i++)
+    // 120 minutes of play are one in-game day to the second.
+    for (i = 1; i < 120 * 60; i++)
         FakeRtc_TickTimeForward();
     EXPECT_EQ(ClockSeconds(), start + HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE);
     EXPECT_EQ(gLocalTime.days, 2);
-    EXPECT_EQ(gLocalTime.hours, 10);
+    EXPECT_EQ(gLocalTime.hours, 8);
+    RestoreSnapshot(&snapshot);
+}
+
+TEST("In-game clock: every hour belongs to one time of day, and evening counts as night for wild Pokemon")
+{
+    static const struct { u8 hour, minute; enum TimeOfDay time; } sBoundaries[] =
+    {
+        { 3, 59, TIME_NIGHT }, { 4, 0, TIME_MORNING }, { 7, 59, TIME_MORNING }, { 8, 0, TIME_DAY },
+        { 19, 59, TIME_DAY }, { 20, 0, TIME_EVENING }, { 23, 59, TIME_EVENING }, { 0, 0, TIME_NIGHT },
+    };
+    struct ClockSnapshot snapshot;
+    bool8 nightFlag = FlagGet(FLAG_NIGHT_POKEMON), dayFlag = FlagGet(FLAG_DAY_POKEMON);
+    u16 encounter = VarGet(VAR_TIME_BASED_ENCOUNTER);
+    u32 i;
+
+    TakeSnapshot(&snapshot);
+    for (i = 0; i < ARRAY_COUNT(sBoundaries); i++)
+    {
+        bool32 night = sBoundaries[i].time == TIME_EVENING || sBoundaries[i].time == TIME_NIGHT;
+
+        FakeRtc_ManuallySetTime(1, sBoundaries[i].hour, sBoundaries[i].minute, 0);
+        EXPECT_EQ(GetTimeOfDay(), sBoundaries[i].time);
+        // The night overworld Pokemon and the night encounter variable follow the night table.
+        SetTimeBasedEncounters();
+        EXPECT_EQ(VarGet(VAR_TIME_BASED_ENCOUNTER), night ? 2 : 1);
+        EXPECT_EQ(FlagGet(FLAG_DAY_POKEMON), night);
+        EXPECT_EQ(FlagGet(FLAG_NIGHT_POKEMON), !night);
+    }
+    if (nightFlag)
+        FlagSet(FLAG_NIGHT_POKEMON);
+    else
+        FlagClear(FLAG_NIGHT_POKEMON);
+    if (dayFlag)
+        FlagSet(FLAG_DAY_POKEMON);
+    else
+        FlagClear(FLAG_DAY_POKEMON);
+    VarSet(VAR_TIME_BASED_ENCOUNTER, encounter);
     RestoreSnapshot(&snapshot);
 }
 
@@ -179,22 +219,23 @@ TEST("In-game clock: passing midnight on the field starts the next day for the d
     FlagSet(TEST_DAILY_FLAG);
     FlagSet(TEST_HOENN_DAILY_FLAG);
 
-    // 23:59:50 is still day 1.
-    FakeRtc_AdvanceTimeBy(0, 13, 59, 50);
+    // 23:59:50 is still day 1, in the evening.
+    FakeRtc_AdvanceTimeBy(0, 15, 59, 50);
     DoTimeBasedEvents();
     EXPECT_EQ(gLocalTime.hours, 23);
     EXPECT_EQ(VarGet(VAR_DAYS), 1);
     EXPECT(FlagGet(TEST_DAILY_FLAG));
     EXPECT(FlagGet(TEST_HOENN_DAILY_FLAG));
     EXPECT_EQ(DailySlots_GetDay(), 1);
-    EXPECT_EQ(GetTimeOfDay(), TIME_NIGHT);
+    EXPECT_EQ(GetTimeOfDay(), TIME_EVENING);
 
-    // One second of play later it is 00:00:06 on day 2.
+    // One second of play later it is 00:00:02 on day 2, at night.
     FakeRtc_TickTimeForward();
     DoTimeBasedEvents();
     EXPECT_EQ(gLocalTime.days, 2);
     EXPECT_EQ(gLocalTime.hours, 0);
-    EXPECT_EQ(gLocalTime.seconds, 6);
+    EXPECT_EQ(gLocalTime.seconds, 2);
+    EXPECT_EQ(GetTimeOfDay(), TIME_NIGHT);
     EXPECT_EQ(VarGet(VAR_DAYS), 2);
     EXPECT(!FlagGet(TEST_DAILY_FLAG));
     EXPECT(!FlagGet(TEST_HOENN_DAILY_FLAG));
@@ -260,7 +301,7 @@ TEST("In-game clock: the day count only goes forward, one day at a time, across 
         FakeRtc_AdvanceTimeBy(1, 0, 0, 0);
         DoTimeBasedEvents();
         EXPECT_EQ(gLocalTime.days, day);
-        EXPECT_EQ(gLocalTime.hours, 10);
+        EXPECT_EQ(gLocalTime.hours, 8);
         EXPECT_EQ(RtcGetLocalDayCount(), day);
         EXPECT_EQ(DailySlots_GetDay(), day);
         EXPECT_EQ(VarGet(VAR_DAYS), day);

@@ -29,7 +29,7 @@ void InitTimeBasedEvents(void)
 }
 
 #if IS_WAYFARER
-// A new game starts on day 1 at 10:00 (.product/specs/in-game-clock.md#new-game). The local
+// A new game starts on day 1 at 8:00 (.product/specs/in-game-clock.md#new-game). The local
 // time is the clock itself: with no offset, the daily update's day (gLocalTime.days) and the
 // daily slots' day (RtcGetLocalDayCount) are the same number, and nothing ever sets an offset.
 void InGameClock_StartNewGame(void)
