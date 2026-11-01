@@ -1352,7 +1352,7 @@ TEST("Wayfarer Hoenn persistent state stays under one KiB")
 
 TEST("Wayfarer friendship state rides in SaveBlock3 and an impossible first-win or number-shown bit invalidates the save")
 {
-    // 38 scores, 5 first-win bytes and 5 number-shown bytes, padded to a word, in the Wayfarer members.
+    // 38 scores, 5 first-win bytes and 5 number-shown bytes, in the Wayfarer members.
     EXPECT_EQ(sizeof(gSaveBlock3Ptr->notableFriendship), 48);
     WayfarerInitPersistentState();
     gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_NEW_BARK;

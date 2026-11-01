@@ -9,6 +9,7 @@
 #include "script.h"
 #include "string_util.h"
 #include "text.h"
+#include "constants/flags.h"
 #include "constants/notable_trainers.h"
 
 extern const u8 NotableFriendship_EventScript_NumberRegistered[];
@@ -137,8 +138,13 @@ bool8 NotableFriendship_HasPendingNumber(void)
 
 bool8 NotableFriendship_TryStartPendingNumberScript(void)
 {
-    u8 characterId = NextOwedNumber();
+    u8 characterId;
 
+    // The line says the number went into the POKéGEAR: it waits until the player has the phone (as the route
+    // contacts' number offers do), still owed.
+    if (!FlagGet(FLAG_HAS_MATCH_CALL))
+        return FALSE;
+    characterId = NextOwedNumber();
     if (characterId == NOTABLE_TRAINER_NONE)
         return FALSE;
     gSpecialVar_0x8004 = characterId;

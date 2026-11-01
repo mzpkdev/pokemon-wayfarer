@@ -25,12 +25,17 @@
 #define MATCH_CALL_LAST_CONTACT DAILY_CONTACT_LAST
 STATIC_ASSERT(MATCH_CALL_ENTRIES_MAX >= MC_HEADER_COUNT + NOTABLE_TRAINER_COUNT + DAILY_CONTACT_LAST + 1,
               MatchCallListFitsEveryContact);
+STATIC_ASSERT(MATCH_CALL_NOTABLE_HEADER_BASE > DAILY_CONTACT_LAST, NotableHeadersPastEveryRouteContact);
 // A notable contact's entry: its character, or NOTABLE_TRAINER_NONE (0) for a header or a route contact.
-#define EntryNotable(entry) ((entry)->notableId)
+#define EntryNotable(entry) \
+    (!(entry)->isSpecialTrainer && (entry)->headerId > MATCH_CALL_NOTABLE_HEADER_BASE \
+     && (entry)->headerId <= MATCH_CALL_NOTABLE_HEADER(NOTABLE_TRAINER_COUNT) \
+     ? (entry)->headerId - MATCH_CALL_NOTABLE_HEADER_BASE : NOTABLE_TRAINER_NONE)
 #else
 #define MATCH_CALL_LAST_CONTACT (REMATCH_TABLE_ENTRIES - 1)
 #define EntryNotable(entry) 0
 #endif
+STATIC_ASSERT(sizeof(struct PokenavListItem) == sizeof(struct PokenavMonListItem), PokenavListItemsShareOneSize);
 
 struct Pokenav_MatchCallMenu
 {
@@ -243,9 +248,6 @@ static u32 LoopedTask_BuildMatchCallList(s32 taskState)
                 state->matchCallEntries[state->numRegistered].headerId = j;
                 state->matchCallEntries[state->numRegistered].isSpecialTrainer = TRUE;
                 state->matchCallEntries[state->numRegistered].mapSec = MatchCall_GetMapSec(j);
-#if IS_WAYFARER
-                state->matchCallEntries[state->numRegistered].notableId = NOTABLE_TRAINER_NONE;
-#endif
                 state->numRegistered++;
             }
 
@@ -267,11 +269,10 @@ static u32 LoopedTask_BuildMatchCallList(s32 taskState)
 
             if (!NotablePhone_IsContact(i) || state->numRegistered >= MATCH_CALL_ENTRIES_MAX)
                 continue;
-            state->matchCallEntries[state->numRegistered].headerId = 0xFFFF;  // no header, no contact number
+            state->matchCallEntries[state->numRegistered].headerId = MATCH_CALL_NOTABLE_HEADER(i);
             state->matchCallEntries[state->numRegistered].isSpecialTrainer = FALSE;
             state->matchCallEntries[state->numRegistered].mapSec = NotablePhone_GetHome(i, &homeGroup, &homeNum)
                 ? Overworld_GetMapHeaderByGroupAndId(homeGroup, homeNum)->regionMapSectionId : MAPSEC_NONE;
-            state->matchCallEntries[state->numRegistered].notableId = i;
             state->numRegistered++;
         }
 #endif
@@ -286,9 +287,6 @@ static u32 LoopedTask_BuildMatchCallList(s32 taskState)
                 state->matchCallEntries[state->numRegistered].headerId = state->headerId;
                 state->matchCallEntries[state->numRegistered].isSpecialTrainer = FALSE;
                 state->matchCallEntries[state->numRegistered].mapSec = GetMatchTableMapSectionId(j);
-#if IS_WAYFARER
-                state->matchCallEntries[state->numRegistered].notableId = NOTABLE_TRAINER_NONE;
-#endif
                 state->numRegistered++;
             }
 

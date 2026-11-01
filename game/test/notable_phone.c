@@ -429,7 +429,9 @@ TEST("Notable contacts are listed once each, after the headers and before the ro
     u8 characterId, contact;
     u32 i, entries, routeContacts = 0, firstRoute, lastNotable = 0;
     struct MapHeader header = gMapHeader;
+    u8 *call = Alloc(1000);
 
+    ASSUME(call != NULL);
     ResetPhone();
     for (contact = 0; contact <= DAILY_CONTACT_LAST; contact++)
     {
@@ -440,6 +442,8 @@ TEST("Notable contacts are listed once each, after the headers and before the ro
     }
     for (characterId = 1; characterId <= NOTABLE_TRAINER_COUNT; characterId++)
         SetScore(characterId, NOTABLE_FRIENDSHIP_CLOSE);
+    // An entry is still the size of a Condition or Ribbons list item (they share one list item type).
+    EXPECT_EQ(sizeof(struct PokenavMatchCallEntry), sizeof(struct PokenavMonListItem));
     // With everyone, the list still has room.
     EXPECT(MATCH_CALL_ENTRIES_MAX >= MC_HEADER_COUNT + (NOTABLE_TRAINER_COUNT - 1) + routeContacts);
     ASSUME(BuildMatchCallList());
@@ -454,7 +458,7 @@ TEST("Notable contacts are listed once each, after the headers and before the ro
         {
             bool8 rematch;
 
-            if (list[i].notableId != characterId)
+            if (list[i].isSpecialTrainer || list[i].headerId != MATCH_CALL_NOTABLE_HEADER(characterId))
                 continue;
             found++;
             lastNotable = i;
@@ -465,16 +469,16 @@ TEST("Notable contacts are listed once each, after the headers and before the ro
             EXPECT(gStringVar1[0] != EOS);
             GetMatchCallMessageText(i, &rematch);
             EXPECT(!rematch);
-            StringCopy(gStringVar3, gStringVar4);
+            StringCopy(call, gStringVar4);
             NotablePhone_BufferCall(characterId, gStringVar4);
-            EXPECT_EQ(StringCompare(gStringVar3, gStringVar4), 0);
+            EXPECT_EQ(StringCompare(call, gStringVar4), 0);
         }
         EXPECT_EQ(found, characterId == NOTABLE_TRAINER_TATE_LIZA ? 0 : 1);
     }
     // Route contacts follow the notables, every one still listed.
     for (firstRoute = 0; firstRoute < entries; firstRoute++)
     {
-        if (!list[firstRoute].isSpecialTrainer && list[firstRoute].notableId == NOTABLE_TRAINER_NONE)
+        if (!list[firstRoute].isSpecialTrainer && list[firstRoute].headerId < MATCH_CALL_NOTABLE_HEADER_BASE)
             break;
     }
     EXPECT_LT(lastNotable, firstRoute);
@@ -485,6 +489,7 @@ TEST("Notable contacts are listed once each, after the headers and before the ro
             EXPECT_LT(i, firstRoute);
     }
     FreeMatchCallList();
+    Free(call);
     gMapHeader = header;
     for (contact = 0; contact <= DAILY_CONTACT_LAST; contact++)
     {

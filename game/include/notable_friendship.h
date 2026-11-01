@@ -46,7 +46,8 @@ void NotableFriendship_CountTrainerWin(u16 trainerId);
 // give none). The field shows its system line when it has control; until the line has played (the saved
 // number-shown bit), the line stays owed, across saves and reloads.
 bool8 NotableFriendship_HasPendingNumber(void);
-// Starts the script for the next owed number and returns TRUE, or returns FALSE with none owed.
+// Starts the script for the next owed number and returns TRUE, or returns FALSE with none owed or before the
+// player has the Pokégear's phone (FLAG_HAS_MATCH_CALL).
 bool8 NotableFriendship_TryStartPendingNumberScript(void);
 // Special: records that the handover's line played for the character in VAR_0x8004.
 void NotableFriendship_MarkNumberShown(void);

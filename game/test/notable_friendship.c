@@ -21,6 +21,7 @@
 #include "test/test.h"
 #include "constants/battle_setup.h"
 #include "constants/characters.h"
+#include "constants/flags.h"
 #include "constants/notable_trainers.h"
 #include "constants/opponents.h"
 #include "constants/opponents_hns.h"
@@ -50,6 +51,7 @@ static void ResetFriendship(void)
     gSaveBlock2Ptr->playerName[0] = CHAR_A;
     gSaveBlock2Ptr->playerName[1] = EOS;
     SetTrainerRating(0);
+    FlagSet(FLAG_HAS_MATCH_CALL);  // the handover's line waits for the Pokégear's phone
 }
 
 static void EndSingleBattle(u16 opponent, u8 outcome)
@@ -308,6 +310,21 @@ TEST("The handover line stays owed across a save until it has played")
     gSaveBlock3Ptr->notableFriendship = saved;
     EXPECT(!NotableFriendship_HasPendingNumber());
     EXPECT(NotableFriendship_IsValid());
+}
+
+TEST("The handover line waits, still owed, until the player has the Pokégear's phone")
+{
+    ResetFriendship();
+    FlagClear(FLAG_HAS_MATCH_CALL);
+    NotableFriendship_AddQuestPoints(NOTABLE_TRAINER_ERIKA);
+    NotableFriendship_AddQuestPoints(NOTABLE_TRAINER_ERIKA);
+    EXPECT(NotableFriendship_HasPendingNumber());
+    EXPECT(!NotableFriendship_TryStartPendingNumberScript());
+    EXPECT(!ScriptContext_IsEnabled());
+    FlagSet(FLAG_HAS_MATCH_CALL);
+    EXPECT(NotableFriendship_TryStartPendingNumberScript());
+    EXPECT_EQ(gSpecialVar_0x8004, NOTABLE_TRAINER_ERIKA);
+    FinishNumberLine(NOTABLE_TRAINER_ERIKA);
 }
 
 TEST("Several numbers owed at once are handed over one at a time, in character order")

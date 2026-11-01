@@ -232,8 +232,10 @@ Rules:
   any route (a win and a quest, or quests), with one system line that names
   the trainer ("Registered BROCK's number in the POKéGEAR."). The line plays
   the next time the field has control (after the battle, the quest, or a
-  scene), and stays owed until it has played to its end: a save or reset
-  before then keeps it owed, and it plays after the reload. Several owed at
+  scene) once the player has the Pokégear's phone (the flag the route
+  contacts' number offers wait for), and stays owed until it has played to
+  its end: a save or reset before then keeps it owed, and it plays after the
+  reload. Several owed at
   once play one at a time, in character order. Tate & Liza keep a score, but
   they give no number and cannot be the partner, and they are not placed at
   haunts in v0.
@@ -606,9 +608,9 @@ only.
 **Contact list.** Contacts are listed in the phone's contact list (the
 Pokégear's Match Call list, shared with the [route
 contacts](phone-rematches.md#contacts)), after the special headers and before
-the route contacts, in character order. An entry shows the trainer's class,
-name, and picture from the character's own encounter (the league registry's
-source trainer), and their home: a simulated trainer's
+the route contacts, in character order. An entry shows the trainer's class
+and name from the character's own encounter (the league registry's source
+trainer), and their home: a simulated trainer's
 [home base](notable-world-simulation.md#home-base) map, or the fixed place
 below. A notable contact has no rematch Poké Ball, no CHECK page, and never
 gets the "close by" message: the call always goes through. The list has room

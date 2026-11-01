@@ -22,17 +22,20 @@ struct PokenavMonListItem
 #define MATCH_CALL_ENTRIES_MAX (MAX_REMATCH_ENTRIES - 1)
 #endif
 
+// Keep this the size of struct PokenavMonListItem: the Condition and Ribbons lists step through their mon lists by
+// sizeof(struct PokenavListItem), the union of both.
 struct PokenavMatchCallEntry
 {
     bool8 isSpecialTrainer;
     mapsec_u8_t mapSec;
-    u16 headerId;
-#if IS_WAYFARER
-    // A notable contact (notable_phone.h): its NOTABLE_TRAINER_*, with isSpecialTrainer and headerId unused.
-    // NOTABLE_TRAINER_NONE for every other entry.
-    u8 notableId;
-#endif
+    u16 headerId;  // a special header (MC_HEADER_*), a route contact number, or MATCH_CALL_NOTABLE_HEADER(characterId)
 };
+
+#if IS_WAYFARER
+// A notable contact's entry (notable_phone.h): not special, with a header id past every route contact number.
+#define MATCH_CALL_NOTABLE_HEADER_BASE 0xFF00
+#define MATCH_CALL_NOTABLE_HEADER(characterId) (MATCH_CALL_NOTABLE_HEADER_BASE + (characterId))
+#endif
 
 struct PokenavListItem
 {
