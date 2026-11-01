@@ -361,7 +361,6 @@ replaces nothing and is just another bed.
 | --- | --- | --- | --- |
 | Battle | win a single trainer battle against the host | the host's party template | yes |
 | Double battle | win a double battle against the host pair | the pair's template | yes |
-
 | Bring an item | the Bag holds the item; it's removed on success | Oran, Pecha, Cheri Berry; Antidote, Full Heal; Nugget; Moomoo Milk | no |
 | Show a type | a party Pokémon, not an Egg, has the type | any of the 18 types | no |
 | Show a species | a party Pokémon is the species | per-host list | no |
