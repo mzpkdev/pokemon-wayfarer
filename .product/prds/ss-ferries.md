@@ -1,6 +1,6 @@
 # S.S. ferries
 
-Specifications: none yet.
+Specifications: [S.S. ferries](../specs/ss-ferries.md)
 
 Design status: agreed for v0. Times build on the
 [in-game clock](in-game-clock.md#design)'s times of day and its by-day and
@@ -63,6 +63,13 @@ The table is the whole schedule, every day the same. It isn't a simulation:
 the Anne can be in Vermilion and Melemele at the same hour, and nobody minds.
 It only says which ship you can **board** where and when.
 
+**Where the ships berth.** At Vermilion, Olivine, Slateport and Lilycove the
+ship ties up at the existing berth, and the berth shows whichever ship is in:
+Vermilion shows the Aqua by day and the Anne by night, so the Anne is seen at
+her dock for the first time. One Island, Seven Island and Melemele were built
+for small boats, so there the big ship anchors offshore and a launch takes you
+out from the existing pier.
+
 ### Boarding
 
 You board the ship that is in port by walking up its gangway. The sailor
@@ -120,6 +127,10 @@ example:
 Nothing outside the ship tells you who's aboard: you find the hosts by
 walking the corridors.
 
+**Passengers rotate.** The ships' trainers join the daily trainer rotation
+like route trainers: each day different passengers are aboard and you can
+battle them again, and other trainers who fit a ship may turn up among them.
+
 **No farming in your sleep.** Staying aboard asleep, round and round, skips a
 day every 4 legs. So a ship's own daily trainers and items (its
 [daily world slots](daily-world-slots.md)) turn over only after you've been
@@ -139,20 +150,36 @@ you've just boarded stays the same half hour before it casts off.
 
 ### Ticket and service
 
-One **S.S. Ticket** works on all three ships. It's checked at every gangway
-and never used up. Its sources stay as they are: the S.S. Aqua's maiden
-voyage, and Bill in Kanto.
+One **S.S. Ticket** works on all three ships, and it's the only thing that
+guards them: get it in any region and you can ride all three, whichever
+region you started in. It's checked at every gangway and never used up. Its
+sources stay as they are (the S.S. Aqua's maiden voyage, Bill in Kanto, and
+the Hoenn start's gifts).
 
 A ship joins the network when its story is done:
 
-- **S.S. Aqua:** after its maiden voyage, as today. Until then it keeps its
-  maiden-voyage boarding at Olivine.
-- **S.S. Anne:** after the captain's adventure. Until then she stays docked
-  at Vermilion for the adventure, as today; afterwards the "visiting hours are
-  over" refusal is gone and she sails her loop.
-- **S.S. Tidal:** from the start, for anyone holding the Ticket.
+- **S.S. Aqua:** in service from the start for anyone holding the Ticket. A
+  Johto start gets the Ticket on the maiden voyage, which stays as it is, so
+  for them the Aqua joins once that voyage is over.
+- **S.S. Anne:** as soon as the captain gives his reward. Until then she
+  stays at Vermilion for the adventure, as today. When he rewards you, she
+  casts off for One Island half an in-game hour later, whatever the time of
+  day: walk down the gangway to stay in Vermilion, or stay aboard and sail.
+  After that she follows the table. Trainers you skipped are still aboard.
+- **S.S. Tidal:** from the start, for anyone holding the Ticket. It no longer
+  waits for Hoenn's League.
 
 Before a ship is in service, its slots in the table stay empty.
+
+### Event islands
+
+The ships' destination menus go, but the special trips to the event islands
+stay where their own games had them. Lilycove's harbor sailor offers a
+charter to Southern Island (with the Eon Ticket), Faraway Island (with the Old
+Sea Map) and the Battle Frontier, each shown only when you qualify, as in
+Emerald. Birth Island and Navel Rock stay on the Seagallop from Vermilion and
+the Sevii harbors, as in FireRed and LeafGreen. The copies of these trips at
+Olivine and Slateport go.
 
 ### Departure boards
 
@@ -165,16 +192,18 @@ don't show ships, and nothing ashore shows who's aboard.
 
 - **The other boats stay** as they are: the Seagallop between Vermilion and
   the Sevii Islands (with its Birth Island and Navel Rock tickets), the Route
-  104 boat, and the Route 13 boat to Alola. They are extras, not part of the
-  network.
+  104 boat, and the Route 13 boat to Alola, which keeps its Strange Souvenir
+  check. They are extras, not part of the network.
 - **The ships' menus go.** The S.S. Aqua's Olivine, Vermilion and Slateport
   destination menu and the S.S. Tidal's Slateport, Lilycove and Battle
-  Frontier menu are replaced by the loops. The Battle Frontier isn't a stop.
+  Frontier menu are replaced by the loops, apart from Lilycove's event-island
+  charters. The Battle Frontier isn't a stop on any loop.
 - **No new ports.** Ships call at existing harbors and landings: Vermilion's,
   Olivine's, Slateport's and Lilycove's ports, the One Island and Seven Island
   Seagallop harbors, and Melemele's boat landing. Cinnabar gets no pier.
-- **No new content aboard.** The ships keep their existing rooms, trainers and
-  daily world slots ([world items](../specs/world-items.md), [daily world
+- **No new ship maps.** Each ship keeps its own rooms; only its gangway now
+  leads to whichever port it's at. Its trainers rotate daily and its item
+  spots stay ([world items](../specs/world-items.md), [daily world
   slots](daily-world-slots.md)). The Anne's Alolan flavour is lines, not new
   trainers.
 - **Sleeping in a cabin is the only time skip**, and it only skips the rest of a
@@ -213,15 +242,6 @@ don't show ships, and nothing ashore shows who's aboard.
   going ashore! Next stop, Seven Island."
 - The Anne's next-stop announcement for Melemele names Alola outright, the
   first time anyone does.
-
-## Open questions
-
-- How a big ship shows at the One Island and Seven Island Seagallop harbors
-  and at Melemele's landing, which were drawn for small boats.
-- Whether the Route 13 boat to Alola keeps its Strange Souvenir check now that
-  the Anne also sails there.
-- Which interior maps each ship uses for the voyage, and how the decks look at
-  sea.
 
 ## References
 

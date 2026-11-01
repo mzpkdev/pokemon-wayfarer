@@ -230,6 +230,9 @@ Nothing a player can reach sets or moves the clock back:
   only show the time.
 - No Wayfarer script uses the time-changing script commands (`initclock`,
   `addtime`, `adddays`, `addhours`, `addminutes`, `fwdtime`, `fwdweekday`).
+- The one forward jump is sleeping in an earned S.S. ferry cabin at sea,
+  which moves the clock to the ship's arrival and never past it
+  ([S.S. ferries](ss-ferries.md#sleeping)).
 - The overworld debug menu (R + Start, compiled into every build, as before
   this spec) keeps its time tools for development: setting the time of day or
   the weekday moves the clock forward to the next such time. With the clock
