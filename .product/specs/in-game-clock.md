@@ -1,7 +1,7 @@
 # In-game clock
 
 PRD: [In-game clock](../prds/in-game-clock.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 
@@ -28,7 +28,9 @@ does not run on the clock yet.
   `RtcGetErrorStatus` is always 0, so no clock error screen can show.
 - The date counts from the engine's epoch: year 0 is 2000, 1 January 2000 is a
   Saturday, and months and leap years follow the calendar. Weekdays (the
-  Bug-Catching Contest, radio shows) follow it.
+  Bug-Catching Contest, radio shows) follow it: `GetDayOfWeek`, `GetDay`,
+  `GetMonth` and `GetFullYear` read the clock's own date in Wayfarer, so day 1
+  is a Saturday for every reader.
 - **Local time is the clock.** `gSaveBlock2Ptr->localTimeOffset` is always
   zero in Wayfarer, so `gLocalTime` (the time every reader uses, from
   `RtcCalcLocalTime`) equals the saved clock, and the **day number** is the
@@ -66,8 +68,9 @@ is running:
   PC, the Pokédex, the Pokégear, shops, cutscenes and scripted scenes, while
   saving, and in link rooms.
 - It does **not** run before a game is started or continued: the title screen,
-  the main menu, the intro, the origin and appearance pickers and the challenge
-  menu, and while the game is off.
+  the main menu, the intro, and the origin, appearance and challenge pickers of
+  a new game; nor while the game is off. (The challenge menu opened later from
+  a PC runs with the counter on, like any other menu.)
 - Nothing pauses it. The engine's pause flag (`OW_FLAG_PAUSE_TIME`) is 0, so
   `Script_PauseFakeRtc` and its siblings have no effect; Wayfarer adds no pause.
 - The counter's display stops at 999:59 and rolls over as before; the clock
@@ -111,17 +114,20 @@ its own moment:
   `VAR_DAYS`. When the day is later, it clears the daily flags (both the
   shared bank and Hoenn's), advances the Dewford trend, TV shows, weather,
   Pokérus, Mirage Island, Birch, the Frontier maniac and gambler, the Shoal
-  Cave items, the lottery number, the days since a form change and the
-  apricorn trees by the number of days passed, then sets `VAR_DAYS`. It also
+  Cave items, the lottery number and the days since a form change by the
+  number of days passed, refills the apricorn trees, then sets `VAR_DAYS`. It also
   grows berry trees by the in-game minutes passed. It runs on every map load
   (warps and camera transitions), on Continue, and on the field every 512
   frames (`TIME_UPDATE_INTERVAL` in
   [field_tasks.c](../../game/src/field_tasks.c), about 2 in-game minutes; the
   other builds keep 8192). So a player standing on a map sees the new day's
   daily flags within about 9 seconds of play.
-- **In a Pokémon Center** (and the link rooms, `InPokemonCenter`) the daily
-  update does not run, as before. It runs on the first load or field check
-  after the player leaves and counts every day passed in between.
+- **In the Centers `InPokemonCenter` lists** the daily update does not run, as
+  before: Emerald's Hoenn Pokémon Centers, the Ever Grande League lobby, the
+  Battle Frontier Centers and the link rooms. It runs on the first load or
+  field check after the player leaves and counts every day passed in between.
+  The other regions' Centers (Johto, Kanto, Sevii, Sinnoh) are ordinary maps
+  for it: the field check runs there too. Either way no day is lost.
 - **During a battle, menu or scene** the clock keeps running but the daily
   update waits for the field: it runs on the next map load or field check.
 - **Daily world slots** take a new day on the next map load
@@ -140,14 +146,19 @@ Nothing a player can reach sets or moves the clock back:
   (`tx_Features_RTCType`).
 - The reset-RTC screen has no entry point: the title screen's
   B + Select + Left chord is gone from Wayfarer.
-- The player's-house wall clock (Brendan's and May's 2F, Littleroot) only
-  shows the time. Its first-visit "the clock is stopped" scene and the
-  "press R to set the clock" line don't run, and R does nothing on the clock
-  face (`Task_ViewClock_HandleInput`).
+- The household wall clocks only show the time. The native openings still
+  stop at the bedroom clock (Brendan's and May's 2F in Littleroot, the player's
+  2F in New Bark), but the scene says the clock is ticking and `StartWallClock`
+  opens the clock face to look at, not to set, before the scene goes on. The
+  "press R to set the clock" line is gone, and R does nothing on the clock face
+  (`Task_ViewClock_HandleInput`).
 - No Wayfarer script uses the time-changing script commands (`initclock`,
   `addtime`, `adddays`, `addhours`, `addminutes`, `fwdtime`, `fwdweekday`).
-- The debug menu keeps its time tools for development; they only move the
-  clock forward.
+- The overworld debug menu (R + Start, compiled into every build, as before
+  this spec) keeps its time tools for development: setting the time of day or
+  the weekday moves the clock forward to the next such time. With the clock
+  always on they now work in every build. Its Cheat Start doesn't touch the
+  clock in Wayfarer.
 
 The day number and `VAR_DAYS` therefore only increase. The daily update and
 the league countdown keep their guards against a day that goes backwards.

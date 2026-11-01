@@ -117,6 +117,12 @@ static void ReturnFromStartWallClock(void)
 
 void StartWallClock(void)
 {
+#if IS_WAYFARER
+    // The household scenes still stop at the clock, but Wayfarer's in-game clock can't be set
+    // (.product/specs/in-game-clock.md): they show the clock face, then the scene continues.
+    SetMainCallback2(CB2_ViewWallClock);
+#else
     SetMainCallback2(CB2_StartWallClock);
+#endif
     gMain.savedCallback = ReturnFromStartWallClock;
 }

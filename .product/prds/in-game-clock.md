@@ -30,8 +30,8 @@ cutscenes. It stops on the title screen and its menus, and while the game is
 off. Exactly which screens stop it is in the
 [spec](../specs/in-game-clock.md#what-play-time-counts).
 
-**A new game starts in the morning.** The player's first day starts at 10:00
-in the morning on day 1.
+**A new game starts by day.** The player's first day starts at 10:00 on
+day 1, the start of the day period.
 
 **No setting or skipping time.** The player can't set, turn back or skip the
 clock in v0. Wayfarer drops the options that did:
@@ -39,7 +39,8 @@ clock in v0. Wayfarer drops the options that did:
 - the challenge menu's real-time-clock / in-game-clock choice (the in-game
   clock is the only one);
 - the hidden screen that resets the cartridge clock; and
-- the clock in the player's house that sets the time.
+- setting the clock in the player's house: the openings still stop at the
+  bedroom clock, but only to look at it.
 
 **Days and times of day.** Everything that happens "each day" or "at night"
 follows the in-game clock: daily world slots, phone rematch readiness and

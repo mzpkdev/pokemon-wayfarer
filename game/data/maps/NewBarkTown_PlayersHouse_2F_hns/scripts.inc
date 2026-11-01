@@ -32,7 +32,11 @@ NewBarkTown_PlayersHouse_2F_Script_ClockSetupTrigger1::
 	delay 60
     applymovement OBJ_EVENT_ID_PLAYER, NewBarkTown_PlayersHouse_2F_Movement_PlayerWalkToClock1
 	waitmovement 0
+#if IS_WAYFARER
+    msgbox PlayersHouse_2F_Text_ClockIsTicking, MSGBOX_DEFAULT
+#else
     msgbox PlayersHouse_2F_Text_ClockIsStopped, MSGBOX_DEFAULT
+#endif
 	call PlayersHouse_2F_EventScript_SetWallClock
 	delay 30
 	setvar VAR_NEWBARK_TOWN_STATE, 1
@@ -54,7 +58,11 @@ NewBarkTown_PlayersHouse_2F_Script_ClockSetupTrigger2::
 	waitmovement OBJ_EVENT_ID_PLAYER
 	delay 60
     applymovement OBJ_EVENT_ID_PLAYER, NewBarkTown_PlayersHouse_2F_Movement_PlayerWalkToClock2
+#if IS_WAYFARER
+    msgbox PlayersHouse_2F_Text_ClockIsTicking, MSGBOX_DEFAULT
+#else
     msgbox PlayersHouse_2F_Text_ClockIsStopped, MSGBOX_DEFAULT
+#endif
 	call PlayersHouse_2F_EventScript_SetWallClock
 	delay 30
 	setvar VAR_NEWBARK_TOWN_STATE, 1

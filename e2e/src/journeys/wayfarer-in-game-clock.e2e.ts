@@ -31,7 +31,7 @@ describe.sequential("Wayfarer in-game clock", () => {
     await settleField(game)
   })
 
-  it("starts a new game on day 1 in the morning", async () => {
+  it("starts a new game on day 1 at 10:00", async () => {
     const clock = await game.clock.read()
     expect({ year: clock.year, month: clock.month, day: clock.day }).toEqual({
       year: 0,
@@ -83,5 +83,17 @@ describe.sequential("Wayfarer in-game clock", () => {
     expect(await game.story.var("days")).toBe(2)
     await game.wait.frames(2 * secondOfPlay)
     expect((await game.clock.read()).totalSeconds).toBeGreaterThan(loaded.totalSeconds)
+  })
+
+  it("starts a day the save crossed into as soon as Continue loads the map", async () => {
+    // A second of play after 23:59:59 the clock is past midnight; the save may or may not have
+    // run the daily update yet, but Continue runs it on load, before the field takes a step.
+    await game.clock.setTimeOfDay({ hour: 23, minute: 59, second: 59 })
+    await game.wait.frames(secondOfPlay + 2)
+    const saved = await game.clock.read()
+    expect({ day: saved.day, hour: saved.hour }).toEqual({ day: 3, hour: 0 })
+    await game.saveAndReload()
+    expect(await game.story.var("days")).toBe(3)
+    expect((await game.clock.read()).day).toBe(3)
   })
 })

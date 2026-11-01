@@ -427,6 +427,12 @@ void FormatDecimalTimeWithoutSeconds(u8 *txtPtr, s8 hour, s8 minute, bool32 is24
 u16 GetFullYear(void)
 {
     struct DateTime dateTime;
+#if IS_WAYFARER
+    // The local time is the clock itself (.product/specs/in-game-clock.md): read its date, so
+    // day 1 is Saturday 1 January 2000 for every reader, the debug tools and the E2E harness.
+    const struct SiiRtcInfo *clock = FakeRtc_GetCurrentTime();
+    return gGen3Epoch.year + clock->year;
+#endif
     RtcCalcLocalTime();
     ConvertTimeToDateTime(&dateTime, &gLocalTime);
 
@@ -436,6 +442,12 @@ u16 GetFullYear(void)
 enum Month GetMonth(void)
 {
     struct DateTime dateTime;
+#if IS_WAYFARER
+    // The local time is the clock itself (.product/specs/in-game-clock.md): read its date, so
+    // day 1 is Saturday 1 January 2000 for every reader, the debug tools and the E2E harness.
+    const struct SiiRtcInfo *clock = FakeRtc_GetCurrentTime();
+    return clock->month;
+#endif
     RtcCalcLocalTime();
     ConvertTimeToDateTime(&dateTime, &gLocalTime);
 
@@ -445,6 +457,12 @@ enum Month GetMonth(void)
 u8 GetDay(void)
 {
     struct DateTime dateTime;
+#if IS_WAYFARER
+    // The local time is the clock itself (.product/specs/in-game-clock.md): read its date, so
+    // day 1 is Saturday 1 January 2000 for every reader, the debug tools and the E2E harness.
+    const struct SiiRtcInfo *clock = FakeRtc_GetCurrentTime();
+    return clock->day;
+#endif
     RtcCalcLocalTime();
     ConvertTimeToDateTime(&dateTime, &gLocalTime);
 
@@ -454,6 +472,12 @@ u8 GetDay(void)
 enum Weekday GetDayOfWeek(void)
 {
     struct DateTime dateTime;
+#if IS_WAYFARER
+    // The local time is the clock itself (.product/specs/in-game-clock.md): read its date, so
+    // day 1 is Saturday 1 January 2000 for every reader, the debug tools and the E2E harness.
+    const struct SiiRtcInfo *clock = FakeRtc_GetCurrentTime();
+    return clock->dayOfWeek;
+#endif
     RtcCalcLocalTime();
     ConvertTimeToDateTime(&dateTime, &gLocalTime);
 

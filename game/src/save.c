@@ -136,7 +136,7 @@ STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerCoast.vars) / sizeof(u16)
 // Note the ABI: CFLAGS uses -mabi=apcs-gnu, which rounds every struct up to a
 // multiple of 4 bytes, so the 31 bytes of fields occupy 32 and the last byte is
 // trailing padding. Headroom before the size actually moves (to 36, not 33):
-// 12 spare bits scattered through the field bytes, wherever a wide bitfield had
+// 13 spare bits scattered through the field bytes, wherever a wide bitfield had
 // to skip the tail of a partly-filled byte, plus the 8 bits of trailing padding.
 // If this fires, that headroom is gone and the new setting needs a save
 // migration rather than another field.

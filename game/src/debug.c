@@ -1810,7 +1810,8 @@ static void DebugAction_Player_Id(u8 taskId)
 
 static void DebugAction_Util_CheatStart(u8 taskId)
 {
-    if (!FlagGet(FLAG_SYS_CLOCK_SET))
+    // Wayfarer's clock is set once, at New Game, and never rewound (.product/specs/in-game-clock.md).
+    if (!IS_WAYFARER && !FlagGet(FLAG_SYS_CLOCK_SET))
         RtcInitLocalTimeOffset(0, 0);
 
     InitTimeBasedEvents();

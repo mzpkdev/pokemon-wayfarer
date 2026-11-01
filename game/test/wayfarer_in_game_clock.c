@@ -126,6 +126,12 @@ TEST("In-game clock: a new game starts on day 1 at 10:00 with every daily system
     EXPECT_EQ(RtcGetLocalDayCount(), 1);
     EXPECT_EQ(DailySlots_GetDay(), 1);
     EXPECT_EQ(GetTimeOfDay(), TIME_DAY);
+    // Every date reader sees the clock's own date: day 1 is Saturday 1 January 2000.
+    EXPECT_EQ(GetDayOfWeek(), WEEKDAY_SAT);
+    EXPECT_EQ(GetDay(), 1);
+    EXPECT_EQ(GetMonth(), MONTH_JAN);
+    EXPECT_EQ(GetFullYear(), 2000);
+    EXPECT_EQ(GetDayOfWeek(), gSaveBlock3Ptr->fakeRTC.dayOfWeek);
     RestoreSnapshot(&snapshot);
 }
 
@@ -219,6 +225,22 @@ TEST("In-game clock: in a Pokemon Center the daily update waits for the player t
     RestoreSnapshot(&snapshot);
 }
 
+TEST("In-game clock: a Pokemon Center outside Emerald's list is an ordinary map for the daily update")
+{
+    struct ClockSnapshot snapshot;
+
+    TakeSnapshot(&snapshot);
+    InGameClock_StartNewGame();
+    StandOn(MAP_GROUP(MAP_CHERRYGROVE_CITY_POKEMON_CENTER_HNS), MAP_NUM(MAP_CHERRYGROVE_CITY_POKEMON_CENTER_HNS));
+    FlagSet(TEST_DAILY_FLAG);
+
+    FakeRtc_AdvanceTimeBy(1, 0, 0, 0);
+    DoTimeBasedEvents();
+    EXPECT_EQ(VarGet(VAR_DAYS), 2);
+    EXPECT(!FlagGet(TEST_DAILY_FLAG));
+    RestoreSnapshot(&snapshot);
+}
+
 TEST("In-game clock: the day count only goes forward, one day at a time, across months and years")
 {
     struct ClockSnapshot snapshot;
@@ -240,6 +262,7 @@ TEST("In-game clock: the day count only goes forward, one day at a time, across 
         EXPECT_EQ(VarGet(VAR_DAYS), day);
         weekday = (weekday + 1) % WEEKDAY_COUNT;
         EXPECT_EQ(GetDayOfWeek(), weekday);
+        EXPECT_EQ(GetDayOfWeek(), gSaveBlock3Ptr->fakeRTC.dayOfWeek);
     }
     RestoreSnapshot(&snapshot);
 }
