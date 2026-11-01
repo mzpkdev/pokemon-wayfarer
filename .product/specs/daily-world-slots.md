@@ -12,6 +12,8 @@ readiness and the rematch table growth are in [Phone rematches](phone-rematches.
 implemented; [what the trainer half left for it](#what-the-trainer-half-leaves-for-the-phone)
 lists the seams it used.
 
+Superseded in part by [S.S. ferries](ss-ferries.md): ship trainers as one-time content.
+
 Design status: draft. Numbers are placeholders for playtesting. Item pools and
 static prizes are in [World items](world-items.md); trainer levels are in
 [trainer party scaling](trainer-party-scaling.md#v0-levels); phone numbers,

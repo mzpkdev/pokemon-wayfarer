@@ -3,6 +3,8 @@
 PRD: [Sevii exploration port](../prds/sevii-exploration-port.md)
 Implemented: Yes
 
+Superseded in part by [S.S. ferries](ss-ferries.md) "Ferry and recovery": the Vermilion selector's fixed rows, the `WayfarerCanSailToBirthIsland` predicate (now the Aurora Ticket alone) and the audit order.
+
 The unimplemented [S.S. Anne adventure port](frlg-kanto-ss-anne-adventure.md)
 will extend the top-level Vermilion selector defined below. It supersedes only
 the selector's current three-result shape and Anne departure assumptions;

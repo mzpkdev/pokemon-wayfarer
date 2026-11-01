@@ -1,7 +1,15 @@
 # S.S. ferries
 
 PRD: [S.S. ferries](../prds/ss-ferries.md)
-Implemented: No
+Implemented: Partial. Part 1 of 3 is built: ports and ships, the schedule
+(`Ferry_ShipAt`), the saved voyage state with every field, boarding at the four
+dock ports and the three launch ports, the ships' exits and the Anne's dynamic
+warp, the story-trip guards, sailing (cast-off and arrival announcements and
+catch-up), service, the old menus and the Lilycove charters, and the region and
+save changes. The cabin fields (`hosts`, `hostParams`, `cabin`, `hostsDone`)
+are saved but written as zero at boarding and unused. Not built yet: the
+cabins (hosts, request kinds, sleeping, the bed heal removal) and the
+passengers (the `liner` trainer rotation and the daily-slot freeze).
 
 ## Scope
 
