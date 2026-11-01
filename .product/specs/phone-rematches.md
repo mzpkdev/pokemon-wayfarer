@@ -28,6 +28,14 @@ text. `IS_WAYFARER` only.
 
 Pairs share one contact and battle together.
 
+**Notable contacts** share the contact list but are not route contacts:
+notable trainers at Friend or above
+([phone contacts](notable-trainers.md#phone-contacts)) are listed after the
+special headers and before the route contacts, outside the contact index
+space below. They have no registration flag, rematch, readiness, gift, or
+Battle and FoundItem texts, and never make a random call; their call is
+owned by Notable trainers.
+
 ## Rematch table and save state
 
 - **Hoenn rows.** Wayfarer compiles HNS's `gRematchTable`, which reuses
@@ -91,8 +99,8 @@ Pairs share one contact and battle together.
   It changes the SaveBlock1 layout; Wayfarer has no released
   saves, so no migration is needed (`AGENTS.md`).
 - **Contact list.** `matchCallEntries` grows from 99 to cover every contact plus
-  the special headers, with a bounds check. The list also reads the Sevii and
-  coast registries.
+  the special headers and every [notable contact](notable-trainers.md#phone-contacts),
+  with a bounds check. The list also reads the Sevii and coast registries.
 
 ## Getting a number
 
@@ -279,7 +287,7 @@ Resolutions made while implementing, kept as the record of why the rules above r
   fixed home.
 - **Contact list.** Each entry's place is named from its home map (`WayfarerGetPlaceNameOfMap`), and the ready Poké
   Ball also shows for the Sevii and coast contacts.
-- **Save.** `SAVE_VERSION` is 15. E2E and test builds can force the next call with `gMatchCallDebugContact`.
+- **Save.** `SAVE_VERSION` was 15 when phone rematches shipped (17 with notable contacts' number-shown bits). E2E and test builds can force the next call with `gMatchCallDebugContact`.
 - **Rematch tooling.** The Hoenn rows are compiled, so `tools/trainer_scaling/reach.py` reads them from the Wayfarer table.
 
 ## Hoenn call texts

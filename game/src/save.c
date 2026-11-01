@@ -103,8 +103,8 @@ STATIC_ASSERT(LEAGUE_EVENT_LINEUP_SIZE == LEAGUE_LINEUP_SIZE, LeagueEventLineupC
 STATIC_ASSERT(LEAGUE_EVENT_NOTABLE_COUNT == NOTABLE_TRAINER_COUNT, LeagueEventTrainerCount);
 STATIC_ASSERT(sizeof(struct LeagueEventState) <= 256, LeagueEventStateSerializedBudget);
 STATIC_ASSERT(NOTABLE_FRIENDSHIP_COUNT == NOTABLE_TRAINER_COUNT, NotableFriendshipTrainerCount);
-// 38 score bytes and 5 first-win bytes, padded to a word.
-STATIC_ASSERT(sizeof(struct NotableFriendshipState) == 44, NotableFriendshipStateSize);
+// 38 score bytes, 5 first-win bytes and 5 number-shown bytes, padded to a word.
+STATIC_ASSERT(sizeof(struct NotableFriendshipState) == 48, NotableFriendshipStateSize);
 STATIC_ASSERT(sizeof(struct PokemonStorage) <= 35712, WayfarerPokemonStorageSectorAllocation);
 STATIC_ASSERT(TOTAL_BOXES_COUNT == 13, WayfarerPcBoxCount);
 STATIC_ASSERT(sizeof(struct WayfarerWorldRecord) == 8, WayfarerWorldRecordSize);

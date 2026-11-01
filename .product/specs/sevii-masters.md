@@ -1,7 +1,7 @@
 # Sevii Masters
 
 PRD: [Sevii Masters](../prds/sevii-masters.md)
-Implemented: Partial. The Masters league registry, lobby acceptance, Master seats, and Gallery counts shipped in [PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139). The partner, phone contacts, tag matches, and final remain.
+Implemented: Partial. The Masters league registry, lobby acceptance, Master seats, and Gallery counts shipped in [PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139). Phone contacts shipped, owned by [Notable trainers](notable-trainers.md#phone-contacts). The partner (and asking for one by phone, [later](#later)), tag matches, and final remain.
 Design status: v0 approved: the Sevii Masters as an off-the-record club, one
 of the three [Leagues](leagues.md), that calls the player once they are a
 **Master** (lifetime wins at both Indigo and Hoenn). Its lineup has eight
@@ -19,7 +19,7 @@ Masters winner; the partner reigns when the player loses the final.
 ## Scope
 
 Own, for the Sevii Masters in `IS_WAYFARER`: its identity and presentation,
-the Master rule, phone contacts, the partner, the Masters' changes to lineup
+the Master rule, the partner (and, later, asking for one by phone), the Masters' changes to lineup
 selection (the lineup size, Master seats, no aloof rule, the partner's
 exclusion, and pairs), the partner in the event lineup, the Masters' title
 rules, the Masters Gallery, the tag matches, party choice, restore, and heal,
@@ -87,11 +87,13 @@ match, where both opponents count) and finished haunt quests each add to it,
 and a win alone never reaches it. Nothing else adds: a loss, a draw, fleeing, a declined league
 event, a battle beside the trainer as a partner, and debug battles add no
 friendship. Friendship never decreases, so a contact stays one. Tate & Liza
-keep a score but give no number, since in v0 a contact's only use is being
-asked as a partner, which the duo cannot be.
+keep a score but give no number, since they can never be a partner.
 
-On the phone, the only use is asking a contact to be the player's
-[partner](#partner); calling a contact otherwise does nothing new.
+[Notable trainers](notable-trainers.md#phone-contacts) owns contacts on the
+phone: the contact list, and a call (greeting, where they are, farewell).
+Asking a contact to be the player's [partner](#partner) by phone is
+[later](#later): until it ships, a call only talks, the partner choice stays
+none, and the partner is the default.
 [Notable haunts](notable-haunts.md#talk-flow) read the friendship
 stage, not the phone.
 
@@ -100,7 +102,9 @@ stage, not the phone.
 At the Masters the player fights beside a **partner**: the notable trainer
 they last asked. The saved **partner choice** is none or one `characterId`.
 
-- **Asking.** The player can ask any contact to be their partner once they
+- **Asking (later).** Not in this slice: until it ships, nobody is asked,
+  the partner choice stays none, and the partner is Lorelei. As designed:
+  the player can ask any contact to be their partner once they
   are a Master (the Masters knows them), by phone only: from the phone's
   contact list whenever they can make a call (in the overworld, with no
   script, battle, or ceremony running). The contact exists from Friend, so
@@ -418,9 +422,9 @@ pairs in the lobby, and each hall's door names its pair along with the hall
 and its condition. The Masters Gallery shows every recorded winner
 ([Masters Gallery](#masters-gallery)).
 
-The player asks a partner with an outgoing phone call to a contact
-([phone calls](../../game/src/match_call.c)); the contact agrees, and the
-call says they will join the player at the next Masters event. The phone's
+Later, with the ask: the player asks a partner with an outgoing phone call to
+a contact ([phone calls](../../game/src/match_call.c)); the contact agrees,
+and the call says they will join the player at the next Masters event. The phone's
 contact list shows who can be asked and who is the current partner. In the
 tag matches the partner appears beside the player with their back pic, and
 in the final they are the opponent and the last opponent of the event, with
@@ -476,7 +480,8 @@ Required implementation evidence (not yet run), alongside
    win alone never crosses it; talks, a loss, a decline, partnering, and
    debug battles add none; Tate & Liza give no
    number.
-5. **Partner.** With no ask, the partner is Lorelei, with or without her
+5. **Partner.** (The ask is later; until then only the default applies.)
+   With no ask, the partner is Lorelei, with or without her
    number; asking any contact always succeeds and sets the partner, the latest
    ask winning; a trainer below Friend and Tate & Liza cannot be asked, and no
    one can be asked before the player is a Master; an ask while an accepted
@@ -538,6 +543,8 @@ Extend the [league tests](leagues.md#acceptance) with these cases.
   ([Notable trainers](notable-trainers.md#friendship)).
 - Picky partners who can refuse, by a higher stage or by trait (such as
   aloof).
+- Asking a contact to be the partner by phone ([partner](#partner)): the
+  ask on the call, its lines, and the contact list's partner mark.
 - Gifts and trades with contacts.
 
 ## References

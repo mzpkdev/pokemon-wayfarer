@@ -47,6 +47,11 @@ struct NotableVoice
     const u8 *hello;
     const u8 *close;
     const u8 *bye;
+    // Phone lines (notable-trainers.md#phone-contacts): the greeting at Friend and at Close, and the farewell.
+    // NULL for Tate & Liza, who give no number.
+    const u8 *callHello;
+    const u8 *callClose;
+    const u8 *callBye;
 };
 
 struct NotableMovePoolEntry

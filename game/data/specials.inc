@@ -842,4 +842,5 @@ gSpecials::
     def_special NotableTalk_PrepareWalker
     def_special NotableTalk_BufferWalkerActivityLine
     def_special NotableFriendship_BufferTrainerName
+    def_special NotableFriendship_MarkNumberShown
 #endif

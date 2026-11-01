@@ -250,7 +250,7 @@ changes yours.
   stage.
 - **Contact:** a notable at Friend or above, whose phone number you hold. Each
   gives you their number when they first reach Friend
-  ([phone contacts](../specs/sevii-masters.md#phone-contacts)).
+  ([phone contacts](../specs/notable-trainers.md#phone-contacts)).
 - **Partner:** the contact you last asked to join you at the Sevii Masters,
   or Lorelei if you have never asked anyone. They fight beside you in the
   tag battles, never in the lineup, and face you in the final

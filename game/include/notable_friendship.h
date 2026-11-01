@@ -42,11 +42,14 @@ bool8 NotableFriendship_CountFirstWin(u8 characterId);
 // belong to no notable are ignored. Tag matches call it once per opponent.
 void NotableFriendship_CountTrainerWin(u16 trainerId);
 
-// The phone number is handed over once, when the score first crosses the Friend threshold (Tate & Liza
-// give none). The crossing queues in RAM; the field shows its system line when it regains control.
+// The phone number is handed over once, when the score first reaches the Friend threshold (Tate & Liza
+// give none). The field shows its system line when it has control; until the line has played (the saved
+// number-shown bit), the line stays owed, across saves and reloads.
 bool8 NotableFriendship_HasPendingNumber(void);
-// Starts the script for the next queued number and returns TRUE, or returns FALSE with none waiting.
+// Starts the script for the next owed number and returns TRUE, or returns FALSE with none owed.
 bool8 NotableFriendship_TryStartPendingNumberScript(void);
+// Special: records that the handover's line played for the character in VAR_0x8004.
+void NotableFriendship_MarkNumberShown(void);
 // Special: buffers the trainer's name for the system line (VAR_0x8004 = character id).
 void NotableFriendship_BufferTrainerName(void);
 

@@ -237,6 +237,14 @@ TEST("A lost league event battle credits nothing")
 }
 #endif // WAYFARER_LEAGUE_EVENTS
 
+// The handover's line has played to its end: the script's last special.
+static void FinishNumberLine(u8 characterId)
+{
+    gSpecialVar_0x8004 = characterId;
+    NotableFriendship_MarkNumberShown();
+    ScriptContext_Init();
+}
+
 TEST("The number is handed over once, when the score first crosses Friend")
 {
     ResetFriendship();
@@ -252,7 +260,7 @@ TEST("The number is handed over once, when the score first crosses Friend")
     EXPECT_EQ(gSpecialVar_0x8004, NOTABLE_TRAINER_LORELEI);
     NotableFriendship_BufferTrainerName();
     EXPECT_EQ(StringCompare(gStringVar1, GetTrainerNameFromId(TRAINER_WAYFARER_INDIGO_LORELEI)), 0);
-    ScriptContext_Init();
+    FinishNumberLine(NOTABLE_TRAINER_LORELEI);
     EXPECT(!NotableFriendship_HasPendingNumber());
     EXPECT(!NotableFriendship_TryStartPendingNumberScript());
 
@@ -269,7 +277,51 @@ TEST("The number is handed over once, when the score first crosses Friend")
     NotableFriendship_AddQuestPoints(NOTABLE_TRAINER_STEVEN);
     EXPECT(NotableFriendship_TryStartPendingNumberScript());
     EXPECT_EQ(gSpecialVar_0x8004, NOTABLE_TRAINER_STEVEN);
+    FinishNumberLine(NOTABLE_TRAINER_STEVEN);
+    EXPECT(NotableFriendship_IsValid());
+}
+
+TEST("The handover line stays owed across a save until it has played")
+{
+    struct NotableFriendshipState saved;
+
+    ResetFriendship();
+    NotableFriendship_CountFirstWin(NOTABLE_TRAINER_MISTY);
+    NotableFriendship_AddQuestPoints(NOTABLE_TRAINER_MISTY);
+    // A save before the field regains control (the Hall of Fame after a champion battle), then a reload: the
+    // saved state alone still owes the line.
+    saved = gSaveBlock3Ptr->notableFriendship;
+    ResetFriendship();
+    gSaveBlock3Ptr->notableFriendship = saved;
+    EXPECT(NotableFriendship_IsValid());
+    EXPECT(NotableFriendship_HasPendingNumber());
+    // A line cut off before its end (a reset mid-fanfare) is still owed.
+    EXPECT(NotableFriendship_TryStartPendingNumberScript());
     ScriptContext_Init();
+    EXPECT(NotableFriendship_HasPendingNumber());
+    EXPECT(NotableFriendship_TryStartPendingNumberScript());
+    EXPECT_EQ(gSpecialVar_0x8004, NOTABLE_TRAINER_MISTY);
+    FinishNumberLine(NOTABLE_TRAINER_MISTY);
+    EXPECT(!NotableFriendship_HasPendingNumber());
+    saved = gSaveBlock3Ptr->notableFriendship;
+    ResetFriendship();
+    gSaveBlock3Ptr->notableFriendship = saved;
+    EXPECT(!NotableFriendship_HasPendingNumber());
+    EXPECT(NotableFriendship_IsValid());
+}
+
+TEST("Several numbers owed at once are handed over one at a time, in character order")
+{
+    ResetFriendship();
+    gSaveBlock3Ptr->notableFriendship.score[NOTABLE_TRAINER_STEVEN - 1] = NOTABLE_FRIENDSHIP_FRIEND;
+    gSaveBlock3Ptr->notableFriendship.score[NOTABLE_TRAINER_BROCK - 1] = NOTABLE_FRIENDSHIP_CLOSE;
+    EXPECT(NotableFriendship_TryStartPendingNumberScript());
+    EXPECT_EQ(gSpecialVar_0x8004, NOTABLE_TRAINER_BROCK);
+    FinishNumberLine(NOTABLE_TRAINER_BROCK);
+    EXPECT(NotableFriendship_TryStartPendingNumberScript());
+    EXPECT_EQ(gSpecialVar_0x8004, NOTABLE_TRAINER_STEVEN);
+    FinishNumberLine(NOTABLE_TRAINER_STEVEN);
+    EXPECT(!NotableFriendship_TryStartPendingNumberScript());
 }
 
 TEST("Tate & Liza keep a score but give no number, and New Game clears a waiting handover")
@@ -285,6 +337,9 @@ TEST("Tate & Liza keep a score but give no number, and New Game clears a waiting
     NotableFriendship_AddQuestPoints(NOTABLE_TRAINER_TATE_LIZA);
     EXPECT_EQ(NotableFriendship_GetStage(NOTABLE_TRAINER_TATE_LIZA), NOTABLE_STAGE_CLOSE);
     EXPECT(!NotableFriendship_HasPendingNumber());
+    // Their line can't be marked shown either.
+    FinishNumberLine(NOTABLE_TRAINER_TATE_LIZA);
+    EXPECT(NotableFriendship_IsValid());
 
     NotableFriendship_AddQuestPoints(NOTABLE_TRAINER_KAREN);
     NotableFriendship_AddQuestPoints(NOTABLE_TRAINER_KAREN);
@@ -293,7 +348,7 @@ TEST("Tate & Liza keep a score but give no number, and New Game clears a waiting
     EXPECT(!NotableFriendship_HasPendingNumber());
 }
 
-TEST("New Game zeroes every score and first-win bit")
+TEST("New Game zeroes every score, first-win bit and number-shown bit")
 {
     u32 i;
     memset(&gSaveBlock3Ptr->notableFriendship, 0xFF, sizeof(gSaveBlock3Ptr->notableFriendship));
@@ -302,6 +357,8 @@ TEST("New Game zeroes every score and first-win bit")
         EXPECT_EQ(gSaveBlock3Ptr->notableFriendship.score[i], 0);
     for (i = 0; i < sizeof(gSaveBlock3Ptr->notableFriendship.firstWin); i++)
         EXPECT_EQ(gSaveBlock3Ptr->notableFriendship.firstWin[i], 0);
+    for (i = 0; i < sizeof(gSaveBlock3Ptr->notableFriendship.numberShown); i++)
+        EXPECT_EQ(gSaveBlock3Ptr->notableFriendship.numberShown[i], 0);
     EXPECT(NotableFriendship_IsValid());
 }
 
@@ -322,6 +379,23 @@ TEST("A first-win bit with a score under Met is an invalid save")
     gSaveBlock3Ptr->notableFriendship.score[37] = NOTABLE_FRIENDSHIP_MET;
     EXPECT(NotableFriendship_IsValid());
     gSaveBlock3Ptr->notableFriendship.firstWin[4] |= 1 << 6;
+    EXPECT(!NotableFriendship_IsValid());
+}
+
+TEST("A number-shown bit needs a contact at Friend or above, and none for Tate & Liza")
+{
+    ResetFriendship();
+    gSaveBlock3Ptr->notableFriendship.numberShown[0] |= 1 << 2; // character 3
+    gSaveBlock3Ptr->notableFriendship.score[2] = NOTABLE_FRIENDSHIP_FRIEND - 1;
+    EXPECT(!NotableFriendship_IsValid());
+    gSaveBlock3Ptr->notableFriendship.score[2] = NOTABLE_FRIENDSHIP_FRIEND;
+    EXPECT(NotableFriendship_IsValid());
+    gSaveBlock3Ptr->notableFriendship.score[NOTABLE_TRAINER_TATE_LIZA - 1] = NOTABLE_FRIENDSHIP_CLOSE;
+    gSaveBlock3Ptr->notableFriendship.numberShown[(NOTABLE_TRAINER_TATE_LIZA - 1) / 8]
+        |= 1 << ((NOTABLE_TRAINER_TATE_LIZA - 1) % 8);
+    EXPECT(!NotableFriendship_IsValid());
+    ResetFriendship();
+    gSaveBlock3Ptr->notableFriendship.numberShown[4] |= 1 << 6; // past character 38
     EXPECT(!NotableFriendship_IsValid());
 }
 

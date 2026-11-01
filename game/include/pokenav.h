@@ -15,9 +15,9 @@ struct PokenavMonListItem
 };
 
 #if IS_WAYFARER
-// The Match Call list holds every contact (the rematch table's rows, then the Sevii and coast families) plus the special
-// headers; the list builder stops there.
-#define MATCH_CALL_ENTRIES_MAX (MC_HEADER_COUNT + 160)
+// The Match Call list holds the special headers, every notable contact (notable_phone.h), and every route contact
+// (the rematch table's rows, then the Sevii and coast families: DAILY_CONTACT_COUNT); the list builder stops there.
+#define MATCH_CALL_ENTRIES_MAX (MC_HEADER_COUNT + 160 + NOTABLE_FRIENDSHIP_COUNT)
 #else
 #define MATCH_CALL_ENTRIES_MAX (MAX_REMATCH_ENTRIES - 1)
 #endif
@@ -27,6 +27,11 @@ struct PokenavMatchCallEntry
     bool8 isSpecialTrainer;
     mapsec_u8_t mapSec;
     u16 headerId;
+#if IS_WAYFARER
+    // A notable contact (notable_phone.h): its NOTABLE_TRAINER_*, with isSpecialTrainer and headerId unused.
+    // NOTABLE_TRAINER_NONE for every other entry.
+    u8 notableId;
+#endif
 };
 
 struct PokenavListItem

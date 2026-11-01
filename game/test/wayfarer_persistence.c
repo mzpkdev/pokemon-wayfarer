@@ -1350,10 +1350,10 @@ TEST("Wayfarer Hoenn persistent state stays under one KiB")
     EXPECT_LE(sizeof(struct SaveBlock3), 1624);
 }
 
-TEST("Wayfarer friendship state rides in SaveBlock3 and an impossible first-win bit invalidates the save")
+TEST("Wayfarer friendship state rides in SaveBlock3 and an impossible first-win or number-shown bit invalidates the save")
 {
-    // 38 scores and 5 first-win bytes, padded to a word, in the Wayfarer members.
-    EXPECT_EQ(sizeof(gSaveBlock3Ptr->notableFriendship), 44);
+    // 38 scores, 5 first-win bytes and 5 number-shown bytes, padded to a word, in the Wayfarer members.
+    EXPECT_EQ(sizeof(gSaveBlock3Ptr->notableFriendship), 48);
     WayfarerInitPersistentState();
     gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_NEW_BARK;
     gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation = HEAL_LOCATION_NEW_BARK_TOWN_HNS;
@@ -1362,6 +1362,11 @@ TEST("Wayfarer friendship state rides in SaveBlock3 and an impossible first-win 
     gSaveBlock3Ptr->notableFriendship.firstWin[0] = 1;
     EXPECT(!WayfarerPersistentStateIsValid());
     gSaveBlock3Ptr->notableFriendship.score[0] = 10;
+    EXPECT(WayfarerPersistentStateIsValid());
+    // The handover's line was shown only to a trainer at Friend or above.
+    gSaveBlock3Ptr->notableFriendship.numberShown[0] = 1;
+    EXPECT(!WayfarerPersistentStateIsValid());
+    gSaveBlock3Ptr->notableFriendship.score[0] = 20;
     EXPECT(WayfarerPersistentStateIsValid());
 }
 

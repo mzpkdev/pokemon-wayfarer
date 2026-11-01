@@ -46,9 +46,14 @@ TOXIC_MOVES = ("Toxic", "Toxic Spikes")
 # Voice bits the friendship talk flow wires (notable-haunts.md#talk-flow). The remaining bits of the voices research
 # draft (ASK, YES, QUIRK, ...) belong to haunts and are not game data yet.
 VOICE_BITS = ("meet", "heard", "again", "hello", "close", "bye")
+# Phone voice bits (notable-trainers.md#phone-contacts): the greeting by stage (Friend, Close) and the farewell of a
+# call to a notable contact. Every trainer who can be a contact has them; Tate & Liza, who give no number, have none.
+PHONE_BITS = ("hello", "close", "bye")
 # A field message box holds two lines of this many pixels (the 27-tile standard text box, less a safety margin).
 MESSAGE_LINE_PIXELS = 208
 MESSAGE_BOX_LINES = 2
+# The phone's call box is narrower: a 28-tile window whose text starts 32 pixels in (pokenav_match_call_gfx.c).
+PHONE_LINE_PIXELS = 192
 # Worst-case characters a placeholder prints: a player name, and a species name (the voices research counts both so).
 PLACEHOLDER_CHARS = {"PLAYER": 7, "BUDDY": 10}
 # {BUDDY} is the buddy slot's current species: the talk code copies it into gStringVar1 before the line prints.
@@ -80,17 +85,17 @@ def text_pixels(text: str, widths: dict[str, int]) -> int:
     return total
 
 
-def wrap_voice(text: str, widths: dict[str, int]) -> list[list[str]]:
+def wrap_voice(text: str, widths: dict[str, int], line_pixels: int = MESSAGE_LINE_PIXELS) -> list[list[str]]:
     """Break a voice line into message boxes of lines, without changing a word. Tate & Liza's halves break at LIZA."""
     if " LIZA: " in text:
         first, second = text.split(" LIZA: ", 1)
         halves = [first, "LIZA: " + second]
-        if all(text_pixels(h, widths) <= MESSAGE_LINE_PIXELS for h in halves):
+        if all(text_pixels(h, widths) <= line_pixels for h in halves):
             return [halves]
     lines, current = [], ""
     for word in text.split(" "):
         candidate = word if not current else current + " " + word
-        if text_pixels(candidate, widths) <= MESSAGE_LINE_PIXELS:
+        if text_pixels(candidate, widths) <= line_pixels:
             current = candidate
         else:
             lines.append(current)
@@ -99,21 +104,22 @@ def wrap_voice(text: str, widths: dict[str, int]) -> list[list[str]]:
     return [lines[i:i + MESSAGE_BOX_LINES] for i in range(0, len(lines), MESSAGE_BOX_LINES)]
 
 
-def validate_voice(name: str, voice: dict, widths: dict[str, int]) -> None:
-    if set(voice) != set(VOICE_BITS):
-        raise ValueError(f"{name}: voice needs exactly {', '.join(VOICE_BITS)}")
+def validate_voice(name: str, voice: dict, widths: dict[str, int], bits=VOICE_BITS, kind: str = "voice",
+                   line_pixels: int = MESSAGE_LINE_PIXELS) -> None:
+    if set(voice) != set(bits):
+        raise ValueError(f"{name}: {kind} needs exactly {', '.join(bits)}")
     for bit, text in voice.items():
         if not isinstance(text, str) or not text.strip() or text != text.strip() or "  " in text:
-            raise ValueError(f"{name}: voice {bit} must be plain text with single spaces")
+            raise ValueError(f"{name}: {kind} {bit} must be plain text with single spaces")
         if set(PLACEHOLDER.findall(text)) - set(PLACEHOLDER_CHARS):
-            raise ValueError(f"{name}: voice {bit} may use only {{PLAYER}} and {{BUDDY}}")
-        if bit == "heard" and "{PLAYER}" not in text:
+            raise ValueError(f"{name}: {kind} {bit} may use only {{PLAYER}} and {{BUDDY}}")
+        if kind == "voice" and bit == "heard" and "{PLAYER}" not in text:
             raise ValueError(f"{name}: voice heard must address {{PLAYER}}")
         for char in PLACEHOLDER.sub("", text):
             if char not in widths:
-                raise ValueError(f"{name}: voice {bit} has {char!r}, which the game charmap cannot print")
-        if len(wrap_voice(text, widths)) != 1:
-            raise ValueError(f"{name}: voice {bit} does not fit one message box")
+                raise ValueError(f"{name}: {kind} {bit} has {char!r}, which the game charmap cannot print")
+        if len(wrap_voice(text, widths, line_pixels)) != 1:
+            raise ValueError(f"{name}: {kind} {bit} does not fit one message box")
 
 
 def symbol(prefix: str, name: str) -> str:
@@ -213,6 +219,13 @@ def validate(data: dict) -> None:
         if type(trainer["buddySlot"]) is not int or not 1 <= trainer["buddySlot"] <= 6:
             raise ValueError(f"{name}: buddy must be a roster slot from 1 to 6")
         validate_voice(name, trainer["voice"], widths)
+        # A contact is any trainer who gives a number: every league-eligible one (Tate & Liza give none).
+        if trainer["league"]["enabled"]:
+            if "phone" not in trainer:
+                raise ValueError(f"{name}: a trainer who gives a number needs phone lines")
+            validate_voice(name, trainer["phone"], widths, PHONE_BITS, "phone", PHONE_LINE_PIXELS)
+        elif "phone" in trainer:
+            raise ValueError(f"{name}: a trainer who gives no number has no phone lines")
         for alias in trainer["encounterIds"]:
             if alias not in opponents or alias in aliases:
                 raise ValueError(f"{name}: unknown or duplicate encounter alias {alias}")
@@ -247,12 +260,18 @@ def generate_voices(data: dict) -> str:
             (box,) = wrap_voice(t["voice"][bit], widths)
             text = PLACEHOLDER.sub(lambda m: PLACEHOLDER_TOKEN[m.group(1)], "\\n".join(box))
             lines.append(f"static const u8 {symbol('sNotableVoice_', t['slug'] + '_' + bit)}[] = _(\"{text}\");")
+        for bit in PHONE_BITS if "phone" in t else ():
+            (box,) = wrap_voice(t["phone"][bit], widths, PHONE_LINE_PIXELS)
+            text = PLACEHOLDER.sub(lambda m: PLACEHOLDER_TOKEN[m.group(1)], "\\n".join(box))
+            lines.append(f"static const u8 {symbol('sNotableVoice_', t['slug'] + '_call_' + bit)}[] = _(\"{text}\");")
         lines.append("")
     lines += ["const struct NotableVoice gNotableVoices[NOTABLE_TRAINER_COUNT] =", "{"]
     for t in trainers:
         lines.append(f"    [{symbol('NOTABLE_TRAINER_', t['slug'])} - 1] =")
         lines.append("    {")
         lines += [f"        .{bit} = {symbol('sNotableVoice_', t['slug'] + '_' + bit)}," for bit in VOICE_BITS]
+        lines += [f"        .call{bit.capitalize()} = {symbol('sNotableVoice_', t['slug'] + '_call_' + bit)},"
+                  for bit in PHONE_BITS if "phone" in t]
         lines.append("    },")
     lines += ["};", ""]
     return "\n".join(lines)

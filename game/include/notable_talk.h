@@ -64,6 +64,9 @@ enum NotableActivityLine NotableTalk_ActivityLineFor(u8 destKind, u16 destId, u8
 void NotableTalk_BufferGreetingText(u8 characterId);
 void NotableTalk_BufferFarewellText(u8 characterId);
 void NotableTalk_BufferActivityLineText(enum NotableActivityLine line);
+// The activity line itself (no placeholders), and {BUDDY} for a voice line: the buddy species in gStringVar1.
+const u8 *NotableTalk_GetActivityLine(enum NotableActivityLine line);
+void NotableTalk_BufferBuddy(u8 characterId);
 
 // Specials. All but PrepareWalker read VAR_0x8004; PrepareWalker writes it.
 u32 NotableTalk_BufferGreeting(void);

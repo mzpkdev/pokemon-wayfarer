@@ -38,7 +38,7 @@ first and repeat wins, saved state, load validation, presentation, and
 regional integration.
 
 - [Sevii Masters](sevii-masters.md) owns what is only the Masters': its
-  identity, the Master rule, phone contacts, the partner, its lineup
+  identity, the Master rule, the partner, its lineup
   changes (eight seats, Master seats, no aloof rule, and pairs), its title
   rules and Gallery, the tag matches and the final, and its own saved state
   and load validation. Where a rule here has a Masters exception, this spec

@@ -406,13 +406,16 @@ struct WayfarerPalletOpeningState
     u16 receipts;
 };
 
-// Notable trainer friendship (notable-trainers.md#friendship): one score byte and one first-win bit per
-// character, indexed by character id - 1. The stage is read from the score; src/notable_friendship.c owns it.
+// Notable trainer friendship (notable-trainers.md#friendship): one score byte, one first-win bit and one
+// number-shown bit per character, indexed by character id - 1. The stage is read from the score; src/notable_friendship.c owns it.
 #define NOTABLE_FRIENDSHIP_COUNT 38
 struct NotableFriendshipState
 {
     u8 score[NOTABLE_FRIENDSHIP_COUNT];
     u8 firstWin[(NOTABLE_FRIENDSHIP_COUNT + 7) / 8];
+    // One bit per character: the number handover's line has been shown. A trainer at Friend or above without it
+    // is still owed the line, so a save between the crossing and the line keeps it (notable-trainers.md#friendship).
+    u8 numberShown[(NOTABLE_FRIENDSHIP_COUNT + 7) / 8];
 };
 #endif
 

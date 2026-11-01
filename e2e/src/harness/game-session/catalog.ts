@@ -545,6 +545,8 @@ export const storyVars = {
 
 export const storyFlags = {
   hasMatchCall: 0x1f3,
+  // FLAG_ADDED_MATCH_CALL_TO_POKENAV: the Pokégear's main menu offers MATCH CALL.
+  pokegearMatchCall: 0x246,
   wadeHasItem: 0x2ea,
   wadeDefeated: 0x5a8, // TRAINER_FLAGS_START + TRAINER_WADE_HNS (168)
   phoneRoseRegistered: 0x8be, // the first appended rematch row, contact 90

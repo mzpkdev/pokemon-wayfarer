@@ -44,9 +44,10 @@ load validation, presentation, the balance report, and acceptance.
   routine and travel design: places found from map data, with no quests,
   where trainers spend most of their time; it switches on with routines and
   travel and leaves v0 placement unchanged.
-- [Sevii Masters](sevii-masters.md) owns phone contacts (a trainer at Friend
-  or above), asking a partner by phone, the partner choice, and the runtime
-  partner slot.
+- [Notable trainers](notable-trainers.md#phone-contacts) owns phone
+  contacts (a trainer at Friend or above) and their calls;
+  [Sevii Masters](sevii-masters.md) owns asking a partner by phone (later),
+  the partner choice, and the runtime partner slot.
 - [Leagues](leagues.md) owns invitations and the accepted event lineup.
 - [Trainer AI](trainer-ai.md) owns the AI flags of every battle here.
 - [Gym Leader scaling](gym-leader-scaling.md) owns battle construction for

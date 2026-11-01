@@ -129,7 +129,46 @@ class CatalogValidationTests(unittest.TestCase):
         self.assertIn("{STR_VAR_1}", voices)
         self.assertNotIn("{BUDDY}", voices)
         self.assertIn("\\n", voices)
-        self.assertEqual(voices.count("_(\""), 38 * len(generate.VOICE_BITS))
+        self.assertEqual(voices.count("_(\""), 38 * len(generate.VOICE_BITS) + 37 * len(generate.PHONE_BITS))
+
+    def test_every_contact_has_phone_lines_and_tate_liza_none(self):
+        for trainer in self.catalog["trainers"]:
+            if trainer["league"]["enabled"]:
+                self.assertEqual(set(trainer["phone"]), set(generate.PHONE_BITS), trainer["name"])
+            else:
+                self.assertNotIn("phone", trainer, trainer["name"])
+        voices = generate.generate_voices(self.catalog)
+        self.assertNotIn("TATE_LIZA_CALL", voices)
+        self.assertIn(".callHello = sNotableVoice_BROCK_CALL_HELLO,", voices)
+
+    def test_phone_lines_are_checked_and_fit_the_phone_box(self):
+        catalog = copy.deepcopy(self.catalog)
+        del catalog["trainers"][0]["phone"]
+        with self.assertRaisesRegex(ValueError, "needs phone lines"):
+            generate.validate(catalog)
+        catalog = copy.deepcopy(self.catalog)
+        del catalog["trainers"][0]["phone"]["bye"]
+        with self.assertRaisesRegex(ValueError, "phone needs exactly"):
+            generate.validate(catalog)
+        catalog = copy.deepcopy(self.catalog)
+        tate_liza = next(t for t in catalog["trainers"] if not t["league"]["enabled"])
+        tate_liza["phone"] = dict(catalog["trainers"][0]["phone"])
+        with self.assertRaisesRegex(ValueError, "gives no number"):
+            generate.validate(catalog)
+        # A line that fits the field box can still be too wide for the narrower phone box.
+        widths = generate.glyph_widths()
+        text = "Hey, {PLAYER}! " + " ".join(["mmmm"] * 12)
+        self.assertEqual(len(generate.wrap_voice(text, widths)), 1)
+        catalog = copy.deepcopy(self.catalog)
+        catalog["trainers"][0]["phone"]["hello"] = text
+        with self.assertRaisesRegex(ValueError, "phone hello does not fit"):
+            generate.validate(catalog)
+        for trainer in self.catalog["trainers"]:
+            for bit, text in trainer.get("phone", {}).items():
+                (box,) = generate.wrap_voice(text, widths, generate.PHONE_LINE_PIXELS)
+                self.assertEqual(" ".join(box).split(), text.split(), f"{trainer['name']} {bit}")
+                for line in box:
+                    self.assertLessEqual(generate.text_pixels(line, widths), generate.PHONE_LINE_PIXELS)
 
     def test_buddy_is_a_roster_slot(self):
         for value in (0, 7, True, "1", None):
