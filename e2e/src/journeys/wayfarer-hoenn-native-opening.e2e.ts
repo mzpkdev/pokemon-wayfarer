@@ -9,6 +9,18 @@ import {
   receiveBirchStarter,
 } from "../playbooks/regional-opening"
 
+const expectClockOnlyLookedAt = async (game: GameSession): Promise<void> => {
+  // The bedroom clock scene only shows the clock (.product/specs/in-game-clock.md): the clock keeps
+  // New Game's day 1, and no local offset splits the day readers see from the clock's.
+  const clock = await game.clock.read()
+  expect({ dayNumber: clock.dayNumber, localDay: clock.localDay }).toEqual({
+    dayNumber: 1,
+    localDay: 1,
+  })
+  expect(clock.hour).toBeGreaterThanOrEqual(10)
+  expect(await game.story.var("days")).toBe(1)
+}
+
 describe.sequential("Wayfarer native Littleroot household", () => {
   it("plays truck, Mom, clock, rival, rescue, and Birch acknowledgement from a fresh game", async () => {
     const game = await GameSession.launch()
@@ -16,6 +28,7 @@ describe.sequential("Wayfarer native Littleroot household", () => {
       await playThroughNewGameIntro(game, "hoenn")
       await fs.promises.writeFile("/tmp/wayfarer-hoenn-initial-map.png", await game.screenshot())
       await playHoennHousehold(game)
+      await expectClockOnlyLookedAt(game)
       await receiveBirchStarter(game, 1, "win", null)
       expect(await game.state.read()).toMatchObject({
         map: { name: "birch-lab" },

@@ -14,6 +14,13 @@ export type ClockReading = {
   second: number
   /** Whole in-game seconds since the epoch's midnight, for measuring how far the clock moved. */
   totalSeconds: number
+  /** The clock's day number: day 1 is 1 January 2000, the day a new game starts on. */
+  dayNumber: number
+  /**
+   * The day every reader last computed (`gLocalTime.days`, refreshed at least once per in-game
+   * minute on the field). It equals `dayNumber` unless something set a local offset.
+   */
+  localDay: number
 }
 
 export type ClockApi = {
@@ -60,8 +67,22 @@ export const createClockApi = (runtime: SessionRuntime): ClockApi => {
         number,
         number,
       ]
-      const totalSeconds = ((dayIndex(year, month, day) * 24 + hour) * 60 + minute) * 60 + second
-      return { year, month, day, dayOfWeek, hour, minute, second, totalSeconds }
+      const index = dayIndex(year, month, day)
+      const totalSeconds = ((index * 24 + hour) * 60 + minute) * 60 + second
+      const localDays = await runtime.readUint16(runtime.address("gLocalTime"))
+      const localDay = localDays >= 0x8000 ? localDays - 0x10000 : localDays
+      return {
+        year,
+        month,
+        day,
+        dayOfWeek,
+        hour,
+        minute,
+        second,
+        totalSeconds,
+        dayNumber: index + 1,
+        localDay,
+      }
     },
     setTimeOfDay: async ({ hour, minute, second }) => {
       if (

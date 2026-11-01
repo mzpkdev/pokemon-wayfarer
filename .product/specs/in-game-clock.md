@@ -151,7 +151,11 @@ Nothing a player can reach sets or moves the clock back:
   2F in New Bark), but the scene says the clock is ticking and `StartWallClock`
   opens the clock face to look at, not to set, before the scene goes on. The
   "press R to set the clock" line is gone, and R does nothing on the clock face
-  (`Task_ViewClock_HandleInput`).
+  (`Task_ViewClock_HandleInput`). The Johto, Kanto and Sevii wall clocks
+  (Pokémon Centers included) share Littleroot's clock script and read the HnS
+  `FLAG_SET_WALL_CLOCK`; only the Johto origin plays New Bark's scene, so the
+  Littleroot and Pallet origins start with that flag set and those clocks
+  only show the time.
 - No Wayfarer script uses the time-changing script commands (`initclock`,
   `addtime`, `adddays`, `addhours`, `addminutes`, `fwdtime`, `fwdweekday`).
 - The overworld debug menu (R + Start, compiled into every build, as before

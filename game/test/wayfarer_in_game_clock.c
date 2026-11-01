@@ -5,6 +5,9 @@
 #include "play_time.h"
 #include "rtc.h"
 #include "wayfarer_daily_slots.h"
+#include "new_game.h"
+#include "wayfarer_appearance.h"
+#include "wayfarer_origin.h"
 #include "test/test.h"
 #include "constants/map_groups.h"
 #include "constants/wayfarer_persistence.h"
@@ -142,6 +145,7 @@ TEST("In-game clock: a second of play moves the clock 16 seconds, so a day lasts
 
     TakeSnapshot(&snapshot);
     InGameClock_StartNewGame();
+    gSaveBlock2Ptr->playTimeVBlanks = 0; // a fresh second of play, whatever ran before
     start = ClockSeconds();
 
     // 59 frames are less than a second of play: the clock waits for the 60th.
@@ -265,6 +269,22 @@ TEST("In-game clock: the day count only goes forward, one day at a time, across 
         EXPECT_EQ(GetDayOfWeek(), gSaveBlock3Ptr->fakeRTC.dayOfWeek);
     }
     RestoreSnapshot(&snapshot);
+}
+
+TEST("In-game clock: only the Johto origin plays New Bark's bedroom-clock scene; the others' shared clocks just show the time")
+{
+    u16 origin;
+
+    // Johto, Kanto and Sevii wall clocks (Pokemon Centers included) reach Littleroot's clock script
+    // through the HnS flag; set, they skip the first-visit scene and only show the clock.
+    for (origin = ORIGIN_NEW_BARK; origin <= ORIGIN_PALLET; origin++)
+    {
+        EXPECT(WayfarerConfirmPendingOrigin(origin));
+        EXPECT(WayfarerConfirmPendingAppearance(APPEARANCE_GOLD));
+        NewGameInitData();
+        EXPECT_EQ(WayfarerGetStartingOriginId(), origin);
+        EXPECT_EQ(FlagGet(FLAG_SET_WALL_CLOCK), origin != ORIGIN_NEW_BARK);
+    }
 }
 
 #endif // IS_WAYFARER

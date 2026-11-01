@@ -41,6 +41,9 @@ describe.sequential("Wayfarer in-game clock", () => {
     // Arranging the game took some play: at most a few in-game minutes past 10:00.
     expect(clock.hour).toBe(10)
     expect(clock.minute).toBeLessThan(30)
+    expect(clock.dayOfWeek).toBe(6) // WEEKDAY_SAT
+    expect(clock.dayNumber).toBe(1)
+    expect(clock.localDay).toBe(1)
     expect(await game.story.var("days")).toBe(1)
   })
 
@@ -92,6 +95,10 @@ describe.sequential("Wayfarer in-game clock", () => {
     await game.wait.frames(secondOfPlay + 2)
     const saved = await game.clock.read()
     expect({ day: saved.day, hour: saved.hour }).toEqual({ day: 3, hour: 0 })
+    // The field check runs every 512 frames, so it may already have started the day. When it
+    // hasn't (most runs), the day below can only come from Continue's own daily update.
+    const daysBeforeSave = await game.story.var("days")
+    expect([2, 3]).toContain(daysBeforeSave)
     await game.saveAndReload()
     expect(await game.story.var("days")).toBe(3)
     expect((await game.clock.read()).day).toBe(3)
