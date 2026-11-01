@@ -275,7 +275,7 @@ TEST("In-game clock: only the Johto origin plays New Bark's bedroom-clock scene;
 {
     u16 origin;
 
-    // Johto, Kanto and Sevii wall clocks (Pokemon Centers included) reach Littleroot's clock script
+    // The HnS-map wall clocks (Johto and Kanto Pokemon Centers, a few houses) reach Littleroot's clock script
     // through the HnS flag; set, they skip the first-visit scene and only show the clock.
     for (origin = ORIGIN_NEW_BARK; origin <= ORIGIN_PALLET; origin++)
     {

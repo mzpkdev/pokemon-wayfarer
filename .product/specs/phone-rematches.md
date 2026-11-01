@@ -253,7 +253,7 @@ Resolutions made while implementing, kept as the record of why the rules above r
   dispatch entry for it. Remapping it in `ResolveWayfarerCommonFlagId` instead would put a check on every flag read,
   which slowed the walker heartbeat enough to delay input after a seamless map change.
 - **Random calls.** A registered contact's random call gets a chance at most once per 180 in-game minutes
-  (`UpdateMatchCallMinutesCounter`, the fake-clock gap), about 11 minutes of play on the
+  (`UpdateMatchCallMinutesCounter`, the fake-clock gap; the first right after New Game or Continue), about 11 minutes of play on the
   [in-game clock](in-game-clock.md#other-readers).
 - **Badges.** Region readiness and random calls wait for `OW_REMATCH_BADGE_COUNT` (5) badges of any region
   (`GetGlobalBadgeCount`), not only Johto's, which is all HNS's `HasEnoughBadgesForRematch` counted.

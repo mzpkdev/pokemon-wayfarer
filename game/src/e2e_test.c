@@ -876,6 +876,7 @@ static void ApplyCheckpointDefaults(void)
     case E2E_TEST_CHECKPOINT_NEW_BARK_AFTER_INTRO:
         VarSet(VAR_NEWBARK_TOWN_STATE, 2);
         VarSet(VAR_NEWBARKTOWN_LABSTATE, 0);
+        FlagSet(FLAG_SET_WALL_CLOCK); // as New Bark's bedroom-clock scene, which this skips, leaves it
 #if IS_WAYFARER
         FlagSet(FLAG_JOHTO_STARTER_CHOICE_COMMITTED);
 #endif
@@ -883,6 +884,7 @@ static void ApplyCheckpointDefaults(void)
     case E2E_TEST_CHECKPOINT_ELM_LAB_BEFORE_INTRO:
         VarSet(VAR_NEWBARK_TOWN_STATE, 2);
         VarSet(VAR_NEWBARKTOWN_LABSTATE, 0);
+        FlagSet(FLAG_SET_WALL_CLOCK); // as New Bark's bedroom-clock scene, which this skips, leaves it
         break;
     }
 }

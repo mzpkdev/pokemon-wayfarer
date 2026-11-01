@@ -151,9 +151,9 @@ Nothing a player can reach sets or moves the clock back:
   2F in New Bark), but the scene says the clock is ticking and `StartWallClock`
   opens the clock face to look at, not to set, before the scene goes on. The
   "press R to set the clock" line is gone, and R does nothing on the clock face
-  (`Task_ViewClock_HandleInput`). The Johto, Kanto and Sevii wall clocks
-  (Pokémon Centers included) share Littleroot's clock script and read the HnS
-  `FLAG_SET_WALL_CLOCK`; only the Johto origin plays New Bark's scene, so the
+  (`Task_ViewClock_HandleInput`). The wall clocks on HnS maps (the Johto and
+  Kanto Pokémon Centers and a few houses) share Littleroot's clock script and
+  read the HnS `FLAG_SET_WALL_CLOCK`; only the Johto origin plays New Bark's scene, so the
   Littleroot and Pallet origins start with that flag set and those clocks
   only show the time.
 - No Wayfarer script uses the time-changing script commands (`initclock`,
@@ -180,7 +180,7 @@ Every other system reads time through `gLocalTime`, `GetTimeOfDay` or
 | Lighting and tint | time of day, refreshed every in-game minute | as in the table above |
 | Start menu clock | `gLocalTime`, recalculated whenever the window is drawn | the minutes move while the menu is open |
 | Map name popup clock | `gLocalTime`, recalculated | |
-| Phone random calls | in-game minutes since the last chance (`UpdateMatchCallMinutesCounter`) | a chance every 180 in-game minutes, about 11 minutes of play |
+| Phone random calls | in-game minutes since the last chance (`UpdateMatchCallMinutesCounter`) | a chance every 180 in-game minutes, about 11 minutes of play (the first comes right after New Game or Continue) |
 | Shoal Cave tides | hour of day | each 6-hour tide lasts 22.5 minutes of play |
 | Bug-Catching Contest | weekday | held Tuesday, Thursday and Saturday, each 90 minutes of play |
 | Berry trees | in-game minutes | grow the same number of in-game days as before |
