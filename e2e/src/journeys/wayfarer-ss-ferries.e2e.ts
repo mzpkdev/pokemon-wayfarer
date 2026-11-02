@@ -159,10 +159,21 @@ describe.sequential("Wayfarer S.S. ferries", () => {
     await game.wait.frames(20)
     expect((await game.state.read()).choice.cursor).toBe(1)
     await game.controls.press("a")
+    // "BATTLE FRONTIER, is it?": wait for the real yes/no, answer YES (its first row), then let the boarding
+    // walk and the ferry's departure run, reading only the "please board" message.
+    let ask = await game.state.read()
+    for (let attempt = 0; attempt < 40 && ask.choice.kind !== "yes-no"; attempt++) {
+      await game.wait.frames(30)
+      ask = await game.state.read()
+    }
+    expect(ask.choice.kind).toBe("yes-no")
+    expect(ask.map.name).toBe("lilycove-city-harbor")
+    await game.controls.press("a")
     for (let attempt = 0; attempt < 120; attempt++) {
       if (await readyOn(game, "battle-frontier-outside-west")) break
       await game.wait.frames(30)
-      await game.controls.press("a")
+      const now = await game.state.read()
+      if (now.dialogueOpen) await game.controls.press("a")
     }
     await expect(game.state.read()).resolves.toMatchObject({
       map: { name: "battle-frontier-outside-west" },
