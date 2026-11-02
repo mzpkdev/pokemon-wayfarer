@@ -80,6 +80,9 @@ const REWIRED = {
 }
 const compiled = (m) => {
   if (REPLACED.has(m.id) || m.id.endsWith("_POC") || m.name.endsWith("_Port")) return false
+  // Another state of a map already drawn (the Lake of Rage at low tide), and
+  // Trainer Hill, a special area hung off Olivine, are not part of the land.
+  if (m.name.includes("LowTide") || m.name.startsWith("TrainerHill_")) return false
   const layout = layouts[m.layout]
   if (layout?.game_version === "frlg") return COAST.has(m.name) || Boolean(m.wayfarer_include)
   return true
@@ -91,41 +94,82 @@ for (const dir of fs.readdirSync(`${game}/data/maps`)) {
   const m = JSON.parse(fs.readFileSync(f))
   if (compiled(m)) maps[m.id] = m
 }
-const placed = new Map()
-const seams = []
-const queue = [[root, 0, 0]]
-while (queue.length) {
-  const [id, x, y] = queue.shift()
-  if (placed.has(id)) continue
-  const m = maps[id],
-    l = layouts[m.layout]
-  placed.set(id, { x, y, m, l })
-  for (const c of m.connections ?? []) {
-    const target = REWIRED[`${m.name}|${c.map}`] ?? c.map
-    const t = maps[target]
-    if (!t) continue
-    const tl = layouts[t.layout],
-      o = c.offset
-    const at = {
-      up: [x + o, y - tl.height],
-      down: [x + o, y + l.height],
-      left: [x - tl.width, y + o],
-      right: [x + l.width, y + o],
-    }[c.direction]
-    if (!at) continue
-    if (placed.has(target)) {
-      // Already placed from elsewhere: note where this connection disagrees.
-      const other = placed.get(target)
-      if (other.x !== at[0] || other.y !== at[1])
-        seams.push(
-          `${m.name} -> ${t.name}: placed at ${other.x},${other.y}, this connection says ${at[0]},${at[1]}`,
-        )
-      continue
+// Connections only promise that each pair of neighbors lines up; around a
+// loop of maps the offsets need not add up, so one link per loop must give.
+// Place the maps along a spanning tree of links, and choose which links to
+// leave out so the fewest map rows and columns end up drawn over each other:
+// a leftover mismatch then shows as a gap, filled like any other, instead
+// of one map cut through another.
+const edgeKey = (a, b) => [a, b].toSorted().join(" ~ ")
+const place = (forbidden) => {
+  const placed = new Map()
+  const queue = [[root, 0, 0]]
+  while (queue.length > 0) {
+    const [id, x, y] = queue.shift()
+    if (placed.has(id)) continue
+    const m = maps[id],
+      l = layouts[m.layout]
+    placed.set(id, { x, y, m, l })
+    for (const c of Array.isArray(m.connections) ? m.connections : []) {
+      const target = REWIRED[`${m.name}|${c.map}`] ?? c.map
+      const t = maps[target]
+      if (!t || placed.has(target) || forbidden.has(edgeKey(id, target))) continue
+      const tl = layouts[t.layout],
+        o = c.offset
+      const at = {
+        up: [x + o, y - tl.height],
+        down: [x + o, y + l.height],
+        left: [x - tl.width, y + o],
+        right: [x + l.width, y + o],
+      }[c.direction]
+      if (at) queue.push([target, ...at])
     }
-    queue.push([target, ...at])
   }
+  return placed
 }
-for (const seam of seams) console.log("disagrees:", seam)
+const overlap = (placed) => {
+  const list = [...placed.values()]
+  let area = 0
+  for (let i = 0; i < list.length; i++)
+    for (let j = i + 1; j < list.length; j++) {
+      const a = list[i],
+        b = list[j]
+      const w = Math.min(a.x + a.l.width, b.x + b.l.width) - Math.max(a.x, b.x)
+      const h = Math.min(a.y + a.l.height, b.y + b.l.height) - Math.max(a.y, b.y)
+      if (w > 0 && h > 0) area += w * h
+    }
+  return area
+}
+const links = new Set()
+for (const [id, m] of Object.entries(maps))
+  for (const c of Array.isArray(m.connections) ? m.connections : []) {
+    const target = REWIRED[`${m.name}|${c.map}`] ?? c.map
+    if (maps[target]) links.add(edgeKey(id, target))
+  }
+const forbidden = new Set()
+let placed = place(forbidden)
+const total = placed.size
+let best = overlap(placed)
+console.log("overlap before:", best)
+for (let round = 0; round < 12 && best > 0; round++) {
+  let pick = null
+  for (const link of links) {
+    if (forbidden.has(link)) continue
+    forbidden.add(link)
+    const trial = place(forbidden)
+    forbidden.delete(link)
+    if (trial.size < total) continue
+    const area = overlap(trial)
+    if (area < best) {
+      best = area
+      pick = link
+    }
+  }
+  if (!pick) break
+  forbidden.add(pick)
+  console.log("leave out:", pick, "-> overlap", best)
+}
+placed = place(forbidden)
 const all = [...placed.values()]
 const minX = Math.min(...all.map((p) => p.x)),
   minY = Math.min(...all.map((p) => p.y))
@@ -263,7 +307,20 @@ const towns = all
   .map((p) => ({ name: p.m.name, x: p.x - minX + p.l.width / 2, y: p.y - minY + p.l.height / 2 }))
 fs.writeFileSync(
   `${outDir}/meta.json`,
-  JSON.stringify({ width: W, height: H, columns: COLUMNS, count: atlasTiles.length, towns }),
+  JSON.stringify({
+    width: W,
+    height: H,
+    columns: COLUMNS,
+    count: atlasTiles.length,
+    towns,
+    maps: all.map((p) => ({
+      name: p.m.name,
+      x: p.x - minX,
+      y: p.y - minY,
+      width: p.l.width,
+      height: p.l.height,
+    })),
+  }),
 )
 console.log(
   "atlas",
