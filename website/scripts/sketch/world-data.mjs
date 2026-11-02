@@ -3,6 +3,7 @@
 // out by their connections, loose pieces placed by their Town Map cells, and
 // the regions arranged on one sea.
 // usage: pnpm sketch:world
+import { spawnSync } from "node:child_process"
 import fs from "node:fs"
 const game = "/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/website-landing/pokemon-wayfarer/game"
 const lib =
@@ -1086,6 +1087,25 @@ fs.mkdirSync(outDir, { recursive: true })
 writePng(`${outDir}/atlas.png`, COLUMNS * 16, rows * 16, atlas)
 fs.writeFileSync(`${outDir}/grid.bin`, Buffer.from(grid.buffer))
 writePng(`${outDir}/overview.png`, W, H, overview)
+// The far-out view is the first thing to load; a JPEG of it is a third the size
+// and looks the same. Made when ffmpeg is around; the explorer falls back to the PNG.
+{
+  const made = spawnSync(
+    "ffmpeg",
+    [
+      "-loglevel",
+      "error",
+      "-y",
+      "-i",
+      `${outDir}/overview.png`,
+      "-q:v",
+      "2",
+      `${outDir}/overview.jpg`,
+    ],
+    { stdio: "inherit" },
+  )
+  if (made.status !== 0) fs.rmSync(`${outDir}/overview.jpg`, { force: true })
+}
 const towns = all
   .filter((p) => ["MAP_TYPE_TOWN", "MAP_TYPE_CITY"].includes(p.m.map_type))
   .map((p) => ({ name: p.m.name, x: p.x - minX + p.l.width / 2, y: p.y - minY + p.l.height / 2 }))

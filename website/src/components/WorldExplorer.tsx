@@ -60,7 +60,9 @@ export const WorldExplorer = ({ base }: { base: string }) => {
       const { width, height, columns } = meta
 
       // The far-out view, one pixel per metatile, drawn like a map by the data script.
-      const overview = await loadImage(`${base}/overview.png`)
+      const overview = await loadImage(`${base}/overview.jpg`).catch(() =>
+        loadImage(`${base}/overview.png`),
+      )
       if (disposed) return
 
       // Chunks of 32x32 metatiles, drawn on demand at 4 or 16 pixels a
