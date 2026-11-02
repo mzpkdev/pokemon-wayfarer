@@ -46,4 +46,29 @@
 #define FERRY_BERTH_DOCK    0
 #define FERRY_BERTH_LAUNCH  1
 
+// The temp flag a ship map's undrawn hosts and an empty berth's ship object hide behind (cleared on every map load).
+#define FERRY_HIDE_FLAG  FLAG_TEMP_1F
+
+// Cabin hosts: the request kinds (the spec's v0 table).
+#define FERRY_REQ_BATTLE         0
+#define FERRY_REQ_DOUBLE_BATTLE  1
+#define FERRY_REQ_ITEM           2
+#define FERRY_REQ_TYPE           3
+#define FERRY_REQ_SPECIES        4
+#define FERRY_REQ_COLOUR         5
+#define FERRY_REQ_MOVE           6
+#define FERRY_REQ_EVOLVED        7
+#define FERRY_REQ_REGION         8
+#define FERRY_REQ_FRIENDSHIP     9
+#define FERRY_REQ_KEY_ITEM       10
+#define FERRY_REQ_QUIZ           11
+#define FERRY_REQ_COIN           12
+
+// What talking to a host does (Ferry_HostTalk).
+#define FERRY_HOST_NONE    0   // not one of this voyage's hosts
+#define FERRY_HOST_CHAT    1   // settled and the cabin isn't yours: small talk
+#define FERRY_HOST_BED     2   // the cabin is yours and has a bed: they point at it
+#define FERRY_HOST_SLEEP   3   // the cabin is yours and has no bed: they offer the sleep
+#define FERRY_HOST_ASK     4   // an open request
+
 #endif // GUARD_CONSTANTS_WAYFARER_FERRY_H

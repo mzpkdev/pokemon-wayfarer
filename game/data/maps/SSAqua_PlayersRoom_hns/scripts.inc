@@ -2,6 +2,9 @@ SSAqua_PlayersRoom_hns_MapScripts::
 	.byte 0
 
 SSAquaRooms_EventScript_Bed::
+#if IS_WAYFARER
+	goto Ferry_EventScript_Bed
+#else
 	specialvar VAR_RESULT, IsPokecenterChallengeActivated
 	goto_if_eq VAR_RESULT, TRUE, SSAquaRooms_EventScript_Bed_PokecenterChallenge
 	lockall
@@ -10,6 +13,7 @@ SSAquaRooms_EventScript_Bed::
 	call Common_EventScript_OutOfCenterPartyHeal
 	releaseall
 	end
+#endif
 
 SSAquaRooms_EventScript_Bed_PokecenterChallenge::
 	msgbox SSAquaRooms_Text_TakeRestOnBed_PokecenterChallenge, MSGBOX_DEFAULT

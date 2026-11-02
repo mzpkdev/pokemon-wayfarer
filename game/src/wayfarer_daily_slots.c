@@ -22,6 +22,7 @@
 #include "pokemon_storage_system.h"
 #include "rtc.h"
 #include "script.h"
+#include "wayfarer_ferry.h"
 #include "data/item_slots/pools.h"
 #include "data/item_slots/spots.h"
 
@@ -86,8 +87,12 @@ static struct WayfarerDailySlots *Daily(void)
     return &gPokemonStoragePtr->dailySlots;
 }
 
+// Aboard a ferry the day stays the one frozen at boarding (the spec's Passengers): the draw, the phone's
+// picks and the snapshots stamped from it hold until the player goes ashore.
 u32 DailySlots_GetDay(void)
 {
+    if (Ferry_IsAboard())
+        return Ferry_GetVoyage()->slotDay;
 #if TESTING || defined(E2E_TESTING)
     if (gDailySlotsDebugFlags & DAILY_DEBUG_DAY)
         return gDailySlotsDebugDay;
