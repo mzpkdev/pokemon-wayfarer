@@ -1,6 +1,4 @@
 ---
-import CtaDawn from "~/components/cta/CtaDawn.astro"
-import CtaPoster from "~/components/cta/CtaPoster.astro"
 import CtaProfessor from "~/components/cta/CtaProfessor.astro"
 import { TitleScene } from "~/components/TitleScene"
 import Layout from "~/layouts/Layout.astro"
@@ -15,19 +13,6 @@ const volbeats = [
 ---
 
 <Layout title="Pokémon Wayfarer">
-  <script is:inline>
-    // Preview switch between the sign-up directions: ?cta=a, b or c.
-    const cta = new URLSearchParams(location.search).get("cta")
-    if (cta === "a" || cta === "b" || cta === "c") document.documentElement.dataset.cta = cta
-  </script>
-  <nav
-    aria-label="Sign-up direction"
-    class="cta-switch fixed right-4 bottom-4 z-50 hidden gap-1 bg-hollow/90 p-1 text-sm ring-1 ring-paper/20"
-  >
-    <a href="?cta=a#notify-a" data-option="a" class="px-3 py-1">A · Poster</a>
-    <a href="?cta=b#notify-b" data-option="b" class="px-3 py-1">B · Dawn</a>
-    <a href="?cta=c#notify-c" data-option="c" class="px-3 py-1">C · Professor</a>
-  </nav>
   <main>
     <TitleScene client:load />
 
@@ -64,12 +49,7 @@ const volbeats = [
           }
         </div>
 
-        <!--
-          Three directions for the sign-up, picked with ?cta=a, ?cta=b or ?cta=c
-          while we choose one. A shows without a choice.
-        -->
-        <CtaPoster />
-        <CtaDawn />
+        <!-- The focal point after the Poké Ball: PROF. OAK asks for your email. -->
         <CtaProfessor />
 
         <section aria-labelledby="about" class="relative mx-auto max-w-5xl px-6 py-16">

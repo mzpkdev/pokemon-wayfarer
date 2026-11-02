@@ -203,8 +203,13 @@ save("text/down-arrow.png", renderIndexed(source("fonts/down_arrow.png")))
 // Text window frame 1, the game's default.
 save("frames/1.png", renderIndexed(source("text_window/1.png")))
 
-// PROF. OAK as the new game intro shows him.
-save("people/oak.png", renderIndexed(source("oak_speech_hns/oak_hns.png")))
+// PROF. OAK from the FireRed and LeafGreen intro, an 8bpp picture whose
+// palette the game loads at BG palette 6, so pixel n takes color n - 96.
+const oakPalette = Array.from({ length: 256 }, () => [0, 0, 0, 0])
+readJascPalette(source("oak_speech/oak/pal.pal")).forEach(
+  (color, i) => (oakPalette[96 + i] = color),
+)
+save("people/oak.png", renderIndexed(source("oak_speech/oak/pic.png"), oakPalette))
 
 // Key item icons for the feature list, each colored by its own palette.
 for (const item of [

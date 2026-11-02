@@ -1,20 +1,23 @@
 ---
-/** Direction C: PROF. OAK asks for your email the way his intro asks for your name. */
-import { RELEASE_LABEL } from "~/lib/release"
+/**
+ * The launch sign-up, the focal point under the title scene: PROF. OAK, as the
+ * FireRed and LeafGreen intro draws him, asks for your email the way his intro
+ * asks for your name.
+ */
 import SignupForm from "~/components/SignupForm.astro"
+import { RELEASE_LABEL } from "~/lib/release"
 
 import CtaLinks from "./CtaLinks.astro"
 ---
 
 <section
-  data-cta-option="c"
-  aria-labelledby="notify-c"
-  class="cta-option relative mx-auto min-h-[90vh] max-w-5xl items-center px-6 pt-8 pb-24"
+  aria-labelledby="notify"
+  class="relative mx-auto flex min-h-[90vh] max-w-5xl items-center px-6 pt-8 pb-24"
 >
-  <div class="grid w-full items-center gap-10 lg:grid-cols-[auto_1fr] lg:gap-16">
-    <div class="relative mx-auto w-max">
+  <div class="grid w-full items-center gap-8 lg:grid-cols-[1fr_auto] lg:gap-16">
+    <div class="relative mx-auto w-max lg:order-last">
       <div
-        class="absolute inset-x-[-15%] bottom-[2%] h-[14%] rounded-[50%] bg-grass-2 shadow-[inset_0_-8px_0_var(--color-grass-1)]"
+        class="absolute inset-x-[8%] bottom-[-2%] h-[7%] rounded-[50%] bg-hollow/70"
         aria-hidden="true"
       >
       </div>
@@ -22,18 +25,18 @@ import CtaLinks from "./CtaLinks.astro"
         src="/game/people/oak.png"
         alt="Professor Oak"
         width="64"
-        height="64"
-        class="pixelated relative size-48 sm:size-64"
+        height="96"
+        class="pixelated relative h-48 w-32 sm:h-72 sm:w-48 lg:h-96 lg:w-64"
       />
     </div>
     <div>
       <p class="pixel-label text-logo-yellow">PROF. OAK</p>
-      <h2 id="notify-c" class="pixel-heading pixel-heading-xl mt-3">First, what is your email?</h2>
+      <h2 id="notify" class="pixel-heading pixel-heading-xl mt-3">First, what is your email?</h2>
       <p class="mt-6 max-w-xl text-lg leading-relaxed text-paper/80">
         Tell me where to write and I'll let you know the moment your journey can begin, on {RELEASE_LABEL}.
         You may hear from me now and then before that, too.
       </p>
-      <SignupForm id="email-c" variant="naming" class="mt-10 max-w-xl" />
+      <SignupForm id="signup-email" class="mt-10 max-w-xl" />
       <CtaLinks class="mt-8" />
     </div>
   </div>

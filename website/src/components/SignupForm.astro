@@ -4,76 +4,36 @@ import { SIGNUP_ACTION, SIGNUP_FIELD } from "~/lib/signup"
 
 /**
  * Email sign-up for development updates and launch day, posted straight to the
- * mailing list service. `bar` joins the field and button into one control;
- * `naming` draws the field like the game's naming screen.
+ * mailing list service: the field and button joined into one bar.
  */
 type Props = {
   id: string
-  variant: "bar" | "naming"
   class?: string
 }
 
-const { id, variant, class: className } = Astro.props
+const { id, class: className } = Astro.props
 const open = SIGNUP_ACTION !== undefined
 ---
 
 <form action={SIGNUP_ACTION} method="post" class={cn("w-full", className)}>
   <label for={id} class="sr-only">Email address</label>
-  {
-    variant === "bar" ? (
-      <div class="pixel-corners flex flex-col gap-2 bg-paper p-2 shadow-[inset_0_0_0_4px_var(--color-logo-blue)] sm:flex-row sm:items-center sm:p-2.5">
-        <input
-          id={id}
-          name={SIGNUP_FIELD}
-          type="email"
-          required
-          autocomplete="email"
-          placeholder="you@example.com"
-          disabled={!open}
-          class="min-w-0 flex-1 bg-transparent px-4 py-3 text-lg text-ink placeholder:text-ink/45 focus:outline-none"
-        />
-        <button
-          type="submit"
-          disabled={!open}
-          class="pixel-corners pixel-label bg-logo-yellow px-7 pt-3 pb-4 text-logo-blue shadow-[inset_0_-6px_0_rgb(200_144_0),inset_0_4px_0_rgb(255_240_140)] hover:bg-[rgb(255_228_80)] focus-visible:shadow-[inset_0_0_0_4px_var(--color-logo-blue)] focus-visible:outline-none active:translate-y-0.5 disabled:cursor-not-allowed"
-        >
-          {open ? "Notify me" : "Opening soon"}
-        </button>
-      </div>
-    ) : (
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-end">
-        <input
-          id={id}
-          name={SIGNUP_FIELD}
-          type="email"
-          required
-          autocomplete="email"
-          placeholder="your email"
-          disabled={!open}
-          class="naming-field min-w-0 flex-1 bg-transparent px-1 pb-2 text-2xl text-paper caret-logo-yellow placeholder:text-paper/40 focus:outline-none"
-        />
-        <button
-          type="submit"
-          disabled={!open}
-          class="pixel-corners pixel-label bg-logo-yellow px-6 pt-2 pb-3 text-logo-blue shadow-[inset_0_-6px_0_rgb(200_144_0),inset_0_4px_0_rgb(255_240_140)] hover:bg-[rgb(255_228_80)] focus-visible:shadow-[inset_0_0_0_4px_var(--color-paper)] focus-visible:outline-none active:translate-y-0.5 disabled:cursor-not-allowed"
-        >
-          {open ? "OK ▶" : "Soon ▶"}
-        </button>
-      </div>
-    )
-  }
+  <div class="pixel-corners flex flex-col gap-2 bg-paper p-2 shadow-[inset_0_0_0_4px_var(--color-logo-blue)] sm:flex-row sm:items-center sm:p-2.5">
+    <input
+      id={id}
+      name={SIGNUP_FIELD}
+      type="email"
+      required
+      autocomplete="email"
+      placeholder="you@example.com"
+      disabled={!open}
+      class="min-w-0 flex-1 bg-transparent px-4 py-3 text-lg text-ink placeholder:text-ink/45 focus:outline-none"
+    />
+    <button
+      type="submit"
+      disabled={!open}
+      class="pixel-corners pixel-label bg-logo-yellow px-7 pt-3 pb-4 text-logo-blue shadow-[inset_0_-6px_0_rgb(200_144_0),inset_0_4px_0_rgb(255_240_140)] hover:bg-[rgb(255_228_80)] focus-visible:shadow-[inset_0_0_0_4px_var(--color-logo-blue)] focus-visible:outline-none active:translate-y-0.5 disabled:cursor-not-allowed"
+    >
+      {open ? "Notify me" : "Opening soon"}
+    </button>
+  </div>
 </form>
-
-<style>
-  /* The naming screen underlines each letter slot. */
-  .naming-field {
-    background-image: linear-gradient(to right, var(--color-paper) 60%, transparent 60%);
-    background-size: 24px 4px;
-    background-repeat: repeat-x;
-    background-position: 0 100%;
-  }
-
-  .naming-field:focus {
-    background-image: linear-gradient(to right, var(--color-logo-yellow) 60%, transparent 60%);
-  }
-</style>
