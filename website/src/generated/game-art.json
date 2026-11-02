@@ -113,6 +113,18 @@
     "x": 0,
     "y": 0
   },
+  "people/stage.png": {
+    "width": 128,
+    "height": 32,
+    "x": 0,
+    "y": 0
+  },
+  "people/wooper.png": {
+    "width": 64,
+    "height": 128,
+    "x": 0,
+    "y": 0
+  },
   "items/town-map.png": {
     "width": 24,
     "height": 24,
@@ -156,6 +168,12 @@
     "y": 0
   },
   "items/tri-pass.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "items/letter.png": {
     "width": 24,
     "height": 24,
     "x": 0,

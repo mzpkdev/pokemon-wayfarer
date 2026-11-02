@@ -1,8 +1,9 @@
 ---
 /**
- * The launch sign-up, the focal point under the title scene: PROF. OAK, as the
- * FireRed and LeafGreen intro draws him, asks for your email the way his intro
- * asks for your name.
+ * The launch sign-up, the focal point under the title scene, staged like
+ * Wayfarer's new game intro: PROF. OAK (as FireRed and LeafGreen draw him)
+ * stands on the intro's grey oval with WOOPER, and asks for your email on the
+ * naming screen the way the intro asks for your name.
  */
 import SignupForm from "~/components/SignupForm.astro"
 import { RELEASE_LABEL } from "~/lib/release"
@@ -10,25 +11,17 @@ import { RELEASE_LABEL } from "~/lib/release"
 import CtaLinks from "./CtaLinks.astro"
 ---
 
-<section
-  aria-labelledby="notify"
-  class="relative mx-auto flex min-h-[90vh] max-w-5xl items-center px-6 pt-8 pb-24"
->
-  <div class="grid w-full items-center gap-8 lg:grid-cols-[1fr_auto] lg:gap-16">
-    <div class="relative mx-auto w-max lg:order-last">
-      <div
-        class="absolute inset-x-[8%] bottom-[-2%] h-[7%] rounded-[50%] bg-hollow/70"
-        aria-hidden="true"
-      >
+<section aria-labelledby="notify" class="relative mx-auto flex min-h-[90vh] max-w-6xl items-center px-6 pt-8 pb-24">
+  <div class="grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-16">
+    <div class="oak-stage relative mx-auto lg:order-last" aria-hidden="true">
+      <div class="spotlight absolute"></div>
+      <img src="/game/people/stage.png" alt="" width="128" height="32" class="pixelated stage absolute" />
+      <div class="wooper absolute">
+        <div class="wooper-frames pixelated"></div>
       </div>
-      <img
-        src="/game/people/oak.png"
-        alt="Professor Oak"
-        width="64"
-        height="96"
-        class="pixelated relative h-48 w-32 sm:h-72 sm:w-48 lg:h-96 lg:w-64"
-      />
+      <img src="/game/people/oak.png" alt="" width="64" height="96" class="pixelated oak absolute" />
     </div>
+
     <div>
       <p class="pixel-label text-logo-yellow">PROF. OAK</p>
       <h2 id="notify" class="pixel-heading pixel-heading-xl mt-3">First, what is your email?</h2>
@@ -41,3 +34,119 @@ import CtaLinks from "./CtaLinks.astro"
     </div>
   </div>
 </section>
+
+<style>
+  /* The stage is laid out in GBA pixels, drawn --s CSS pixels each. */
+  .oak-stage {
+    --s: 2px;
+    width: calc(160 * var(--s));
+    height: calc(136 * var(--s));
+  }
+
+  @media (min-width: 640px) {
+    .oak-stage {
+      --s: 3px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .oak-stage {
+      --s: 3px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .oak-stage {
+      --s: 4px;
+    }
+  }
+
+  .stage {
+    left: calc(16 * var(--s));
+    top: calc(104 * var(--s));
+    width: calc(128 * var(--s));
+    height: calc(32 * var(--s));
+  }
+
+  .oak {
+    left: calc(68 * var(--s));
+    top: calc(26 * var(--s));
+    width: calc(64 * var(--s));
+    height: calc(96 * var(--s));
+  }
+
+  /* Light falling on the stage from above, the only light in the dark grass. */
+  .spotlight {
+    left: 0;
+    right: 0;
+    top: calc(-40 * var(--s));
+    bottom: calc(16 * var(--s));
+    clip-path: polygon(38% 0, 62% 0, 92% 100%, 8% 100%);
+    background: linear-gradient(to bottom, rgb(248 248 200 / 0), rgb(248 248 200 / 0.14));
+  }
+
+  /* WOOPER pops out of a Poké Ball beside him, stays a while, then goes back in. */
+  .wooper {
+    left: calc(8 * var(--s));
+    top: calc(64 * var(--s));
+    width: calc(64 * var(--s));
+    height: calc(64 * var(--s));
+    transform-origin: 50% 90%;
+    animation: wooper-out 9s steps(1) infinite;
+  }
+
+  .wooper-frames {
+    width: 100%;
+    height: 100%;
+    background: url("/game/people/wooper.png") 0 0 / 100% 200%;
+    animation: wooper-idle 1.2s steps(1) infinite;
+  }
+
+  @keyframes wooper-idle {
+    0%,
+    70% {
+      background-position-y: 0;
+    }
+    71%,
+    100% {
+      background-position-y: 100%;
+    }
+  }
+
+  @keyframes wooper-out {
+    0%,
+    6% {
+      scale: 0;
+      filter: brightness(4);
+    }
+    8% {
+      scale: 0.5;
+      filter: brightness(3);
+    }
+    10% {
+      scale: 1;
+      filter: brightness(2);
+    }
+    12%,
+    84% {
+      scale: 1;
+      filter: none;
+    }
+    86% {
+      scale: 0.6;
+      filter: brightness(3);
+    }
+    88%,
+    100% {
+      scale: 0;
+      filter: brightness(4);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wooper,
+    .wooper-frames {
+      animation: none;
+    }
+  }
+</style>

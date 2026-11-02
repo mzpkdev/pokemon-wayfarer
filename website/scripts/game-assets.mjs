@@ -211,21 +211,53 @@ readJascPalette(source("oak_speech/oak/pal.pal")).forEach(
 )
 save("people/oak.png", renderIndexed(source("oak_speech/oak/pic.png"), oakPalette))
 
-// Key item icons for the feature list, each colored by its own palette.
-for (const item of [
-  "town_map",
-  "ss_ticket",
-  "sun_stone",
-  "vs_seeker",
-  "rare_candy",
-  "master_ball",
-  "soothe_bell",
-  "tri_pass",
+// The grey oval PROF. OAK stands on in Wayfarer's new game intro. At runtime
+// the intro loads its gradient palette one slot up over BG palette 0, so slot
+// n shows gradient color n - 1, at the GBA's 5-bit color depth.
+const stagePalette = [
+  ...readJascPalette(source("oak_speech_hns/bg0_hns.pal")),
+  ...readJascPalette(source("oak_speech_hns/bg1_hns.pal")),
+]
+const gradient = readJascPalette(source("oak_speech_hns/bg2_hns.pal"))
+for (let slot = 1; slot <= 8; slot++)
+  stagePalette[slot] = [...gradient[slot - 1].slice(0, 3).map((c) => c & 0xf8), 255]
+const stage = tilemap(
+  readTiles(source("oak_speech_hns/shadow_hns.png")),
+  source("oak_speech_hns/map_hns.bin"),
+  4,
+  stagePalette,
+)
+// The intro draws it on black; drop the black so it sits on the page instead.
+const oval = crop(stage, 56, 72, 128, 32)
+for (let i = 0; i < oval.rgba.length; i += 4)
+  if (oval.rgba[i] === 0 && oval.rgba[i + 1] === 0 && oval.rgba[i + 2] === 0) oval.rgba[i + 3] = 0
+save("people/stage.png", oval)
+
+// The POKéMON the intro introduces, with its two front frames stacked.
+save(
+  "people/wooper.png",
+  renderIndexed(
+    source("pokemon/wooper/anim_front.png"),
+    readJascPalette(source("pokemon/wooper/normal.pal")),
+  ),
+)
+
+// Key item icons, each colored by its palette (named when the icon shares one).
+for (const [item, palette = item] of [
+  ["town_map"],
+  ["ss_ticket"],
+  ["sun_stone"],
+  ["vs_seeker"],
+  ["rare_candy"],
+  ["master_ball"],
+  ["soothe_bell"],
+  ["tri_pass"],
+  ["letter", "lava_cookie_and_letter"],
 ]) {
-  const palette = readJascPalette(source(`items/icon_palettes/${item}.pal`))
+  const colors = readJascPalette(source(`items/icon_palettes/${palette}.pal`))
   save(
     `items/${item.replaceAll("_", "-")}.png`,
-    renderIndexed(source(`items/icons/${item}.png`), palette),
+    renderIndexed(source(`items/icons/${item}.png`), colors),
   )
 }
 

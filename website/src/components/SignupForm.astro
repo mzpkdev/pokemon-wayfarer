@@ -3,8 +3,9 @@ import { cn } from "~/lib/cn"
 import { SIGNUP_ACTION, SIGNUP_FIELD } from "~/lib/signup"
 
 /**
- * Email sign-up for development updates and launch day, posted straight to the
- * mailing list service: the field and button joined into one bar.
+ * Email sign-up for development updates and launch day, drawn as the game's
+ * naming screen asking "YOUR EMAIL?", and posted straight to the mailing list
+ * service.
  */
 type Props = {
   id: string
@@ -15,25 +16,112 @@ const { id, class: className } = Astro.props
 const open = SIGNUP_ACTION !== undefined
 ---
 
-<form action={SIGNUP_ACTION} method="post" class={cn("w-full", className)}>
-  <label for={id} class="sr-only">Email address</label>
-  <div class="pixel-corners flex flex-col gap-2 bg-paper p-2 shadow-[inset_0_0_0_4px_var(--color-logo-blue)] sm:flex-row sm:items-center sm:p-2.5">
-    <input
-      id={id}
-      name={SIGNUP_FIELD}
-      type="email"
-      required
-      autocomplete="email"
-      placeholder="you@example.com"
-      disabled={!open}
-      class="min-w-0 flex-1 bg-transparent px-4 py-3 text-lg text-ink placeholder:text-ink/45 focus:outline-none"
+<form action={SIGNUP_ACTION} method="post" class={cn("naming-board pixel-corners w-full", className)}>
+  <div class="naming-box pixel-corners flex items-center gap-4 sm:gap-5">
+    <img
+      src="/game/items/letter.png"
+      alt=""
+      width="24"
+      height="24"
+      class="pixelated size-12 shrink-0 sm:size-[72px]"
     />
-    <button
-      type="submit"
-      disabled={!open}
-      class="pixel-corners pixel-label bg-logo-yellow px-7 pt-3 pb-4 text-logo-blue shadow-[inset_0_-6px_0_rgb(200_144_0),inset_0_4px_0_rgb(255_240_140)] hover:bg-[rgb(255_228_80)] focus-visible:shadow-[inset_0_0_0_4px_var(--color-logo-blue)] focus-visible:outline-none active:translate-y-0.5 disabled:cursor-not-allowed"
-    >
-      {open ? "Notify me" : "Opening soon"}
-    </button>
+    <div class="min-w-0 flex-1">
+      <label for={id} class="naming-prompt">YOUR EMAIL?</label>
+      <div class="mt-1 flex items-center gap-2">
+        <span class="naming-prompt" aria-hidden="true">▶</span>
+        <input
+          id={id}
+          name={SIGNUP_FIELD}
+          type="email"
+          required
+          autocomplete="email"
+          placeholder="you@example.com"
+          disabled={!open}
+          class="naming-field min-w-0 flex-1 bg-transparent px-1 pb-2 text-lg text-ink placeholder:text-ink/40 focus:outline-none"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="mt-4 flex items-center justify-end gap-3">
+    {!open && <span class="text-sm text-ink/70">Sign-ups open soon</span>}
+    <button type="submit" disabled={!open} class="naming-ok pixel-corners pixel-label">OK</button>
   </div>
 </form>
+
+<style>
+  /* Colors sampled from the naming screen. */
+  .naming-board {
+    --step: 4px;
+    padding: 20px;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgb(248 248 248) 0 4px,
+      rgb(240 232 192) 4px 8px
+    );
+    box-shadow:
+      inset 0 0 0 4px rgb(224 216 88),
+      inset 0 0 0 8px rgb(248 248 248);
+  }
+
+  .naming-box {
+    --step: 4px;
+    padding: 16px 20px;
+    background: rgb(248 248 248);
+    box-shadow:
+      inset 0 0 0 3px rgb(136 136 128),
+      inset 0 0 0 9px rgb(192 184 176),
+      inset 0 0 0 12px rgb(224 216 208);
+  }
+
+  .naming-prompt {
+    font-family: var(--font-gba);
+    font-size: 32px;
+    line-height: 32px;
+    -webkit-font-smoothing: none;
+    color: rgb(96 96 96);
+    text-shadow:
+      2px 0 rgb(208 208 200),
+      0 2px rgb(208 208 200),
+      2px 2px rgb(208 208 200);
+  }
+
+  /* The naming screen marks each letter slot with an underscore. */
+  .naming-field {
+    background-image: linear-gradient(to right, rgb(96 96 96) 65%, transparent 65%);
+    background-size: 20px 4px;
+    background-repeat: repeat-x;
+    background-position: 0 100%;
+  }
+
+  .naming-field:focus {
+    background-image: linear-gradient(to right, rgb(48 80 200) 65%, transparent 65%);
+  }
+
+  .naming-ok {
+    padding: 8px 28px 12px;
+    background: rgb(232 208 64);
+    color: rgb(56 56 56);
+    box-shadow:
+      inset 0 0 0 4px rgb(56 56 56),
+      inset 0 -8px 0 rgb(184 160 32),
+      inset 0 8px 0 rgb(248 240 152);
+  }
+
+  .naming-ok:hover:enabled {
+    background: rgb(248 224 96);
+  }
+
+  .naming-ok:active:enabled {
+    translate: 0 2px;
+  }
+
+  .naming-ok:focus-visible {
+    outline: 4px solid rgb(48 80 200);
+    outline-offset: 2px;
+  }
+
+  .naming-ok:disabled {
+    cursor: not-allowed;
+    filter: saturate(0.5);
+  }
+</style>
