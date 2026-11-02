@@ -219,7 +219,7 @@ const REGIONS = [
   {
     name: "Hoenn",
     roots: ["MAP_LITTLEROOT_TOWN", "MAP_SOOTOPOLIS_CITY"],
-    at: [-260, 560],
+    at: [-160, 600],
   },
   { name: "Sinjoh", roots: ["MAP_ROUTE49_HNS"], at: [0, 0], beside: "Sinjoh" },
   {
@@ -248,9 +248,9 @@ const REGIONS = [
       "MAP_SIX_ISLAND_PATTERN_BUSH",
       "MAP_SEVEN_ISLAND",
     ],
-    at: [760, 640],
+    at: [720, 560],
   },
-  { name: "Alola", roots: ["MAP_MELEMELE_ISLE_HNS"], at: [1500, 760] },
+  { name: "Alola", roots: ["MAP_MELEMELE_ISLE_HNS"], at: [1220, 700] },
 ]
 // Each Sevii Town Map is its own cell space; set them out like the islands lie.
 const SEVII_MAPS = [
