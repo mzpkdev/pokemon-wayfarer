@@ -169,11 +169,12 @@ describe.sequential("Wayfarer S.S. ferries", () => {
     expect(ask.choice.kind).toBe("yes-no")
     expect(ask.map.name).toBe("lilycove-city-harbor")
     await game.controls.press("a")
+    // Read the boarding message through, but stop pressing the moment the Frontier map is reached: an A press
+    // there would talk to the Frontier's ferry attendant and sail straight back.
     for (let attempt = 0; attempt < 120; attempt++) {
-      if (await readyOn(game, "battle-frontier-outside-west")) break
       await game.wait.frames(30)
-      const now = await game.state.read()
-      if (now.dialogueOpen) await game.controls.press("a")
+      if ((await game.state.read()).map.name === "battle-frontier-outside-west") break
+      await game.controls.press("a")
     }
     await expect(game.state.read()).resolves.toMatchObject({
       map: { name: "battle-frontier-outside-west" },
