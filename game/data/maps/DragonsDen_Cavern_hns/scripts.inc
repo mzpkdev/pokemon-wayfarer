@@ -40,7 +40,7 @@ DragonsDen_Cavern_Trigger_ClairLeft::
 	setflag FLAG_HIDE_DRAGONS_DEN_CAVERN_CLAIR
 	removeobject LOCALID_DRAGONSDEN2_CLAIR
 	playse SE_EXIT
-	setvar VAR_BLACKTHORN_CITY_STATE, 4
+	call DragonsDen_Cavern_EventScript_TrialDone
 	setrespawn HEAL_LOCATION_BLACKTHORN_CITY_HNS
 	releaseall
 	end
@@ -58,7 +58,7 @@ DragonsDen_Cavern_Trigger_ClairMid::
 	setflag FLAG_HIDE_DRAGONS_DEN_CAVERN_CLAIR
 	removeobject LOCALID_DRAGONSDEN2_CLAIR
 	playse SE_EXIT
-	setvar VAR_BLACKTHORN_CITY_STATE, 4
+	call DragonsDen_Cavern_EventScript_TrialDone
 	release
 	end
 
@@ -77,9 +77,16 @@ DragonsDen_Cavern_Trigger_ClairRight::
 	setflag FLAG_HIDE_DRAGONS_DEN_CAVERN_CLAIR
 	removeobject LOCALID_DRAGONSDEN2_CLAIR
 	playse SE_EXIT
-	setvar VAR_BLACKTHORN_CITY_STATE, 4
+	call DragonsDen_Cavern_EventScript_TrialDone
 	release
 	end
+
+@ The Den trial is done: Blackthorn moves on (forward only) and Elm owes the Master Ball. Neither
+@ touches Elm's lab state.
+DragonsDen_Cavern_EventScript_TrialDone::
+	setvar_forward VAR_BLACKTHORN_CITY_STATE, 4
+	setflag FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_OWED
+	return
 
 DragonsDen_Cavern_EventScript_Clair::
 	turnobject OBJ_EVENT_ID_PLAYER, DIR_WEST

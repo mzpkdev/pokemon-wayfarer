@@ -446,8 +446,7 @@ DragonsDen_Shrine_EventScript_ElderGiveBasicDratini::
 
 	msgbox DragonsDen_Shrine_Text_SymbolicDragon, MSGBOX_DEFAULT
 	setflag FLAG_GOT_DRATINI
-	release
-	end
+	goto DragonsDen_Shrine_EventScript_ElderElmMessage
 
 DragonsDen_Shrine_EventScript_ElderGiveSpecialDratini::
 	goto_if_set FLAG_GOT_DRATINI, DragonsDen_Shrine_EventScript_ElderAlreadyGotDratini
@@ -460,11 +459,21 @@ DragonsDen_Shrine_EventScript_ElderGiveSpecialDratini::
 
 	msgbox DragonsDen_Shrine_Text_SymbolicDragon, MSGBOX_DEFAULT
 	setflag FLAG_GOT_DRATINI
-	release
-	end
+	goto DragonsDen_Shrine_EventScript_ElderElmMessage
 
 DragonsDen_Shrine_EventScript_ElderAlreadyGotDratini::
 	msgbox DragonsDen_Shrine_Text_ClairsGrandfather, MSGBOX_DEFAULT
+	goto DragonsDen_Shrine_EventScript_ElderElmMessage
+
+@ The Elder's closing line for a visitor: no Elm call plays for them, so he sends them to
+@ Professor Elm and Blackthorn advances here instead.
+DragonsDen_Shrine_EventScript_ElderElmMessage::
+	specialvar VAR_RESULT, WayfarerIsJohtoOrigin
+	goto_if_eq VAR_RESULT, TRUE, DragonsDen_Shrine_EventScript_ElderElmMessageDone
+	goto_if_ne VAR_BLACKTHORN_CITY_STATE, 4, DragonsDen_Shrine_EventScript_ElderElmMessageDone
+	msgbox DragonsDen_Shrine_Text_ElderElmAskedForYou, MSGBOX_DEFAULT
+	setvar_forward VAR_BLACKTHORN_CITY_STATE, 5
+DragonsDen_Shrine_EventScript_ElderElmMessageDone::
 	release
 	end
 
@@ -480,6 +489,13 @@ DragonsDen_Shrine_Text_SymbolicDragon:
     .string "clan.\p"
     .string "You have shown that you can be\n"
     .string "entrusted with one.$"
+
+DragonsDen_Shrine_Text_ElderElmAskedForYou:
+    .string "One more thing.\p"
+    .string "PROFESSOR ELM in NEW BARK TOWN asked\n"
+    .string "to meet whoever earned the RISING\l"
+    .string "BADGE.\p"
+    .string "Do pay him a visit.$"
 
 DragonsDen_Shrine_Text_ClairsGrandfather:
     .string "CLAIR appears to have learned an\n"

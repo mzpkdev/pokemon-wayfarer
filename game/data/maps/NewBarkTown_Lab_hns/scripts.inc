@@ -84,20 +84,22 @@ NewBarkTown_Lab_EventScript_Elm::
 	faceplayer
 	goto_if_ne VAR_RESULT, ORIGIN_SCENE_NATIVE, NewBarkTown_Lab_EventScript_VisitorElm
 NewBarkTown_Lab_EventScript_ElmCampaign:
+	@ Elm's gifts have their own state and are checked before any errand branch, so they work
+	@ before the egg return, before the Violet aide, and after the ceremony.
+	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_OWED, NewBarkTown_Lab_EventScript_ElmCampaignNoBall
+	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_RECEIVED, NewBarkTown_Lab_EventScript_ElmMasterBall
+NewBarkTown_Lab_EventScript_ElmCampaignNoBall::
+	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_OWED, NewBarkTown_Lab_EventScript_ElmCampaignNoTicket
+	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED, NewBarkTown_Lab_EventScript_ElmSSTicket
+NewBarkTown_Lab_EventScript_ElmCampaignNoTicket::
 	goto_if_set FLAG_HIDE_NEWBARKTOWN_LAB_AIDE, NewBarkTown_Lab_EventScript_ElmAideIsWaiting
-	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 7, NewBarkTown_Lab_EventScript_ElmMasterBall
-	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 8, NewBarkTown_Lab_EventScript_ElmKimono
-	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 9, NewBarkTown_Lab_EventScript_ElmLeague
-	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 10, NewBarkTown_Lab_EventScript_ElmSSTicket
 
 	goto_if_unset FLAG_RECEIVED_TOGEPI_EGG, NewBarkTown_Lab_EventScript_Elm_AfterEggCheck
 	goto_if_set FLAG_SHOWN_ELM_TOGEPI, NewBarkTown_Lab_EventScript_Elm_CallMe
 	call_if_unset FLAG_SHOWN_ELM_TOGEPI, NewBarkTown_Lab_EventScript_Elm_Check_Togepi
 NewBarkTown_Lab_EventScript_Elm_AfterEggCheck:
 	goto_if_ge VAR_GOLDENROD_CITY_STATE, 1, NewBarkTown_Lab_EventScript_Elm_Check_WhereIsEgg
-	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 5, NewBarkTown_Lab_EventScript_ElmState5
-
-	goto_if_ge VAR_NEWBARKTOWN_LABSTATE, 6, NewBarkTown_Lab_EventScript_ElmState5
+	goto_if_ge VAR_NEWBARKTOWN_LABSTATE, 5, NewBarkTown_Lab_EventScript_ElmErrandDone
 	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 2, CopNewBarkTown_Lab_EventScript_ElmState2
 	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 3, CopNewBarkTown_Lab_EventScript_ElmState2
 	goto_if_set FLAG_JOHTO_STARTER_CHOICE_COMMITTED, NewBarkTown_Lab_EventScript_MrPokemon
@@ -455,6 +457,16 @@ NewBarkTown_Lab_EventScript_PoliceYes::
 	release
 	end
 
+@ The errand is past the egg return. The ceremony lines read the ceremony's own state: the
+@ Kimono Girls are waiting only while it is activated and unfinished; once it is done and until
+@ the S.S. ticket arrives, Elm sends the player to the League.
+NewBarkTown_Lab_EventScript_ElmErrandDone::
+	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_RECEIVED, NewBarkTown_Lab_EventScript_ElmState5
+	goto_if_lt VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 5, NewBarkTown_Lab_EventScript_ElmState5
+	goto_if_lt VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 8, NewBarkTown_Lab_EventScript_ElmKimono
+	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED, NewBarkTown_Lab_EventScript_ElmLeague
+	goto NewBarkTown_Lab_EventScript_ElmState5
+
 NewBarkTown_Lab_EventScript_ElmState5::
 	lock
 	faceplayer
@@ -469,6 +481,8 @@ NewBarkTown_Lab_EventScript_ElmMasterBall::
 	faceplayer
 	msgbox NewBarkTown_Lab_Text_ElmGiveMasterBall1, MSGBOX_DEFAULT
 	giveitem ITEM_MASTER_BALL
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_EventScript_ElmMasterBallBagFull
+	setflag FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_RECEIVED
 	msgbox NewBarkTown_Lab_Text_ElmGiveMasterBall2, MSGBOX_DEFAULT
 	closemessage
 	delay 20
@@ -478,12 +492,18 @@ NewBarkTown_Lab_EventScript_ElmMasterBall::
 	waitmovement LOCALID_ELM
 	msgbox NewBarkTown_Lab_Text_KimonoGirls, MSGBOX_DEFAULT
 	closemessage
-	setvar VAR_NEWBARKTOWN_LABSTATE, 8
-	@ Ecruteak's Silver no longer sits on the Kimono chain, so Elm's handoff moves the ceremony
-	@ straight from 4 to 5 (the theater's entry triggers). The ceremony rework replaces this.
+	@ INTERIM: keeps the ceremony completable until the ceremony rework removes the theater's
+	@ state-5 entry triggers (it deletes this activation). Ecruteak's Silver no longer sits on
+	@ the Kimono chain, so the handoff moves the ceremony straight from 4 to 5.
 	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 4
 	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 5
 	clearflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS
+	release
+	end
+
+NewBarkTown_Lab_EventScript_ElmMasterBallBagFull::
+	call Common_EventScript_BagIsFull
+	closemessage
 	release
 	end
 
@@ -507,7 +527,7 @@ NewBarkTown_Lab_EventScript_ElmSSTicket::
 	msgbox NewBarkTown_Lab_Text_ElmGiveTicket1, MSGBOX_DEFAULT
 	msgbox NewBarkTown_Lab_Text_ElmGiveTicket2, MSGBOX_DEFAULT
 	closemessage
-	setvar VAR_NEWBARKTOWN_LABSTATE, 11
+	setflag FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED
 	clearflag FLAG_HIDE_OLIVINE_PORT_OAK
 	release
 	end
@@ -1046,12 +1066,17 @@ NewBarkTown_Lab_EventScript_AuthoredEnd::
 	end
 
 @ Visitors (every origin but New Bark) get an ordinary professor: no errand, starter or gift,
-@ and no lab or town state is written by this conversation. Elm's Master Ball (lab state 7) and
-@ S.S. ticket (lab state 10) stay reachable, as they are today, until the Master Ball rework gives
-@ them their own state.
+@ and no lab or town state is written by this conversation. Elm's Master Ball and S.S. ticket
+@ are the exceptions: they follow their own owed and received flags, as for the Johto origin.
 NewBarkTown_Lab_EventScript_VisitorElm::
-	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 7, NewBarkTown_Lab_EventScript_ElmMasterBall
-	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 10, NewBarkTown_Lab_EventScript_ElmSSTicket
+	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_OWED, NewBarkTown_Lab_EventScript_VisitorElmNoBall
+	goto_if_set FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_RECEIVED, NewBarkTown_Lab_EventScript_VisitorElmNoBall
+	msgbox NewBarkTown_Lab_Text_VisitorElmIntroduces, MSGBOX_DEFAULT
+	goto NewBarkTown_Lab_EventScript_ElmMasterBall
+NewBarkTown_Lab_EventScript_VisitorElmNoBall::
+	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_OWED, NewBarkTown_Lab_EventScript_VisitorElmNoTicket
+	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED, NewBarkTown_Lab_EventScript_ElmSSTicket
+NewBarkTown_Lab_EventScript_VisitorElmNoTicket::
 	msgbox NewBarkTown_Lab_Text_VisitorElm, MSGBOX_DEFAULT
 	goto NewBarkTown_Lab_EventScript_ReleaseEnd
 
@@ -1065,6 +1090,9 @@ NewBarkTown_Lab_EventScript_ReleaseEnd::
 	releaseall
 	end
 
+NewBarkTown_Lab_Text_VisitorElmIntroduces:
+	.string "I'm PROF. ELM, the one who asked\n"
+	.string "to meet you.$"
 NewBarkTown_Lab_Text_VisitorElm:
 	.string "ELM: Hello! You're traveling with\n"
 	.string "your POKéMON, I see.\p"

@@ -11,8 +11,8 @@ NewBarkTown_OnFrame::
 	map_script_2 VAR_NEWBARK_TOWN_STATE, 6, NewBarkTown_EventScript_ElmCallAfterLeague
 	.2byte 0
 
-@ Elm calls only the Johto origin after the League. A visitor hears nothing, but the lab state
-@ still moves on to Elm's S.S. ticket.
+@ Elm calls only the Johto origin after the League. A visitor hears nothing, but Elm's S.S.
+@ ticket is still owed (its own flag, not the lab state).
 NewBarkTown_EventScript_ElmCallAfterLeague::
 	specialvar VAR_RESULT, WayfarerIsJohtoOrigin
 	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_EventScript_ElmCallAfterLeagueSkipped
@@ -22,13 +22,13 @@ NewBarkTown_EventScript_ElmCallAfterLeague::
 	waitmessage
 	delay 30
 	setvar VAR_NEWBARK_TOWN_STATE, 7
-	setvar VAR_NEWBARKTOWN_LABSTATE, 10
+	setflag FLAG_WAYFARER_JOHTO_ELM_TICKET_OWED
 	release
 	end
 
 NewBarkTown_EventScript_ElmCallAfterLeagueSkipped::
 	setvar VAR_NEWBARK_TOWN_STATE, 7
-	setvar VAR_NEWBARKTOWN_LABSTATE, 10
+	setflag FLAG_WAYFARER_JOHTO_ELM_TICKET_OWED
 	end
 
 NewBarkTown_Text_ElmName:
