@@ -233,6 +233,17 @@ for (let i = 0; i < oval.rgba.length; i += 4)
   if (oval.rgba[i] === 0 && oval.rgba[i + 1] === 0 && oval.rgba[i + 2] === 0) oval.rgba[i + 3] = 0
 save("people/stage.png", oval)
 
+// The Poké Ball that releases it (closed, opening, open) and the particles
+// that burst from it, colored like the circle impact the game lends them.
+save("people/poke-ball.png", renderIndexed(source("balls/poke.png")))
+save(
+  "people/ball-particles.png",
+  renderIndexed(
+    source("battle_anims/sprites/particles.png"),
+    readPng(source("battle_anims/sprites/circle_impact.png")).palette,
+  ),
+)
+
 // The POKéMON the intro introduces, with its two front frames stacked.
 save(
   "people/wooper.png",

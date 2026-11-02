@@ -119,6 +119,18 @@
     "x": 0,
     "y": 0
   },
+  "people/poke-ball.png": {
+    "width": 16,
+    "height": 48,
+    "x": 0,
+    "y": 0
+  },
+  "people/ball-particles.png": {
+    "width": 8,
+    "height": 64,
+    "x": 0,
+    "y": 0
+  },
   "people/wooper.png": {
     "width": 64,
     "height": 128,
