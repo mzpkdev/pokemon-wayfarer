@@ -1,3 +1,5 @@
+#include "constants/wayfarer_johto_story.h"
+
 RocketHideout_B3F_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, RocketHideout_B3F_OnFrame
 	map_script MAP_SCRIPT_ON_LOAD, RocketHideout_B3F_OnLoad
@@ -142,7 +144,12 @@ RocketHideout_B3F_Movement_MurkrowStairs2:
 	walk_fast_down
 	step_end
 
+@ Silver's chapter 7 scene: a non-battle encounter inside the hideout. The hideout's step from
+@ 7 to 8 happens whether or not it plays, and nothing waits on it.
 RocketHideout_B3F_Trigger_Silver::
+	setvar VAR_0x8004, SILVER_CHAPTER_HIDEOUT
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	goto_if_eq VAR_RESULT, FALSE, RocketHideout_B3F_EventScript_SilverSkipped
 	lock
 	clearflag FLAG_HIDE_ROCKETHIDEOUT3_SILVER
 	addobject LOCALID_ROCKETHIDEOUT3_SILVER
@@ -150,16 +157,30 @@ RocketHideout_B3F_Trigger_Silver::
 	applymovement LOCALID_ROCKETHIDEOUT3_SILVER, RocketHideout_B3F_Movement_SilverEnter
 	waitmovement 0
 	turnobject OBJ_EVENT_ID_PLAYER, DIR_WEST
-	msgbox RocketHideout_B3F_Text_Rival, MSGBOX_DEFAULT
+	call_if_set FLAG_WAYFARER_JOHTO_SILVER_PLAYED_6, RocketHideout_B3F_EventScript_RivalAfterOlivine
+	call_if_unset FLAG_WAYFARER_JOHTO_SILVER_PLAYED_6, RocketHideout_B3F_EventScript_RivalNeutral
 	closemessage
 	applymovement LOCALID_ROCKETHIDEOUT3_SILVER, RocketHideout_B3F_Movement_SilverLeave
 	waitmovement 0
 	setflag FLAG_HIDE_ROCKETHIDEOUT3_SILVER
 	removeobject LOCALID_ROCKETHIDEOUT3_SILVER
 	setvar_forward VAR_MAHOGANY_TOWN_STATE, 8
+	setflag FLAG_WAYFARER_JOHTO_SILVER_PLAYED_7
 	fadedefaultbgm
 	release
 	end
+
+RocketHideout_B3F_EventScript_SilverSkipped::
+	setvar_forward VAR_MAHOGANY_TOWN_STATE, 8
+	end
+
+RocketHideout_B3F_EventScript_RivalAfterOlivine::
+	msgbox RocketHideout_B3F_Text_Rival, MSGBOX_DEFAULT
+	return
+
+RocketHideout_B3F_EventScript_RivalNeutral::
+	msgbox RocketHideout_B3F_Text_RivalNeutral, MSGBOX_DEFAULT
+	return
 
 RocketHideout_B3F_Movement_SilverEnter:
 	walk_down
@@ -281,6 +302,26 @@ RocketHideout_B3F_Text_Rival:
     .string "…\p"
     .string "Didn't I tell you that I was\n"
     .string "going to destroy TEAM ROCKET?\p"
+    .string "…Tell me, who was the guy in the\n"
+    .string "cape who used dragon POKéMON?\p"
+    .string "My POKéMON were no match at all.\p"
+    .string "It's what he said that bothers\n"
+    .string "me…\p"
+    .string "He told me that I don't love and\n"
+    .string "trust my POKéMON enough.\p"
+    .string "It's not my fault my team is so\n"
+    .string "useless.\p"
+    .string "I'm furious that I lost to a\n"
+    .string "bleeding heart like him.\p"
+    .string "But it makes me question myself.\p"
+    .string "Is there something I'm doing\n"
+    .string "wrong?\p"
+    .string "Could it be that love made his\n"
+    .string "team so powerful?$"
+
+RocketHideout_B3F_Text_RivalNeutral:
+    .string "…\p"
+    .string "I'm going to destroy TEAM ROCKET.\p"
     .string "…Tell me, who was the guy in the\n"
     .string "cape who used dragon POKéMON?\p"
     .string "My POKéMON were no match at all.\p"

@@ -1,3 +1,5 @@
+#include "constants/wayfarer_johto_story.h"
+
 OlivineCity_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, OlivineCity_MapScript_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters
@@ -63,7 +65,12 @@ OlivineCity_EventScript_Setup:: @FLAGHEAP
 OlivineCity_Setup_SuicuneStarted:
 	return
 
+@ Silver's chapter 6 scene: a non-battle encounter that plays once while no later battle has
+@ started. Retired, it does nothing.
 OlivineCity_EventScript_SilverTrigger::
+	setvar VAR_0x8004, SILVER_CHAPTER_OLIVINE
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	goto_if_eq VAR_RESULT, FALSE, OlivineCity_EventScript_SilverInert
 	lock
 	clearflag FLAG_HIDE_OLIVINE_SILVER
 	opendoor 11, 27
@@ -82,11 +89,15 @@ OlivineCity_EventScript_SilverTrigger::
 	call_if_eq VAR_TEMP_1, 30, OlivineCity_EventScript_SilverLeaveAdjust2
 	applymovement LOCALID_OLIVINE_SILVER, OlivineCity_Movement_SilverLeave
 	waitmovement 0
-	setvar VAR_OLIVINE_CITY_STATE, 2
+	setvar_forward VAR_OLIVINE_CITY_STATE, 2
+	setflag FLAG_WAYFARER_JOHTO_SILVER_PLAYED_6
 	setflag FLAG_HIDE_OLIVINE_SILVER
 	removeobject LOCALID_OLIVINE_SILVER
 	fadedefaultbgm
 	release
+	end
+
+OlivineCity_EventScript_SilverInert::
 	end
 
 OlivineCity_EventScript_SilverWalkToPlayer1::

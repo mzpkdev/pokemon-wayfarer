@@ -478,11 +478,6 @@ u16 GetStarterPokemon(u16 chosenStarterId)
 }
 
 #if IS_WAYFARER
-u16 WayfarerGetJohtoStarterSpecies(void)
-{
-    return GetJohtoStarterPokemon(VarGet(VAR_STARTER_MON));
-}
-
 u16 GetJohtoStarterPokemon(u16 chosenStarterId)
 {
     static const u16 starters[] = {SPECIES_CHIKORITA, SPECIES_CYNDAQUIL, SPECIES_TOTODILE};

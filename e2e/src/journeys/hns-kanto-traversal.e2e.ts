@@ -172,6 +172,8 @@ const arrangeMtMoonSilver = async (
         kantoRocketStoryState: 4,
         fanClubClefairy: 2,
         ssAquaState: 8,
+        // Silver is shown only once his Victory Road battle has started.
+        silverChapter: 10,
       },
       flags: {
         hideMtMoonSilver: false,
@@ -274,7 +276,7 @@ describe.sequential("HNS Kanto traversal", () => {
         checkpoint: "new-bark-after-intro",
         player: { facing: "right", position: { map: "mt-moon-cave", x: 8, y: 12 } },
         story: {
-          vars: { pewterCityState: 0, kantoRocketStoryState: 4, ssAquaState: 8 },
+          vars: { pewterCityState: 0, kantoRocketStoryState: 4, ssAquaState: 8, silverChapter: 10 },
           flags: { hideMtMoonSilver: false, returnedMachinePart: false },
         },
       })
@@ -293,6 +295,27 @@ describe.sequential("HNS Kanto traversal", () => {
       await expect(game.story.var("ssAquaState")).resolves.toBe(8)
       await expect(game.story.flag("hideMtMoonSilver")).resolves.toBe(false)
       await expect(game.story.flag("returnedMachinePart")).resolves.toBe(false)
+    })
+
+    it("hides Silver until Victory Road has started, and the cave still crosses", async () => {
+      await game.arrange({
+        checkpoint: "new-bark-after-intro",
+        player: { facing: "right", position: { map: "mt-moon-cave", x: 8, y: 12 } },
+        story: {
+          vars: { pewterCityState: 0, kantoRocketStoryState: 4, ssAquaState: 8, silverChapter: 0 },
+          flags: { hideMtMoonSilver: false, returnedMachinePart: false },
+        },
+      })
+
+      await game.wait.forReady()
+      await expect(game.story.flag("hideMtMoonSilver")).resolves.toBe(true)
+      await game.player.move("right")
+      await expect(game.state.read()).resolves.toMatchObject({
+        ready: true,
+        dialogueOpen: false,
+        battle: { active: false },
+        player: { x: 9, y: 12 },
+      })
     })
 
     it("keeps Silver available and local state unchanged after declining", async () => {
@@ -340,6 +363,8 @@ describe.sequential("HNS Kanto traversal", () => {
       await finishSilverVictoryScript(game)
 
       await expect(game.story.var("pewterCityState")).resolves.toBe(2)
+      await expect(game.story.var("silverChapter")).resolves.toBe(11)
+      await expect(game.story.flag("silverWon11")).resolves.toBe(true)
       await expect(game.story.flag("hideMtMoonSilver")).resolves.toBe(true)
       await expect(game.story.flag("hideIndigoPlateauSilver")).resolves.toBe(false)
       await expect(game.story.flag("returnedMachinePart")).resolves.toBe(false)

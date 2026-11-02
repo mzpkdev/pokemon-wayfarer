@@ -2,13 +2,13 @@ import { describe, expect, it } from "webanvil/test"
 
 import { GameSession } from "../harness/game-session"
 import {
-  advanceOpeningUntil,
   finishOpeningDialogue,
   receiveBirchStarter,
+  stepOpening,
 } from "../playbooks/regional-opening"
 
 describe.sequential("Littleroot trainer visiting Elm", () => {
-  it("postpones the choice, declines the gift, and reclaims the same slot after reloading", async () => {
+  it("meets an ordinary professor who offers and writes nothing", async () => {
     const game = await GameSession.launch()
     try {
       await game.arrange({
@@ -18,64 +18,44 @@ describe.sequential("Littleroot trainer visiting Elm", () => {
       })
       await receiveBirchStarter(game, 1)
       const partner = (await game.state.read()).party[0]
-      await game.player.warp("players-house-1f", 2, 3, "up")
-      await game.player.interact()
+      const untouched = async (): Promise<void> => {
+        const state = await game.state.read()
+        expect(state.party).toEqual([partner])
+        expect(state.origin).toMatchObject({
+          id: 2,
+          johtoChoice: 0,
+          johtoCommitted: false,
+          johtoReceived: false,
+          hoennChoice: 1,
+          hoennReceived: true,
+        })
+        expect(await game.story.var("newBarkTownLabState")).toBe(0)
+        expect(await game.story.var("newBarkTownState")).toBe(2)
+      }
+
+      // The lab's entry triggers end cleanly instead of running the native introduction.
+      await game.player.warp("elm-lab", 6, 8, "up")
+      await stepOpening(game, "up")
       await finishOpeningDialogue(game)
-      expect(await game.story.var("newBarkTownState")).toBe(2)
-      expect(await game.story.var("newBarkTownLabState")).toBe(0)
+      await untouched()
+
+      // Elm talks like a professor and releases the player; the starter Balls stay shut.
       await game.player.warp("elm-lab", 6, 4, "up")
       await game.player.interact()
-      await advanceOpeningUntil(game, (state) => state.ready, "Elm did not allow postponement", "b")
-      expect((await game.state.read()).origin.johtoCommitted).toBe(false)
-      expect(await game.story.var("newBarkTownLabState")).toBe(0)
-      await game.player.interact()
+      await game.wait.frames(30)
+      expect((await game.state.read()).dialogue.text).toContain("ELM: Hello!")
       await finishOpeningDialogue(game)
+      await untouched()
       await game.player.warp("elm-lab", 10, 5, "up")
       await game.player.interact()
-      await advanceOpeningUntil(
-        game,
-        (state) => state.origin.johtoCommitted,
-        "Elm choice did not commit",
-      )
-      await advanceOpeningUntil(
-        game,
-        (state) => state.ready,
-        "Elm gift decline did not return control",
-        "b",
-      )
-      expect((await game.state.read()).origin).toMatchObject({
-        id: 2,
-        johtoChoice: 2,
-        johtoCommitted: true,
-        johtoReceived: false,
-        hoennChoice: 1,
-        hoennReceived: true,
-      })
-      expect((await game.state.read()).party).toEqual([partner])
-      expect(await game.story.var("newBarkTownLabState")).toBe(2)
-      expect(await game.story.var("newBarkTownState")).toBe(3)
+      await finishOpeningDialogue(game)
+      await untouched()
+
+      // The Silver of New Bark's lab corner never appears for a visitor.
+      await game.player.warp("new-bark-town", 10, 12, "up")
+      expect(await game.story.flag("hideSilverInNewBark")).toBe(true)
       await game.saveAndReload()
-      await game.player.warp("elm-lab", 3, 3, "up")
-      await game.player.interact()
-      await advanceOpeningUntil(
-        game,
-        (state) => state.origin.johtoReceived,
-        "Elm did not deliver the saved choice",
-      )
-      await advanceOpeningUntil(
-        game,
-        (state) => state.ready,
-        "Elm gift handoff did not finish",
-        "b",
-      )
-      const state = await game.state.read()
-      expect(state.party).toHaveLength(2)
-      expect(state.party[0]).toEqual(partner)
-      expect(state.party[1]?.species).toBe("totodile")
-      expect(state.origin).toMatchObject({ id: 2, johtoChoice: 2, hoennChoice: 1 })
-      expect(await game.story.var("newBarkTownLabState")).toBeGreaterThanOrEqual(2)
-      await game.saveAndReload()
-      expect((await game.state.read()).party).toEqual(state.party)
+      await untouched()
     } finally {
       await game.close()
     }

@@ -85,6 +85,14 @@ state. Wattson's New Mauville relocation still requires Norman's defeat and the
 Dynamo Badge in either order. Preserve initial-badge protections for Chuck,
 Giovanni or the currently selected Viridian owner, Clair, and Blaine.
 
+Victory Road's corridor never depends on Silver. He is a talk-to object in the
+alcove beside the 1F lane at `(27-29,7)` (see
+[Johto independent story beats](johto-independent-story-beats.md)), shown to
+Johto-origin players while his chapter 10 battle is playable. The lane has no
+coordinate trigger, so crossing it writes no story state and never asks whether a
+league knows the player; declining or losing his battle leaves the corridor
+passable and his offer available.
+
 ## Opening and travel
 
 The existing Johto opening initializes zero badges, no league wins, no

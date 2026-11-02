@@ -158,7 +158,11 @@ VioletCity_EventScript_Rattata::
 	release
 	end
 
+@ Elm calls only the Johto origin after Falkner. A visitor gets no call and no Violet aide, and
+@ the town state moves on silently.
 VioletCity_EventScript_ElmCall_Trigger::
+	specialvar VAR_RESULT, WayfarerIsJohtoOrigin
+	goto_if_eq VAR_RESULT, FALSE, VioletCity_EventScript_ElmCallSkipped
 	lock
 	setspeaker VioletCity_Text_ElmName
 	pokenavcall VioletCity_Text_Elm_Call
@@ -166,8 +170,12 @@ VioletCity_EventScript_ElmCall_Trigger::
 	delay 30
 	clearflag FLAG_HIDE_VIOLET_CITY_AIDE
 	setflag FLAG_HIDE_NEWBARKTOWN_LAB_AIDE
-	setvar VAR_VIOLET_CITY_STATE, 4
+	setvar_forward VAR_VIOLET_CITY_STATE, 4
 	release
+	end
+
+VioletCity_EventScript_ElmCallSkipped::
+	setvar_forward VAR_VIOLET_CITY_STATE, 4
 	end
 
 VioletCity_EventScript_Kimono_Girl::

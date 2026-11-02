@@ -1,3 +1,5 @@
+#include "constants/wayfarer_johto_story.h"
+
 AzaleaTown_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, AzaleaTown_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, AzaleaTown_OnFrame
@@ -6,7 +8,9 @@ AzaleaTown_hns_MapScripts::
 AzaleaTown_OnTransition::
 	call_if_unset FLAG_WAYFARER_JOHTO_SETUP_AZALEA, AzaleaTown_EventScript_Setup
 	call_if_eq VAR_AZALEA_TOWN_STATE, 8, AzaleaTown_MapScript_ArmGSBall
-	goto_if_eq VAR_AZALEA_TOWN_STATE, 5, AzaleaTown_MapScript_Hide_Silver
+	setvar VAR_0x8004, SILVER_CHAPTER_AZALEA
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	call_if_eq VAR_RESULT, FALSE, AzaleaTown_MapScript_Hide_Silver
 	end
 	
 @ VAR_TEMP_1 arms Kurt's GS Ball once per visit, so a full Poke Ball pocket
@@ -21,8 +25,7 @@ AzaleaTown_MapScript_ArmGSBall::
 
 AzaleaTown_MapScript_Hide_Silver:
 	setflag FLAG_HIDE_AZALEA_TOWN_SILVER
-	removeobject LOCALID_AZALEA_TOWN_SILVER
-	end
+	return
 
 @ First-visit setup, run once from the map load however the player arrives.
 @ New-game defaults are not restated: Ilex Forest's errand objects and Celebi
@@ -141,9 +144,10 @@ AzaleaTown_EventScript_AzaleaSign::
 	end
 
 AzaleaTown_EventScript_SilverTriggerTop::
-#if IS_WAYFARER
-	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, AzaleaTown_EventScript_DeferredSilver
-#endif
+	goto_if_unset FLAG_DEFEATED_AZALEA_TOWN_GYM, AzaleaTown_EventScript_SilverInert
+	setvar VAR_0x8004, SILVER_CHAPTER_AZALEA
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	goto_if_eq VAR_RESULT, FALSE, AzaleaTown_EventScript_SilverInert
 	lock
 	clearflag FLAG_HIDE_AZALEA_TOWN_SILVER
 	addobject LOCALID_AZALEA_TOWN_SILVER
@@ -151,11 +155,15 @@ AzaleaTown_EventScript_SilverTriggerTop::
 	applymovement LOCALID_AZALEA_TOWN_SILVER, AzaleaTown_Movement_Silver_EnterTop
 	waitmovement 0
 	turnobject OBJ_EVENT_ID_PLAYER, DIR_EAST
-	msgbox AzaleaTown_Text_RivalBefore, MSGBOX_DEFAULT
+	call_if_ge VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 3, AzaleaTown_EventScript_RivalBeforeWell
+	call_if_lt VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 3, AzaleaTown_EventScript_RivalBeforeNoWell
 	closemessage
+	setvar_forward VAR_WAYFARER_JOHTO_SILVER_CHAPTER, SILVER_CHAPTER_AZALEA
 	call_if_eq VAR_STARTER_MON, 0, AzaleaTown_Silver_Battle_Cyndaquil
 	call_if_eq VAR_STARTER_MON, 1, AzaleaTown_Silver_Battle_Totodile
 	call_if_eq VAR_STARTER_MON, 2, AzaleaTown_Silver_Battle_Chikorita
+	setflag FLAG_WAYFARER_JOHTO_SILVER_WON_4
+	setflag FLAG_WAYFARER_JOHTO_SILVER_WON_ANY
 	msgbox AzaleaTown_Text_RivalAfter, MSGBOX_DEFAULT
 	closemessage
 	applymovement OBJ_EVENT_ID_PLAYER, AzaleaTown_Movement_Player_LeaveTop
@@ -171,9 +179,10 @@ AzaleaTown_EventScript_SilverTriggerTop::
 	end
 
 AzaleaTown_EventScript_SilverTriggerBot::
-#if IS_WAYFARER
-	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, AzaleaTown_EventScript_DeferredSilver
-#endif
+	goto_if_unset FLAG_DEFEATED_AZALEA_TOWN_GYM, AzaleaTown_EventScript_SilverInert
+	setvar VAR_0x8004, SILVER_CHAPTER_AZALEA
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	goto_if_eq VAR_RESULT, FALSE, AzaleaTown_EventScript_SilverInert
 	lock
 	clearflag FLAG_HIDE_AZALEA_TOWN_SILVER
 	addobject LOCALID_AZALEA_TOWN_SILVER
@@ -181,11 +190,15 @@ AzaleaTown_EventScript_SilverTriggerBot::
 	applymovement LOCALID_AZALEA_TOWN_SILVER, AzaleaTown_Movement_Silver_EnterBot
 	waitmovement 0
 	turnobject OBJ_EVENT_ID_PLAYER, DIR_EAST
-	msgbox AzaleaTown_Text_RivalBefore, MSGBOX_DEFAULT
+	call_if_ge VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 3, AzaleaTown_EventScript_RivalBeforeWell
+	call_if_lt VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 3, AzaleaTown_EventScript_RivalBeforeNoWell
 	closemessage
+	setvar_forward VAR_WAYFARER_JOHTO_SILVER_CHAPTER, SILVER_CHAPTER_AZALEA
 	call_if_eq VAR_STARTER_MON, 0, AzaleaTown_Silver_Battle_Cyndaquil
 	call_if_eq VAR_STARTER_MON, 1, AzaleaTown_Silver_Battle_Totodile
 	call_if_eq VAR_STARTER_MON, 2, AzaleaTown_Silver_Battle_Chikorita
+	setflag FLAG_WAYFARER_JOHTO_SILVER_WON_4
+	setflag FLAG_WAYFARER_JOHTO_SILVER_WON_ANY
 	playbgm MUS_HG_RIVAL_EXIT, FALSE
 	msgbox AzaleaTown_Text_RivalAfter, MSGBOX_DEFAULT
 	closemessage
@@ -199,6 +212,18 @@ AzaleaTown_EventScript_SilverTriggerBot::
 	setvar_forward VAR_AZALEA_TOWN_STATE, 6
 	fadedefaultbgm
 	release
+	end
+
+AzaleaTown_EventScript_RivalBeforeWell::
+	msgbox AzaleaTown_Text_RivalBefore, MSGBOX_DEFAULT
+	return
+
+AzaleaTown_EventScript_RivalBeforeNoWell::
+	msgbox AzaleaTown_Text_RivalBeforeNoWell, MSGBOX_DEFAULT
+	return
+
+@ Nothing to play: Bugsy is not beaten yet, or Silver's Azalea scene is retired.
+AzaleaTown_EventScript_SilverInert::
 	end
 
 AzaleaTown_Silver_Battle_Cyndaquil::
@@ -366,6 +391,9 @@ AzaleaTown_Text_RivalBefore:
 	.string "You're not joking?\n"
 	.string "Then let's see how good you are.$"
 
+AzaleaTown_Text_RivalBeforeNoWell:
+	.string "…Let's see how good you are.$"
+
 AzaleaTown_Text_RivalWin:
 	.string "…Humph! Useless POKéMON!\p"
 	.string "Listen, you. You only won because\n"
@@ -466,8 +494,3 @@ AzaleaTown_Text_IlexForestSign:
 	.string "ILEX FOREST\p"
 	.string "Enter through the gate.$"
 
-#if IS_WAYFARER
-AzaleaTown_EventScript_DeferredSilver::
-	releaseall
-	end
-#endif

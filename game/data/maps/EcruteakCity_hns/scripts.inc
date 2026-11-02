@@ -1,3 +1,5 @@
+#include "constants/wayfarer_johto_story.h"
+
 EcruteakCity_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, EcruteakCity_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters
@@ -31,16 +33,21 @@ EcruteakCity_Setup_EusineGone:
 	setflag FLAG_HIDE_ROUTE39_SHADOW
 	@ Only the theater ceremony shows these, so they are hidden however far
 	@ Elm's handoff has moved the ceremony before the first visit.
+	setflag FLAG_HIDE_ECRUTEAK_SILVER
 	setflag FLAG_HIDE_TIN_TOWER_KIMONO_GIRLS
 	setflag FLAG_HIDE_WHIRL_ISLANDS_KIMONO_GIRLS
 	goto_if_ne VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 0, EcruteakCity_Setup_CeremonyStarted
 	setflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS
-	setflag FLAG_HIDE_ECRUTEAK_SILVER
 EcruteakCity_Setup_CeremonyStarted:
 	setvar_forward VAR_ECRUTEAK_CITY_STATE, 1
 	return
 
+@ Silver's chapter 9 scene: once the Radio Tower is resolved, at his existing tile. It is
+@ independent of the theater and the ceremony.
 EcruteakCity_Trigger_Silver::
+	setvar VAR_0x8004, SILVER_CHAPTER_ECRUTEAK
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	goto_if_eq VAR_RESULT, FALSE, EcruteakCity_EventScript_SilverInert
 	lockall
 	opendoor 39, 40
 	waitdooranim
@@ -76,8 +83,11 @@ EcruteakCity_Trigger_Silver::
 	removeobject LOCALID_ECRUTEK_SILVER
 	fadedefaultbgm
 
-	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 5
+	setflag FLAG_WAYFARER_JOHTO_SILVER_PLAYED_9
 	releaseall
+	end
+
+EcruteakCity_EventScript_SilverInert::
 	end
 
 EcruteakCity_Movement_Silver1:

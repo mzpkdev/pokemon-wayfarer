@@ -1,3 +1,5 @@
+#include "constants/wayfarer_johto_story.h"
+
 BurnedTower_1F_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, BurnedTower_1F_OnLoad
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, BurnedTower_1F_OnFrame
@@ -6,8 +8,23 @@ BurnedTower_1F_hns_MapScripts::
 	.byte 0
 
 BurnedTower_1F_OnTransition: 
+	@ Silver stands on 1F only while his chapter 5 battle is playable and the floor has not
+	@ yet collapsed; Eusine and Morty keep their own hide flag.
+	setvar VAR_0x8004, SILVER_CHAPTER_BURNED_TOWER
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	call_if_eq VAR_RESULT, TRUE, BurnedTower_1F_EventScript_ShowSilver
+	call_if_eq VAR_RESULT, FALSE, BurnedTower_1F_EventScript_HideSilver
+	call_if_ge VAR_ECRUTEAK_CITY_STATE, 3, BurnedTower_1F_EventScript_HideSilver
 	callnative SetTimeBasedEncounters
 	end
+
+BurnedTower_1F_EventScript_ShowSilver::
+	clearflag FLAG_WAYFARER_JOHTO_HIDE_BURNED_TOWER_SILVER
+	return
+
+BurnedTower_1F_EventScript_HideSilver::
+	setflag FLAG_WAYFARER_JOHTO_HIDE_BURNED_TOWER_SILVER
+	return
 
 BurnedTower_1F_OnLoad::
 	goto_if_ge VAR_ECRUTEAK_CITY_STATE, 4, BurnedTower_1F_MapScript_CreateHole
@@ -98,10 +115,13 @@ BurnedTower_1FMortyText:
 	.string "decided to investigate the\l"
 	.string "TOWER with him.$"
 
+@ The floor gives way at (15,12) once Eusine has been met. With Silver's chapter 5 battle
+@ unavailable (not the Johto origin, retired, or won) the collapse and the drop to B1F happen
+@ without him.
 BurnedTower_1F_EventScript_Silver::
-#if IS_WAYFARER
-	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, BurnedTower_1F_EventScript_DeferredSilver
-#endif
+	setvar VAR_0x8004, SILVER_CHAPTER_BURNED_TOWER
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	goto_if_eq VAR_RESULT, FALSE, BurnedTower_1F_EventScript_FloorCollapse
 	lock
 	playse SE_PIN
 	applymovement LOCALID_BURNED_TOWER_SILVER, Common_Movement_ExclamationMark
@@ -112,9 +132,12 @@ BurnedTower_1F_EventScript_Silver::
 	waitmovement 0
 	waitmovement 0
 	msgbox BurnedTowerSilver_BeforeText, MSGBOX_DEFAULT
+	setvar_forward VAR_WAYFARER_JOHTO_SILVER_CHAPTER, SILVER_CHAPTER_BURNED_TOWER
 	call_if_eq VAR_STARTER_MON, 0, BurnedTower_1F_Silver_Battle_Cyndaquil
 	call_if_eq VAR_STARTER_MON, 1, BurnedTower_1F_Silver_Battle_Totodile
 	call_if_eq VAR_STARTER_MON, 2, BurnedTower_1F_Silver_Battle_Chikorita
+	setflag FLAG_WAYFARER_JOHTO_SILVER_WON_5
+	setflag FLAG_WAYFARER_JOHTO_SILVER_WON_ANY
 	playbgm MUS_HG_RIVAL_EXIT, FALSE
 	msgbox BurnedTowerSilver_AfterText1, MSGBOX_DEFAULT
 	closemessage
@@ -136,10 +159,39 @@ BurnedTower_1F_EventScript_Silver::
 	msgbox BurnedTowerSilver_AfterText2, MSGBOX_AUTOCLOSE
 	waitmessage
 	warphole MAP_BURNED_TOWER_B1F_HNS
-	setvar VAR_ECRUTEAK_CITY_STATE, 3
+	setvar_forward VAR_ECRUTEAK_CITY_STATE, 3
 	waitstate
 	release
 	end
+
+BurnedTower_1F_EventScript_FloorCollapse::
+	lock
+	setvar VAR_0x8004, 1  @ vertical pan
+	setvar VAR_0x8005, 1  @ horizontal pan
+	setvar VAR_0x8006, 20  @ num shakes
+	setvar VAR_0x8007, 6  @ shake delay
+	special ShakeCamera
+	waitstate
+	playse SE_CLICK
+	setmetatile 16, 12, 0x37E, FALSE
+	special DrawWholeMapView
+	waitse
+	delay 60
+	special SpawnCameraObject
+	removeobject OBJ_EVENT_ID_PLAYER
+	playse SE_FALL
+	delay 60
+	msgbox BurnedTower_1F_Text_FloorGaveWay, MSGBOX_AUTOCLOSE
+	waitmessage
+	warphole MAP_BURNED_TOWER_B1F_HNS
+	setvar_forward VAR_ECRUTEAK_CITY_STATE, 3
+	waitstate
+	release
+	end
+
+BurnedTower_1F_Text_FloorGaveWay:
+	.string "The rotten floor gave way\n"
+	.string "beneath {PLAYER}!$"
 
 BurnedTower_1F_Silver_Battle_Cyndaquil::
 	trainerbattle_no_intro TRAINER_RIVAL_CYNDAQUIL_3_HNS, BurnedTowerSilver_WinText
@@ -218,8 +270,3 @@ BurnedTower_Text_RichardoAfter:
 	.string "Maybe a life of crime isn't for\n"
 	.string "me...$"
 
-#if IS_WAYFARER
-BurnedTower_1F_EventScript_DeferredSilver::
-	releaseall
-	end
-#endif

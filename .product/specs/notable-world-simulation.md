@@ -295,10 +295,9 @@ solid, except the authored story gates in the overrides'
 door blockers, the Bell Tower sage, Vermilion's Snorlax, the League
 reception gate's guards, Cliff Edge Gate's engineers, Route 120's bridge
 Kecleon, Route 121's Aqua grunts, and Silver in the Burned Tower. Silver
-leaves only after the rival scene, which needs the Johto starter choice:
-for a visitor origin that declines Elm's offer the graph's way past him is
-off-screen only (an on-screen walker that meets him fails its search and
-leaves). A Cut tree or boulder is overridden
+leaves after the rival scene or when his chapter retires; for a visitor
+origin he is never shown at all, so nothing blocks the graph (see
+[Johto independent story beats](johto-independent-story-beats.md)). A Cut tree or boulder is overridden
 only when it is the one way to a leader's own Gym (Vermilion's tree) or by
 an explicit product decision: Route 2's Cut tree at (11, 13), the way to
 Diglett's Cave, and Victory Road's Strength boulders at B1F (48, 12) and

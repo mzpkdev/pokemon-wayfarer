@@ -15,6 +15,7 @@
 #include "constants/rgb.h"
 #include "trainer_pokemon_sprites.h"
 #include "starter_choose.h"
+#include "wayfarer_origin.h"
 #include "decompress.h"
 #include "intro_credits_graphics.h"
 #include "sound.h"
@@ -1447,7 +1448,7 @@ static void SpriteCB_CreditsMonBg(struct Sprite *sprite)
 
 static void DeterminePokemonToShow(void)
 {
-    enum NationalDexOrder starter = SpeciesToNationalPokedexNum(GetStarterPokemon(VarGet(VAR_STARTER_MON)));
+    enum NationalDexOrder starter = SpeciesToNationalPokedexNum(WayfarerGetOriginStarterSpecies());
     u16 page;
     u16 dexNum;
     u16 j;

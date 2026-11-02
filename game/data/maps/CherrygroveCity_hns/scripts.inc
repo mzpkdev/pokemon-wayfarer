@@ -1,11 +1,20 @@
+#include "constants/wayfarer_johto_story.h"
+
 CherrygroveCity_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, CherryGroveCity_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters
 	.byte 0
 
 CherryGroveCity_OnTransition::
+	setvar VAR_0x8004, SILVER_CHAPTER_CHERRYGROVE
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	call_if_eq VAR_RESULT, FALSE, CherryGroveCity_EventScript_HideSilver
 	callnative SetTimeBasedEncounters
 	end
+
+CherryGroveCity_EventScript_HideSilver::
+	setflag FLAG_HIDE_SILVER_CHERRYGROVE
+	return
 
 CherryGroveCity_EventScript_TriggerGent_Top::
 	lock
@@ -210,9 +219,9 @@ CherryGroveCity_EventScript_Sign::
 	end	
 
 CherryGroveCity_EventScript_TriggerSilver_Top::
-#if IS_WAYFARER
-	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, CherrygroveCity_EventScript_DeferredSilver
-#endif
+	setvar VAR_0x8004, SILVER_CHAPTER_CHERRYGROVE
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	goto_if_eq VAR_RESULT, FALSE, CherrygroveCity_EventScript_SilverRetired
 	lock
 	applymovement OBJ_EVENT_ID_PLAYER, CherryGroveCity_Movement_Trigger_Silver_Top
 	waitmovement 0
@@ -220,9 +229,9 @@ CherryGroveCity_EventScript_TriggerSilver_Top::
 	end
 
 CherryGroveCity_EventScript_TriggerSilver_Bottom::
-#if IS_WAYFARER
-	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, CherrygroveCity_EventScript_DeferredSilver
-#endif
+	setvar VAR_0x8004, SILVER_CHAPTER_CHERRYGROVE
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	goto_if_eq VAR_RESULT, FALSE, CherrygroveCity_EventScript_SilverRetired
 	lock
 	applymovement OBJ_EVENT_ID_PLAYER, CherryGroveCity_Movement_Trigger_Silver_Bottom
 	waitmovement 0
@@ -230,15 +239,16 @@ CherryGroveCity_EventScript_TriggerSilver_Bottom::
 	end
 
 CherryGroveCity_EventScript_TriggerSilver::
-#if IS_WAYFARER
-	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, CherrygroveCity_EventScript_DeferredSilver
-#endif
+	setvar VAR_0x8004, SILVER_CHAPTER_CHERRYGROVE
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	goto_if_eq VAR_RESULT, FALSE, CherrygroveCity_EventScript_SilverRetired
 	lock
 	playbgm MUS_HG_ENCOUNTER_RIVAL, FALSE
 	applymovement LOCALID_CHERRYGROVE_SILVER, CherryGroveCity_Movement_Silver_Enter
 	waitmovement 0
 	msgbox CherrygroveCity_Text_RivalSeen, MSGBOX_DEFAULT
 	closemessage
+	setvar_forward VAR_WAYFARER_JOHTO_SILVER_CHAPTER, SILVER_CHAPTER_CHERRYGROVE
 	goto_if_eq VAR_STARTER_MON, 0, CherryGroveCity_Silver_Battle_Cyndaquil
 	goto_if_eq VAR_STARTER_MON, 1, CherryGroveCity_Silver_Battle_Totodile
 	goto_if_eq VAR_STARTER_MON, 2, CherryGroveCity_Silver_Battle_Chikorita
@@ -258,6 +268,8 @@ CherryGroveCity_Silver_Battle_Chikorita::
 	goto CherryGroveCity_Silver_AfterBattle
 
 CherryGroveCity_Silver_AfterBattle::
+	setflag FLAG_WAYFARER_JOHTO_SILVER_WON_2
+	setflag FLAG_WAYFARER_JOHTO_SILVER_WON_ANY
 	playbgm MUS_HG_RIVAL_EXIT, FALSE
 	msgbox CherrygroveCity_Text_RivalAfter, MSGBOX_DEFAULT
 	closemessage
@@ -580,8 +592,7 @@ CherryGroveCity_Movement_Silver_Leave2:
 	walk_fast_left
 	step_end
 
-#if IS_WAYFARER
-CherrygroveCity_EventScript_DeferredSilver::
+@ A retired Silver scene does nothing: no battle, no rewards, no state.
+CherrygroveCity_EventScript_SilverRetired::
 	releaseall
 	end
-#endif

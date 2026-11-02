@@ -93,6 +93,9 @@ TEST("Wayfarer new origins initialize independent regional state and recovery")
             EXPECT(!FlagGet(FLAG_HOENN_STARTER_RECEIVED));
             EXPECT(!FlagGet(FLAG_JOHTO_STARTER_CHOICE_COMMITTED));
             EXPECT(!FlagGet(FLAG_JOHTO_STARTER_RECEIVED));
+            // The Hoenn profile no longer reveals New Bark's Silver; Silver exists for Johto only.
+            EXPECT(origin == ORIGIN_NEW_BARK || FlagGet(FLAG_HIDE_SILVER_NEWBARKTOWN));
+            EXPECT_EQ(WayfarerIsJohtoOrigin(), origin == ORIGIN_NEW_BARK);
             EXPECT_EQ(gSaveBlock3Ptr->wayfarerHoenn.hnsRegionContext, REGION_JOHTO);
             EXPECT_EQ(GetHealLocationIndexByWarpData(&gSaveBlock1Ptr->lastHealLocation), WayfarerGetInitialRecoveryDestination());
             EXPECT_EQ(GetRegionVisitedState(REGION_JOHTO), origin == ORIGIN_NEW_BARK);

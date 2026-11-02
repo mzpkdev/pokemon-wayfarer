@@ -219,9 +219,11 @@ where necessary so later blanket clears cannot erase regional initialization:
    and other global defaults once. Preserve the current default money of 3,000.
 3. Establish the HNS world baseline once for all origins. Initialize the
    separate Hoenn bank as uninitialized with no starter choice or receipt.
-4. Store origin and apply the selected profile below, including the dormant
-   Johto pre-Elm state for Hoenn-origin visitors. Native Hoenn baseline writes
-   stay in the Hoenn bank. Shared equipment/system flags change only when
+4. Store origin and apply the selected profile below. (The dormant Johto
+   pre-Elm state for Hoenn-origin visitors is superseded: visitors get no
+   Elm errand, and Hoenn's profile now hides the New Bark Silver; see
+   [Johto independent story beats](johto-independent-story-beats.md).) Native
+   Hoenn baseline writes stay in the Hoenn bank. Shared equipment/system flags change only when
    their authored handoffs occur.
 5. Set the initial map, current-region state, visited-region bit, and initial
    recovery destination before any map callback can execute. Then enter the
@@ -318,6 +320,17 @@ consumers use that same choice. Johto's choice remains unset until Elm's
 local choice occurs.
 
 ### Johto opening and Hoenn-origin visitors
+
+> **Superseded by [Johto independent story beats](johto-independent-story-beats.md).**
+> The visitor Elm flow below (the dormant pre-Elm state, the visitor
+> introduction, starter choice and optional gift, and the Silver guard on an
+> uncommitted choice) was removed. A visitor's Elm is an ordinary professor who
+> offers no errand, starter or gift and never resets lab state; Mr. Pokémon
+> gives no Mystery Egg; no Silver scene exists for a visitor; and Jessica's
+> trade and the starter preview use the visitor's own origin starter. The
+> Johto-origin paragraph below, the household bypass and the Pokédex rules still
+> stand. The text below is kept as history.
+
 
 Johto-origin players keep the existing Mom, Elm, first starter, Mr. Pokémon,
 Silver, police, and related local scenes. Update native starter acquisition to
@@ -458,11 +471,11 @@ that a mixed-region script writes the intended bank.
 | New-game state | All three origins, all four appearance/gender mappings, preserved challenge settings, zero TR/badges/clears, correct visited bits, correct home, and correct initialized marker. |
 | Native starters | All three local choices in each region, exact-once delivery, native first-battle loss continuation versus visitor rescue retry, correct local rival branch, and no writes to the other starter choice. |
 | Shared services | Each origin's owned running-shoes, Pokégear, Pokédex, later-professor, and pre-Center recovery behavior works through the actual Wayfarer UI and scripts. Kanto grants its Pokédex and five Poké Balls during Parcel delivery but not Daisy's deferred Town Map. |
-| Visitor stories | Johto-to-Hoenn rescue still uses the existing party; Hoenn-to-Johto Elm choice can be postponed, declined as a gift, retried with full storage, and reclaimed later without quest rewind. |
+| Visitor stories | Johto-to-Hoenn rescue still uses the existing party. (Superseded: the Hoenn-to-Johto Elm choice, gift and reclaim are removed; visitors get an ordinary Elm and Mr. Pokémon, no Silver, and the Johto story beats stand alone.) |
 | Persistence | Save/reload at permitted opening checkpoints, after starter choice, after local rewards, in another region, and after completing the full circuit; no opening replay or origin change. |
 | Travel | Fresh Hoenn reaches Slateport, obtains Ticket, visits Olivine and Vermilion, and returns to progressed Hoenn with zero badges/clears; Johto still completes its maiden voyage and all three regular legs. |
 | Recovery | Early first-battle loss, ordinary blackout before first Center, local blackout after each travel leg, Teleport where available, and existing Hoenn special whiteout cases. |
-| Progression | Hoenn-origin access to all 24 badges and the existing League circuit, including deferred Elm/Birch story and return journeys; no hidden Johto-origin or maiden-voyage gate. |
+| Progression | Hoenn-origin access to all 24 badges and the existing League circuit, including return journeys; no hidden Johto-origin or maiden-voyage gate. (The deferred Elm story is superseded.) |
 | Build isolation | Wayfarer includes truck closure and all three runtime profiles, fits its save-block limits and the 32 MiB ROM budget; standalone HNS/Emerald/FRLG retain their existing flow and compile without Wayfarer-only state references. |
 | Authoring boundary | A test-only custom profile in the same region as a stock profile can enter a non-house map, use its own milestones and recovery, and resume without invoking Mom, rival, professor, or stock starter setup. Its own travel predicate works with both stock starter/voyage milestones unset. Unknown IDs are rejected, and menu reordering preserves IDs. |
 
