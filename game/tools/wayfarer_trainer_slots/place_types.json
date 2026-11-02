@@ -10,6 +10,10 @@
       "describe": "a ship's map",
       "map_name_prefixes": ["AbandonedShip"]
     },
+    "liner": {
+      "describe": "an S.S. liner's deck or room",
+      "map_name_prefixes": ["SSAnne", "SSAqua", "SSTidal"]
+    },
     "tower": {
       "describe": "a tower or lighthouse map",
       "map_name_prefixes": ["SproutTower", "BurnedTower", "OlivineCity_Lighthouse", "BellTower", "TinTower", "MirageTower"]

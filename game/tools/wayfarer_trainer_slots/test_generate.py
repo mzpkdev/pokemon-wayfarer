@@ -389,9 +389,14 @@ class PlaceTypes(unittest.TestCase):
         errors = []
         G.check_places(self.placed('ship', map_name='SSAnne_Deck'), errors)
         self.assertTrue(any('place type ship' in e for e in errors), errors)
+        errors = []
+        G.check_places(self.placed('liner', map_name='AbandonedShip_Rooms_1F'), errors)
+        self.assertTrue(any('place type liner' in e for e in errors), errors)
 
     def test_a_slot_of_the_right_kind_passes(self):
         for place, kwargs in (('cave', {'map_type': 'MAP_TYPE_UNDERGROUND'}), ('ship', {'map_name': 'AbandonedShip_Rooms_1F'}),
+                              ('liner', {'map_name': 'SSAnne_Deck_Frlg'}), ('liner', {'map_name': 'SSAqua_B1F_hns'}),
+                              ('liner', {'map_name': 'SSTidalRooms'}),
                               ('mansion', {'map_name': 'PokemonMansion_2F_Frlg'}), ('tower', {'map_name': 'SproutTower_1F_hns'})):
             errors = []
             G.check_places(self.placed(place, **kwargs), errors)
