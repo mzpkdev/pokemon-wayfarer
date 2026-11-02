@@ -421,7 +421,7 @@ MAKEFLAGS += --no-print-directory
 .DELETE_ON_ERROR:
 
 RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test surfable-pokemon-pixel-alias-test wild-encounter-scaling-test wild-encounters-v2-check wild-encounters-v2-hm-audit wayfarer-hoenn-content-test wayfarer-hoenn-content-audit wayfarer-hoenn-entry-test wayfarer-hoenn-entry-audit wayfarer-sevii-port-test wayfarer-sevii-port-audit rom-report-test ram-report-test
-RULES_NO_SCAN += league-circuit-test trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit world-items-generate world-items-test world-items-audit world-trainers-generate world-trainers-test world-trainers-audit
+RULES_NO_SCAN += league-circuit-test johto-story-test trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit world-items-generate world-items-test world-items-audit world-trainers-generate world-trainers-test world-trainers-audit
 RULES_NO_SCAN += summary-screen-test
 RULES_NO_SCAN += wayfarer-phone-texts-test wayfarer-phone-texts-audit
 RULES_NO_SCAN += wayfarer-sevii-content-test wayfarer-sevii-content-audit
@@ -532,7 +532,7 @@ ifeq ($(BUILD_NAME),wayfarer)
 check: $(TEST_RAM_REPORT)
 check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-port-audit
 check: wayfarer-sinnoh-port-audit
-check: league-circuit-test
+check: league-circuit-test johto-story-test
 check: native-hm-windows-test wild-encounters-v2-check
 check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit league-circuit-test trainer-party-scaling-audit trainer-party-scaling-test world-items-audit world-items-test world-trainers-audit world-trainers-test wayfarer-phone-texts-audit wayfarer-phone-texts-test
 endif
@@ -852,6 +852,9 @@ wayfarer: all
 
 legacy-multiboot-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/legacy_multiboot -p 'test_*.py' -q
+
+johto-story-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/johto_story -p 'test_*.py' -q
 
 league-circuit-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/league_circuit -p 'test_*.py' -q
