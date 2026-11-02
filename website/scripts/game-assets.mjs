@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Renders the website's art from the game's own graphics in ../game/graphics:
 // the opening's parallax layers and Poké Ball, the title screen's logo,
-// wordmark and passing sprites, the 20 text window frames, the dawn scene,
-// and a web font traced from the game's normal Latin font.
+// wordmark and passing sprites, the default text window frame, the dawn
+// scene, key item icons, and a web font traced from the game's normal Latin font.
 //
 // The output is committed under public/game/, so building the site does not
 // need the game tree. Rerun with `pnpm run assets` after the source art changes.
@@ -115,13 +115,20 @@ for (const layer of [0, 1, 2, 3]) {
 save("intro/pokeball.png", renderIndexed(source("intro/scene_1/wayfarer_pokeball.png")))
 
 // The dawn artwork the Wayfarer title screen loads behind the mountain pan.
+// Only its GBA screen's 240x160 is drawn.
 save(
   "title/dawn.png",
-  tilemap(
-    readTiles(source("title_screen/wayfarer/background/scene.png")),
-    source("title_screen/wayfarer/background/scene.bin"),
-    8,
-    readJascPalette(source("title_screen/wayfarer/background/shared.pal")),
+  crop(
+    tilemap(
+      readTiles(source("title_screen/wayfarer/background/scene.png")),
+      source("title_screen/wayfarer/background/scene.bin"),
+      8,
+      readJascPalette(source("title_screen/wayfarer/background/shared.pal")),
+    ),
+    0,
+    0,
+    240,
+    160,
   ),
 )
 
@@ -149,37 +156,8 @@ save("sprites/bicycle.png", renderIndexed(source("intro/scene_2/bicycle.png"), p
 
 save("text/down-arrow.png", renderIndexed(source("fonts/down_arrow.png")))
 
-// Text window frames 1-20, as picked in OPTIONS.
-for (let frame = 1; frame <= 20; frame++)
-  save(`frames/${frame}.png`, renderIndexed(source(`text_window/${frame}.png`)))
-
-// Map name popups, framed as DrawMapNamePopUpFrame lays out the outline tiles:
-// 12 along the top, three down each side, 12 along the bottom. Wood colors its
-// outline with the body's palette; the other themes use the outline's.
-const placeTile = (target, tile, x, y) => {
-  for (let row = 0; row < 8; row++)
-    target.rgba.set(tile.rgba.subarray(row * 32, row * 32 + 32), ((y + row) * target.width + x) * 4)
-}
-for (const theme of ["wood", "marble", "stone", "brick", "underwater", "stone2"]) {
-  const palette =
-    theme === "wood"
-      ? readPng(source("map_popup/wood.png")).palette
-      : readPng(source(`map_popup/${theme}_outline.png`)).palette
-  const body = renderIndexed(source(`map_popup/${theme}.png`), palette)
-  const outline = spriteTiles(renderIndexed(source(`map_popup/${theme}_outline.png`), palette))
-  const popup = { width: 96, height: 40, rgba: new Uint8Array(96 * 40 * 4) }
-  for (let y = 0; y < 24; y++)
-    popup.rgba.set(body.rgba.subarray(y * 80 * 4, (y + 1) * 80 * 4), ((y + 8) * 96 + 8) * 4)
-  for (let i = 0; i < 12; i++) {
-    placeTile(popup, outline[i], i * 8, 0)
-    placeTile(popup, outline[18 + i], i * 8, 32)
-  }
-  for (let side = 0; side < 3; side++) {
-    placeTile(popup, outline[12 + side * 2], 0, 8 + side * 8)
-    placeTile(popup, outline[13 + side * 2], 88, 8 + side * 8)
-  }
-  save(`popups/${theme}.png`, popup)
-}
+// Text window frame 1, the game's default.
+save("frames/1.png", renderIndexed(source("text_window/1.png")))
 
 // Key item icons for the feature list, each colored by its own palette.
 for (const item of [

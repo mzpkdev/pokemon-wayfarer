@@ -24,14 +24,6 @@ const {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preload" href="/game/fonts/wayfarer-text.ttf" as="font" type="font/ttf" crossorigin />
     <title>{title}</title>
-    <script is:inline>
-      // Apply the visitor's saved text window frame before first paint.
-      try {
-        const frame = Number(localStorage.getItem("wayfarer:frame"))
-        if (frame >= 1 && frame <= 20)
-          document.documentElement.style.setProperty("--frame", `url("/game/frames/${frame}.png")`)
-      } catch {}
-    </script>
   </head>
   <body class="min-h-dvh bg-ground text-paper">
     <slot />

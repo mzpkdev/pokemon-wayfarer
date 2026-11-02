@@ -7,6 +7,8 @@
 }
 
 @theme {
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-gba: "Wayfarer Text", ui-monospace, monospace;
   /* Colors sampled from the opening's layers and the game's text palettes. */
   --color-sky: rgb(131 205 238);
@@ -18,6 +20,9 @@
   --color-ink-blue: rgb(48 80 200);
   --color-ink-blue-shadow: rgb(168 184 248);
   --color-paper: rgb(248 248 248);
+  /* The Pokémon logo's yellow and blue. */
+  --color-logo-yellow: rgb(255 214 0);
+  --color-logo-blue: rgb(40 72 200);
 }
 
 :root {
@@ -46,13 +51,9 @@
   }
 
   body {
-    font-family: var(--font-gba);
-    font-size: calc(16 * var(--px));
-    line-height: calc(16 * var(--px));
-    -webkit-font-smoothing: none;
-    -moz-osx-font-smoothing: unset;
-    font-smooth: never;
-    text-rendering: optimizeSpeed;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   ::selection {
@@ -76,6 +77,8 @@
   font-family: var(--font-gba);
   font-size: calc(16 * var(--px));
   line-height: calc(16 * var(--px));
+  -webkit-font-smoothing: none;
+  font-smooth: never;
   color: var(--ink);
   text-shadow:
     var(--dot) 0 var(--shadow),
@@ -118,13 +121,6 @@
   animation: gba-down-arrow 0.53s steps(1) infinite;
 }
 
-/** The ▶ menu cursor, which lives in the font. */
-@utility gba-cursor {
-  &::before {
-    content: "▶";
-  }
-}
-
 @keyframes gba-down-arrow {
   0%,
   100% {
@@ -145,4 +141,13 @@
   .gba-down-arrow {
     animation: none;
   }
+}
+
+/** A small label in the game's font, drawn at 2x so its pixels stay crisp. */
+@utility pixel-label {
+  font-family: var(--font-gba);
+  font-size: 32px;
+  line-height: 32px;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
 }
