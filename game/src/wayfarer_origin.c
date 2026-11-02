@@ -11,6 +11,10 @@
 #include "pokemon.h"
 #include "pokedex.h"
 #include "script.h"
+#include "starter_choose.h"
+#include "constants/flags.h"
+#include "constants/vars.h"
+#include "constants/wayfarer_johto_story.h"
 #include "wayfarer_persistence.h"
 #include "wayfarer_kanto_opening.h"
 #include "constants/heal_locations.h"
@@ -53,7 +57,7 @@ static void InitializeLittleroot(void)
     VarSet(VAR_NEWBARK_TOWN_STATE, 2);
     VarSet(VAR_NEWBARKTOWN_LABSTATE, 0);
     FlagSet(FLAG_HIDE_LAB_POLICEMAN);
-    FlagClear(FLAG_HIDE_SILVER_NEWBARKTOWN);
+    FlagSet(FLAG_HIDE_SILVER_NEWBARKTOWN);
     RunScriptImmediately(WayfarerHoennOrigin_EventScript_InitializeBaseline);
     WayfarerSetHoennStateInitialized(TRUE);
 }
@@ -191,6 +195,47 @@ u16 WayfarerGetConfirmedPendingOrigin(void) { return sConfirmedOrigin; }
 u16 WayfarerGetStartingOriginId(void) { return gSaveBlock3Ptr->wayfarerHoenn.startingOriginId; }
 // Special: Johto story beats that only the New Bark origin sees read this.
 u16 WayfarerIsJohtoOrigin(void) { return WayfarerGetStartingOriginId() == ORIGIN_NEW_BARK; }
+
+// Special: the starter slot (0 Grass, 1 Fire, 2 Water in every region) of the player's own origin,
+// or ORIGIN_STARTER_SLOT_NONE before it is chosen. Content that follows "your starter" reads this
+// instead of the Johto starter variable, which only the Johto origin writes.
+u16 WayfarerGetOriginStarterSlot(void)
+{
+    u16 slot = ORIGIN_STARTER_SLOT_NONE;
+
+    switch (WayfarerGetStartingOriginId())
+    {
+    case ORIGIN_NEW_BARK:
+        if (FlagGet(FLAG_JOHTO_STARTER_CHOICE_COMMITTED))
+            slot = VarGet(VAR_STARTER_MON);
+        break;
+    case ORIGIN_LITTLEROOT:
+        slot = VarGet(VAR_HOENN_STARTER_CHOICE);
+        break;
+    case ORIGIN_PALLET:
+        slot = WayfarerKanto_GetStarterSlot();
+        break;
+    }
+    return slot < ORIGIN_STARTER_SLOT_NONE ? slot : ORIGIN_STARTER_SLOT_NONE;
+}
+
+// The species of the player's origin starter. Before it is chosen, the lead party member stands in
+// (credits), and a Pikachu if there is no party.
+u16 WayfarerGetOriginStarterSpecies(void)
+{
+    u16 slot = WayfarerGetOriginStarterSlot();
+
+    if (slot == ORIGIN_STARTER_SLOT_NONE)
+        return gPlayerPartyCount != 0 ? GetMonData(&gPlayerParty[0], MON_DATA_SPECIES) : SPECIES_PIKACHU;
+    switch (WayfarerGetStartingOriginId())
+    {
+    case ORIGIN_NEW_BARK:
+        return GetJohtoStarterPokemon(slot);
+    case ORIGIN_PALLET:
+        return GetKantoStarterPokemon(slot);
+    }
+    return GetStarterPokemon(slot);
+}
 
 bool8 WayfarerInitializeOrigin(u16 id)
 {

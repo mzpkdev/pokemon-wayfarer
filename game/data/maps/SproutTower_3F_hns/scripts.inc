@@ -1,10 +1,24 @@
+#include "constants/wayfarer_johto_story.h"
+
 SproutTower_3F_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, SproutTower_3F_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters
 	.byte 0
 
 SproutTower_3F_OnTransition: 
+	setvar VAR_0x8004, SILVER_CHAPTER_SPROUT_TOWER
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	call_if_eq VAR_RESULT, FALSE, SproutTower_3F_EventScript_HideSilver
 	callnative SetTimeBasedEncounters
+	end
+
+SproutTower_3F_EventScript_HideSilver::
+	setflag FLAG_HIDE_SPROUT_TOWER_SILVER
+	return
+
+@ A retired Silver scene does nothing: no rewards, no state.
+SproutTower_3F_EventScript_SilverRetired::
+	releaseall
 	end
 
 
@@ -39,6 +53,9 @@ SproutTower_3F_EventScript_EscapeRope::
 	end
 
 SproutTower_3F_EventScript_TriggerSceneLeft::
+	setvar VAR_0x8004, SILVER_CHAPTER_SPROUT_TOWER
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	goto_if_eq VAR_RESULT, FALSE, SproutTower_3F_EventScript_SilverRetired
 	lock
 	playbgm MUS_HG_ENCOUNTER_RIVAL, FALSE
 	applymovement LOCALID_SPROUT_TOWER_SILVER, SproutTower_3F_Movement_Silver1
@@ -70,6 +87,9 @@ SproutTower_3F_EventScript_TriggerSceneLeft::
 	end
 
 SproutTower_3F_EventScript_TriggerSceneRight::
+	setvar VAR_0x8004, SILVER_CHAPTER_SPROUT_TOWER
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	goto_if_eq VAR_RESULT, FALSE, SproutTower_3F_EventScript_SilverRetired
 	lock
 	playbgm MUS_HG_ENCOUNTER_RIVAL, FALSE
 	applymovement LOCALID_SPROUT_TOWER_SILVER, SproutTower_3F_Movement_Silver1

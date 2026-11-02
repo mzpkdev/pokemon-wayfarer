@@ -40,15 +40,25 @@ BlackthornCity_Setup_Started:
 	setvar_forward VAR_BLACKTHORN_CITY_STATE, 1
 	return
 
+@ Elm calls only the Johto origin. A visitor hears nothing, but the lab state is still moved to
+@ Elm's Master Ball, which is their only path to it until the Master Ball rework gives the Den
+@ Elder a closing line.
 BlackthornCity_EventScript_Call::
+	specialvar VAR_RESULT, WayfarerIsJohtoOrigin
+	goto_if_eq VAR_RESULT, FALSE, BlackthornCity_EventScript_CallSkipped
 	lock
 	setspeaker BlackthornCity_Text_ElmName
 	pokenavcall BlackthornCity_Text_ElmCall
 	waitmessage
 	delay 30
-	setvar VAR_BLACKTHORN_CITY_STATE, 5
+	setvar_forward VAR_BLACKTHORN_CITY_STATE, 5
 	setvar VAR_NEWBARKTOWN_LABSTATE, 7
 	release
+	end
+
+BlackthornCity_EventScript_CallSkipped::
+	setvar_forward VAR_BLACKTHORN_CITY_STATE, 5
+	setvar VAR_NEWBARKTOWN_LABSTATE, 7
 	end
 
 BlackthornCity_Text_ElmName:

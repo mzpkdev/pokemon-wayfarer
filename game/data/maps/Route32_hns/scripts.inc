@@ -222,46 +222,25 @@ Route32_EventScript_FriedaCompleted::
 	release
 	end
 
+@ The Miracle Seed is given on the first conversation, to any origin, with no Silver, Violet Gym
+@ or Togepi Egg check. Its own flag records the receipt, set only once the item is in the Bag so a
+@ full Bag can retry.
 Route32_EventScript_BaldingMan::
 	lock
 	faceplayer
-	goto_if_ge VAR_VIOLET_CITY_STATE, 5, Route32_EventScript_BaldingManCompleted
-	goto Route32_EventScript_BaldingManCheck
+	goto_if_set FLAG_WAYFARER_JOHTO_MIRACLE_SEED_RECEIVED, Route32_EventScript_BaldingManCompleted
+	msgbox Route32_Text_CooltrainerM_HaveThisSeed, MSGBOX_DEFAULT
+	giveitem ITEM_MIRACLE_SEED
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
+	setflag FLAG_WAYFARER_JOHTO_MIRACLE_SEED_RECEIVED
+	closemessage
+	release
+	end
 
 Route32_EventScript_BaldingManCompleted::
 	msgbox Route32_Text_CooltrainerM_Experiences, MSGBOX_DEFAULT
 	closemessage
 	turnobject LOCALID_ROUTE32_BALDINGMAN, DIR_EAST
-	release
-	end
-
-Route32_EventScript_BaldingManCheck::
-	goto_if_unset FLAG_HIDE_SPROUT_TOWER_SILVER, Route32_EventScript_BaldingManTower
-	goto_if_unset FLAG_DEFEATED_VIOLET_GYM, Route32_EventScript_BaldingManGym
-	goto_if_unset FLAG_RECEIVED_TOGEPI_EGG, Route32_EventScript_BaldingManEgg
-	msgbox Route32_Text_CooltrainerM_HaveThisSeed, MSGBOX_DEFAULT
-	giveitem ITEM_MIRACLE_SEED
-	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
-	setvar VAR_VIOLET_CITY_STATE, 5
-	closemessage
-	release
-	end
-Route32_EventScript_BaldingManTower::
-	msgbox Route32_Text_CooltrainerM_WhatsTheHurry, MSGBOX_DEFAULT
-	msgbox Route32_Text_CooltrainerM_SproutTower, MSGBOX_DEFAULT
-	closemessage
-	release
-	end
-Route32_EventScript_BaldingManGym::
-	msgbox Route32_Text_CooltrainerM_WhatsTheHurry, MSGBOX_DEFAULT
-	msgbox Route32_Text_CooltrainerM_VioletGym, MSGBOX_DEFAULT
-	closemessage
-	release
-	end
-Route32_EventScript_BaldingManEgg::
-	msgbox Route32_Text_CooltrainerM_WhatsTheHurry, MSGBOX_DEFAULT
-	msgbox Route32_Text_CooltrainerM_AideIsWaiting, MSGBOX_DEFAULT
-	closemessage
 	release
 	end
 
@@ -312,43 +291,16 @@ Route32_Movement_SlowpokeRight::
 	walk_right
 	step_end
 
-Route32_Text_CooltrainerM_WhatsTheHurry:
-	.string "Wait up!\n"
-	.string "What's the hurry?$"
-
-Route32_Text_CooltrainerM_AideIsWaiting:
-	.string "{PLAYER}, right?\n"
-	.string "Some guy wearing glasses\p"
-	.string "was looking for you.\p"
-	.string "See for yourself. He's waiting for\n"
-	.string "you at the POKéMON CENTER.$"
-
-Route32_Text_CooltrainerM_SproutTower:
-	.string "Have you gone to SPROUT TOWER?\n"
-	.string "If you ever visit VIOLET CITY,\p"
-	.string "they'll expect you to train there.\n"
-	.string "That's basic for trainers.\p"
-	.string "Go to SPROUT TOWER!$"
-
-Route32_Text_CooltrainerM_VioletGym:
-	.string "Have you gone to the POKéMON GYM?\n"
-	.string "You can test your POKéMON and\p"
-	.string "yourself there.\n"
-	.string "It's a rite of passage for all\p"
-	.string "trainers!$"
-
 Route32_Text_CooltrainerM_HaveThisSeed:
 	.string "You have some good POKéMON there.\n"
-	.string "It must be from the training you\p"
-	.string "gave them around VIOLET CITY.\n"
-	.string "The training at the GYM must have\p"
-	.string "been especially helpful. As a\n"
-	.string "souvenir of VIOLET CITY, take this.\p"
+	.string "It must be from all the training\p"
+	.string "you've given them. As a souvenir,\n"
+	.string "take this.\p"
 	.string "It increases the power of GRASS-\n"
 	.string "type moves.$"
 
 Route32_Text_CooltrainerM_Experiences:
-	.string "Your experiences in VIOLET CITY\n"
+	.string "Your experiences on the road\n"
 	.string "should be useful for your journey.$"
 
 Route32_Text_SlowpokeTailOffer:

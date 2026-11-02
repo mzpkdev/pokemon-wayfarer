@@ -1,3 +1,5 @@
+#include "constants/wayfarer_johto_story.h"
+
 IndigoPlateau_PokemonCenter_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, IndigoPlateau_PokemonCenter_OnFrame 
 	map_script MAP_SCRIPT_ON_TRANSITION, IndigoPlateau_Pokecenter_OnTransition
@@ -22,7 +24,20 @@ IndigoPlateau_Pokecenter_OnTransition::
 	setflag FLAG_HIDE_LEAGUE_BLACKBELT
 #endif
 	setrespawn HEAL_LOCATION_INDIGO_PLATEAU_HNS
+	@ Silver's daily rematch follows his Mt. Moon battle (chapter 12).
+	setvar VAR_0x8004, SILVER_CHAPTER_INDIGO
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	call_if_eq VAR_RESULT, TRUE, IndigoPlateau_PokemonCenter_EventScript_ShowSilver
+	call_if_eq VAR_RESULT, FALSE, IndigoPlateau_PokemonCenter_EventScript_HideSilver
 	end
+
+IndigoPlateau_PokemonCenter_EventScript_ShowSilver::
+	clearflag FLAG_HIDE_INDIGO_PLATEAU_SILVER
+	return
+
+IndigoPlateau_PokemonCenter_EventScript_HideSilver::
+	setflag FLAG_HIDE_INDIGO_PLATEAU_SILVER
+	return
 
 #if IS_WAYFARER
 IndigoPlateau_EventScript_LeagueEventEntrance::
@@ -75,9 +90,9 @@ IndigoPlateau_Text_CooltrainerM:
     .string "lose, you have to start all over!$"
 
 IndigoPlateau_EventScript_Silver::
-#if IS_WAYFARER
-	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, IndigoPlateau_PokemonCenter_EventScript_DeferredSilver
-#endif
+	setvar VAR_0x8004, SILVER_CHAPTER_INDIGO
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	goto_if_eq VAR_RESULT, FALSE, IndigoPlateau_PokemonCenter_EventScript_SilverInert
 	lock
 	faceplayer 
 	goto_if_set FLAG_DAILY_BEAT_SILVER, IndigoPlateau_EventScript_SilverBeat
@@ -186,8 +201,5 @@ IndigoPlateau_Text_TeleportGuyNo:
 IndigoPlateau_Text_Abra:
     .string "ABRA: Aabra…$"
 
-#if IS_WAYFARER
-IndigoPlateau_PokemonCenter_EventScript_DeferredSilver::
-	releaseall
+IndigoPlateau_PokemonCenter_EventScript_SilverInert::
 	end
-#endif

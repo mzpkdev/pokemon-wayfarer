@@ -11,7 +11,6 @@ u16 GetStarterPokemon(u16 chosenStarterId);
 #if IS_WAYFARER
 u16 GetJohtoStarterPokemon(u16 chosenStarterId);
 u16 GetKantoStarterPokemon(u16 chosenStarterId);
-u16 WayfarerGetJohtoStarterSpecies(void);
 #endif
 void CB2_ChooseStarter(void);
 #if TESTING

@@ -1,3 +1,5 @@
+#include "constants/wayfarer_johto_story.h"
+
 GoldenrodCity_UndergroundSwitches_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, GoldenrodUnderground1_OnLoad
 	.byte 0
@@ -346,9 +348,9 @@ GoldenrodCity_UndergroundSwitches_EventScript_RemoveWall6::
 	return
 
 GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerTop::
-#if IS_WAYFARER
-	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, GoldenrodCity_UndergroundSwitches_EventScript_DeferredSilver
-#endif
+	setvar VAR_0x8004, SILVER_CHAPTER_UNDERGROUND
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	goto_if_eq VAR_RESULT, FALSE, GoldenrodCity_UndergroundSwitches_EventScript_StepWithoutSilver
 	lock
 	playse SE_EXIT
 	waitse
@@ -363,12 +365,19 @@ GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerTop::
 	waitmovement 0
 	waitmovement 0
 	msgbox GoldenrodUnderground_Text_SilverBefore, MSGBOX_DEFAULT
+	call_if_set FLAG_WAYFARER_JOHTO_SILVER_WON_ANY, GoldenrodCity_UndergroundSwitches_EventScript_SilverBeatenBefore
+	call_if_unset FLAG_WAYFARER_JOHTO_SILVER_WON_ANY, GoldenrodCity_UndergroundSwitches_EventScript_SilverFirstBattle
 	closemessage
+	setvar_forward VAR_WAYFARER_JOHTO_SILVER_CHAPTER, SILVER_CHAPTER_UNDERGROUND
 	call_if_eq VAR_STARTER_MON, 0, GoldenrodCity_UndergroundSwitches_EventScript_Cyndaquil
 	call_if_eq VAR_STARTER_MON, 1, GoldenrodCity_UndergroundSwitches_EventScript_Totodile
 	call_if_eq VAR_STARTER_MON, 2, GoldenrodCity_UndergroundSwitches_EventScript_Chikorita
+	setflag FLAG_WAYFARER_JOHTO_SILVER_WON_8
+	setflag FLAG_WAYFARER_JOHTO_SILVER_WON_ANY
 	playbgm MUS_HG_RIVAL_EXIT, FALSE
 	msgbox GoldenrodUnderground_Text_SilverAfter, MSGBOX_DEFAULT
+	call_if_set FLAG_WAYFARER_JOHTO_SILVER_PLAYED_7, GoldenrodCity_UndergroundSwitches_EventScript_SilverAfterLance
+	msgbox GoldenrodUnderground_Text_SilverAfterEnd, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_GOLDENROD_UNDERGROUND_SILVER, GoldenrodCity_UndergroundSwitches_Movement_SilverLeaveTop
 	waitmovement 0
@@ -382,9 +391,9 @@ GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerTop::
 
 
 GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerBot::
-#if IS_WAYFARER
-	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, GoldenrodCity_UndergroundSwitches_EventScript_DeferredSilver
-#endif
+	setvar VAR_0x8004, SILVER_CHAPTER_UNDERGROUND
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	goto_if_eq VAR_RESULT, FALSE, GoldenrodCity_UndergroundSwitches_EventScript_StepWithoutSilver
 	lock
 	playse SE_EXIT
 	waitse
@@ -399,12 +408,19 @@ GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerBot::
 	waitmovement 0
 	waitmovement 0
 	msgbox GoldenrodUnderground_Text_SilverBefore, MSGBOX_DEFAULT
+	call_if_set FLAG_WAYFARER_JOHTO_SILVER_WON_ANY, GoldenrodCity_UndergroundSwitches_EventScript_SilverBeatenBefore
+	call_if_unset FLAG_WAYFARER_JOHTO_SILVER_WON_ANY, GoldenrodCity_UndergroundSwitches_EventScript_SilverFirstBattle
 	closemessage
+	setvar_forward VAR_WAYFARER_JOHTO_SILVER_CHAPTER, SILVER_CHAPTER_UNDERGROUND
 	call_if_eq VAR_STARTER_MON, 0, GoldenrodCity_UndergroundSwitches_EventScript_Cyndaquil
 	call_if_eq VAR_STARTER_MON, 1, GoldenrodCity_UndergroundSwitches_EventScript_Totodile
 	call_if_eq VAR_STARTER_MON, 2, GoldenrodCity_UndergroundSwitches_EventScript_Chikorita
+	setflag FLAG_WAYFARER_JOHTO_SILVER_WON_8
+	setflag FLAG_WAYFARER_JOHTO_SILVER_WON_ANY
 	playbgm MUS_HG_RIVAL_EXIT, FALSE
 	msgbox GoldenrodUnderground_Text_SilverAfter, MSGBOX_DEFAULT
+	call_if_set FLAG_WAYFARER_JOHTO_SILVER_PLAYED_7, GoldenrodCity_UndergroundSwitches_EventScript_SilverAfterLance
+	msgbox GoldenrodUnderground_Text_SilverAfterEnd, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_GOLDENROD_UNDERGROUND_SILVER, GoldenrodCity_UndergroundSwitches_Movement_SilverLeaveBot
 	waitmovement 0
@@ -415,6 +431,24 @@ GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerBot::
 	setvar_forward VAR_GOLDENROD_CITY_STATE, 9
 	release
 	end
+
+@ The occupation's step past the Switches room happens whether or not Silver's chapter 8
+@ battle is playable.
+GoldenrodCity_UndergroundSwitches_EventScript_StepWithoutSilver::
+	setvar_forward VAR_GOLDENROD_CITY_STATE, 9
+	end
+
+GoldenrodCity_UndergroundSwitches_EventScript_SilverBeatenBefore::
+	msgbox GoldenrodUnderground_Text_SilverBeatenBefore, MSGBOX_DEFAULT
+	return
+
+GoldenrodCity_UndergroundSwitches_EventScript_SilverFirstBattle::
+	msgbox GoldenrodUnderground_Text_SilverFirstBattle, MSGBOX_DEFAULT
+	return
+
+GoldenrodCity_UndergroundSwitches_EventScript_SilverAfterLance::
+	msgbox GoldenrodUnderground_Text_SilverAfterLance, MSGBOX_DEFAULT
+	return
 
 GoldenrodCity_UndergroundSwitches_EventScript_Cyndaquil::
 	trainerbattle_no_intro TRAINER_RIVAL_CYNDAQUIL_4_HNS, GoldenrodUnderground_Text_SilverWin
@@ -531,12 +565,19 @@ GoldenrodUnderground_Text_SilverBefore:
     .string "Hold it!\p"
     .string "I saw you, so I tailed you.\p"
     .string "I don't need you underfoot while I\n"
-    .string "take care of TEAM ROCKET.\p"
+    .string "take care of TEAM ROCKET.$"
+
+GoldenrodUnderground_Text_SilverBeatenBefore:
     .string "…Wait a second. You beat me before,\n"
     .string "didn't you?\p"
     .string "That was just a fluke.\p"
     .string "I've been training my team and now\n"
     .string "I will repay my debts!$"
+
+GoldenrodUnderground_Text_SilverFirstBattle:
+    .string "…Wait a second.\p"
+    .string "I've been training my team.\p"
+    .string "Let's see how good you are!$"
 
 GoldenrodUnderground_Text_SilverWin:
     .string "…Why… Why do I lose?\p"
@@ -545,14 +586,18 @@ GoldenrodUnderground_Text_SilverWin:
     .string "So why do I lose?$"
 
 GoldenrodUnderground_Text_SilverAfter:
-    .string "…I don't understand…\p"
+    .string "…I don't understand…$"
+
+GoldenrodUnderground_Text_SilverAfterLance:
     .string "Is what that LANCE guy said true?\p"
     .string "That I don't treat POKéMON properly?\p"
     .string "Love…\p"
     .string "Trust…\p"
     .string "Are they really what I lack?\p"
     .string "Are they keeping me from winning?\p"
-    .string "I… I just don't understand.\p"
+    .string "I… I just don't understand.$"
+
+GoldenrodUnderground_Text_SilverAfterEnd:
     .string "But it's not going to end here.\p"
     .string "Not now. Not because of this.\p"
     .string "I won't give up my dream of becoming\n"
@@ -656,8 +701,3 @@ GoldenrodUnderground_Text_Switch2Off:
 GoldenrodUnderground_Text_Switch3Off:
     .string "SWITCH 3 deactivated.$"
 
-#if IS_WAYFARER
-GoldenrodCity_UndergroundSwitches_EventScript_DeferredSilver::
-	releaseall
-	end
-#endif

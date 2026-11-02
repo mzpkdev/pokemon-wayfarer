@@ -25,6 +25,8 @@
 #include "constants/map_types.h"
 #include "decoration_inventory.h"
 #include "randomizer.h"
+#include "wayfarer_origin.h"
+#include "constants/wayfarer_johto_story.h"
 
 #if IS_HNS
 
@@ -154,22 +156,20 @@ bool8 Mom_CheckForGiftPurchase(u32 newBalance, u32 oldBalance, bool8 isAutomatic
     {
         if (purchasedItem == MOM_GIFT_STARTER_DOLL)
         {
-            u16 starterChoice = VarGet(VAR_STARTER_MON);
-            switch (starterChoice)
-            {
-                case 0:
-                    purchasedItem = DECOR_CHIKORITA_DOLL;
-                    break;
-                case 1:
-                    purchasedItem = DECOR_CYNDAQUIL_DOLL;
-                    break;
-                case 2:
-                    purchasedItem = DECOR_TOTODILE_DOLL;
-                    break;
-                default:
-                    purchasedItem = DECOR_TOGEPI_DOLL;
-                    break;
-            }
+            // The doll is the player's own origin starter (Kanto has no starter-stage dolls, so
+            // its line stands in); before a starter exists, a Togepi doll.
+            static const u8 sOriginDolls[][3] = {
+                [ORIGIN_NEW_BARK]   = {DECOR_CHIKORITA_DOLL, DECOR_CYNDAQUIL_DOLL, DECOR_TOTODILE_DOLL},
+                [ORIGIN_LITTLEROOT] = {DECOR_TREECKO_DOLL, DECOR_TORCHIC_DOLL, DECOR_MUDKIP_DOLL},
+                [ORIGIN_PALLET]     = {DECOR_VENUSAUR_DOLL, DECOR_CHARIZARD_DOLL, DECOR_BLASTOISE_DOLL},
+            };
+            u16 slot = WayfarerGetOriginStarterSlot();
+            u16 origin = WayfarerGetStartingOriginId();
+
+            if (slot < ORIGIN_STARTER_SLOT_NONE && origin < ARRAY_COUNT(sOriginDolls) && sOriginDolls[origin][0] != 0)
+                purchasedItem = sOriginDolls[origin][slot];
+            else
+                purchasedItem = DECOR_TOGEPI_DOLL;
             isDecoration = TRUE;
         }
         else

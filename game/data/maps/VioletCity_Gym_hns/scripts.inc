@@ -42,7 +42,7 @@ VioletCity_Gym_EventScript_Falkner::
 	call Common_EventScript_SetGymTrainers_hns
 	giveitem ITEM_TM_ROOST
 	msgbox VioletGym_Text_Falkner_TMExplain, MSGBOX_DEFAULT
-	setvar VAR_VIOLET_CITY_STATE, 3
+	setvar_forward VAR_VIOLET_CITY_STATE, 3
 	setrespawn HEAL_LOCATION_VIOLET_CITY_HNS
 	closemessage
 	release

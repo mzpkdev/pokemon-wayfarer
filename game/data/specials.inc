@@ -791,8 +791,9 @@ gSpecials::
     def_special WayfarerCanUseRegularAqua
     def_special WayfarerCanReceiveSlateportTicket
     def_special WayfarerCanUseAquaMaidenVoyage
-    def_special WayfarerGetJohtoStarterSpecies
     def_special WayfarerIsJohtoOrigin
+    def_special WayfarerGetOriginStarterSlot
+    def_special WayfarerJohtoSilverAvailable
     def_special WayfarerGrantSharedEquipment
     def_special WayfarerGrantRunningShoes
     def_special WayfarerHasSharedPokedex
