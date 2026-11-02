@@ -5,7 +5,7 @@ import { SIGNUP_ACTION, SIGNUP_FIELD } from "~/lib/signup"
 const open = SIGNUP_ACTION !== undefined
 ---
 
-<form action={SIGNUP_ACTION} method="post" class="w-full max-w-xl">
+<form action={SIGNUP_ACTION} method="post" class="mx-auto w-full max-w-xl">
   <div class="flex flex-col gap-3 sm:flex-row">
     <label for="signup-email" class="sr-only">Email address</label>
     <input
@@ -16,17 +16,17 @@ const open = SIGNUP_ACTION !== undefined
       autocomplete="email"
       placeholder="you@example.com"
       disabled={!open}
-      class="pixel-corners min-w-0 flex-1 bg-grass-1 px-5 py-4 text-paper shadow-[inset_0_4px_0_rgb(0_16_0),inset_0_0_0_4px_var(--color-grass-2)] placeholder:text-paper/50 focus:shadow-[inset_0_0_0_4px_var(--color-logo-yellow)] focus:outline-none disabled:opacity-60"
+      class="pixel-corners min-w-0 flex-1 bg-paper px-5 py-4 text-left text-lg text-ink shadow-[inset_0_0_0_4px_var(--color-ink-shadow)] placeholder:text-ink/45 focus:shadow-[inset_0_0_0_4px_var(--color-ink-blue)] focus:outline-none"
     />
     <button
       type="submit"
       disabled={!open}
-      class="pixel-corners pixel-label bg-logo-yellow px-6 pt-3 pb-4 text-logo-blue shadow-[inset_0_-4px_0_rgb(200_144_0),inset_0_4px_0_rgb(255_240_140)] transition-colors hover:bg-paper focus-visible:outline-none focus-visible:shadow-[inset_0_0_0_4px_var(--color-logo-blue)] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-logo-yellow"
+      class="pixel-corners pixel-label bg-logo-yellow px-8 pt-3 pb-4 text-logo-blue shadow-[inset_0_-6px_0_rgb(200_144_0),inset_0_4px_0_rgb(255_240_140)] transition-colors hover:bg-[rgb(255_228_80)] active:translate-y-0.5 focus-visible:shadow-[inset_0_0_0_4px_var(--color-logo-blue)] focus-visible:outline-none disabled:cursor-not-allowed"
     >
       {open ? "Notify me" : "Sign-ups open soon"}
     </button>
   </div>
-  <p class="mt-3 text-sm text-paper/60">
+  <p class="mt-4 text-sm text-ink/70">
     Occasional development updates and one email on launch day. Unsubscribe at any time.
   </p>
 </form>

@@ -156,6 +156,15 @@ save("page/edge.png", mirrorPair(edge))
 // The bright meadow from the title screen, for the foot of the page.
 save("page/meadow.png", mirrorPair(crop(layer(2), 0, 16, 240, 64)))
 
+// The intro's sparkles, colored with the lightning palette the intro lends them.
+save(
+  "intro/sparkle.png",
+  renderIndexed(
+    source("intro/scene_1/sparkle.png"),
+    readPng(source("intro/scene_3/lightning.png")).palette,
+  ),
+)
+
 save("intro/pokeball.png", renderIndexed(source("intro/scene_1/wayfarer_pokeball.png")))
 
 // The dawn artwork the Wayfarer title screen loads behind the mountain pan.

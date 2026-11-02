@@ -56,6 +56,12 @@ const DIALOG_HEIGHT = 48
  */
 const HOLD_VH = 1
 
+/**
+ * Viewport heights past the Poké Ball at which the page's grass reaches the
+ * countdown and dialog, so they fade and the ball hands off to the sign-up.
+ */
+const PAGE_RISES_AT = 0.35
+
 type Viewport = { scale: number; width: number; height: number; originX: number; originY: number }
 
 const measure = (): Viewport => {
@@ -292,7 +298,7 @@ export const TitleScene = () => {
         context.drawImage(logoCanvas, view.originX + LOGO.x, view.originY + LOGO.y + rise)
       }
 
-      const draw = (pan: number) => {
+      const draw = (pan: number, pageRising: boolean) => {
         const { originX, originY, width, height } = view
         // Backdrop: sky above the scene, ground below it.
         const horizon = originY + 128
@@ -316,7 +322,8 @@ export const TitleScene = () => {
         drawLayer(bg2!, layerOffset(LAYERS[1]!, pan))
         drawLayer(bg1!, layerOffset(LAYERS[2]!, pan))
         const ballY = pokeballCenterY(pan)
-        if (ballY < SCREEN_HEIGHT + 32)
+        // Once the page rises, the Poké Ball has gone on to the sign-up below.
+        if (ballY < SCREEN_HEIGHT + 32 && !pageRising)
           context.drawImage(
             pokeball,
             originX + POKEBALL.x - POKEBALL.size / 2,
@@ -363,12 +370,13 @@ export const TitleScene = () => {
 
         const pan =
           frame < PAN_START ? 0 : frame < INTRO_END ? (frame - PAN_START) / PAN_FRAMES : scrolled
-        draw(pan)
+        const pageRising = scrolledScreens() >= SCRUB_VH + PAGE_RISES_AT
+        draw(pan, pageRising)
 
         const title = frame >= INTRO_END && pan === 1
         if (title !== titleShown) setAtTitle((titleShown = title))
         // The countdown and dialog leave as the page below starts rising over the scene.
-        const ball = frame >= INTRO_END && pan < 0.06 && scrolledScreens() < SCRUB_VH + 0.35
+        const ball = frame >= INTRO_END && pan < 0.06 && !pageRising
         if (ball !== ballShown) setAtBall((ballShown = ball))
       }
       raf = requestAnimationFrame(tick)

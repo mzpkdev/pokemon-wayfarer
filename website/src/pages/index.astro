@@ -1,9 +1,17 @@
 ---
+import { DaysToGo } from "~/components/DaysToGo"
 import SignupForm from "~/components/SignupForm.astro"
 import { TitleScene } from "~/components/TitleScene"
 import Layout from "~/layouts/Layout.astro"
 import { FEATURES, ORIGINS, REPOSITORY_URL, STATS } from "~/lib/content"
-import { RELEASE_AT, RELEASE_LABEL } from "~/lib/release"
+
+/** Sparkles twinkling around the Poké Ball above the sign-up, as in the opening. */
+const sparkles = [
+  { left: "-30%", top: "10%", delay: "0s" },
+  { left: "105%", top: "-5%", delay: "-0.35s" },
+  { left: "90%", top: "70%", delay: "-0.6s" },
+  { left: "-15%", top: "65%", delay: "-0.15s" },
+]
 
 /** Volbeats drifting through the dark grass behind the page: start height, duration, delay, direction. */
 const volbeats = [
@@ -50,19 +58,45 @@ const volbeats = [
           }
         </div>
 
-        <section aria-labelledby="notify" class="relative mx-auto max-w-5xl px-6 pb-20">
-          <p class="pixel-label text-logo-yellow">
-            Out <time datetime={RELEASE_AT.toISOString().slice(0, 10)}>{RELEASE_LABEL}</time>
-          </p>
-          <h2 id="notify" class="pixel-heading pixel-heading-xl mt-4 max-w-3xl">Be there on launch day</h2>
-          <p class="mt-6 max-w-2xl text-lg leading-relaxed text-paper/80">
-            Leave your email and we'll tell you the moment Pokémon Wayfarer is out, with the odd update on
-            how it's coming along until then.
-          </p>
-          <div class="mt-8">
-            <SignupForm />
+        <!-- The focal point after the Poké Ball: the sign-up, as a big in-game text window. -->
+        <section
+          aria-labelledby="notify"
+          class="relative mx-auto flex min-h-[85vh] max-w-3xl flex-col items-center justify-center px-4 pt-8 pb-24 text-center"
+        >
+          <div class="relative mb-[calc(-6*var(--px))]" aria-hidden="true">
+            {
+              sparkles.map(({ left, top, delay }) => (
+                <div
+                  class="sprite sparkle absolute bg-[url(/game/intro/sparkle.png)]"
+                  style={`left: ${left}; top: ${top}; --size: 16; --frames: 8; --duration: 0.9s; animation-delay: ${delay}`}
+                />
+              ))
+            }
+            <img
+              src="/game/intro/pokeball.png"
+              alt=""
+              width="64"
+              height="64"
+              class="pixelated catch-shake relative size-[calc(64*var(--px))]"
+            />
           </div>
-          <p class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-paper/70">
+
+          <div class="gba-window relative z-10 w-full px-[calc(8*var(--px))] py-[calc(6*var(--px))]">
+            <p class="gba-text gba-text-blue">
+              <DaysToGo client:load />
+            </p>
+            <h2 id="notify" class="gba-text gba-text-2x mt-[calc(4*var(--px))] text-balance">
+              Be there on launch day
+            </h2>
+            <p class="gba-text mx-auto mt-[calc(6*var(--px))] max-w-[calc(200*var(--px))] text-balance">
+              Get an email the moment POKéMON WAYFARER is out.
+            </p>
+            <div class="mt-[calc(10*var(--px))]">
+              <SignupForm />
+            </div>
+          </div>
+
+          <p class="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-paper/70">
             <a href="/wayfarer-release.ics" download class="underline-offset-4 hover:text-paper hover:underline">
               Add the release to your calendar
             </a>
@@ -224,6 +258,42 @@ const volbeats = [
     }
   }
 
+  /* The Poké Ball shakes like a ball mid-catch: left, right, left, then rests. */
+  .catch-shake {
+    transform-origin: 50% 85%;
+    animation: catch-shake 2.6s steps(1) infinite;
+  }
+
+  @keyframes catch-shake {
+    0%,
+    48%,
+    100% {
+      rotate: 0deg;
+    }
+    54% {
+      rotate: -12deg;
+    }
+    60% {
+      rotate: 0deg;
+    }
+    66% {
+      rotate: 12deg;
+    }
+    72% {
+      rotate: 0deg;
+    }
+    78% {
+      rotate: -12deg;
+    }
+    84% {
+      rotate: 0deg;
+    }
+  }
+
+  .sparkle {
+    --sprite-px: var(--px);
+  }
+
   /* TORCHIC runs rightward (its sprite faces left), cycling frames 0, 1, 2, 1. */
   .torchic-path {
     animation: drift 16s linear infinite;
@@ -253,7 +323,9 @@ const volbeats = [
     .volbeat-path,
     .volbeat-bob,
     .torchic-path,
-    .torchic {
+    .torchic,
+    .catch-shake,
+    .sparkle {
       animation: none;
     }
 
