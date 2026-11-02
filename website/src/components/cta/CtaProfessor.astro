@@ -14,22 +14,23 @@ import CtaLinks from "./CtaLinks.astro"
 ---
 
 <section aria-labelledby="notify" class="relative mx-auto flex min-h-[90vh] max-w-6xl items-center px-6 pt-8 pb-24">
-  <div class="grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-16">
-    <div class="oak-stage relative mx-auto lg:order-last" aria-hidden="true">
+  <!-- On wide screens OAK's oval sits level with the bottom of the form, so he stands beside it. -->
+  <div class="grid w-full grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16">
+    <div class="oak-stage relative mx-auto mb-12 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mb-0 lg:self-end" aria-hidden="true">
       <div class="spotlight absolute"></div>
       <OakStage client:visible className="relative" />
     </div>
 
-    <div>
+    <div class="lg:col-start-1 lg:row-start-1">
       <p class="pixel-label text-logo-yellow">PROF. OAK</p>
       <h2 id="notify" class="pixel-heading pixel-heading-xl mt-3">First, what is your email?</h2>
       <p class="mt-6 max-w-xl text-lg leading-relaxed text-paper/80">
         Tell me where to write and I'll let you know the moment your journey can begin, on {RELEASE_LABEL}.
         You may hear from me now and then before that, too.
       </p>
-      <SignupForm id="signup-email" class="mt-10 max-w-xl" />
-      <CtaLinks class="mt-8" />
     </div>
+    <SignupForm id="signup-email" class="mt-10 max-w-xl lg:col-start-1 lg:row-start-2" />
+    <CtaLinks class="mt-8 lg:col-start-1 lg:row-start-3" />
   </div>
 </section>
 
