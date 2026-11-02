@@ -1,0 +1,25 @@
+---
+import "~/styles/global.css"
+
+type Props = {
+  title: string
+  description?: string
+}
+
+const { title, description = "Pokémon Wayfarer, a ROM hack built on pokeemerald-expansion." } =
+  Astro.props
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body class="min-h-dvh bg-wayfarer-950 font-sans text-wayfarer-50 antialiased">
+    <slot />
+  </body>
+</html>

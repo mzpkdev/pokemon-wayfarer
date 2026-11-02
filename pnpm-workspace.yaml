@@ -3,6 +3,7 @@ packages:
   - devtools
   - devtools/tools/*
   - devtools/ui
+  - website
 
 allowBuilds:
   "@playwright/browser-chromium": true

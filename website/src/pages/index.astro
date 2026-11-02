@@ -1,0 +1,14 @@
+---
+import { FeatureTabs } from "~/components/FeatureTabs"
+import Layout from "~/layouts/Layout.astro"
+---
+
+<Layout title="Pokémon Wayfarer">
+  <main class="mx-auto flex max-w-3xl flex-col items-start gap-8 px-4 py-24">
+    <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl">Pokémon Wayfarer</h1>
+    <p class="text-lg text-wayfarer-50/70">
+      One journey across every region. This site is a work in progress.
+    </p>
+    <FeatureTabs client:visible />
+  </main>
+</Layout>
