@@ -70,11 +70,6 @@ CianwoodGym_EventScript_ChuckVictory::
 	msgbox CianwoodGym_Text_ChuckTMSpeech, MSGBOX_DEFAULT
 	setvar VAR_GETFLY, 1
 	setrespawn HEAL_LOCATION_CIANWOOD_CITY_HNS
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	call MahoganyTown_Gym_EventScript_TryArmRocketTakeover
-#else
-	call_if_eq VAR_NUM_BADGES, 7, MahoganyTown_Gym_EventScript_SetupElmRocketCall
-#endif
 	closemessage
 	release
 	end

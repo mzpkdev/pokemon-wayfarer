@@ -63,7 +63,12 @@ RadioTower1F_EventScript_Reception::
 	lock
 	faceplayer
 	msgbox RadioTower1F_Text_ReceptionistWelcome, MSGBOX_DEFAULT
+	@ No quiz while the Rockets hold the Tower, so it can never touch the takeover.
+	goto_if_lt VAR_GOLDENROD_CITY_STATE, 6, RadioTower1F_EventScript_ReceptionOpen
+	goto_if_lt VAR_GOLDENROD_CITY_STATE, 11, RadioTower1F_EventScript_ReceptionNoTours
+RadioTower1F_EventScript_ReceptionOpen::
 	goto_if_unset FLAG_ENABLE_RADIO, RadioTower1F_EventScript_ReceptionOfferQuiz
+RadioTower1F_EventScript_ReceptionNoTours::
 	msgbox RadioTower1F_Text_ReceptionistNoTours, MSGBOX_DEFAULT
 	closemessage
 	release

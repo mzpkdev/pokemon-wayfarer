@@ -134,10 +134,33 @@ GoldenrodCity_EventScript_RocketScout::
 	waitmovement LOCALID_GOLDENROD_ROCKET_SCOUT
 	faceplayer
 	msgbox GoldenrodCity_Text_RocketScout2, MSGBOX_DEFAULT
+	msgbox GoldenrodCity_Text_RocketScoutFollow, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, FALSE, GoldenrodCity_EventScript_RocketScoutDeclined
+	closemessage
+	call GoldenrodCity_EventScript_StartTakeover
+	fadescreen FADE_TO_BLACK
+	@ The hidden NPCs and the Rockets only change on a map load, so reload Goldenrod at the
+	@ Radio Tower's door. The player never leaves the city.
+	warpsilent MAP_GOLDENROD_CITY_HNS, 16, 23
+	waitstate
+	release
+	end
+
+GoldenrodCity_EventScript_RocketScoutDeclined::
 	closemessage
 	turnobject LOCALID_GOLDENROD_ROCKET_SCOUT, DIR_NORTH
 	release
 	end
+
+@ The Radio Tower occupation begins. It writes only Goldenrod's own state and objects: no
+@ Mahogany state, no phone call. The scout and the 2F policeman share one hide flag.
+GoldenrodCity_EventScript_StartTakeover::
+	setvar_forward VAR_GOLDENROD_CITY_STATE, 6
+	clearflag FLAG_HIDE_GOLDENROD_ROCKETS
+	setflag FLAG_HIDE_GOLDENROD_ROCKET_SCOUT
+	setflag FLAG_HIDE_GOLDENROD_NPCS
+	clearflag FLAG_HIDE_ROCKET_GOLDENROD_RADIOTOWER_1
+	return
 
 GoldenrodCity_EventScript_Rocket1::
 	lock
@@ -368,6 +391,10 @@ GoldenrodCity_Text_Gramps:
 
 GoldenrodCity_Text_RocketScout1:
 	.string "So this is the RADIO TOWER…$"
+
+GoldenrodCity_Text_RocketScoutFollow:
+	.string "Follow the suspicious man into the\n"
+	.string "RADIO TOWER?$"
 
 GoldenrodCity_Text_RocketScout2:
 	.string "What do you want, pest?\n"
