@@ -431,7 +431,7 @@ const route28 = all.find((p) => p.m.name === "Route28_hns")
 for (const p of all.filter((q) => q.region === "Sinjoh"))
   console.log("  ", p.m.name, p.x, p.y, p.l.width, p.l.height)
 // Open sea all round.
-const MARGIN = 48
+const MARGIN = 72
 const minX = Math.min(...all.map((p) => p.x)) - MARGIN,
   minY = Math.min(...all.map((p) => p.y)) - MARGIN
 const W = Math.max(...all.map((p) => p.x + p.l.width)) - minX + MARGIN,
@@ -510,71 +510,297 @@ all.forEach((p, mapIndex) => {
       owner[i] = mapIndex
     }
 })
-// Fill the gaps the way the game fills past a map's edge: with the nearest
-// map's border blocks, tiled on the world grid.
+// The land between the maps. Map tiles say where the world is land and where
+// it is water; land grows out from the maps' land to a coastline that wanders
+// with fractal noise, sea stays sea, and stretches of water that no open sea
+// reaches (the insides of route loops) become land too. Each filled cell
+// then takes the border blocks of the nearest map with that kind of border,
+// the way the game fills past a map's edge, tiled on the world grid.
+const N = W * H
+const tileColor = (() => {
+  const cache = new Map()
+  return (k) => {
+    if (cache.has(k)) return cache.get(k)
+    const tile = atlasTiles[k]
+    let r = 0,
+      g = 0,
+      b = 0
+    for (let i = 0; i < 256; i++) {
+      r += tile[i * 4]
+      g += tile[i * 4 + 1]
+      b += tile[i * 4 + 2]
+    }
+    const color = [r / 256, g / 256, b / 256]
+    cache.set(k, color)
+    return color
+  }
+})()
+const isWater = (k) => {
+  const [r, g, b] = tileColor(k)
+  return b > 110 && b > r + 30 && b >= g - 10
+}
+const isDark = (k) => {
+  const [r, g, b] = tileColor(k)
+  return r + g + b < 120
+}
+
 // Sinjoh's maps are bordered by a cave's black void; give them the snow past
 // Route 217's edge instead, so Sinjoh joins the land on either side.
 const route217 = layouts[byName.Route217.layout]
 const borders = all.map((p) => {
-  if (p.region === "Sinjoh")
-    p = { ...p, l: { ...route217, primary_tileset: route217.primary_tileset } }
-  const bin = fs.readFileSync(`${game}/${p.l.border_filepath}`)
+  const layout = p.region === "Sinjoh" ? route217 : p.l
+  const bin = fs.readFileSync(`${game}/${layout.border_filepath}`)
   // A few layouts declare a bigger border than their file holds; fall back to 2x2.
-  const declared = (p.l.border_width ?? 2) * (p.l.border_height ?? 2)
+  const declared = (layout.border_width ?? 2) * (layout.border_height ?? 2)
   const fits = bin.length / 2 >= declared
-  const bw = fits ? (p.l.border_width ?? 2) : 2,
-    bh = fits ? (p.l.border_height ?? 2) : 2
-  return {
-    bw,
-    bh,
-    ids: Array.from({ length: bw * bh }, (_, k) =>
-      atlasIndex(p.l.primary_tileset, p.l.secondary_tileset, bin.readUInt16LE(k * 2) & 0x3ff),
-    ),
-  }
+  const bw = fits ? (layout.border_width ?? 2) : 2,
+    bh = fits ? (layout.border_height ?? 2) : 2
+  const ids = Array.from({ length: bw * bh }, (_, k) =>
+    atlasIndex(layout.primary_tileset, layout.secondary_tileset, bin.readUInt16LE(k * 2) & 0x3ff),
+  )
+  const water = ids.filter(isWater).length
+  const kind = ids.some(isDark) ? "none" : water * 2 > ids.length ? "water" : "land"
+  return { bw, bh, ids, kind }
 })
-// Only near the maps, though: a border spread over open ocean would paint
-// whole seas in one map's trees. Maps whose border is the black void past a
-// cave's edge don't spread at all. Past the fill, it's open sea.
-const FILL = 20
-const average = (k) => {
-  const tile = atlasTiles[k]
-  let sum = 0
-  for (let i = 0; i < 256; i++) sum += tile[i * 4] + tile[i * 4 + 1] + tile[i * 4 + 2]
-  return sum / 256
-}
-const spreads = borders.map((b) => b.ids.every((k) => average(k) > 60))
-let frontier = []
-for (let i = 0; i < W * H; i++) if (owner[i] >= 0 && spreads[owner[i]]) frontier.push(i)
-for (let step = 0; step < FILL && frontier.length; step++) {
-  const next = []
-  for (const i of frontier) {
-    const x = i % W,
-      y = (i - x) / W
-    for (const [dx, dy] of [
-      [1, 0],
-      [-1, 0],
-      [0, 1],
-      [0, -1],
-    ]) {
-      const nx = x + dx,
-        ny = y + dy
-      if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue
-      const j = ny * W + nx
-      if (owner[j] >= 0) continue
-      owner[j] = owner[i]
-      const b = borders[owner[i]]
-      grid[j] = b.ids[(ny % b.bh) * b.bw + (nx % b.bw)]
-      next.push(j)
-    }
-  }
-  frontier = next
-}
-const ocean = borders[all.findIndex((p) => p.m.name === "Route105")]
-for (let i = 0; i < W * H; i++) {
-  if (grid[i] !== EMPTY) continue
+const pattern = (b, i) => {
   const x = i % W,
     y = (i - x) / W
-  grid[i] = ocean.ids[(y % ocean.bh) * ocean.bw + (x % ocean.bw)]
+  return b.ids[(y % b.bh) * b.bw + (x % b.bw)]
+}
+
+// Fractal value noise, fixed seed, in [-1, 1].
+const hash = (x, y) => {
+  let h = (x * 374761393 + y * 668265263) ^ 0x5bd1e995
+  h = Math.imul(h ^ (h >>> 13), 1274126177)
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967296
+}
+const valueNoise = (x, y) => {
+  const ix = Math.floor(x),
+    iy = Math.floor(y)
+  const fx = x - ix,
+    fy = y - iy
+  const sx = fx * fx * (3 - 2 * fx),
+    sy = fy * fy * (3 - 2 * fy)
+  const top = hash(ix, iy) + (hash(ix + 1, iy) - hash(ix, iy)) * sx
+  const bottom = hash(ix, iy + 1) + (hash(ix + 1, iy + 1) - hash(ix, iy + 1)) * sx
+  return top + (bottom - top) * sy
+}
+const fractal = (x, y, base = 1 / 48) => {
+  let sum = 0,
+    weight = 0,
+    amplitude = 1,
+    frequency = base
+  for (let octave = 0; octave < 4; octave++) {
+    sum += amplitude * valueNoise(x * frequency + octave * 17.3, y * frequency - octave * 9.1)
+    weight += amplitude
+    amplitude /= 2
+    frequency *= 2
+  }
+  return (sum / weight) * 2 - 1
+}
+// Domain-warped: the noise sampled at a point pushed about by more noise,
+// which bends coastlines into capes and inlets instead of ripples.
+const coastNoise = (x, y) => {
+  const wx = fractal(x + 101, y - 57, 1 / 90) * 28
+  const wy = fractal(x - 33, y + 211, 1 / 90) * 28
+  return fractal(x + wx, y + wy, 1 / 70)
+}
+
+// Distance (in metatiles, chamfer 3-4) from each cell to the nearest cell in `seed`.
+const distanceFrom = (seed) => {
+  const d = new Float32Array(N).fill(1e9)
+  for (let i = 0; i < N; i++) if (seed[i]) d[i] = 0
+  for (let y = 0; y < H; y++)
+    for (let x = 0; x < W; x++) {
+      const i = y * W + x
+      let v = d[i]
+      if (x > 0) v = Math.min(v, d[i - 1] + 1)
+      if (y > 0) {
+        v = Math.min(v, d[i - W] + 1)
+        if (x > 0) v = Math.min(v, d[i - W - 1] + Math.SQRT2)
+        if (x < W - 1) v = Math.min(v, d[i - W + 1] + Math.SQRT2)
+      }
+      d[i] = v
+    }
+  for (let y = H - 1; y >= 0; y--)
+    for (let x = W - 1; x >= 0; x--) {
+      const i = y * W + x
+      let v = d[i]
+      if (x < W - 1) v = Math.min(v, d[i + 1] + 1)
+      if (y < H - 1) {
+        v = Math.min(v, d[i + W] + 1)
+        if (x < W - 1) v = Math.min(v, d[i + W + 1] + Math.SQRT2)
+        if (x > 0) v = Math.min(v, d[i + W - 1] + Math.SQRT2)
+      }
+      d[i] = v
+    }
+  return d
+}
+
+// Land grows only from maps that are mostly land; a sea route's rocks and
+// islets don't make a coast, and the water past a sea route stays sea.
+const waterShare = new Float32Array(all.length)
+const cellCount = new Float32Array(all.length)
+for (let i = 0; i < N; i++)
+  if (owner[i] >= 0) {
+    cellCount[owner[i]]++
+    if (isWater(grid[i])) waterShare[owner[i]]++
+  }
+for (let m = 0; m < all.length; m++) waterShare[m] /= cellCount[m]
+const mapLand = new Uint8Array(N)
+const mapSea = new Uint8Array(N)
+for (let i = 0; i < N; i++)
+  if (owner[i] >= 0) {
+    if (waterShare[owner[i]] > 0.55) mapSea[i] = 1
+    else if (!isWater(grid[i])) mapLand[i] = 1
+  }
+const toLand = distanceFrom(mapLand)
+const toSeaRoute = distanceFrom(mapSea)
+// How far land reaches past the maps: about 18 metatiles, give or take 24.
+const REACH = 18,
+  WANDER = 24
+let land = new Uint8Array(N)
+for (let i = 0; i < N; i++) {
+  if (owner[i] >= 0) land[i] = owner[i] >= 0 && !isWater(grid[i]) ? 1 : 0
+  else {
+    const x = i % W,
+      y = (i - x) / W
+    land[i] = toLand[i] < REACH + WANDER * coastNoise(x, y) && toLand[i] < toSeaRoute[i] ? 1 : 0
+  }
+}
+// Smooth the filled coast: each filled cell takes the majority of its 5x5
+// neighborhood, twice, which rounds off stray corners and specks.
+for (let pass = 0; pass < 2; pass++) {
+  const next = land.slice()
+  for (let y = 2; y < H - 2; y++)
+    for (let x = 2; x < W - 2; x++) {
+      const i = y * W + x
+      if (owner[i] >= 0) continue
+      let count = 0
+      for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) count += land[i + dy * W + dx]
+      next[i] = count > 12 ? 1 : 0
+    }
+  land = next
+}
+// Water that no open sea reaches is enclosed by land: the inside of a route
+// loop, not a lake any map draws. Fill it in.
+{
+  const open = new Uint8Array(N)
+  const queue = []
+  for (let x = 0; x < W; x++) queue.push(x, (H - 1) * W + x)
+  for (let y = 0; y < H; y++) queue.push(y * W, y * W + W - 1)
+  for (const i of queue) open[i] = land[i] ? 0 : 1
+  let head = 0
+  const stack = queue.filter((i) => open[i])
+  while (head < stack.length) {
+    const i = stack[head++]
+    const x = i % W,
+      y = (i - x) / W
+    for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, y > 0 ? i - W : -1, y < H - 1 ? i + W : -1])
+      if (j >= 0 && !open[j] && !land[j]) {
+        open[j] = 1
+        stack.push(j)
+      }
+  }
+  for (let i = 0; i < N; i++) if (!land[i] && !open[i] && owner[i] < 0) land[i] = 1
+}
+
+// Which map each cell takes its border from: the nearest map of the right kind.
+const nearest = (kind) => {
+  const from = new Int32Array(N).fill(-1)
+  const queue = []
+  for (let i = 0; i < N; i++)
+    if (owner[i] >= 0 && borders[owner[i]].kind === kind) {
+      from[i] = owner[i]
+      queue.push(i)
+    }
+  let head = 0
+  while (head < queue.length) {
+    const i = queue[head++]
+    const x = i % W,
+      y = (i - x) / W
+    for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, y > 0 ? i - W : -1, y < H - 1 ? i + W : -1])
+      if (j >= 0 && from[j] < 0) {
+        from[j] = from[i]
+        queue.push(j)
+      }
+  }
+  return from
+}
+const landFrom = nearest("land")
+const waterFrom = nearest("water")
+const ocean = borders[all.findIndex((p) => p.m.name === "Route105")]
+// Look the nearest map up from a point pushed about by noise, so where one
+// map's fill meets another's the boundary wanders instead of running straight.
+const warped = (from, i) => {
+  const x = i % W,
+    y = (i - x) / W
+  const wx = Math.round(x + fractal(x + 400, y, 1 / 40) * 22)
+  const wy = Math.round(y + fractal(x, y + 400, 1 / 40) * 22)
+  const j = Math.min(H - 1, Math.max(0, wy)) * W + Math.min(W - 1, Math.max(0, wx))
+  return from[j] >= 0 ? from[j] : from[i]
+}
+for (let i = 0; i < N; i++) {
+  if (owner[i] >= 0) continue
+  if (land[i]) grid[i] = pattern(borders[warped(landFrom, i)], i)
+  else grid[i] = waterFrom[i] >= 0 && toLand[i] < 40 ? pattern(borders[waterFrom[i]], i) : pattern(ocean, i)
+}
+
+// The far-out view, drawn like a map. Land is each cell's tile color, with
+// filled land given a little texture and darkening inland, and the coast
+// picked out a shade darker. All water is one sea, whatever game its tiles
+// come from: light in the shallows, deepening away from the shore.
+const SEA_SHALLOW = [150, 206, 240],
+  SEA_DEEP = [52, 92, 178]
+const overview = new Uint8Array(N * 4)
+{
+  const isLand = new Uint8Array(N)
+  for (let i = 0; i < N; i++) isLand[i] = isWater(grid[i]) ? 0 : 1
+  const toShore = distanceFrom(isLand)
+  const sea = new Uint8Array(N)
+  for (let i = 0; i < N; i++) sea[i] = 1 - isLand[i]
+  const toSea = distanceFrom(sea)
+  for (let i = 0; i < N; i++) {
+    const x = i % W,
+      y = (i - x) / W
+    let r, g, b
+    if (isLand[i]) {
+      ;[r, g, b] = tileColor(grid[i])
+      if (owner[i] < 0) {
+        // Relief: deep inland, denser forest, and highlands where the noise rises.
+        const inland = Math.min(1, Math.max(0, (toLand[i] - 6) / 24))
+        const forest = inland * 0.3 * (0.6 + 0.4 * fractal(x - 77, y + 13, 1 / 30))
+        r += (44 - r) * forest
+        g += (108 - g) * forest
+        b += (52 - b) * forest
+        const high = inland * Math.max(0, fractal(x + 900, y - 300, 1 / 60) - 0.15) * 1.4
+        r += (176 - r) * Math.min(0.55, high)
+        g += (148 - g) * Math.min(0.55, high)
+        b += (112 - b) * Math.min(0.55, high)
+        const shade = 1 + 0.08 * fractal(x, y, 1 / 20)
+        r *= shade
+        g *= shade
+        b *= shade
+      }
+      if (toSea[i] <= 1.5) {
+        r *= 0.6
+        g *= 0.6
+        b *= 0.6
+      }
+    } else {
+      const t = Math.min(1, Math.max(0, (toShore[i] - 1) / 34)) ** 0.7
+      const ripple = 1 + 0.03 * fractal(x, y, 1 / 18)
+      r = (SEA_SHALLOW[0] + (SEA_DEEP[0] - SEA_SHALLOW[0]) * t) * ripple
+      g = (SEA_SHALLOW[1] + (SEA_DEEP[1] - SEA_SHALLOW[1]) * t) * ripple
+      b = (SEA_SHALLOW[2] + (SEA_DEEP[2] - SEA_SHALLOW[2]) * t) * ripple
+      if (toShore[i] <= 1.5) {
+        r = r * 0.6 + 255 * 0.4
+        g = g * 0.6 + 255 * 0.4
+        b = b * 0.6 + 255 * 0.4
+      }
+    }
+    overview.set([r, g, b, 255], i * 4)
+  }
 }
 // The atlas: 64 metatiles a row.
 const COLUMNS = 64
@@ -589,6 +815,7 @@ atlasTiles.forEach((tile, k) => {
 fs.mkdirSync(outDir, { recursive: true })
 writePng(`${outDir}/atlas.png`, COLUMNS * 16, rows * 16, atlas)
 fs.writeFileSync(`${outDir}/grid.bin`, Buffer.from(grid.buffer))
+writePng(`${outDir}/overview.png`, W, H, overview)
 const towns = all
   .filter((p) => ["MAP_TYPE_TOWN", "MAP_TYPE_CITY"].includes(p.m.map_type))
   .map((p) => ({ name: p.m.name, x: p.x - minX + p.l.width / 2, y: p.y - minY + p.l.height / 2 }))

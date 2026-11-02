@@ -15,6 +15,9 @@ type Meta = {
 
 const EMPTY = 0xffff
 const CHUNK = 32
+/** Device pixels per metatile where the tiles start fading in over the map view, and finish. */
+const FADE_FROM = 5
+const FADE_TO = 10
 /** Zoom limits, in CSS pixels per metatile. */
 const MAX_ZOOM = 48
 
@@ -55,43 +58,9 @@ export const WorldExplorer = ({ base }: { base: string }) => {
       if (disposed) return
       const { width, height, columns } = meta
 
-      // One pixel per metatile, its average color, for the far-out view.
-      const sheet = document.createElement("canvas")
-      sheet.width = atlas.width
-      sheet.height = atlas.height
-      const sheetContext = sheet.getContext("2d", { willReadFrequently: true })!
-      sheetContext.drawImage(atlas, 0, 0)
-      const pixels = sheetContext.getImageData(0, 0, atlas.width, atlas.height).data
-      const average = new Uint8Array(meta.count * 3)
-      for (let k = 0; k < meta.count; k++) {
-        const ax = (k % columns) * 16
-        const ay = Math.floor(k / columns) * 16
-        let r = 0
-        let g = 0
-        let b = 0
-        for (let y = 0; y < 16; y++)
-          for (let x = 0; x < 16; x++) {
-            const o = ((ay + y) * atlas.width + ax + x) * 4
-            r += pixels[o]!
-            g += pixels[o + 1]!
-            b += pixels[o + 2]!
-          }
-        average.set([r / 256, g / 256, b / 256], k * 3)
-      }
-      const overview = document.createElement("canvas")
-      overview.width = width
-      overview.height = height
-      const overviewContext = overview.getContext("2d")!
-      const overviewData = overviewContext.createImageData(width, height)
-      for (let i = 0; i < width * height; i++) {
-        const k = grid[i]!
-        if (k === EMPTY) continue
-        overviewData.data.set(
-          [average[k * 3]!, average[k * 3 + 1]!, average[k * 3 + 2]!, 255],
-          i * 4,
-        )
-      }
-      overviewContext.putImageData(overviewData, 0, 0)
+      // The far-out view, one pixel per metatile, drawn like a map by the data script.
+      const overview = await loadImage(`${base}/overview.png`)
+      if (disposed) return
 
       // Chunks of 32x32 metatiles, drawn on demand at 4 or 16 pixels a
       // metatile and kept until too many pile up.
@@ -168,10 +137,9 @@ export const WorldExplorer = ({ base }: { base: string }) => {
         context.fillStyle = "rgb(8 41 0)"
         context.fillRect(0, 0, w, h)
 
-        if (scale < 3) {
-          context.imageSmoothingEnabled = scale < 1
-          context.drawImage(overview, -left * scale, -top * scale, width * scale, height * scale)
-        } else {
+        // The map view far out, the tiles close in, cross-fading between.
+        const tiles = Math.min(1, Math.max(0, (scale - FADE_FROM) / (FADE_TO - FADE_FROM)))
+        if (tiles > 0) {
           const size = scale < 10 ? 4 : 16
           context.imageSmoothingEnabled = scale < size
           const firstX = Math.max(0, Math.floor(left / CHUNK))
@@ -192,6 +160,13 @@ export const WorldExplorer = ({ base }: { base: string }) => {
               const below = Math.round(((cy + 1) * CHUNK - top) * scale)
               context.drawImage(chunk(cx, cy, size), x, y, next - x, below - y)
             }
+        }
+        if (tiles < 1) {
+          context.globalAlpha = 1 - tiles
+          context.imageSmoothingEnabled = scale < 2
+          context.imageSmoothingQuality = "high"
+          context.drawImage(overview, -left * scale, -top * scale, width * scale, height * scale)
+          context.globalAlpha = 1
         }
 
         // Town names while they help: not when everything is a speck, nor
