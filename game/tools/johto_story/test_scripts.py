@@ -1668,6 +1668,14 @@ class ElmAndSeedForVisitors(unittest.TestCase):
     def test_elm_mentions_the_kimono_girls_only_while_the_trial_is_open_and_unfinished(self):
         text = raw_text('NewBarkTown_Lab_hns')
         self.assertNotIn('since that EGG got you', text)
+        # The hint does not wait for the Dragon's Den: no Master Ball owed or received.
+        for branch in (1, 2):
+            talk = Interp('NewBarkTown_Lab_hns', vars={LAB: 6, BRANCH: branch, 'VAR_GOLDENROD_CITY_STATE': 1},
+                          flags={RESOLVED, 'FLAG_RECEIVED_TOGEPI_EGG', 'FLAG_SHOWN_ELM_TOGEPI'})
+            talk.items = {WINGS[branch]}
+            talk.tr = LEGENDARY_TR
+            talk.run('NewBarkTown_Lab_EventScript_Elm')
+            self.assertIn('NewBarkTown_Lab_Text_KimonoWaiting', talk.messages, branch)
         for johto in (True, False):
             for branch in (1, 2):
                 cases = (  # (ceremony, wing held, radio tower resolved, tr, expected)
@@ -1908,9 +1916,27 @@ class KimonoTrial(unittest.TestCase):
                 # Done: nothing offers it again.
                 interp.run('EcruteakCity_Theater_EventScript_Zuki')
                 self.assertEqual(len(interp.battles), 5)
-        # A Hall of Fame level 70 state is never rewound to the level 50 story.
-        late = zuki_talk(branch=1, extra_vars={LUGIA_P: 4})
-        self.assertEqual(late.vars[LUGIA_P], 4)
+
+    def test_only_the_ceremony_and_pewter_write_legendary_progress(self):
+        # The Johto Hall of Fame used to set both to 4, which skipped the ceremony's encounter
+        # (forward-only 2) and Pewter's resolved-at-3 check for anyone clearing the League first.
+        writers = set()
+        for path in all_script_files():
+            for line in path.read_text().splitlines():
+                parts = line.split('@')[0].replace(',', ' ').split()
+                if len(parts) >= 2 and parts[0] in ('setvar', 'setvar_forward', 'addvar') \
+                        and parts[1] in (LUGIA_P, HOOH_P):
+                    writers.add(path.parent.name)
+        # The Hall of Fame's remaining writes are in its non-Wayfarer (#else) arm, and Ecruteak's
+        # are in the unreferenced EcruteakCity_Test_League debug label.
+        self.assertEqual(writers, {'EcruteakCity_Theater_hns', 'PewterCity_hns', 'WhirlIslands_LugiaChamber_hns',
+                                   'TinTower_RoofDay_hns', 'PokemonLeague_HallOfFame_hns', 'EcruteakCity_hns'})
+        block = _label_block(raw_text('PokemonLeague_HallOfFame_hns'),
+                             'PokemonLeague_HallOfFame_EventScript_SetFirstGameClearFlags')
+        self.assertIn('SpawnJohtoRoamers', block)
+        self.assertNotRegex(block, 'VAR_COMPLETED_(LUGIA|HO_OH)')
+        self.assertNotIn('EcruteakCity_Test_League', ''.join(path.read_text() for path in all_script_files()
+                                                             if path.parent.name != 'EcruteakCity_hns'))
 
     def test_encounter_resolution_completes_the_ceremony_for_every_outcome(self):
         for chamber, label, progress in (

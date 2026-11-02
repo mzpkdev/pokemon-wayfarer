@@ -94,10 +94,9 @@ NewBarkTown_Lab_EventScript_ElmCampaignNoBall::
 	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED, NewBarkTown_Lab_EventScript_ElmSSTicket
 NewBarkTown_Lab_EventScript_ElmCampaignNoTicket::
 	goto_if_set FLAG_HIDE_NEWBARKTOWN_LAB_AIDE, NewBarkTown_Lab_EventScript_ElmAideIsWaiting
-	@ After the Ball, the ceremony lines: the Kimono Girls are waiting only while the trial is
-	@ available and unfinished; once the encounter is resolved and until the S.S. ticket
-	@ arrives, Elm sends the player to the League.
-	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_RECEIVED, NewBarkTown_Lab_EventScript_ElmCampaignErrand
+	@ The ceremony lines: the Kimono Girls are waiting only while the trial is available and
+	@ unfinished; once the encounter is resolved and until the S.S. ticket arrives, Elm sends
+	@ the player to the League.
 	specialvar VAR_RESULT, WayfarerJohtoKimonoTrialAvailable
 	goto_if_eq VAR_RESULT, TRUE, NewBarkTown_Lab_EventScript_ElmKimono
 	goto_if_lt VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, KIMONO_CEREMONY_RESOLVED, NewBarkTown_Lab_EventScript_ElmCampaignErrand
