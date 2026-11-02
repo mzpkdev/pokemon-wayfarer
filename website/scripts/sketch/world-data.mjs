@@ -315,6 +315,64 @@ const CELL = (() => {
 })()
 console.log("metatiles per Town Map cell:", CELL.toFixed(1))
 
+// A Town Map cell is coarse, so pieces placed by their cells can land on one
+// another. Nudge each piece but the first in shrinking steps, whichever way
+// most reduces what it covers of the others, until nothing overlaps (with a
+// few tiles of room). Sootopolis belongs inside Route 126's crater, so the
+// two may overlap.
+const ROOM = 3
+const covered = (a, b) => {
+  if (a.m.name === "SootopolisCity" || b.m.name === "SootopolisCity") return 0
+  const w = Math.min(a.x + a.l.width, b.x + b.l.width) - Math.max(a.x, b.x) + ROOM
+  const h = Math.min(a.y + a.l.height, b.y + b.l.height) - Math.max(a.y, b.y) + ROOM
+  return w > 0 && h > 0 ? w * h : 0
+}
+const pieceOverlap = (piece, others) => {
+  let area = 0
+  for (const p of piece) for (const q of others) area += covered(p, q)
+  return area
+}
+const separate = (pieces) => {
+  for (let round = 0; round < 400; round++) {
+    let moved = false
+    for (let k = 1; k < pieces.length; k++) {
+      const others = pieces.filter((_, j) => j !== k).flat()
+      let area = pieceOverlap(pieces[k], others)
+      if (area === 0) continue
+      for (const step of [64, 32, 16, 8, 4, 2, 1]) {
+        let best = null
+        for (const [dx, dy] of [
+          [step, 0],
+          [-step, 0],
+          [0, step],
+          [0, -step],
+        ]) {
+          for (const p of pieces[k]) {
+            p.x += dx
+            p.y += dy
+          }
+          const trial = pieceOverlap(pieces[k], others)
+          for (const p of pieces[k]) {
+            p.x -= dx
+            p.y -= dy
+          }
+          if (trial < area && (!best || trial < best.area)) best = { dx, dy, area: trial }
+        }
+        if (best) {
+          for (const p of pieces[k]) {
+            p.x += best.dx
+            p.y += best.dy
+          }
+          area = best.area
+          moved = true
+          break
+        }
+      }
+    }
+    if (!moved) break
+  }
+}
+
 const all = []
 const regionBounds = {}
 for (const region of REGIONS) {
@@ -363,6 +421,7 @@ for (const region of REGIONS) {
     }
     pieces.push(piece)
   }
+  separate(pieces)
   const placed = pieces.flat()
   const left = Math.min(...placed.map((p) => p.x)),
     top = Math.min(...placed.map((p) => p.y))
@@ -535,9 +594,10 @@ const tileColor = (() => {
     return color
   }
 })()
+// Water is a clear, saturated blue; grey-blue rock, snow and ice are land.
 const isWater = (k) => {
   const [r, g, b] = tileColor(k)
-  return b > 110 && b > r + 30 && b >= g - 10
+  return b > 150 && b - r > 55 && b - g > 28
 }
 const isDark = (k) => {
   const [r, g, b] = tileColor(k)
@@ -647,6 +707,15 @@ for (let i = 0; i < N; i++)
     if (isWater(grid[i])) waterShare[owner[i]]++
   }
 for (let m = 0; m < all.length; m++) waterShare[m] /= cellCount[m]
+if (process.env.DEBUG_MAPS)
+  for (const name of process.env.DEBUG_MAPS.split(",")) {
+    const m = all.findIndex((p) => p.m.name === name)
+    const colors = new Map()
+    for (let i = 0; i < N; i++)
+      if (owner[i] === m && isWater(grid[i])) colors.set(grid[i], (colors.get(grid[i]) ?? 0) + 1)
+    const top = [...colors].toSorted((a, b) => b[1] - a[1]).slice(0, 4)
+    console.log(name, waterShare[m].toFixed(2), top.map(([k, n]) => `${tileColor(k).map(Math.round)}x${n}`).join(" "))
+  }
 const mapLand = new Uint8Array(N)
 const mapSea = new Uint8Array(N)
 for (let i = 0; i < N; i++)
