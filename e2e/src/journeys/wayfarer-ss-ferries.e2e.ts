@@ -148,6 +148,9 @@ describe.sequential("Wayfarer S.S. ferries", () => {
     let menu = await game.state.read()
     for (let attempt = 0; attempt < 40 && menu.choice.kind !== "multichoice"; attempt++) {
       await game.wait.frames(30)
+      // Re-read after the wait: an A on the open menu would pick the ship row.
+      menu = await game.state.read()
+      if (menu.choice.kind === "multichoice") break
       if (menu.dialogueOpen || menu.scriptActive) await game.controls.press("a")
       menu = await game.state.read()
     }
