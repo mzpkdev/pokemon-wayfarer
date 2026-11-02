@@ -270,7 +270,17 @@ const relax = (list) => {
     console.log(
       `  ${root.m.name}: kept the tree (worst link ${after} vs ${before}, overlap ${clash})`,
     )
-  } else console.log(`  ${root.m.name}: worst link ${before} -> ${after} metatiles`)
+  } else {
+    const worst = links.toSorted(
+      (p, q) =>
+        Math.abs(q.b.x - q.a.x - q.dx) +
+        Math.abs(q.b.y - q.a.y - q.dy) -
+        (Math.abs(p.b.x - p.a.x - p.dx) + Math.abs(p.b.y - p.a.y - p.dy)),
+    )[0]
+    console.log(
+      `  ${root.m.name}: worst link ${before} -> ${after} metatiles (${worst.a.m.name} ~ ${worst.b.m.name})`,
+    )
+  }
   return list
 }
 
@@ -971,10 +981,13 @@ const warped = (from, i) => {
   const j = Math.min(H - 1, Math.max(0, wy)) * W + Math.min(W - 1, Math.max(0, wx))
   return from[j] >= 0 ? from[j] : from[i]
 }
+const fillBorder = new Int32Array(N).fill(-1)
 for (let i = 0; i < N; i++) {
   if (owner[i] >= 0) continue
-  if (land[i]) grid[i] = pattern(borders[warped(landFrom, i)], i)
-  else
+  if (land[i]) {
+    fillBorder[i] = warped(landFrom, i)
+    grid[i] = pattern(borders[fillBorder[i]], i)
+  } else
     grid[i] =
       waterFrom[i] >= 0 && toLand[i] < 40 ? pattern(borders[waterFrom[i]], i) : pattern(ocean, i)
 }
@@ -983,6 +996,20 @@ for (let i = 0; i < N; i++) {
 // filled land given a little texture and darkening inland, and the coast
 // picked out a shade darker. All water is one sea, whatever game its tiles
 // come from: light in the shallows, deepening away from the shore.
+const borderColor = (() => {
+  const cache = new Map()
+  return (m) => {
+    if (!cache.has(m)) {
+      const colors = borders[m].ids.map(tileColor)
+      cache.set(
+        m,
+        [0, 1, 2].map((c) => colors.reduce((sum, color) => sum + color[c], 0) / colors.length),
+      )
+    }
+    return cache.get(m)
+  }
+})()
+const borderSets = borders.map((b) => new Set(b.ids))
 const SEA_SHALLOW = [150, 206, 240],
   SEA_DEEP = [52, 92, 178]
 const overview = new Uint8Array(N * 4)
@@ -998,7 +1025,17 @@ const overview = new Uint8Array(N * 4)
       y = (i - x) / W
     let r, g, b
     if (isLand[i]) {
-      ;[r, g, b] = tileColor(grid[i])
+      // Filled land takes its whole border pattern's color, so a pattern's
+      // alternating blocks don't stripe the far-out view.
+      // A map's own edge is mostly its border blocks too; color those the same
+      // so maps blend into the land around them.
+      const own = owner[i] >= 0 && borderSets[owner[i]].has(grid[i]) ? owner[i] : -1
+      ;[r, g, b] =
+        fillBorder[i] >= 0
+          ? borderColor(fillBorder[i])
+          : own >= 0
+            ? borderColor(own)
+            : tileColor(grid[i])
       if (owner[i] < 0) {
         // Relief: deep inland, denser forest, and highlands where the noise rises.
         const inland = Math.min(1, Math.max(0, (toLand[i] - 6) / 24))
