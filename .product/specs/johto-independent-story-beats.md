@@ -432,7 +432,9 @@ write (`PewterCity_hns:24-41`).
 Suicune's chase starts on the first Olivine arrival however the player gets
 there. The sightings keep their order and do not require the Burned Tower.
 Eusine's Cianwood greeting (`CianwoodCity_hns:271`) becomes a first meeting
-when the player has not seen his Burned Tower introduction.
+when the player has not seen his Burned Tower introduction. Likewise, his
+Burned Tower introduction becomes "We meet again" when the player already met
+him in Cianwood, so he introduces himself once whichever comes first.
 
 ### Related documents updated with this work
 

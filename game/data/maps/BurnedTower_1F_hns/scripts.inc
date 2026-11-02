@@ -46,13 +46,23 @@ BurnedTower_1F_EventScript_MeetEusine::
 	waitmovement LOCALID_BURNED_TOWER_EUSINE
 	applymovement LOCALID_BURNED_TOWER_EUSINE, BurnedTower_Movement_Eusine1
 	waitmovement 0
-	msgbox BurnedTower_1FEusineIntroText, MSGBOX_DEFAULT
+	@ Suicune encounters reach 2 only at the Cianwood battle, where he introduced himself.
+	call_if_ge VAR_SUICUNE_ENCOUNTERS, 2, BurnedTower_1F_EventScript_EusineGreetMet
+	call_if_lt VAR_SUICUNE_ENCOUNTERS, 2, BurnedTower_1F_EventScript_EusineGreetFirst
 	closemessage
 	applymovement LOCALID_BURNED_TOWER_EUSINE, BurnedTower_Movement_Eusine2
 	waitmovement 0
 	setvar VAR_ECRUTEAK_CITY_STATE, 2
 	release
 	end
+
+BurnedTower_1F_EventScript_EusineGreetFirst::
+	msgbox BurnedTower_1FEusineIntroText, MSGBOX_DEFAULT
+	return
+
+BurnedTower_1F_EventScript_EusineGreetMet::
+	msgbox BurnedTower_1FEusineMetText, MSGBOX_DEFAULT
+	return
 
 BurnedTower_Movement_Eusine1:
 	walk_down
@@ -71,6 +81,13 @@ BurnedTower_1FEusineIntroText:
 	.string "called SUICUNE.\p"
 	.string "And you are...?\p"
 	.string "{PLAYER}? Glad to meet you!\p"
+	.string "I heard SUICUNE might be in\n"
+	.string "this BURNED TOWER, so I came\l"
+	.string "to check it out.\p"
+	.string "But where exactly could it be?$"
+
+BurnedTower_1FEusineMetText:
+	.string "EUSINE: {PLAYER}! We meet again.\p"
 	.string "I heard SUICUNE might be in\n"
 	.string "this BURNED TOWER, so I came\l"
 	.string "to check it out.\p"

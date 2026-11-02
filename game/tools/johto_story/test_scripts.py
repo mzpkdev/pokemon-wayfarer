@@ -2354,6 +2354,24 @@ class SuicuneAndEusine(unittest.TestCase):
         self.assertIn("My name's EUSINE", text)
         self.assertNotIn('Yo,', text)
 
+    def test_eusine_introduces_himself_once_whichever_he_meets_first(self):
+        # Cianwood first (by ship or skipping the tower), then the Burned Tower: one introduction.
+        both = ('CianwoodCity_hns', 'BurnedTower_1F_hns')
+        cianwood_first = Interp(*both, vars={ECR: 1, 'VAR_SUICUNE_ENCOUNTERS': 1})
+        cianwood_first.run('CianwoodCity_EventScript_SuicuneTrigger')
+        cianwood_first.run('BurnedTower_1F_EventScript_MeetEusine')
+        # The Burned Tower first, then Cianwood.
+        tower_first = Interp(*both, vars={ECR: 1, 'VAR_SUICUNE_ENCOUNTERS': 1})
+        tower_first.run('BurnedTower_1F_EventScript_MeetEusine')
+        tower_first.run('CianwoodCity_EventScript_SuicuneTrigger')
+        intros = ('CianwoodCity_Text_EusineSuicuneFirst', 'BurnedTower_1FEusineIntroText')
+        for name, interp in (('cianwood first', cianwood_first), ('tower first', tower_first)):
+            with self.subTest(name):
+                self.assertEqual(sum(interp.messages.count(m) for m in intros), 1, interp.messages)
+                self.assertEqual(interp.vars[ECR], 2)
+        self.assertIn('BurnedTower_1FEusineMetText', cianwood_first.messages)
+        self.assertEqual(tower_first.messages.count('BurnedTower_1FEusineIntroText'), 1)
+
 
 if __name__ == '__main__':
     unittest.main()
