@@ -1,7 +1,7 @@
 # Johto independent story beats
 
 PRD: [Johto independent story beats](../prds/johto-independent-story-beats.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 
