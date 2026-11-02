@@ -1,0 +1,11 @@
+---
+/** Sketch: the overworld in the game's own tiles, to pan and zoom. Not linked from the site. */
+import { WorldExplorer } from "~/components/WorldExplorer"
+import Layout from "~/layouts/Layout.astro"
+---
+
+<Layout title="World map sketch · Pokémon Wayfarer">
+  <main class="h-svh bg-ground">
+    <WorldExplorer client:only="react" base="/sketch/world" />
+  </main>
+</Layout>
