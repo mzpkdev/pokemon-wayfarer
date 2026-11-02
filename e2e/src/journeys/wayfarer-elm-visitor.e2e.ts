@@ -40,8 +40,10 @@ describe.sequential("Littleroot trainer visiting Elm", () => {
       await untouched()
 
       // Elm talks like a professor and releases the player; the starter Balls stay shut.
-      await game.player.warp("elm-lab", 3, 3, "up")
+      await game.player.warp("elm-lab", 6, 4, "up")
       await game.player.interact()
+      await game.wait.frames(30)
+      expect((await game.state.read()).dialogue.text).toContain("ELM: Hello!")
       await finishOpeningDialogue(game)
       await untouched()
       await game.player.warp("elm-lab", 10, 5, "up")

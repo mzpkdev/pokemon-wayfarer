@@ -304,7 +304,9 @@ class VisitorScripts(unittest.TestCase):
 
     def test_mr_pokemon_egg_still_follows_the_johto_errand(self):
         house = 'Route30_MrPokemonsHouse_hns'
-        expected = {0: 0, 1: 1, 2: 1, 3: 1, 4: 0, 5: 0}
+        # Later lab states (Blackthorn's call, the ceremony, the League) never close the errand;
+        # Cherrygrove 1 -> 2, written by the Egg scene, is what stops a repeat.
+        expected = {0: 0, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 7: 1, 9: 1, 10: 1}
         for lab_state, wanted in expected.items():
             script = Script(house)
             script.johto = True

@@ -14,7 +14,6 @@ MrPokemonHouse_EventScript_GiveEgg::
 	specialvar VAR_RESULT, WayfarerIsJohtoOrigin
 	goto_if_eq VAR_RESULT, FALSE, MrPokemonHouse_EventScript_WaitForElm
 	goto_if_lt VAR_NEWBARKTOWN_LABSTATE, 1, MrPokemonHouse_EventScript_WaitForElm
-	goto_if_ge VAR_NEWBARKTOWN_LABSTATE, 4, MrPokemonHouse_EventScript_WaitForElm
 	lock
 	playse SE_PIN
 	applymovement LOCALID_MRPOKEMON, Common_Movement_ExclamationMark	
@@ -289,7 +288,6 @@ MrPokemonHouse_OriginOnTransition::
 	specialvar VAR_RESULT, WayfarerIsJohtoOrigin
 	goto_if_eq VAR_RESULT, FALSE, MrPokemonHouse_EventScript_WaitForElm
 	goto_if_lt VAR_NEWBARKTOWN_LABSTATE, 1, MrPokemonHouse_EventScript_WaitForElm
-	goto_if_ge VAR_NEWBARKTOWN_LABSTATE, 4, MrPokemonHouse_EventScript_WaitForElm
 	goto_if_ne VAR_CHERRYGROVE_CITY_STATE, 1, MrPokemonHouse_EventScript_WaitForElm
 	setvar VAR_TEMP_1, 1
 	end
