@@ -52,15 +52,47 @@ const layouts = Object.fromEntries(
     .layouts.filter((l) => l.id)
     .map((l) => [l.id, l]),
 )
+// Only the maps the wayfarer build compiles, connected the way it connects
+// them (tools/mapjson/mapjson.cpp): the FRLG coast replaces the HNS Routes
+// 19-21, Cinnabar and Seafoam, and the proof-of-concept coast maps, and
+// Fuchsia and Pallet are rewired to it.
+const REPLACED = new Set([
+  "MAP_CINNABAR_ISLAND_HNS",
+  "MAP_ROUTE19_HNS",
+  "MAP_ROUTE20_HNS",
+  "MAP_ROUTE21_HNS",
+  "MAP_ROUTE19_CAVE_HNS",
+  "MAP_FUCHSIA_ROUTE19GATE_HNS",
+  "MAP_SEAFOAM_ISLANDS_1F_HNS",
+])
+const COAST = new Set([
+  "Route19_Frlg",
+  "Route20_Frlg",
+  "Route21_North_Frlg",
+  "Route21_South_Frlg",
+  "CinnabarIsland_Frlg",
+])
+const REWIRED = {
+  "FuchsiaCity_hns|MAP_ROUTE19_COAST_POC": "MAP_ROUTE19",
+  "PalletTown_hns|MAP_ROUTE21_NORTH_COAST_POC": "MAP_ROUTE21_NORTH",
+  "Route19_Frlg|MAP_FUCHSIA_CITY": "MAP_FUCHSIA_CITY_HNS",
+  "Route21_North_Frlg|MAP_PALLET_TOWN": "MAP_PALLET_TOWN_HNS",
+}
+const compiled = (m) => {
+  if (REPLACED.has(m.id) || m.id.endsWith("_POC") || m.name.endsWith("_Port")) return false
+  const layout = layouts[m.layout]
+  if (layout?.game_version === "frlg") return COAST.has(m.name) || Boolean(m.wayfarer_include)
+  return true
+}
 const maps = {}
 for (const dir of fs.readdirSync(`${game}/data/maps`)) {
   const f = `${game}/data/maps/${dir}/map.json`
-  if (fs.existsSync(f)) {
-    const m = JSON.parse(fs.readFileSync(f))
-    maps[m.id] = m
-  }
+  if (!fs.existsSync(f)) continue
+  const m = JSON.parse(fs.readFileSync(f))
+  if (compiled(m)) maps[m.id] = m
 }
 const placed = new Map()
+const seams = []
 const queue = [[root, 0, 0]]
 while (queue.length) {
   const [id, x, y] = queue.shift()
@@ -69,8 +101,9 @@ while (queue.length) {
     l = layouts[m.layout]
   placed.set(id, { x, y, m, l })
   for (const c of m.connections ?? []) {
-    const t = maps[c.map]
-    if (!t || placed.has(c.map)) continue
+    const target = REWIRED[`${m.name}|${c.map}`] ?? c.map
+    const t = maps[target]
+    if (!t) continue
     const tl = layouts[t.layout],
       o = c.offset
     const at = {
@@ -79,9 +112,20 @@ while (queue.length) {
       left: [x - tl.width, y + o],
       right: [x + l.width, y + o],
     }[c.direction]
-    if (at) queue.push([c.map, ...at])
+    if (!at) continue
+    if (placed.has(target)) {
+      // Already placed from elsewhere: note where this connection disagrees.
+      const other = placed.get(target)
+      if (other.x !== at[0] || other.y !== at[1])
+        seams.push(
+          `${m.name} -> ${t.name}: placed at ${other.x},${other.y}, this connection says ${at[0]},${at[1]}`,
+        )
+      continue
+    }
+    queue.push([target, ...at])
   }
 }
+for (const seam of seams) console.log("disagrees:", seam)
 const all = [...placed.values()]
 const minX = Math.min(...all.map((p) => p.x)),
   minY = Math.min(...all.map((p) => p.y))
