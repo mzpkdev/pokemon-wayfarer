@@ -10,41 +10,24 @@ VioletCity_OnFrame::
 	.2byte 0
 
 VioletCity_OnTransition::
+	call_if_unset FLAG_WAYFARER_JOHTO_SETUP_VIOLET, VioletCity_EventScript_Setup
 	callnative SetTimeBasedEncounters
 	end
 
-VioletCity_EventScript_Trigger::
+@ First-visit setup, run once from the map load however the player arrives.
+@ New-game defaults (the Togepi Egg, Sprout Tower, Ruins of Alph, trades) are
+@ not restated, so progress made elsewhere first survives. The Ruins of Alph
+@ reward items start hidden from the new game, since the Ruins can be solved
+@ before the first Violet visit.
+VioletCity_EventScript_Setup::
 	@LOCAL FLAGHEAP
-	clearflag FLAG_RECEIVED_TOGEPI_EGG
-	clearflag FLAG_VIOLET_NPC_TRADE_COMPLETED
-	clearflag FLAG_HIDE_SPROUT_TOWER_SILVER
-	clearflag FLAG_HIDE_JOHTO_GYM_LEADERS
-	clearflag FLAG_HOOH_BROUGHT
-	clearflag FLAG_OMANYTE_BROUGHT
-	clearflag FLAG_AERODACTYL_BROUGHT
-	clearflag FLAG_KABUTO_BROUGHT
-	clearflag FLAG_HIDE_SUDOWOODO
-	clearflag FLAG_GOT_HARD_STONE
-	clearflag FLAG_GOT_POISON_BARB
-	clearflag FLAG_HIDE_UNION_CAVE_LAPRAS
-	clearflag FLAG_GOT_BLACK_GLASSES
-	
-	setvar VAR_SLOWPOKE_TAIL, 0
-	setvar VAR_VIOLET_CITY_KIMONO_GIRL, 0
-	setvar VAR_RUINSOFALPH_STATE, 0
-	
-	setflag FLAG_ITEM_GS_BALL
-	setflag FLAG_ITEM_DOME_FOSSIL
-	setflag FLAG_ITEM_HELIX_FOSSIL
-	setflag FLAG_ITEM_OLD_AMBER
+	setflag FLAG_WAYFARER_JOHTO_SETUP_VIOLET
 	setflag FLAG_HIDE_TRAINER_SCHOOL_EARL
 	setflag FLAG_HIDE_VIOLET_CITY_AIDE
 	setflag FLAG_VISITED_VIOLET_CITY
 	setflag FLAG_HIDE_VIOLET_CITY_KIMONO_GIRL
-	
-	setvar VAR_SPROUT_TOWER, 0
-	setvar VAR_VIOLET_CITY_STATE, 1
-	end
+	setvar_forward VAR_VIOLET_CITY_STATE, 1
+	return
 
 VioletCity_EventScript_Earl::
 	lock

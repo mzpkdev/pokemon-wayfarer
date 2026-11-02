@@ -195,7 +195,7 @@ class HnsTraversalContractTest(unittest.TestCase):
         kept = at(azalea, 11, 16, var="VAR_AZALEA_TOWN_STATE", var_value="5")
         self.assertEqual([event["script"] for event in kept], ["AzaleaTown_EventScript_SilverTriggerTop"])
         battle = self.scripts.reachable_text("AzaleaTown_EventScript_SilverTriggerTop")
-        self.assertIn("setvar VAR_AZALEA_TOWN_STATE, 6", battle)
+        self.assertIn("setvar_forward VAR_AZALEA_TOWN_STATE, 6", battle)
         self.assertIn("setflag FLAG_HIDE_AZALEA_TOWN_SILVER", battle)
 
     def test_route_30_staging_and_lane_are_unchanged(self) -> None:
@@ -1030,8 +1030,7 @@ class HnsTraversalContractTest(unittest.TestCase):
             [
                 "goto_if_ne VAR_TRIGGER_ELM_ROCKET_CALL, 0",
                 "goto_if_ge VAR_GOLDENROD_CITY_STATE, 6",
-                "goto_if_ge VAR_MAHOGANY_TOWN_STATE, 16",
-                "goto_if_lt VAR_MAHOGANY_TOWN_STATE, 15",
+                "goto_if_unset FLAG_DEFEATED_MAHOGANY_TOWN_GYM",
                 "goto_if_unset FLAG_BADGE05_GET",
                 "goto_if_unset FLAG_BADGE06_GET",
                 "goto_if_unset FLAG_BADGE07_GET",
@@ -1071,12 +1070,12 @@ class HnsTraversalContractTest(unittest.TestCase):
 
         whitney = self.scripts.block("GoldenrodCity_Gym_EventScript_Whitney")
         self.assertIn("goto_if_defeated TRAINER_WHITNEY_1_HNS", whitney)
-        self.assertIn("goto_if_ge VAR_GOLDENROD_CITY_STATE, 3", whitney)
+        self.assertIn("goto_if_ge VAR_WAYFARER_JOHTO_WHITNEY_STATE, 3", whitney)
         reward = self.scripts.block("GoldenrodCity_Gym_EventScript_WhitneyBadge")
         self.assertIn("goto_if_set FLAG_BADGE03_GET", reward)
         award = self.scripts.block("GoldenrodCity_Gym_EventScript_WhitneyBadgeAward")
         self.assertLess(award.index("setflag FLAG_BADGE03_GET"), award.index("addvar VAR_NUM_BADGES"))
-        self.assertIn("goto_if_ge VAR_GOLDENROD_CITY_STATE, 5", award)
+        self.assertIn("goto_if_ge VAR_WAYFARER_JOHTO_WHITNEY_STATE, 5", award)
 
         clair = self.scripts.block("DragonsDen_Shrine_EventScript_ClairEnter")
         self.assertTrue(clair.lstrip().startswith("goto_if_set FLAG_BADGE08_GET"))
@@ -1120,25 +1119,11 @@ class HnsTraversalContractTest(unittest.TestCase):
             (merchant["x"], merchant["y"], merchant["script"], merchant["flag"]),
             (30, 11, "MahoganyTown_EventScript_Merchant", "0"),
         )
-        merchant_triggers = [
-            event
-            for event in mahogany["coord_events"]
-            if event.get("script") == "MahoganyTown_EventScript_MerchantTrigger"
-            and event.get("var") == "VAR_MAHOGANY_TOWN_STATE"
-        ]
-        self.assertEqual(
-            {
-                (event["x"], event["y"], event["var_value"], event["script"])
-                for event in merchant_triggers
-            },
-            {
-                (30, y, str(value), "MahoganyTown_EventScript_MerchantTrigger")
-                for value in range(1, 17)
-                for y in (12, 13, 14)
-            },
-        )
+        # The merchant keeps his shop but no longer blocks Route 44.
+        self.assertEqual(mahogany["coord_events"], [])
+        self.assertNotIn("MahoganyTown_EventScript_MerchantTrigger", self.scripts.blocks)
         self.assertIn(
-            "setvar VAR_MAHOGANY_TOWN_STATE, 17",
+            "setflag FLAG_WAYFARER_JOHTO_RADIO_TOWER_RESOLVED",
             self.scripts.block("GoldenrodCity_RadioTower_5F_Fakeout"),
         )
 
@@ -1300,7 +1285,7 @@ class HnsTraversalContractTest(unittest.TestCase):
         self.assertOrderedText(
             self.scripts.block("ReceptionGate_Trigger"),
             [
-                "goto_if_lt VAR_ECRUTEAK_CITY_THEATER, 8, ReceptionGate_EventScript_Kimono",
+                "goto_if_lt VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 8, ReceptionGate_EventScript_Kimono",
                 "goto_if_unset FLAG_BADGE08_GET, ReceptionGate_EventScript_NotEnough",
                 "setvar VAR_ROUTE27_STATE, 2",
             ],

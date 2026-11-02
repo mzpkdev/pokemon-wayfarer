@@ -4,6 +4,7 @@ EcruteakCity_hns_MapScripts::
 	.byte 0
 
 EcruteakCity_OnTransition::
+	call_if_unset FLAG_WAYFARER_JOHTO_SETUP_ECRUTEAK, EcruteakCity_EventScript_Setup
 	callnative SetTimeBasedEncounters
 	end
 
@@ -16,47 +17,28 @@ EcruteakCity_Test_League::
 	end
 
 
-EcruteakCity_EventScript_Trigger::
+@ First-visit setup, run once from the map load however the player arrives.
+@ New-game defaults are not restated. The Kimono ceremony's hide flags are left
+@ alone once the ceremony has started, and Route 42's Eusine is left alone once
+@ Suicune's Route 42 scene is over.
+EcruteakCity_EventScript_Setup::
 	@flagheap
-	clearflag FLAG_RELEASED_BEASTS
-	clearflag FLAG_AMPHAROS_HEALED
-	clearflag FLAG_HIDE_ECRUTEAK_BILL
-	clearflag FLAG_DEFEATED_HO_OH
-	clearflag FLAG_CAUGHT_HO_OH
-	clearflag FLAG_DEFEATED_LUGIA
-	clearflag FLAG_CAUGHT_LUGIA
-	clearflag FLAG_HIDE_ECRUTEAK_ROCKET
-	clearflag FLAG_HIDE_BURNED_TOWER_NPCS  
-	clearflag FLAG_HIDE_BURNED_TOWER_BEASTS
-	clearflag FLAG_HIDE_BURNED_TOWER_B1F_EUSINE
-	clearflag FLAG_HIDE_ECRUTEAK_CITY_SAGE
-	clearflag FLAG_CAUGHT_ENTEI
-	clearflag FLAG_CAUGHT_RAIKOU
-	clearflag FLAG_GOT_TM_SNATCH
-	clearflag FLAG_HIDE_ROUTE42_SUICUNE
-	clearflag FLAG_GOT_TYROGUE
-	clearflag FLAG_BEAT_KIYO
-	clearflag FLAG_ENABLE_BAOBA_MATCH_CALL
-	clearflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS
-	clearflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_ZUKI
-	clearflag FLAG_HIDE_TINTOWER_GUARD
-	clearflag FLAG_HIDE_WHIRL_ISLANDS_TENTACRUEL
-	clearflag FLAG_HIDE_LUGIA
-	clearflag FLAG_HIDE_HO_OH
-
+	setflag FLAG_WAYFARER_JOHTO_SETUP_ECRUTEAK
 	setflag FLAG_VISITED_ECRUTEAK_CITY
+	goto_if_ge VAR_SUICUNE_ENCOUNTERS, 3, EcruteakCity_Setup_EusineGone
 	setflag FLAG_HIDE_ROUTE42_EUSINE
-
+EcruteakCity_Setup_EusineGone:
+	setflag FLAG_HIDE_ROUTE39_SHADOW
+	@ Only the theater ceremony shows these, so they are hidden however far
+	@ Elm's handoff has moved the ceremony before the first visit.
 	setflag FLAG_HIDE_TIN_TOWER_KIMONO_GIRLS
 	setflag FLAG_HIDE_WHIRL_ISLANDS_KIMONO_GIRLS
+	goto_if_ne VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 0, EcruteakCity_Setup_CeremonyStarted
 	setflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS
-	setflag FLAG_HIDE_ROUTE39_SHADOW
 	setflag FLAG_HIDE_ECRUTEAK_SILVER
-	setvar VAR_COMPLETED_HO_OH, 0
-	setvar VAR_COMPLETED_LUGIA, 0
-	setvar VAR_ECRUTEAK_CITY_THEATER, 0 
-	setvar VAR_ECRUTEAK_CITY_STATE, 1
-	end
+EcruteakCity_Setup_CeremonyStarted:
+	setvar_forward VAR_ECRUTEAK_CITY_STATE, 1
+	return
 
 EcruteakCity_Trigger_Silver::
 	lockall
@@ -94,7 +76,7 @@ EcruteakCity_Trigger_Silver::
 	removeobject LOCALID_ECRUTEK_SILVER
 	fadedefaultbgm
 
-	setvar VAR_ECRUTEAK_CITY_THEATER, 5
+	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 5
 	releaseall
 	end
 

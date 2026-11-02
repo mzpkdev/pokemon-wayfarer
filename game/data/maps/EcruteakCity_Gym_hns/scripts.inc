@@ -51,7 +51,6 @@ EcruteakCity_Gym_EventScript_Morty::
 	call Common_EventScript_SetGymTrainers_hns
 	giveitem ITEM_TM_SHADOW_BALL
 	msgbox MortyText_ShadowBallSpeech, MSGBOX_DEFAULT
-	setvar VAR_ECRUTEAK_CITY_STATE, 4
 	closemessage
 	release
 	end

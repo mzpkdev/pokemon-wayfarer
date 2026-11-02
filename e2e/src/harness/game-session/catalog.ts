@@ -541,6 +541,10 @@ export const storyVars = {
   vermilionCityState: 0x408f,
   violetCityState: 0x4091,
   trainerRating: 0x40f7,
+  // Wayfarer coast bank vars (0xf000 | slot): the Johto story's per-adventure state.
+  johtoSlowpokeWellState: 0xf006,
+  johtoWhitneyState: 0xf007,
+  johtoKimonoCeremonyState: 0xf008,
 } as const
 
 export const storyFlags = {
@@ -562,6 +566,15 @@ export const storyFlags = {
   towerRocket2Cleared: 0x8e9,
   towerRocket3Cleared: 0x8ea,
   towerEscapeRopeClaimed: 0x8eb,
+  // Johto story flags (coast bank slots 128-135).
+  johtoRadioTowerResolved: 0xe080,
+  johtoSetupViolet: 0xe081,
+  johtoSetupAzalea: 0xe082,
+  johtoSetupGoldenrod: 0xe083,
+  johtoSetupEcruteak: 0xe084,
+  johtoSetupOlivine: 0xe085,
+  johtoSetupMahogany: 0xe086,
+  johtoSetupBlackthorn: 0xe087,
   towerBlueMet: 0xe076,
   towerHouse1FujiHidden: 0xe077,
   seviiItemMtEmberExteriorUltraBall: 0xc03d,
@@ -789,6 +802,7 @@ export const storyFlags = {
   defeatedPewterGym: 0x22f,
   hideDojoBrock: 0x0c4,
   defeatedGoldenrodGym: 0x229,
+  defeatedMahoganyGym: 0x22d,
   defeatedWhitneyTrainer: 0x696,
   defeatedPetalburgGym: 0x64f4,
   hideMauvilleCityWattson: 0x6390,

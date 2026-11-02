@@ -4,49 +4,41 @@ AzaleaTown_hns_MapScripts::
 	.byte 0
 
 AzaleaTown_OnTransition::
+	call_if_unset FLAG_WAYFARER_JOHTO_SETUP_AZALEA, AzaleaTown_EventScript_Setup
+	call_if_eq VAR_AZALEA_TOWN_STATE, 8, AzaleaTown_MapScript_ArmGSBall
 	goto_if_eq VAR_AZALEA_TOWN_STATE, 5, AzaleaTown_MapScript_Hide_Silver
 	end
 	
+@ VAR_TEMP_1 arms Kurt's GS Ball once per visit, so a full Poke Ball pocket
+@ leaves it owed for the next visit instead of replaying it every frame.
 AzaleaTown_OnFrame::
-	map_script_2 VAR_AZALEA_TOWN_STATE, 8, AzaleaTown_EventScript_GSBall
+	map_script_2 VAR_TEMP_1, 1, AzaleaTown_EventScript_GSBall
 	.2byte 0
+
+AzaleaTown_MapScript_ArmGSBall::
+	setvar VAR_TEMP_1, 1
+	return
 
 AzaleaTown_MapScript_Hide_Silver:
 	setflag FLAG_HIDE_AZALEA_TOWN_SILVER
 	removeobject LOCALID_AZALEA_TOWN_SILVER
 	end
 
-AzaleaTown_EventScript_Trigger:: @flagheap
+@ First-visit setup, run once from the map load however the player arrives.
+@ New-game defaults are not restated: Ilex Forest's errand objects and Celebi
+@ start hidden from the new game and are revealed by their own steps.
+AzaleaTown_EventScript_Setup:: @flagheap
+	setflag FLAG_WAYFARER_JOHTO_SETUP_AZALEA
 	setflag FLAG_VISITED_AZALEA_TOWN
 	setflag FLAG_HIDE_AZALEA_TOWN_SLOWPOKE
 	setflag FLAG_HIDE_AZALEA_TOWN_SILVER
 	setflag FLAG_HIDE_KURT_2
-	setflag FLAG_HIDE_ILEX_FOREST_APPRENTICE
-	setflag FLAG_HIDE_ILEX_FOREST_MASTER
-	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_4
-	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_3
-	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_2
-	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_1
-	setflag FLAG_HIDE_CELEBI
-	setflag FLAG_HIDE_ILEX_FOREST_KURT
 	setflag FLAG_HIDE_AZALEA_TOWN_KURT
 	setflag FLAG_HIDE_AZALEA_ARIADOS_LEFT
 	setflag FLAG_HIDE_AZALEA_ARIADOS_MID
 	setflag FLAG_HIDE_AZALEA_ARIADOS_RIGHT
-	
-
-	clearflag FLAG_HIDE_ILEX_FOREST_KIMONO
-	clearflag FLAG_ITEM_SLOWPOKE_WELL_RAIN_DANCE
-	clearflag FLAG_HIDE_AZALEA_TOWN_ROCKETS
-	clearflag FLAG_HIDE_AZALEA_TOWN_WELL_ROCKET
-	clearflag FLAG_HIDE_KURT_1
-	clearflag FLAG_GOT_CHARCOAL
-	clearflag FLAG_HIDE_AZALEA_TOWN_FARFETCHD
-	clearflag FLAG_HIDE_AZALEA_TOWN_CUT_MASTER
-	clearflag FLAG_MOVE_TUTOR_TAUGHT_HEADBUTT
-
-	setvar VAR_AZALEA_TOWN_STATE, 1
-	end
+	setvar_forward VAR_AZALEA_TOWN_STATE, 1
+	return
 
 AzaleaTown_EventScript_Rocket1::
 	lock
@@ -173,7 +165,7 @@ AzaleaTown_EventScript_SilverTriggerTop::
 	playse SE_EXIT
 	setflag FLAG_HIDE_AZALEA_TOWN_SILVER
 	removeobject LOCALID_AZALEA_TOWN_SILVER
-	setvar VAR_AZALEA_TOWN_STATE, 6
+	setvar_forward VAR_AZALEA_TOWN_STATE, 6
 	fadedefaultbgm
 	release
 	end
@@ -204,7 +196,7 @@ AzaleaTown_EventScript_SilverTriggerBot::
 	playse SE_EXIT
 	setflag FLAG_HIDE_AZALEA_TOWN_SILVER
 	removeobject LOCALID_AZALEA_TOWN_SILVER
-	setvar VAR_AZALEA_TOWN_STATE, 6
+	setvar_forward VAR_AZALEA_TOWN_STATE, 6
 	fadedefaultbgm
 	release
 	end
@@ -224,6 +216,7 @@ AzaleaTown_Silver_Battle_Chikorita::
 
 AzaleaTown_EventScript_GSBall::
 	lock
+	setvar VAR_TEMP_1, 0
 	applymovement OBJ_EVENT_ID_PLAYER, AzaleaTown_Movement_PlayerGSBall
 	waitmovement 0
 	clearflag FLAG_HIDE_AZALEA_TOWN_KURT
@@ -241,6 +234,7 @@ AzaleaTown_EventScript_GSBall::
 	playse SE_M_PETAL_DANCE
 	msgbox AzaleaTown_Text_Kurt2, MSGBOX_DEFAULT
 	giveitem ITEM_GS_BALL
+	goto_if_eq VAR_RESULT, FALSE, AzaleaTown_EventScript_GSBallBagFull
 	waitse
 	playse SE_M_PETAL_DANCE
 	turnobject LOCALID_AZALEA_TOWN_KURT_GS, DIR_WEST
@@ -260,7 +254,24 @@ AzaleaTown_EventScript_GSBall::
 	removeobject LOCALID_AZALEA_TOWN_KURT_GS
 	closedoor 19, 11
 	waitdooranim
-	setvar VAR_AZALEA_TOWN_STATE, 9
+	setvar_forward VAR_AZALEA_TOWN_STATE, 9
+	release
+	end
+
+@ A full Bag leaves the GS Ball with Kurt: he leaves, the chain stays at 8, and
+@ the scene plays again on the next visit to Azalea.
+AzaleaTown_EventScript_GSBallBagFull::
+	call Common_EventScript_BagIsFull
+	closemessage
+	applymovement LOCALID_AZALEA_TOWN_KURT_GS, AzaleaTown_Movement_KurtLeave
+	delay 60
+	opendoor 19, 11
+	waitdooranim
+	waitmovement 0
+	setflag FLAG_HIDE_AZALEA_TOWN_KURT
+	removeobject LOCALID_AZALEA_TOWN_KURT_GS
+	closedoor 19, 11
+	waitdooranim
 	release
 	end
 

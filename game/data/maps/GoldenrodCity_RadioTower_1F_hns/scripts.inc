@@ -140,7 +140,6 @@ RadioTower1F_EventScript_ReceptionGiveRadio::
 	removeobject LOCALID_GOLDENROD_RADIOTOWER_WHITNEY
 	setflag FLAG_ENABLE_RADIO
 	setflag FLAG_HIDE_GOLDENROD_BEAUTY
-	setvar VAR_GOLDENROD_CITY_STATE, 2
 	release
 	end
 

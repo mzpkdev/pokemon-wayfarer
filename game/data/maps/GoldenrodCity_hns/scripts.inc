@@ -1,49 +1,48 @@
 GoldenrodCity_hns_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, GoldenrodCity_OnTransition
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, GoldenrodCity_OnFrame
 	.byte 0
 
-GoldenrodCity_EventScript_Trigger:: @flagheap
-	call_if_unset FLAG_SHOWN_ELM_TOGEPI, GoldenrodCity_Elm_Togepi_Call
+GoldenrodCity_OnTransition::
+	call_if_unset FLAG_WAYFARER_JOHTO_SETUP_GOLDENROD, GoldenrodCity_EventScript_Setup
+	end
+
+GoldenrodCity_OnFrame::
+	map_script_2 VAR_TEMP_1, 1, GoldenrodCity_Elm_Togepi_Call
+	.2byte 0
+
+@ First-visit setup, run once from the map load however the player arrives.
+@ New-game defaults are not restated. The Radio Tower takeover's hide flags are
+@ left alone once the takeover has started, and Bill stays where his
+@ Ecruteak visit put him.
+GoldenrodCity_EventScript_Setup:: @flagheap
+	call_if_unset FLAG_SHOWN_ELM_TOGEPI, GoldenrodCity_Setup_QueueElmCall
+	setflag FLAG_WAYFARER_JOHTO_SETUP_GOLDENROD
 	setflag FLAG_VISITED_GOLDENROD_CITY
-	setflag FLAG_HIDE_GOLDENROD_ROCKETS
+	goto_if_set FLAG_SYS_PC_BILL, GoldenrodCity_Setup_BillMoved
 	setflag FLAG_HIDE_GOLDENROD_BILL
+GoldenrodCity_Setup_BillMoved:
+	@ The takeover cannot pass its first step before the first Goldenrod load,
+	@ so its later scenes are always hidden here.
 	setflag FLAG_HIDE_GOLDENROD_UNDERGROUND_KIMONO
 	setflag FLAG_HIDE_GOLDENROD_UNDERGROUND_SILVER
-	setflag FLAG_HIDE_ROCKET_GOLDENROD_RADIOTOWER_1
 	setflag FLAG_HIDE_GOLDENROD_RADIOTOWER_PETREL
 	setflag FLAG_HIDE_GOLDENROD_RADIOTOWER_DIRECTOR_2
-	
-	clearflag FLAG_HIDE_GOLDENROD_BEAUTY
-	clearflag FLAG_HIDE_GOLDENROD_ROCKET_SCOUT
-	clearflag FLAG_HIDE_GOLDENROD_NPCS
-	clearflag FLAG_GOT_RETURN
-	clearflag FLAG_GOT_FRUSTRATION
-	clearflag FLAG_RECEIVED_BIKE
-	clearflag FLAG_RECEIVED_SQUIRTBOTTLE
-	clearflag FLAG_GOT_EEVEE
-	clearflag FLAG_SYS_PC_BILL
-	clearflag FLAG_UNLOCKED_GOLDENROD_UNDERGROUND_DOOR
-	clearflag FLAG_GOLDENROD_MACHOKE_1
-	clearflag FLAG_GOLDENROD_MACHOKE_2
-	clearflag FLAG_GOLDENROD_MACHOKE_3
-	clearflag FLAG_COMPLETED_SWITCHES
-	clearflag FLAG_ENABLE_RADIO
-	clearflag FLAG_KANTO_RADIO_GOT
-	clearflag FLAG_GOLDENROD_NPC_TRADE_COMPLETED
-	clearflag FLAG_GOT_SUNNY_DAY
-	clearflag FLAG_HIDE_RADIOTOWER_GATE
-	clearflag FLAG_HIDE_GOLDENROD_RADIOTOWER_DIRECTOR
-	clearflag FLAG_GOT_MARY_BRIGHT_POWDER
-	clearflag FLAG_GOT_QUICK_CLAW
-	clearflag FLAG_GOT_MAGNET
+	goto_if_ge VAR_GOLDENROD_CITY_STATE, 6, GoldenrodCity_Setup_TakeoverStarted
+	setflag FLAG_HIDE_GOLDENROD_ROCKETS
+	setflag FLAG_HIDE_ROCKET_GOLDENROD_RADIOTOWER_1
+GoldenrodCity_Setup_TakeoverStarted:
+	setvar_forward VAR_GOLDENROD_CITY_STATE, 1
+	return
 
-	setvar VAR_BUG_CONTEST_STATE, 0
-	setvar VAR_KENYA, 0
-	setvar VAR_LUGIA_OR_HOOH, 0
-	setvar VAR_TRAIN, 0
-	setvar VAR_ELEVATOR, 0
-	setvar VAR_GOLDENROD_CITY_STATE, 1
-	release
-	end
+@ A load script cannot show Elm's call, so the setup queues it for the OnFrame
+@ entry. Only Johto-origin players get it.
+GoldenrodCity_Setup_QueueElmCall::
+	specialvar VAR_RESULT, WayfarerIsJohtoOrigin
+	goto_if_eq VAR_RESULT, FALSE, GoldenrodCity_Setup_NoElmCall
+	setvar VAR_TEMP_1, 1
+GoldenrodCity_Setup_NoElmCall:
+	return
 
 GoldenrodCity_Trigger_Music::
 	goto_if_lt VAR_GOLDENROD_CITY_STATE, 6, GoldenrodCity_Trigger_MusicNotYet
@@ -68,12 +67,13 @@ GoldenrodCity_Trigger_MusicNotYet::
 
 GoldenrodCity_Elm_Togepi_Call::
 	lock
+	setvar VAR_TEMP_1, 0
 	setspeaker GoldenrodCity_Text_ElmName
 	pokenavcall GoldenrodCity_Text_ElmCall
 	waitmessage
 	delay 30
 	release
-	return
+	end
 
 GoldenrodCity_EventScript_PokefanM::
 	lock

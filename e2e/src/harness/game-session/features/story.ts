@@ -16,6 +16,13 @@ export type StoryApi = {
   setVar: (name: StoryVar, value: number) => Promise<void>
 }
 
+// Hoenn (0x7000) and coast (0xf000) vars live outside the plain save-bank var
+// array, so the ROM reads and writes them through VarGet and VarSet.
+const isScriptOnlyVarId = (id: number): boolean => {
+  const namespace = id & 0xf000
+  return namespace === 0x7000 || namespace === 0xf000
+}
+
 export const createStoryApi = (runtime: SessionRuntime, mailbox: MailboxApi): StoryApi => ({
   flag: async (name) => {
     const id = storyFlags[name]
@@ -51,7 +58,7 @@ export const createStoryApi = (runtime: SessionRuntime, mailbox: MailboxApi): St
       return new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength).getUint32(0, true)
     }
     const id = storyVars[name]
-    if ((id & 0xf000) === 0x7000) {
+    if (isScriptOnlyVarId(id)) {
       const result = await mailbox.execute(
         (requestId) => encodeObserveVarRequest(runtime.abi, requestId, id),
         `observe story var ${name}`,
@@ -76,7 +83,7 @@ export const createStoryApi = (runtime: SessionRuntime, mailbox: MailboxApi): St
     if (!Number.isInteger(value) || value < 0 || value > 0xffff)
       throw new Error("Story variable values must be unsigned 16-bit integers")
     const id = storyVars[name]
-    if ((id & 0xf000) === 0x7000) {
+    if (isScriptOnlyVarId(id)) {
       await mailbox.execute(
         (requestId) => encodeSetVarRequest(runtime.abi, requestId, id, value),
         `set story var ${name}`,
