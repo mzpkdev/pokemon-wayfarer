@@ -1,3 +1,5 @@
+import art from "~/generated/game-art.json"
+
 // PROF. OAK throwing a Poké Ball and a POKéMON coming out, after the game's own
 // release: CreatePokeballSpriteToReleaseMon and SpriteCB_ReleasedMonFlyOut in
 // game/src/pokeball.c, PokeBallOpenParticleAnimation in
@@ -13,22 +15,48 @@ export const OAK = { x: 100, y: 26 }
 export const HAND = { x: 109, y: 76 }
 /** Where the ball lands and opens. */
 export const BALL_LANDING = { x: 72, y: 112 }
-/** Where WOOPER's 64x64 picture is centered once out. */
-export const MON_HOME = { x: 72, y: 96 }
+type Bounds = { left: number; right: number; top: number; bottom: number }
+const artBounds = (file: string) =>
+  (art as Record<string, { art?: Bounds }>)[`people/${file}.png`]!.art!
+
+const oakArt = artBounds("oak")
+/** OAK's height in the Pokédex's decimeters, which sets the scale for everyone. */
+const OAK_HEIGHT = 17.5
+const PIXELS_PER_DECIMETER = (oakArt.bottom - oakArt.top + 1) / OAK_HEIGHT
+
+/** The row the POKéMON stand on: just behind OAK's feet, on the oval. */
+export const FLOOR = OAK.y + oakArt.bottom - 2
+/** Where a POKéMON stands, unless it is too wide to fit before OAK. */
+const MON_X = 72
+/** The rightmost column a POKéMON may reach, so it stays clear of OAK's hand. */
+const MON_RIGHT = 106
 
 /**
  * The POKéMON OAK sends out, one per throw: WOOPER from his own intro, then
- * the opening's cast. `lift` raises each picture from WOOPER's footing by its
- * frontPicYOffset (16 for WOOPER) plus any enemyMonElevation, so every one
- * stands on the oval, and FLYGON hovers over it as it does in battle.
+ * the opening's cast. Each is scaled from its Pokédex height (species_info's
+ * .height, in decimeters) against OAK's, and `center` and `foot` place its
+ * art: the middle of its first frame and the row under its lowest pixel.
  */
-export const ROSTER = [
-  { species: "wooper", lift: 0 },
-  { species: "torchic", lift: 16 - 8 },
-  { species: "manectric", lift: 16 - 4 },
-  { species: "volbeat", lift: 16 - 8 },
-  { species: "flygon", lift: 16 - 1 + 7 },
-] as const
+export const ROSTER = (
+  [
+    ["wooper", 4],
+    ["torchic", 4],
+    ["manectric", 15],
+    ["volbeat", 7],
+    ["flygon", 20],
+  ] as const
+).map(([species, height]) => {
+  const bounds = artBounds(`mons/${species}`)
+  const size = (height * PIXELS_PER_DECIMETER) / (bounds.bottom - bounds.top + 1)
+  const halfWidth = ((bounds.right - bounds.left + 1) * size) / 2
+  return {
+    species,
+    size,
+    center: (bounds.left + bounds.right + 1) / 2,
+    foot: bounds.bottom + 1,
+    home: { x: Math.round(Math.min(MON_X, MON_RIGHT - halfWidth)), y: FLOOR },
+  }
+})
 
 /** The ball's frames: closed, open, then empty once it has vanished. */
 export const BALL_FRAME = { closed: 0, open: 1 } as const
@@ -84,8 +112,10 @@ export type Particle = { x: number; y: number; frame: number; flip: boolean }
 export type Mon = {
   /** Index into ROSTER. */
   species: number
+  /** The middle of its feet. */
   x: number
   y: number
+  /** Of its 64x64 picture: its size times how far it has grown out of the ball. */
   scale: number
   tint: number
   frame: number
@@ -114,7 +144,7 @@ const emergeScale = (frame: number) => Math.min(0x100, 0x28 + 0x12 * Math.min(fr
 export const releaseAt = (loopFrame: number): ReleaseState => {
   const f = loopFrame % BEATS.loop
   const species = Math.floor(loopFrame / BEATS.loop) % ROSTER.length
-  const home = { x: MON_HOME.x, y: MON_HOME.y - ROSTER[species]!.lift }
+  const { home, size } = ROSTER[species]!
   const { throwAt, bounceAt, openAt, outAt, recallAt, closeAt, returnAt, restAt } = BEATS
 
   if (f < throwAt || f >= restAt) return { ball: null, particles: [], mon: null }
@@ -159,7 +189,7 @@ export const releaseAt = (loopFrame: number): ReleaseState => {
       species,
       x: Math.round(lerp(BALL_LANDING.x, home.x, progress / 128)) + arc,
       y: Math.round(lerp(BALL_LANDING.y, home.y, progress / 128)) + arc,
-      scale: emergeScale(since),
+      scale: emergeScale(since) * size,
       tint: Math.max(0, 1 - since / EMERGE),
       // The front animation's second frame, held briefly on arrival, then a blink now and then.
       frame: f < outAt ? 0 : (f - outAt) % 90 < 70 ? 0 : 1,
@@ -178,7 +208,7 @@ export const releaseAt = (loopFrame: number): ReleaseState => {
         species,
         x: Math.round(lerp(home.x, BALL_LANDING.x, t)),
         y: Math.round(lerp(home.y, BALL_LANDING.y, t)),
-        scale: lerp(1, 0x28 / 0x100, t),
+        scale: lerp(1, 0x28 / 0x100, t) * size,
         tint: Math.min(1, t * 2),
         frame: 0,
       },
@@ -199,5 +229,5 @@ export const releaseAt = (loopFrame: number): ReleaseState => {
 export const restingRelease: ReleaseState = {
   ball: null,
   particles: [],
-  mon: { species: 0, ...MON_HOME, scale: 1, tint: 0, frame: 0 },
+  mon: { species: 0, ...ROSTER[0]!.home, scale: ROSTER[0]!.size, tint: 0, frame: 0 },
 }

@@ -30,7 +30,17 @@ export const OakStage = ({ className }: { className?: string }) => {
     const canvas = canvasRef.current
     const context = canvas?.getContext("2d")
     if (!canvas || !context) return
-    context.imageSmoothingEnabled = false
+
+    // Draw at the screen's own resolution, `pixels` device pixels to a GBA
+    // pixel, so POKéMON scaled to their height keep their detail.
+    let pixels = 1
+    const fit = () => {
+      pixels = Math.max(1, Math.round((canvas.clientWidth / STAGE.width) * window.devicePixelRatio))
+      canvas.width = STAGE.width * pixels
+      canvas.height = STAGE.height * pixels
+      context.imageSmoothingEnabled = false
+    }
+    fit()
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     let raf = 0
@@ -38,6 +48,8 @@ export const OakStage = ({ className }: { className?: string }) => {
     let frame = 0
     let carry = 0
     let lastTime: number | null = null
+    // Redraws a still scene after a resize; the animation redraws on its own.
+    let resized = () => {}
 
     const monCanvas = document.createElement("canvas")
     monCanvas.width = 64
@@ -62,6 +74,7 @@ export const OakStage = ({ className }: { className?: string }) => {
         particles: particleStates,
         mon: monState,
       }: ReleaseState) => {
+        context.setTransform(pixels, 0, 0, pixels, 0, 0)
         context.clearRect(0, 0, STAGE.width, STAGE.height)
         context.drawImage(oval!, OVAL.x, OVAL.y)
 
@@ -87,11 +100,14 @@ export const OakStage = ({ className }: { className?: string }) => {
             monContext.fillRect(0, 0, 64, 64)
             monContext.globalAlpha = 1
           }
-          const size = Math.max(1, Math.round(64 * monState.scale))
+          // Stand its feet on (x, y), snapped to whole device pixels.
+          const { center, foot } = ROSTER[monState.species]!
+          const snap = (value: number) => Math.round(value * pixels) / pixels
+          const size = Math.max(1 / pixels, snap(64 * monState.scale))
           context.drawImage(
             monCanvas,
-            Math.round(monState.x - size / 2),
-            Math.round(monState.y - size / 2),
+            snap(monState.x - center * monState.scale),
+            snap(monState.y - foot * monState.scale),
             size,
             size,
           )
@@ -118,6 +134,7 @@ export const OakStage = ({ className }: { className?: string }) => {
 
       if (reducedMotion) {
         draw(restingRelease)
+        resized = () => draw(restingRelease)
         return
       }
 
@@ -142,9 +159,16 @@ export const OakStage = ({ className }: { className?: string }) => {
       visible = entry?.isIntersecting ?? true
     })
     observer.observe(canvas)
+    // The stage grows a step at wider screens; redraw at the new resolution.
+    const resizer = new ResizeObserver(() => {
+      fit()
+      resized()
+    })
+    resizer.observe(canvas)
     return () => {
       cancelAnimationFrame(raf)
       observer.disconnect()
+      resizer.disconnect()
     }
   }, [])
 

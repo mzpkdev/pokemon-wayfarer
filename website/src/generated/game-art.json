@@ -111,7 +111,13 @@
     "width": 64,
     "height": 96,
     "x": 0,
-    "y": 0
+    "y": 0,
+    "art": {
+      "left": 5,
+      "right": 59,
+      "top": 7,
+      "bottom": 92
+    }
   },
   "people/stage.png": {
     "width": 128,
@@ -135,31 +141,61 @@
     "width": 64,
     "height": 128,
     "x": 0,
-    "y": 0
+    "y": 0,
+    "art": {
+      "left": 15,
+      "right": 49,
+      "top": 18,
+      "bottom": 47
+    }
   },
   "people/mons/torchic.png": {
     "width": 64,
     "height": 128,
     "x": 0,
-    "y": 0
+    "y": 0,
+    "art": {
+      "left": 16,
+      "right": 48,
+      "top": 9,
+      "bottom": 55
+    }
   },
   "people/mons/manectric.png": {
     "width": 64,
     "height": 128,
     "x": 0,
-    "y": 0
+    "y": 0,
+    "art": {
+      "left": 11,
+      "right": 52,
+      "top": 4,
+      "bottom": 59
+    }
   },
   "people/mons/volbeat.png": {
     "width": 64,
     "height": 128,
     "x": 0,
-    "y": 0
+    "y": 0,
+    "art": {
+      "left": 10,
+      "right": 53,
+      "top": 11,
+      "bottom": 55
+    }
   },
   "people/mons/flygon.png": {
     "width": 64,
     "height": 128,
     "x": 0,
-    "y": 0
+    "y": 0,
+    "art": {
+      "left": 0,
+      "right": 63,
+      "top": 1,
+      "bottom": 63
+    }
   },
   "items/town-map.png": {
     "width": 24,

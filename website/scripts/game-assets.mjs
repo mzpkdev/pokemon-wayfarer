@@ -30,6 +30,29 @@ const save = (name, image) => {
   console.log(`  ${path.relative(process.cwd(), file)} ${image.width}x${image.height}`)
 }
 
+/**
+ * The opaque box of a front picture's first frame, with its lowest row taken
+ * over both frames so neither one sinks below the floor.
+ */
+const opaqueBounds = (image, frameHeight = 64) => {
+  let left = Infinity
+  let right = -Infinity
+  let top = Infinity
+  let bottom = -Infinity
+  for (let y = 0; y < image.height; y++) {
+    for (let x = 0; x < image.width; x++) {
+      if (image.rgba[(y * image.width + x) * 4 + 3] === 0) continue
+      const frameY = y % frameHeight
+      bottom = Math.max(bottom, frameY)
+      if (y >= frameHeight) continue
+      left = Math.min(left, x)
+      right = Math.max(right, x)
+      top = Math.min(top, frameY)
+    }
+  }
+  return { left, right, top, bottom }
+}
+
 /** Copies a width x height block of an RGBA image. */
 const crop = (image, x, y, width, height) => {
   const rgba = new Uint8Array(width * height * 4)
@@ -209,7 +232,9 @@ const oakPalette = Array.from({ length: 256 }, () => [0, 0, 0, 0])
 readJascPalette(source("oak_speech/oak/pal.pal")).forEach(
   (color, i) => (oakPalette[96 + i] = color),
 )
-save("people/oak.png", renderIndexed(source("oak_speech/oak/pic.png"), oakPalette))
+const oak = renderIndexed(source("oak_speech/oak/pic.png"), oakPalette)
+save("people/oak.png", oak)
+manifest["people/oak.png"].art = opaqueBounds(oak, oak.height)
 
 // The grey oval PROF. OAK stands on in Wayfarer's new game intro. At runtime
 // the intro loads its gradient palette one slot up over BG palette 0, so slot
@@ -247,14 +272,16 @@ save(
 // The POKéMON OAK sends out in turn: WOOPER from his own intro, then the
 // opening's cast. Two front frames stacked, in the GBA style the game builds
 // with (P_GBA_STYLE_SPECIES_GFX).
+// Each records where its art sits in the 64x64 frame, so the site can scale
+// it to size and stand its feet on the floor.
 for (const species of ["wooper", "torchic", "manectric", "volbeat", "flygon"]) {
-  save(
-    `people/mons/${species}.png`,
-    renderIndexed(
-      source(`pokemon/${species}/anim_front_gba.png`),
-      readJascPalette(source(`pokemon/${species}/normal_gba.pal`)),
-    ),
+  const name = `people/mons/${species}.png`
+  const image = renderIndexed(
+    source(`pokemon/${species}/anim_front_gba.png`),
+    readJascPalette(source(`pokemon/${species}/normal_gba.pal`)),
   )
+  save(name, image)
+  manifest[name].art = opaqueBounds(image)
 }
 
 // Key item icons, each colored by its palette (named when the icon shares one).
