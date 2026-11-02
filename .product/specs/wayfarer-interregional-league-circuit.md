@@ -73,13 +73,16 @@ league-win cap. Eight, sixteen, or twenty-four badges with no league wins are
 valid states.
 
 Coherent local prerequisites remain. These include Jasmine's medicine errand,
-Misty's Power Plant and Route 25 sequence, Juan's weather story, Clair's Chuck,
-Jasmine, and Pryce badge requirements, and Norman's four Hoenn badges and Wally
-tutorial. Prerequisites must recognize already-satisfied facts on revisit and
+Misty's Power Plant and Route 25 sequence, Juan's weather story, and Norman's
+four Hoenn badges and Wally tutorial. Clair has no badge requirement: the
+Blackthorn gym boy never blocks the Gym, and Clair and the Dragon's Den work with
+zero other badges. Prerequisites must recognize already-satisfied facts on revisit and
 must not depend on an exact global badge count.
 
-The Johto Rocket takeover must use explicit regional story facts rather than
-the historical exact-seven shared badge check. Whitney and Clair's deferred
+The Johto Rocket takeover reads no badge at all. It starts only when the player
+follows the Rocket scout outside the Goldenrod Radio Tower, and nothing arms it
+from the Chuck, Jasmine, or Pryce victories (see
+[Johto independent story beats](johto-independent-story-beats.md)). Whitney and Clair's deferred
 rewards remain reachable and once-only at every global badge count and circuit
 state. Wattson's New Mauville relocation still requires Norman's defeat and the
 Dynamo Badge in either order. Preserve initial-badge protections for Chuck,
@@ -527,8 +530,8 @@ so a rolled-back first victory leaves Blue hidden.
 
 Play a Johto-start journey to all twenty-four badges with zero league wins.
 Include mixed regional order, deferred Whitney and Clair rewards, the selected
-Viridian badge owner, Wattson/Norman in both orders, and the audited Rocket
-takeover predicate. Then clear Indigo, Masters, and Hoenn consecutively and
+Viridian badge owner, Wattson/Norman in both orders, and the Goldenrod scout's
+takeover start with no badges. Then clear Indigo, Masters, and Hoenn consecutively and
 reach Red.
 
 Repeat representative routes by taking each stage at its minimum badge count.

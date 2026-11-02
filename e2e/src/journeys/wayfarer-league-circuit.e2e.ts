@@ -782,51 +782,26 @@ describe.sequential("Wayfarer League Circuit", () => {
     })
   }, 600_000)
 
-  it("recovers mixed-order Rocket, Wattson, Whitney, and Clair states", async () => {
-    // The takeover arms on Pryce's defeat and an unstarted takeover; the Lake and
-    // hideout adventure's own state is irrelevant and stays untouched.
+  it("recovers mixed-order Wattson, Whitney, and Clair states with no Rocket arming", async () => {
+    // The Radio Tower takeover reads no badge and is armed by nothing: seven west-Johto
+    // badges and Pryce's win, in Mahogany, leave Goldenrod and the call variable alone.
     await finishPendingArrange(
       game,
       game.arrange({
         checkpoint: "new-bark-after-intro",
         player: { position: { map: "mahogany-town", x: 30, y: 13 } },
         story: {
-          vars: {
-            numBadges: 12,
-            mahoganyTownState: 3,
-            goldenrodCityState: 1,
-            triggerElmRocketCall: 0,
-          },
+          vars: { numBadges: 12, mahoganyTownState: 3, goldenrodCityState: 1 },
           flags: { defeatedMahoganyGym: true },
         },
         circuit: { badges: { kanto: 5, johto: 7 } },
       }),
-      "late Rocket takeover recovery",
+      "mixed-order badges without Rocket arming",
     )
-    await expect(game.story.var("triggerElmRocketCall")).resolves.toBe(2)
-    await expect(game.story.var("goldenrodCityState")).resolves.toBe(6)
+    await game.saveAndReload()
+    await expect(game.story.var("triggerElmRocketCall")).resolves.toBe(0)
+    await expect(game.story.var("goldenrodCityState")).resolves.toBe(1)
     await expect(game.story.var("mahoganyTownState")).resolves.toBe(3)
-    await expect(game.story.flag("johtoRadioTowerResolved")).resolves.toBe(false)
-
-    // The finale's resolved flag, not a Mahogany value, ends the takeover.
-    await game.arrange({
-      checkpoint: "new-bark-after-intro",
-      player: { position: { map: "mahogany-town", x: 30, y: 13 } },
-      story: {
-        vars: {
-          numBadges: 20,
-          mahoganyTownState: 5,
-          goldenrodCityState: 8,
-          triggerElmRocketCall: 2,
-        },
-        flags: { defeatedMahoganyGym: true, johtoRadioTowerResolved: true },
-      },
-      circuit: { badges: { kanto: 8, johto: 7, hoenn: 5 } },
-    })
-    await expect(game.story.var("triggerElmRocketCall")).resolves.toBe(2)
-    await expect(game.story.var("goldenrodCityState")).resolves.toBe(8)
-    await expect(game.story.var("mahoganyTownState")).resolves.toBe(5)
-    await expect(game.story.flag("johtoRadioTowerResolved")).resolves.toBe(true)
 
     await game.arrange({
       checkpoint: "new-bark-after-intro",

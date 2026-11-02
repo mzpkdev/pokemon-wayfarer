@@ -38,6 +38,9 @@ CHAPTER = 'VAR_WAYFARER_JOHTO_SILVER_CHAPTER'
 WON_ANY = 'FLAG_WAYFARER_JOHTO_SILVER_WON_ANY'
 INDIGO_ENTERED = 'FLAG_WAYFARER_JOHTO_INDIGO_ENTERED'
 SEED = 'FLAG_WAYFARER_JOHTO_MIRACLE_SEED_RECEIVED'
+LAB = 'VAR_NEWBARKTOWN_LABSTATE'
+BALL_OWED = 'FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_OWED'
+BALL_GOT = 'FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_RECEIVED'
 
 
 def won(chapter):
@@ -245,6 +248,8 @@ class Interp:
                     self.vars[args[0]] = int(self.silver_playable())
                 else:
                     self.vars[args[0]] = {'WayfarerIsJohtoOrigin': int(self.johto),
+                                          # ORIGIN_SCENE_NATIVE (1) for Johto, ORIGIN_SCENE_VISITOR (0) otherwise.
+                                          'WayfarerDispatchOriginScene': int(self.johto),
                                           'WayfarerGetOriginStarterSlot': self.starter_slot}.get(args[1], 0)
             elif command == 'msgbox':
                 self.messages.append(args[0])
@@ -390,9 +395,8 @@ class TownSetup(unittest.TestCase):
                 self.assertIn(SETUP_FLAGS[town], interp.flags)
 
     def test_goldenrod_takeover_started_before_the_first_visit_is_not_reset(self):
-        # The Pryce arming can start the takeover before Goldenrod is visited.
-        interp = Interp('GoldenrodCity_hns', 'Mahoganytown_hns')
-        interp.run('Mahoganytown_EventScript_RocketTrigger')
+        interp = Interp('GoldenrodCity_hns')
+        interp.run('GoldenrodCity_EventScript_StartTakeover')
         self.assertEqual(interp.vars[GOLD], 6)
         interp.writes.clear()
         interp.run('GoldenrodCity_OnTransition')
@@ -687,33 +691,136 @@ class MahoganyLakeAndRadioTower(unittest.TestCase):
             self.assertEqual(interp.vars[MAH], state)
             self.assertNotIn(MAH, interp.written())
 
-    def test_takeover_start_does_not_touch_mahogany_and_never_rewinds_goldenrod(self):
+    def test_scout_start_from_zero_badges_declines_then_accepts(self):
+        maps = ('GoldenrodCity_hns', 'GoldenrodCity_RadioTower_1F_hns')
+        interp = Interp(*maps)
+        interp.run('GoldenrodCity_OnTransition')
+        # The scout is visible from the first visit; the quiz works before the takeover.
+        self.assertNotIn('FLAG_HIDE_GOLDENROD_ROCKET_SCOUT', interp.flags)
+        interp.run('RadioTower1F_EventScript_Reception')
+        self.assertIn('RadioTower1F_Text_RadioCardWomanOfferQuiz', interp.messages)
+        interp.run('RadioTower1F_EventScript_ReceptionGiveRadio')
+        self.assertIn('FLAG_ENABLE_RADIO', interp.flags)
+        # Declining changes nothing.
+        interp.answers = [0]
+        interp.messages.clear()
+        interp.writes.clear()
+        interp.run('GoldenrodCity_EventScript_RocketScout')
+        self.assertEqual(interp.vars[GOLD], 1)
+        self.assertFalse(interp.written('var') - {'VAR_RESULT'})
+        self.assertNotIn('FLAG_HIDE_GOLDENROD_ROCKET_SCOUT', interp.flags)
+        self.assertEqual(interp.messages, ['GoldenrodCity_Text_RocketScout1', 'GoldenrodCity_Text_RocketScout2',
+                                           'GoldenrodCity_Text_RocketScoutFollow'])
+        # Accepting starts the occupation: Goldenrod only, no Mahogany state, no phone call.
+        interp.answers = [1]
+        interp.run('GoldenrodCity_EventScript_RocketScout')
+        self.assertEqual(interp.vars[GOLD], 6)
+        self.assertTrue({'FLAG_HIDE_GOLDENROD_ROCKET_SCOUT', 'FLAG_HIDE_GOLDENROD_NPCS'} <= interp.flags)
+        self.assertFalse({'FLAG_HIDE_GOLDENROD_ROCKETS', 'FLAG_HIDE_ROCKET_GOLDENROD_RADIOTOWER_1'} & interp.flags)
+        self.assertNotIn(MAH, interp.written())
+        self.assertNotIn('VAR_TRIGGER_ELM_ROCKET_CALL', interp.written())
+        self.assertEqual(interp.pokenav, [])
+
+    def test_takeover_start_never_rewinds_goldenrod(self):
         for gold in (0, 1, 8, 11):
-            interp = Interp(*self.MAPS, vars={MAH: 14, GOLD: gold})
-            interp.run('Mahoganytown_EventScript_RocketTrigger')
+            interp = Interp('GoldenrodCity_hns', vars={MAH: 14, GOLD: gold})
+            interp.run('GoldenrodCity_EventScript_StartTakeover')
             self.assertEqual(interp.vars[MAH], 14)
             self.assertEqual(interp.vars[GOLD], max(gold, 6))
 
-    def test_arming_keys_on_pryce_and_an_unstarted_takeover(self):
-        label = 'MahoganyTown_Gym_EventScript_TryArmRocketTakeover'
-        badges = {'FLAG_BADGE05_GET', 'FLAG_BADGE06_GET', 'FLAG_BADGE07_GET'}
-        for mahogany in (0, 3, 14):  # Lake progress is irrelevant
-            interp = Interp(*self.MAPS, vars={MAH: mahogany}, flags=badges | {'FLAG_DEFEATED_MAHOGANY_TOWN_GYM'})
-            interp.run(label)
-            self.assertEqual(interp.vars.get('VAR_TRIGGER_ELM_ROCKET_CALL'), 1, mahogany)
-        interp = Interp(*self.MAPS, flags=badges)
-        interp.run(label)
-        self.assertNotIn('VAR_TRIGGER_ELM_ROCKET_CALL', interp.vars)
-        interp = Interp(*self.MAPS, vars={GOLD: 6}, flags=badges | {'FLAG_DEFEATED_MAHOGANY_TOWN_GYM'})
-        interp.run(label)
-        self.assertNotIn('VAR_TRIGGER_ELM_ROCKET_CALL', interp.vars)
+    def test_policeman_hides_with_the_scout_and_the_scout_prompts_first(self):
+        block = _label_block(raw_text('GoldenrodCity_hns'), 'GoldenrodCity_EventScript_RocketScout')
+        self.assertLess(block.index('MSGBOX_YESNO'), block.index('GoldenrodCity_EventScript_StartTakeover'))
+        policeman = [o for o in json.loads((MAPS / 'GoldenrodCity_RadioTower_2F_hns/map.json').read_text())
+                     ['object_events'] if o['script'].endswith('Policeman')]
+        self.assertEqual([o['flag'] for o in policeman], ['FLAG_HIDE_GOLDENROD_ROCKET_SCOUT'])
 
-    def test_radio_quiz_leaves_the_takeover_alone(self):
-        text = raw_text('GoldenrodCity_RadioTower_1F_hns')
-        self.assertNotIn(GOLD, text)
-        interp = Interp('GoldenrodCity_RadioTower_1F_hns', vars={GOLD: 8})
+    def test_nothing_arms_the_takeover_anywhere(self):
+        for path in all_script_files():
+            if 'Route24' in path.parent.name:
+                continue
+            text = path.read_text()
+            for gone in ('TryArmRocketTakeover', 'SetupElmRocketCall', 'VAR_TRIGGER_ELM_ROCKET_CALL',
+                         'Mahoganytown_EventScript_RocketTrigger', 'ElmPhoneRadioTowerRocketTakeoverText'):
+                self.assertNotIn(gone, text, (path.parent.name, gone))
+        # Winning the three west-Johto gyms starts nothing.
+        for label, name in (('CianwoodGym_EventScript_ChuckVictory', 'CianwoodGym_hns'),
+                            ('OlivineCity_Gym_EventScript_JasmineVictory', 'OlivineCity_Gym_hns'),
+                            ('MahoganyTown_Gym_EventScript_PryceVictory', 'MahoganyTown_Gym_hns')):
+            interp = Interp(name, flags={'FLAG_BADGE05_GET', 'FLAG_BADGE06_GET', 'FLAG_BADGE07_GET',
+                                         'FLAG_DEFEATED_MAHOGANY_TOWN_GYM'})
+            interp.run(label)
+            self.assertNotIn(GOLD, interp.written(), label)
+
+    def test_radio_quiz_is_unavailable_during_the_occupation_and_never_regresses_it(self):
+        maps = ('GoldenrodCity_RadioTower_1F_hns',)
+        for gold in range(0, 13):
+            interp = Interp(*maps, vars={GOLD: gold})
+            interp.run('RadioTower1F_EventScript_Reception')
+            offered = 'RadioTower1F_Text_RadioCardWomanOfferQuiz' in interp.messages
+            self.assertEqual(offered, not 6 <= gold <= 10, gold)
+            self.assertEqual(interp.vars.get(GOLD, 0), gold)
+            self.assertNotIn(GOLD, interp.written())
+        interp = Interp(*maps, vars={GOLD: 8})
         interp.run('RadioTower1F_EventScript_ReceptionGiveRadio')
         self.assertEqual(interp.vars[GOLD], 8)
+
+    def test_wing_is_owed_at_archer_and_given_once_after_baoba(self):
+        maps = ('GoldenrodCity_RadioTower_5F_hns',)
+        owed = 'FLAG_WAYFARER_JOHTO_RADIO_TOWER_WING_OWED'
+        given = 'FLAG_WAYFARER_JOHTO_RADIO_TOWER_WING_GIVEN'
+        for branch, wing in ((1, 'ITEM_SILVER_WING'), (2, 'ITEM_RAINBOW_WING')):
+            # Archer is beaten before Baoba's choice: the Wing is owed, nothing is given.
+            interp = Interp(*maps, vars={GOLD: 9})
+            interp.vars['VAR_FACING'] = interp.get('DIR_SOUTH')
+            interp.run('GoldenrodCity_RadioTower_5F_EventScript_Archer')
+            self.assertIn(owed, interp.flags)
+            self.assertEqual(interp.vars[GOLD], 10)
+            self.assertEqual(interp.given, [])
+            self.assertIn(RESOLVED, interp.flags)
+            self.assertNotIn('GoldenrodCity_RadioTower_5F_Text_DirectorThanks', interp.messages)
+            # The office Director only points at Baoba.
+            interp.messages.clear()
+            interp.run('GoldenrodCity_RadioTower_5F_EventScript_Petrel')
+            self.assertEqual(interp.messages, ['GoldenrodCity_RadioTower_5F_Text_DirectorHoldsWing'])
+            self.assertEqual(interp.given, [])
+            # After the branch is set: a full Bag leaves it owed, a retry gives it, never twice.
+            interp.vars['VAR_LUGIA_OR_HOOH'] = branch
+            interp.bag_full = True
+            interp.run('GoldenrodCity_RadioTower_5F_EventScript_Petrel')
+            self.assertEqual((interp.given, given in interp.flags, owed in interp.flags), ([], False, True))
+            interp.bag_full = False
+            interp.run('GoldenrodCity_RadioTower_5F_EventScript_Petrel')
+            self.assertEqual(interp.given, [wing])
+            self.assertIn(given, interp.flags)
+            interp.messages.clear()
+            interp.run('GoldenrodCity_RadioTower_5F_EventScript_Petrel')
+            self.assertEqual(interp.given, [wing])
+            self.assertEqual(interp.messages[-1], 'GoldenrodCity_RadioTower_5F_Text_DirectorIntro')
+
+    def test_wing_with_the_branch_already_chosen_comes_from_the_cutscene_once(self):
+        maps = ('GoldenrodCity_RadioTower_5F_hns',)
+        interp = Interp(*maps, vars={GOLD: 9, 'VAR_LUGIA_OR_HOOH': 1, 'VAR_FACING': Interp('GoldenrodCity_hns').get('DIR_SOUTH')})
+        interp.run('GoldenrodCity_RadioTower_5F_EventScript_Archer')
+        self.assertEqual(interp.given, ['ITEM_SILVER_WING'])
+        interp.run('GoldenrodCity_RadioTower_5F_EventScript_Petrel')
+        self.assertEqual(interp.given, ['ITEM_SILVER_WING'])
+        # A full Bag during the cutscene leaves the Wing with the office Director.
+        full = Interp(*maps, vars={GOLD: 9, 'VAR_LUGIA_OR_HOOH': 2, 'VAR_FACING': Interp('GoldenrodCity_hns').get('DIR_WEST')},
+                      bag_full=True)
+        full.run('GoldenrodCity_RadioTower_5F_EventScript_Archer')
+        self.assertEqual(full.given, [])
+        self.assertIn(RESOLVED, full.flags)
+        full.bag_full = False
+        full.run('GoldenrodCity_RadioTower_5F_EventScript_Petrel')
+        self.assertEqual(full.given, ['ITEM_RAINBOW_WING'])
+
+    def test_resolution_unlocks_only_the_merchant_dialogue(self):
+        interp = Interp('GoldenrodCity_RadioTower_5F_hns', vars={GOLD: 10, MAH: 3, WELL: 2})
+        interp.run('GoldenrodCity_RadioTower_5F_Fakeout')
+        self.assertEqual((interp.vars[MAH], interp.vars[WELL]), (3, 2))
+        self.assertNotIn(MAH, interp.written())
+        self.assertNotIn(WELL, interp.written())
 
     def test_petrel_never_rewinds_the_takeover(self):
         for gold in (7, 8, 9, 10):
@@ -1399,32 +1506,157 @@ class ElmAndSeedForVisitors(unittest.TestCase):
                 interp.run(label)
                 with self.subTest(map=map_name, johto=johto):
                     self.assertEqual(bool(interp.pokenav), johto)
-                    self.assertEqual(interp.vars[state], after)
+                    # A visitor's Blackthorn waits for the Den Elder's closing line.
+                    wait = map_name == 'BlackthornCity_hns' and not johto
+                    self.assertEqual(interp.vars[state], vars_[state] if wait else after)
                     self.assertFalse(interp.locked)
                     if map_name == 'VioletCity_hns':
                         self.assertEqual('FLAG_HIDE_VIOLET_CITY_AIDE' in interp.flags, not johto)
                         self.assertEqual('FLAG_HIDE_NEWBARKTOWN_LAB_AIDE' in interp.flags, johto)
 
-    def test_visitors_keep_their_path_to_elms_master_ball_and_ticket(self):
-        blackthorn = Interp('BlackthornCity_hns', johto=False, vars={'VAR_BLACKTHORN_CITY_STATE': 4})
-        blackthorn.run('BlackthornCity_EventScript_Call')
-        self.assertEqual(blackthorn.vars['VAR_NEWBARKTOWN_LABSTATE'], 7)
-        lab = Interp('NewBarkTown_Lab_hns', johto=False, vars={'VAR_NEWBARKTOWN_LABSTATE': 7})
-        lab.run('NewBarkTown_Lab_EventScript_Elm')
-        self.assertIn('NewBarkTown_Lab_Text_ElmGiveMasterBall1', lab.messages)
-        self.assertEqual(lab.given, ['ITEM_MASTER_BALL'])
+    def test_ceremony_scenes_and_calls_write_no_lab_state(self):
+        for path in all_script_files():
+            for number, line in enumerate(path.read_text().splitlines(), 1):
+                parts = line.split('@')[0].replace(',', ' ').split()
+                if len(parts) >= 3 and parts[0] in ('setvar', 'setvar_forward', 'addvar') \
+                        and parts[1] == 'VAR_NEWBARKTOWN_LABSTATE':
+                    # Only Elm's errand writes the lab state, and only its own values 0-6.
+                    self.assertIn(path.parent.name, ('NewBarkTown_Lab_hns', 'Route30_MrPokemonsHouse_hns',
+                                                     'NewBarkTown_PlayersHouse_1F_hns'), (path.parent.name, number))
+                    self.assertLessEqual(int(parts[2]), 6, (path.parent.name, number))
 
-    def test_elms_handoff_moves_the_ceremony_to_the_theater_without_ecruteak_silver(self):
-        lab = Interp('NewBarkTown_Lab_hns', vars={'VAR_NEWBARKTOWN_LABSTATE': 7})
+    def test_den_trial_owes_the_master_ball_without_lab_state(self):
+        for label in ('DragonsDen_Cavern_Trigger_ClairLeft', 'DragonsDen_Cavern_Trigger_ClairMid',
+                      'DragonsDen_Cavern_Trigger_ClairRight'):
+            interp = Interp('DragonsDen_Cavern_hns', vars={'VAR_BLACKTHORN_CITY_STATE': 3})
+            interp.run(label)
+            self.assertEqual(interp.vars['VAR_BLACKTHORN_CITY_STATE'], 4, label)
+            self.assertIn(BALL_OWED, interp.flags, label)
+            self.assertNotIn(LAB, interp.written(), label)
+
+    def test_blackthorn_call_advances_for_the_johto_origin_and_never_touches_the_lab(self):
+        for lab_state in (0, 3, 5, 6):
+            interp = Interp('BlackthornCity_hns', vars={'VAR_BLACKTHORN_CITY_STATE': 4, LAB: lab_state})
+            interp.run('BlackthornCity_EventScript_Call')
+            self.assertEqual(interp.vars['VAR_BLACKTHORN_CITY_STATE'], 5)
+            self.assertEqual(interp.vars[LAB], lab_state)
+            self.assertEqual(len(interp.pokenav), 1)
+
+    def test_visitor_elder_line_sends_them_to_elm_and_advances_blackthorn(self):
+        maps = ('DragonsDen_Shrine_hns',)
+        for got_dratini in (False, True):
+            flags = {'FLAG_GOT_DRATINI'} if got_dratini else set()
+            interp = Interp(*maps, johto=False, vars={'VAR_BLACKTHORN_CITY_STATE': 4}, flags=flags)
+            interp.run('DragonsDen_Shrine_EventScript_Elder')
+            self.assertEqual(interp.vars['VAR_BLACKTHORN_CITY_STATE'], 5, got_dratini)
+            self.assertIn('DragonsDen_Shrine_Text_ElderElmAskedForYou', interp.messages)
+            self.assertNotIn(LAB, interp.written())
+            # Said once.
+            interp.messages.clear()
+            interp.run('DragonsDen_Shrine_EventScript_Elder')
+            self.assertNotIn('DragonsDen_Shrine_Text_ElderElmAskedForYou', interp.messages)
+        # The Johto origin hears Elm's call instead; the Elder stays quiet and Blackthorn waits.
+        interp = Interp(*maps, johto=True, vars={'VAR_BLACKTHORN_CITY_STATE': 4})
+        interp.run('DragonsDen_Shrine_EventScript_Elder')
+        self.assertEqual(interp.vars['VAR_BLACKTHORN_CITY_STATE'], 4)
+        self.assertNotIn('DragonsDen_Shrine_Text_ElderElmAskedForYou', interp.messages)
+        # Before the trial completes he says nothing about Elm.
+        interp = Interp(*maps, johto=False, vars={'VAR_BLACKTHORN_CITY_STATE': 3})
+        interp.run('DragonsDen_Shrine_EventScript_Elder')
+        self.assertNotIn('DragonsDen_Shrine_Text_ElderElmAskedForYou', interp.messages)
+
+    def test_visitor_blackthorn_waits_at_four_without_a_call(self):
+        interp = Interp('BlackthornCity_hns', johto=False, vars={'VAR_BLACKTHORN_CITY_STATE': 4})
+        interp.run('BlackthornCity_EventScript_Call')
+        self.assertEqual((interp.vars['VAR_BLACKTHORN_CITY_STATE'], interp.pokenav), (4, []))
+
+    def test_master_ball_at_tr_zero_once_for_both_origins_and_after_a_full_pocket(self):
+        for johto in (True, False):
+            interp = Interp('NewBarkTown_Lab_hns', johto=johto, flags={BALL_OWED}, bag_full=True)
+            interp.run('NewBarkTown_Lab_EventScript_Elm')
+            self.assertEqual((interp.given, BALL_GOT in interp.flags), ([], False), johto)
+            interp.bag_full = False
+            interp.run('NewBarkTown_Lab_EventScript_Elm')
+            self.assertEqual(interp.given, ['ITEM_MASTER_BALL'], johto)
+            self.assertIn(BALL_GOT, interp.flags)
+            self.assertEqual('NewBarkTown_Lab_Text_VisitorElmIntroduces' in interp.messages, not johto)
+            interp.run('NewBarkTown_Lab_EventScript_Elm')
+            interp.run('NewBarkTown_Lab_EventScript_Elm')
+            self.assertEqual(interp.given, ['ITEM_MASTER_BALL'], johto)
+        block = _label_block(raw_text('NewBarkTown_Lab_hns'), 'NewBarkTown_Lab_EventScript_ElmMasterBall')
+        self.assertNotRegex(block, 'TrainerRating|TRAINER_RATING')
+
+    def test_master_ball_works_at_every_errand_stage_and_the_errand_still_completes(self):
+        stages = {
+            'before the egg return': ({LAB: 4}, set()),
+            'before the Violet aide': ({LAB: 6}, {'FLAG_HIDE_NEWBARKTOWN_LAB_AIDE'}),
+            'with the aide waiting and no starter yet': ({LAB: 1}, {'FLAG_HIDE_NEWBARKTOWN_LAB_AIDE'}),
+            'after the ceremony': ({LAB: 6, CEREMONY: 8}, set()),
+        }
+        for name, (vars_, flags) in stages.items():
+            interp = Interp('NewBarkTown_Lab_hns', vars=vars_, flags=set(flags) | {BALL_OWED})
+            before = vars_[LAB]
+            interp.run('NewBarkTown_Lab_EventScript_Elm')
+            self.assertEqual(interp.given, ['ITEM_MASTER_BALL'], name)
+            self.assertEqual(interp.vars[LAB], before, name)
+            self.assertNotIn(LAB, interp.written(), name)
+        # The errand still completes: the egg return runs after the ball was taken.
+        interp = Interp('NewBarkTown_Lab_hns', vars={LAB: 4}, flags={BALL_OWED})
+        interp.run('NewBarkTown_Lab_EventScript_Elm')
+        interp.run('NewBarkTown_Lab_EventScript_PoliceEpisode')
+        self.assertEqual(interp.vars[LAB], 5)
+        # After the ceremony Elm's errand talk is not stuck on the ceremony lines.
+        interp = Interp('NewBarkTown_Lab_hns', vars={LAB: 5, CEREMONY: 8},
+                        flags={BALL_OWED, BALL_GOT, 'FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED'})
+        interp.run('NewBarkTown_Lab_EventScript_Elm')
+        self.assertIn('NewBarkTown_Lab_Text_ElmStudyingEgg', interp.messages)
+
+    def test_master_ball_handoff_keeps_the_interim_ceremony_activation_only(self):
+        lab = Interp('NewBarkTown_Lab_hns', flags={BALL_OWED})
         lab.run('NewBarkTown_Lab_EventScript_Elm')
         self.assertEqual(lab.vars[CEREMONY], 5)
-        self.assertNotIn('FLAG_HIDE_ECRUTEAK_SILVER', lab.written())
-        scene = _label_block(raw_text('EcruteakCity_hns'), 'EcruteakCity_Trigger_Silver')
-        for state in (THEATER, CEREMONY, 'VAR_NEWBARKTOWN_LABSTATE'):
-            self.assertNotIn(state, scene)
-        trigger = [e for e in json.loads((MAPS / 'EcruteakCity_hns/map.json').read_text())['coord_events']
-                   if e['script'] == 'EcruteakCity_Trigger_Silver']
-        self.assertEqual([(e['x'], e['y'], e['var']) for e in trigger], [(39, 41, 'VAR_TEMP_0')])
+        self.assertIn('NewBarkTown_Lab_Text_KimonoGirls', lab.messages)
+        self.assertIn('FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS', lab.written())
+        self.assertFalse(lab.written() & {THEATER, 'FLAG_HIDE_ECRUTEAK_SILVER', 'FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS',
+                                          LAB})
+        self.assertIn('INTERIM', raw_text('NewBarkTown_Lab_hns'))
+        # The waiting line plays only while the ceremony is activated and unfinished.
+        for ceremony, expected in ((0, False), (4, False), (5, True), (7, True), (8, False)):
+            interp = Interp('NewBarkTown_Lab_hns', vars={LAB: 5, CEREMONY: ceremony},
+                            flags={BALL_OWED, BALL_GOT})
+            interp.run('NewBarkTown_Lab_EventScript_Elm')
+            self.assertEqual('NewBarkTown_Lab_Text_KimonoWaiting' in interp.messages, expected, ceremony)
+
+    def test_post_league_call_owes_the_ticket_without_touching_the_lab(self):
+        for johto in (True, False):
+            interp = Interp('NewBarkTown_hns', 'NewBarkTown_Lab_hns', johto=johto,
+                            vars={'VAR_NEWBARK_TOWN_STATE': 6, LAB: 5})
+            interp.run('NewBarkTown_EventScript_ElmCallAfterLeague')
+            self.assertEqual(interp.vars[LAB], 5)
+            self.assertIn('FLAG_WAYFARER_JOHTO_ELM_TICKET_OWED', interp.flags)
+            interp.run('NewBarkTown_Lab_EventScript_Elm')
+            self.assertIn('NewBarkTown_Lab_Text_ElmGiveTicket1', interp.messages, johto)
+            self.assertIn('FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED', interp.flags)
+            interp.messages.clear()
+            interp.run('NewBarkTown_Lab_EventScript_Elm')
+            self.assertNotIn('NewBarkTown_Lab_Text_ElmGiveTicket1', interp.messages)
+
+    def test_gym_boy_never_blocks_and_clair_and_the_den_need_no_other_badges(self):
+        text = raw_text('BlackthornCity_hns')
+        self.assertNotIn('MAP_SCRIPT_ON_LOAD', text)
+        self.assertNotIn('MoveGymBoy', text)
+        self.assertNotRegex(text, 'FLAG_BADGE0[567]_GET')
+        self.assertNotRegex(raw_text('BlackthornCity_Gym_hns'), 'FLAG_BADGE0[567]_GET')
+        self.assertNotRegex(raw_text('DragonsDen_Shrine_hns'), 'FLAG_BADGE0[567]_GET')
+        for state, line in ((1, 'BlackthornCity_Text_ClairIsIn'), (2, 'BlackthornCity_Text_ClairIsBeaten')):
+            interp = Interp('BlackthornCity_hns', vars={'VAR_BLACKTHORN_CITY_STATE': state})
+            interp.run('BlackthornCity_EventScript_GymBoy')
+            self.assertEqual(interp.messages, [line])
+        # Clair, then the Den, with no other badge.
+        gym = Interp('BlackthornCity_Gym_hns', vars={'VAR_BLACKTHORN_CITY_STATE': 1})
+        gym.run('BlackthornGym_EventScript_Clair')
+        self.assertEqual(gym.vars['VAR_BLACKTHORN_CITY_STATE'], 2)
+        self.assertEqual(len(gym.battles), 1)
 
     def test_miracle_seed_is_given_once_before_and_after_falkner(self):
         for falkner_first in (False, True):
