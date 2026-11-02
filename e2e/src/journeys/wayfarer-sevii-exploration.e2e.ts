@@ -25,10 +25,9 @@ const waitForFerry = async (game: GameSession, destination: GameMap): Promise<vo
 const openSeviiMenu = async (game: GameSession): Promise<void> => {
   await game.player.interact()
   await game.wait.frames(30)
-  // The sailor's menu lists the ship in port first (the S.S. Aqua by day, once the Ticket is held and the Johto
-  // start's maiden voyage is over), then SEVII ISLANDS.
-  const shipInPort =
-    (await game.inventory.contains("ssTicket")) && (await game.story.var("ssAquaState")) >= 8
+  // The sailor's menu lists the ship in port first (the S.S. Aqua by day, once the Johto start's maiden voyage is
+  // over; the Ticket gates boarding, not the berth), then SEVII ISLANDS.
+  const shipInPort = (await game.story.var("ssAquaState")) >= 8
   if (shipInPort) {
     await game.controls.press("down")
     await game.wait.frames(10)

@@ -6,9 +6,10 @@
 
 @ A sailor's talk, shared by every dock and launch port. The caller has run lock and faceplayer, and sets
 @ VAR_0x8004 to FERRY_BERTH_DOCK or FERRY_BERTH_LAUNCH. Returns VAR_RESULT TRUE once the voyage state is set and
-@ the caller should walk the player aboard; FALSE after any refusal (the sailor has already said why).
+@ the caller should walk the player aboard (the offered ship is snapshotted in VAR_0x8005); FALSE after any refusal (the sailor has already said why).
 Ferry_EventScript_SailorTalk::
 	specialvar VAR_RESULT, Ferry_GetBerthShip
+	copyvar VAR_0x8005, VAR_RESULT
 	goto_if_eq VAR_RESULT, FERRY_SHIP_NONE, Ferry_EventScript_SailorNoShip
 	checkitem ITEM_SS_TICKET
 	goto_if_eq VAR_RESULT, FALSE, Ferry_EventScript_SailorNoTicket

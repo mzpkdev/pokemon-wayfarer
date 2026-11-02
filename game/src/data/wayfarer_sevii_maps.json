@@ -19042,7 +19042,7 @@
           "label": "Ferry_EventScript_LaunchSailor",
           "kind": "script_symbol",
           "path": "data/scripts/wayfarer_ferry.inc",
-          "sha256": "023ef4a40f97b40143bc76c2fbaf4e0ef037db6213e8f6025d30a4f899d789c8"
+          "sha256": "93768968486435dac94ada13ac235e09424aa023dee1a78b9e41d7d7565f43e8"
         },
         {
           "label": "CalculatePlayerPartyCount",

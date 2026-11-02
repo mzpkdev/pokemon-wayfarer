@@ -661,11 +661,15 @@ def recovery_and_ferry_report(root: Path, enabled_ids: set[str], release_enabled
         for destination, target in expected_rows:
             if not re.search(rf"\[{destination}\]\s*=\s*\{{\s*MAP_GROUP\({target}\),\s*MAP_NUM\({target}\),\s*0x08,\s*0x05", seagallop):
                 raise AuditError(f"Wayfarer ferry has wrong {destination} target or arrival tile")
-        for name, item, gate in (("BirthIsland", "ITEM_AURORA_TICKET", "ITEM_AURORA_TICKET"),
+        # Birth Island needs the Aurora Ticket alone (no Aqua gate, no flag); Navel Rock the League clear and the
+        # Mystic Ticket. tools/wayfarer_hoenn_entry/generate.py pins the exact Birth Island predicate.
+        for name, item, gate in (("BirthIsland", "ITEM_AURORA_TICKET", None),
                                  ("NavelRock", "ITEM_MYSTIC_TICKET", "FLAG_SYS_GAME_CLEAR")):
             match = re.search(rf"u16\s+WayfarerCanSailTo{name}\(void\)\s*\{{([\s\S]*?)\n\}}", ferry_source)
-            if match is None or item not in match.group(1) or gate not in match.group(1):
+            if match is None or item not in match.group(1) or (gate is not None and gate not in match.group(1)):
                 raise AuditError(f"Wayfarer ferry lacks the reviewed {name} read-only eligibility predicate")
+            if gate is None and re.search(r"(?:FlagGet|WayfarerCanUse)", match.group(1)):
+                raise AuditError(f"Wayfarer ferry {name} eligibility predicate has a gate beyond its ticket")
             if re.search(r"(?:FlagSet|FlagClear|AddBagItem|RemoveBagItem|VarSet)", match.group(1)):
                 raise AuditError(f"Wayfarer ferry {name} eligibility predicate writes persistent state")
         for path in ferry_inputs[2:]:

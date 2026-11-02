@@ -12,12 +12,15 @@
 #include "wayfarer_persistence.h"
 #include "wayfarer_sevii_ferry.h"
 #include "test/test.h"
+#include "constants/event_objects.h"
 #include "constants/field_specials.h"
 #include "constants/flags.h"
 #include "constants/heal_locations.h"
 #include "constants/items.h"
 #include "constants/maps.h"
+#include "constants/vars.h"
 #include "constants/wayfarer_ferry.h"
+#include "constants/wayfarer_persistence.h"
 
 #if IS_WAYFARER
 
@@ -92,17 +95,21 @@ TEST("Ferry: the schedule table returns the by-day and by-night ship of every po
 TEST("Ferry: ships not yet in service are returned as none, whatever the table says")
 {
     ResetFerryFixture();
-    // No Ticket and no captain's reward: only the Tidal sails.
-    EXPECT_EQ(Ferry_ShipAt(FERRY_PORT_VERMILION, 12), FERRY_SHIP_NONE);
+    // No captain's reward: the Anne is out. The Aqua and the Tidal are in service even without a Ticket
+    // (the Ticket gates boarding at the gangway, not the berth).
+    EXPECT_EQ(Ferry_ShipAt(FERRY_PORT_VERMILION, 12), FERRY_SHIP_AQUA);
+    EXPECT_EQ(Ferry_ShipAt(FERRY_PORT_VERMILION, 22), FERRY_SHIP_NONE);
     EXPECT_EQ(Ferry_ShipAt(FERRY_PORT_SEVEN_ISLAND, 12), FERRY_SHIP_NONE);
     EXPECT_EQ(Ferry_ShipAt(FERRY_PORT_SEVEN_ISLAND, 22), FERRY_SHIP_TIDAL);
     EXPECT_EQ(Ferry_ShipAt(FERRY_PORT_SLATEPORT, 12), FERRY_SHIP_TIDAL);
     EXPECT_EQ(Ferry_ShipAt(FERRY_PORT_ONE_ISLAND, 12), FERRY_SHIP_NONE);
-    // The scheduled ship is still the table's answer.
+    // A Johto start whose maiden voyage is pending has no Aqua anywhere.
+    gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_NEW_BARK;
+    EXPECT_EQ(Ferry_ShipAt(FERRY_PORT_VERMILION, 12), FERRY_SHIP_NONE);
     EXPECT_EQ(Ferry_ScheduledShip(FERRY_PORT_VERMILION, 12), FERRY_SHIP_AQUA);
 }
 
-TEST("Ferry: the Ticket is the only gate of the Aqua for every start, and a Johto start also waits for the maiden voyage")
+TEST("Ferry: only a Johto start's pending maiden voyage keeps the Aqua out of service, and the Ticket is never used up")
 {
     static const u16 sStarts[] = {ORIGIN_NEW_BARK, ORIGIN_LITTLEROOT, ORIGIN_PALLET};
     u32 start, state, ticket;
@@ -122,9 +129,8 @@ TEST("Ferry: the Ticket is the only gate of the Aqua for every start, and a Joht
                 if (ticket)
                     EXPECT(AddBagItem(ITEM_SS_TICKET, 1));
                 EXPECT_EQ(Ferry_IsMaidenVoyagePending(), pending);
-                EXPECT_EQ(Ferry_ShipInService(FERRY_SHIP_AQUA), ticket && !pending);
-                EXPECT_EQ(Ferry_ShipAt(FERRY_PORT_OLIVINE, 12), ticket && !pending ? FERRY_SHIP_AQUA : FERRY_SHIP_NONE);
-                // The Ticket is checked, never used up.
+                EXPECT_EQ(Ferry_ShipInService(FERRY_SHIP_AQUA), !pending);
+                EXPECT_EQ(Ferry_ShipAt(FERRY_PORT_OLIVINE, 12), pending ? FERRY_SHIP_NONE : FERRY_SHIP_AQUA);
                 EXPECT_EQ(CountTotalItemQuantityInBag(ITEM_SS_TICKET), ticket);
             }
         }
@@ -530,6 +536,219 @@ TEST("Ferry: the Lilycove arrival tile is a valid Hoenn arrival, so going ashore
                                      8, 11, HEAL_LOCATION_LILYCOVE_CITY));
     EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_HOENN);
     EXPECT(WayfarerHoennStateIsInitialized());
+}
+
+
+static void StandAt(u32 mapGroup, u32 mapNum)
+{
+    gSaveBlock1Ptr->location.mapGroup = mapGroup;
+    gSaveBlock1Ptr->location.mapNum = mapNum;
+}
+
+static void LoadBerth(u32 mapGroup, u32 mapNum, u32 hour)
+{
+    StandAt(mapGroup, mapNum);
+    FakeRtc_ManuallySetTime(1, hour, 0, 0);
+    Ferry_OnMapLoad();
+}
+
+TEST("Ferry: each dock berth shows the scheduled ship's graphics by day and by night, or hides when empty")
+{
+    ResetFerryFixture();
+    PutEveryShipInService();
+    // Olivine: Aqua by day, Tidal by night.
+    LoadBerth(MAP_GROUP(MAP_OLIVINE_CITY_PORT_INSIDE_HNS), MAP_NUM(MAP_OLIVINE_CITY_PORT_INSIDE_HNS), 12);
+    EXPECT_EQ(VarGet(VAR_OBJ_GFX_ID_E), OBJ_EVENT_GFX_SS_AQUA_HNS);
+    EXPECT(!FlagGet(FLAG_TEMP_1F));
+    LoadBerth(MAP_GROUP(MAP_OLIVINE_CITY_PORT_INSIDE_HNS), MAP_NUM(MAP_OLIVINE_CITY_PORT_INSIDE_HNS), 22);
+    EXPECT_EQ(VarGet(VAR_OBJ_GFX_ID_E), OBJ_EVENT_GFX_SS_TIDAL);
+    // Vermilion: Aqua by day, the Anne by night, one row further out so she clears the sailor and the walkway.
+    LoadBerth(MAP_GROUP(MAP_VERMILION_CITY_PORT_INSIDE_HNS), MAP_NUM(MAP_VERMILION_CITY_PORT_INSIDE_HNS), 12);
+    EXPECT_EQ(VarGet(VAR_OBJ_GFX_ID_E), OBJ_EVENT_GFX_SS_AQUA_HNS);
+    EXPECT(!FlagGet(FLAG_TEMP_1F));
+    LoadBerth(MAP_GROUP(MAP_VERMILION_CITY_PORT_INSIDE_HNS), MAP_NUM(MAP_VERMILION_CITY_PORT_INSIDE_HNS), 22);
+    EXPECT_EQ(VarGet(VAR_OBJ_GFX_ID_E), OBJ_EVENT_GFX_SS_ANNE);
+    EXPECT(!FlagGet(FLAG_TEMP_1F));
+    // Slateport: Tidal by day, Aqua by night; Lilycove: Aqua by day, Tidal by night.
+    LoadBerth(MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR), MAP_NUM(MAP_SLATEPORT_CITY_HARBOR), 12);
+    EXPECT_EQ(VarGet(VAR_OBJ_GFX_ID_E), OBJ_EVENT_GFX_SS_TIDAL);
+    LoadBerth(MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR), MAP_NUM(MAP_SLATEPORT_CITY_HARBOR), 22);
+    EXPECT_EQ(VarGet(VAR_OBJ_GFX_ID_E), OBJ_EVENT_GFX_SS_AQUA_HNS);
+    LoadBerth(MAP_GROUP(MAP_LILYCOVE_CITY_HARBOR), MAP_NUM(MAP_LILYCOVE_CITY_HARBOR), 12);
+    EXPECT_EQ(VarGet(VAR_OBJ_GFX_ID_E), OBJ_EVENT_GFX_SS_AQUA_HNS);
+    LoadBerth(MAP_GROUP(MAP_LILYCOVE_CITY_HARBOR), MAP_NUM(MAP_LILYCOVE_CITY_HARBOR), 22);
+    EXPECT_EQ(VarGet(VAR_OBJ_GFX_ID_E), OBJ_EVENT_GFX_SS_TIDAL);
+    // An empty berth hides its ship: the Anne is out of service until her reward.
+    FlagClear(FLAG_WAYFARER_SS_ANNE_CAPTAIN_REWARDED);
+    LoadBerth(MAP_GROUP(MAP_VERMILION_CITY_PORT_INSIDE_HNS), MAP_NUM(MAP_VERMILION_CITY_PORT_INSIDE_HNS), 22);
+    EXPECT(FlagGet(FLAG_TEMP_1F));
+    // The maiden voyage keeps Olivine's Aqua in the water even at night, for the Johto start.
+    gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_NEW_BARK;
+    LoadBerth(MAP_GROUP(MAP_OLIVINE_CITY_PORT_INSIDE_HNS), MAP_NUM(MAP_OLIVINE_CITY_PORT_INSIDE_HNS), 22);
+    EXPECT_EQ(VarGet(VAR_OBJ_GFX_ID_E), OBJ_EVENT_GFX_SS_AQUA_HNS);
+    EXPECT(!FlagGet(FLAG_TEMP_1F));
+    // The berth's flag is not left set for the next map.
+    LoadBerth(MAP_GROUP(MAP_VERMILION_CITY_PORT_INSIDE_HNS), MAP_NUM(MAP_VERMILION_CITY_PORT_INSIDE_HNS), 22);
+}
+
+TEST("Ferry: a berth whose ship changes is removed and spawned again, never re-skinned in place")
+{
+    // Re-skinning keeps the old sprite's tile allocation (60 tiles), and the Anne needs 128.
+    EXPECT(Ferry_BerthNeedsRespawn(FERRY_SHIP_AQUA + 1, FERRY_SHIP_ANNE));
+    EXPECT(Ferry_BerthNeedsRespawn(FERRY_SHIP_ANNE + 1, FERRY_SHIP_AQUA));
+    EXPECT(Ferry_BerthNeedsRespawn(FERRY_SHIP_AQUA + 1, FERRY_SHIP_NONE));
+    EXPECT(!Ferry_BerthNeedsRespawn(FERRY_SHIP_AQUA + 1, FERRY_SHIP_AQUA));
+    EXPECT(!Ferry_BerthNeedsRespawn(0, FERRY_SHIP_AQUA));
+}
+
+TEST("Ferry: the sailor boards the ship that was announced even when the table flips mid-dialogue")
+{
+    const struct WayfarerVoyage *voyage = Ferry_GetVoyage();
+
+    ResetFerryFixture();
+    PutEveryShipInService();
+    StandAt(MAP_GROUP(MAP_VERMILION_CITY_PORT_INSIDE_HNS), MAP_NUM(MAP_VERMILION_CITY_PORT_INSIDE_HNS));
+    FakeRtc_ManuallySetTime(1, 19, 59, 0);
+    gSpecialVar_0x8005 = Ferry_GetBerthShip();
+    EXPECT_EQ(gSpecialVar_0x8005, FERRY_SHIP_AQUA);
+    EXPECT(Ferry_BufferBoarding());
+    // 20:00 arrives while the sailor is still talking.
+    FakeRtc_ManuallySetTime(1, 20, 0, 0);
+    EXPECT_EQ(Ferry_GetBerthShip(), FERRY_SHIP_ANNE);
+    EXPECT(Ferry_Board());
+    EXPECT_EQ((u32)voyage->ship, FERRY_SHIP_AQUA);
+    EXPECT_EQ((u32)voyage->stop, 1);
+}
+
+TEST("Ferry: the launch ports board the ship at anchor, and an empty berth refuses")
+{
+    const struct WayfarerVoyage *voyage = Ferry_GetVoyage();
+
+    ResetFerryFixture();
+    PutEveryShipInService();
+    // One Island by day: the Anne, stop 1 of her loop.
+    StandAt(MAP_GROUP(MAP_ONE_ISLAND_HARBOR), MAP_NUM(MAP_ONE_ISLAND_HARBOR));
+    FakeRtc_ManuallySetTime(1, 12, 0, 0);
+    gSpecialVar_0x8005 = Ferry_GetBerthShip();
+    EXPECT(Ferry_Board());
+    EXPECT_EQ((u32)voyage->ship, FERRY_SHIP_ANNE);
+    EXPECT_EQ((u32)voyage->stop, 1);
+    Ferry_ClearVoyage();
+    // ... but 0:00-4:00 the berth is empty and boarding is refused.
+    FakeRtc_ManuallySetTime(1, 2, 0, 0);
+    gSpecialVar_0x8005 = Ferry_GetBerthShip();
+    EXPECT_EQ(gSpecialVar_0x8005, FERRY_SHIP_NONE);
+    EXPECT(!Ferry_Board());
+    EXPECT(!Ferry_IsAboard());
+    // Seven Island: the Anne by day, the Tidal by night (which readies Hoenn's state for its maps).
+    StandAt(MAP_GROUP(MAP_SEVEN_ISLAND_HARBOR), MAP_NUM(MAP_SEVEN_ISLAND_HARBOR));
+    FakeRtc_ManuallySetTime(1, 12, 0, 0);
+    gSpecialVar_0x8005 = Ferry_GetBerthShip();
+    EXPECT(Ferry_Board());
+    EXPECT_EQ((u32)voyage->ship, FERRY_SHIP_ANNE);
+    EXPECT_EQ((u32)voyage->stop, 3);
+    Ferry_ClearVoyage();
+    FakeRtc_ManuallySetTime(1, 22, 0, 0);
+    gSpecialVar_0x8005 = Ferry_GetBerthShip();
+    EXPECT(Ferry_BufferBoarding());
+    EXPECT(Ferry_Board());
+    EXPECT_EQ((u32)voyage->ship, FERRY_SHIP_TIDAL);
+    EXPECT_EQ((u32)voyage->stop, 2);
+    EXPECT(WayfarerHoennStateIsInitialized());
+    Ferry_ClearVoyage();
+    // Melemele: the Anne, stop 2.
+    StandAt(MAP_GROUP(MAP_MELEMELE_ISLE_HNS), MAP_NUM(MAP_MELEMELE_ISLE_HNS));
+    FakeRtc_ManuallySetTime(1, 12, 0, 0);
+    gSpecialVar_0x8005 = Ferry_GetBerthShip();
+    EXPECT(Ferry_Board());
+    EXPECT_EQ((u32)voyage->ship, FERRY_SHIP_ANNE);
+    EXPECT_EQ((u32)voyage->stop, 2);
+    // Boarding needs a ship in service: without the reward there is nothing to board at Melemele.
+    Ferry_ClearVoyage();
+    FlagClear(FLAG_WAYFARER_SS_ANNE_CAPTAIN_REWARDED);
+    gSpecialVar_0x8005 = Ferry_GetBerthShip();
+    EXPECT(!Ferry_Board());
+}
+
+TEST("Ferry: a blackout aboard returns the player to the last heal location with the voyage cleared")
+{
+    ResetFerryFixture();
+    SetLastHealLocationWarp(HEAL_LOCATION_OLIVINE_CITY_HNS);
+    EXPECT(Ferry_BoardAt(FERRY_PORT_VERMILION, FERRY_SHIP_AQUA, 1000));
+    SetWarpDestinationToLastHealLocation();
+    EXPECT(!Ferry_IsAboard());
+    EXPECT_EQ(gSaveBlock1Ptr->lastHealLocation.mapNum, MAP_NUM(MAP_OLIVINE_CITY_HNS));
+}
+
+TEST("Ferry: the Anne's first departure: getting off before cast-off leaves the player in Vermilion with it cleared")
+{
+    const struct WayfarerVoyage *voyage = Ferry_GetVoyage();
+
+    ResetFerryFixture();
+    FlagSet(FLAG_WAYFARER_SS_ANNE_CAPTAIN_REWARDED);
+    StandAt(MAP_GROUP(MAP_SSANNE_CAPTAINS_OFFICE), MAP_NUM(MAP_SSANNE_CAPTAINS_OFFICE));
+    EXPECT(Ferry_ArmAnneDeparture());
+    EXPECT(voyage->annePending != 0);
+    // Walking down the gangway: the Vermilion berth map loads with the voyage still set.
+    StandAt(MAP_GROUP(MAP_VERMILION_CITY_PORT_INSIDE_HNS), MAP_NUM(MAP_VERMILION_CITY_PORT_INSIDE_HNS));
+    Ferry_OnMapLoad();
+    EXPECT(!Ferry_IsAboard());
+    EXPECT(voyage->annePending == 0);
+    EXPECT(!Ferry_IsAnnePendingAtVermilion());
+    EXPECT_EQ(gSaveBlock1Ptr->lastHealLocation.mapNum, MAP_NUM(MAP_VERMILION_CITY_HNS));
+}
+
+TEST("Ferry: going ashore at Melemele by the gangway runs the Alola first-visit flags once")
+{
+    ResetFerryFixture();
+    FlagClear(FLAG_VISITED_ALOLA);
+    FlagClear(FLAG_HIDE_TAPU_KOKO);
+    FlagClear(FLAG_HIDE_FLYOVER);
+    EXPECT(Ferry_BoardAt(FERRY_PORT_SEVEN_ISLAND, FERRY_SHIP_ANNE, 0));
+    StandAt(MAP_GROUP(MAP_SSANNE_1F_CORRIDOR), MAP_NUM(MAP_SSANNE_1F_CORRIDOR));
+    StandAt(MAP_GROUP(MAP_MELEMELE_ISLE_HNS), MAP_NUM(MAP_MELEMELE_ISLE_HNS));
+    Ferry_OnMapLoad();
+    EXPECT(!Ferry_IsAboard());
+    EXPECT(FlagGet(FLAG_HIDE_TAPU_KOKO));
+    EXPECT(FlagGet(FLAG_HIDE_FLYOVER));
+    EXPECT(FlagGet(FLAG_HIDE_SAMSONOAK_INTRO));
+    EXPECT_EQ(gSaveBlock1Ptr->lastHealLocation.mapNum, MAP_NUM(MAP_MELEMELE_ISLE_HNS));
+}
+
+TEST("Ferry: the Lilycove charters are offered by their conditions, and none means boarding directly")
+{
+    ResetFerryFixture();
+    EXPECT_EQ(GetFerryLilycoveCharterCount(), 0);
+    EXPECT(AddBagItem(ITEM_EON_TICKET, 1));
+    EXPECT_EQ(GetFerryLilycoveCharterCount(), 1);
+    EXPECT(AddBagItem(ITEM_OLD_SEA_MAP, 1));
+    EXPECT_EQ(GetFerryLilycoveCharterCount(), 2);
+    // The Battle Frontier is Scott's invite: the Hoenn-bank flag his scene on the Tidal sets.
+    FlagSet(HOENN_FLAG_ID(0x1D0));
+    EXPECT_EQ(GetFerryLilycoveCharterCount(), 3);
+    EXPECT(RemoveBagItem(ITEM_EON_TICKET, 1));
+    EXPECT(RemoveBagItem(ITEM_OLD_SEA_MAP, 1));
+    EXPECT_EQ(GetFerryLilycoveCharterCount(), 1);
+    FlagClear(HOENN_FLAG_ID(0x1D0));
+    EXPECT_EQ(GetFerryLilycoveCharterCount(), 0);
+    // No game-clear gate and no FLAG_ENABLE_SHIP_* flags.
+    EXPECT(!FlagGet(FLAG_SYS_GAME_CLEAR));
+    EXPECT(AddBagItem(ITEM_EON_TICKET, 1));
+    EXPECT_EQ(GetFerryLilycoveCharterCount(), 1);
+}
+
+TEST("Ferry: the exit checks bring a stale phase up to date, and the poll still announces it")
+{
+    struct WayfarerVoyage voyage = {0};
+
+    ResetFerryFixture();
+    FakeRtc_ManuallySetTime(1, 12, 0, 0);
+    EXPECT(Ferry_BoardAt(FERRY_PORT_VERMILION, FERRY_SHIP_AQUA, Ferry_GetNow() - 31));
+    // Past cast-off by a minute: a walking player must not find the exit open.
+    EXPECT(Ferry_IsAtSeaForScript());
+    EXPECT(!Ferry_CanDisembark());
+    EXPECT_EQ((u32)Ferry_GetVoyage()->phase, FERRY_PHASE_SEA);
+    Test_Ferry_SetVoyage(&voyage);
 }
 
 #endif // IS_WAYFARER

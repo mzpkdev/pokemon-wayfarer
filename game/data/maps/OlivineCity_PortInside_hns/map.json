@@ -123,7 +123,7 @@
     {
       "type": "sign",
       "x": 7,
-      "y": 14,
+      "y": 15,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "OlivinePort_EventScript_DepartureBoard"

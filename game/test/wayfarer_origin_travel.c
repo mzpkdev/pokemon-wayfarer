@@ -35,8 +35,8 @@ TEST("Wayfarer New Bark Aqua policy depends only on its real maiden voyage")
             {
                 if (ticket)
                     EXPECT(AddBagItem(ITEM_SS_TICKET, 1));
-                // The Ticket is the only gate; a Johto start also waits for the maiden voyage to end.
-                EXPECT_EQ(Ferry_ShipInService(FERRY_SHIP_AQUA), ticket && state >= 8);
+                // Only a Johto start's pending maiden voyage keeps the Aqua out of service; the Ticket gates boarding.
+                EXPECT_EQ(Ferry_ShipInService(FERRY_SHIP_AQUA), state >= 8);
                 EXPECT(!WayfarerCanReceiveSlateportTicket());
                 EXPECT(WayfarerCanUseAquaMaidenVoyage());
                 EXPECT_EQ(VarGet(VAR_SSAQUA_STATE), state);
@@ -74,8 +74,8 @@ TEST("Wayfarer Littleroot Aqua policy unlocks on partner receipt without maiden 
             {
                 if (ticket)
                     EXPECT(AddBagItem(ITEM_SS_TICKET, 1));
-                // The Ticket alone gates the Aqua, whatever the partner receipt says.
-                EXPECT_EQ(Ferry_ShipInService(FERRY_SHIP_AQUA), ticket);
+                // The Aqua is in service for this start whatever the partner receipt and the Ticket say.
+                EXPECT(Ferry_ShipInService(FERRY_SHIP_AQUA));
                 EXPECT_EQ(WayfarerCanReceiveSlateportTicket(), receipt);
                 EXPECT(!WayfarerCanUseAquaMaidenVoyage());
                 EXPECT_EQ(VarGet(VAR_SSAQUA_STATE), state);

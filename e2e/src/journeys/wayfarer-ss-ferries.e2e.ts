@@ -134,4 +134,43 @@ describe.sequential("Wayfarer S.S. ferries", () => {
     await game.wait.forMap("vermilion-port-inside")
     await expect(game.state.read()).resolves.toMatchObject({ ready: true, player: { x: 8, y: 9 } })
   })
+  it("offers Lilycove's Battle Frontier charter once Scott has invited the player, next to the ship in port", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { facing: "up", position: { map: "lilycove-city-harbor", x: 8, y: 11 } },
+      story: { vars: { ssAquaState: 8 }, flags: { metScottOnSsTidal: true } },
+      bag: { items: { ssTicket: 1 } },
+      determinism: { textSpeed: "instant" },
+    })
+    // Rows: the ship in port (the Aqua by day), BATTLE FRONTIER, CANCEL. Pick the charter and confirm.
+    await game.player.interact()
+    await game.wait.frames(60)
+    await game.controls.press("a")
+    await game.wait.frames(30)
+    await game.controls.press("a")
+    await game.wait.frames(30)
+    await game.controls.press("down")
+    await game.wait.frames(10)
+    await game.controls.press("a")
+    for (let attempt = 0; attempt < 120; attempt++) {
+      if (await readyOn(game, "battle-frontier-outside-west")) break
+      await game.wait.frames(30)
+      await game.controls.press("a")
+    }
+    await expect(game.state.read()).resolves.toMatchObject({
+      map: { name: "battle-frontier-outside-west" },
+    })
+  })
+
+  it("boards the ship in port directly when no charter is available", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { facing: "up", position: { map: "lilycove-city-harbor", x: 8, y: 11 } },
+      story: { vars: { ssAquaState: 8 } },
+      bag: { items: { ssTicket: 1 } },
+      determinism: { textSpeed: "instant" },
+    })
+    await boardFerryAtDock(game)
+    await waitAboard(game, "ss-aqua-1f")
+  })
 })

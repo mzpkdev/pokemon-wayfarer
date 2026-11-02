@@ -168,6 +168,8 @@ static const struct FerryShip sShips[] =
 // The berth object the minute refresh still has to apply (a dialogue holds it back).
 static EWRAM_DATA u8 sBerthShownPlusOne = 0;  // the ship the berth shows, plus one; zero until the berth is set up
 static EWRAM_DATA bool8 sBerthDirty = FALSE;
+// A transition applied quietly (by a check that must not act on a stale phase) still gets its announcement.
+static EWRAM_DATA u8 sPendingAnnounce = 0;
 
 static struct WayfarerVoyage *Voyage(void)
 {
@@ -212,7 +214,8 @@ bool8 Ferry_ShipInService(u8 ship)
     switch (ship)
     {
     case FERRY_SHIP_AQUA:
-        return CheckBagHasItem(ITEM_SS_TICKET, 1) && !Ferry_IsMaidenVoyagePending();
+        // The Ticket gates boarding at every gangway, not whether the ship is in service.
+        return !Ferry_IsMaidenVoyagePending();
     case FERRY_SHIP_ANNE:
         return FlagGet(FLAG_WAYFARER_SS_ANNE_CAPTAIN_REWARDED);
     case FERRY_SHIP_TIDAL:
@@ -286,6 +289,19 @@ bool8 Ferry_IsAboard(void)
     return Voyage()->ship != FERRY_SHIP_NONE;
 }
 
+// A walking player must never act on a phase the clock has passed: the exit checks bring the voyage up to date
+// first, and the field poll announces whatever they applied.
+static void AdvanceQuietly(void)
+{
+    u8 announce;
+
+    if (Voyage()->ship == FERRY_SHIP_NONE)
+        return;
+    announce = Ferry_Advance(Ferry_GetNow());
+    if (announce != FERRY_ANNOUNCE_NONE)
+        sPendingAnnounce = announce;
+}
+
 bool8 Ferry_IsAtSea(void)
 {
     return Voyage()->ship != FERRY_SHIP_NONE && Voyage()->phase == FERRY_PHASE_SEA;
@@ -306,6 +322,7 @@ void Ferry_InitNewGame(void)
 void Ferry_ClearVoyage(void)
 {
     memset(Voyage(), 0, sizeof(struct WayfarerVoyage));
+    sPendingAnnounce = FERRY_ANNOUNCE_NONE;
     sBerthDirty = TRUE;
 }
 
@@ -439,12 +456,45 @@ u16 Ferry_GetBerthShip(void)
     return GetShownShip(port);
 }
 
+// The Anne is 128x64 (four rows tall), the Aqua and the Tidal 96x40. Anchored on the Aqua's tile she would cover
+// Vermilion's gangway sailor at (8,10) and the walkway, so at Vermilion she sits one row further out on the berth's
+// water: rows 11-14 of the open water (every tile from row 11 down is water), clear of row 10's sailor tile.
+#define VERMILION_BERTH_X       8
+#define VERMILION_BERTH_Y       13
+#define VERMILION_BERTH_ANNE_Y  14
+
+// Swapping the graphics of a live berth object keeps the sprite's old tile allocation (60 tiles for the Aqua, 128
+// needed by the Anne), so a changed ship is a removal and a fresh spawn.
+bool8 Ferry_BerthNeedsRespawn(u8 shownPlusOne, u8 ship)
+{
+    return shownPlusOne != 0 && shownPlusOne != ship + 1;
+}
+
+static void SetBerthTemplateCoords(u8 localId, s16 x, s16 y)
+{
+    u32 i;
+
+    for (i = 0; i < OBJECT_EVENT_TEMPLATES_COUNT; i++)
+    {
+        struct ObjectEventTemplate *template = &gSaveBlock1Ptr->objectEventTemplates[i];
+
+        if (template->localId == localId)
+        {
+            template->x = x;
+            template->y = y;
+            return;
+        }
+    }
+}
+
 static void ApplyBerth(bool8 live)
 {
     u8 port = GetBerthPort();
     u8 ship;
+    u8 previousPlusOne = sBerthShownPlusOne;
     u16 graphicsId;
     u8 objectId;
+    bool8 exists;
 
     sBerthDirty = FALSE;
     if (port == FERRY_PORT_NONE || sPorts[port].kind != FERRY_BERTH_DOCK)
@@ -456,19 +506,20 @@ static void ApplyBerth(bool8 live)
         FlagSet(FERRY_BERTH_HIDE_FLAG);
     else
         FlagClear(FERRY_BERTH_HIDE_FLAG);
+    if (port == FERRY_PORT_VERMILION)
+        SetBerthTemplateCoords(sPorts[port].shipLocalId, VERMILION_BERTH_X,
+                               ship == FERRY_SHIP_ANNE ? VERMILION_BERTH_ANNE_Y : VERMILION_BERTH_Y);
     sBerthShownPlusOne = ship + 1;
-    sBerthDirty = FALSE;
     if (!live)
         return;
-    if (ship == FERRY_SHIP_NONE)
+    exists = !TryGetObjectEventIdByLocalIdAndMap(sPorts[port].shipLocalId, gSaveBlock1Ptr->location.mapNum,
+                                                 gSaveBlock1Ptr->location.mapGroup, &objectId);
+    if (exists && (ship == FERRY_SHIP_NONE || Ferry_BerthNeedsRespawn(previousPlusOne, ship) || previousPlusOne == 0))
     {
         RemoveObjectEventByLocalIdAndMap(sPorts[port].shipLocalId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
-        return;
+        exists = FALSE;
     }
-    if (!TryGetObjectEventIdByLocalIdAndMap(sPorts[port].shipLocalId, gSaveBlock1Ptr->location.mapNum,
-                                            gSaveBlock1Ptr->location.mapGroup, &objectId))
-        ObjectEventSetGraphicsId(&gObjectEvents[objectId], graphicsId);
-    else
+    if (ship != FERRY_SHIP_NONE && !exists)
         TrySpawnObjectEvent(sPorts[port].shipLocalId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
 }
 
@@ -515,6 +566,7 @@ void Ferry_OnMinute(void)
 // Anne's home port is Vermilion.
 void Ferry_RefreshAnneWarp(void)
 {
+    AdvanceQuietly();
     const struct WayfarerVoyage *voyage = Voyage();
     const struct FerryPort *port = &sPorts[sShips[FERRY_SHIP_ANNE].homePort];
     const struct FerryShip *anne = &sShips[FERRY_SHIP_ANNE];
@@ -552,9 +604,15 @@ bool8 Ferry_TryStartFieldEvent(void)
     if (voyage->ship == FERRY_SHIP_NONE
      || !Ferry_IsShipMap(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
         return FALSE;
-    if (Ferry_GetNow() < voyage->eventAt)
-        return FALSE;
-    announce = Ferry_Advance(Ferry_GetNow());
+    announce = sPendingAnnounce;
+    sPendingAnnounce = FERRY_ANNOUNCE_NONE;
+    if (Ferry_GetNow() >= voyage->eventAt)
+    {
+        u8 applied = Ferry_Advance(Ferry_GetNow());
+
+        if (applied != FERRY_ANNOUNCE_NONE)
+            announce = applied;
+    }
     if (announce == FERRY_ANNOUNCE_NONE)
         return FALSE;
     if (voyage->ship == FERRY_SHIP_ANNE)
@@ -599,9 +657,11 @@ u16 Ferry_BufferNextShip(void)
     return FALSE;
 }
 
+// The sailor's talk snapshots the offered ship in VAR_0x8005 when it starts, so the ship boarded is the one announced
+// even if the table flips (an hour change) mid-dialogue.
 u16 Ferry_BufferBoarding(void)
 {
-    u8 ship = Ferry_GetBerthShip();
+    u8 ship = gSpecialVar_0x8005;
     u8 port = GetBerthPort();
     u8 stop = Ferry_GetPortStop(ship, port);
 
@@ -616,7 +676,7 @@ u16 Ferry_BufferBoarding(void)
 // Hoenn-source); a refusal changes nothing.
 u16 Ferry_Board(void)
 {
-    u8 ship = Ferry_GetBerthShip();
+    u8 ship = gSpecialVar_0x8005;
     u8 port = GetBerthPort();
 
     if (ship == FERRY_SHIP_NONE || Ferry_GetPortStop(ship, port) == 0xFF)
@@ -640,6 +700,7 @@ void Ferry_WarpAboard(void)
 
 u16 Ferry_IsAtSeaForScript(void)
 {
+    AdvanceQuietly();
     return Ferry_IsAtSea();
 }
 
@@ -662,6 +723,7 @@ static u8 GetDisembarkPort(void)
 
 u16 Ferry_CanDisembark(void)
 {
+    AdvanceQuietly();
     return GetDisembarkPort() != FERRY_PORT_NONE;
 }
 

@@ -15,6 +15,7 @@
 #include "constants/items.h"
 #include "constants/script_menu.h"
 #include "constants/seagallop.h"
+#include "constants/wayfarer_persistence.h"
 
 enum WayfarerVermilionPortChoice
 {
@@ -98,7 +99,8 @@ static bool8 IsCharterAvailable(u8 charter)
     case FERRY_CHARTER_FARAWAY_ISLAND:
         return CheckBagHasItem(ITEM_OLD_SEA_MAP, 1);
     case FERRY_CHARTER_BATTLE_FRONTIER:
-        return FlagGet(FLAG_MET_SCOTT_ON_SS_TIDAL);
+        // Scott's scene on the Tidal sets the Hoenn-bank flag; the HnS-bank constant of the same name is 0.
+        return FlagGet(HOENN_FLAG_ID(0x1D0));
     }
     return FALSE;
 }

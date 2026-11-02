@@ -51,6 +51,7 @@ static void HideMaidenVoyageObjects(void)
 {
     FlagSet(FLAG_HIDE_SSAQUA_CAPTAINS_ROOM_GRANDDAUGHTER);
     FlagSet(FLAG_HIDE_SSAQUA_ROOM_SSE_GRANDDAUGHTER);
+    FlagSet(FLAG_HIDE_SSAQUA_1F_GRANDPA);
 }
 
 static void InitializeLittleroot(void)

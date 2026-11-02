@@ -377,12 +377,12 @@ describe.sequential("HNS S.S. Aqua voyage rewards", () => {
       })
 
       await expect(game.inventory.contains("ssTicket")).resolves.toBe(false)
-      // Without the Ticket the Aqua is not in service: Olivine's sailor names the next ship, and Vermilion's
-      // menu has no ship row (cancel it).
+      // The Ticket gates boarding only: the Aqua is in port by day, and its sailor asks for the Ticket.
+      // At Vermilion the ship is the first row of the menu.
       await game.player.interact()
       if (port.map === "vermilion-port-inside") {
         await game.wait.frames(30)
-        await game.controls.press("b")
+        await game.controls.press("a")
       }
       await finishScript(game)
 

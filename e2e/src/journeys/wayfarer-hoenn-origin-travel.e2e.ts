@@ -10,7 +10,7 @@ import {
 } from "../playbooks/wayfarer-ports"
 
 describe.sequential("Littleroot-origin ferry network", () => {
-  it("grants its Ticket at the Slateport gangway, rides the S.S. Tidal to Lilycove and keeps its own origin state", async () => {
+  it("grants its Ticket at Slateport, rides the S.S. Aqua to Olivine and Vermilion and keeps its own origin state", async () => {
     const game = await GameSession.launch()
     try {
       await game.arrange({
@@ -20,55 +20,67 @@ describe.sequential("Littleroot-origin ferry network", () => {
       })
       await receiveBirchStarter(game, 1)
       const partner = (await game.state.read()).party
-      // The Hoenn start's Ticket moved to the Slateport gangway sailor (the attendant at (8,10)). The
-      // Tidal needs no League: it is Slateport's ship by day.
+      // Slateport's ship at night is the Aqua (Lilycove -> Olivine -> Vermilion lie on its loop). Starting at 4:00
+      // leaves room for three legs before midnight, and the clock never crosses it.
+      await game.clock.setTimeOfDay({ hour: 4, minute: 0, second: 0 })
+      // The Hoenn start's Ticket moved to the Slateport gangway sailor (the attendant at (8,10)).
       await game.player.warp("slateport-city-harbor", 8, 11, "up")
       expect(await game.inventory.contains("ssTicket")).toBe(false)
       await boardFerryAtDock(game)
-      await waitAboard(game, "ss-tidal-corridor")
+      await waitAboard(game, "ss-aqua-1f")
       expect(await game.inventory.contains("ssTicket")).toBe(true)
-      // Boarding the Tidal initialized Hoenn without touching the Johto-side travel state.
-      expect((await game.state.read()).origin).toMatchObject({
-        id: 2,
-        maidenVoyageState: 0,
-        hoennInitialized: true,
-      })
 
+      // Slateport -> Lilycove (stay aboard) -> Olivine.
       await sailFerryLeg(game)
-      await goAshoreFromExitSailor(game, "down", "lilycove-city-harbor")
+      await sailFerryLeg(game)
+      await goAshoreFromExitSailor(game, "up", "olivine-port-inside")
 
-      const state = await game.state.read()
-      expect(state).toMatchObject({
-        map: { name: "lilycove-city-harbor" },
-        player: { x: 8, y: 11 },
-        origin: {
-          id: 2,
-          maidenVoyageState: 0,
-          hoennInitialized: true,
-          hoennChoice: 1,
-          hoennReceived: true,
-          johtoCommitted: false,
-          recovery: { map: "lilycove-city" },
-        },
-        circuit: {
-          badges: { total: 0 },
-          clears: { indigo: false, masters: false, hoenn: false },
-        },
-      })
-      expect(state.party).toEqual(partner)
-      expect(await game.inventory.contains("ssTicket")).toBe(true)
-      await game.saveAndReload()
-      expect((await game.state.read()).origin).toEqual(state.origin)
-      await game.battle.startWild({ species: "pidgey", level: 2, moves: ["tackle"] })
-      await game.battle.lose()
-      await advanceOpeningUntil(
-        game,
-        (current) => current.ready && current.map.name === "lilycove-pokemon-center",
-        "blackout did not reach the Lilycove recovery point after the Tidal",
-      )
-      expect((await game.state.read()).origin.id).toBe(2)
-      expect(await game.inventory.contains("ssTicket")).toBe(true)
-      expect((await game.state.read()).party.every((mon) => !mon.fainted)).toBe(true)
+      for (const [port, recovery] of [
+        ["olivine-port-inside", "olivine-city"],
+        ["vermilion-port-inside", "vermilion-city"],
+      ] as const) {
+        if (port === "vermilion-port-inside") {
+          // Olivine -> Vermilion by day on the same ship.
+          await game.player.warp("olivine-port-inside", 8, 16, "down")
+          await boardFerryAtDock(game)
+          await waitAboard(game, "ss-aqua-1f")
+          await sailFerryLeg(game)
+          await goAshoreFromExitSailor(game, "up", port)
+        }
+        const state = await game.state.read()
+        expect(state).toMatchObject({
+          map: { name: port },
+          origin: {
+            id: 2,
+            maidenVoyageState: 0,
+            hoennInitialized: true,
+            hoennChoice: 1,
+            hoennReceived: true,
+            johtoCommitted: false,
+            recovery: { map: recovery },
+          },
+          circuit: {
+            badges: { total: 0 },
+            clears: { indigo: false, masters: false, hoenn: false },
+          },
+        })
+        expect(state.party).toEqual(partner)
+        expect(await game.inventory.contains("ssTicket")).toBe(true)
+        await game.saveAndReload()
+        expect((await game.state.read()).origin).toEqual(state.origin)
+        await game.battle.startWild({ species: "pidgey", level: 2, moves: ["tackle"] })
+        await game.battle.lose()
+        await advanceOpeningUntil(
+          game,
+          (current) => current.ready && current.map.name === recovery,
+          `blackout did not reach the local recovery point after ${port}`,
+        )
+        expect((await game.state.read()).origin.id).toBe(2)
+        expect(await game.inventory.contains("ssTicket")).toBe(true)
+        expect((await game.state.read()).party.every((mon) => !mon.fainted)).toBe(true)
+      }
+      // Johto, Kanto and Hoenn have all been visited.
+      expect((await game.state.read()).origin.visitedRegions).toBe(7)
     } finally {
       await game.close()
     }

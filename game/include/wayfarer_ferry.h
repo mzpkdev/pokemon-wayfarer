@@ -45,7 +45,7 @@ bool8 Ferry_IsAboard(void);
 bool8 Ferry_IsAtSea(void);
 u32 Ferry_GetNow(void);
 void Ferry_InitNewGame(void);
-void Ferry_ClearVoyage(void);              // going ashore; the Anne's pending departure survives unless asked
+void Ferry_ClearVoyage(void);              // going ashore: zeroes the whole state, annePending included
 void Ferry_OnBlackout(void);
 bool8 Ferry_BoardAt(u8 port, u8 ship, u32 now);
 u8 Ferry_Advance(u32 now);                 // applies every elapsed transition; returns what to announce
@@ -59,6 +59,7 @@ void Ferry_OnMinute(void);
 // ---- Scripts: berths and boarding ----
 u16 Ferry_GetBerthShip(void);              // the ship the sailor here offers now, FERRY_SHIP_NONE if none
 u16 Ferry_GetBerthPort(void);
+bool8 Ferry_BerthNeedsRespawn(u8 shownPlusOne, u8 ship);
 u16 Ferry_BufferNextShip(void);            // STR_VAR_1 ship, STR_VAR_2 hour; FALSE if no ship ever calls
 u16 Ferry_BufferBoarding(void);            // STR_VAR_1 ship, STR_VAR_2 next stop
 u16 Ferry_Board(void);

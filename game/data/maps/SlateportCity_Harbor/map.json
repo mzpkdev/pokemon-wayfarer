@@ -196,9 +196,9 @@
   "bg_events": [
     {
       "type": "sign",
-      "x": 10,
-      "y": 11,
-      "elevation": 3,
+      "x": 9,
+      "y": 10,
+      "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "SlateportCity_Harbor_EventScript_DepartureBoard"
     }
