@@ -801,8 +801,8 @@ class EcruteakAndMorty(unittest.TestCase):
 class BagFullEndings(unittest.TestCase):
     """The interpreter treats a goto to an unknown label as the script ending, so check
     textually that every bag-full path ends the script and releases the player."""
-    MAPS = ('AzaleaTown_hns', 'AzaleaTown_KurtsHouse_hns', 'IlexForest_hns', 'Mahoganytown_hns',
-            'EcruteakCity_Theater_hns')
+    MAPS = ('AzaleaTown_hns', 'AzaleaTown_KurtsHouse_hns', 'AzaleaTown_House1_hns', 'IlexForest_hns',
+            'Mahoganytown_hns', 'EcruteakCity_Theater_hns')
 
     def test_bag_full_branches_jump_to_an_ending_label(self):
         checked = 0
@@ -820,7 +820,20 @@ class BagFullEndings(unittest.TestCase):
                     continue
                 block = _label_block(text, label)
                 self.assertRegex(block, r'(?m)^\s*release\n\s*end\b', (map_name, label))
-        self.assertGreaterEqual(checked, 7)
+        self.assertGreaterEqual(checked, 8)
+
+    def test_charcoal_survives_a_full_bag(self):
+        full = Interp('AzaleaTown_House1_hns', vars={'VAR_ILEX_FOREST_FARFETCHD': 3}, bag_full=True)
+        full.run('AzaleaTown_House1_EventScript_Apprentice3')
+        self.assertNotIn('FLAG_GOT_CHARCOAL', full.flags)
+        ok = Interp('AzaleaTown_House1_hns', vars={'VAR_ILEX_FOREST_FARFETCHD': 3})
+        ok.run('AzaleaTown_House1_EventScript_Apprentice3')
+        self.assertIn('FLAG_GOT_CHARCOAL', ok.flags)
+
+    def test_route42_eusine_starts_hidden_from_the_new_game(self):
+        new_game = (GAME / 'data/scripts/new_game.inc').read_text()
+        reset = new_game.split('EventScript_ResetAllMapFlagsHnS::', 1)[1].split('\n\n', 1)[0]
+        self.assertIn('setflag FLAG_HIDE_ROUTE42_EUSINE\n', reset)
 
 
 class SharedStateWrites(unittest.TestCase):

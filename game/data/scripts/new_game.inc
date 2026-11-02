@@ -336,6 +336,8 @@ EventScript_ResetAllMapFlagsHnS::
 	setflag FLAG_ITEM_DOME_FOSSIL
 	setflag FLAG_ITEM_HELIX_FOSSIL
 	setflag FLAG_ITEM_OLD_AMBER
+	@ Route 42's Eusine waits for Suicune's Route 42 scene, whichever town comes first.
+	setflag FLAG_HIDE_ROUTE42_EUSINE
 	@ Ilex Forest's errand and Celebi, revealed by Bugsy's win and Kurt's GS Ball.
 	@ Ilex can be entered from Route 34 before Azalea's first load.
 	setflag FLAG_HIDE_ILEX_FOREST_APPRENTICE
