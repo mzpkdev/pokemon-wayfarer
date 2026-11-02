@@ -189,7 +189,89 @@ const layOut = (root) => {
   }
   placed = walk(root, forbidden)
   if (forbidden.size > 0) console.log(`  ${maps[root].name}: left out ${[...forbidden].join(", ")}`)
-  return [...placed.values()]
+  return relax([...placed.values()])
+}
+
+// The links left out of the tree still say where their maps belong, and
+// their whole mismatch sits on that one link. Spread it round the loop: move
+// every map a little toward where all its links want it, then push apart any
+// maps that touch, until it settles. A loop's error then shows as a few short
+// gaps the fill turns into land, not one long one.
+const linkErrors = (list) => {
+  const at = new Map(list.map((p) => [p.m.id, p]))
+  const links = []
+  for (const a of list)
+    for (const c of connections(a.m)) {
+      const b = at.get(targetOf(a.m, c))
+      if (!b || a.m.id > b.m.id) continue
+      const o = c.offset
+      const [dx, dy] = {
+        up: [o, -b.l.height],
+        down: [o, a.l.height],
+        left: [-b.l.width, o],
+        right: [a.l.width, o],
+      }[c.direction] ?? [null, null]
+      if (dx === null) continue
+      links.push({ a, b, dx, dy })
+    }
+  return links
+}
+const relax = (list) => {
+  const links = linkErrors(list)
+  if (links.length < list.length) return list
+  // The worst link is what shows: one long gap or skewed road.
+  const error = () =>
+    Math.max(
+      ...links.map(({ a, b, dx, dy }) => Math.abs(b.x - a.x - dx) + Math.abs(b.y - a.y - dy)),
+    )
+  const before = error()
+  if (before === 0) return list
+  const start = list.map((p) => [p.x, p.y])
+  const root = list[0]
+  for (let round = 0; round < 400; round++) {
+    const pull = new Map(list.map((p) => [p, { x: 0, y: 0, n: 0 }]))
+    for (const { a, b, dx, dy } of links) {
+      const pa = pull.get(a),
+        pb = pull.get(b)
+      pb.x += a.x + dx - b.x
+      pb.y += a.y + dy - b.y
+      pb.n++
+      pa.x += b.x - dx - a.x
+      pa.y += b.y - dy - a.y
+      pa.n++
+    }
+    for (const p of list) {
+      if (p === root) continue
+      const { x, y, n } = pull.get(p)
+      if (n === 0) continue
+      p.x += Math.round((x / n) * 0.5)
+      p.y += Math.round((y / n) * 0.5)
+    }
+    // Push touching maps apart along their shallower overlap.
+    for (let i = 0; i < list.length; i++)
+      for (let j = i + 1; j < list.length; j++) {
+        const a = list[i],
+          b = list[j]
+        const w = Math.min(a.x + a.l.width, b.x + b.l.width) - Math.max(a.x, b.x)
+        const h = Math.min(a.y + a.l.height, b.y + b.l.height) - Math.max(a.y, b.y)
+        if (w <= 0 || h <= 0) continue
+        const [mover, still] = b === root ? [a, b] : [b, a]
+        if (w < h) mover.x += mover.x + mover.l.width / 2 >= still.x + still.l.width / 2 ? w : -w
+        else mover.y += mover.y + mover.l.height / 2 >= still.y + still.l.height / 2 ? h : -h
+      }
+  }
+  const after = error()
+  const clash = overlap(list)
+  if (clash > 0 || after >= before) {
+    list.forEach((p, k) => {
+      p.x = start[k][0]
+      p.y = start[k][1]
+    })
+    console.log(
+      `  ${root.m.name}: kept the tree (worst link ${after} vs ${before}, overlap ${clash})`,
+    )
+  } else console.log(`  ${root.m.name}: worst link ${before} -> ${after} metatiles`)
+  return list
 }
 
 // Town Map cells, to place the pieces no connection reaches: the game's own
@@ -485,7 +567,20 @@ const route28 = all.find((p) => p.m.name === "Route28_hns")
       .map((p) => p.y + p.l.height),
   )
   void sinnohBelow
-  shift("Sinnoh", dx, sinjohNow.top - 6 - sinnohBottom)
+  // Away from Sinjoh, keep a strait between Sinnoh and Johto and Kanto wide
+  // enough that their coasts don't meet, so the land runs only through Sinjoh.
+  const STRAIT = 20
+  let lift = sinjohNow.top - 6 - sinnohBottom
+  for (const s of all.filter((p) => p.region === "Sinnoh")) {
+    const left = s.x + dx,
+      right = left + s.l.width
+    if (left < sinjohNow.right + STRAIT / 2 && right > sinjohNow.left - STRAIT / 2) continue
+    for (const j of all.filter((p) => p.region === "Johto and Kanto"))
+      if (left < j.x + j.l.width + STRAIT && right > j.x - STRAIT)
+        lift = Math.min(lift, j.y - STRAIT - (s.y + s.l.height))
+  }
+  shift("Sinnoh", dx, lift)
+  console.log("  Sinnoh to Sinjoh gap:", sinjohNow.top - (sinnohBottom + lift))
 }
 for (const p of all.filter((q) => q.region === "Sinjoh"))
   console.log("  ", p.m.name, p.x, p.y, p.l.width, p.l.height)
@@ -782,6 +877,58 @@ for (let pass = 0; pass < 2; pass++) {
       }
   }
   for (let i = 0; i < N; i++) if (!land[i] && !open[i] && owner[i] < 0) land[i] = 1
+}
+
+// Regions stay apart: each cell belongs to its nearest region, and where two
+// regions' cells meet, a strait of sea runs between them. Sinjoh is the
+// exception; it is the land that joins Johto to Sinnoh.
+{
+  const regionOf = all.map((p) => p.region)
+  const nearestRegion = new Int16Array(N).fill(-1)
+  const names = [...new Set(regionOf)]
+  const queue = []
+  for (let i = 0; i < N; i++)
+    if (owner[i] >= 0) {
+      nearestRegion[i] = names.indexOf(regionOf[owner[i]])
+      queue.push(i)
+    }
+  let head = 0
+  while (head < queue.length) {
+    const i = queue[head++]
+    const x = i % W,
+      y = (i - x) / W
+    for (const j of [
+      x > 0 ? i - 1 : -1,
+      x < W - 1 ? i + 1 : -1,
+      y > 0 ? i - W : -1,
+      y < H - 1 ? i + W : -1,
+    ])
+      if (j >= 0 && nearestRegion[j] < 0) {
+        nearestRegion[j] = nearestRegion[i]
+        queue.push(j)
+      }
+  }
+  const sinjoh = names.indexOf("Sinjoh")
+  const HALF = 5
+  for (let y = HALF; y < H - HALF; y++)
+    for (let x = HALF; x < W - HALF; x++) {
+      const i = y * W + x
+      if (owner[i] >= 0 || !land[i]) continue
+      const mine = nearestRegion[i]
+      if (mine === sinjoh) continue
+      for (const [dx, dy] of [
+        [HALF, 0],
+        [-HALF, 0],
+        [0, HALF],
+        [0, -HALF],
+      ]) {
+        const other = nearestRegion[i + dy * W + dx]
+        if (other !== mine && other !== sinjoh) {
+          land[i] = 0
+          break
+        }
+      }
+    }
 }
 
 // Which map each cell takes its border from: the nearest map of the right kind.
