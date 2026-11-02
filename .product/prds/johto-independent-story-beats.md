@@ -367,9 +367,10 @@ Each of these must work in every supported order.
 
 Each town's first-visit setup runs however the player first arrives: by any
 road, by ship, by train, or by Fly. It runs once and never overwrites progress
-made since. Today Goldenrod, Ecruteak, Olivine, and Mahogany run their setup
-only from one approach road, and running it late resets Baoba's choice, the
-theater, the beasts, and Suicune's chase. A player who enters Ecruteak from
+made since. Today Violet, Azalea, Goldenrod, Ecruteak, Olivine, Mahogany, and
+Blackthorn run their setup only from one approach road, and running it late
+resets the Togepi Egg, Baoba's choice, the theater, the beasts, and Suicune's
+chase. A player who enters Ecruteak from
 Route 38 must still find Eusine at the Burned Tower.
 
 When adventures share an NPC or location, each unfinished adventure must remain

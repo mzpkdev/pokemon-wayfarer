@@ -31,7 +31,10 @@ carry no badge checks.
    that flag is stuck there. The flag has other readers: Jessica's Tauros
    trade on Melemele (`Melemele_House_hns:67-69`) and the starter preview
    (`game/src/scrcmd.c:2664`).
-3. **Town setup runs from one approach road.** Goldenrod's first-visit script
+3. **Town setup runs from one approach road.** Violet's first-visit script is
+   a coordinate trigger in the Route 31 gate (`VioletCity_hns:16-46`), and
+   resets the Togepi Egg, Sprout Tower, and Ruins of Alph state when it runs
+   late. Azalea's runs from Route 33. Goldenrod's first-visit script
    is a coordinate trigger on Route 34, Ecruteak's on Route 37, Olivine's on
    Route 39, and Mahogany's on Route 42, each at town state 0. Entering by
    another road, ship, or train skips it; crossing the trigger later runs it
