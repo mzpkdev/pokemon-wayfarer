@@ -18,6 +18,9 @@ const advanceUntil = async (
   for (let attempt = 0; attempt < attempts; attempt++) {
     if (await done()) return
     await game.wait.frames(30)
+    // Look again before pressing: arriving on a ship map faces the player at its exit sailor, and an A press
+    // after arrival would talk to him and go straight back ashore.
+    if (await done()) return
     await game.controls.press("a")
   }
   throw new Error(`${description}: ${JSON.stringify(await game.state.read())}`)
