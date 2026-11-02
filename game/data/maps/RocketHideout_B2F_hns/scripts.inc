@@ -322,7 +322,8 @@ RocketHideout_B2F_EventScript_DoLanceMultiBattle::
 
 RocketHideout_B2F_EventScript_DefeatedAriana::
 	clearflag FLAG_ROCKETHIDEOUT2_BATTLE
-	msgbox RocketHideout_Text_ArianaRetreat, MSGBOX_DEFAULT
+	call_if_unset FLAG_WAYFARER_JOHTO_RADIO_TOWER_RESOLVED, RocketHideout_B2F_EventScript_ArianaRetreat
+	call_if_set FLAG_WAYFARER_JOHTO_RADIO_TOWER_RESOLVED, RocketHideout_B2F_EventScript_ArianaRetreatTowerDone
 	closemessage
 	fadescreenswapbuffers FADE_TO_BLACK
 	applymovement LOCALID_ROCKETHIDEOUT2_LANCE, Common_Movement_WalkUp1
@@ -366,6 +367,14 @@ RocketHideout_B2F_EventScript_DefeatedAriana::
 	setvar_forward VAR_MAHOGANY_TOWN_STATE, 13
 	release
 	end
+
+RocketHideout_B2F_EventScript_ArianaRetreat::
+	msgbox RocketHideout_Text_ArianaRetreat, MSGBOX_DEFAULT
+	return
+
+RocketHideout_B2F_EventScript_ArianaRetreatTowerDone::
+	msgbox RocketHideout_Text_ArianaRetreatTowerDone, MSGBOX_DEFAULT
+	return
 
 RocketHideout_B2F_Movement_LanceWalkToGenerator:
 	walk_up
@@ -602,6 +611,18 @@ RocketHideout_Text_ArianaRetreat:
     .string "this hideout now.\p"
     .string "We have much bigger plans.\n"
     .string "You'll come to appreciate Team\l"
+    .string "Rocket's true power soon enough.\p"
+    .string "Enjoy yourself while you can...\n"
+    .string "Hee hee hee...$"
+
+RocketHideout_Text_ArianaRetreatTowerDone:
+    .string "ARIANA: But that's fine.\n"
+    .string "The broadcast experiment was a\l"
+    .string "total success. GOLDENROD was a\l"
+    .string "setback, nothing more.\p"
+    .string "It doesn't matter what happens to\n"
+    .string "this hideout now.\p"
+    .string "You'll come to appreciate Team\n"
     .string "Rocket's true power soon enough.\p"
     .string "Enjoy yourself while you can...\n"
     .string "Hee hee hee...$"

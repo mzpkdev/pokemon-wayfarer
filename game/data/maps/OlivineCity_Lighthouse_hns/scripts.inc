@@ -320,7 +320,14 @@ OlivineLighthouse_Text_JasmineCureAmphy:
 	.string "AMPHY?$"
 
 
+OlivineLighthouse_Text_JasmineAmphyIll:
+	.string "JASMINE: …This is AMPHY. It kept the\n"
+	.string "sea lit at night.\p"
+	.string "…But it's ill now… It's gasping for\n"
+	.string "air…$"
+
 OlivineLighthouse_EventScript_JasmineDeliverPotion::
+	call_if_set FLAG_WAYFARER_JOHTO_LIGHTHOUSE_MEDICINE_FIRST, OlivineLighthouse_EventScript_JasmineAmphyIll
 	msgbox OlivineLighthouse_Text_JasmineCureAmphy, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, OlivineLighthouse_EventScript_JasmineRefuse
 	playse SE_USE_ITEM
@@ -362,6 +369,11 @@ OlivineLighthouse_EventScript_JasmineDeliverPotion::
 	clearflag FLAG_HIDE_OLIVINE_CITY_GYM_JASMINE
 	release
 	end
+
+@ The medicine came before Jasmine asked: she explains what is wrong before asking if it will help.
+OlivineLighthouse_EventScript_JasmineAmphyIll::
+	msgbox OlivineLighthouse_Text_JasmineAmphyIll, MSGBOX_DEFAULT
+	return
 
 OlivineLighthouse_Movement_Jasmine:
 	face_player

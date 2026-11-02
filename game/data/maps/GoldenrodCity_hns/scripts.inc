@@ -134,6 +134,8 @@ GoldenrodCity_EventScript_RocketScout::
 	waitmovement LOCALID_GOLDENROD_ROCKET_SCOUT
 	faceplayer
 	msgbox GoldenrodCity_Text_RocketScout2, MSGBOX_DEFAULT
+	@ The takeover can start with no badges, so warn before the choice.
+	msgbox GoldenrodCity_Text_RocketScoutWarning, MSGBOX_DEFAULT
 	msgbox GoldenrodCity_Text_RocketScoutFollow, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, GoldenrodCity_EventScript_RocketScoutDeclined
 	closemessage
@@ -391,6 +393,11 @@ GoldenrodCity_Text_Gramps:
 
 GoldenrodCity_Text_RocketScout1:
 	.string "So this is the RADIO TOWER…$"
+
+GoldenrodCity_Text_RocketScoutWarning:
+	.string "If you follow him, TEAM ROCKET\n"
+	.string "will take over GOLDENROD.\p"
+	.string "Their leader is tough!$"
 
 GoldenrodCity_Text_RocketScoutFollow:
 	.string "Follow the suspicious man into the\n"

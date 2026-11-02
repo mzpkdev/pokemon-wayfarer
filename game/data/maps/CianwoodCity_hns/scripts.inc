@@ -198,7 +198,9 @@ CianwoodCity_EventScript_SuicuneTrigger::
 	delay 55
 	applymovement LOCALID_CIANWOOD_EUSINE, CianwoodCity_Movement_Eusine2
 	waitmovement 0 
-	msgbox CianwoodCity_Text_EusineSuicune, MSGBOX_DEFAULT
+	@ Ecruteak state 2 or more records his Burned Tower introduction on 1F.
+	call_if_ge VAR_ECRUTEAK_CITY_STATE, 2, CianwoodCity_EventScript_EusineGreetMet
+	call_if_lt VAR_ECRUTEAK_CITY_STATE, 2, CianwoodCity_EventScript_EusineGreetFirst
 	trainerbattle_no_intro TRAINER_EUSINE_HNS, CianwoodCity_Text_EusineBeaten
 	playbgm MUS_HG_EUSINE, FALSE
 	msgbox CianwoodCity_Text_EusineAfter, MSGBOX_DEFAULT
@@ -261,6 +263,34 @@ CianwoodCity_Movement_Eusine3:
 	walk_fast_down
 	walk_fast_down
 	step_end
+
+CianwoodCity_EventScript_EusineGreetMet::
+	msgbox CianwoodCity_Text_EusineSuicune, MSGBOX_DEFAULT
+	return
+
+CianwoodCity_EventScript_EusineGreetFirst::
+	msgbox CianwoodCity_Text_EusineSuicuneFirst, MSGBOX_DEFAULT
+	return
+
+CianwoodCity_Text_EusineSuicuneFirst:
+	.string "EUSINE: Hey, you there!\p"
+	.string "My name's EUSINE. I'm on the trail\n"
+	.string "of a POKéMON called SUICUNE.\p"
+	.string "And you are...?\p"
+	.string "{PLAYER}? Glad to meet you!\p"
+	.string "Wasn't that SUICUNE just now?\p"
+	.string "I only caught a quick glimpse, but\n"
+	.string "I thought I saw SUICUNE running on\l"
+	.string "the waves.\p"
+	.string "SUICUNE is beautiful and grand.\p"
+	.string "And it races through towns and\n"
+	.string "roads at simply awesome speeds.\p"
+	.string "It's wonderful…\p"
+	.string "I want to see SUICUNE up close…\p"
+	.string "I've decided.\p"
+	.string "I'll battle you as a trainer to\n"
+	.string "earn SUICUNE's respect!\p"
+	.string "Come on, {PLAYER}. Let's battle now!$"
 
 CianwoodCity_Text_EusineSuicune:
 	.string "EUSINE: Yo, {PLAYER}.\p"

@@ -3,7 +3,7 @@
 Specification: [Johto independent story beats](../specs/johto-independent-story-beats.md)
 
 Status: Agreed product design, revised 2026-11-02 against current main and the
-Kanto story rules settled since the first draft. Not implemented. The
+Kanto story rules settled since the first draft. Implemented. The
 specification settles the scene-level choices: the Rocket scout starts the
 Radio Tower takeover, Zuki introduces the ceremony, and Archer's ending becomes
 neutral unless the other operations are resolved.

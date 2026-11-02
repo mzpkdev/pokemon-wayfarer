@@ -194,6 +194,7 @@ class Interp:
         self.writes = []      # (name, value, kind) in order
         self.messages = []
         self.battles = []     # (command, stored Silver chapter at that moment)
+        self.intros = []      # intro text label of each trainerbattle_single
         self.given = []
         self.pokenav = []
         self.locked = False
@@ -286,6 +287,8 @@ class Interp:
                 self.pokenav.append(args[0])
             elif command.startswith('trainerbattle'):
                 self.battles.append((command, self.vars.get(CHAPTER, 0)))
+                if command == 'trainerbattle_single':
+                    self.intros.append(args[1])
                 if self.battle == 'lose':
                     return
             elif command == 'giveitem':
@@ -756,7 +759,9 @@ class MahoganyLakeAndRadioTower(unittest.TestCase):
         self.assertEqual(interp.vars[GOLD], 1)
         self.assertFalse(interp.written('var') - {'VAR_RESULT'})
         self.assertNotIn('FLAG_HIDE_GOLDENROD_ROCKET_SCOUT', interp.flags)
+        # The warning comes right before the choice.
         self.assertEqual(interp.messages, ['GoldenrodCity_Text_RocketScout1', 'GoldenrodCity_Text_RocketScout2',
+                                           'GoldenrodCity_Text_RocketScoutWarning',
                                            'GoldenrodCity_Text_RocketScoutFollow'])
         # Accepting starts the occupation: Goldenrod only, no Mahogany state, no phone call.
         interp.answers = [1]
@@ -2152,6 +2157,220 @@ class PewterWing(unittest.TestCase):
         self.assertEqual(len(re.findall(r'#define WAYFARER_LEGENDARY_TR ', header)), 2)  # v0 and today's scale
         c = (GAME / 'src/wayfarer_johto_story.c').read_text()
         self.assertEqual(c.count('GetTrainerRating() < WAYFARER_LEGENDARY_TR'), 2)
+
+
+DONE_WELL, DONE_LAKE = 4, 14
+ROCKET_MAPS = ('GoldenrodCity_RadioTower_3F_hns', 'GoldenrodCity_RadioTower_4F_hns',
+               'GoldenrodCity_RadioTower_5F_hns', 'RocketHideout_B2F_hns', 'RocketHideout_B3F_hns')
+
+
+def rocket_state(done):
+    """Variables for the adventures finished so far: 'W' the Well, 'H' the Lake and hideout, 'T' the Tower."""
+    vars_ = {WELL: DONE_WELL if 'W' in done else 0, MAH: DONE_LAKE if 'H' in done else 0, GOLD: 6}
+    return vars_, ([RESOLVED] if 'T' in done else [])
+
+
+class RocketDialogue(unittest.TestCase):
+    """Every Rocket line that recalls another operation plays only when that operation happened."""
+    FOREIGN = {WELL, MAH, GOLD, RESOLVED}
+
+    def run_label(self, label, done, *, extra=None, own=()):
+        vars_, flags = rocket_state(done)
+        vars_.update(extra or {})
+        interp = Interp(*ROCKET_MAPS, vars=vars_, flags=flags)
+        interp.run(label)
+        # No other adventure is completed, rewound or blocked: only this scene's own variables move.
+        for name, value, kind in interp.writes:
+            if name in self.FOREIGN and name not in own:
+                self.fail('%s wrote %s' % (label, name))
+        for name in own:
+            self.assertGreaterEqual(interp.vars.get(name, 0), vars_.get(name, 0))
+        return interp
+
+    def test_every_order_of_the_three_operations(self):
+        for order in permutations('WHT'):
+            for i, adventure in enumerate(order):
+                done = ''.join(order[:i])
+                with self.subTest(order=''.join(order), at=adventure, done=done):
+                    if adventure == 'T':
+                        proton = self.run_label('GoldenrodRaidoTower4_EventScript_Proton', done)
+                        self.assertEqual(proton.intros, ['GoldenrodCity_RadioTower_4F4_Text_Proton_Seen'
+                                                         if 'W' in done else
+                                                         'GoldenrodCity_RadioTower_4F4_Text_Proton_SeenFirst'])
+                        ariana = self.run_label('GoldenrodRaidoTower4_EventScript_ARIANA', done)
+                        self.assertEqual(ariana.intros, ['GoldenrodCity_RadioTower_5F_Text_ExecutiveF1Seen'
+                                                         if 'H' in done else
+                                                         'GoldenrodCity_RadioTower_5F_Text_ExecutiveF1SeenFirst'])
+                        archer = self.run_label('GoldenrodCity_RadioTower_5F_EventScript_Archer', done,
+                                                extra={GOLD: 9}, own=(GOLD,))
+                        disband = 'W' in done and 'H' in done
+                        self.assertIn('GoldenrodCity_RadioTower_5F_Text_RocketBossAfter' if disband
+                                      else 'GoldenrodCity_RadioTower_5F_Text_RocketBossAfterWithdraw',
+                                      archer.messages)
+                        self.assertNotIn('GoldenrodCity_RadioTower_5F_Text_RocketBossAfterWithdraw' if disband
+                                         else 'GoldenrodCity_RadioTower_5F_Text_RocketBossAfter', archer.messages)
+                        self.assertEqual(archer.vars[GOLD], 10)
+                    if adventure == 'H':
+                        eto = self.run_label('RocketHideout_B3F_EventScript_Eto', done)
+                        self.assertEqual(eto.intros, ['RocketHideout_B3F_Text_GruntM28Seen' if 'W' in done
+                                                      else 'RocketHideout_B3F_Text_GruntM28SeenFirst'])
+                        retreat = self.run_label('RocketHideout_B2F_EventScript_DefeatedAriana', done,
+                                                 extra={MAH: 12}, own=(MAH,))
+                        self.assertIn('RocketHideout_Text_ArianaRetreatTowerDone' if 'T' in done
+                                      else 'RocketHideout_Text_ArianaRetreat', retreat.messages)
+                        self.assertEqual(len([m for m in retreat.messages if 'ArianaRetreat' in m]), 1)
+                        self.assertEqual(retreat.vars[MAH], 13)
+
+    def test_the_underground_grunt_names_the_underground_only_once_it_is_done(self):
+        for gold, text in ((6, 'GoldenrodCity_RadioTower_3F_Text_GruntM9AfterNeutral'),
+                           (8, 'GoldenrodCity_RadioTower_3F_Text_GruntM9AfterNeutral'),
+                           (9, 'GoldenrodCity_RadioTower_3F_Text_GruntM9After'),
+                           (10, 'GoldenrodCity_RadioTower_3F_Text_GruntM9After')):
+            interp = self.run_label('GoldenrodRaidoTower3_EventScript_Grunt8', '', extra={GOLD: gold})
+            self.assertEqual(interp.messages, [text], gold)
+        neutral = re.search(r'GruntM9AfterNeutral:\n(.*?)\$', raw_text('GoldenrodCity_RadioTower_3F_hns'), re.S)[1]
+        self.assertNotIn('UNDERGROUND', neutral)
+
+    def test_first_meeting_lines_recall_nothing(self):
+        for map_name, label, forbidden in (
+                ('GoldenrodCity_RadioTower_4F_hns', 'Proton_SeenFirst', r'WELL|got in our way'),
+                ('RocketHideout_B3F_hns', 'GruntM28SeenFirst', r'well|again|better'),
+                ('GoldenrodCity_RadioTower_5F_hns', 'ExecutiveF1SeenFirst', r'HIDEOUT|MAHOGANY|Remember'),
+                ('GoldenrodCity_RadioTower_5F_hns', 'RocketBossAfterWithdraw', r'disband|GIOVANNI')):
+            text = re.search(r'\w*%s:\n(.*?)\$' % label, raw_text(map_name), re.S)[1]
+            self.assertNotRegex(text, forbidden, label)
+        withdraw = re.search(r'RocketBossAfterWithdraw:\n(.*?)\$', raw_text('GoldenrodCity_RadioTower_5F_hns'), re.S)[1]
+        self.assertIn('This operation is over.', withdraw)
+        self.assertTrue(withdraw.rstrip().endswith('Farewell.'))
+
+    def test_trainer_battle_comes_first_in_each_sight_script_branch(self):
+        # Trainers with sight run their script until the battle, so each branch must reach it unaided.
+        for map_name, label in (('GoldenrodCity_RadioTower_4F_hns', 'GoldenrodRaidoTower4_EventScript_ProtonFirstMeeting'),
+                                ('RocketHideout_B3F_hns', 'RocketHideout_B3F_EventScript_EtoFirstMeeting'),
+                                ('GoldenrodCity_RadioTower_5F_hns', 'GoldenrodRaidoTower4_EventScript_ARIANAFirstMeeting')):
+            block = _label_block(raw_text(map_name), label)
+            self.assertRegex(block, r'::\n\s*trainerbattle_single')
+
+
+class LighthouseMedicine(unittest.TestCase):
+    MAPS = ('OlivineCity_Lighthouse_hns', 'CianwoodShop_hns')
+    FIRST = 'CianwoodCity_Text_PharmacistGivePotionFirst'
+    ASKED = 'CianwoodCity_Text_PharmacistGivePotion'
+    ILL = 'OlivineLighthouse_Text_JasmineAmphyIll'
+    CURE = 'OlivineLighthouse_Text_JasmineCureAmphy'
+    MEDICINE_FIRST = 'FLAG_WAYFARER_JOHTO_LIGHTHOUSE_MEDICINE_FIRST'
+
+    def test_jasmine_first_keeps_the_order_and_the_delivery_question(self):
+        interp = Interp(*self.MAPS, vars={'VAR_OLIVINE_CITY_STATE': 1})
+        interp.items = set()
+        interp.run('OlivineLighthouse_EventScript_Jasmine')
+        self.assertEqual(interp.vars['VAR_OLIVINE_CITY_STATE'], 3)
+        interp.run('CianwoodCity_EventScript_Pharmacist')
+        self.assertIn(self.ASKED, interp.messages)
+        self.assertNotIn(self.FIRST, interp.messages)
+        self.assertEqual(interp.vars['VAR_OLIVINE_CITY_STATE'], 4)
+        self.assertNotIn(self.MEDICINE_FIRST, interp.flags)
+        interp.messages.clear()
+        interp.run('OlivineLighthouse_EventScript_Jasmine')
+        self.assertIn(self.CURE, interp.messages)
+        self.assertNotIn(self.ILL, interp.messages)
+        self.assertEqual(interp.vars['VAR_OLIVINE_CITY_STATE'], 5)
+
+    def test_medicine_first_explains_the_potion_and_amphy_and_still_completes_the_errand(self):
+        for state in (0, 1, 2):
+            with self.subTest(state=state):
+                interp = Interp(*self.MAPS, vars={'VAR_OLIVINE_CITY_STATE': state}, flags={'FLAG_HIDE_OLIVINE_CITY_GYM_JASMINE'})
+                interp.items = set()
+                interp.run('CianwoodCity_EventScript_Pharmacist')
+                self.assertIn(self.FIRST, interp.messages)
+                self.assertNotIn(self.ASKED, interp.messages)
+                self.assertEqual(interp.given, ['ITEM_SECRET_POTION'])
+                self.assertEqual(interp.vars['VAR_OLIVINE_CITY_STATE'], 4)
+                self.assertIn(self.MEDICINE_FIRST, interp.flags)
+                text = re.search(r'PharmacistGivePotionFirst:\n(.*?)\$', raw_text('CianwoodShop_hns'), re.S)[1]
+                self.assertIn('LIGHTHOUSE', text)
+                self.assertNotIn('JASMINE', text)
+                interp.messages.clear()
+                interp.run('OlivineLighthouse_EventScript_Jasmine')
+                self.assertLess(interp.messages.index(self.ILL), interp.messages.index(self.CURE))
+                self.assertEqual(interp.vars['VAR_OLIVINE_CITY_STATE'], 5)
+                self.assertNotIn('FLAG_HIDE_OLIVINE_CITY_GYM_JASMINE', interp.flags)
+                self.assertIn('FLAG_HIDE_LIGHTHOUSE_JASMINE', interp.flags)
+                self.assertIn('FLAG_AMPHAROS_HEALED', interp.flags)
+
+    def test_the_potion_survives_a_full_bag_and_is_given_once(self):
+        for state, variant in ((1, self.FIRST), (3, self.ASKED)):
+            with self.subTest(state=state):
+                full = Interp(*self.MAPS, vars={'VAR_OLIVINE_CITY_STATE': state}, bag_full=True)
+                full.items = set()
+                full.run('CianwoodCity_EventScript_Pharmacist')
+                self.assertEqual(full.vars['VAR_OLIVINE_CITY_STATE'], state)
+                self.assertNotIn(self.MEDICINE_FIRST, full.flags)
+                self.assertEqual(full.given, [])
+                full.bag_full = False
+                full.run('CianwoodCity_EventScript_Pharmacist')
+                self.assertEqual(full.given, ['ITEM_SECRET_POTION'])
+                self.assertEqual(full.vars['VAR_OLIVINE_CITY_STATE'], 4)
+                self.assertEqual(full.messages.count(variant), 2)
+                full.run('CianwoodCity_EventScript_Pharmacist')   # holding it: a repeat only describes it
+                self.assertEqual(full.given, ['ITEM_SECRET_POTION'])
+                self.assertEqual(full.messages[-1], 'CianwoodCity_Text_PharmacistDescribePotion')
+
+    def test_the_receipt_follows_the_add(self):
+        block = _label_block(raw_text('CianwoodShop_hns'), 'CianwoodCity_EventScript_PharmacistGive')
+        self.assertLess(block.index('giveitem'), block.index('setvar VAR_OLIVINE_CITY_STATE, 4'))
+        self.assertRegex(_label_block(raw_text('CianwoodShop_hns'), 'CianwoodCity_EventScript_PharmacistBagFull'),
+                         r'(?m)^\s*release\n\s*end\b')
+
+
+class SuicuneAndEusine(unittest.TestCase):
+    def test_the_olivine_load_starts_the_chase_for_every_arrival(self):
+        # The port connects north to the town, so a ship arrival reaches the same map load as Route 39.
+        port = json.loads((MAPS / 'OlivineCity_PortOutside_hns/map.json').read_text())
+        self.assertEqual([(c['map'], c['direction']) for c in port['connections']], [('MAP_OLIVINE_CITY_HNS', 'up')])
+        interp = Interp('OlivineCity_hns', 'CianwoodCity_hns')
+        interp.run('OlivineCity_MapScript_OnTransition')
+        self.assertEqual(interp.vars['VAR_SUICUNE_ENCOUNTERS'], 1)
+        self.assertEqual(interp.vars['VAR_CIANWOOD_CITY_STATE'], 1)
+        self.assertIn('FLAG_HIDE_CIANWOOD_EUSINE', interp.flags)
+        # The Route 42 and Olivine sightings never read the Burned Tower's state.
+        for map_name in ('Route42_hns', 'OlivineCity_hns'):
+            self.assertNotIn('VAR_ECRUTEAK_CITY_STATE', raw_text(map_name))
+
+    def test_eusine_greets_a_stranger_until_the_burned_tower_introduced_him(self):
+        for ecruteak, expected, other in (
+                (0, 'CianwoodCity_Text_EusineSuicuneFirst', 'CianwoodCity_Text_EusineSuicune'),
+                (1, 'CianwoodCity_Text_EusineSuicuneFirst', 'CianwoodCity_Text_EusineSuicune'),
+                (2, 'CianwoodCity_Text_EusineSuicune', 'CianwoodCity_Text_EusineSuicuneFirst'),
+                (4, 'CianwoodCity_Text_EusineSuicune', 'CianwoodCity_Text_EusineSuicuneFirst')):
+            with self.subTest(ecruteak=ecruteak):
+                interp = Interp('CianwoodCity_hns', vars={ECR: ecruteak, 'VAR_SUICUNE_ENCOUNTERS': 1})
+                interp.run('CianwoodCity_EventScript_SuicuneTrigger')
+                self.assertEqual(interp.messages.count(expected), 1)
+                self.assertNotIn(other, interp.messages)
+                self.assertEqual(interp.vars['VAR_SUICUNE_ENCOUNTERS'], 2)
+                self.assertEqual(interp.vars[ECR], ecruteak)
+        text = re.search(r'EusineSuicuneFirst:\n(.*?)\$', raw_text('CianwoodCity_hns'), re.S)[1]
+        self.assertIn("My name's EUSINE", text)
+        self.assertNotIn('Yo,', text)
+
+    def test_eusine_introduces_himself_once_whichever_he_meets_first(self):
+        # Cianwood first (by ship or skipping the tower), then the Burned Tower: one introduction.
+        both = ('CianwoodCity_hns', 'BurnedTower_1F_hns')
+        cianwood_first = Interp(*both, vars={ECR: 1, 'VAR_SUICUNE_ENCOUNTERS': 1})
+        cianwood_first.run('CianwoodCity_EventScript_SuicuneTrigger')
+        cianwood_first.run('BurnedTower_1F_EventScript_MeetEusine')
+        # The Burned Tower first, then Cianwood.
+        tower_first = Interp(*both, vars={ECR: 1, 'VAR_SUICUNE_ENCOUNTERS': 1})
+        tower_first.run('BurnedTower_1F_EventScript_MeetEusine')
+        tower_first.run('CianwoodCity_EventScript_SuicuneTrigger')
+        intros = ('CianwoodCity_Text_EusineSuicuneFirst', 'BurnedTower_1FEusineIntroText')
+        for name, interp in (('cianwood first', cianwood_first), ('tower first', tower_first)):
+            with self.subTest(name):
+                self.assertEqual(sum(interp.messages.count(m) for m in intros), 1, interp.messages)
+                self.assertEqual(interp.vars[ECR], 2)
+        self.assertIn('BurnedTower_1FEusineMetText', cianwood_first.messages)
+        self.assertEqual(tower_first.messages.count('BurnedTower_1FEusineIntroText'), 1)
 
 
 if __name__ == '__main__':
