@@ -1,0 +1,28 @@
+---
+/** Direction A: the headline set like the Pokémon logo, big enough to carry the screen alone. */
+import { DaysToGo } from "~/components/DaysToGo"
+import SignupForm from "~/components/SignupForm.astro"
+
+import CtaLinks from "./CtaLinks.astro"
+---
+
+<section
+  data-cta-option="a"
+  aria-labelledby="notify-a"
+  class="cta-option relative mx-auto min-h-[90vh] max-w-5xl flex-col items-center justify-center px-6 pt-8 pb-24 text-center"
+>
+  <img
+    src="/game/intro/pokeball.png"
+    alt=""
+    width="64"
+    height="64"
+    class="pixelated catch-shake size-32 sm:size-48"
+  />
+  <p class="pixel-label mt-4 text-paper/85"><DaysToGo client:load /></p>
+  <h2 id="notify-a" class="logo-title mt-6">Be there on<br />launch day</h2>
+  <p class="mt-10 max-w-xl text-lg leading-relaxed text-paper/80">
+    One email the moment Pokémon Wayfarer is out, and the odd update on how it's coming along until then.
+  </p>
+  <SignupForm id="email-a" variant="bar" class="mt-10 max-w-2xl" />
+  <CtaLinks class="mt-8 justify-center" />
+</section>

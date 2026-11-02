@@ -156,15 +156,6 @@ save("page/edge.png", mirrorPair(edge))
 // The bright meadow from the title screen, for the foot of the page.
 save("page/meadow.png", mirrorPair(crop(layer(2), 0, 16, 240, 64)))
 
-// The intro's sparkles, colored with the lightning palette the intro lends them.
-save(
-  "intro/sparkle.png",
-  renderIndexed(
-    source("intro/scene_1/sparkle.png"),
-    readPng(source("intro/scene_3/lightning.png")).palette,
-  ),
-)
-
 save("intro/pokeball.png", renderIndexed(source("intro/scene_1/wayfarer_pokeball.png")))
 
 // The dawn artwork the Wayfarer title screen loads behind the mountain pan.
@@ -211,6 +202,9 @@ save("text/down-arrow.png", renderIndexed(source("fonts/down_arrow.png")))
 
 // Text window frame 1, the game's default.
 save("frames/1.png", renderIndexed(source("text_window/1.png")))
+
+// PROF. OAK as the new game intro shows him.
+save("people/oak.png", renderIndexed(source("oak_speech_hns/oak_hns.png")))
 
 // Key item icons for the feature list, each colored by its own palette.
 for (const item of [

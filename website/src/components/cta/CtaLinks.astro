@@ -1,0 +1,15 @@
+---
+import { cn } from "~/lib/cn"
+import { REPOSITORY_URL } from "~/lib/content"
+
+const { class: className } = Astro.props
+---
+
+<p class={cn("flex flex-wrap gap-x-6 gap-y-2 text-sm text-paper/70", className)}>
+  <a href="/wayfarer-release.ics" download class="underline-offset-4 hover:text-paper hover:underline">
+    Add the release to your calendar
+  </a>
+  <a href={REPOSITORY_URL} class="underline-offset-4 hover:text-paper hover:underline">
+    Follow development on GitHub <span aria-hidden="true">→</span>
+  </a>
+</p>

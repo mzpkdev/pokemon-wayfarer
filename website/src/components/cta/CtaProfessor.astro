@@ -1,0 +1,40 @@
+---
+/** Direction C: PROF. OAK asks for your email the way his intro asks for your name. */
+import { RELEASE_LABEL } from "~/lib/release"
+import SignupForm from "~/components/SignupForm.astro"
+
+import CtaLinks from "./CtaLinks.astro"
+---
+
+<section
+  data-cta-option="c"
+  aria-labelledby="notify-c"
+  class="cta-option relative mx-auto min-h-[90vh] max-w-5xl items-center px-6 pt-8 pb-24"
+>
+  <div class="grid w-full items-center gap-10 lg:grid-cols-[auto_1fr] lg:gap-16">
+    <div class="relative mx-auto w-max">
+      <div
+        class="absolute inset-x-[-15%] bottom-[2%] h-[14%] rounded-[50%] bg-grass-2 shadow-[inset_0_-8px_0_var(--color-grass-1)]"
+        aria-hidden="true"
+      >
+      </div>
+      <img
+        src="/game/people/oak.png"
+        alt="Professor Oak"
+        width="64"
+        height="64"
+        class="pixelated relative size-48 sm:size-64"
+      />
+    </div>
+    <div>
+      <p class="pixel-label text-logo-yellow">PROF. OAK</p>
+      <h2 id="notify-c" class="pixel-heading pixel-heading-xl mt-3">First, what is your email?</h2>
+      <p class="mt-6 max-w-xl text-lg leading-relaxed text-paper/80">
+        Tell me where to write and I'll let you know the moment your journey can begin, on {RELEASE_LABEL}.
+        You may hear from me now and then before that, too.
+      </p>
+      <SignupForm id="email-c" variant="naming" class="mt-10 max-w-xl" />
+      <CtaLinks class="mt-8" />
+    </div>
+  </div>
+</section>

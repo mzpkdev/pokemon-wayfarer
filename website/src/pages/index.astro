@@ -1,17 +1,10 @@
 ---
-import { DaysToGo } from "~/components/DaysToGo"
-import SignupForm from "~/components/SignupForm.astro"
+import CtaDawn from "~/components/cta/CtaDawn.astro"
+import CtaPoster from "~/components/cta/CtaPoster.astro"
+import CtaProfessor from "~/components/cta/CtaProfessor.astro"
 import { TitleScene } from "~/components/TitleScene"
 import Layout from "~/layouts/Layout.astro"
 import { FEATURES, ORIGINS, REPOSITORY_URL, STATS } from "~/lib/content"
-
-/** Sparkles twinkling around the Poké Ball above the sign-up, as in the opening. */
-const sparkles = [
-  { left: "-30%", top: "10%", delay: "0s" },
-  { left: "105%", top: "-5%", delay: "-0.35s" },
-  { left: "90%", top: "70%", delay: "-0.6s" },
-  { left: "-15%", top: "65%", delay: "-0.15s" },
-]
 
 /** Volbeats drifting through the dark grass behind the page: start height, duration, delay, direction. */
 const volbeats = [
@@ -22,6 +15,19 @@ const volbeats = [
 ---
 
 <Layout title="Pokémon Wayfarer">
+  <script is:inline>
+    // Preview switch between the sign-up directions: ?cta=a, b or c.
+    const cta = new URLSearchParams(location.search).get("cta")
+    if (cta === "a" || cta === "b" || cta === "c") document.documentElement.dataset.cta = cta
+  </script>
+  <nav
+    aria-label="Sign-up direction"
+    class="cta-switch fixed right-4 bottom-4 z-50 hidden gap-1 bg-hollow/90 p-1 text-sm ring-1 ring-paper/20"
+  >
+    <a href="?cta=a#notify-a" data-option="a" class="px-3 py-1">A · Poster</a>
+    <a href="?cta=b#notify-b" data-option="b" class="px-3 py-1">B · Dawn</a>
+    <a href="?cta=c#notify-c" data-option="c" class="px-3 py-1">C · Professor</a>
+  </nav>
   <main>
     <TitleScene client:load />
 
@@ -58,53 +64,13 @@ const volbeats = [
           }
         </div>
 
-        <!-- The focal point after the Poké Ball: the sign-up, as a big in-game text window. -->
-        <section
-          aria-labelledby="notify"
-          class="relative mx-auto flex min-h-[85vh] max-w-3xl flex-col items-center justify-center px-4 pt-8 pb-24 text-center"
-        >
-          <div class="relative mb-[calc(-6*var(--px))]" aria-hidden="true">
-            {
-              sparkles.map(({ left, top, delay }) => (
-                <div
-                  class="sprite sparkle absolute bg-[url(/game/intro/sparkle.png)]"
-                  style={`left: ${left}; top: ${top}; --size: 16; --frames: 8; --duration: 0.9s; animation-delay: ${delay}`}
-                />
-              ))
-            }
-            <img
-              src="/game/intro/pokeball.png"
-              alt=""
-              width="64"
-              height="64"
-              class="pixelated catch-shake relative size-[calc(64*var(--px))]"
-            />
-          </div>
-
-          <div class="gba-window relative z-10 w-full px-[calc(8*var(--px))] py-[calc(6*var(--px))]">
-            <p class="gba-text gba-text-blue">
-              <DaysToGo client:load />
-            </p>
-            <h2 id="notify" class="gba-text gba-text-2x mt-[calc(4*var(--px))] text-balance">
-              Be there on launch day
-            </h2>
-            <p class="gba-text mx-auto mt-[calc(6*var(--px))] max-w-[calc(200*var(--px))] text-balance">
-              Get an email the moment POKéMON WAYFARER is out.
-            </p>
-            <div class="mt-[calc(10*var(--px))]">
-              <SignupForm />
-            </div>
-          </div>
-
-          <p class="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-paper/70">
-            <a href="/wayfarer-release.ics" download class="underline-offset-4 hover:text-paper hover:underline">
-              Add the release to your calendar
-            </a>
-            <a href={REPOSITORY_URL} class="underline-offset-4 hover:text-paper hover:underline">
-              Follow development on GitHub <span aria-hidden="true">→</span>
-            </a>
-          </p>
-        </section>
+        <!--
+          Three directions for the sign-up, picked with ?cta=a, ?cta=b or ?cta=c
+          while we choose one. A shows without a choice.
+        -->
+        <CtaPoster />
+        <CtaDawn />
+        <CtaProfessor />
 
         <section aria-labelledby="about" class="relative mx-auto max-w-5xl px-6 py-16">
           <div class="pixel-corners pixel-panel grid gap-8 p-8 sm:p-12 lg:grid-cols-[1fr_auto] lg:items-center">
@@ -258,42 +224,6 @@ const volbeats = [
     }
   }
 
-  /* The Poké Ball shakes like a ball mid-catch: left, right, left, then rests. */
-  .catch-shake {
-    transform-origin: 50% 85%;
-    animation: catch-shake 2.6s steps(1) infinite;
-  }
-
-  @keyframes catch-shake {
-    0%,
-    48%,
-    100% {
-      rotate: 0deg;
-    }
-    54% {
-      rotate: -12deg;
-    }
-    60% {
-      rotate: 0deg;
-    }
-    66% {
-      rotate: 12deg;
-    }
-    72% {
-      rotate: 0deg;
-    }
-    78% {
-      rotate: -12deg;
-    }
-    84% {
-      rotate: 0deg;
-    }
-  }
-
-  .sparkle {
-    --sprite-px: var(--px);
-  }
-
   /* TORCHIC runs rightward (its sprite faces left), cycling frames 0, 1, 2, 1. */
   .torchic-path {
     animation: drift 16s linear infinite;
@@ -323,9 +253,7 @@ const volbeats = [
     .volbeat-path,
     .volbeat-bob,
     .torchic-path,
-    .torchic,
-    .catch-shake,
-    .sparkle {
+    .torchic {
       animation: none;
     }
 

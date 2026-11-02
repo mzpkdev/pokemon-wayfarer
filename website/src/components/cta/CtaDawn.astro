@@ -1,0 +1,30 @@
+---
+/** Direction B: the dawn island art as a second title screen, with the sign-up laid over it. */
+import { DaysToGo } from "~/components/DaysToGo"
+import SignupForm from "~/components/SignupForm.astro"
+
+import CtaLinks from "./CtaLinks.astro"
+---
+
+<section
+  data-cta-option="b"
+  aria-labelledby="notify-b"
+  class="cta-option relative min-h-[100vh] flex-col items-center justify-end overflow-hidden px-6 pt-48 pb-20 text-center"
+>
+  <div class="pixelated absolute inset-0 bg-[url(/game/title/dawn.png)] bg-cover bg-center" aria-hidden="true">
+  </div>
+  <div
+    class="absolute inset-0 bg-[linear-gradient(to_bottom,var(--color-ground)_0%,transparent_15%,rgb(8_41_0/0.55)_35%,rgb(8_41_0/0.9)_60%,var(--color-ground)_100%)] sm:bg-[linear-gradient(to_bottom,var(--color-ground)_0%,transparent_18%,transparent_45%,rgb(8_41_0/0.85)_75%,var(--color-ground)_100%)]"
+    aria-hidden="true"
+  >
+  </div>
+  <div class="relative flex max-w-2xl flex-col items-center">
+    <p class="pixel-label text-logo-yellow"><DaysToGo client:load /></p>
+    <h2 id="notify-b" class="pixel-heading pixel-heading-xl mt-3">Be there on launch day</h2>
+    <p class="mt-5 text-lg leading-relaxed text-paper/90">
+      One email the moment Pokémon Wayfarer is out, and the odd update until then.
+    </p>
+    <SignupForm id="email-b" variant="bar" class="mt-8" />
+    <CtaLinks class="mt-6 justify-center" />
+  </div>
+</section>
