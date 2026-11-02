@@ -16,6 +16,8 @@ type Meta = {
 
 const EMPTY = 0xffff
 const CHUNK = 32
+/** Lands labeled smaller and in white, beside the four main regions in gold. */
+const MINOR_REGIONS = new Set(["SINJOH", "SEVII ISLANDS", "ALOLA"])
 /** Device pixels per metatile where the tiles start fading in over the map view, and finish. */
 const FADE_FROM = 5
 const FADE_TO = 10
@@ -177,15 +179,20 @@ export const WorldExplorer = ({ base }: { base: string }) => {
         const regionAlpha = Math.min(1, Math.max(0, (1.1 - camera.zoom) / 0.4))
         if (regionAlpha > 0) {
           context.globalAlpha = regionAlpha
-          context.font = `${Math.round(28 * ratio)}px "Wayfarer Text", monospace`
-          context.textAlign = "center"
+          // Sized to the screen; the lesser lands smaller, and Sinjoh's name set
+          // beside its narrow neck rather than over it.
+          const big = Math.min(28, Math.max(14, canvas.clientWidth / 36))
           context.textBaseline = "middle"
           for (const region of meta.regions) {
-            const x = (region.x - left) * scale
+            const minor = MINOR_REGIONS.has(region.name)
+            context.font = `${Math.round((minor ? big * 0.7 : big) * ratio)}px "Wayfarer Text", monospace`
+            const aside = region.name === "SINJOH"
+            context.textAlign = aside ? "left" : "center"
+            const x = (region.x - left) * scale + (aside ? 70 * scale : 0)
             const y = (region.y - top) * scale
             context.fillStyle = "rgb(0 0 0 / 0.75)"
             context.fillText(region.name, x + ratio * 2, y + ratio * 2)
-            context.fillStyle = "rgb(255 214 0)"
+            context.fillStyle = minor ? "rgb(248 248 248)" : "rgb(255 214 0)"
             context.fillText(region.name, x, y)
           }
           context.globalAlpha = 1
