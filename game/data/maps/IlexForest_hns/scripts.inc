@@ -197,7 +197,7 @@ IlexForest_EventScript_Trigger::
 	setflag FLAG_HIDE_ILEX_FOREST_APPRENTICE
 	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_1
 	setvar VAR_ILEX_FOREST_FARFETCHD, 3
-	setvar VAR_AZALEA_TOWN_STATE, 7
+	setvar_forward VAR_AZALEA_TOWN_STATE, 7
 	clearflag FLAG_HIDE_AZALEA_TOWN_FARFETCHD
 	clearflag FLAG_HIDE_AZALEA_TOWN_CUT_MASTER
 	closemessage
@@ -267,7 +267,7 @@ IlexForest_EventScript_Kurt::
 	waitmovement 0
 	setflag FLAG_HIDE_ILEX_FOREST_KURT
 	removeobject LOCALID_ILEX_FOREST_KURT
-	setvar VAR_AZALEA_TOWN_STATE, 10
+	setvar_forward VAR_AZALEA_TOWN_STATE, 10
 	release
 	end
 

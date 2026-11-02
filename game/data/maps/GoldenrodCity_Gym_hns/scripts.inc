@@ -43,14 +43,14 @@ GoldenrodCity_Gym_EventScript_Whitney::
 	faceplayer
 	goto_if_set FLAG_BADGE03_GET, GoldenrodCity_Gym_EventScript_WhitneyDefeated
 	goto_if_set FLAG_DEFEATED_GOLDENROD_CITY_GYM, GoldenrodCity_Gym_EventScript_WhitneyBadge
-	goto_if_eq VAR_GOLDENROD_CITY_STATE, 3, GoldenrodCity_Gym_EventScript_WhitneyCrying
-	goto_if_eq VAR_GOLDENROD_CITY_STATE, 4, GoldenrodCity_Gym_EventScript_WhitneyBadge
+	goto_if_eq VAR_WAYFARER_JOHTO_WHITNEY_STATE, 3, GoldenrodCity_Gym_EventScript_WhitneyCrying
+	goto_if_eq VAR_WAYFARER_JOHTO_WHITNEY_STATE, 4, GoldenrodCity_Gym_EventScript_WhitneyBadge
 	goto_if_defeated TRAINER_WHITNEY_1_HNS, GoldenrodCity_Gym_EventScript_WhitneyBadge
 	msgbox GoldenrodCity_Gym_Text_WhitneyBefore, MSGBOX_DEFAULT
 	trainerbattle_no_intro TRAINER_WHITNEY_1_HNS, GoldenrodCity_Gym_Text_WhitneyShouldntBeSoSerious
 	msgbox GoldenrodCity_Gym_Text_WhitneyYouMeanie, MSGBOX_DEFAULT
-	goto_if_ge VAR_GOLDENROD_CITY_STATE, 3, GoldenrodCity_Gym_EventScript_WhitneyBattleDone
-	setvar VAR_GOLDENROD_CITY_STATE, 3
+	goto_if_ge VAR_WAYFARER_JOHTO_WHITNEY_STATE, 3, GoldenrodCity_Gym_EventScript_WhitneyBattleDone
+	setvar VAR_WAYFARER_JOHTO_WHITNEY_STATE, 3
 GoldenrodCity_Gym_EventScript_WhitneyBattleDone::
 	closemessage
 	release
@@ -85,8 +85,8 @@ GoldenrodCity_Gym_EventScript_WhitneyBadgeAward::
 	call Common_EventScript_SetGymTrainers_hns
 	giveitem ITEM_TM_ATTRACT
 	msgbox GoldenrodCity_Gym_Text_WhitneyAttract, MSGBOX_DEFAULT
-	goto_if_ge VAR_GOLDENROD_CITY_STATE, 5, GoldenrodCity_Gym_EventScript_WhitneyBadgeDone
-	setvar VAR_GOLDENROD_CITY_STATE, 5
+	goto_if_ge VAR_WAYFARER_JOHTO_WHITNEY_STATE, 5, GoldenrodCity_Gym_EventScript_WhitneyBadgeDone
+	setvar VAR_WAYFARER_JOHTO_WHITNEY_STATE, 5
 GoldenrodCity_Gym_EventScript_WhitneyBadgeDone::
 	closemessage
 	release
@@ -113,9 +113,9 @@ GoldenrodCity_Gym_EventScript_Trigger::
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkUp1
 	waitmovement 0
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	goto_if_ge VAR_GOLDENROD_CITY_STATE, 4, GoldenrodCity_Gym_EventScript_TriggerDone
+	goto_if_ge VAR_WAYFARER_JOHTO_WHITNEY_STATE, 4, GoldenrodCity_Gym_EventScript_TriggerDone
 #endif
-	setvar VAR_GOLDENROD_CITY_STATE, 4
+	setvar VAR_WAYFARER_JOHTO_WHITNEY_STATE, 4
 GoldenrodCity_Gym_EventScript_TriggerDone::
 	closemessage
 	release

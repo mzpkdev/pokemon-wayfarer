@@ -21,8 +21,21 @@ BlackthornCity_OnFrame::
 
 BlackthornCity_EventScript_CityEnter:: 
 	setflag FLAG_VISITED_BLACKTHORN_CITY
+	call_if_eq VAR_BLACKTHORN_CITY_STATE, 0, BlackthornCity_EventScript_Setup
 	callnative SetTimeBasedEncounters
 	end
+
+@ Blackthorn and Dragon's Den start-up, run on the first load of Blackthorn
+@ however the player reached it (it no longer rides on Mahogany's setup). It
+@ only runs while Blackthorn's state is still 0, and New-game defaults are not
+@ restated.
+BlackthornCity_EventScript_Setup:: @flagheap
+	setflag FLAG_HIDE_DRAGONS_DEN_CAVERN_SILVER
+	setflag FLAG_HIDE_DRAGONS_DEN_CAVERN_CLAIR
+	setflag FLAG_HIDE_DRAGONS_DEN_CAVERN_LANCE
+	setflag FLAG_HIDE_DRAGONS_DEN_SHRINE_CLAIR
+	setvar VAR_BLACKTHORN_CITY_STATE, 1
+	return
 
 BlackthornCity_EventScript_Call::
 	lock

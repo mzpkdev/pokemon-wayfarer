@@ -4,6 +4,7 @@ AzaleaTown_hns_MapScripts::
 	.byte 0
 
 AzaleaTown_OnTransition::
+	call_if_unset FLAG_VISITED_AZALEA_TOWN, AzaleaTown_EventScript_Setup
 	goto_if_eq VAR_AZALEA_TOWN_STATE, 5, AzaleaTown_MapScript_Hide_Silver
 	end
 	
@@ -16,11 +17,19 @@ AzaleaTown_MapScript_Hide_Silver:
 	removeobject LOCALID_AZALEA_TOWN_SILVER
 	end
 
-AzaleaTown_EventScript_Trigger:: @flagheap
+@ First-visit setup, run once from the map load however the player arrives.
+@ New-game defaults are not restated, and Ilex Forest's hide flags are left
+@ alone once the forest has started.
+AzaleaTown_EventScript_Setup:: @flagheap
 	setflag FLAG_VISITED_AZALEA_TOWN
 	setflag FLAG_HIDE_AZALEA_TOWN_SLOWPOKE
 	setflag FLAG_HIDE_AZALEA_TOWN_SILVER
 	setflag FLAG_HIDE_KURT_2
+	setflag FLAG_HIDE_AZALEA_TOWN_KURT
+	setflag FLAG_HIDE_AZALEA_ARIADOS_LEFT
+	setflag FLAG_HIDE_AZALEA_ARIADOS_MID
+	setflag FLAG_HIDE_AZALEA_ARIADOS_RIGHT
+	goto_if_ne VAR_ILEX_FOREST_FARFETCHD, 0, AzaleaTown_Setup_IlexStarted
 	setflag FLAG_HIDE_ILEX_FOREST_APPRENTICE
 	setflag FLAG_HIDE_ILEX_FOREST_MASTER
 	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_4
@@ -29,24 +38,9 @@ AzaleaTown_EventScript_Trigger:: @flagheap
 	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_1
 	setflag FLAG_HIDE_CELEBI
 	setflag FLAG_HIDE_ILEX_FOREST_KURT
-	setflag FLAG_HIDE_AZALEA_TOWN_KURT
-	setflag FLAG_HIDE_AZALEA_ARIADOS_LEFT
-	setflag FLAG_HIDE_AZALEA_ARIADOS_MID
-	setflag FLAG_HIDE_AZALEA_ARIADOS_RIGHT
-	
-
-	clearflag FLAG_HIDE_ILEX_FOREST_KIMONO
-	clearflag FLAG_ITEM_SLOWPOKE_WELL_RAIN_DANCE
-	clearflag FLAG_HIDE_AZALEA_TOWN_ROCKETS
-	clearflag FLAG_HIDE_AZALEA_TOWN_WELL_ROCKET
-	clearflag FLAG_HIDE_KURT_1
-	clearflag FLAG_GOT_CHARCOAL
-	clearflag FLAG_HIDE_AZALEA_TOWN_FARFETCHD
-	clearflag FLAG_HIDE_AZALEA_TOWN_CUT_MASTER
-	clearflag FLAG_MOVE_TUTOR_TAUGHT_HEADBUTT
-
-	setvar VAR_AZALEA_TOWN_STATE, 1
-	end
+AzaleaTown_Setup_IlexStarted:
+	setvar_forward VAR_AZALEA_TOWN_STATE, 1
+	return
 
 AzaleaTown_EventScript_Rocket1::
 	lock
@@ -173,7 +167,7 @@ AzaleaTown_EventScript_SilverTriggerTop::
 	playse SE_EXIT
 	setflag FLAG_HIDE_AZALEA_TOWN_SILVER
 	removeobject LOCALID_AZALEA_TOWN_SILVER
-	setvar VAR_AZALEA_TOWN_STATE, 6
+	setvar_forward VAR_AZALEA_TOWN_STATE, 6
 	fadedefaultbgm
 	release
 	end
@@ -204,7 +198,7 @@ AzaleaTown_EventScript_SilverTriggerBot::
 	playse SE_EXIT
 	setflag FLAG_HIDE_AZALEA_TOWN_SILVER
 	removeobject LOCALID_AZALEA_TOWN_SILVER
-	setvar VAR_AZALEA_TOWN_STATE, 6
+	setvar_forward VAR_AZALEA_TOWN_STATE, 6
 	fadedefaultbgm
 	release
 	end
@@ -260,7 +254,7 @@ AzaleaTown_EventScript_GSBall::
 	removeobject LOCALID_AZALEA_TOWN_KURT_GS
 	closedoor 19, 11
 	waitdooranim
-	setvar VAR_AZALEA_TOWN_STATE, 9
+	setvar_forward VAR_AZALEA_TOWN_STATE, 9
 	release
 	end
 

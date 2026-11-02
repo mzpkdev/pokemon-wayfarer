@@ -46,9 +46,11 @@
 #define WAYFARER_COAST_FLAG_ID(slot)  (WAYFARER_COAST_FLAG_NAMESPACE | (slot))
 #define WAYFARER_COAST_VAR_ID(slot)   (WAYFARER_COAST_VAR_NAMESPACE | (slot))
 
-#define WAYFARER_COAST_FLAG_COUNT 128
+// Slots 0-127 serve the Kanto coast adventures; 128-191 are the Johto story block.
+#define WAYFARER_COAST_FLAG_COUNT 192
 #define WAYFARER_COAST_FLAG_BYTES (WAYFARER_COAST_FLAG_COUNT / 8)
-#define WAYFARER_COAST_VAR_COUNT 8
+// Vars 0-5 serve the Kanto coast adventures; 6-15 are the Johto story block.
+#define WAYFARER_COAST_VAR_COUNT 16
 #define WAYFARER_COAST_STATE_MAGIC 0x43
 
 #define WAYFARER_SEVII_FLAG_COUNT            256

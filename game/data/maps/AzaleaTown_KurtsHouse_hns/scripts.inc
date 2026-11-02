@@ -4,11 +4,11 @@ AzaleaTown_KurtsHouse_hns_MapScripts::
 	.byte 0
 
 AzaleaTown_KurtsHouse_OnTransition::
-	goto_if_eq VAR_AZALEA_TOWN_STATE, 3, AzaleaTown_KurtsHouse_EventScript_ReturnFromWellSetup
+	goto_if_eq VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 3, AzaleaTown_KurtsHouse_EventScript_ReturnFromWellSetup
 	end
 
 AzaleaTown_KurtsHouse_OnFrame::
-	map_script_2 VAR_AZALEA_TOWN_STATE, 3, AzaleaTown_KurtsHouse_EventScript_ReturnFromWell
+	map_script_2 VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 3, AzaleaTown_KurtsHouse_EventScript_ReturnFromWell
 	.2byte 0
 
 AzaleaTown_KurtsHouse_EventScript_KurtBefore::
@@ -23,7 +23,7 @@ AzaleaTown_KurtsHouse_EventScript_KurtBefore::
 	removeobject LOCALID_AZALEA_TOWN_KURT_BEFORE
 	setflag FLAG_HIDE_KURT_1
 	setflag FLAG_HIDE_AZALEA_TOWN_WELL_ROCKET
-	setvar VAR_AZALEA_TOWN_STATE, 2
+	setvar_forward VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 2
 	release
 	end
 
@@ -36,6 +36,7 @@ AzaleaTown_KurtsHouse_EventScript_PlayerMove::
 	removeobject LOCALID_AZALEA_TOWN_KURT_BEFORE
 	setflag FLAG_HIDE_KURT_1
 	setflag FLAG_HIDE_AZALEA_TOWN_WELL_ROCKET
+	setvar_forward VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 2
 	release
 	end
 
@@ -49,12 +50,9 @@ AzaleaTown_KurtsHouse_EventScript_Girl::
 	end
 
 AzaleaTown_KurtsHouse_EventScript_Girl2::
-	goto_if_eq VAR_AZALEA_TOWN_STATE, 3, AzaleaTown_KurtsHouse_EventScript_Girl4
-	goto_if_eq VAR_AZALEA_TOWN_STATE, 4, AzaleaTown_KurtsHouse_EventScript_Girl4
-	goto_if_eq VAR_AZALEA_TOWN_STATE, 5, AzaleaTown_KurtsHouse_EventScript_Girl4
-	goto_if_eq VAR_AZALEA_TOWN_STATE, 6, AzaleaTown_KurtsHouse_EventScript_Girl4
 	goto_if_eq VAR_AZALEA_TOWN_STATE, 8, AzaleaTown_KurtsHouse_EventScript_Girl5
 	goto_if_eq VAR_AZALEA_TOWN_STATE, 9, AzaleaTown_KurtsHouse_EventScript_Girl5
+	goto_if_ge VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 3, AzaleaTown_KurtsHouse_EventScript_Girl4
 
 	msgbox KurtsHouse_Text_GranddaughterDad, MSGBOX_DEFAULT
 	closemessage
@@ -92,7 +90,7 @@ AzaleaTown_KurtsHouse_EventScript_ReturnFromWell::
 	msgbox KurtsHouse_Text_KurtBallsFromApricorns, MSGBOX_DEFAULT
 	closemessage
 	turnobject LOCALID_AZALEA_TOWN_KURT, DIR_NORTH
-	setvar VAR_AZALEA_TOWN_STATE, 4
+	setvar_forward VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 4
 	release
 	end
 
@@ -196,7 +194,7 @@ AzaleaTown_KurtsHouse_EventScript_KurtGsBall::
 	waitmovement 0
 AzaleaTown_KurtsHouse_EventScript_KurtGsBall2::
 	msgbox KurtsHouse_Text_Kurt_Whatwasthat, MSGBOX_DEFAULT
-	setvar VAR_AZALEA_TOWN_STATE, 8
+	setvar_forward VAR_AZALEA_TOWN_STATE, 8
 	closemessage
 	release
 	end

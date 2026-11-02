@@ -3,7 +3,7 @@ EcruteakCity_Theater_hns_MapScripts::
 	.byte 0
 EcruteakCity_Theater_OnTransition::
 	call_if_eq VAR_ECRUTEAK_CITY_THEATER, 1, EcruteakCity_Theater_MapScript_SetRocketSceneActive
-	call_if_eq VAR_ECRUTEAK_CITY_THEATER, 8, EcruteakCity_Theater_MapScript_SetKimonoMovement
+	call_if_eq VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 8, EcruteakCity_Theater_MapScript_SetKimonoMovement
 	end
 
 EcruteakCity_Theater_MapScript_SetRocketSceneActive::
@@ -208,7 +208,7 @@ EcruteakCity_Theater_Text_KimonoRocket3:
 EcruteakCity_Theater_EventScript_KimonoGirl::
 	lock
 	faceplayer
-	goto_if_eq VAR_ECRUTEAK_CITY_THEATER, 6, EcruteakCity_Theater_EventScript_KimonoGirlDuringEvent
+	goto_if_eq VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 6, EcruteakCity_Theater_EventScript_KimonoGirlDuringEvent
 	msgbox EcruteakCity_Theater_Text_KimonoDone, MSGBOX_DEFAULT
 	closemessage
 	release
@@ -223,8 +223,8 @@ EcruteakCity_Theater_EventScript_KimonoGirlDuringEvent::
 EcruteakCity_Theater_EventScript_Zuki::
 	lock
 	faceplayer
-	goto_if_ge VAR_ECRUTEAK_CITY_THEATER, 8, EcruteakCity_Theater_EventScript_ZukiAfterLegendary
-	goto_if_eq VAR_ECRUTEAK_CITY_THEATER, 6, EcruteakCity_Theater_EventScript_ZukiBattle
+	goto_if_ge VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 8, EcruteakCity_Theater_EventScript_ZukiAfterLegendary
+	goto_if_eq VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 6, EcruteakCity_Theater_EventScript_ZukiBattle
 	goto_if_eq VAR_ECRUTEAK_CITY_THEATER, 1, EcruteakCity_Theater_EventScript_ZukiDuringRocket
 	msgbox EcruteakCity_Theater_Text_Kimono, MSGBOX_DEFAULT
 	closemessage
@@ -269,9 +269,18 @@ EcruteakCity_Theater_EventScript_SurfGuy_GiveSurf::
 	msgbox EcruteakCity_Theater_Text_SurfGuyGaveSurf
 	closemessage
 	setflag FLAG_RECEIVED_HM_SURF
-	setvar VAR_ECRUTEAK_CITY_THEATER, 3
+	call EcruteakCity_Theater_EventScript_SurfGivenAfterRocket
 	release
 	end
+
+@ HM Surf is the Theater Rocket's last step: the Surf state moves 2 -> 3 and
+@ nothing else, so a talk that finds the Rocket in any other state, or the
+@ ceremony further along, never changes it.
+EcruteakCity_Theater_EventScript_SurfGivenAfterRocket::
+	goto_if_ne VAR_ECRUTEAK_CITY_THEATER, 2, EcruteakCity_Theater_EventScript_SurfGivenAfterRocketDone
+	setvar VAR_ECRUTEAK_CITY_THEATER, 3
+EcruteakCity_Theater_EventScript_SurfGivenAfterRocketDone::
+	return
 
 EcruteakCity_Theater_EventScript_SurfGuyDuringRocket::
 	msgbox EcruteakCity_Theater_Text_SurfGuyRocket, MSGBOX_DEFAULT
@@ -290,7 +299,7 @@ EcruteakCity_Theater_EventScript_TriggerSurfGuy::
 	msgbox EcruteakCity_Theater_Text_SurfGuyGaveSurf
 	closemessage
 	setflag FLAG_RECEIVED_HM_SURF
-	setvar VAR_ECRUTEAK_CITY_THEATER, 3
+	call EcruteakCity_Theater_EventScript_SurfGivenAfterRocket
 	applymovement LOCALID_SURF_GUY, EcruteakCity_Theater_Movement_SurfGuy2
 	waitmovement 0 
 	release
@@ -688,7 +697,7 @@ EcruteakCity_Theater_EventScript_LegendaryCutscene::
 	playse SE_M_PETAL_DANCE
 	applymovement2 LOCALID_ECRUTEAK_ZUKI, EcruteakCity_Theater_Movement_KimonoSpin
 	waitmovement 0
-	setvar VAR_ECRUTEAK_CITY_THEATER, 6
+	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 6
 EcruteakCity_Theater_EventScript_ZukiBattle::
 	msgbox EcruteakCity_Theater_Text_ZukiSeenAgain, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, EcruteakCity_Theater_EventScript_LegendaryDenied
@@ -825,7 +834,7 @@ EcruteakCity_Theater_EventScript_Lugia::
 	setflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_ZUKI
 	setflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS
 	setvar VAR_NEWBARKTOWN_LABSTATE, 9
-	setvar VAR_ECRUTEAK_CITY_THEATER, 7
+	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 7
 	release
 	end
 EcruteakCity_Theater_EventScript_Hooh::
@@ -871,7 +880,7 @@ EcruteakCity_Theater_EventScript_Hooh::
 	setflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_ZUKI
 	setflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS
 	setvar VAR_NEWBARKTOWN_LABSTATE, 9
-	setvar VAR_ECRUTEAK_CITY_THEATER, 7
+	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 7
 	release
 	end
 

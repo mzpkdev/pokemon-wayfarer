@@ -539,7 +539,7 @@ AzaleaTown_Gym_EventScript_Bugsy::
 	call Common_EventScript_SetGymTrainers_hns
 	giveitem ITEM_TM_U_TURN
 	msgbox AzaleaTown_Gym_Text_FuryCutterSpeech, MSGBOX_DEFAULT
-	setvar VAR_AZALEA_TOWN_STATE, 5
+	setvar_forward VAR_AZALEA_TOWN_STATE, 5
 	closemessage
 	setflag FLAG_HIDE_AZALEA_TOWN_FARFETCHD
 	setflag FLAG_GET_HEADBUTT

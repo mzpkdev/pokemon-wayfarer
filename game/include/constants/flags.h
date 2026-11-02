@@ -2747,6 +2747,8 @@
 #define FLAG_WAYFARER_COAST_TRAINER_DEFEAT_LAST  WAYFARER_COAST_FLAG_ID(108)
 #define FLAG_WAYFARER_COAST_REMATCH_PENDING_FIRST WAYFARER_COAST_FLAG_ID(109)
 #define FLAG_WAYFARER_COAST_REMATCH_PENDING_LAST  WAYFARER_COAST_FLAG_ID(117)
+// Johto story flags occupy the coast bank's slots 128-191; 129-191 are reserved.
+#define FLAG_WAYFARER_JOHTO_RADIO_TOWER_RESOLVED WAYFARER_COAST_FLAG_ID(128)
 // Background hidden-item fields are 13 bits, so reserve distinct HNS-bank
 // slots below 0x1000 for the seven coast hidden items.
 #define FLAG_WAYFARER_HIDDEN_ITEM_ROUTE20_STARDUST 0x942
