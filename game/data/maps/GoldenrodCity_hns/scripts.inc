@@ -4,7 +4,7 @@ GoldenrodCity_hns_MapScripts::
 	.byte 0
 
 GoldenrodCity_OnTransition::
-	call_if_unset FLAG_VISITED_GOLDENROD_CITY, GoldenrodCity_EventScript_Setup
+	call_if_unset FLAG_WAYFARER_JOHTO_SETUP_GOLDENROD, GoldenrodCity_EventScript_Setup
 	end
 
 GoldenrodCity_OnFrame::
@@ -17,6 +17,7 @@ GoldenrodCity_OnFrame::
 @ Ecruteak visit put him.
 GoldenrodCity_EventScript_Setup:: @flagheap
 	call_if_unset FLAG_SHOWN_ELM_TOGEPI, GoldenrodCity_Setup_QueueElmCall
+	setflag FLAG_WAYFARER_JOHTO_SETUP_GOLDENROD
 	setflag FLAG_VISITED_GOLDENROD_CITY
 	goto_if_set FLAG_SYS_PC_BILL, GoldenrodCity_Setup_BillMoved
 	setflag FLAG_HIDE_GOLDENROD_BILL
@@ -32,8 +33,13 @@ GoldenrodCity_Setup_TakeoverStarted:
 	setvar_forward VAR_GOLDENROD_CITY_STATE, 1
 	return
 
+@ A load script cannot show Elm's call, so the setup queues it for the OnFrame
+@ entry. Only Johto-origin players get it.
 GoldenrodCity_Setup_QueueElmCall::
+	specialvar VAR_RESULT, WayfarerIsJohtoOrigin
+	goto_if_eq VAR_RESULT, FALSE, GoldenrodCity_Setup_NoElmCall
 	setvar VAR_TEMP_1, 1
+GoldenrodCity_Setup_NoElmCall:
 	return
 
 GoldenrodCity_Trigger_Music::

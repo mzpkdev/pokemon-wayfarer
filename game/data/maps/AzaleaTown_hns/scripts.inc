@@ -4,7 +4,7 @@ AzaleaTown_hns_MapScripts::
 	.byte 0
 
 AzaleaTown_OnTransition::
-	call_if_unset FLAG_VISITED_AZALEA_TOWN, AzaleaTown_EventScript_Setup
+	call_if_unset FLAG_WAYFARER_JOHTO_SETUP_AZALEA, AzaleaTown_EventScript_Setup
 	goto_if_eq VAR_AZALEA_TOWN_STATE, 5, AzaleaTown_MapScript_Hide_Silver
 	end
 	
@@ -21,6 +21,7 @@ AzaleaTown_MapScript_Hide_Silver:
 @ New-game defaults are not restated, and Ilex Forest's hide flags are left
 @ alone once the forest has started.
 AzaleaTown_EventScript_Setup:: @flagheap
+	setflag FLAG_WAYFARER_JOHTO_SETUP_AZALEA
 	setflag FLAG_VISITED_AZALEA_TOWN
 	setflag FLAG_HIDE_AZALEA_TOWN_SLOWPOKE
 	setflag FLAG_HIDE_AZALEA_TOWN_SILVER

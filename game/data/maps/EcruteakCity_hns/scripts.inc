@@ -4,7 +4,7 @@ EcruteakCity_hns_MapScripts::
 	.byte 0
 
 EcruteakCity_OnTransition::
-	call_if_unset FLAG_VISITED_ECRUTEAK_CITY, EcruteakCity_EventScript_Setup
+	call_if_unset FLAG_WAYFARER_JOHTO_SETUP_ECRUTEAK, EcruteakCity_EventScript_Setup
 	callnative SetTimeBasedEncounters
 	end
 
@@ -23,6 +23,7 @@ EcruteakCity_Test_League::
 @ Suicune's Route 42 scene is over.
 EcruteakCity_EventScript_Setup::
 	@flagheap
+	setflag FLAG_WAYFARER_JOHTO_SETUP_ECRUTEAK
 	setflag FLAG_VISITED_ECRUTEAK_CITY
 	goto_if_ge VAR_SUICUNE_ENCOUNTERS, 3, EcruteakCity_Setup_EusineGone
 	setflag FLAG_HIDE_ROUTE42_EUSINE

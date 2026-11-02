@@ -5,7 +5,7 @@ Mahoganytown_hns_MapScripts::
 	.byte 0
 
 Mahoganytown_OnTransition::
-	call_if_unset FLAG_VISITED_MAHOGANY_TOWN, MahoganyTown_EventScript_Setup
+	call_if_unset FLAG_WAYFARER_JOHTO_SETUP_MAHOGANY, MahoganyTown_EventScript_Setup
 	end
 
 Mahoganytown_OnLoad::
@@ -43,6 +43,7 @@ Mahoganytown_EventScript_RocketTrigger::
 @ New-game defaults are not restated, and Blackthorn's own state is set up by
 @ Blackthorn itself.
 MahoganyTown_EventScript_Setup::
+	setflag FLAG_WAYFARER_JOHTO_SETUP_MAHOGANY
 	setflag FLAG_VISITED_MAHOGANY_TOWN
 	setflag FLAG_HIDE_LAKE_OF_RAGE_LANCE
 	setflag FLAG_HIDE_MAHOGANY_TOWN_SHOP_NPCS

@@ -1380,8 +1380,9 @@ static bool16 IsInfiltratedSpaceCenter(struct WarpData *warp)
 
 static bool16 IsRocketTakeover(struct WarpData *warp)
 {
-    // Inject Rocket Takeover override logic
-    if (VarGet(VAR_MAHOGANY_TOWN_STATE) == 16)
+    // Inject Rocket Takeover override logic. The takeover runs from its start
+    // (Goldenrod state 6) until the Radio Tower finale sets the resolved flag.
+    if (VarGet(VAR_GOLDENROD_CITY_STATE) >= 6 && !FlagGet(FLAG_WAYFARER_JOHTO_RADIO_TOWER_RESOLVED))
     {
         if (IS_MAP(MAP_GOLDENROD_CITY_HNS, MAP_GOLDENROD_CITY_HNS) ||
             IS_MAP(MAP_GOLDENROD_CITY_RADIO_TOWER_1F_HNS, MAP_GOLDENROD_CITY_RADIO_TOWER_1F_HNS) ||

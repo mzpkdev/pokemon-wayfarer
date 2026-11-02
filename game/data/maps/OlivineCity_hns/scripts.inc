@@ -5,6 +5,7 @@ OlivineCity_hns_MapScripts::
 	.byte 0
 
 OlivineCity_MapScript_OnTransition::
+	call_if_unset FLAG_WAYFARER_JOHTO_SETUP_OLIVINE, OlivineCity_EventScript_Setup
 	callnative SetTimeBasedEncounters
 	goto_if_ge VAR_OLIVINE_CITY_STATE, 5, OlivineCity_MapScript_ClearWeather
 	end
@@ -46,25 +47,21 @@ OlivineCity_Text_Baoba:
 	.string "We're a little out of the way, but\n"
 	.string "please come visit!$"
 
-OlivineCity_EventScript_CityTrigger:: @FLAGHEAP
+@ First-visit setup, run once from the map load however the player arrives
+@ (road, ship, or Fly). New-game defaults are not restated; Suicune's chase and
+@ Cianwood's state are only started while the chase has not begun.
+OlivineCity_EventScript_Setup:: @FLAGHEAP
+	setflag FLAG_WAYFARER_JOHTO_SETUP_OLIVINE
 	setflag FLAG_HIDE_OLIVINE_CITY_GYM_JASMINE
 	setflag FLAG_HIDE_OLIVINE_SILVER
 	setflag FLAG_VISITED_OLIVINE_CITY
-	clearflag FLAG_SAFARI_ZONE_WEST_EXPANSION
-	clearflag FLAG_SAFARI_ZONE_EAST_EXPANSION
-	clearflag FLAG_HIDE_BATTLEFRONTIER_ENGINEER
-	clearflag FLAG_HIDE_LIGHTHOUSE_JASMINE
-	clearflag FLAG_HIDE_WHIRL_ISLANDS_TENTACRUEL
-	setvar VAR_GETFLY, 0
-	
-	setvar VAR_OLIVINE_CITY_STATE, 1
-
-	@cianwood flags
+	setvar_forward VAR_OLIVINE_CITY_STATE, 1
+	goto_if_ne VAR_SUICUNE_ENCOUNTERS, 0, OlivineCity_Setup_SuicuneStarted
 	setvar VAR_SUICUNE_ENCOUNTERS, 1
-	clearflag FLAG_HIDE_CIANWOOD_SUICUNE
 	setflag FLAG_HIDE_CIANWOOD_EUSINE
-	setvar VAR_CIANWOOD_CITY_STATE, 1
-	end
+	setvar_forward VAR_CIANWOOD_CITY_STATE, 1
+OlivineCity_Setup_SuicuneStarted:
+	return
 
 OlivineCity_EventScript_SilverTrigger::
 	lock
