@@ -8,6 +8,7 @@ import { createClockApi, type ClockApi } from "./features/clock"
 import { createControlsApi, type ControlsApi } from "./features/controls"
 import { createDailySlotsApi, type DailySlotsApi } from "./features/daily-slots"
 import { createDialogueApi, type DialogueApi } from "./features/dialogue"
+import { createFerryApi, type FerryApi } from "./features/ferry"
 import { createInventoryApi, type InventoryApi } from "./features/inventory"
 import { createLeaguesApi, type LeaguesApi } from "./features/leagues"
 import { createPlayerApi, type PlayerApi } from "./features/player"
@@ -34,6 +35,7 @@ export class GameSession {
   readonly controls: ControlsApi
   readonly dailySlots: DailySlotsApi
   readonly dialogue: DialogueApi
+  readonly ferry: FerryApi
   readonly inventory: InventoryApi
   readonly leagues: LeaguesApi
   readonly player: PlayerApi
@@ -64,6 +66,7 @@ export class GameSession {
     this.controls = createControlsApi(runtime)
     this.dailySlots = createDailySlotsApi(runtime)
     this.dialogue = createDialogueApi(state, wait)
+    this.ferry = createFerryApi(runtime)
     this.inventory = createInventoryApi(runtime)
     this.player = createPlayerApi(runtime, mailbox)
     this.regionMap = createRegionMapApi(runtime, mailbox)

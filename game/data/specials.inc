@@ -835,6 +835,19 @@ gSpecials::
     def_special Ferry_Disembark
     def_special Ferry_IsAnnePendingAtVermilion
     def_special Ferry_ArmAnneDepartureScript
+    def_special Ferry_HostTalk
+    def_special Ferry_GetHostKind
+    def_special Ferry_CheckRequest
+    def_special Ferry_HostMet
+    def_special Ferry_HostMissed
+    def_special Ferry_IsHostOneTry
+    def_special Ferry_SetUpHostBattle
+    def_special Ferry_EndHostBattle
+    def_special Ferry_BufferQuiz
+    def_special Ferry_QuizCorrect
+    def_special Ferry_BufferSleepPort
+    def_special Ferry_Sleep
+    def_special Ferry_IsBedMine
     def_special DrawFerryLilycoveCharterMenu
     def_special GetFerryLilycoveCharter
     def_special GetFerryLilycoveCharterCount

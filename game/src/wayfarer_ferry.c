@@ -2,8 +2,7 @@
 //
 // The schedule is a pure table. The voyage state lives in PokemonStorage after the daily
 // slots (struct WayfarerVoyage) and is C-side only, so HnS and Hoenn maps read the same state
-// through specials. Cabins, hosts and the daily-slot freeze are other parts of the spec: this
-// file keeps their fields in the saved struct and leaves them zero.
+// through specials. The cabins (hosts, requests, sleeping) are in wayfarer_ferry_cabins.c.
 
 #include "global.h"
 #include "wayfarer_ferry.h"
@@ -39,7 +38,6 @@ extern const u8 Ferry_EventScript_PA_Arrival[];
 extern const u8 Ferry_EventScript_PA_ArrivalAlola[];
 
 #define FERRY_SLATEPORT_PATRONS_FLAG HOENN_FLAG_ID(0x389)  // FLAG_HIDE_SLATEPORT_CITY_HARBOR_PATRONS
-#define FERRY_BERTH_HIDE_FLAG        FLAG_TEMP_1F          // the berth ship object's flag; cleared on every map load
 #define FERRY_CYCLE_MINUTES          (4 * (FERRY_PORT_MINUTES + FERRY_SEA_MINUTES))
 #define MINUTES_PER_DAY              (HOURS_PER_DAY * MINUTES_PER_HOUR)
 
@@ -317,9 +315,8 @@ void Ferry_OnBlackout(void)
         Ferry_ClearVoyage();
 }
 
-// Boarding sets every field. The cabin fields (hosts, request parameters, cabin, settled requests)
-// stay zero until the cabins part draws them; slotDay is frozen at the daily slots' current stamp so
-// boarding never starts a new day by itself.
+// Boarding sets every field: two fresh hosts, and slotDay frozen at the daily slots' current stamp so boarding
+// never starts a new day by itself.
 bool8 Ferry_BoardAt(u8 port, u8 ship, u32 now)
 {
     struct WayfarerVoyage *voyage = Voyage();
@@ -335,6 +332,7 @@ bool8 Ferry_BoardAt(u8 port, u8 ship, u32 now)
     voyage->eventAt = now + FERRY_PORT_MINUTES;
     voyage->slotDay = gPokemonStoragePtr->dailySlots.stampDay;
     voyage->annePending = annePending;
+    Ferry_DrawHosts(ship);
     return TRUE;
 }
 
@@ -487,9 +485,9 @@ static void ApplyBerth(bool8 live)
     graphicsId = sShips[ship == FERRY_SHIP_NONE ? FERRY_SHIP_AQUA : ship].graphicsId;
     VarSet(VAR_OBJ_GFX_ID_E, graphicsId);
     if (ship == FERRY_SHIP_NONE)
-        FlagSet(FERRY_BERTH_HIDE_FLAG);
+        FlagSet(FERRY_HIDE_FLAG);
     else
-        FlagClear(FERRY_BERTH_HIDE_FLAG);
+        FlagClear(FERRY_HIDE_FLAG);
     if (port == FERRY_PORT_VERMILION)
         SetBerthTemplateCoords(sPorts[port].shipLocalId, VERMILION_BERTH_X,
                                ship == FERRY_SHIP_ANNE ? VERMILION_BERTH_ANNE_Y : VERMILION_BERTH_Y);
@@ -531,6 +529,7 @@ void Ferry_OnMapLoad(void)
     sBerthShownPlusOne = 0;
     sBerthDirty = FALSE;
     ApplyBerth(FALSE);
+    Ferry_PlaceHosts();
 }
 
 // Every in-game minute (the overworld's time-of-day refresh): a changed answer is applied the next time
@@ -571,6 +570,11 @@ void Ferry_RefreshAnneWarp(void)
 static const u8 *GetPortName(u8 port)
 {
     return port < FERRY_PORT_COUNT ? sPorts[port].name : sNameNone;
+}
+
+void Ferry_BufferPortName(u8 port)
+{
+    StringCopy(gStringVar1, GetPortName(port));
 }
 
 // The field poll: acts only when the player has the field (it runs from the field input, so never in a script,

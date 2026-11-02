@@ -8,13 +8,33 @@ import {
   waitAboard,
 } from "../playbooks/wayfarer-ports"
 
-// The S.S. ferries (.product/specs/ss-ferries.md), part 1: boarding, sailing, arriving and going ashore.
+// The S.S. ferries (.product/specs/ss-ferries.md): boarding, sailing, arriving and going ashore, and the cabins.
 // A new game starts at 8:00 on day 1, and `clock.setTimeOfDay` never changes the date, so each test keeps
 // to the morning and afternoon, or moves the date explicitly.
 
 const readyOn = async (game: GameSession, map: string): Promise<boolean> => {
   const state = await game.state.read()
   return state.ready && state.map.name === map
+}
+
+/**
+ * Talks to the host in front of the player and reads the dialogue through (A only while a script runs).
+ * Returns everything the dialogue showed.
+ */
+const talkAndReadThrough = async (game: GameSession, description: string): Promise<string> => {
+  await game.player.interact()
+  let seen = false
+  let shown = ""
+  for (let attempt = 0; attempt < 60; attempt++) {
+    await game.wait.frames(30)
+    const state = await game.state.read()
+    if (state.scriptActive || state.dialogueOpen) {
+      seen = true
+      shown += `${state.dialogue.fullText}\n`
+      await game.controls.press("a")
+    } else if (seen && state.ready) return shown
+  }
+  throw new Error(`${description}: ${JSON.stringify(await game.state.read())}`)
 }
 
 describe.sequential("Wayfarer S.S. ferries", () => {
@@ -191,5 +211,86 @@ describe.sequential("Wayfarer S.S. ferries", () => {
     })
     await boardFerryAtDock(game)
     await waitAboard(game, "ss-aqua-1f")
+  })
+
+  it("meets a cabin host's request, sleeps at sea and wakes at the next port", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { facing: "down", position: { map: "olivine-port-inside", x: 8, y: 16 } },
+      story: { vars: { ssAquaState: 8 } },
+      bag: { items: { ssTicket: 1, fullHeal: 1 } },
+      determinism: { textSpeed: "instant" },
+    })
+    // The Aqua's merchant (host row 4, in the south-south-east cabin) wants a FULL HEAL (his parameter 1);
+    // the gambler is the voyage's other host.
+    await game.ferry.pinHosts({ host: 4, param: 1 }, { host: 2 })
+    await boardFerryAtDock(game)
+    await waitAboard(game, "ss-aqua-1f")
+
+    // The merchant stands at (1,6) of his cabin. The request is checked at once, and the FULL HEAL is taken.
+    await game.player.warp("ss-aqua-room-sse", 1, 7, "up")
+    await game.wait.frames(60)
+    await expect(game.state.read()).resolves.toMatchObject({ ready: true, map: { name: "ss-aqua-room-sse" } })
+    const request = await talkAndReadThrough(game, "The merchant's request was not read through")
+    expect(request).toContain("FULL HEAL")
+    await expect(game.inventory.contains("fullHeal")).resolves.toBe(false)
+
+    // The cabin is the player's now, but the ship is in port: the bed (his offer) asks nothing and moves no time.
+    const before = await game.clock.read()
+    await talkAndReadThrough(game, "The port refusal was not read through")
+    await expect(game.state.read()).resolves.toMatchObject({ ready: true, map: { name: "ss-aqua-room-sse" } })
+    const inPort = await game.clock.read()
+    expect(inPort.hour * 60 + inPort.minute - (before.hour * 60 + before.minute)).toBeLessThan(5)
+
+    // Half an hour on, the ship casts off; the cast-off announcement plays and is read through.
+    await game.clock.setTimeOfDay({ hour: before.hour, minute: before.minute + 31, second: 0 })
+    let announced = false
+    for (let attempt = 0; attempt < 60; attempt++) {
+      await game.wait.frames(30)
+      const state = await game.state.read()
+      if (state.scriptActive || state.dialogueOpen) {
+        announced = true
+        await game.controls.press("a")
+      } else if (announced && state.ready) break
+    }
+    expect(announced).toBe(true)
+
+    // At sea the offer is real: "Sleep until we reach VERMILION CITY?" Wait for the real yes/no, answer YES.
+    await game.player.interact()
+    let ask = await game.state.read()
+    for (let attempt = 0; attempt < 40 && ask.choice.kind !== "yes-no"; attempt++) {
+      await game.wait.frames(30)
+      ask = await game.state.read()
+    }
+    expect(ask.choice.kind).toBe("yes-no")
+    await game.controls.press("a")
+
+    // The clock jumps to the arrival (six in-game hours after cast-off, 14:30), the map reloads with the player
+    // where they stood, and the arrival announcement plays. Read it through only once its text was seen.
+    let arrived = false
+    for (let attempt = 0; attempt < 80; attempt++) {
+      await game.wait.frames(30)
+      const state = await game.state.read()
+      if (state.scriptActive || state.dialogueOpen) {
+        if (state.dialogue.fullText.includes("Now arriving at VERMILION CITY")) arrived = true
+        await game.controls.press("a")
+      } else if (arrived && state.ready) break
+    }
+    expect(arrived).toBe(true)
+    const woke = await game.clock.read()
+    expect(woke.hour).toBe(14)
+    expect(woke.minute).toBeGreaterThanOrEqual(30)
+    expect(woke.minute).toBeLessThan(40)
+    await expect(game.state.read()).resolves.toMatchObject({
+      ready: true,
+      map: { name: "ss-aqua-room-sse" },
+      player: { x: 1, y: 7 },
+    })
+
+    // In port at Vermilion: the exit sailor lets the player ashore at its berth.
+    await game.player.warp("ss-aqua-1f", 29, 3, "up")
+    await game.wait.frames(60)
+    await goAshoreFromExitSailor(game, "up", "vermilion-port-inside")
+    await expect(game.state.read()).resolves.toMatchObject({ player: { x: 8, y: 9 } })
   })
 })
