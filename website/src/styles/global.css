@@ -55,6 +55,8 @@
   }
 
   body {
+    /* Sprites run past the edges; clip, unlike hidden, keeps the title scene sticky. */
+    overflow-x: clip;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
