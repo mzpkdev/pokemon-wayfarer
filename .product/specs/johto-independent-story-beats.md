@@ -191,6 +191,8 @@ on `VAR_ROUTE27_STATE` and on the `LeagueCircuit_IsKnownThere` skip. Update
 corridor still writes no story state while Silver's offer stays available.
 If the player has already competed at Indigo, his opener drops "Are you going
 to take the Pokémon League challenge?" and opens from "…Don't make me laugh."
+"Competed" means the player has started at least one Indigo run, whether they
+won or lost. Record it with a new flag set when an Indigo circuit run begins.
 
 **Ecruteak.** The chapter 9 scene leaves the Kimono chain. It plays at its
 existing tile once the Radio Tower is resolved. It no longer reads or writes
