@@ -1917,6 +1917,45 @@ class KimonoTrial(unittest.TestCase):
                 interp.run('EcruteakCity_Theater_EventScript_Zuki')
                 self.assertEqual(len(interp.battles), 5)
 
+    def test_the_johto_hall_of_fame_before_or_after_the_ceremony_keeps_both_legendary_paths(self):
+        maps = LEGENDARY_MAPS + ('PokemonLeague_HallOfFame_hns', 'WhirlIslands_LugiaChamber_hns',
+                                 'TinTower_RoofDay_hns', 'PewterCity_hns')
+        hall = 'PokemonLeague_HallOfFame_EventScript_SetFirstGameClearFlags'
+        theater_hides = {'FLAG_HIDE_ECRUTEAK_CITY_THEATER_ZUKI', 'FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS'}
+        for branch, main, chamber, legendary, kimonos, other_wing in (
+                (1, LUGIA_P, 'WhirlIslands_LugiaChamber', 'FLAG_HIDE_LUGIA', 'FLAG_HIDE_WHIRL_ISLANDS_KIMONO_GIRLS',
+                 'ITEM_RAINBOW_WING'),
+                (2, HOOH_P, 'TinTower_RoofDay', 'FLAG_HIDE_HO_OH', 'FLAG_HIDE_TIN_TOWER_KIMONO_GIRLS',
+                 'ITEM_SILVER_WING')):
+            battle = '%s_EventScript_%s' % (chamber, 'Lugia' if branch == 1 else 'HoOh')
+            for league_first in (True, False):
+                with self.subTest(branch=branch, league_first=league_first):
+                    interp = Interp(*maps, answers=1, flags={RESOLVED},
+                                    vars={BRANCH: branch, THEATER: 3, CEREMONY: 0, LAB: 5})
+                    interp.items = {WINGS[branch]}
+                    interp.tr = LEGENDARY_TR
+                    if league_first:
+                        interp.run(hall)
+                        self.assertEqual(interp.vars.get(main, 0), 0)
+                    # The ceremony arms the level 50 encounter whichever came first.
+                    interp.run('EcruteakCity_Theater_EventScript_Zuki')
+                    self.assertEqual((interp.vars[CEREMONY], interp.vars[main]), (DONE, 2))
+                    interp.run('%s_OnTransition' % chamber)
+                    self.assertNotIn(legendary, interp.flags)
+                    self.assertNotIn(kimonos, interp.flags)
+                    interp.outcome = 'WON'
+                    interp.run(battle)
+                    self.assertEqual((interp.vars[CEREMONY], interp.vars[main]), (RESOLVED_CEREMONY, 3))
+                    # Zuki and the Kimono Girls are back in the theater.
+                    self.assertFalse(theater_hides & interp.flags)
+                    if not league_first:
+                        interp.run(hall)
+                        self.assertEqual(interp.vars[main], 3)
+                    # Pewter's old man gives the other Wing either way.
+                    interp.items = set()
+                    interp.run('PewterCity_EventScript_Gramps')
+                    self.assertIn(other_wing, interp.given)
+
     def test_only_the_ceremony_and_pewter_write_legendary_progress(self):
         # The Johto Hall of Fame used to set both to 4, which skipped the ceremony's encounter
         # (forward-only 2) and Pewter's resolved-at-3 check for anyone clearing the League first.
