@@ -142,15 +142,19 @@ describe.sequential("Wayfarer S.S. ferries", () => {
       bag: { items: { ssTicket: 1 } },
       determinism: { textSpeed: "instant" },
     })
-    // Rows: the ship in port (the Aqua by day), BATTLE FRONTIER, CANCEL. Pick the charter and confirm.
+    // Rows: the ship in port (the Aqua by day), BATTLE FRONTIER, CANCEL. Read through "May I see your ticket?"
+    // until the menu is really open (the harness reports it), then move to the Frontier row.
     await game.player.interact()
-    await game.wait.frames(120)
-    // "May I see your ticket?" waits for a press, then the menu opens on its first row. Give it time to open:
-    // a press before it does nothing, and the next A would take the ship row.
-    await game.controls.press("a")
-    await game.wait.frames(240)
+    let menu = await game.state.read()
+    for (let attempt = 0; attempt < 40 && menu.choice.kind !== "multichoice"; attempt++) {
+      await game.wait.frames(30)
+      if (menu.dialogueOpen || menu.scriptActive) await game.controls.press("a")
+      menu = await game.state.read()
+    }
+    expect(menu.choice).toMatchObject({ kind: "multichoice", optionCount: 3 })
     await game.controls.press("down")
     await game.wait.frames(20)
+    expect((await game.state.read()).choice.cursor).toBe(1)
     await game.controls.press("a")
     for (let attempt = 0; attempt < 120; attempt++) {
       if (await readyOn(game, "battle-frontier-outside-west")) break

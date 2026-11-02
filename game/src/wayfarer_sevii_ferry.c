@@ -116,6 +116,22 @@ u16 GetFerryLilycoveCharterCount(void)
     return count;
 }
 
+// The rows of Lilycove's menu in order, as FERRY_CHARTER_* ids: the ship in port (if any), each available charter,
+// then Cancel. The menu returns the id of the chosen row, which the attendant's script switches on.
+u8 Ferry_GetCharterRows(u8 *ids)
+{
+    u8 count = 0;
+    u8 charter;
+
+    if (Ferry_GetBerthShip() != FERRY_SHIP_NONE)
+        ids[count++] = FERRY_CHARTER_SHIP;
+    for (charter = FERRY_CHARTER_SOUTHERN_ISLAND; charter <= FERRY_CHARTER_BATTLE_FRONTIER; charter++)
+        if (IsCharterAvailable(charter))
+            ids[count++] = charter;
+    ids[count++] = FERRY_CHARTER_CANCEL;
+    return count;
+}
+
 void DrawFerryLilycoveCharterMenu(void)
 {
     static const u8 sTextSouthernIsland[] = _("SOUTHERN ISLAND");
@@ -123,32 +139,32 @@ void DrawFerryLilycoveCharterMenu(void)
     static const u8 sTextBattleFrontier[] = _("BATTLE FRONTIER");
     const u8 *labels[5];
     s32 destinations[5];
-    u8 count = 0;
-    u8 ship = Ferry_GetBerthShip();
+    u8 ids[5];
+    u8 count = Ferry_GetCharterRows(ids);
+    u8 i;
 
-    if (ship != FERRY_SHIP_NONE)
+    for (i = 0; i < count; i++)
     {
-        labels[count] = Ferry_GetShipName(ship);
-        destinations[count++] = FERRY_CHARTER_SHIP;
+        destinations[i] = ids[i];
+        switch (ids[i])
+        {
+        case FERRY_CHARTER_SHIP:
+            labels[i] = Ferry_GetShipName(Ferry_GetBerthShip());
+            break;
+        case FERRY_CHARTER_SOUTHERN_ISLAND:
+            labels[i] = sTextSouthernIsland;
+            break;
+        case FERRY_CHARTER_FARAWAY_ISLAND:
+            labels[i] = sTextFarawayIsland;
+            break;
+        case FERRY_CHARTER_BATTLE_FRONTIER:
+            labels[i] = sTextBattleFrontier;
+            break;
+        default:
+            labels[i] = gText_Cancel2;
+            break;
+        }
     }
-    if (IsCharterAvailable(FERRY_CHARTER_SOUTHERN_ISLAND))
-    {
-        labels[count] = sTextSouthernIsland;
-        destinations[count++] = FERRY_CHARTER_SOUTHERN_ISLAND;
-    }
-    if (IsCharterAvailable(FERRY_CHARTER_FARAWAY_ISLAND))
-    {
-        labels[count] = sTextFarawayIsland;
-        destinations[count++] = FERRY_CHARTER_FARAWAY_ISLAND;
-    }
-    if (IsCharterAvailable(FERRY_CHARTER_BATTLE_FRONTIER))
-    {
-        labels[count] = sTextBattleFrontier;
-        destinations[count++] = FERRY_CHARTER_BATTLE_FRONTIER;
-    }
-    labels[count] = gText_Cancel2;
-    destinations[count++] = FERRY_CHARTER_CANCEL;
-
     ScriptMenu_MultichoiceDynamic(15, 4, count, CreateMenuItems(labels, destinations, count),
                                   FALSE, count, 0, DYN_MULTICHOICE_CB_NONE);
 }

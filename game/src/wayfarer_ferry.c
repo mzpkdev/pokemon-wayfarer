@@ -168,8 +168,6 @@ static const struct FerryShip sShips[] =
 // The berth object the minute refresh still has to apply (a dialogue holds it back).
 static EWRAM_DATA u8 sBerthShownPlusOne = 0;  // the ship the berth shows, plus one; zero until the berth is set up
 static EWRAM_DATA bool8 sBerthDirty = FALSE;
-// A transition applied quietly (by a check that must not act on a stale phase) still gets its announcement.
-static EWRAM_DATA u8 sPendingAnnounce = 0;
 
 static struct WayfarerVoyage *Voyage(void)
 {
@@ -289,19 +287,6 @@ bool8 Ferry_IsAboard(void)
     return Voyage()->ship != FERRY_SHIP_NONE;
 }
 
-// A walking player must never act on a phase the clock has passed: the exit checks bring the voyage up to date
-// first, and the field poll announces whatever they applied.
-static void AdvanceQuietly(void)
-{
-    u8 announce;
-
-    if (Voyage()->ship == FERRY_SHIP_NONE)
-        return;
-    announce = Ferry_Advance(Ferry_GetNow());
-    if (announce != FERRY_ANNOUNCE_NONE)
-        sPendingAnnounce = announce;
-}
-
 bool8 Ferry_IsAtSea(void)
 {
     return Voyage()->ship != FERRY_SHIP_NONE && Voyage()->phase == FERRY_PHASE_SEA;
@@ -322,7 +307,6 @@ void Ferry_InitNewGame(void)
 void Ferry_ClearVoyage(void)
 {
     memset(Voyage(), 0, sizeof(struct WayfarerVoyage));
-    sPendingAnnounce = FERRY_ANNOUNCE_NONE;
     sBerthDirty = TRUE;
 }
 
@@ -566,7 +550,6 @@ void Ferry_OnMinute(void)
 // Anne's home port is Vermilion.
 void Ferry_RefreshAnneWarp(void)
 {
-    AdvanceQuietly();
     const struct WayfarerVoyage *voyage = Voyage();
     const struct FerryPort *port = &sPorts[sShips[FERRY_SHIP_ANNE].homePort];
     const struct FerryShip *anne = &sShips[FERRY_SHIP_ANNE];
@@ -604,15 +587,9 @@ bool8 Ferry_TryStartFieldEvent(void)
     if (voyage->ship == FERRY_SHIP_NONE
      || !Ferry_IsShipMap(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
         return FALSE;
-    announce = sPendingAnnounce;
-    sPendingAnnounce = FERRY_ANNOUNCE_NONE;
-    if (Ferry_GetNow() >= voyage->eventAt)
-    {
-        u8 applied = Ferry_Advance(Ferry_GetNow());
-
-        if (applied != FERRY_ANNOUNCE_NONE)
-            announce = applied;
-    }
+    if (Ferry_GetNow() < voyage->eventAt)
+        return FALSE;
+    announce = Ferry_Advance(Ferry_GetNow());
     if (announce == FERRY_ANNOUNCE_NONE)
         return FALSE;
     if (voyage->ship == FERRY_SHIP_ANNE)
@@ -657,11 +634,9 @@ u16 Ferry_BufferNextShip(void)
     return FALSE;
 }
 
-// The sailor's talk snapshots the offered ship in VAR_0x8005 when it starts, so the ship boarded is the one announced
-// even if the table flips (an hour change) mid-dialogue.
 u16 Ferry_BufferBoarding(void)
 {
-    u8 ship = gSpecialVar_0x8005;
+    u8 ship = Ferry_GetBerthShip();
     u8 port = GetBerthPort();
     u8 stop = Ferry_GetPortStop(ship, port);
 
@@ -676,7 +651,7 @@ u16 Ferry_BufferBoarding(void)
 // Hoenn-source); a refusal changes nothing.
 u16 Ferry_Board(void)
 {
-    u8 ship = gSpecialVar_0x8005;
+    u8 ship = Ferry_GetBerthShip();
     u8 port = GetBerthPort();
 
     if (ship == FERRY_SHIP_NONE || Ferry_GetPortStop(ship, port) == 0xFF)
@@ -700,7 +675,6 @@ void Ferry_WarpAboard(void)
 
 u16 Ferry_IsAtSeaForScript(void)
 {
-    AdvanceQuietly();
     return Ferry_IsAtSea();
 }
 
@@ -723,7 +697,6 @@ static u8 GetDisembarkPort(void)
 
 u16 Ferry_CanDisembark(void)
 {
-    AdvanceQuietly();
     return GetDisembarkPort() != FERRY_PORT_NONE;
 }
 

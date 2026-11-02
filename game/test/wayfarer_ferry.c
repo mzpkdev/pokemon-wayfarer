@@ -601,25 +601,6 @@ TEST("Ferry: a berth whose ship changes is removed and spawned again, never re-s
     EXPECT(!Ferry_BerthNeedsRespawn(0, FERRY_SHIP_AQUA));
 }
 
-TEST("Ferry: the sailor boards the ship that was announced even when the table flips mid-dialogue")
-{
-    const struct WayfarerVoyage *voyage = Ferry_GetVoyage();
-
-    ResetFerryFixture();
-    PutEveryShipInService();
-    StandAt(MAP_GROUP(MAP_VERMILION_CITY_PORT_INSIDE_HNS), MAP_NUM(MAP_VERMILION_CITY_PORT_INSIDE_HNS));
-    FakeRtc_ManuallySetTime(1, 19, 59, 0);
-    gSpecialVar_0x8005 = Ferry_GetBerthShip();
-    EXPECT_EQ(gSpecialVar_0x8005, FERRY_SHIP_AQUA);
-    EXPECT(Ferry_BufferBoarding());
-    // 20:00 arrives while the sailor is still talking.
-    FakeRtc_ManuallySetTime(1, 20, 0, 0);
-    EXPECT_EQ(Ferry_GetBerthShip(), FERRY_SHIP_ANNE);
-    EXPECT(Ferry_Board());
-    EXPECT_EQ((u32)voyage->ship, FERRY_SHIP_AQUA);
-    EXPECT_EQ((u32)voyage->stop, 1);
-}
-
 TEST("Ferry: the launch ports board the ship at anchor, and an empty berth refuses")
 {
     const struct WayfarerVoyage *voyage = Ferry_GetVoyage();
@@ -629,28 +610,24 @@ TEST("Ferry: the launch ports board the ship at anchor, and an empty berth refus
     // One Island by day: the Anne, stop 1 of her loop.
     StandAt(MAP_GROUP(MAP_ONE_ISLAND_HARBOR), MAP_NUM(MAP_ONE_ISLAND_HARBOR));
     FakeRtc_ManuallySetTime(1, 12, 0, 0);
-    gSpecialVar_0x8005 = Ferry_GetBerthShip();
-    EXPECT(Ferry_Board());
+        EXPECT(Ferry_Board());
     EXPECT_EQ((u32)voyage->ship, FERRY_SHIP_ANNE);
     EXPECT_EQ((u32)voyage->stop, 1);
     Ferry_ClearVoyage();
     // ... but 0:00-4:00 the berth is empty and boarding is refused.
     FakeRtc_ManuallySetTime(1, 2, 0, 0);
-    gSpecialVar_0x8005 = Ferry_GetBerthShip();
-    EXPECT_EQ(gSpecialVar_0x8005, FERRY_SHIP_NONE);
+        EXPECT_EQ(Ferry_GetBerthShip(), FERRY_SHIP_NONE);
     EXPECT(!Ferry_Board());
     EXPECT(!Ferry_IsAboard());
     // Seven Island: the Anne by day, the Tidal by night (which readies Hoenn's state for its maps).
     StandAt(MAP_GROUP(MAP_SEVEN_ISLAND_HARBOR), MAP_NUM(MAP_SEVEN_ISLAND_HARBOR));
     FakeRtc_ManuallySetTime(1, 12, 0, 0);
-    gSpecialVar_0x8005 = Ferry_GetBerthShip();
-    EXPECT(Ferry_Board());
+        EXPECT(Ferry_Board());
     EXPECT_EQ((u32)voyage->ship, FERRY_SHIP_ANNE);
     EXPECT_EQ((u32)voyage->stop, 3);
     Ferry_ClearVoyage();
     FakeRtc_ManuallySetTime(1, 22, 0, 0);
-    gSpecialVar_0x8005 = Ferry_GetBerthShip();
-    EXPECT(Ferry_BufferBoarding());
+        EXPECT(Ferry_BufferBoarding());
     EXPECT(Ferry_Board());
     EXPECT_EQ((u32)voyage->ship, FERRY_SHIP_TIDAL);
     EXPECT_EQ((u32)voyage->stop, 2);
@@ -659,15 +636,13 @@ TEST("Ferry: the launch ports board the ship at anchor, and an empty berth refus
     // Melemele: the Anne, stop 2.
     StandAt(MAP_GROUP(MAP_MELEMELE_ISLE_HNS), MAP_NUM(MAP_MELEMELE_ISLE_HNS));
     FakeRtc_ManuallySetTime(1, 12, 0, 0);
-    gSpecialVar_0x8005 = Ferry_GetBerthShip();
-    EXPECT(Ferry_Board());
+        EXPECT(Ferry_Board());
     EXPECT_EQ((u32)voyage->ship, FERRY_SHIP_ANNE);
     EXPECT_EQ((u32)voyage->stop, 2);
     // Boarding needs a ship in service: without the reward there is nothing to board at Melemele.
     Ferry_ClearVoyage();
     FlagClear(FLAG_WAYFARER_SS_ANNE_CAPTAIN_REWARDED);
-    gSpecialVar_0x8005 = Ferry_GetBerthShip();
-    EXPECT(!Ferry_Board());
+        EXPECT(!Ferry_Board());
 }
 
 TEST("Ferry: a blackout aboard returns the player to the last heal location with the voyage cleared")
@@ -715,6 +690,38 @@ TEST("Ferry: going ashore at Melemele by the gangway runs the Alola first-visit 
     EXPECT_EQ(gSaveBlock1Ptr->lastHealLocation.mapNum, MAP_NUM(MAP_MELEMELE_ISLE_HNS));
 }
 
+TEST("Ferry: Lilycove's menu rows map to the ship, each charter and Cancel in order")
+{
+    u8 ids[5];
+
+    ResetFerryFixture();
+    StandAt(MAP_GROUP(MAP_LILYCOVE_CITY_HARBOR), MAP_NUM(MAP_LILYCOVE_CITY_HARBOR));
+    FakeRtc_ManuallySetTime(1, 12, 0, 0);
+    // A ship in port and Scott's invite: the Aqua first, then the Frontier, then Cancel.
+    FlagSet(HOENN_FLAG_ID(0x1D0));
+    EXPECT_EQ(Ferry_GetCharterRows(ids), 3);
+    EXPECT_EQ(ids[0], FERRY_CHARTER_SHIP);
+    EXPECT_EQ(ids[1], FERRY_CHARTER_BATTLE_FRONTIER);
+    EXPECT_EQ(ids[2], FERRY_CHARTER_CANCEL);
+    // Every charter at once.
+    EXPECT(AddBagItem(ITEM_EON_TICKET, 1));
+    EXPECT(AddBagItem(ITEM_OLD_SEA_MAP, 1));
+    EXPECT_EQ(Ferry_GetCharterRows(ids), 5);
+    EXPECT_EQ(ids[1], FERRY_CHARTER_SOUTHERN_ISLAND);
+    EXPECT_EQ(ids[2], FERRY_CHARTER_FARAWAY_ISLAND);
+    EXPECT_EQ(ids[3], FERRY_CHARTER_BATTLE_FRONTIER);
+    EXPECT_EQ(ids[4], FERRY_CHARTER_CANCEL);
+    // An empty berth (the Anne is out of service at night here) drops the ship row; the ids stay fixed.
+    FakeRtc_ManuallySetTime(1, 22, 0, 0);
+    gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_NEW_BARK;
+    VarSet(VAR_SSAQUA_STATE, 0);
+    FakeRtc_ManuallySetTime(1, 12, 0, 0);
+    EXPECT_EQ(Ferry_GetCharterRows(ids), 4);
+    EXPECT_EQ(ids[0], FERRY_CHARTER_SOUTHERN_ISLAND);
+    EXPECT_EQ(ids[3], FERRY_CHARTER_CANCEL);
+    FlagClear(HOENN_FLAG_ID(0x1D0));
+}
+
 TEST("Ferry: the Lilycove charters are offered by their conditions, and none means boarding directly")
 {
     ResetFerryFixture();
@@ -735,20 +742,6 @@ TEST("Ferry: the Lilycove charters are offered by their conditions, and none mea
     EXPECT(!FlagGet(FLAG_SYS_GAME_CLEAR));
     EXPECT(AddBagItem(ITEM_EON_TICKET, 1));
     EXPECT_EQ(GetFerryLilycoveCharterCount(), 1);
-}
-
-TEST("Ferry: the exit checks bring a stale phase up to date, and the poll still announces it")
-{
-    struct WayfarerVoyage voyage = {0};
-
-    ResetFerryFixture();
-    FakeRtc_ManuallySetTime(1, 12, 0, 0);
-    EXPECT(Ferry_BoardAt(FERRY_PORT_VERMILION, FERRY_SHIP_AQUA, Ferry_GetNow() - 31));
-    // Past cast-off by a minute: a walking player must not find the exit open.
-    EXPECT(Ferry_IsAtSeaForScript());
-    EXPECT(!Ferry_CanDisembark());
-    EXPECT_EQ((u32)Ferry_GetVoyage()->phase, FERRY_PHASE_SEA);
-    Test_Ferry_SetVoyage(&voyage);
 }
 
 #endif // IS_WAYFARER

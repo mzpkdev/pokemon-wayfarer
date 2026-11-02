@@ -11,6 +11,7 @@ u16 GetWayfarerVermilionSeviiDestination(void);
 u16 WayfarerCanSailToBirthIsland(void);
 u16 WayfarerCanSailToNavelRock(void);
 u16 GetFerryLilycoveCharterCount(void);
+u8 Ferry_GetCharterRows(u8 *ids);
 void DrawFerryLilycoveCharterMenu(void);
 u16 GetFerryLilycoveCharter(void);
 #endif
