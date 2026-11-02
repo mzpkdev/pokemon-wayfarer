@@ -16,12 +16,12 @@ const open = SIGNUP_ACTION !== undefined
       autocomplete="email"
       placeholder="you@example.com"
       disabled={!open}
-      class="min-w-0 flex-1 rounded-full bg-paper/10 px-5 py-3 text-paper ring-1 ring-paper/25 placeholder:text-paper/50 focus:ring-2 focus:ring-logo-yellow focus:outline-none disabled:opacity-60"
+      class="pixel-corners min-w-0 flex-1 bg-grass-1 px-5 py-4 text-paper shadow-[inset_0_4px_0_rgb(0_16_0),inset_0_0_0_4px_var(--color-grass-2)] placeholder:text-paper/50 focus:shadow-[inset_0_0_0_4px_var(--color-logo-yellow)] focus:outline-none disabled:opacity-60"
     />
     <button
       type="submit"
       disabled={!open}
-      class="rounded-full bg-logo-yellow px-6 py-3 font-semibold text-ground transition-colors hover:bg-paper focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-logo-yellow disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-logo-yellow"
+      class="pixel-corners pixel-label bg-logo-yellow px-6 pt-3 pb-4 text-logo-blue shadow-[inset_0_-4px_0_rgb(200_144_0),inset_0_4px_0_rgb(255_240_140)] transition-colors hover:bg-paper focus-visible:outline-none focus-visible:shadow-[inset_0_0_0_4px_var(--color-logo-blue)] disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-logo-yellow"
     >
       {open ? "Notify me" : "Sign-ups open soon"}
     </button>

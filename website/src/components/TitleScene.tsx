@@ -49,8 +49,12 @@ const BALL_BOTTOM = BALL_TOP + POKEBALL.size
 const COUNTDOWN_HEIGHT = 70
 const DIALOG_HEIGHT = 48
 
-/** Extra viewport heights the stage stays pinned at the Poké Ball. */
-const HOLD_VH = 0.8
+/**
+ * Extra viewport heights the stage stays pinned at the Poké Ball. The page
+ * after it overlaps all but the first 0.3 of this (see index.astro), so it
+ * rises over the pinned scene like a nearer layer.
+ */
+const HOLD_VH = 1
 
 type Viewport = { scale: number; width: number; height: number; originX: number; originY: number }
 
@@ -118,6 +122,10 @@ export const TitleScene = () => {
       canvas.height = view.height
       context.imageSmoothingEnabled = false
       setViewport(view)
+      // Lets the page below draw its pixel art at the same scale and tiling origin.
+      const root = document.documentElement.style
+      root.setProperty("--scene-px", `${view.scale}px`)
+      root.setProperty("--scene-x", `${view.originX * view.scale}px`)
     }
     resize()
 
@@ -142,6 +150,9 @@ export const TitleScene = () => {
         nextPass = INTRO_END + 180
       }
     }
+
+    /** Viewport heights scrolled into the section. */
+    const scrolledScreens = () => -section.getBoundingClientRect().top / window.innerHeight
 
     /** 0 at the Poké Ball, 1 at the title; scrolling down pans back down. */
     const scrollPan = () => {
@@ -356,7 +367,8 @@ export const TitleScene = () => {
 
         const title = frame >= INTRO_END && pan === 1
         if (title !== titleShown) setAtTitle((titleShown = title))
-        const ball = frame >= INTRO_END && pan < 0.06
+        // The countdown and dialog leave as the page below starts rising over the scene.
+        const ball = frame >= INTRO_END && pan < 0.06 && scrolledScreens() < SCRUB_VH + 0.35
         if (ball !== ballShown) setAtBall((ballShown = ball))
       }
       raf = requestAnimationFrame(tick)

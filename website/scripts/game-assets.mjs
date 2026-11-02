@@ -112,6 +112,50 @@ for (const layer of [0, 1, 2, 3]) {
   )
   save(`intro/bg${layer}.png`, layer === 3 ? trimFlatBottom(image) : image)
 }
+/** An image followed by its mirror image, so it tiles without a seam. */
+const mirrorPair = (image) => {
+  const pair = {
+    width: image.width * 2,
+    height: image.height,
+    rgba: new Uint8Array(image.width * 2 * image.height * 4),
+  }
+  for (let y = 0; y < image.height; y++)
+    for (let x = 0; x < image.width; x++) {
+      const pixel = image.rgba.subarray((y * image.width + x) * 4, (y * image.width + x) * 4 + 4)
+      pair.rgba.set(pixel, (y * pair.width + x) * 4)
+      pair.rgba.set(pixel, (y * pair.width + pair.width - 1 - x) * 4)
+    }
+  return pair
+}
+
+/** Draws `top` over `bottom` at (x, y), skipping transparent pixels. */
+const overlay = (bottom, top, x, y) => {
+  for (let row = 0; row < top.height; row++)
+    for (let column = 0; column < top.width; column++) {
+      const from = (row * top.width + column) * 4
+      if (!top.rgba[from + 3]) continue
+      bottom.rgba.set(
+        top.rgba.subarray(from, from + 4),
+        ((y + row) * bottom.width + x + column) * 4,
+      )
+    }
+  return bottom
+}
+
+const layer = (n) =>
+  crop(tilemap(introTiles, source(`intro/scene_1/bg${n}_map.bin`), 4), 0, 0, 240, 256)
+
+// The page's top edge, which rises over the opening like a nearer layer: BG1's
+// leafy plants with BG0's grass silhouette in front, whose solid part is the
+// ground color the page continues in.
+const edge = { width: 240, height: 112, rgba: new Uint8Array(240 * 112 * 4) }
+overlay(edge, crop(layer(1), 0, 0, 240, 100), 0, 0)
+overlay(edge, crop(layer(0), 0, 176, 240, 39), 0, 73)
+save("page/edge.png", mirrorPair(edge))
+
+// The bright meadow from the title screen, for the foot of the page.
+save("page/meadow.png", mirrorPair(crop(layer(2), 0, 16, 240, 64)))
+
 save("intro/pokeball.png", renderIndexed(source("intro/scene_1/wayfarer_pokeball.png")))
 
 // The dawn artwork the Wayfarer title screen loads behind the mountain pan.
