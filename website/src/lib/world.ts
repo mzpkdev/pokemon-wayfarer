@@ -1,6 +1,7 @@
-// Wayfarer's world, assembled from the region maps the game draws (Hoenn,
-// Johto and Kanto, the Sevii Islands) on one shared ocean, and the camera that
-// pulls back across it as the page scrolls. Units are the maps' own pixels.
+// Wayfarer's world on one shared ocean: the region maps the game draws (Hoenn,
+// Johto and Kanto, the Sevii Islands), Sinnoh's from the project its maps came
+// from, and Alola and Sinjoh painted in the same colors, with the camera that
+// pulls back across it all as the page scrolls. Units are the maps' own pixels.
 import art from "~/generated/game-art.json"
 
 type Placed = { x: number; y: number }
@@ -14,13 +15,24 @@ export const SEA = (manifest["world/hoenn.png"] as unknown as { sea: number[][] 
   ([r, g, b]) => `rgb(${r} ${g} ${b})`,
 )
 
+/**
+ * Johto and Kanto's map top, below Sinnoh and the northern coast that
+ * closes the map's cut-off top edge. Sinnoh, Johto and Hoenn are cut off on
+ * the left too, so they all line up on the world's left edge.
+ */
+const NORTH_COAST_Y = 171
+const JOHTO_Y = NORTH_COAST_Y + 40
+
 /** Where each region map sits in the world, by its top-left corner. */
 export const REGIONS = [
-  { file: "johto-kanto", x: 0, y: 0 },
-  { file: "hoenn", x: 0, y: 160 },
-  { file: "sevii-123", x: 252, y: 118 },
-  { file: "sevii-45", x: 318, y: 162 },
-  { file: "sevii-67", x: 262, y: 204 },
+  { file: "sinnoh", x: 0, y: 0 },
+  { file: "north-coast", x: 0, y: NORTH_COAST_Y },
+  { file: "johto-kanto", x: 0, y: JOHTO_Y },
+  { file: "hoenn", x: 0, y: JOHTO_Y + 160 },
+  { file: "sevii-123", x: 252, y: JOHTO_Y + 118 },
+  { file: "sevii-45", x: 318, y: JOHTO_Y + 162 },
+  { file: "sevii-67", x: 262, y: JOHTO_Y + 204 },
+  { file: "alola", x: 352, y: 236 },
 ].map((region) => {
   const { width, height } = sizeOf(region.file)
   return { ...region, width, height }
@@ -131,26 +143,33 @@ const PORTS = {
   lilycove: cell("hoenn", 18, 3),
   oneIsland: cell("sevii-123", 1, 8),
   sevenIsland: cell("sevii-67", 5, 8),
-  melemele: { x: WORLD.width + 80, y: 120 },
+  melemele: (() => {
+    const { x, y } = region("alola")
+    const islands = (
+      manifest["world/alola.png"] as unknown as { islands: { id: string; x: number; y: number }[] }
+    ).islands
+    const island = islands.find(({ id }) => id === "MAP_MELEMELE_ISLE_HNS")!
+    return { x: x + island.x, y: y + island.y }
+  })(),
 }
 type Port = keyof typeof PORTS
 
 /** Open-sea turning points, so the lanes go around the land, not over it. */
 const SEA_POINTS = {
-  olivineSound: { x: 27, y: 96 },
-  johtoCoast: { x: 34, y: 132 },
-  strait: { x: 150, y: 140 },
-  kantoBay: { x: 210, y: 124 },
-  seviiReach: { x: 240, y: 150 },
-  hoennNorth: { x: 190, y: 172 },
-  hoennEast: { x: 250, y: 250 },
-  hoennSouth: { x: 200, y: 302 },
-  slateportReach: { x: 110, y: 302 },
-  slateportBerth: { x: 76, y: 292 },
-  mossdeepSound: { x: 215, y: 215 },
-  seviiNorth: { x: 300, y: 140 },
-  seviiSouth: { x: 400, y: 282 },
-  sevenReach: { x: 270, y: 232 },
+  olivineSound: { x: 27, y: JOHTO_Y + 96 },
+  johtoCoast: { x: 34, y: JOHTO_Y + 132 },
+  strait: { x: 150, y: JOHTO_Y + 140 },
+  kantoBay: { x: 210, y: JOHTO_Y + 124 },
+  seviiReach: { x: 240, y: JOHTO_Y + 150 },
+  hoennNorth: { x: 190, y: JOHTO_Y + 172 },
+  hoennEast: { x: 250, y: JOHTO_Y + 250 },
+  hoennSouth: { x: 200, y: JOHTO_Y + 302 },
+  slateportReach: { x: 110, y: JOHTO_Y + 302 },
+  slateportBerth: { x: 76, y: JOHTO_Y + 292 },
+  mossdeepSound: { x: 215, y: JOHTO_Y + 215 },
+  seviiNorth: { x: 330, y: JOHTO_Y + 90 },
+  seviiSouth: { x: 456, y: JOHTO_Y + 200 },
+  sevenReach: { x: 270, y: JOHTO_Y + 232 },
 }
 type Point = Port | keyof typeof SEA_POINTS
 

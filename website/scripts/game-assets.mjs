@@ -288,9 +288,9 @@ for (const species of ["wooper", "torchic", "manectric", "volbeat", "flygon"]) {
 // is an 8bpp affine background, one byte per tile on a 64x64 tile grid. Its
 // sea is a two-color stripe; drop it so every region can sit on one shared
 // ocean, and keep the stripe's colors to paint that ocean with.
-const regionMap = (name, { width = 512 } = {}) => {
-  const sheet = readPng(source(`pokenav/region_map/${name}.png`))
-  const map = fs.readFileSync(source(`pokenav/region_map/${name}.bin`))
+const regionMap = (name, { width = 512, from = source("pokenav/region_map") } = {}) => {
+  const sheet = readPng(path.join(from, `${name}.png`))
+  const map = fs.readFileSync(path.join(from, `${name}.bin`))
   const palette = sheet.palette
   const tilesPerRow = sheet.width / 8
   const counts = new Map()
@@ -337,6 +337,215 @@ for (const [name, file, width] of [
   save(`world/${name}.png`, image)
   manifest[`world/${name}.png`].sea = seaColors
 }
+
+// Sinnoh has maps in the game but no Town Map art; its region map comes from
+// the project the maps were ported from (see scripts/source/sinnoh).
+const sinnoh = regionMap("map", { from: path.join(here, "source/sinnoh") }).image
+save("world/sinnoh.png", sinnoh)
+
+// Alola and Sinjoh have no region map anywhere, so they are painted in the
+// region maps' own colors, sampled from the Johto and Kanto map: a dark
+// outline at the coast, then lighter greens inland.
+const LAND = [
+  [0, 115, 0],
+  [0, 115, 0],
+  [57, 172, 8],
+  [57, 172, 8],
+  [98, 213, 0],
+  [98, 213, 0],
+  [98, 213, 0],
+  [172, 238, 49],
+]
+const SNOW = [
+  [0, 115, 0],
+  [96, 120, 152],
+  [168, 184, 208],
+  [168, 184, 208],
+  [216, 224, 240],
+  [216, 224, 240],
+  [248, 248, 248],
+]
+const ROUTE = [230, 164, 0]
+
+/**
+ * Paints a land mask (1 = land) by each pixel's distance to the nearest sea.
+ * `beyond` names the edges where the land carries on past the image.
+ */
+const paintLand = (mask, width, height, { snow = () => false, beyond = [] } = {}) => {
+  const image = { width, height, rgba: new Uint8Array(width * height * 4) }
+  const land = (x, y) => {
+    if (x < 0) return beyond.includes("left")
+    if (y >= height) return beyond.includes("bottom")
+    return y >= 0 && x < width && mask[y * width + x] === 1
+  }
+  for (let y = 0; y < height; y++)
+    for (let x = 0; x < width; x++) {
+      if (!land(x, y)) continue
+      let distance = 1
+      search: for (; distance < 8; distance++)
+        for (let dy = -distance; dy <= distance; dy++)
+          for (let dx = -distance; dx <= distance; dx++) if (!land(x + dx, y + dy)) break search
+      const palette = snow(x, y) ? SNOW : LAND
+      image.rgba.set([...palette[Math.min(distance, palette.length) - 1], 255], (y * width + x) * 4)
+    }
+  return image
+}
+
+/** The town marker, lifted from the Hoenn map (OLDALE TOWN). */
+const hoennArt = regionMap("map").image
+const marker = (cellX, cellY) => {
+  const tile = crop(hoennArt, (cellX + 1) * 8, (cellY + 2) * 8, 8, 8)
+  // Keep only the marker itself: drop the land and route colors around it.
+  const ground = new Set([...LAND, ROUTE, [238, 189, 57], [41, 131, 230], [74, 156, 230]].map(String))
+  for (let i = 0; i < tile.rgba.length; i += 4)
+    if (ground.has(String([...tile.rgba.subarray(i, i + 3)]))) tile.rgba[i + 3] = 0
+  return tile
+}
+const townMarker = marker(4, 9)
+const stamp = (image, sprite, x, y) => {
+  for (let row = 0; row < sprite.height; row++)
+    for (let column = 0; column < sprite.width; column++) {
+      const from = (row * sprite.width + column) * 4
+      if (!sprite.rgba[from + 3]) continue
+      const to = ((y + row) * image.width + x + column) * 4
+      if (to >= 0 && to < image.rgba.length) image.rgba.set(sprite.rgba.subarray(from, from + 4), to)
+    }
+}
+
+/**
+ * A region's outdoor maps laid out by their connections, as a land mask at
+ * one pixel per `scale` metatiles: water is a metatile at elevation 1 that
+ * can be crossed; anything else, walkable or not, is land.
+ */
+const mapsById = new Map()
+for (const dir of fs.readdirSync(path.join(game, "data/maps"))) {
+  const file = path.join(game, "data/maps", dir, "map.json")
+  if (fs.existsSync(file)) {
+    const map = JSON.parse(fs.readFileSync(file, "utf8"))
+    mapsById.set(map.id, map)
+  }
+}
+const layoutsById = new Map(
+  JSON.parse(fs.readFileSync(path.join(game, "data/layouts/layouts.json"), "utf8"))
+    .layouts.filter((layout) => layout.id)
+    .map((layout) => [layout.id, layout]),
+)
+const overworldMask = (root, scale) => {
+  const placed = new Map()
+  const queue = [[root, 0, 0]]
+  while (queue.length > 0) {
+    const [id, x, y] = queue.shift()
+    if (placed.has(id)) continue
+    const map = mapsById.get(id)
+    const layout = layoutsById.get(map.layout)
+    placed.set(id, { x, y, map, layout })
+    for (const { map: next, offset, direction } of map.connections ?? []) {
+      const nextLayout = layoutsById.get(mapsById.get(next)?.layout)
+      if (!nextLayout || placed.has(next)) continue
+      const at = {
+        up: [x + offset, y - nextLayout.height],
+        down: [x + offset, y + layout.height],
+        left: [x - nextLayout.width, y + offset],
+        right: [x + layout.width, y + offset],
+      }[direction]
+      if (at) queue.push([next, ...at])
+    }
+  }
+  const all = [...placed.values()]
+  const left = Math.min(...all.map(({ x }) => x))
+  const top = Math.min(...all.map(({ y }) => y))
+  const width = Math.ceil((Math.max(...all.map(({ x, layout }) => x + layout.width)) - left) / scale)
+  const height = Math.ceil((Math.max(...all.map(({ y, layout }) => y + layout.height)) - top) / scale)
+  const landCount = new Float32Array(width * height)
+  for (const { x, y, layout } of all) {
+    const blocks = fs.readFileSync(path.join(game, layout.blockdata_filepath))
+    for (let row = 0; row < layout.height; row++)
+      for (let column = 0; column < layout.width; column++) {
+        const block = blocks.readUInt16LE((row * layout.width + column) * 2)
+        const water = block >> 12 === 1 && ((block >> 10) & 3) === 0
+        if (water) continue
+        const cell =
+          Math.floor((y - top + row) / scale) * width + Math.floor((x - left + column) / scale)
+        landCount[cell] += 1 / (scale * scale)
+      }
+  }
+  const towns = all
+    .filter(({ map }) => map.map_type === "MAP_TYPE_TOWN" || map.map_type === "MAP_TYPE_CITY")
+    .map(({ x, y, layout }) => ({
+      x: Math.round((x - left + layout.width / 2) / scale),
+      y: Math.round((y - top + layout.height / 2) / scale),
+    }))
+  return { mask: landCount.map((share) => (share >= 0.5 ? 1 : 0)), width, height, towns, placed: all }
+}
+
+// Alola's four islands from Melemele, Akala, Ula'ula and Poni, at about the
+// region maps' own scale, each marked like a town.
+const ALOLA_SCALE = 2
+const alola = overworldMask("MAP_MELEMELE_ISLE_HNS", ALOLA_SCALE)
+// The island maps meet edge to edge, framed in trees, so their union is one
+// block. Round each island inside its own map instead, leaving sea between.
+const alolaLeft = Math.min(...alola.placed.map(({ x }) => x))
+const alolaTop = Math.min(...alola.placed.map(({ y }) => y))
+const islands = alola.placed
+  .filter(({ map }) => map.id !== "MAP_ALOLA_WATER_HNS")
+  .map(({ x, y, layout, map }) => ({
+    id: map.id,
+    x: (x - alolaLeft + layout.width / 2) / ALOLA_SCALE,
+    y: (y - alolaTop + layout.height / 2) / ALOLA_SCALE,
+    radiusX: (layout.width / ALOLA_SCALE / 2) * 0.8,
+    radiusY: (layout.height / ALOLA_SCALE / 2) * 0.8,
+  }))
+const islandMask = alola.mask.map((land, i) => {
+  const x = (i % alola.width) + 0.5
+  const y = Math.floor(i / alola.width) + 0.5
+  return islands.some(({ x: cx, y: cy, radiusX, radiusY }) => {
+    const angle = Math.atan2(y - cy, x - cx)
+    const wobble = 1 + Math.sin(angle * 3 + cx) * 0.12 + Math.sin(angle * 5 + cy) * 0.06
+    return ((x - cx) / radiusX) ** 2 + ((y - cy) / radiusY) ** 2 <= wobble ** 2
+  })
+    ? land
+    : 0
+})
+const alolaArt = paintLand(islandMask, alola.width, alola.height)
+const islandCenters = islands.map(({ id, x, y }) => ({ id, x: Math.round(x), y: Math.round(y) }))
+for (const { x, y } of islandCenters) stamp(alolaArt, townMarker, x - 4, y - 4)
+save("world/alola.png", alolaArt)
+manifest["world/alola.png"].islands = islandCenters
+
+// Johto's map is cut off along its top edge. Close it with a northern coast,
+// snowed over past MT. SILVER (cell 14, 7) where Sinjoh lies, with NEW SINJOH
+// and the SINJOH RUINS on Routes 49 and 50.
+const johtoKanto = regionMap("map_jk").image
+const NORTH = 40
+const coast = { width: johtoKanto.width, height: NORTH }
+const coastMask = new Uint8Array(coast.width * coast.height)
+const landAlongTop = []
+for (let x = 0; x < johtoKanto.width; x++) if (johtoKanto.rgba[x * 4 + 3]) landAlongTop.push(x)
+const coastEnd = Math.max(...landAlongTop) + 1
+for (let x = 0; x < coastEnd; x++) {
+  // Highest at the middle, falling to the shore at the east end, with a
+  // gently wandering edge.
+  const rise = Math.min(1, ((coastEnd - x) / coastEnd) * 3)
+  const wander = Math.sin(x * 0.21) * 3 + Math.sin(x * 0.07 + 1) * 4
+  const reach = Math.round((NORTH - 10) * rise + wander * rise)
+  for (let y = Math.max(0, NORTH - reach); y < NORTH; y++) coastMask[y * coast.width + x] = 1
+}
+const SINJOH = { x: (14 + 1) * 8 + 4, width: 34 }
+const northCoast = paintLand(coastMask, coast.width, coast.height, {
+  beyond: ["left", "bottom"],
+  snow: (x, y) => Math.abs(x - SINJOH.x) < SINJOH.width / 2 + Math.sin(y * 0.6) * 2 + Math.sin(y * 0.23) * 3,
+})
+// Routes 49 and 50 run north from the map's edge to NEW SINJOH and the ruins.
+const sinjohTowns = [
+  { x: SINJOH.x - 4, y: 22 },
+  { x: SINJOH.x + 5, y: 10 },
+]
+for (let y = sinjohTowns[1].y; y < NORTH; y++)
+  for (let x = SINJOH.x - 2; x < SINJOH.x + 2; x++)
+    northCoast.rgba.set([...ROUTE, 255], (y * coast.width + x) * 4)
+for (const { x, y } of sinjohTowns) stamp(northCoast, townMarker, x - 4, y - 4)
+save("world/north-coast.png", northCoast)
+manifest["world/north-coast.png"].sinjoh = sinjohTowns
 
 // The player's icon on the region map, and the SEAGALLOP ferry to sail the lanes.
 save("world/brendan.png", renderIndexed(source("pokenav/region_map/brendan_icon.png")))

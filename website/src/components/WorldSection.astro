@@ -5,8 +5,9 @@
  */
 import { type Caption, WorldZoom } from "~/components/WorldZoom"
 
-// Counted from what the build compiles and a player can reach (see the
-// website-landing task note): Sinnoh's maps are compiled but unreachable.
+// Counted from the outdoor maps the build compiles (see the website-landing
+// task note): towns and cities by map type, numbered routes by number.
+// Sinnoh counts too; it opens up by launch.
 const captions: Caption[] = [
   {
     place: "LITTLEROOT TOWN",
@@ -20,11 +21,11 @@ const captions: Caption[] = [
   },
   {
     place: "THE WORLD",
-    title: "And Hoenn is only one of four.",
-    body: "Johto, Kanto, Hoenn and the Sevii Islands, on one save. Three ships sail between them, and the S.S. Anne sails on to Alola.",
+    title: "And Hoenn is only one of them.",
+    body: "Johto, Kanto, Hoenn and Sinnoh, the Sevii Islands, Sinjoh past MT. SILVER, and Alola, all on one save. Three ships sail between them.",
     stats: [
-      { value: "43", label: "towns and cities" },
-      { value: "82", label: "routes" },
+      { value: "62", label: "towns and cities" },
+      { value: "114", label: "routes" },
       { value: "7", label: "ports" },
     ],
   },

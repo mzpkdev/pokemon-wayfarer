@@ -34,6 +34,13 @@ Everything on the page is drawn with the game's own graphics, rendered from
 - the 20 text window frames, map name popups and key item icons
 - `Wayfarer Text`, a web font traced from the game's normal Latin font, with
   glyph widths from `game/src/fonts.c` and characters from `game/charmap.txt`
+- PROF. OAK, his oval and the POKéMON he sends out, from the new game intro
+- the region maps for the world section. The game has no Town Map art for
+  Sinnoh, so that one comes from the project its maps were ported from
+  (`scripts/source/sinnoh`). Alola and Sinjoh have none anywhere: Alola's
+  islands are traced from their overworld maps, and Sinjoh sits on a northern
+  coast that closes the Johto map's cut-off top. Both are painted in colors
+  sampled from the region maps.
 
 The output is committed, so building the site does not need the game tree.
 Run `pnpm assets` after the source art changes. It also writes
