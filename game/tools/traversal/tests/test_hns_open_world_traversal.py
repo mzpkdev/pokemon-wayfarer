@@ -1286,7 +1286,7 @@ class HnsTraversalContractTest(unittest.TestCase):
         self.assertOrderedText(
             self.scripts.block("ReceptionGate_Trigger"),
             [
-                "goto_if_lt VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 8, ReceptionGate_EventScript_Kimono",
+                "goto_if_lt VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, KIMONO_CEREMONY_RESOLVED, ReceptionGate_EventScript_Kimono",
                 "goto_if_unset FLAG_BADGE08_GET, ReceptionGate_EventScript_NotEnough",
                 "setvar VAR_ROUTE27_STATE, 2",
             ],

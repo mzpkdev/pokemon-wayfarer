@@ -383,6 +383,10 @@ trial and afterwards. Remove the theater state-5 entry triggers and Elm's
 activation. The Bell, the sage-office Clear Bell access, the ceremony, and the
 level 50 encounter follow as today. The encounter maps keep dispatching on
 legendary progress, which only the ceremony and Pewter's gift can now set.
+The ceremony sets only the selected legendary's progress (forward only) and
+never the other's, so Pewter's gift can tell an unresolved encounter from a
+resolved one. The ceremony variable runs 1 (trial started), 2 (ceremony done),
+3 (encounter resolved); the offer itself is derived, not stored.
 
 **Callbacks.** Each Kimono Girl line plays only when its event happened:
 
