@@ -1,0 +1,32 @@
+---
+import { SIGNUP_ACTION, SIGNUP_FIELD } from "~/lib/signup"
+
+/** Email sign-up for development updates and launch day, posted straight to the mailing list service. */
+const open = SIGNUP_ACTION !== undefined
+---
+
+<form action={SIGNUP_ACTION} method="post" class="w-full max-w-xl">
+  <div class="flex flex-col gap-3 sm:flex-row">
+    <label for="signup-email" class="sr-only">Email address</label>
+    <input
+      id="signup-email"
+      name={SIGNUP_FIELD}
+      type="email"
+      required
+      autocomplete="email"
+      placeholder="you@example.com"
+      disabled={!open}
+      class="min-w-0 flex-1 rounded-full bg-paper/10 px-5 py-3 text-paper ring-1 ring-paper/25 placeholder:text-paper/50 focus:ring-2 focus:ring-logo-yellow focus:outline-none disabled:opacity-60"
+    />
+    <button
+      type="submit"
+      disabled={!open}
+      class="rounded-full bg-logo-yellow px-6 py-3 font-semibold text-ground transition-colors hover:bg-paper focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-logo-yellow disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-logo-yellow"
+    >
+      {open ? "Notify me" : "Sign-ups open soon"}
+    </button>
+  </div>
+  <p class="mt-3 text-sm text-paper/60">
+    Occasional development updates and one email on launch day. Unsubscribe at any time.
+  </p>
+</form>

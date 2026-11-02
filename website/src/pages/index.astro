@@ -1,41 +1,50 @@
 ---
+import SignupForm from "~/components/SignupForm.astro"
 import { TitleScene } from "~/components/TitleScene"
 import Layout from "~/layouts/Layout.astro"
 import { FEATURES, ORIGINS, REPOSITORY_URL, STATS } from "~/lib/content"
 import { RELEASE_AT, RELEASE_LABEL } from "~/lib/release"
 
-const button =
-  "inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-logo-yellow"
 ---
 
 <Layout title="Pokémon Wayfarer">
   <main>
     <TitleScene client:load />
 
-    <!-- The page continues on the ground color the opening ends on. -->
-    <section aria-labelledby="about" class="mx-auto max-w-5xl px-6 pt-12 pb-24 sm:pt-20">
+    <!-- The page continues on the ground color the opening ends on, leading with the sign-up. -->
+    <section aria-labelledby="notify" class="mx-auto max-w-5xl px-6 pt-12 pb-20 sm:pt-20">
       <p class="pixel-label text-logo-yellow">
         Out <time datetime={RELEASE_AT.toISOString().slice(0, 10)}>{RELEASE_LABEL}</time>
       </p>
-      <h2 id="about" class="mt-4 max-w-3xl text-4xl font-bold tracking-tight text-balance sm:text-6xl">
+      <h2 id="notify" class="mt-4 max-w-3xl text-4xl font-bold tracking-tight text-balance sm:text-6xl">
+        Be there on launch day
+      </h2>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-paper/75">
+        Leave your email and we'll tell you the moment Pokémon Wayfarer is out, with the odd update on
+        how it's coming along until then.
+      </p>
+      <div class="mt-8">
+        <SignupForm />
+      </div>
+      <p class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-paper/70">
+        <a href="/wayfarer-release.ics" download class="underline-offset-4 hover:text-paper hover:underline">
+          Add the release to your calendar
+        </a>
+        <a href={REPOSITORY_URL} class="underline-offset-4 hover:text-paper hover:underline">
+          Follow development on GitHub <span aria-hidden="true">→</span>
+        </a>
+      </p>
+    </section>
+
+    <section aria-labelledby="about" class="mx-auto max-w-5xl px-6 py-24">
+      <p class="pixel-label text-logo-yellow">About</p>
+      <h2 id="about" class="mt-4 max-w-3xl text-3xl font-bold tracking-tight text-balance sm:text-5xl">
         One save. Three home regions. Every road open.
       </h2>
       <p class="mt-6 max-w-2xl text-lg leading-relaxed text-paper/75">
         Pokémon Wayfarer is a free fan-made GBA game built on pokeemerald-expansion. Start your journey in
         Johto, Hoenn or Kanto, then sail on to the Sevii Islands and Alola, all on the same save.
       </p>
-      <div class="mt-10 flex flex-wrap gap-3">
-        <a
-          href="/wayfarer-release.ics"
-          download
-          class:list={[button, "bg-logo-yellow text-ground hover:bg-paper"]}
-        >
-          Add the release to your calendar
-        </a>
-        <a href={REPOSITORY_URL} class:list={[button, "text-paper ring-1 ring-paper/25 hover:bg-paper/10"]}>
-          Follow development on GitHub <span aria-hidden="true">→</span>
-        </a>
-      </div>
     </section>
 
     <section aria-labelledby="features" class="mx-auto max-w-5xl px-6 py-24">
