@@ -714,7 +714,11 @@ if (process.env.DEBUG_MAPS)
     for (let i = 0; i < N; i++)
       if (owner[i] === m && isWater(grid[i])) colors.set(grid[i], (colors.get(grid[i]) ?? 0) + 1)
     const top = [...colors].toSorted((a, b) => b[1] - a[1]).slice(0, 4)
-    console.log(name, waterShare[m].toFixed(2), top.map(([k, n]) => `${tileColor(k).map(Math.round)}x${n}`).join(" "))
+    console.log(
+      name,
+      waterShare[m].toFixed(2),
+      top.map(([k, n]) => `${tileColor(k).map(Math.round)}x${n}`).join(" "),
+    )
   }
 const mapLand = new Uint8Array(N)
 const mapSea = new Uint8Array(N)
@@ -746,7 +750,8 @@ for (let pass = 0; pass < 2; pass++) {
       const i = y * W + x
       if (owner[i] >= 0) continue
       let count = 0
-      for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) count += land[i + dy * W + dx]
+      for (let dy = -2; dy <= 2; dy++)
+        for (let dx = -2; dx <= 2; dx++) count += land[i + dy * W + dx]
       next[i] = count > 12 ? 1 : 0
     }
   land = next
@@ -765,7 +770,12 @@ for (let pass = 0; pass < 2; pass++) {
     const i = stack[head++]
     const x = i % W,
       y = (i - x) / W
-    for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, y > 0 ? i - W : -1, y < H - 1 ? i + W : -1])
+    for (const j of [
+      x > 0 ? i - 1 : -1,
+      x < W - 1 ? i + 1 : -1,
+      y > 0 ? i - W : -1,
+      y < H - 1 ? i + W : -1,
+    ])
       if (j >= 0 && !open[j] && !land[j]) {
         open[j] = 1
         stack.push(j)
@@ -788,7 +798,12 @@ const nearest = (kind) => {
     const i = queue[head++]
     const x = i % W,
       y = (i - x) / W
-    for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, y > 0 ? i - W : -1, y < H - 1 ? i + W : -1])
+    for (const j of [
+      x > 0 ? i - 1 : -1,
+      x < W - 1 ? i + 1 : -1,
+      y > 0 ? i - W : -1,
+      y < H - 1 ? i + W : -1,
+    ])
       if (j >= 0 && from[j] < 0) {
         from[j] = from[i]
         queue.push(j)
@@ -812,7 +827,9 @@ const warped = (from, i) => {
 for (let i = 0; i < N; i++) {
   if (owner[i] >= 0) continue
   if (land[i]) grid[i] = pattern(borders[warped(landFrom, i)], i)
-  else grid[i] = waterFrom[i] >= 0 && toLand[i] < 40 ? pattern(borders[waterFrom[i]], i) : pattern(ocean, i)
+  else
+    grid[i] =
+      waterFrom[i] >= 0 && toLand[i] < 40 ? pattern(borders[waterFrom[i]], i) : pattern(ocean, i)
 }
 
 // The far-out view, drawn like a map. Land is each cell's tile color, with
@@ -888,6 +905,38 @@ writePng(`${outDir}/overview.png`, W, H, overview)
 const towns = all
   .filter((p) => ["MAP_TYPE_TOWN", "MAP_TYPE_CITY"].includes(p.m.map_type))
   .map((p) => ({ name: p.m.name, x: p.x - minX + p.l.width / 2, y: p.y - minY + p.l.height / 2 }))
+// Region names, centered on their towns. Johto and Kanto share one piece, so
+// they are told apart by their towns.
+const JOHTO =
+  /^(NewBark|Cherrygrove|Violet|Azalea|Goldenrod|Ecruteak|Olivine|Cianwood|Mahogany|Blackthorn)/
+const KANTO =
+  /^(Pallet|Viridian|Pewter|Cerulean|Vermilion|Lavender|Celadon|Saffron|Fuchsia|Cinnabar)/
+const labelFor = (p) => {
+  if (p.region !== "Johto and Kanto")
+    return p.region === "Sevii Islands" ? "SEVII ISLANDS" : p.region.toUpperCase()
+  if (JOHTO.test(p.m.name)) return "JOHTO"
+  if (KANTO.test(p.m.name)) return "KANTO"
+  return null
+}
+const regionLabels = new Map()
+for (const p of all) {
+  const label = labelFor(p)
+  if (
+    !label ||
+    (p.region === "Johto and Kanto" && !["MAP_TYPE_TOWN", "MAP_TYPE_CITY"].includes(p.m.map_type))
+  )
+    continue
+  const entry = regionLabels.get(label) ?? { name: label, x: 0, y: 0, n: 0 }
+  entry.x += p.x - minX + p.l.width / 2
+  entry.y += p.y - minY + p.l.height / 2
+  entry.n++
+  regionLabels.set(label, entry)
+}
+const regions = [...regionLabels.values()].map(({ name, x, y, n }) => ({
+  name,
+  x: x / n,
+  y: y / n,
+}))
 fs.writeFileSync(
   `${outDir}/meta.json`,
   JSON.stringify({
@@ -896,6 +945,7 @@ fs.writeFileSync(
     columns: COLUMNS,
     count: atlasTiles.length,
     towns,
+    regions,
     maps: all.map((p) => ({
       name: p.m.name,
       x: p.x - minX,

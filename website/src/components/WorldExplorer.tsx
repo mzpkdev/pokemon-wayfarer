@@ -11,6 +11,7 @@ type Meta = {
   columns: number
   count: number
   towns: { name: string; x: number; y: number }[]
+  regions: { name: string; x: number; y: number }[]
 }
 
 const EMPTY = 0xffff
@@ -134,7 +135,8 @@ export const WorldExplorer = ({ base }: { base: string }) => {
         const left = camera.x - w / 2 / scale
         const top = camera.y - h / 2 / scale
         context.setTransform(1, 0, 0, 1, 0, 0)
-        context.fillStyle = "rgb(8 41 0)"
+        // Open sea past the edges, the color the map view deepens to.
+        context.fillStyle = "rgb(52 92 178)"
         context.fillRect(0, 0, w, h)
 
         // The map view far out, the tiles close in, cross-fading between.
@@ -167,6 +169,25 @@ export const WorldExplorer = ({ base }: { base: string }) => {
           context.imageSmoothingQuality = "high"
           context.drawImage(overview, -left * scale, -top * scale, width * scale, height * scale)
           context.globalAlpha = 1
+        }
+
+        // Region names far out, fading as the town names take over.
+        const regionAlpha = Math.min(1, Math.max(0, (1.1 - camera.zoom) / 0.4))
+        if (regionAlpha > 0) {
+          context.globalAlpha = regionAlpha
+          context.font = `${Math.round(28 * ratio)}px "Wayfarer Text", monospace`
+          context.textAlign = "center"
+          context.textBaseline = "middle"
+          for (const region of meta.regions) {
+            const x = (region.x - left) * scale
+            const y = (region.y - top) * scale
+            context.fillStyle = "rgb(0 0 0 / 0.75)"
+            context.fillText(region.name, x + ratio * 2, y + ratio * 2)
+            context.fillStyle = "rgb(255 214 0)"
+            context.fillText(region.name, x, y)
+          }
+          context.globalAlpha = 1
+          context.textBaseline = "alphabetic"
         }
 
         // Town names while they help: not when everything is a speck, nor
