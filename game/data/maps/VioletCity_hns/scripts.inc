@@ -16,14 +16,12 @@ VioletCity_OnTransition::
 
 @ First-visit setup, run once from the map load however the player arrives.
 @ New-game defaults (the Togepi Egg, Sprout Tower, Ruins of Alph, trades) are
-@ not restated, so progress made elsewhere first survives.
+@ not restated, so progress made elsewhere first survives. The Ruins of Alph
+@ reward items start hidden from the new game, since the Ruins can be solved
+@ before the first Violet visit.
 VioletCity_EventScript_Setup::
 	@LOCAL FLAGHEAP
 	setflag FLAG_WAYFARER_JOHTO_SETUP_VIOLET
-	setflag FLAG_ITEM_GS_BALL
-	setflag FLAG_ITEM_DOME_FOSSIL
-	setflag FLAG_ITEM_HELIX_FOSSIL
-	setflag FLAG_ITEM_OLD_AMBER
 	setflag FLAG_HIDE_TRAINER_SCHOOL_EARL
 	setflag FLAG_HIDE_VIOLET_CITY_AIDE
 	setflag FLAG_VISITED_VIOLET_CITY

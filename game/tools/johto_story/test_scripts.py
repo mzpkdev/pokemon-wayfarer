@@ -67,7 +67,10 @@ TRANSITION_LABELS = {
 # State and rewards each town's setup must never write.
 PROTECTED = {
     'violet': {'FLAG_RECEIVED_TOGEPI_EGG', 'VAR_SPROUT_TOWER', 'FLAG_HIDE_SPROUT_TOWER_SILVER',
-               'VAR_RUINSOFALPH_STATE', 'FLAG_VIOLET_NPC_TRADE_COMPLETED'},
+               'VAR_RUINSOFALPH_STATE', 'FLAG_VIOLET_NPC_TRADE_COMPLETED',
+               # Ruins puzzle rewards revealed by puzzles solved before the first visit.
+               'FLAG_ITEM_GS_BALL', 'FLAG_ITEM_DOME_FOSSIL', 'FLAG_ITEM_HELIX_FOSSIL',
+               'FLAG_ITEM_OLD_AMBER'},
     'azalea': {'FLAG_GOT_CHARCOAL', 'FLAG_HIDE_AZALEA_TOWN_ROCKETS', 'FLAG_HIDE_KURT_1',
                'FLAG_HIDE_AZALEA_TOWN_FARFETCHD', 'FLAG_HIDE_AZALEA_TOWN_CUT_MASTER'},
     'goldenrod': {'VAR_LUGIA_OR_HOOH', 'FLAG_RECEIVED_BIKE', 'FLAG_GOT_EEVEE', 'FLAG_RECEIVED_SQUIRTBOTTLE',
@@ -324,6 +327,23 @@ class TownSetup(unittest.TestCase):
         hide = {'FLAG_HIDE_GOLDENROD_ROCKETS', 'FLAG_HIDE_ROCKET_GOLDENROD_RADIOTOWER_1'}
         self.assertFalse(hide & interp.flags)
         self.assertTrue({'FLAG_HIDE_GOLDENROD_ROCKET_SCOUT', 'FLAG_HIDE_GOLDENROD_NPCS'} <= interp.flags)
+        # Later takeover scenes are still hidden: the takeover is only at its first step.
+        later = {'FLAG_HIDE_GOLDENROD_UNDERGROUND_KIMONO', 'FLAG_HIDE_GOLDENROD_UNDERGROUND_SILVER',
+                 'FLAG_HIDE_GOLDENROD_RADIOTOWER_PETREL', 'FLAG_HIDE_GOLDENROD_RADIOTOWER_DIRECTOR_2'}
+        self.assertTrue(later <= interp.flags)
+
+    def test_ruins_rewards_start_hidden_from_the_new_game(self):
+        new_game = (GAME / 'data/scripts/new_game.inc').read_text()
+        reset = new_game.split('EventScript_ResetAllMapFlagsHnS::', 1)[1].split('\treturn', 1)[0]
+        for flag in ('FLAG_ITEM_GS_BALL', 'FLAG_ITEM_DOME_FOSSIL', 'FLAG_ITEM_HELIX_FOSSIL',
+                     'FLAG_ITEM_OLD_AMBER'):
+            self.assertIn('setflag %s\n' % flag, reset)
+            self.assertNotIn(flag, raw_text('VioletCity_hns'))
+
+    def test_azalea_hides_celebi_and_ilex_kurt_after_an_early_ilex_visit(self):
+        interp = run_setup('azalea', vars={'VAR_ILEX_FOREST_FARFETCHD': 1})
+        self.assertTrue({'FLAG_HIDE_CELEBI', 'FLAG_HIDE_ILEX_FOREST_KURT'} <= interp.flags)
+        self.assertNotIn('FLAG_HIDE_ILEX_FOREST_FARFETCHD_1', interp.written())
 
     def test_goldenrod_elm_call_is_queued_for_johto_origin_only(self):
         for johto in (True, False):
@@ -488,8 +508,6 @@ class MahoganyLakeAndRadioTower(unittest.TestCase):
     def test_merchant_has_no_road_block_and_reads_the_resolved_flag(self):
         events = json.loads((MAPS / 'Mahoganytown_hns/map.json').read_text())['coord_events']
         self.assertEqual(events, [])
-        for state in range(0, 18):
-            self.assertEqual(events, [], state)
         text = raw_text('Mahoganytown_hns')
         self.assertNotIn('MerchantTrigger', text)
         self.assertNotIn('PushPlayer', text)
@@ -569,6 +587,20 @@ class EcruteakAndMorty(unittest.TestCase):
             text = raw_text(name)
             self.assertIn('setvar_forward %s, 8' % CEREMONY, text)
         self.assertIn('setvar_forward %s, 4' % CEREMONY, raw_text('NewBarkTown_Lab_hns'))
+
+    def test_trial_waits_for_the_theater_rocket_on_shared_tiles(self):
+        events = json.loads((MAPS / 'EcruteakCity_Theater_hns/map.json').read_text())['coord_events']
+        trial = {(e['x'], e['y']) for e in events if 'PreBattleCutscene' in e['script']}
+        rocket = {(e['x'], e['y']) for e in events if e['script'].endswith('RocketEventTrigger')}
+        self.assertTrue(trial & rocket)
+        for e in events:
+            if 'PreBattleCutscene' not in e['script']:
+                continue
+            for theater in range(0, 4):
+                interp = Interp('EcruteakCity_Theater_hns', vars={THEATER: theater, CEREMONY: 5})
+                interp.run(e['script'])
+                self.assertEqual(interp.vars[CEREMONY], 6 if theater >= 2 else 5, (e['script'], theater))
+                self.assertEqual(interp.vars[THEATER], theater)
 
     def test_ceremony_coordinates_read_the_ceremony_variable(self):
         theater = json.loads((MAPS / 'EcruteakCity_Theater_hns/map.json').read_text())['coord_events']

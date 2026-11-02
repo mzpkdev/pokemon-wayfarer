@@ -30,6 +30,10 @@ AzaleaTown_EventScript_Setup:: @flagheap
 	setflag FLAG_HIDE_AZALEA_ARIADOS_LEFT
 	setflag FLAG_HIDE_AZALEA_ARIADOS_MID
 	setflag FLAG_HIDE_AZALEA_ARIADOS_RIGHT
+	@ Celebi and Ilex Kurt follow Kurt's GS Ball in Azalea, so no earlier
+	@ Ilex visit can have shown them.
+	setflag FLAG_HIDE_CELEBI
+	setflag FLAG_HIDE_ILEX_FOREST_KURT
 	goto_if_ne VAR_ILEX_FOREST_FARFETCHD, 0, AzaleaTown_Setup_IlexStarted
 	setflag FLAG_HIDE_ILEX_FOREST_APPRENTICE
 	setflag FLAG_HIDE_ILEX_FOREST_MASTER
@@ -37,8 +41,6 @@ AzaleaTown_EventScript_Setup:: @flagheap
 	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_3
 	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_2
 	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_1
-	setflag FLAG_HIDE_CELEBI
-	setflag FLAG_HIDE_ILEX_FOREST_KURT
 AzaleaTown_Setup_IlexStarted:
 	setvar_forward VAR_AZALEA_TOWN_STATE, 1
 	return

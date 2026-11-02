@@ -331,6 +331,11 @@ EventScript_ResetAllMapFlags::
 #endif
 #if IS_HNS
 EventScript_ResetAllMapFlagsHnS::
+	@ Ruins of Alph puzzle rewards, revealed by their own puzzles.
+	setflag FLAG_ITEM_GS_BALL
+	setflag FLAG_ITEM_DOME_FOSSIL
+	setflag FLAG_ITEM_HELIX_FOSSIL
+	setflag FLAG_ITEM_OLD_AMBER
 	setflag FLAG_HIDE_BATTLE_TOWER_OPPONENT
 	setflag FLAG_HIDE_DEOXYS @???
 	setflag FLAG_HIDE_CONTEST_POKE_BALL @???

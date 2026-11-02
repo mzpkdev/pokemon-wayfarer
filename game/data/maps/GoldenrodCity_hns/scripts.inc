@@ -22,13 +22,15 @@ GoldenrodCity_EventScript_Setup:: @flagheap
 	goto_if_set FLAG_SYS_PC_BILL, GoldenrodCity_Setup_BillMoved
 	setflag FLAG_HIDE_GOLDENROD_BILL
 GoldenrodCity_Setup_BillMoved:
-	goto_if_ge VAR_GOLDENROD_CITY_STATE, 6, GoldenrodCity_Setup_TakeoverStarted
-	setflag FLAG_HIDE_GOLDENROD_ROCKETS
+	@ The takeover cannot pass its first step before the first Goldenrod load,
+	@ so its later scenes are always hidden here.
 	setflag FLAG_HIDE_GOLDENROD_UNDERGROUND_KIMONO
 	setflag FLAG_HIDE_GOLDENROD_UNDERGROUND_SILVER
-	setflag FLAG_HIDE_ROCKET_GOLDENROD_RADIOTOWER_1
 	setflag FLAG_HIDE_GOLDENROD_RADIOTOWER_PETREL
 	setflag FLAG_HIDE_GOLDENROD_RADIOTOWER_DIRECTOR_2
+	goto_if_ge VAR_GOLDENROD_CITY_STATE, 6, GoldenrodCity_Setup_TakeoverStarted
+	setflag FLAG_HIDE_GOLDENROD_ROCKETS
+	setflag FLAG_HIDE_ROCKET_GOLDENROD_RADIOTOWER_1
 GoldenrodCity_Setup_TakeoverStarted:
 	setvar_forward VAR_GOLDENROD_CITY_STATE, 1
 	return

@@ -500,7 +500,13 @@ EcruteakCity_Theater_Text_FancyPanel:
 	.string "It's a fancy panel that's\n"
 	.string "decorated with flowers.$"
 
+@ The trial shares its entry tiles with the Theater Rocket and waits until the
+@ Rocket is beaten.
+EcruteakCity_Theater_Trigger_PreBattleNotYet::
+	end
+
 EcruteakCity_Theater_Trigger_PreBattleCutsceneLeft::
+	goto_if_lt VAR_ECRUTEAK_CITY_THEATER, 2, EcruteakCity_Theater_Trigger_PreBattleNotYet
 	lock
 	applymovement2 OBJ_EVENT_ID_PLAYER, EcruteakCity_Theater_Movement_PlayerWalkToZukiLeft
 	applymovement2 OBJ_EVENT_ID_FOLLOWER, EcruteakCity_Theater_Movement_MonWalkToZukiLeft
@@ -511,6 +517,7 @@ EcruteakCity_Theater_Trigger_PreBattleCutsceneLeft::
 	goto EcruteakCity_Theater_EventScript_LegendaryCutscene
 
 EcruteakCity_Theater_Trigger_PreBattleCutsceneTop::
+	goto_if_lt VAR_ECRUTEAK_CITY_THEATER, 2, EcruteakCity_Theater_Trigger_PreBattleNotYet
 	lock
 	applymovement2 OBJ_EVENT_ID_PLAYER, EcruteakCity_Theater_Movement_PlayerWalkToZukiTop
 	applymovement2 OBJ_EVENT_ID_FOLLOWER, EcruteakCity_Theater_Movement_MonWalkToZukiTop
@@ -521,6 +528,7 @@ EcruteakCity_Theater_Trigger_PreBattleCutsceneTop::
 	goto EcruteakCity_Theater_EventScript_LegendaryCutscene
 
 EcruteakCity_Theater_Trigger_PreBattleCutsceneRight::
+	goto_if_lt VAR_ECRUTEAK_CITY_THEATER, 2, EcruteakCity_Theater_Trigger_PreBattleNotYet
 	lock
 	applymovement2 OBJ_EVENT_ID_PLAYER, EcruteakCity_Theater_Movement_PlayerWalkToZukiRight
 	applymovement2 OBJ_EVENT_ID_FOLLOWER, EcruteakCity_Theater_Movement_MonWalkToZukiRight
