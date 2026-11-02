@@ -131,7 +131,31 @@
     "x": 0,
     "y": 0
   },
-  "people/wooper.png": {
+  "people/mons/wooper.png": {
+    "width": 64,
+    "height": 128,
+    "x": 0,
+    "y": 0
+  },
+  "people/mons/torchic.png": {
+    "width": 64,
+    "height": 128,
+    "x": 0,
+    "y": 0
+  },
+  "people/mons/manectric.png": {
+    "width": 64,
+    "height": 128,
+    "x": 0,
+    "y": 0
+  },
+  "people/mons/volbeat.png": {
+    "width": 64,
+    "height": 128,
+    "x": 0,
+    "y": 0
+  },
+  "people/mons/flygon.png": {
     "width": 64,
     "height": 128,
     "x": 0,

@@ -1,4 +1,4 @@
-// PROF. OAK throwing a Poké Ball and WOOPER coming out, after the game's own
+// PROF. OAK throwing a Poké Ball and a POKéMON coming out, after the game's own
 // release: CreatePokeballSpriteToReleaseMon and SpriteCB_ReleasedMonFlyOut in
 // game/src/pokeball.c, PokeBallOpenParticleAnimation in
 // game/src/battle_anim_throw.c, and the emerge affine animation in
@@ -15,6 +15,20 @@ export const HAND = { x: 109, y: 76 }
 export const BALL_LANDING = { x: 72, y: 112 }
 /** Where WOOPER's 64x64 picture is centered once out. */
 export const MON_HOME = { x: 72, y: 96 }
+
+/**
+ * The POKéMON OAK sends out, one per throw: WOOPER from his own intro, then
+ * the opening's cast. `lift` raises each picture from WOOPER's footing by its
+ * frontPicYOffset (16 for WOOPER) plus any enemyMonElevation, so every one
+ * stands on the oval, and FLYGON hovers over it as it does in battle.
+ */
+export const ROSTER = [
+  { species: "wooper", lift: 0 },
+  { species: "torchic", lift: 16 - 8 },
+  { species: "manectric", lift: 16 - 4 },
+  { species: "volbeat", lift: 16 - 8 },
+  { species: "flygon", lift: 16 - 1 + 7 },
+] as const
 
 /** The ball's frames: closed, open, then empty once it has vanished. */
 export const BALL_FRAME = { closed: 0, open: 1 } as const
@@ -67,7 +81,15 @@ export const BEATS = (() => {
 
 export type Ball = { x: number; y: number; frame: number; rotation: number }
 export type Particle = { x: number; y: number; frame: number; flip: boolean }
-export type Mon = { x: number; y: number; scale: number; tint: number; frame: number }
+export type Mon = {
+  /** Index into ROSTER. */
+  species: number
+  x: number
+  y: number
+  scale: number
+  tint: number
+  frame: number
+}
 
 export type ReleaseState = { ball: Ball | null; particles: Particle[]; mon: Mon | null }
 
@@ -91,6 +113,8 @@ const emergeScale = (frame: number) => Math.min(0x100, 0x28 + 0x12 * Math.min(fr
 /** Everything on the stage `frame` frames into the loop. */
 export const releaseAt = (loopFrame: number): ReleaseState => {
   const f = loopFrame % BEATS.loop
+  const species = Math.floor(loopFrame / BEATS.loop) % ROSTER.length
+  const home = { x: MON_HOME.x, y: MON_HOME.y - ROSTER[species]!.lift }
   const { throwAt, bounceAt, openAt, outAt, recallAt, closeAt, returnAt, restAt } = BEATS
 
   if (f < throwAt || f >= restAt) return { ball: null, particles: [], mon: null }
@@ -127,13 +151,14 @@ export const releaseAt = (loopFrame: number): ReleaseState => {
       })
     }
 
-    // WOOPER flies from the ball to its place over 32 frames, pushed up and
-    // left by up to 32px on the way, while it grows and its ball color fades.
+    // The POKéMON flies from the ball to its place over 32 frames, pushed up
+    // and left by up to 32px on the way, while it grows and its ball color fades.
     const progress = Math.min(since * 4, 128)
     const arc = progress < 128 ? -Math.trunc(sin(progress, 256) / 8) : 0
     const mon: Mon = {
-      x: Math.round(lerp(BALL_LANDING.x, MON_HOME.x, progress / 128)) + arc,
-      y: Math.round(lerp(BALL_LANDING.y, MON_HOME.y, progress / 128)) + arc,
+      species,
+      x: Math.round(lerp(BALL_LANDING.x, home.x, progress / 128)) + arc,
+      y: Math.round(lerp(BALL_LANDING.y, home.y, progress / 128)) + arc,
       scale: emergeScale(since),
       tint: Math.max(0, 1 - since / EMERGE),
       // The front animation's second frame, held briefly on arrival, then a blink now and then.
@@ -150,8 +175,9 @@ export const releaseAt = (loopFrame: number): ReleaseState => {
       ball: t > 0.5 ? { ...BALL_LANDING, frame: BALL_FRAME.open, rotation: 0 } : null,
       particles: [],
       mon: {
-        x: Math.round(lerp(MON_HOME.x, BALL_LANDING.x, t)),
-        y: Math.round(lerp(MON_HOME.y, BALL_LANDING.y, t)),
+        species,
+        x: Math.round(lerp(home.x, BALL_LANDING.x, t)),
+        y: Math.round(lerp(home.y, BALL_LANDING.y, t)),
         scale: lerp(1, 0x28 / 0x100, t),
         tint: Math.min(1, t * 2),
         frame: 0,
@@ -173,5 +199,5 @@ export const releaseAt = (loopFrame: number): ReleaseState => {
 export const restingRelease: ReleaseState = {
   ball: null,
   particles: [],
-  mon: { ...MON_HOME, scale: 1, tint: 0, frame: 0 },
+  mon: { species: 0, ...MON_HOME, scale: 1, tint: 0, frame: 0 },
 }

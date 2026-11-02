@@ -2,7 +2,8 @@
 /**
  * The launch sign-up, the focal point under the title scene, staged like
  * Wayfarer's new game intro: PROF. OAK (as FireRed and LeafGreen draw him)
- * stands on the intro's grey oval and throws out WOOPER, and asks for your
+ * stands on the intro's grey oval and throws out WOOPER (then the opening's
+ * cast in turn), and asks for your
  * email on the naming screen the way the intro asks for your name.
  */
 import { OakStage } from "~/components/OakStage"
@@ -38,7 +39,7 @@ import CtaLinks from "./CtaLinks.astro"
     --s: 2px;
     width: calc(192 * var(--s));
     height: calc(136 * var(--s));
-    /* The left 32px only holds WOOPER's arc out of the ball; center what's left. */
+    /* The left 32px only holds the POKéMON's arc out of the ball; center what's left. */
     translate: calc(-16 * var(--s)) 0;
   }
 

@@ -4,6 +4,7 @@ import {
   OAK,
   OPEN_FADE,
   OVAL,
+  ROSTER,
   type ReleaseState,
   STAGE,
   releaseAt,
@@ -20,7 +21,7 @@ const loadImage = (src: string) =>
 
 /**
  * PROF. OAK on the intro's grey oval, throwing a Poké Ball that releases
- * WOOPER, drawn at GBA resolution and scaled by whole pixels through CSS.
+ * WOOPER, then each of the opening's POKéMON in turn, drawn at GBA resolution and scaled by whole pixels through CSS.
  */
 export const OakStage = ({ className }: { className?: string }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -44,15 +45,17 @@ export const OakStage = ({ className }: { className?: string }) => {
     const monContext = monCanvas.getContext("2d")!
 
     const run = async () => {
-      const [oval, oak, mon, ball, particles] = await Promise.all(
-        [
-          "/game/people/stage.png",
-          "/game/people/oak.png",
-          "/game/people/wooper.png",
-          "/game/people/poke-ball.png",
-          "/game/people/ball-particles.png",
-        ].map(loadImage),
-      )
+      const [[oval, oak, ball, particles], mons] = await Promise.all([
+        Promise.all(
+          [
+            "/game/people/stage.png",
+            "/game/people/oak.png",
+            "/game/people/poke-ball.png",
+            "/game/people/ball-particles.png",
+          ].map(loadImage),
+        ),
+        Promise.all(ROSTER.map(({ species }) => loadImage(`/game/people/mons/${species}.png`))),
+      ])
 
       const draw = ({
         ball: ballState,
@@ -66,7 +69,17 @@ export const OakStage = ({ className }: { className?: string }) => {
           // Tint toward the ball's open color, then draw scaled about its center.
           monContext.clearRect(0, 0, 64, 64)
           monContext.globalCompositeOperation = "source-over"
-          monContext.drawImage(mon!, 0, monState.frame * 64, 64, 64, 0, 0, 64, 64)
+          monContext.drawImage(
+            mons[monState.species]!,
+            0,
+            monState.frame * 64,
+            64,
+            64,
+            0,
+            0,
+            64,
+            64,
+          )
           if (monState.tint > 0) {
             monContext.globalCompositeOperation = "source-atop"
             monContext.globalAlpha = monState.tint

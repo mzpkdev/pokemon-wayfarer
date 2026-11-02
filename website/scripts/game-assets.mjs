@@ -244,14 +244,18 @@ save(
   ),
 )
 
-// The POKéMON the intro introduces, with its two front frames stacked.
-save(
-  "people/wooper.png",
-  renderIndexed(
-    source("pokemon/wooper/anim_front.png"),
-    readJascPalette(source("pokemon/wooper/normal.pal")),
-  ),
-)
+// The POKéMON OAK sends out in turn: WOOPER from his own intro, then the
+// opening's cast. Two front frames stacked, in the GBA style the game builds
+// with (P_GBA_STYLE_SPECIES_GFX).
+for (const species of ["wooper", "torchic", "manectric", "volbeat", "flygon"]) {
+  save(
+    `people/mons/${species}.png`,
+    renderIndexed(
+      source(`pokemon/${species}/anim_front_gba.png`),
+      readJascPalette(source(`pokemon/${species}/normal_gba.pal`)),
+    ),
+  )
+}
 
 // Key item icons, each colored by its palette (named when the icon shares one).
 for (const [item, palette = item] of [
