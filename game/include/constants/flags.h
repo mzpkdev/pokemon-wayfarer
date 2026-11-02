@@ -2787,6 +2787,8 @@
 #define FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED       WAYFARER_COAST_FLAG_ID(154)
 // Pewter's old man has given the other branch's Wing (a tossed Wing is not given again).
 #define FLAG_WAYFARER_JOHTO_PEWTER_WING_GIVEN         WAYFARER_COAST_FLAG_ID(155)
+// The Cianwood pharmacist gave the Secret Potion before Jasmine asked for it (Jasmine's delivery opens differently).
+#define FLAG_WAYFARER_JOHTO_LIGHTHOUSE_MEDICINE_FIRST WAYFARER_COAST_FLAG_ID(156)
 // Background hidden-item fields are 13 bits, so reserve distinct HNS-bank
 // slots below 0x1000 for the seven coast hidden items.
 #define FLAG_WAYFARER_HIDDEN_ITEM_ROUTE20_STARDUST 0x942

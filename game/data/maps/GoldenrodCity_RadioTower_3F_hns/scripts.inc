@@ -42,7 +42,13 @@ GoldenrodRaidoTower3_EventScript_Grunt7::
 
 GoldenrodRaidoTower3_EventScript_Grunt8::
 	trainerbattle_single TRAINER_GRUNT_8_HNS, GoldenrodCity_RadioTower_3F_Text_GruntM9Seen, GoldenrodCity_RadioTower_3F_Text_GruntM9Beaten
+	@ He knows about the UNDERGROUND only once the player has been through it.
+	goto_if_lt VAR_GOLDENROD_CITY_STATE, 9, GoldenrodRaidoTower3_EventScript_Grunt8Neutral
 	msgbox GoldenrodCity_RadioTower_3F_Text_GruntM9After, MSGBOX_AUTOCLOSE
+	end
+
+GoldenrodRaidoTower3_EventScript_Grunt8Neutral::
+	msgbox GoldenrodCity_RadioTower_3F_Text_GruntM9AfterNeutral, MSGBOX_AUTOCLOSE
 	end
 
 GoldenrodRaidoTower3_EventScript_Scientist::
@@ -218,6 +224,10 @@ GoldenrodCity_RadioTower_3F_Text_GruntM9Beaten:
 GoldenrodCity_RadioTower_3F_Text_GruntM9After:
 	.string "What?! You made it past our men in\n"
 	.string "the UNDERGROUND?\p"
+	.string "How could you?$"
+
+GoldenrodCity_RadioTower_3F_Text_GruntM9AfterNeutral:
+	.string "What?! You beat me?\p"
 	.string "How could you?$"
 
 GoldenrodCity_RadioTower_3F_Text_ScientistMarcSeen:
