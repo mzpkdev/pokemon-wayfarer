@@ -1506,9 +1506,8 @@ class ElmAndSeedForVisitors(unittest.TestCase):
                 interp.run(label)
                 with self.subTest(map=map_name, johto=johto):
                     self.assertEqual(bool(interp.pokenav), johto)
-                    # A visitor's Blackthorn waits for the Den Elder's closing line.
-                    wait = map_name == 'BlackthornCity_hns' and not johto
-                    self.assertEqual(interp.vars[state], vars_[state] if wait else after)
+                    # Every call moves its state on, so no frame script stays armed for a visitor.
+                    self.assertEqual(interp.vars[state], after)
                     self.assertFalse(interp.locked)
                     if map_name == 'VioletCity_hns':
                         self.assertEqual('FLAG_HIDE_VIOLET_CITY_AIDE' in interp.flags, not johto)
@@ -1542,33 +1541,39 @@ class ElmAndSeedForVisitors(unittest.TestCase):
             self.assertEqual(interp.vars[LAB], lab_state)
             self.assertEqual(len(interp.pokenav), 1)
 
-    def test_visitor_elder_line_sends_them_to_elm_and_advances_blackthorn(self):
+    def test_visitor_elder_line_sends_them_to_elm_while_the_ball_is_owed(self):
         maps = ('DragonsDen_Shrine_hns',)
-        for got_dratini in (False, True):
-            flags = {'FLAG_GOT_DRATINI'} if got_dratini else set()
-            interp = Interp(*maps, johto=False, vars={'VAR_BLACKTHORN_CITY_STATE': 4}, flags=flags)
-            interp.run('DragonsDen_Shrine_EventScript_Elder')
-            self.assertEqual(interp.vars['VAR_BLACKTHORN_CITY_STATE'], 5, got_dratini)
-            self.assertIn('DragonsDen_Shrine_Text_ElderElmAskedForYou', interp.messages)
-            self.assertNotIn(LAB, interp.written())
-            # Said once.
-            interp.messages.clear()
-            interp.run('DragonsDen_Shrine_EventScript_Elder')
-            self.assertNotIn('DragonsDen_Shrine_Text_ElderElmAskedForYou', interp.messages)
-        # The Johto origin hears Elm's call instead; the Elder stays quiet and Blackthorn waits.
-        interp = Interp(*maps, johto=True, vars={'VAR_BLACKTHORN_CITY_STATE': 4})
+        line = 'DragonsDen_Shrine_Text_ElderElmAskedForYou'
+        # Before or after Blackthorn's frame script moved the city on.
+        for city in (4, 5):
+            for got_dratini in (False, True):
+                flags = {BALL_OWED} | ({'FLAG_GOT_DRATINI'} if got_dratini else set())
+                interp = Interp(*maps, johto=False, vars={'VAR_BLACKTHORN_CITY_STATE': city}, flags=flags)
+                interp.run('DragonsDen_Shrine_EventScript_Elder')
+                self.assertIn(line, interp.messages, (city, got_dratini))
+                self.assertNotIn(LAB, interp.written())
+                # Quiet once the Ball is taken.
+                interp.messages.clear()
+                interp.flags.add(BALL_GOT)
+                interp.run('DragonsDen_Shrine_EventScript_Elder')
+                self.assertNotIn(line, interp.messages)
+        # The Johto origin hears Elm's call instead; the Elder stays quiet.
+        interp = Interp(*maps, johto=True, vars={'VAR_BLACKTHORN_CITY_STATE': 4}, flags={BALL_OWED})
         interp.run('DragonsDen_Shrine_EventScript_Elder')
-        self.assertEqual(interp.vars['VAR_BLACKTHORN_CITY_STATE'], 4)
-        self.assertNotIn('DragonsDen_Shrine_Text_ElderElmAskedForYou', interp.messages)
+        self.assertNotIn(line, interp.messages)
         # Before the trial completes he says nothing about Elm.
         interp = Interp(*maps, johto=False, vars={'VAR_BLACKTHORN_CITY_STATE': 3})
         interp.run('DragonsDen_Shrine_EventScript_Elder')
-        self.assertNotIn('DragonsDen_Shrine_Text_ElderElmAskedForYou', interp.messages)
+        self.assertNotIn(line, interp.messages)
 
-    def test_visitor_blackthorn_waits_at_four_without_a_call(self):
+    def test_visitor_blackthorn_frame_script_leaves_state_four_without_a_call(self):
+        # BlackthornCity_OnFrame runs the call every frame while the city is at 4, holding the
+        # player, so the visitor's skip must move it on too.
+        self.assertIn('map_script_2 VAR_BLACKTHORN_CITY_STATE, 4, BlackthornCity_EventScript_Call',
+                      raw_text('BlackthornCity_hns'))
         interp = Interp('BlackthornCity_hns', johto=False, vars={'VAR_BLACKTHORN_CITY_STATE': 4})
         interp.run('BlackthornCity_EventScript_Call')
-        self.assertEqual((interp.vars['VAR_BLACKTHORN_CITY_STATE'], interp.pokenav), (4, []))
+        self.assertEqual((interp.vars['VAR_BLACKTHORN_CITY_STATE'], interp.pokenav), (5, []))
 
     def test_master_ball_at_tr_zero_once_for_both_origins_and_after_a_full_pocket(self):
         for johto in (True, False):
@@ -1620,12 +1625,22 @@ class ElmAndSeedForVisitors(unittest.TestCase):
         self.assertFalse(lab.written() & {THEATER, 'FLAG_HIDE_ECRUTEAK_SILVER', 'FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS',
                                           LAB})
         self.assertIn('INTERIM', raw_text('NewBarkTown_Lab_hns'))
-        # The waiting line plays only while the ceremony is activated and unfinished.
-        for ceremony, expected in ((0, False), (4, False), (5, True), (7, True), (8, False)):
-            interp = Interp('NewBarkTown_Lab_hns', vars={LAB: 5, CEREMONY: ceremony},
-                            flags={BALL_OWED, BALL_GOT})
-            interp.run('NewBarkTown_Lab_EventScript_Elm')
-            self.assertEqual('NewBarkTown_Lab_Text_KimonoWaiting' in interp.messages, expected, ceremony)
+        # The waiting line plays only while the ceremony is activated and unfinished, and the
+        # League line after it until the ticket, in a real late save: egg hatched and shown,
+        # Goldenrod visited.
+        late = {BALL_OWED, BALL_GOT, 'FLAG_RECEIVED_TOGEPI_EGG', 'FLAG_SHOWN_ELM_TOGEPI'}
+        for ceremony, expected in ((0, None), (4, None), (5, 'KimonoWaiting'), (7, 'KimonoWaiting'),
+                                   (8, 'League')):
+            for egg_flags in (set(), late):
+                interp = Interp('NewBarkTown_Lab_hns', vars={LAB: 6, CEREMONY: ceremony, 'VAR_GOLDENROD_CITY_STATE': 1},
+                                flags={BALL_OWED, BALL_GOT} | egg_flags)
+                interp.run('NewBarkTown_Lab_EventScript_Elm')
+                with self.subTest(ceremony=ceremony, late=bool(egg_flags)):
+                    self.assertEqual('NewBarkTown_Lab_Text_KimonoWaiting' in interp.messages,
+                                     expected == 'KimonoWaiting')
+                    if expected == 'League':
+                        self.assertFalse(any('Kimono' in m for m in interp.messages))
+                        self.assertTrue(any('League' in m for m in interp.messages), interp.messages)
 
     def test_post_league_call_owes_the_ticket_without_touching_the_lab(self):
         for johto in (True, False):

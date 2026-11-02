@@ -93,13 +93,21 @@ NewBarkTown_Lab_EventScript_ElmCampaignNoBall::
 	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED, NewBarkTown_Lab_EventScript_ElmSSTicket
 NewBarkTown_Lab_EventScript_ElmCampaignNoTicket::
 	goto_if_set FLAG_HIDE_NEWBARKTOWN_LAB_AIDE, NewBarkTown_Lab_EventScript_ElmAideIsWaiting
+	@ After the Ball, the ceremony lines read the ceremony's own state: the Kimono Girls are
+	@ waiting while it is activated and unfinished; once it is done and until the S.S. ticket
+	@ arrives, Elm sends the player to the League.
+	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_RECEIVED, NewBarkTown_Lab_EventScript_ElmCampaignErrand
+	goto_if_lt VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 5, NewBarkTown_Lab_EventScript_ElmCampaignErrand
+	goto_if_lt VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 8, NewBarkTown_Lab_EventScript_ElmKimono
+	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED, NewBarkTown_Lab_EventScript_ElmLeague
+NewBarkTown_Lab_EventScript_ElmCampaignErrand:
 
 	goto_if_unset FLAG_RECEIVED_TOGEPI_EGG, NewBarkTown_Lab_EventScript_Elm_AfterEggCheck
 	goto_if_set FLAG_SHOWN_ELM_TOGEPI, NewBarkTown_Lab_EventScript_Elm_CallMe
 	call_if_unset FLAG_SHOWN_ELM_TOGEPI, NewBarkTown_Lab_EventScript_Elm_Check_Togepi
 NewBarkTown_Lab_EventScript_Elm_AfterEggCheck:
 	goto_if_ge VAR_GOLDENROD_CITY_STATE, 1, NewBarkTown_Lab_EventScript_Elm_Check_WhereIsEgg
-	goto_if_ge VAR_NEWBARKTOWN_LABSTATE, 5, NewBarkTown_Lab_EventScript_ElmErrandDone
+	goto_if_ge VAR_NEWBARKTOWN_LABSTATE, 5, NewBarkTown_Lab_EventScript_ElmState5
 	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 2, CopNewBarkTown_Lab_EventScript_ElmState2
 	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 3, CopNewBarkTown_Lab_EventScript_ElmState2
 	goto_if_set FLAG_JOHTO_STARTER_CHOICE_COMMITTED, NewBarkTown_Lab_EventScript_MrPokemon
@@ -456,16 +464,6 @@ NewBarkTown_Lab_EventScript_PoliceYes::
 	removeitem ITEM_MYSTERY_EGG
 	release
 	end
-
-@ The errand is past the egg return. The ceremony lines read the ceremony's own state: the
-@ Kimono Girls are waiting only while it is activated and unfinished; once it is done and until
-@ the S.S. ticket arrives, Elm sends the player to the League.
-NewBarkTown_Lab_EventScript_ElmErrandDone::
-	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_RECEIVED, NewBarkTown_Lab_EventScript_ElmState5
-	goto_if_lt VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 5, NewBarkTown_Lab_EventScript_ElmState5
-	goto_if_lt VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 8, NewBarkTown_Lab_EventScript_ElmKimono
-	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED, NewBarkTown_Lab_EventScript_ElmLeague
-	goto NewBarkTown_Lab_EventScript_ElmState5
 
 NewBarkTown_Lab_EventScript_ElmState5::
 	lock

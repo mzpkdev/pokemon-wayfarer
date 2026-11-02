@@ -31,7 +31,8 @@ BlackthornCity_Setup_Started:
 
 @ Elm calls only the Johto origin; the call just moves Blackthorn on. It writes no lab state:
 @ Elm's Master Ball is owed from the Den trial (his own flags), so the call cannot rewind his
-@ errand. A visitor gets no call: the Den Elder sends them to Elm and advances Blackthorn there.
+@ errand. A visitor gets no call, but Blackthorn still moves on (this is a frame script, so it
+@ must leave state 4); the Den Elder sends them to Elm while the Ball is owed.
 BlackthornCity_EventScript_Call::
 	specialvar VAR_RESULT, WayfarerIsJohtoOrigin
 	goto_if_eq VAR_RESULT, FALSE, BlackthornCity_EventScript_CallSkipped
@@ -45,6 +46,7 @@ BlackthornCity_EventScript_Call::
 	end
 
 BlackthornCity_EventScript_CallSkipped::
+	setvar_forward VAR_BLACKTHORN_CITY_STATE, 5
 	end
 
 BlackthornCity_Text_ElmName:
