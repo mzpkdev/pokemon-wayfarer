@@ -399,7 +399,7 @@ describe.sequential("HNS Johto traversal bypasses", () => {
 
     await game.player.interact()
     await finishFieldScript(game, "Route 32 completed reward interaction")
-    await expect(game.state.read()).resolves.toMatchObject({ bag: { items: { miracleSeed: 1 } } })
+    await expect(game.inventory.count("miracleSeed")).resolves.toBe(1)
   })
 
   it("walks through the removed Ilex Forest Cut-tree choke", async () => {
