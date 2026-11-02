@@ -75,7 +75,7 @@
 // variables. Vars 10-15 are reserved for later Johto story state.
 #define VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE            WAYFARER_COAST_VAR_ID(6) // 2 Kurt left, 3 Well cleared, 4 rewarded
 #define VAR_WAYFARER_JOHTO_WHITNEY_STATE                  WAYFARER_COAST_VAR_ID(7) // 3 crying, 4 Bridget, 5 badge
-#define VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE          WAYFARER_COAST_VAR_ID(8) // 4 Elm handoff, 5 Silver, 6 trial, 7 ceremony done, 8 encounter resolved
+#define VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE          WAYFARER_COAST_VAR_ID(8) // KIMONO_CEREMONY_* in constants/wayfarer_johto_story.h
 #define VAR_WAYFARER_JOHTO_SILVER_CHAPTER                 WAYFARER_COAST_VAR_ID(9) // highest Silver battle chapter started
 #else
 #define VAR_HOENN_STARTER_CHOICE                         VAR_STARTER_MON
