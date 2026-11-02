@@ -1,14 +1,134 @@
 ---
-import { FeatureTabs } from "~/components/FeatureTabs"
+import { Countdown } from "~/components/Countdown"
+import { FeatureBag } from "~/components/FeatureBag"
+import { FrameOptions } from "~/components/FrameOptions"
+import MapPopup from "~/components/MapPopup.astro"
+import { OriginChoice } from "~/components/OriginChoice"
+import { TitleScene } from "~/components/TitleScene"
 import Layout from "~/layouts/Layout.astro"
+import { RELEASE_LABEL } from "~/lib/release"
+
+const records = [
+  { label: "STARTING REGIONS", value: "3" },
+  { label: "SHIPS AT SEA", value: "3" },
+  { label: "PORTS OF CALL", value: "7" },
+  { label: "GYM BADGES", value: "24" },
+  { label: "ONE DAY", value: "2:00" },
+]
 ---
 
 <Layout title="Pokémon Wayfarer">
-  <main class="mx-auto flex max-w-3xl flex-col items-start gap-8 px-4 py-24">
-    <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl">Pokémon Wayfarer</h1>
-    <p class="text-lg text-wayfarer-50/70">
-      One journey across every region. This site is a work in progress.
-    </p>
-    <FeatureTabs client:visible />
+  <main>
+    <TitleScene client:load />
+
+    <section aria-labelledby="origins" class="dawn relative py-[calc(24*var(--px))]">
+      <div class="mx-auto flex max-w-[calc(256*var(--px))] flex-col gap-[calc(8*var(--px))] px-[calc(4*var(--px))]">
+        <MapPopup id="origins" theme="wood" label="ORIGINS" />
+        <div class="h-[calc(64*var(--px))]" aria-hidden="true"></div>
+        <OriginChoice client:visible />
+      </div>
+    </section>
+
+    <section aria-labelledby="key-items" class="py-[calc(24*var(--px))]">
+      <div class="mx-auto flex max-w-[calc(256*var(--px))] flex-col gap-[calc(8*var(--px))] px-[calc(4*var(--px))]">
+        <MapPopup id="key-items" theme="stone" label="KEY ITEMS" />
+        <FeatureBag client:visible />
+      </div>
+    </section>
+
+    <section aria-labelledby="records" class="py-[calc(24*var(--px))]">
+      <div class="mx-auto flex max-w-[calc(256*var(--px))] flex-col gap-[calc(8*var(--px))] px-[calc(4*var(--px))]">
+        <MapPopup id="records" theme="brick" label="RECORDS" />
+        <dl class="gba-window">
+          {
+            records.map(({ label, value }) => (
+              <div class="record flex items-baseline gap-[calc(4*var(--px))]">
+                <dt class="gba-text">{label}</dt>
+                <dd class="gba-text gba-text-blue order-last">{value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </section>
+
+    <footer class="relative overflow-hidden pt-[calc(24*var(--px))] pb-[calc(48*var(--px))]">
+      <div class="mx-auto flex max-w-[calc(256*var(--px))] flex-col items-center gap-[calc(8*var(--px))] px-[calc(4*var(--px))]">
+        <MapPopup id="see-you" theme="underwater" label="SEE YOU!" />
+        <p class="gba-text gba-text-light text-center">POKéMON WAYFARER arrives on {RELEASE_LABEL}.</p>
+        <Countdown client:visible />
+        <div class="flex flex-wrap items-end justify-center gap-[calc(8*var(--px))]">
+          <FrameOptions client:visible />
+          <a href="#top" class="gba-window gba-text block no-underline hover:gba-text-blue focus-visible:gba-text-blue">
+            ▲ BACK TO TITLE
+          </a>
+        </div>
+        <p class="gba-text gba-text-light max-w-[calc(220*var(--px))] text-center opacity-80">
+          POKéMON WAYFARER is a free fan game. It is not affiliated with Nintendo, Creatures Inc. or GAME FREAK inc.
+          POKéMON is a trademark of Nintendo.
+        </p>
+      </div>
+      <div class="torchic" aria-hidden="true"></div>
+    </footer>
   </main>
 </Layout>
+
+<style>
+  .dawn {
+    background: url("/game/title/dawn.png") center / cover;
+    image-rendering: pixelated;
+  }
+
+  /* Dotted leaders between a record's label and its value, as on the TRAINER CARD. */
+  .record::after {
+    content: "";
+    flex: 1;
+    order: 1;
+    border-bottom: var(--px) dotted var(--color-ink-shadow);
+  }
+
+  /* TORCHIC running along the bottom of the page. */
+  .torchic {
+    position: absolute;
+    bottom: calc(8 * var(--px));
+    left: 0;
+    width: calc(32 * var(--px));
+    height: calc(32 * var(--px));
+    background: url("/game/sprites/torchic.png") 0 0 / calc(32 * var(--px)) calc(192 * var(--px));
+    image-rendering: pixelated;
+    scale: -1 1;
+    animation:
+      torchic-run 0.2s steps(1) infinite,
+      torchic-cross 14s linear infinite;
+  }
+
+  @keyframes torchic-run {
+    0% {
+      background-position-y: 0;
+    }
+    25% {
+      background-position-y: calc(-32 * var(--px));
+    }
+    50% {
+      background-position-y: calc(-64 * var(--px));
+    }
+    75% {
+      background-position-y: calc(-32 * var(--px));
+    }
+  }
+
+  @keyframes torchic-cross {
+    from {
+      translate: calc(-32 * var(--px)) 0;
+    }
+    to {
+      translate: 100vw 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .torchic {
+      display: none;
+    }
+  }
+</style>

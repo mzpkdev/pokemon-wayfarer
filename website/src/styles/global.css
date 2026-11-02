@@ -1,9 +1,148 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Wayfarer Text";
+  src: url("/game/fonts/wayfarer-text.ttf") format("truetype");
+  font-display: block;
+}
+
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --color-wayfarer-50: oklch(0.97 0.02 210);
-  --color-wayfarer-500: oklch(0.62 0.14 220);
-  --color-wayfarer-700: oklch(0.45 0.12 230);
-  --color-wayfarer-950: oklch(0.2 0.05 240);
+  --font-gba: "Wayfarer Text", ui-monospace, monospace;
+  /* Colors sampled from the opening's layers and the game's text palettes. */
+  --color-sky: rgb(131 205 238);
+  --color-ground: rgb(8 41 0);
+  --color-hollow: rgb(0 16 0);
+  --color-leaf: rgb(16 57 0);
+  --color-ink: rgb(56 56 56);
+  --color-ink-shadow: rgb(216 216 216);
+  --color-ink-blue: rgb(48 80 200);
+  --color-ink-blue-shadow: rgb(168 184 248);
+  --color-paper: rgb(248 248 248);
+}
+
+:root {
+  /* One GBA pixel, in CSS pixels. The title scene sets its own to match its canvas. */
+  --px: 2px;
+  --frame: url("/game/frames/1.png");
+}
+
+@media (min-width: 768px) {
+  :root {
+    --px: 3px;
+  }
+}
+
+@layer base {
+  html {
+    background: var(--color-ground);
+    color: var(--color-paper);
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    font-family: var(--font-gba);
+    font-size: calc(16 * var(--px));
+    line-height: calc(16 * var(--px));
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: unset;
+    font-smooth: never;
+    text-rendering: optimizeSpeed;
+  }
+
+  ::selection {
+    background: var(--color-ink-blue);
+    color: var(--color-paper);
+  }
+}
+
+@utility pixelated {
+  image-rendering: pixelated;
+}
+
+/*
+ * Text drawn the way the game's text printer draws it: ink plus a one-pixel
+ * shadow to the right, below, and diagonally.
+ */
+@utility gba-text {
+  --ink: var(--color-ink);
+  --shadow: var(--color-ink-shadow);
+  --dot: var(--px);
+  font-family: var(--font-gba);
+  font-size: calc(16 * var(--px));
+  line-height: calc(16 * var(--px));
+  color: var(--ink);
+  text-shadow:
+    var(--dot) 0 var(--shadow),
+    0 var(--dot) var(--shadow),
+    var(--dot) var(--dot) var(--shadow);
+}
+
+@utility gba-text-light {
+  --ink: var(--color-paper);
+  --shadow: rgb(80 80 80);
+}
+
+@utility gba-text-blue {
+  --ink: var(--color-ink-blue);
+  --shadow: var(--color-ink-blue-shadow);
+}
+
+@utility gba-text-2x {
+  --dot: calc(2 * var(--px));
+  font-size: calc(32 * var(--px));
+  line-height: calc(32 * var(--px));
+}
+
+/** A text window: the chosen 24x24 frame, 8px edges stretched by whole pixels. */
+@utility gba-window {
+  border-style: solid;
+  border-width: calc(8 * var(--px));
+  border-image: var(--frame) 8 fill / calc(8 * var(--px));
+  image-rendering: pixelated;
+  padding: calc(2 * var(--px)) calc(4 * var(--px));
+  color: var(--color-ink);
+}
+
+/** The bouncing ▼ that waits for A at the end of a message. */
+@utility gba-down-arrow {
+  width: calc(8 * var(--px));
+  height: calc(8 * var(--px));
+  background: url("/game/text/down-arrow.png") 0 0 / calc(8 * var(--px)) calc(48 * var(--px));
+  image-rendering: pixelated;
+  animation: gba-down-arrow 0.53s steps(1) infinite;
+}
+
+/** The ▶ menu cursor, which lives in the font. */
+@utility gba-cursor {
+  &::before {
+    content: "▶";
+  }
+}
+
+@keyframes gba-down-arrow {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  25% {
+    translate: 0 calc(1 * var(--px));
+  }
+  50% {
+    translate: 0 calc(2 * var(--px));
+  }
+  75% {
+    translate: 0 calc(1 * var(--px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gba-down-arrow {
+    animation: none;
+  }
 }

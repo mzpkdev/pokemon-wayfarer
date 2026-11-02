@@ -6,8 +6,10 @@ type Props = {
   description?: string
 }
 
-const { title, description = "Pokémon Wayfarer, a ROM hack built on pokeemerald-expansion." } =
-  Astro.props
+const {
+  title,
+  description = "Pokémon Wayfarer, a GBA adventure across Kanto, Johto and Hoenn on one save. Out 20.01.2027.",
+} = Astro.props
 ---
 
 <!doctype html>
@@ -16,10 +18,22 @@ const { title, description = "Pokémon Wayfarer, a ROM hack built on pokeemerald
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <meta name="theme-color" content="#082900" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preload" href="/game/fonts/wayfarer-text.ttf" as="font" type="font/ttf" crossorigin />
     <title>{title}</title>
+    <script is:inline>
+      // Apply the visitor's saved text window frame before first paint.
+      try {
+        const frame = Number(localStorage.getItem("wayfarer:frame"))
+        if (frame >= 1 && frame <= 20)
+          document.documentElement.style.setProperty("--frame", `url("/game/frames/${frame}.png")`)
+      } catch {}
+    </script>
   </head>
-  <body class="min-h-dvh bg-wayfarer-950 font-sans text-wayfarer-50 antialiased">
+  <body class="min-h-dvh bg-ground text-paper">
     <slot />
   </body>
 </html>

@@ -1,0 +1,296 @@
+{
+  "intro/bg0.png": {
+    "width": 240,
+    "height": 256,
+    "x": 0,
+    "y": 0
+  },
+  "intro/bg1.png": {
+    "width": 240,
+    "height": 256,
+    "x": 0,
+    "y": 0
+  },
+  "intro/bg2.png": {
+    "width": 240,
+    "height": 256,
+    "x": 0,
+    "y": 0
+  },
+  "intro/bg3.png": {
+    "width": 240,
+    "height": 168,
+    "x": 0,
+    "y": 0
+  },
+  "intro/pokeball.png": {
+    "width": 64,
+    "height": 64,
+    "x": 0,
+    "y": 0
+  },
+  "title/dawn.png": {
+    "width": 256,
+    "height": 256,
+    "x": 0,
+    "y": 0
+  },
+  "title/logo.png": {
+    "width": 152,
+    "height": 56,
+    "x": 10,
+    "y": 3
+  },
+  "title/wordmark.png": {
+    "width": 112,
+    "height": 27,
+    "x": 8,
+    "y": 2
+  },
+  "title/press-start.png": {
+    "width": 90,
+    "height": 7,
+    "x": 27,
+    "y": 1
+  },
+  "sprites/volbeat.png": {
+    "width": 32,
+    "height": 64,
+    "x": 0,
+    "y": 0
+  },
+  "sprites/torchic.png": {
+    "width": 32,
+    "height": 192,
+    "x": 0,
+    "y": 0
+  },
+  "sprites/manectric.png": {
+    "width": 64,
+    "height": 256,
+    "x": 0,
+    "y": 0
+  },
+  "sprites/brendan.png": {
+    "width": 64,
+    "height": 256,
+    "x": 0,
+    "y": 0
+  },
+  "sprites/bicycle.png": {
+    "width": 64,
+    "height": 128,
+    "x": 0,
+    "y": 0
+  },
+  "text/down-arrow.png": {
+    "width": 8,
+    "height": 48,
+    "x": 0,
+    "y": 0
+  },
+  "frames/1.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/2.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/3.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/4.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/5.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/6.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/7.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/8.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/9.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/10.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/11.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/12.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/13.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/14.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/15.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/16.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/17.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/18.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/19.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "frames/20.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "popups/wood.png": {
+    "width": 96,
+    "height": 40,
+    "x": 0,
+    "y": 0
+  },
+  "popups/marble.png": {
+    "width": 96,
+    "height": 40,
+    "x": 0,
+    "y": 0
+  },
+  "popups/stone.png": {
+    "width": 96,
+    "height": 40,
+    "x": 0,
+    "y": 0
+  },
+  "popups/brick.png": {
+    "width": 96,
+    "height": 40,
+    "x": 0,
+    "y": 0
+  },
+  "popups/underwater.png": {
+    "width": 96,
+    "height": 40,
+    "x": 0,
+    "y": 0
+  },
+  "popups/stone2.png": {
+    "width": 96,
+    "height": 40,
+    "x": 0,
+    "y": 0
+  },
+  "items/town-map.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "items/ss-ticket.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "items/sun-stone.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "items/vs-seeker.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "items/rare-candy.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "items/master-ball.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "items/soothe-bell.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  },
+  "items/tri-pass.png": {
+    "width": 24,
+    "height": 24,
+    "x": 0,
+    "y": 0
+  }
+}

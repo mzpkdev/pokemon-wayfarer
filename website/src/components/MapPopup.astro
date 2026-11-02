@@ -1,0 +1,66 @@
+---
+/**
+ * A section heading drawn as the map name popup the game shows on entering a
+ * new area. It slides down into place when the section scrolls into view.
+ */
+type Props = {
+  id: string
+  theme: "wood" | "marble" | "stone" | "brick" | "underwater" | "stone2"
+  label: string
+}
+
+const { id, theme, label } = Astro.props
+---
+
+<div class="map-popup" style={`--popup: url("/game/popups/${theme}.png")`}>
+  <h2 id={id} class="gba-text">{label}</h2>
+</div>
+
+<style>
+  .map-popup {
+    display: grid;
+    place-items: center;
+    width: calc(96 * var(--px));
+    height: calc(40 * var(--px));
+    padding: calc(8 * var(--px));
+    background: var(--popup) 0 0 / 100% 100%;
+    image-rendering: pixelated;
+    /* The game slides it 2px a frame from 40px above. */
+    transition:
+      translate 0.33s steps(20),
+      opacity 0.33s steps(2);
+  }
+
+  .map-popup[data-shown="false"] {
+    translate: 0 calc(-40 * var(--px));
+    opacity: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .map-popup {
+      transition: none;
+    }
+  }
+
+  h2 {
+    white-space: nowrap;
+  }
+</style>
+
+<script>
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue
+        ;(entry.target as HTMLElement).dataset.shown = "true"
+        observer.unobserve(entry.target)
+      }
+    },
+    { threshold: 0.6 },
+  )
+  // Popups start in place so they show without JavaScript; hide them until seen.
+  for (const popup of document.querySelectorAll<HTMLElement>(".map-popup")) {
+    popup.dataset.shown = "false"
+    observer.observe(popup)
+  }
+</script>
