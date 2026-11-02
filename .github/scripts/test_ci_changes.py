@@ -4,7 +4,7 @@ import re
 import unittest
 from unittest.mock import Mock
 
-from ci_changes import BUILD_INPUT_DOCS, classify, documentation_path
+from ci_changes import BUILD_INPUT_DOCS, classify, documentation_path, light_path
 
 REPO = Path(__file__).resolve().parents[2]
 SCANNED_SUFFIXES = {".py", ".mk", ".json", ".c", ".h", ".ts"}
@@ -35,6 +35,26 @@ class ClassificationTests(unittest.TestCase):
         for path in ["game/README.md", ".github/README.md", "docs/a.json", "docs/../game/a.md", "/docs/a.md", "docs//a.md", "unknown.md", "docs/a.MD", None]:
             with self.subTest(path=path):
                 self.assertFalse(documentation_path(path))
+
+    def test_website_paths_are_light(self):
+        for path in ["website/package.json", "website/src/pages/index.astro", ".github/workflows/website.yml", "docs/a.md"]:
+            with self.subTest(path=path):
+                self.assertTrue(light_path(path))
+        for path in ["pnpm-lock.yaml", "pnpm-workspace.yaml", "package.json", "websites/a.ts", "website", "website/../game/a.c", ".github/workflows/ci.yml", None]:
+            with self.subTest(path=path):
+                self.assertFalse(light_path(path))
+
+    def test_website_only_and_docs_with_website_are_light(self):
+        self.assertTrue(self.check([{"filename": "website/src/pages/index.astro", "status": "modified"}])[0])
+        self.assertTrue(self.check([{"filename": "website/a.ts", "status": "added"}, {"filename": ".github/workflows/website.yml", "status": "modified"}, {"filename": "docs/a.md", "status": "modified"}])[0])
+
+    def test_website_with_shared_install_inputs_runs_full(self):
+        result, _ = self.check([{"filename": "website/package.json", "status": "modified"}, {"filename": "pnpm-lock.yaml", "status": "modified"}])
+        self.assertFalse(result)
+
+    def test_website_rename_from_code_runs_full(self):
+        result, _ = self.check([{"filename": "website/a.ts", "status": "renamed", "previous_filename": "devtools/a.ts"}])
+        self.assertFalse(result)
 
     def test_mixed_paths_run_full(self):
         result, _ = self.check([{"filename": "docs/a.md", "status": "modified"}, {"filename": "game/src/a.c", "status": "modified"}])

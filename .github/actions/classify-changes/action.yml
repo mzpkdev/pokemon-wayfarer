@@ -1,9 +1,9 @@
 name: Classify PR changes
-description: Verify all changed paths before allowing documentation-only validation
+description: Verify all changed paths before allowing light (docs and website only) validation
 outputs:
-  docs-only:
-    description: True only for a verified, complete documentation-only PR
-    value: ${{ steps.classify.outputs.docs-only }}
+  light:
+    description: True only for a verified, complete PR that changes nothing but documentation and website paths
+    value: ${{ steps.classify.outputs.light }}
 runs:
   using: composite
   steps:

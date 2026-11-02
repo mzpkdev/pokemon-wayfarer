@@ -1,4 +1,9 @@
-"""Conservatively identify documentation-only PRs; uncertainty runs full CI."""
+"""Conservatively identify PRs that change only docs and the website; uncertainty runs full CI.
+
+Neither the ROM, the E2E suites nor devtools read the website, so a PR limited
+to documentation and website paths takes the light path. Shared install inputs
+(pnpm-lock.yaml, pnpm-workspace.yaml, root package.json) still run full CI.
+"""
 
 import json
 import os
@@ -29,13 +34,19 @@ BUILD_INPUT_DOCS = frozenset({
     ".product/specs/world-items.md",
 })
 BUILD_INPUT_DOC_DIRS = (".product/research/native-hm-windows/",)
+WEBSITE_DIR = "website/"
+WEBSITE_FILES = frozenset({".github/workflows/website.yml"})
 STATUSES = {"added", "removed", "modified", "renamed", "copied", "changed", "unchanged"}
 
 
-def documentation_path(path):
-    if not isinstance(path, str) or not path or any(
+def safe_path(path):
+    return isinstance(path, str) and bool(path) and not any(
         part in {"", ".", ".."} for part in path.split("/")
-    ):
+    )
+
+
+def documentation_path(path):
+    if not safe_path(path):
         return False
     if path in BUILD_INPUT_DOCS or path.startswith(BUILD_INPUT_DOC_DIRS):
         return False
@@ -44,7 +55,15 @@ def documentation_path(path):
     )
 
 
-def docs_only(event, get):
+def website_path(path):
+    return safe_path(path) and (path.startswith(WEBSITE_DIR) or path in WEBSITE_FILES)
+
+
+def light_path(path):
+    return documentation_path(path) or website_path(path)
+
+
+def light_only(event, get):
     """Require a complete, stable API listing before permitting the cheap path."""
     pr = event["pull_request"]
     number = pr["number"]
@@ -79,14 +98,14 @@ def docs_only(event, get):
         if not isinstance(entry, dict) or entry.get("status") not in STATUSES:
             return False
         path = entry.get("filename")
-        if not documentation_path(path) or path in seen:
+        if not light_path(path) or path in seen:
             return False
         seen.add(path)
         # Renames/copies must not hide removal of a production input.
         previous = entry.get("previous_filename")
         if entry["status"] in {"renamed", "copied"} and previous is None:
             return False
-        if previous is not None and not documentation_path(previous):
+        if previous is not None and not light_path(previous):
             return False
     return len(files) == count and current()
 
@@ -95,7 +114,7 @@ def classify(event_name, event, get):
     if event_name != "pull_request":
         return False
     try:
-        return docs_only(event, get)
+        return light_only(event, get)
     except Exception:
         # Authentication, API limits, malformed data, and network failures all
         # retain full validation. Do not print response bodies or credentials.
@@ -123,8 +142,8 @@ def main():
     except Exception:
         print("::warning::Could not read the PR event; running full CI.")
     with open(os.environ["GITHUB_OUTPUT"], "a") as output:
-        output.write(f"docs-only={str(result).lower()}\n")
-    print("Documentation-only PR: build the docs UI; skip ROM and browser suites." if result else "Run full CI.")
+        output.write(f"light={str(result).lower()}\n")
+    print("Docs and website only: build the docs UI; skip ROM and browser suites." if result else "Run full CI.")
 
 
 if __name__ == "__main__":
