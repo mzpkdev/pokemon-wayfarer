@@ -3,10 +3,22 @@ Route42_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters
 	.byte 0
 
+@ The Route 42 sighting is the chase's third step: Suicune is here, and its
+@ scene plays, only after Cianwood's sighting (encounters == 2).
 Route42_MapScript_OnTransition::
-	call_if_set FLAG_HIDE_ROUTE42_SUICUNE, Route42_MapScript_HideTrigger
+	call_if_eq VAR_SUICUNE_ENCOUNTERS, 2, Route42_MapScript_ShowSuicune
+	call_if_ne VAR_SUICUNE_ENCOUNTERS, 2, Route42_MapScript_HideSuicune
 	callnative SetTimeBasedEncounters
 	end
+
+Route42_MapScript_ShowSuicune::
+	clearflag FLAG_HIDE_ROUTE42_SUICUNE
+	return
+
+Route42_MapScript_HideSuicune::
+	setflag FLAG_HIDE_ROUTE42_SUICUNE
+	setvar VAR_TEMP_0, 1
+	return
 
 Route42_MapScript_HideTrigger::
 	setvar VAR_TEMP_0, 1

@@ -4,10 +4,15 @@ AzaleaTown_House1_hns_MapScripts::
 AzaleaTown_House1_EventScript_Boss::
 	lock
 	faceplayer
-	goto_if_eq VAR_AZALEA_TOWN_STATE, 5, AzaleaTown_House1_EventScript_Boss3
-	goto_if_eq VAR_AZALEA_TOWN_STATE, 6, AzaleaTown_House1_EventScript_Boss3
-	goto_if_eq VAR_AZALEA_TOWN_STATE, 7, AzaleaTown_House1_EventScript_Boss4
-	goto_if_set FLAG_HIDE_AZALEA_TOWN_ROCKETS, AzaleaTown_House1_EventScript_Boss2
+	@ The Boss's lines follow the facts they describe, not Azalea's step counter,
+	@ which the GS Ball chain can move past them: Rockets chased off, Bugsy beaten,
+	@ and Ilex done (Ilex's own var; Rustboro also gives HM Cut).
+	goto_if_unset FLAG_HIDE_AZALEA_TOWN_ROCKETS, AzaleaTown_House1_EventScript_Boss1
+	goto_if_ge VAR_ILEX_FOREST_FARFETCHD, 3, AzaleaTown_House1_EventScript_Boss4
+	goto_if_set FLAG_DEFEATED_AZALEA_TOWN_GYM, AzaleaTown_House1_EventScript_Boss3
+	goto AzaleaTown_House1_EventScript_Boss2
+
+AzaleaTown_House1_EventScript_Boss1::
 	msgbox CharcoalKiln_Text_Boss1, MSGBOX_DEFAULT
 	closemessage
 	release
@@ -34,7 +39,7 @@ AzaleaTown_House1_EventScript_Boss4::
 AzaleaTown_House1_EventScript_Apprentice::
 	lock
 	faceplayer
-	goto_if_ge VAR_AZALEA_TOWN_STATE, 7, AzaleaTown_House1_EventScript_Apprentice3
+	goto_if_ge VAR_ILEX_FOREST_FARFETCHD, 3, AzaleaTown_House1_EventScript_Apprentice3
 	goto_if_set FLAG_HIDE_AZALEA_TOWN_ROCKETS, AzaleaTown_House1_EventScript_Apprentice2
 	msgbox CharcoalKiln_Text_Apprentice1, MSGBOX_DEFAULT
 	closemessage

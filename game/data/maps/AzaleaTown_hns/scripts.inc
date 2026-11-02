@@ -5,12 +5,19 @@ AzaleaTown_hns_MapScripts::
 
 AzaleaTown_OnTransition::
 	call_if_unset FLAG_WAYFARER_JOHTO_SETUP_AZALEA, AzaleaTown_EventScript_Setup
+	call_if_eq VAR_AZALEA_TOWN_STATE, 8, AzaleaTown_MapScript_ArmGSBall
 	goto_if_eq VAR_AZALEA_TOWN_STATE, 5, AzaleaTown_MapScript_Hide_Silver
 	end
 	
+@ VAR_TEMP_1 arms Kurt's GS Ball once per visit, so a full Poke Ball pocket
+@ leaves it owed for the next visit instead of replaying it every frame.
 AzaleaTown_OnFrame::
-	map_script_2 VAR_AZALEA_TOWN_STATE, 8, AzaleaTown_EventScript_GSBall
+	map_script_2 VAR_TEMP_1, 1, AzaleaTown_EventScript_GSBall
 	.2byte 0
+
+AzaleaTown_MapScript_ArmGSBall::
+	setvar VAR_TEMP_1, 1
+	return
 
 AzaleaTown_MapScript_Hide_Silver:
 	setflag FLAG_HIDE_AZALEA_TOWN_SILVER
@@ -18,8 +25,8 @@ AzaleaTown_MapScript_Hide_Silver:
 	end
 
 @ First-visit setup, run once from the map load however the player arrives.
-@ New-game defaults are not restated, and Ilex Forest's hide flags are left
-@ alone once the forest has started.
+@ New-game defaults are not restated: Ilex Forest's errand objects and Celebi
+@ start hidden from the new game and are revealed by their own steps.
 AzaleaTown_EventScript_Setup:: @flagheap
 	setflag FLAG_WAYFARER_JOHTO_SETUP_AZALEA
 	setflag FLAG_VISITED_AZALEA_TOWN
@@ -30,18 +37,6 @@ AzaleaTown_EventScript_Setup:: @flagheap
 	setflag FLAG_HIDE_AZALEA_ARIADOS_LEFT
 	setflag FLAG_HIDE_AZALEA_ARIADOS_MID
 	setflag FLAG_HIDE_AZALEA_ARIADOS_RIGHT
-	@ Celebi and Ilex Kurt follow Kurt's GS Ball in Azalea, so no earlier
-	@ Ilex visit can have shown them.
-	setflag FLAG_HIDE_CELEBI
-	setflag FLAG_HIDE_ILEX_FOREST_KURT
-	goto_if_ne VAR_ILEX_FOREST_FARFETCHD, 0, AzaleaTown_Setup_IlexStarted
-	setflag FLAG_HIDE_ILEX_FOREST_APPRENTICE
-	setflag FLAG_HIDE_ILEX_FOREST_MASTER
-	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_4
-	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_3
-	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_2
-	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_1
-AzaleaTown_Setup_IlexStarted:
 	setvar_forward VAR_AZALEA_TOWN_STATE, 1
 	return
 
@@ -221,6 +216,7 @@ AzaleaTown_Silver_Battle_Chikorita::
 
 AzaleaTown_EventScript_GSBall::
 	lock
+	setvar VAR_TEMP_1, 0
 	applymovement OBJ_EVENT_ID_PLAYER, AzaleaTown_Movement_PlayerGSBall
 	waitmovement 0
 	clearflag FLAG_HIDE_AZALEA_TOWN_KURT
@@ -238,6 +234,7 @@ AzaleaTown_EventScript_GSBall::
 	playse SE_M_PETAL_DANCE
 	msgbox AzaleaTown_Text_Kurt2, MSGBOX_DEFAULT
 	giveitem ITEM_GS_BALL
+	goto_if_eq VAR_RESULT, FALSE, AzaleaTown_EventScript_GSBallBagFull
 	waitse
 	playse SE_M_PETAL_DANCE
 	turnobject LOCALID_AZALEA_TOWN_KURT_GS, DIR_WEST
@@ -258,6 +255,23 @@ AzaleaTown_EventScript_GSBall::
 	closedoor 19, 11
 	waitdooranim
 	setvar_forward VAR_AZALEA_TOWN_STATE, 9
+	release
+	end
+
+@ A full Bag leaves the GS Ball with Kurt: he leaves, the chain stays at 8, and
+@ the scene plays again on the next visit to Azalea.
+AzaleaTown_EventScript_GSBallBagFull::
+	call Common_EventScript_BagIsFull
+	closemessage
+	applymovement LOCALID_AZALEA_TOWN_KURT_GS, AzaleaTown_Movement_KurtLeave
+	delay 60
+	opendoor 19, 11
+	waitdooranim
+	waitmovement 0
+	setflag FLAG_HIDE_AZALEA_TOWN_KURT
+	removeobject LOCALID_AZALEA_TOWN_KURT_GS
+	closedoor 19, 11
+	waitdooranim
 	release
 	end
 

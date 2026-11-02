@@ -542,12 +542,9 @@ AzaleaTown_Gym_EventScript_Bugsy::
 	setvar_forward VAR_AZALEA_TOWN_STATE, 5
 	closemessage
 	setflag FLAG_GET_HEADBUTT
-	@ Bugsy's win starts the Ilex Farfetch'd errand only if Ilex hasn't already.
-	goto_if_ne VAR_ILEX_FOREST_FARFETCHD, 0, AzaleaTown_Gym_EventScript_IlexAlreadyStarted
 	setflag FLAG_HIDE_AZALEA_TOWN_FARFETCHD
 	clearflag FLAG_HIDE_ILEX_FOREST_APPRENTICE
 	clearflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_1
-AzaleaTown_Gym_EventScript_IlexAlreadyStarted::
 	release
 	end
 

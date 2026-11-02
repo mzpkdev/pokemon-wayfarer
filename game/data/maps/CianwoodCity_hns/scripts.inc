@@ -213,13 +213,8 @@ CianwoodCity_EventScript_SuicuneTrigger::
 	setvar VAR_SUICUNE_ENCOUNTERS, 2
 	setvar VAR_CIANWOOD_CITY_STATE, 2
 	fadedefaultbgm
-	call_if_set FLAG_HIDE_ROUTE42_SUICUNE, CianwoodCity_EventScript_DoneJohtoSuicune
 	release
 	end
-
-CianwoodCity_EventScript_DoneJohtoSuicune::
-	setvar VAR_SUICUNE_ENCOUNTERS, 3
-	return
 
 CianwoodCity_Movement_Suicune1:
 	jump_in_place_right_left

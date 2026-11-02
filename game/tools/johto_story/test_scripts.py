@@ -64,6 +64,13 @@ TRANSITION_LABELS = {
     'blackthorn': 'BlackthornCity_EventScript_CityEnter',
 }
 
+# Ilex Forest's errand and Celebi objects: hidden by the new game, revealed by their own steps.
+ILEX_ERRAND_FLAGS = {
+    'FLAG_HIDE_ILEX_FOREST_APPRENTICE', 'FLAG_HIDE_ILEX_FOREST_MASTER', 'FLAG_HIDE_ILEX_FOREST_FARFETCHD_1',
+    'FLAG_HIDE_ILEX_FOREST_FARFETCHD_2', 'FLAG_HIDE_ILEX_FOREST_FARFETCHD_3', 'FLAG_HIDE_ILEX_FOREST_FARFETCHD_4',
+    'FLAG_HIDE_CELEBI', 'FLAG_HIDE_ILEX_FOREST_KURT',
+}
+
 # State and rewards each town's setup must never write.
 PROTECTED = {
     'violet': {'FLAG_RECEIVED_TOGEPI_EGG', 'VAR_SPROUT_TOWER', 'FLAG_HIDE_SPROUT_TOWER_SILVER',
@@ -72,7 +79,7 @@ PROTECTED = {
                'FLAG_ITEM_GS_BALL', 'FLAG_ITEM_DOME_FOSSIL', 'FLAG_ITEM_HELIX_FOSSIL',
                'FLAG_ITEM_OLD_AMBER'},
     'azalea': {'FLAG_GOT_CHARCOAL', 'FLAG_HIDE_AZALEA_TOWN_ROCKETS', 'FLAG_HIDE_KURT_1',
-               'FLAG_HIDE_AZALEA_TOWN_FARFETCHD', 'FLAG_HIDE_AZALEA_TOWN_CUT_MASTER'},
+               'FLAG_HIDE_AZALEA_TOWN_FARFETCHD', 'FLAG_HIDE_AZALEA_TOWN_CUT_MASTER'} | ILEX_ERRAND_FLAGS,
     'goldenrod': {'VAR_LUGIA_OR_HOOH', 'FLAG_RECEIVED_BIKE', 'FLAG_GOT_EEVEE', 'FLAG_RECEIVED_SQUIRTBOTTLE',
                   'FLAG_GOT_RETURN', 'FLAG_GOT_FRUSTRATION', 'FLAG_GOT_SUNNY_DAY', 'VAR_KENYA',
                   'VAR_BUG_CONTEST_STATE', 'FLAG_HIDE_GOLDENROD_ROCKET_SCOUT', 'FLAG_HIDE_GOLDENROD_NPCS',
@@ -200,8 +207,12 @@ class Interp:
                     self.vars['VAR_RESULT'] = self.answer
             elif command == 'giveitem':
                 self.vars['VAR_RESULT'] = 0 if self.bag_full else 1
+            elif command == 'checkitemspace':
+                self.vars['VAR_RESULT'] = 0 if self.bag_full else 1
             elif command in ('checkitem', 'checkmoney'):
                 self.vars['VAR_RESULT'] = 1
+            elif command == 'removemoney':
+                self.set_var('VAR_MONEY_SPENT', self.get('VAR_MONEY_SPENT') + self.get(args[0]))
             elif command == 'goto':
                 if args[0] not in self.labels:
                     return
@@ -345,10 +356,14 @@ class TownSetup(unittest.TestCase):
         self.assertTrue({'FLAG_HIDE_TIN_TOWER_KIMONO_GIRLS', 'FLAG_HIDE_WHIRL_ISLANDS_KIMONO_GIRLS'} <= interp.flags)
         self.assertNotIn('FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS', interp.written())
 
-    def test_azalea_hides_celebi_and_ilex_kurt_after_an_early_ilex_visit(self):
-        interp = run_setup('azalea', vars={'VAR_ILEX_FOREST_FARFETCHD': 1})
-        self.assertTrue({'FLAG_HIDE_CELEBI', 'FLAG_HIDE_ILEX_FOREST_KURT'} <= interp.flags)
-        self.assertNotIn('FLAG_HIDE_ILEX_FOREST_FARFETCHD_1', interp.written())
+    def test_ilex_errand_objects_start_hidden_from_the_new_game(self):
+        # Ilex is reachable from Route 34 before Azalea's first load.
+        new_game = (GAME / 'data/scripts/new_game.inc').read_text()
+        reset = new_game.split('EventScript_ResetAllMapFlagsHnS::', 1)[1].split('\n\n', 1)[0]
+        for flag in sorted(ILEX_ERRAND_FLAGS):
+            self.assertIn('setflag %s\n' % flag, reset)
+        interp = run_setup('azalea')
+        self.assertFalse(ILEX_ERRAND_FLAGS & interp.written())
 
     def test_goldenrod_elm_call_is_queued_for_johto_origin_only(self):
         for johto in (True, False):
@@ -455,17 +470,77 @@ class AzaleaAndSlowpokeWell(unittest.TestCase):
         retry.run('AzaleaTown_KurtsHouse_EventScript_ReturnFromWell')
         self.assertEqual(retry.vars[WELL], 4)
 
-    def test_bugsy_after_an_early_ilex_leaves_the_farfetchd_errand(self):
-        for farfetchd in (1, 3):
-            interp = Interp(*self.MAPS, vars={'VAR_ILEX_FOREST_FARFETCHD': farfetchd})
-            interp.run('AzaleaTown_Gym_EventScript_Bugsy')
-            self.assertEqual(interp.written('flag') & {'FLAG_HIDE_AZALEA_TOWN_FARFETCHD',
-                                                       'FLAG_HIDE_ILEX_FOREST_APPRENTICE',
-                                                       'FLAG_HIDE_ILEX_FOREST_FARFETCHD_1'}, set())
+    def test_bugsy_reveals_the_ilex_errand(self):
         interp = Interp(*self.MAPS)
         interp.run('AzaleaTown_Gym_EventScript_Bugsy')
         self.assertIn('FLAG_HIDE_AZALEA_TOWN_FARFETCHD', interp.flags)
-        self.assertIn('FLAG_HIDE_ILEX_FOREST_APPRENTICE', interp.written('flag'))
+        self.assertNotIn('FLAG_HIDE_ILEX_FOREST_APPRENTICE', interp.flags)
+        self.assertNotIn('FLAG_HIDE_ILEX_FOREST_FARFETCHD_1', interp.flags)
+        self.assertNotIn('VAR_ILEX_FOREST_FARFETCHD', _label_block(raw_text('AzaleaTown_Gym_hns'),
+                                                                  'AzaleaTown_Gym_EventScript_Bugsy'))
+
+    def test_hm_cut_survives_a_full_bag_and_stays_retryable(self):
+        for label in ('IlexForest_EventScript_Trigger', 'IlexForest_EventScript_TriggerBot'):
+            full = Interp(*self.MAPS, vars={'VAR_ILEX_FOREST_FARFETCHD': 2}, bag_full=True)
+            full.run(label)
+            self.assertEqual(full.vars['VAR_ILEX_FOREST_FARFETCHD'], 2, label)  # the trigger tiles fire again
+            self.assertNotIn('FLAG_RECEIVED_HM_CUT', full.flags)
+            self.assertNotIn(AZ, full.vars)
+            self.assertIn('IlexForest_EventScript_CutBagFull', raw_text('IlexForest_hns'))
+            retry = Interp(*self.MAPS, vars=dict(full.vars))
+            retry.run(label)
+            self.assertEqual(retry.vars['VAR_ILEX_FOREST_FARFETCHD'], 3, label)
+            self.assertIn('FLAG_RECEIVED_HM_CUT', retry.flags)
+
+    def test_gs_ball_survives_a_full_bag_without_replaying_every_frame(self):
+        transition = _label_block(raw_text('AzaleaTown_hns'), 'AzaleaTown_OnTransition')
+        self.assertNotIn('VAR_TEMP_1', _label_block(raw_text('AzaleaTown_hns'), 'AzaleaTown_OnFrame').replace(
+            'map_script_2 VAR_TEMP_1, 1, AzaleaTown_EventScript_GSBall', ''))
+        for state in (1, 7, 9, 10):
+            interp = Interp(*self.MAPS, vars={AZ: state}, flags={SETUP_FLAGS['azalea']})
+            interp.run('AzaleaTown_OnTransition')
+            self.assertEqual(interp.vars.get('VAR_TEMP_1', 0), 0, state)
+        full = Interp(*self.MAPS, vars={AZ: 8}, flags={SETUP_FLAGS['azalea']}, bag_full=True)
+        full.run('AzaleaTown_OnTransition')
+        self.assertEqual(full.vars['VAR_TEMP_1'], 1)
+        full.run('AzaleaTown_EventScript_GSBall')
+        self.assertEqual(full.vars[AZ], 8)             # still owed
+        self.assertEqual(full.vars['VAR_TEMP_1'], 0)   # OnFrame disarmed for this visit
+        self.assertIn('FLAG_HIDE_AZALEA_TOWN_KURT', full.flags)
+        retry = Interp(*self.MAPS, vars=dict(full.vars), flags={SETUP_FLAGS['azalea']})
+        retry.run('AzaleaTown_OnTransition')
+        self.assertEqual(retry.vars['VAR_TEMP_1'], 1)
+        retry.run('AzaleaTown_EventScript_GSBall')
+        self.assertEqual(retry.vars[AZ], 9)
+
+    def test_gs_ball_before_ilex_does_not_give_the_ilex_reward(self):
+        maps = ('AzaleaTown_House1_hns',)
+        for az in (5, 6, 7, 8, 9, 10):
+            interp = Interp(*maps, vars={AZ: az, 'VAR_ILEX_FOREST_FARFETCHD': 0}, flags={'FLAG_HIDE_AZALEA_TOWN_ROCKETS'})
+            interp.run('AzaleaTown_House1_EventScript_Apprentice')
+            self.assertNotIn('FLAG_GOT_CHARCOAL', interp.flags, az)
+            self.assertNotIn('CharcoalKiln_Text_Apprentice3', interp.messages, az)
+        done = Interp(*maps, vars={AZ: 5, 'VAR_ILEX_FOREST_FARFETCHD': 3}, flags={'FLAG_HIDE_AZALEA_TOWN_ROCKETS'})
+        done.run('AzaleaTown_House1_EventScript_Apprentice')
+        self.assertIn('FLAG_GOT_CHARCOAL', done.flags)
+
+    def test_boss_lines_follow_the_facts_not_the_azalea_step(self):
+        rockets, bugsy = 'FLAG_HIDE_AZALEA_TOWN_ROCKETS', 'FLAG_DEFEATED_AZALEA_TOWN_GYM'
+        cases = (
+            # (flags, Ilex var) -> line
+            (set(), 0, 'CharcoalKiln_Text_Boss1'),
+            ({rockets}, 0, 'CharcoalKiln_Text_Boss2'),
+            ({rockets, bugsy}, 0, 'CharcoalKiln_Text_Boss3'),
+            ({rockets, bugsy}, 3, 'CharcoalKiln_Text_Boss4'),
+            ({rockets}, 3, 'CharcoalKiln_Text_Boss4'),
+        )
+        for flags, ilex, line in cases:
+            for az in (1, 5, 6, 7, 8, 9, 10):  # the GS Ball chain can put Azalea anywhere
+                interp = Interp('AzaleaTown_House1_hns', vars={AZ: az, 'VAR_ILEX_FOREST_FARFETCHD': ilex},
+                                flags=flags)
+                interp.run('AzaleaTown_House1_EventScript_Boss')
+                self.assertEqual(interp.messages[-1], line, (flags, ilex, az))
+        self.assertNotIn(AZ, raw_text('AzaleaTown_House1_hns'))
 
     def test_kurts_house_reads_the_right_state(self):
         text = raw_text('AzaleaTown_KurtsHouse_hns')
@@ -483,6 +558,39 @@ class AzaleaAndSlowpokeWell(unittest.TestCase):
         interp = Interp('AzaleaTown_KurtsHouse_hns', vars={WELL: 4, AZ: 9})
         interp.run('AzaleaTown_KurtsHouse_EventScript_Girl2')
         self.assertEqual(interp.messages[-1], 'KurtsHouse_Text_GranddaughterSound')
+
+
+class SuicuneChase(unittest.TestCase):
+    MAPS = ('Route42_hns', 'CianwoodCity_hns', 'OlivineCity_hns')
+
+    def test_route_42_sighting_waits_for_cianwood(self):
+        events = json.loads((MAPS / 'Route42_hns/map.json').read_text())['coord_events']
+        trigger = [e for e in events if e['script'] == 'Route42_EventScript_Suicune_Trigger']
+        self.assertEqual([(e['var'], e['var_value']) for e in trigger], [('VAR_TEMP_0', '0')])
+        for encounters in range(0, 10):
+            with self.subTest(encounters=encounters):
+                interp = Interp(*self.MAPS, vars={'VAR_SUICUNE_ENCOUNTERS': encounters})
+                interp.run('Route42_MapScript_OnTransition')
+                here = encounters == 2
+                # Suicune is on the road, and its scene armed, only at its own step.
+                self.assertEqual('FLAG_HIDE_ROUTE42_SUICUNE' in interp.flags, not here)
+                self.assertEqual(interp.vars.get('VAR_TEMP_0', 0), 0 if here else 1)
+                self.assertEqual(interp.vars['VAR_SUICUNE_ENCOUNTERS'], encounters)
+
+    def test_visiting_route_42_early_does_not_stick_the_chase(self):
+        interp = Interp(*self.MAPS)
+        interp.run('OlivineCity_EventScript_Setup')
+        self.assertEqual(interp.vars['VAR_SUICUNE_ENCOUNTERS'], 1)
+        interp.run('Route42_MapScript_OnTransition')       # Mahogany side first
+        self.assertEqual(interp.vars['VAR_TEMP_0'], 1)
+        interp.vars.pop('VAR_TEMP_0')
+        interp.run('CianwoodCity_EventScript_SuicuneTrigger')
+        self.assertEqual(interp.vars['VAR_SUICUNE_ENCOUNTERS'], 2)
+        interp.run('Route42_MapScript_OnTransition')       # now it is Route 42's turn
+        self.assertNotIn('FLAG_HIDE_ROUTE42_SUICUNE', interp.flags)
+        self.assertEqual(interp.vars.get('VAR_TEMP_0', 0), 0)
+        interp.run('Route42_EventScript_Suicune_Trigger')
+        self.assertEqual(interp.vars['VAR_SUICUNE_ENCOUNTERS'], 3)
 
 
 class MahoganyLakeAndRadioTower(unittest.TestCase):
@@ -558,6 +666,17 @@ class MahoganyLakeAndRadioTower(unittest.TestCase):
             interp.run('MahoganyTown_EventScript_MerchantRageCandyBar')
             self.assertEqual('MahoganyTown_Text_RageCandyBarMerchantSoldOut' in interp.messages, expected)
 
+    def test_rage_candy_bar_checks_room_before_taking_money(self):
+        label = 'MahoganyTown_EventScript_MerchantRageCandyBar'
+        full = Interp('Mahoganytown_hns', bag_full=True)
+        full.run(label)
+        self.assertEqual(full.vars.get('VAR_MONEY_SPENT', 0), 0)
+        roomy = Interp('Mahoganytown_hns')
+        roomy.run(label)
+        self.assertEqual(roomy.vars['VAR_MONEY_SPENT'], 300)
+        for branch in raw_text('Mahoganytown_hns').split('removemoney 300')[:-1]:
+            self.assertIn('checkitemspace ITEM_RAGE_CANDY_BAR', branch.rsplit('showmoneybox', 1)[1])
+
     def test_takeover_music_reads_goldenrod_not_mahogany(self):
         code = (GAME / 'src/overworld.c').read_text()
         body = code[code.index('static bool16 IsRocketTakeover'):]
@@ -613,12 +732,14 @@ class EcruteakAndMorty(unittest.TestCase):
             self.assertEqual(again.written(), set(), label)
 
     def test_ceremony_gives_back_the_theater_npcs_it_removes(self):
+        # removeobject hides through the NPCs' shared flag; each ending that removes
+        # them must clear it again before it finishes.
         text = raw_text('EcruteakCity_Theater_hns')
-        removals = text.count('removeobject LOCALID_ECRUTEAK_SISTER')
-        self.assertEqual(removals, 2)
-        self.assertEqual(text.count('removeobject LOCALID_ECRUTEAK_SISTER\n'
-                                    '\t@ removeobject hides her through the theater NPCs\' shared flag; give it back.\n'
-                                    '\tclearflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS'), removals)
+        removals = [m.start() for m in re.finditer(r'removeobject LOCALID_ECRUTEAK_SISTER\b', text)]
+        self.assertEqual(len(removals), 2)
+        for start in removals:
+            ending = text[start:].split('\trelease\n', 1)[0]
+            self.assertIn('clearflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS', ending)
 
     def test_surf_trigger_with_a_full_bag_walks_him_back(self):
         text = raw_text('EcruteakCity_Theater_hns')
@@ -638,10 +759,8 @@ class EcruteakAndMorty(unittest.TestCase):
         interp.run('EcruteakCity_Theater_EventScript_LegendaryCutscene')
         self.assertEqual(interp.vars[CEREMONY], 8)
         self.assertEqual(interp.vars[THEATER], 3)
-        for name, label in (('TinTower_RoofDay_hns', 'TinTower_RoofDay_EventScript_HoOhPostgame'),
-                            ('WhirlIslands_LugiaChamber_hns', None)):
-            text = raw_text(name)
-            self.assertIn('setvar_forward %s, 8' % CEREMONY, text)
+        for name in ('TinTower_RoofDay_hns', 'WhirlIslands_LugiaChamber_hns'):
+            self.assertIn('setvar_forward %s, 8' % CEREMONY, raw_text(name))
         self.assertIn('setvar_forward %s, 4' % CEREMONY, raw_text('NewBarkTown_Lab_hns'))
 
     def test_trial_waits_for_the_theater_rocket_on_shared_tiles(self):
@@ -677,6 +796,31 @@ class EcruteakAndMorty(unittest.TestCase):
             text = (MAPS / path).read_text()
             self.assertNotIn(GOLD, text)
             self.assertIn(WHITNEY, text)
+
+
+class BagFullEndings(unittest.TestCase):
+    """The interpreter treats a goto to an unknown label as the script ending, so check
+    textually that every bag-full path ends the script and releases the player."""
+    MAPS = ('AzaleaTown_hns', 'AzaleaTown_KurtsHouse_hns', 'IlexForest_hns', 'Mahoganytown_hns',
+            'EcruteakCity_Theater_hns')
+
+    def test_bag_full_branches_jump_to_an_ending_label(self):
+        checked = 0
+        for map_name in self.MAPS:
+            text = raw_text(map_name)
+            lines = text.splitlines()
+            for number, line in enumerate(lines):
+                match = re.match(r'\s*goto_if_eq VAR_RESULT, FALSE, (\w+)', line)
+                if not match or not re.search(r'giveitem|checkitemspace', ' '.join(lines[max(0, number - 3):number])):
+                    continue
+                label = match.group(1)
+                checked += 1
+                self.assertNotEqual(label, 'Common_EventScript_BagIsFull', map_name)  # returns without releasing
+                if label == 'Common_EventScript_ShowBagIsFull':
+                    continue
+                block = _label_block(text, label)
+                self.assertRegex(block, r'(?m)^\s*release\n\s*end\b', (map_name, label))
+        self.assertGreaterEqual(checked, 7)
 
 
 class SharedStateWrites(unittest.TestCase):

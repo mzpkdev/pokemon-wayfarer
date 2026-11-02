@@ -86,6 +86,8 @@ MahoganyTown_EventScript_MerchantRageCandyBar::
 	goto_if_eq VAR_RESULT, FALSE, MahoganyTown_EventScript_MerchantRefused
 	checkmoney 300, 0
 	goto_if_eq VAR_RESULT, FALSE, MahoganyTown_EventScript_MerchantBroke
+	checkitemspace ITEM_RAGE_CANDY_BAR
+	goto_if_eq VAR_RESULT, FALSE, MahoganyTown_EventScript_MerchantNoRoom
 	removemoney 300
 	updatemoneybox 0
 	msgbox MahoganyTown_Text_RageCandyBarMerchantSavorIt, MSGBOX_DEFAULT
@@ -108,6 +110,8 @@ MahoganyTown_EventScript_MerchantExit::
 	goto_if_eq VAR_RESULT, FALSE, MahoganyTown_EventScript_MerchantRefused
 	checkmoney 300, 0
 	goto_if_eq VAR_RESULT, FALSE, MahoganyTown_EventScript_MerchantBroke
+	checkitemspace ITEM_RAGE_CANDY_BAR
+	goto_if_eq VAR_RESULT, FALSE, MahoganyTown_EventScript_MerchantNoRoom
 	removemoney 300
 	updatemoneybox 0
 	msgbox MahoganyTown_Text_RageCandyBarMerchantSavorIt, MSGBOX_DEFAULT
@@ -129,6 +133,14 @@ MahoganyTown_EventScript_MerchantRefused::
 MahoganyTown_EventScript_MerchantBroke::
 	msgbox MahoganyTown_Text_RageCandyBarMerchantNotEnoughMoney, MSGBOX_DEFAULT
 	closemessage
+	hidemoneybox
+	closemessage
+	release
+	end
+
+@ No room: he keeps the candy bar and the player keeps the money.
+MahoganyTown_EventScript_MerchantNoRoom::
+	call Common_EventScript_BagIsFull
 	hidemoneybox
 	closemessage
 	release

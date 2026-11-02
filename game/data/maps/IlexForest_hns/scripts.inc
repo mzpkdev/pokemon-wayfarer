@@ -190,7 +190,7 @@ IlexForest_EventScript_Trigger::
 	msgbox IlexForest_Text_CharcoalMasterIntro, MSGBOX_DEFAULT
 	closemessage
 	giveitem ITEM_HM_CUT
-	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_BagIsFull
+	goto_if_eq VAR_RESULT, FALSE, IlexForest_EventScript_CutBagFull
 	msgbox IlexForest_Text_CharcoalMasterOutro, MSGBOX_DEFAULT
 	setflag FLAG_RECEIVED_HM_CUT
 	setflag FLAG_HIDE_ILEX_FOREST_MASTER
@@ -200,6 +200,14 @@ IlexForest_EventScript_Trigger::
 	setvar_forward VAR_AZALEA_TOWN_STATE, 7
 	clearflag FLAG_HIDE_AZALEA_TOWN_FARFETCHD
 	clearflag FLAG_HIDE_AZALEA_TOWN_CUT_MASTER
+	closemessage
+	release
+	end
+
+@ A full Bag leaves the HM owed: the errand stays at step 2, so stepping onto
+@ the trigger tiles again offers it again.
+IlexForest_EventScript_CutBagFull::
+	call Common_EventScript_BagIsFull
 	closemessage
 	release
 	end
