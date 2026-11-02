@@ -192,9 +192,15 @@ class HnsTraversalContractTest(unittest.TestCase):
 
         azalea = load_map("AzaleaTown_hns")["coord_events"]
         self.assertFalse(at(azalea, 11, 17, var="VAR_AZALEA_TOWN_STATE", var_value="5"))
-        kept = at(azalea, 11, 16, var="VAR_AZALEA_TOWN_STATE", var_value="5")
+        # The lane is kept, but no longer keyed on the shared Azalea state: Ilex Forest or the GS
+        # Ball finishing before Bugsy would have skipped state 5. Bugsy's win and Silver's chapter
+        # rules (WayfarerJohtoSilverAvailable) gate the scene instead.
+        self.assertFalse(at(azalea, 11, 16, var="VAR_AZALEA_TOWN_STATE", var_value="5"))
+        kept = at(azalea, 11, 16, var="VAR_TEMP_0", var_value="0")
         self.assertEqual([event["script"] for event in kept], ["AzaleaTown_EventScript_SilverTriggerTop"])
         battle = self.scripts.reachable_text("AzaleaTown_EventScript_SilverTriggerTop")
+        self.assertIn("FLAG_DEFEATED_AZALEA_TOWN_GYM", battle)
+        self.assertIn("WayfarerJohtoSilverAvailable", battle)
         self.assertIn("setvar_forward VAR_AZALEA_TOWN_STATE, 6", battle)
         self.assertIn("setflag FLAG_HIDE_AZALEA_TOWN_SILVER", battle)
 
@@ -225,19 +231,20 @@ class HnsTraversalContractTest(unittest.TestCase):
         guard = at(data["object_events"], 26, 10)
         self.assertEqual(len(guard), 1)
         self.assertEqual(guard[0]["script"], "Route32_EventScript_BaldingMan")
-        check = self.scripts.block("Route32_EventScript_BaldingManCheck")
+        check = self.scripts.block("Route32_EventScript_BaldingMan")
         self.assertOrderedText(
             check,
             [
-                "FLAG_HIDE_SPROUT_TOWER_SILVER",
-                "FLAG_DEFEATED_VIOLET_GYM",
-                "FLAG_RECEIVED_TOGEPI_EGG",
+                "FLAG_WAYFARER_JOHTO_MIRACLE_SEED_RECEIVED",
                 "giveitem ITEM_MIRACLE_SEED",
                 "goto_if_eq VAR_RESULT, FALSE",
-                "setvar VAR_VIOLET_CITY_STATE, 5",
+                "setflag FLAG_WAYFARER_JOHTO_MIRACLE_SEED_RECEIVED",
             ],
-            "Miracle Seed delivery must succeed before state 5 commits",
+            "Miracle Seed delivery must succeed before its own receipt commits",
         )
+        for gone in ("SILVER", "DEFEATED_VIOLET_GYM", "TOGEPI", "VAR_VIOLET_CITY_STATE"):
+            self.assertNotIn(gone, check)
+
     def test_ilex_choke_tree_only_is_removed(self) -> None:
         data = load_map("IlexForest_hns")
         self.assertFalse(at(data["object_events"], 32, 40, script="EventScript_CutTree", flag="FLAG_TEMP_1"))
@@ -371,11 +378,10 @@ class HnsTraversalContractTest(unittest.TestCase):
         )
         for flag in set_defaults:
             self.assertContains(reset, rf"^\s*setflag\s+{flag}\s*$")
-        for flag in (
-            "FLAG_HIDE_MTMOON_SILVER",
-            "FLAG_HIDE_FAN_CLUB_CLEFAIRY_DOLL",
-        ):
+        for flag in ("FLAG_HIDE_FAN_CLUB_CLEFAIRY_DOLL",):
             self.assertContains(reset, rf"^\s*clearflag\s+{flag}\s*$")
+        # Mt. Moon's Silver is derived from his chapter on every load, not shown from a new game.
+        self.assertNotContains(reset, r"clearflag\s+FLAG_HIDE_MTMOON_SILVER")
         self.assertNotContains(reset, r"setvar\s+VAR_KANTO_ROCKET_STORY_STATE,")
 
     def test_ss_aqua_boarding_and_corridor_are_resumable(self) -> None:
@@ -531,7 +537,18 @@ class HnsTraversalContractTest(unittest.TestCase):
             re.DOTALL,
         )
         self.assertIsNotNone(transition)
-        self.assertEqual(mutation_lines(transition.group(1)), ["setvar VAR_PEWTER_CITY_STATE, 1"])
+        self.assertEqual(
+            mutation_lines(transition.group(1)),
+            ["setvar VAR_0x8004, SILVER_CHAPTER_MT_MOON", "setvar VAR_PEWTER_CITY_STATE, 1"],
+        )
+        # Silver is hidden until chapter 11 is playable, and shown only then.
+        self.assertIn("specialvar VAR_RESULT, WayfarerJohtoSilverAvailable", transition.group(1))
+        self.assertContains(
+            self.scripts.block("MtMoon_Cave_EventScript_HideSilver"), r"setflag\s+FLAG_HIDE_MTMOON_SILVER"
+        )
+        self.assertContains(
+            self.scripts.block("MtMoon_Cave_EventScript_ShowSilver"), r"clearflag\s+FLAG_HIDE_MTMOON_SILVER"
+        )
         interaction = self.scripts.reachable_text(silver["script"])
         self.assertIn("MSGBOX_YESNO", interaction)
         declined = self.scripts.block("MtMoon_Cave_EventScript_SilverDeclined")
@@ -1292,22 +1309,19 @@ class HnsTraversalContractTest(unittest.TestCase):
             "the League corridor must require the legendary story and Badge 8",
         )
         victory_road = load_map("VictoryRoadKanto_1F_hns")
-        self.assertEqual(
-            {
-                (event["x"], event["y"], event["var"], event["var_value"], event["script"])
-                for event in victory_road["coord_events"]
-            },
-            {(x, 7, "VAR_ROUTE27_STATE", "2", "VictoryRoadKanto_1F_Trigger") for x in (27, 28, 29)},
-        )
+        # Silver is an object in the corridor's west alcove, not a coordinate trigger on its lane:
+        # the lane (27-29,7) has no event, and the corridor never reads or writes his state.
+        self.assertEqual(victory_road["coord_events"], [])
+        silver = object_with_local_id(victory_road, "LOCALID_VICTORYROAD_SILVER")
+        self.assertEqual((silver["x"], silver["y"]), (26, 6))
+        self.assertEqual(silver["script"], "VictoryRoadKanto_1F_EventScript_Silver")
+        offer = self.scripts.block("VictoryRoadKanto_1F_EventScript_Silver")
         self.assertOrderedText(
-            self.scripts.block("VictoryRoadKanto_1F_Trigger"),
-            [
-                "msgbox VictoryRoad_Text_RivalBefore",
-                "msgbox VictoryRoad_Text_RivalAfter",
-                "setvar VAR_ROUTE27_STATE, 3",
-            ],
-            "the final League corridor lane must retain the state-2 Silver battle",
+            offer,
+            ["msgbox VictoryRoad_Text_RivalChallenge, MSGBOX_YESNO", "goto_if_eq VAR_RESULT, NO"],
+            "talking to Silver on Victory Road must ask before the battle",
         )
+        self.assertNotIn("VAR_ROUTE27_STATE", self.scripts.reachable_text("VictoryRoadKanto_1F_EventScript_Silver"))
 
         silver_guard = [
             obj

@@ -34,6 +34,38 @@ THEATER = 'VAR_ECRUTEAK_CITY_THEATER'
 CEREMONY = 'VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE'
 ECR = 'VAR_ECRUTEAK_CITY_STATE'
 RESOLVED = 'FLAG_WAYFARER_JOHTO_RADIO_TOWER_RESOLVED'
+CHAPTER = 'VAR_WAYFARER_JOHTO_SILVER_CHAPTER'
+WON_ANY = 'FLAG_WAYFARER_JOHTO_SILVER_WON_ANY'
+INDIGO_ENTERED = 'FLAG_WAYFARER_JOHTO_INDIGO_ENTERED'
+SEED = 'FLAG_WAYFARER_JOHTO_MIRACLE_SEED_RECEIVED'
+
+
+def won(chapter):
+    return 'FLAG_WAYFARER_JOHTO_SILVER_WON_%d' % chapter
+
+
+def played(chapter):
+    return 'FLAG_WAYFARER_JOHTO_SILVER_PLAYED_%d' % chapter
+
+
+def silver_playable(chapter, johto, started, flags):
+    """The spec's Silver table, restated: whether a chapter's scene can play."""
+    if not johto or chapter not in range(1, 13):
+        return False
+    return {
+        1: started == 0,
+        2: started <= 2 and won(2) not in flags,
+        3: started < 4,
+        4: started <= 4 and won(4) not in flags,
+        5: started <= 5 and won(5) not in flags,
+        6: started < 8 and played(6) not in flags,
+        7: started < 8 and played(7) not in flags,
+        8: started <= 8 and won(8) not in flags,
+        9: RESOLVED in flags and started < 10 and played(9) not in flags,
+        10: started <= 10 and won(10) not in flags,
+        11: started in (10, 11) and won(11) not in flags,
+        12: won(11) in flags,
+    }[chapter]
 
 SETUP_MAPS = {
     'violet': 'VioletCity_hns',
@@ -137,8 +169,17 @@ class Interp:
         self.johto = johto
         self.answer = answers
         self.bag_full = bag_full
+        self.answers = list(answers) if isinstance(answers, list) else None
+        if self.answers:
+            self.answer = self.answers[-1]
+        self.battle = 'win'     # 'win' resumes after a trainerbattle; 'lose' never does
+        self.starter_slot = 3
         self.writes = []      # (name, value, kind) in order
         self.messages = []
+        self.battles = []     # (command, stored Silver chapter at that moment)
+        self.given = []
+        self.pokenav = []
+        self.locked = False
 
     def get(self, name):
         if name in self.vars:
@@ -200,13 +241,29 @@ class Interp:
                 if self.get(args[0]) == switch_value:
                     pc = self.labels[args[1]]
             elif command == 'specialvar':
-                self.vars[args[0]] = {'WayfarerIsJohtoOrigin': int(self.johto)}.get(args[1], 0)
+                if args[1] == 'WayfarerJohtoSilverAvailable':
+                    self.vars[args[0]] = int(self.silver_playable())
+                else:
+                    self.vars[args[0]] = {'WayfarerIsJohtoOrigin': int(self.johto),
+                                          'WayfarerGetOriginStarterSlot': self.starter_slot}.get(args[1], 0)
             elif command == 'msgbox':
                 self.messages.append(args[0])
                 if args[-1] == 'MSGBOX_YESNO':
-                    self.vars['VAR_RESULT'] = self.answer
+                    self.vars['VAR_RESULT'] = self.answers.pop(0) if self.answers else self.answer
+            elif command in ('lock', 'lockall'):
+                self.locked = True
+            elif command in ('release', 'releaseall'):
+                self.locked = False
+            elif command == 'pokenavcall':
+                self.pokenav.append(args[0])
+            elif command.startswith('trainerbattle'):
+                self.battles.append((command, self.vars.get(CHAPTER, 0)))
+                if self.battle == 'lose':
+                    return
             elif command == 'giveitem':
                 self.vars['VAR_RESULT'] = 0 if self.bag_full else 1
+                if not self.bag_full:
+                    self.given.append(args[0])
             elif command == 'checkitemspace':
                 self.vars['VAR_RESULT'] = 0 if self.bag_full else 1
             elif command in ('checkitem', 'checkmoney'):
@@ -230,6 +287,10 @@ class Interp:
                 elif self.cond(kind, args) and command.startswith('goto'):
                     return
         raise AssertionError('script did not terminate: ' + label)
+
+    def silver_playable(self):
+        chapter = self.get('VAR_0x8004')
+        return silver_playable(chapter, self.johto, self.vars.get(CHAPTER, 0), self.flags)
 
     def written(self, kind=None):
         return {name for name, _, k in self.writes if kind in (None, k)}
@@ -299,7 +360,8 @@ class TownSetup(unittest.TestCase):
                 interp.writes.clear()
                 interp.run(TRANSITION_LABELS[town])
                 self.assertEqual((interp.vars, interp.flags), before)
-                self.assertEqual(interp.writes if town != 'blackthorn' else [], [])
+                self.assertEqual([w for w in interp.writes if w[0] not in ('VAR_0x8004', 'VAR_RESULT')]
+                                 if town != 'blackthorn' else [], [])
 
     def test_setup_leaves_progress_made_before_the_first_visit(self):
         cases = {
@@ -428,18 +490,23 @@ class AzaleaAndSlowpokeWell(unittest.TestCase):
                     self.assertGreaterEqual(interp.vars.get(other, 0), before.get(other, 0), (order, name))
                 # A step only ever writes its own adventure's variable.
                 self.assertEqual(interp.written('var') - {'VAR_TEMP_0', 'VAR_TEMP_1', 'VAR_TEMP_2', 'VAR_RESULT',
-                                                           'VAR_ILEX_FOREST_FARFETCHD', 'VAR_0x8008', 'VAR_NUM_BADGES'} - {var}, set(),
+                                                           'VAR_ILEX_FOREST_FARFETCHD', 'VAR_0x8008', 'VAR_NUM_BADGES',
+                                                           'VAR_0x8004', CHAPTER} - {var}, set(),
                                  (order, name))
             self.assertEqual(interp.vars[WELL], 4, order)
             self.assertEqual(interp.vars[AZ], 9, order)
             runs += 1
         self.assertGreater(runs, 1000)
 
-    def test_well_then_bugsy_does_not_skip_the_silver_trigger_value(self):
+    def test_well_then_bugsy_then_silver_walks_the_azalea_steps_in_order(self):
         interp = Interp(*self.MAPS)
         for name in ('W2', 'W3', 'W4', 'Bugsy'):
             interp.run(self.STEPS[name][0])
-        self.assertEqual((interp.vars[WELL], interp.vars[AZ]), (4, 5))  # Silver's tile fires at Azalea == 5
+        self.assertEqual((interp.vars[WELL], interp.vars[AZ]), (4, 5))
+        # Silver's Azalea scene follows Bugsy's win whatever the Well or later Azalea steps wrote.
+        interp.run('AzaleaTown_EventScript_SilverTriggerTop')
+        self.assertEqual(interp.vars[AZ], 6)
+        self.assertEqual(interp.vars[CHAPTER], 4)
 
     def test_kurt_gs_ball_never_downgrades_a_running_chain(self):
         for start in (8, 9):
@@ -784,12 +851,13 @@ class EcruteakAndMorty(unittest.TestCase):
                 self.assertEqual(event['var'], CEREMONY)
             else:
                 self.assertEqual(event['var'], THEATER)
+        # Ecruteak's Silver is off the Kimono chain: his tile reads no ceremony or theater state.
         city = json.loads((MAPS / 'EcruteakCity_hns/map.json').read_text())['coord_events']
         silver = [e for e in city if e['script'] == 'EcruteakCity_Trigger_Silver']
-        self.assertEqual([(e['var'], e['var_value']) for e in silver], [(CEREMONY, '4')])
-        interp = Interp('EcruteakCity_hns', vars={THEATER: 3, CEREMONY: 4})
+        self.assertEqual([(e['var'], e['var_value']) for e in silver], [('VAR_TEMP_0', '0')])
+        interp = Interp('EcruteakCity_hns', vars={THEATER: 3, CEREMONY: 4}, flags={RESOLVED})
         interp.run('EcruteakCity_Trigger_Silver')
-        self.assertEqual((interp.vars[THEATER], interp.vars[CEREMONY]), (3, 5))
+        self.assertEqual((interp.vars[THEATER], interp.vars[CEREMONY]), (3, 4))
 
     def test_whitney_owns_her_state(self):
         for path in ('GoldenrodCity_Gym_hns/scripts.inc', 'GoldenrodCity_Gym_hns/map.json'):
@@ -875,6 +943,538 @@ class SharedStateWrites(unittest.TestCase):
                          and re.search(r'setvar\w*\s+%s,\s*16' % MAH, raw_text('Mahoganytown_hns')))
         for path in all_script_files():
             self.assertNotRegex(path.read_text(), r'(?m)^\s*setvar\w*\s+%s,\s*(15|16|17)\b' % MAH)
+
+
+def _scene(maps, label, texts, *, vars=None, flags=(), battle=False, host=()):
+    return {'maps': maps, 'label': label, 'texts': set(texts), 'vars': vars or {}, 'flags': set(flags),
+            'battle': battle, 'host': set(host)}
+
+
+# Silver's scenes by chapter: the script that plays it, its Silver-only text, the host state it needs,
+# and the host variables it may move even when Silver is not part of it.
+SCENES = {
+    2: _scene(('CherrygroveCity_hns',), 'CherryGroveCity_EventScript_TriggerSilver',
+              ['CherrygroveCity_Text_RivalSeen'], vars={'VAR_CHERRYGROVE_CITY_STATE': 3}, battle=True,
+              host=['VAR_CHERRYGROVE_CITY_STATE']),
+    3: _scene(('SproutTower_3F_hns',), 'SproutTower_3F_EventScript_TriggerSceneLeft',
+              ['SproutTower_Text_ElderLecturesRival']),
+    4: _scene(('AzaleaTown_hns',), 'AzaleaTown_EventScript_SilverTriggerTop',
+              ['AzaleaTown_Text_RivalBefore', 'AzaleaTown_Text_RivalBeforeNoWell'],
+              flags=['FLAG_DEFEATED_AZALEA_TOWN_GYM'], battle=True),
+    5: _scene(('BurnedTower_1F_hns',), 'BurnedTower_1F_EventScript_Silver', ['BurnedTowerSilver_BeforeText'],
+              vars={ECR: 2}, battle=True, host=[ECR]),
+    6: _scene(('OlivineCity_hns',), 'OlivineCity_EventScript_SilverTrigger', ['OlivineCity_Text_SilverEncounter'],
+              vars={'VAR_OLIVINE_CITY_STATE': 1}),
+    7: _scene(('RocketHideout_B3F_hns',), 'RocketHideout_B3F_Trigger_Silver',
+              ['RocketHideout_B3F_Text_Rival', 'RocketHideout_B3F_Text_RivalNeutral'], vars={MAH: 7}, host=[MAH]),
+    8: _scene(('GoldenrodCity_UndergroundSwitches_hns',), 'GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerTop',
+              ['GoldenrodUnderground_Text_SilverBefore'], vars={GOLD: 8}, battle=True, host=[GOLD]),
+    9: _scene(('EcruteakCity_hns',), 'EcruteakCity_Trigger_Silver', ['EcruteakCity_Text_Silver2'],
+              flags=[RESOLVED]),
+    10: _scene(('VictoryRoadKanto_1F_hns',), 'VictoryRoadKanto_1F_EventScript_Silver', ['VictoryRoad_Text_RivalBefore'],
+               battle=True),
+    11: _scene(('MtMoon_Cave_hns',), 'MtMoon_Cave_EventScript_Silver', ['MtMoon_Cave_Text_Rival_Before'], battle=True),
+    12: _scene(('IndigoPlateau_PokemonCenter_hns',), 'IndigoPlateau_EventScript_Silver',
+               ['IndigoPlateau_Text_RivalEntrance1'], flags=[won(11)], battle=True),
+}
+BATTLE_CHAPTERS = (2, 4, 5, 8, 10, 11)
+NO_SILVER_WRITES = {'VAR_RESULT', 'VAR_0x8004', 'VAR_0x8005', 'VAR_0x8006', 'VAR_0x8007', 'VAR_TEMP_0', 'VAR_TEMP_1'}
+
+
+def play(chapter, *, johto=True, started=None, flags=(), vars=None, battle='win', answers=1, extra_maps=()):
+    scene = SCENES[chapter]
+    if started is None:
+        started = 10 if chapter == 11 else 0  # Mt. Moon only follows Victory Road
+    interp = Interp(*scene['maps'], *extra_maps, johto=johto, answers=answers,
+                    vars={**scene['vars'], CHAPTER: started, **(vars or {})}, flags=scene['flags'] | set(flags))
+    interp.battle = battle
+    interp.run(scene['label'])
+    return interp
+
+
+def silver_text(chapter, interp):
+    return bool(SCENES[chapter]['texts'] & set(interp.messages))
+
+
+def silver_writes(chapter, interp):
+    """Everything a scene wrote beyond the engine scratch variables and its host's own progress."""
+    return interp.written() - NO_SILVER_WRITES - SCENES[chapter]['host']
+
+
+class SilverChapters(unittest.TestCase):
+    def test_every_scene_follows_the_chapter_table(self):
+        for started in (0, 2, 4, 5, 8, 10, 11):
+            wins = [(), (started,) if started else (), tuple(c for c in BATTLE_CHAPTERS if c <= started)]
+            for won_chapters in wins:
+                for extra in ((), (played(6), played(7), played(9))):
+                    flags = {won(c) for c in won_chapters} | set(extra)
+                    for chapter in SCENES:
+                        interp = play(chapter, started=started, flags=flags)
+                        full = flags | SCENES[chapter]['flags']
+                        expected = silver_playable(chapter, True, started, full)
+                        with self.subTest(chapter=chapter, started=started, flags=sorted(flags)):
+                            self.assertEqual(silver_text(chapter, interp), expected)
+                            self.assertEqual(bool(interp.battles), expected and SCENES[chapter]['battle'])
+
+    def test_starting_a_battle_stores_the_chapter_just_before_it(self):
+        for chapter in BATTLE_CHAPTERS + (12,):
+            interp = play(chapter)
+            with self.subTest(chapter=chapter):
+                self.assertEqual(len(interp.battles), 1)
+                if chapter == 12:
+                    continue  # the daily rematch never moves the saved chapter
+                self.assertEqual(interp.battles[0][1], chapter)
+                self.assertEqual(interp.vars[CHAPTER], chapter)
+                self.assertTrue({won(chapter), WON_ANY} <= interp.flags)
+
+    def test_a_loss_leaves_the_battle_offered_and_the_win_unrecorded(self):
+        for chapter in BATTLE_CHAPTERS:
+            lost = play(chapter, battle='lose')
+            with self.subTest(chapter=chapter):
+                self.assertEqual(lost.battles[0][1], chapter)
+                self.assertEqual(lost.vars[CHAPTER], chapter)
+                self.assertFalse({won(chapter), WON_ANY} & lost.flags)
+                again = play(chapter, started=chapter, flags=lost.flags, vars={k: v for k, v in lost.vars.items()
+                                                                               if k != CHAPTER})
+                self.assertTrue(silver_text(chapter, again))
+                self.assertEqual(len(again.battles), 1)
+                self.assertIn(won(chapter), again.flags)
+
+    def test_a_later_battle_retires_earlier_scenes_without_rewards(self):
+        for later in BATTLE_CHAPTERS:
+            for chapter in SCENES:
+                if chapter >= later or chapter in (9, 12):
+                    continue
+                interp = play(chapter, started=later)
+                with self.subTest(later=later, chapter=chapter):
+                    retired = not silver_playable(chapter, True, later, set())
+                    self.assertEqual(silver_text(chapter, interp), not retired)
+                    if retired:
+                        self.assertEqual(interp.battles, [])
+                        self.assertEqual(silver_writes(chapter, interp), set())
+
+    def test_non_battle_scenes_never_change_the_stored_chapter(self):
+        for chapter in (3, 6, 7, 9):
+            interp = play(chapter, started=0)
+            with self.subTest(chapter=chapter):
+                self.assertTrue(silver_text(chapter, interp))
+                self.assertEqual(interp.vars[CHAPTER], 0)
+
+    def test_olivine_before_azalea_leaves_both_battles(self):
+        maps = [SCENES[c]['maps'][0] for c in (4, 5, 6)]
+        interp = Interp(*maps, vars={ECR: 2, 'VAR_OLIVINE_CITY_STATE': 1},
+                        flags={'FLAG_DEFEATED_AZALEA_TOWN_GYM'})
+        interp.run(SCENES[6]['label'])
+        self.assertIn(played(6), interp.flags)
+        self.assertEqual(interp.vars.get(CHAPTER, 0), 0)
+        interp.run(SCENES[4]['label'])
+        interp.run(SCENES[5]['label'])
+        self.assertEqual([chapter for _, chapter in interp.battles], [4, 5])
+        self.assertTrue({won(4), won(5)} <= interp.flags)
+
+    def test_chapter_state_is_only_written_forward_and_before_a_battle(self):
+        for path in all_script_files():
+            for number, line in enumerate(path.read_text().splitlines(), 1):
+                parts = line.split('@')[0].split()
+                if len(parts) >= 2 and parts[1].rstrip(',') == CHAPTER:
+                    self.assertEqual(parts[0], 'setvar_forward', '%s:%d' % (path.parent.name, number))
+
+    def test_scene_trigger_scripts_need_no_starter_flag(self):
+        for chapter, scene in SCENES.items():
+            for name in scene['maps']:
+                self.assertNotIn('FLAG_JOHTO_STARTER_CHOICE_COMMITTED', raw_text(name), name)
+
+    def test_azalea_scene_fires_after_later_azalea_steps_have_passed_state_5(self):
+        # Ilex Forest and the GS Ball can finish before Bugsy; the old state-5 tile would never fire.
+        for azalea in (1, 7, 9):
+            interp = play(4, vars={AZ: azalea})
+            self.assertTrue(silver_text(4, interp), azalea)
+            self.assertEqual(interp.vars[AZ], max(azalea, 6))
+        interp = Interp(*SCENES[4]['maps'], vars={AZ: 5}, flags=set())
+        interp.run(SCENES[4]['label'])
+        self.assertEqual((interp.messages, interp.battles), ([], []))  # Bugsy not beaten yet
+
+    def test_indigo_daily_follows_the_mt_moon_win(self):
+        interp = Interp(*SCENES[12]['maps'], johto=True, flags=set())
+        interp.run(SCENES[12]['label'])
+        self.assertEqual((interp.messages, interp.battles), ([], []))
+        for johto in (True, False):
+            interp = Interp(*SCENES[12]['maps'], johto=johto, flags={won(11)})
+            interp.run(SCENES[12]['label'])
+            self.assertEqual(bool(interp.battles), johto)
+
+
+class SilverVisitors(unittest.TestCase):
+    def test_no_scene_plays_or_writes_silver_state_for_a_visitor(self):
+        for chapter in SCENES:
+            for started in (0, 10):
+                interp = play(chapter, johto=False, started=started)
+                with self.subTest(chapter=chapter, started=started):
+                    self.assertFalse(silver_text(chapter, interp))
+                    self.assertEqual(interp.battles, [])
+                    self.assertEqual(silver_writes(chapter, interp), set())
+                    self.assertFalse([name for name, value, kind in interp.writes
+                                      if kind == 'flag' and value == 0 and 'SILVER' in name])
+
+    def test_visitor_scene_entries_do_not_freeze_the_player(self):
+        for chapter in SCENES:
+            interp = play(chapter, johto=False)
+            with self.subTest(chapter=chapter):
+                self.assertFalse(interp.locked)
+
+    def test_every_silver_object_is_hidden_on_load_for_a_visitor(self):
+        for name, (maps, label, flag, extra_vars, extra_flags) in LOAD_HIDES.items():
+            for started in (0, 10):
+                interp = Interp(*maps, johto=False, vars={CHAPTER: started, **extra_vars}, flags=extra_flags)
+                interp.run(label)
+                with self.subTest(map=name, started=started):
+                    self.assertIn(flag, interp.flags)
+                    self.assertFalse([w for w in interp.writes if w[0] == flag and w[1] == 0])
+
+    def test_new_bark_silver_is_hidden_for_the_hoenn_origin_too(self):
+        interp = Interp('NewBarkTown_hns', johto=False, vars={'VAR_NEWBARK_TOWN_STATE': 2})
+        interp.run('NewBarkTown_OnTransition')
+        self.assertIn('FLAG_HIDE_SILVER_NEWBARKTOWN', interp.flags)
+        source_c = (GAME / 'src/wayfarer_origin.c').read_text()
+        self.assertNotIn('FlagClear(FLAG_HIDE_SILVER_NEWBARKTOWN)', source_c)
+        self.assertIn('FlagSet(FLAG_HIDE_SILVER_NEWBARKTOWN)', source_c)
+
+    def test_new_bark_silver_shows_for_a_fresh_johto_origin_only(self):
+        interp = Interp('NewBarkTown_hns', johto=True, flags={'FLAG_HIDE_SILVER_NEWBARKTOWN'},
+                        vars={'VAR_NEWBARK_TOWN_STATE': 2})
+        interp.run('NewBarkTown_OnTransition')
+        self.assertNotIn('FLAG_HIDE_SILVER_NEWBARKTOWN', interp.flags)
+        interp = Interp('NewBarkTown_hns', johto=True, vars={'VAR_NEWBARK_TOWN_STATE': 2, CHAPTER: 2})
+        interp.run('NewBarkTown_OnTransition')
+        self.assertIn('FLAG_HIDE_SILVER_NEWBARKTOWN', interp.flags)
+
+    def test_burned_tower_release_and_morty_complete_without_silver(self):
+        for johto, started, flags in ((False, 0, ()), (True, 8, ()), (True, 0, (won(5),))):
+            interp = Interp('BurnedTower_1F_hns', 'BurnedTower_B1F_hns', johto=johto,
+                            vars={ECR: 2, CHAPTER: started}, flags=flags)
+            interp.run('BurnedTower_1F_EventScript_Silver')
+            with self.subTest(johto=johto, started=started):
+                self.assertEqual(interp.battles, [])
+                self.assertEqual(interp.messages, ['BurnedTower_1F_Text_FloorGaveWay'])
+                self.assertEqual(interp.vars[ECR], 3)
+                interp.run('BurnedTower_B1F_EventScript_ReleaseBeasts')
+                self.assertEqual(interp.vars[ECR], 4)
+                self.assertIn('FLAG_RELEASED_BEASTS', interp.flags)
+                self.assertIn('FLAG_HIDE_ECRUTEAK_CITY_SAGE', interp.flags)  # Morty's Gym door opens
+
+    def test_burned_tower_silver_has_his_own_hide_flag(self):
+        events = json.loads((MAPS / 'BurnedTower_1F_hns/map.json').read_text())['object_events']
+        flags = {event['local_id']: event['flag'] for event in events if 'local_id' in event}
+        self.assertEqual(flags['LOCALID_BURNED_TOWER_SILVER'], 'FLAG_WAYFARER_JOHTO_HIDE_BURNED_TOWER_SILVER')
+        self.assertEqual(flags['LOCALID_BURNED_TOWER_EUSINE'], 'FLAG_HIDE_BURNED_TOWER_NPCS')
+
+    def test_underground_step_happens_without_silver(self):
+        for johto, started, flags in ((False, 0, ()), (True, 10, ()), (True, 0, (won(8),))):
+            for label in ('SilverTriggerTop', 'SilverTriggerBot'):
+                interp = Interp(*SCENES[8]['maps'], johto=johto, vars={GOLD: 8, CHAPTER: started}, flags=flags)
+                interp.run('GoldenrodCity_UndergroundSwitches_EventScript_' + label)
+                with self.subTest(johto=johto, started=started, label=label):
+                    self.assertEqual(interp.vars[GOLD], 9)
+                    self.assertEqual(interp.battles, [])
+                    self.assertEqual(interp.messages, [])
+
+    def test_underground_loss_waits_for_a_win_or_a_later_chapter(self):
+        lost = play(8, battle='lose')
+        self.assertEqual(lost.vars[GOLD], 8)
+        self.assertTrue(silver_playable(8, True, lost.vars[CHAPTER], lost.flags))
+        retired = play(8, started=10, vars={GOLD: 8})
+        self.assertEqual(retired.vars[GOLD], 9)
+
+    def test_hideout_progress_does_not_wait_on_silver(self):
+        for johto, started in ((False, 0), (True, 8)):
+            interp = Interp(*SCENES[7]['maps'], johto=johto, vars={MAH: 7, CHAPTER: started})
+            interp.run('RocketHideout_B3F_Trigger_Silver')
+            self.assertEqual(interp.vars[MAH], 8)
+            self.assertNotIn(played(7), interp.flags)
+        pattern = re.compile(r'(?:goto_if_\w+|call_if_\w+|map_script_2)\s+VAR_MAHOGANY_TOWN_STATE,\s*8\b')
+        for path in all_script_files():
+            self.assertIsNone(pattern.search(path.read_text()), path.parent.name)
+        for path in MAPS.glob('*/map.json'):
+            for kind in ('coord_events', 'bg_events', 'object_events'):
+                for event in json.loads(path.read_text()).get(kind, []):
+                    self.assertFalse(event.get('var') == MAH and event.get('var_value') == '8', path.parent.name)
+
+
+# (maps, transition label, hide flag, vars, flags) for every Silver object that exists on load
+LOAD_HIDES = {
+    'New Bark': (('NewBarkTown_hns',), 'NewBarkTown_OnTransition', 'FLAG_HIDE_SILVER_NEWBARKTOWN',
+                 {'VAR_NEWBARK_TOWN_STATE': 2}, set()),
+    'Cherrygrove': (('CherrygroveCity_hns',), 'CherryGroveCity_OnTransition', 'FLAG_HIDE_SILVER_CHERRYGROVE', {}, set()),
+    'Sprout Tower 3F': (('SproutTower_3F_hns',), 'SproutTower_3F_OnTransition', 'FLAG_HIDE_SPROUT_TOWER_SILVER', {}, set()),
+    'Azalea': (('AzaleaTown_hns',), 'AzaleaTown_OnTransition', 'FLAG_HIDE_AZALEA_TOWN_SILVER', {},
+               {'FLAG_WAYFARER_JOHTO_SETUP_AZALEA'}),
+    'Burned Tower 1F': (('BurnedTower_1F_hns',), 'BurnedTower_1F_OnTransition',
+                        'FLAG_WAYFARER_JOHTO_HIDE_BURNED_TOWER_SILVER', {ECR: 2}, set()),
+    'Victory Road 1F': (('VictoryRoadKanto_1F_hns',), 'VictoryRoadKanto_1F_OnTransition',
+                        'FLAG_HIDE_VICTORY_ROAD_SILVER', {}, set()),
+    'Mt. Moon': (('MtMoon_Cave_hns',), 'MtMoon_Cave_OnTransition', 'FLAG_HIDE_MTMOON_SILVER', {}, set()),
+    'Indigo Center': (('IndigoPlateau_PokemonCenter_hns',), 'IndigoPlateau_Pokecenter_OnTransition',
+                      'FLAG_HIDE_INDIGO_PLATEAU_SILVER', {}, {won(11)}),
+}
+# The objects whose visibility is fully derived (shown as well as hidden) on every load.
+DERIVED = {'Burned Tower 1F': 5, 'Victory Road 1F': 10, 'Mt. Moon': 11, 'Indigo Center': 12}
+
+
+class SilverVisibility(unittest.TestCase):
+    def test_derived_objects_follow_the_chapter_rules_on_every_load(self):
+        for name, chapter in DERIVED.items():
+            maps, label, flag, extra_vars, extra_flags = LOAD_HIDES[name]
+            for started in (0, 2, 5, 8, 10, 11):
+                for wins in ((), tuple(c for c in BATTLE_CHAPTERS if c <= started)):
+                    flags = {won(c) for c in wins} | set(extra_flags)
+                    for stale in (True, False):
+                        interp = Interp(*maps, vars={CHAPTER: started, **extra_vars},
+                                        flags=flags | ({flag} if stale else set()))
+                        interp.run(label)
+                        with self.subTest(map=name, started=started, wins=wins, stale=stale):
+                            self.assertEqual(flag not in interp.flags,
+                                             silver_playable(chapter, True, started, flags))
+
+    def test_mt_moon_is_hidden_until_victory_road_has_started(self):
+        maps, label, flag, _, _ = LOAD_HIDES['Mt. Moon']
+        for started, shown in ((0, False), (8, False), (10, True), (11, True)):
+            interp = Interp(*maps, vars={CHAPTER: started})
+            interp.run(label)
+            self.assertEqual(flag not in interp.flags, shown, started)
+        interp = Interp(*maps, vars={CHAPTER: 11}, flags={won(11)})
+        interp.run(label)
+        self.assertIn(flag, interp.flags)
+        self.assertNotIn('FLAG_HIDE_MTMOON_SILVER', (GAME / 'data/scripts/new_game.inc').read_text())
+
+    def test_hide_only_objects_are_hidden_once_retired(self):
+        for name in ('Cherrygrove', 'Sprout Tower 3F', 'Azalea'):
+            maps, label, flag, extra_vars, extra_flags = LOAD_HIDES[name]
+            chapter = {'Cherrygrove': 2, 'Sprout Tower 3F': 3, 'Azalea': 4}[name]
+            for started in (0, 2, 4, 5, 8, 10):
+                interp = Interp(*maps, vars={CHAPTER: started, **extra_vars}, flags=extra_flags)
+                interp.run(label)
+                with self.subTest(map=name, started=started):
+                    if not silver_playable(chapter, True, started, set()):
+                        self.assertIn(flag, interp.flags)
+                    else:
+                        self.assertNotIn(flag, interp.flags)
+
+
+class SilverDialogue(unittest.TestCase):
+    def test_azalea_drops_the_rocket_question_without_the_well(self):
+        for well, text in ((0, 'AzaleaTown_Text_RivalBeforeNoWell'), (2, 'AzaleaTown_Text_RivalBeforeNoWell'),
+                           (3, 'AzaleaTown_Text_RivalBefore'), (4, 'AzaleaTown_Text_RivalBefore')):
+            interp = play(4, vars={WELL: well})
+            self.assertIn(text, interp.messages, well)
+            self.assertNotIn('AzaleaTown_Text_RivalBefore' if well < 3 else 'AzaleaTown_Text_RivalBeforeNoWell',
+                             interp.messages, well)
+        no_well = re.search(r'AzaleaTown_Text_RivalBeforeNoWell:\n(.*?)\$', raw_text('AzaleaTown_hns'), re.S)[1]
+        self.assertNotIn('ROCKET', no_well)
+
+    def test_underground_before_line_needs_an_earlier_win(self):
+        for won_before, text in ((False, 'GoldenrodUnderground_Text_SilverFirstBattle'),
+                                 (True, 'GoldenrodUnderground_Text_SilverBeatenBefore')):
+            interp = play(8, flags=[WON_ANY] if won_before else [])
+            self.assertIn(text, interp.messages)
+            self.assertEqual(len([m for m in interp.messages if m.startswith('GoldenrodUnderground_Text_Silver')
+                                  and ('Beaten' in m or 'First' in m)]), 1)
+        self.assertNotIn('beat me', re.search(r'SilverFirstBattle:\n(.*?)\$', raw_text('GoldenrodCity_UndergroundSwitches_hns'), re.S)[1])
+
+    def test_underground_after_line_needs_the_hideout(self):
+        lance = 'GoldenrodUnderground_Text_SilverAfterLance'
+        interp = play(8, flags=[played(7)])
+        self.assertIn(lance, interp.messages)
+        interp = play(8)
+        self.assertNotIn(lance, interp.messages)
+        self.assertEqual(interp.messages[-2:], ['GoldenrodUnderground_Text_SilverAfter',
+                                                'GoldenrodUnderground_Text_SilverAfterEnd'])
+
+    def test_hideout_line_is_neutral_without_olivine(self):
+        self.assertIn('RocketHideout_B3F_Text_Rival', play(7, flags=[played(6)]).messages)
+        interp = play(7)
+        self.assertIn('RocketHideout_B3F_Text_RivalNeutral', interp.messages)
+        neutral = re.search(r'RivalNeutral:\n(.*?)\$', raw_text('RocketHideout_B3F_hns'), re.S)[1]
+        self.assertNotIn("Didn't I tell you", neutral)
+
+    def test_victory_road_after_line_needs_the_hideout(self):
+        dragon = 'VictoryRoad_Text_RivalDragonMaster'
+        self.assertIn(dragon, play(10, flags=[played(7)]).messages)
+        self.assertNotIn(dragon, play(10).messages)
+        defeat = re.search(r'RivalDefeat:\n(.*?)\$', raw_text('VictoryRoadKanto_1F_hns'), re.S)[1]
+        self.assertTrue(defeat.rstrip().endswith('What you possess, and what I lack…'.strip()), defeat)
+        self.assertNotIn('dragon', defeat)
+
+    def test_victory_road_opener_drops_the_league_question_after_indigo(self):
+        question = 'VictoryRoad_Text_RivalLeagueQuestion'
+        self.assertIn(question, play(10).messages)
+        self.assertNotIn(question, play(10, flags=[INDIGO_ENTERED]).messages)
+        body = play(10, flags=[INDIGO_ENTERED]).messages
+        self.assertEqual(body[0], 'VictoryRoad_Text_RivalBefore')
+        opener = re.search(r'RivalBefore:\n(.*?)\$', raw_text('VictoryRoadKanto_1F_hns'), re.S)[1]
+        self.assertTrue(opener.lstrip().startswith('.string "…Don\'t make me laugh.'))
+
+    def test_mt_moon_drops_since_i_lost_without_a_win(self):
+        beaten = play(11, started=10, flags=[WON_ANY])
+        self.assertIn('MtMoon_Cave_Text_Rival_BeforeBeaten', beaten.messages)
+        first = play(11, started=10)
+        self.assertIn('MtMoon_Cave_Text_Rival_BeforeFirst', first.messages)
+        self.assertNotIn('MtMoon_Cave_Text_Rival_BeforeBeaten', first.messages)
+        text = re.search(r'BeforeFirst:\n(.*?)\$', raw_text('MtMoon_Cave_hns'), re.S)[1]
+        self.assertNotIn('Since I lost to you', text)
+
+
+class VictoryRoadCorridor(unittest.TestCase):
+    def test_declining_and_losing_leave_the_corridor_passable(self):
+        declined = play(10, answers=0)
+        self.assertEqual(declined.battles, [])
+        self.assertEqual(declined.messages[-1], 'VictoryRoad_Text_RivalDeclined')
+        self.assertEqual(silver_writes(10, declined), set())
+        self.assertTrue(silver_playable(10, True, 0, declined.flags))  # the offer stays available
+        lost = play(10, battle='lose')
+        self.assertTrue(silver_playable(10, True, lost.vars[CHAPTER], lost.flags))
+        # Neither touches Route 27 or the League corridor's state.
+        for interp in (declined, lost):
+            self.assertNotIn('VAR_ROUTE27_STATE', interp.written())
+
+    def test_corridor_has_no_trigger_and_silver_stands_off_every_path(self):
+        data = json.loads((MAPS / 'VictoryRoadKanto_1F_hns/map.json').read_text())
+        self.assertEqual(data['coord_events'], [])
+        silver = [e for e in data['object_events'] if e.get('local_id') == 'LOCALID_VICTORYROAD_SILVER'][0]
+        self.assertEqual(silver['script'], 'VictoryRoadKanto_1F_EventScript_Silver')
+        tile = (silver['x'], silver['y'])
+        self.assertEqual(tile, (26, 6))
+        walkable = victory_road_walkable()
+        self.assertIn(tile, walkable)
+        pocket = {(26, 5), (26, 6)}
+        # The alcove is a dead end: nothing but the lane's side opens into it ...
+        for x, y in pocket:
+            for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                if (nx, ny) in walkable and (nx, ny) not in pocket:
+                    self.assertEqual((nx, ny), (x + 1, y), (x, y))
+        # ... and closing it changes no route between the corridor's two ends.
+        without = walkable - pocket
+        self.assertEqual(reachable(without, (28, 3)), reachable(walkable, (28, 3)) - pocket)
+        lane = {(x, 7) for x in (27, 28, 29)}
+        self.assertTrue(lane <= reachable(without, (28, 3)))
+        self.assertIn((28, 10), reachable(without, (28, 3)))
+
+    def test_league_corridor_story_state_is_independent_of_silver(self):
+        text = raw_text('VictoryRoadKanto_1F_hns')
+        self.assertNotIn('VAR_ROUTE27_STATE', text)
+        self.assertNotIn('LeagueCircuit', text)
+
+
+def victory_road_walkable():
+    import struct
+    data = (GAME / 'data/layouts/VictoryRoadKanto_1F_hns/map.bin').read_bytes()
+    width, height = 50, 30
+    tiles = struct.unpack('<%dH' % (width * height), data)
+    return {(x, y) for y in range(height) for x in range(width) if not (tiles[y * width + x] >> 10) & 3}
+
+
+def reachable(walkable, start):
+    seen, todo = {start}, [start]
+    while todo:
+        x, y = todo.pop()
+        for step in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+            if step in walkable and step not in seen:
+                seen.add(step)
+                todo.append(step)
+    return seen
+
+
+class ElmAndSeedForVisitors(unittest.TestCase):
+    def test_no_elm_call_plays_for_a_visitor(self):
+        cases = (
+            ('VioletCity_hns', 'VioletCity_EventScript_ElmCall_Trigger', {'VAR_VIOLET_CITY_STATE': 3},
+             'VAR_VIOLET_CITY_STATE', 4),
+            ('BlackthornCity_hns', 'BlackthornCity_EventScript_Call', {'VAR_BLACKTHORN_CITY_STATE': 4},
+             'VAR_BLACKTHORN_CITY_STATE', 5),
+            ('NewBarkTown_hns', 'NewBarkTown_EventScript_ElmCallAfterLeague', {'VAR_NEWBARK_TOWN_STATE': 6},
+             'VAR_NEWBARK_TOWN_STATE', 7),
+        )
+        for map_name, label, vars_, state, after in cases:
+            for johto in (True, False):
+                interp = Interp(map_name, johto=johto, vars=vars_, flags={'FLAG_HIDE_VIOLET_CITY_AIDE'})
+                interp.run(label)
+                with self.subTest(map=map_name, johto=johto):
+                    self.assertEqual(bool(interp.pokenav), johto)
+                    self.assertEqual(interp.vars[state], after)
+                    self.assertFalse(interp.locked)
+                    if map_name == 'VioletCity_hns':
+                        self.assertEqual('FLAG_HIDE_VIOLET_CITY_AIDE' in interp.flags, not johto)
+                        self.assertEqual('FLAG_HIDE_NEWBARKTOWN_LAB_AIDE' in interp.flags, johto)
+
+    def test_visitors_keep_their_path_to_elms_master_ball_and_ticket(self):
+        blackthorn = Interp('BlackthornCity_hns', johto=False, vars={'VAR_BLACKTHORN_CITY_STATE': 4})
+        blackthorn.run('BlackthornCity_EventScript_Call')
+        self.assertEqual(blackthorn.vars['VAR_NEWBARKTOWN_LABSTATE'], 7)
+        lab = Interp('NewBarkTown_Lab_hns', johto=False, vars={'VAR_NEWBARKTOWN_LABSTATE': 7})
+        lab.run('NewBarkTown_Lab_EventScript_Elm')
+        self.assertIn('NewBarkTown_Lab_Text_ElmGiveMasterBall1', lab.messages)
+        self.assertEqual(lab.given, ['ITEM_MASTER_BALL'])
+
+    def test_elms_handoff_moves_the_ceremony_to_the_theater_without_ecruteak_silver(self):
+        lab = Interp('NewBarkTown_Lab_hns', vars={'VAR_NEWBARKTOWN_LABSTATE': 7})
+        lab.run('NewBarkTown_Lab_EventScript_Elm')
+        self.assertEqual(lab.vars[CEREMONY], 5)
+        self.assertNotIn('FLAG_HIDE_ECRUTEAK_SILVER', lab.written())
+        scene = _label_block(raw_text('EcruteakCity_hns'), 'EcruteakCity_Trigger_Silver')
+        for state in (THEATER, CEREMONY, 'VAR_NEWBARKTOWN_LABSTATE'):
+            self.assertNotIn(state, scene)
+        trigger = [e for e in json.loads((MAPS / 'EcruteakCity_hns/map.json').read_text())['coord_events']
+                   if e['script'] == 'EcruteakCity_Trigger_Silver']
+        self.assertEqual([(e['x'], e['y'], e['var']) for e in trigger], [(39, 41, 'VAR_TEMP_0')])
+
+    def test_miracle_seed_is_given_once_before_and_after_falkner(self):
+        for falkner_first in (False, True):
+            interp = Interp('Route32_hns', 'VioletCity_Gym_hns', 'VioletCity_hns', johto=False,
+                            vars={'VAR_VIOLET_CITY_STATE': 1})
+            order = ['falkner', 'seed', 'call'] if falkner_first else ['seed', 'falkner', 'call']
+            for step in order:
+                if step == 'seed':
+                    interp.run('Route32_EventScript_BaldingMan')
+                    interp.run('Route32_EventScript_BaldingMan')
+                elif step == 'falkner':
+                    interp.run('VioletCity_Gym_EventScript_Falkner')
+                else:
+                    interp.run('VioletCity_EventScript_ElmCall_Trigger')
+            with self.subTest(falkner_first=falkner_first):
+                self.assertEqual(interp.given.count('ITEM_MIRACLE_SEED'), 1)
+                self.assertIn(SEED, interp.flags)
+                self.assertEqual(interp.vars['VAR_VIOLET_CITY_STATE'], 4)
+
+    def test_miracle_seed_needs_no_silver_togepi_or_gym_and_survives_a_full_bag(self):
+        interp = Interp('Route32_hns', johto=True, bag_full=True)
+        interp.run('Route32_EventScript_BaldingMan')
+        self.assertNotIn(SEED, interp.flags)
+        self.assertEqual(interp.given, [])
+        interp.bag_full = False
+        interp.run('Route32_EventScript_BaldingMan')
+        self.assertIn(SEED, interp.flags)
+        self.assertEqual(interp.given, ['ITEM_MIRACLE_SEED'])
+        interp.run('Route32_EventScript_BaldingMan')
+        self.assertEqual(interp.given, ['ITEM_MIRACLE_SEED'])
+        text = raw_text('Route32_hns')
+        block = _label_block(text, 'Route32_EventScript_BaldingMan')
+        for gone in ('SILVER', 'TOGEPI', 'DEFEATED_VIOLET_GYM', 'VAR_VIOLET_CITY_STATE'):
+            self.assertNotIn(gone, block)
+        self.assertLess(block.index('giveitem'), block.index('setflag %s' % SEED))
+
+    def test_violet_state_writes_are_forward_only(self):
+        for path in all_script_files():
+            for number, line in enumerate(path.read_text().splitlines(), 1):
+                parts = line.split('@')[0].split()
+                if len(parts) >= 2 and parts[0] == 'setvar' and parts[1].rstrip(',') == 'VAR_VIOLET_CITY_STATE':
+                    self.fail('%s:%d %s' % (path.parent.name, number, line.strip()))
+
+    def test_origin_starter_slot_replaces_the_johto_starter_in_content(self):
+        for path in all_script_files():
+            if path.parent.name == 'NewBarkTown_Lab_hns' or 'Silver' in path.parent.name:
+                continue
+            text = path.read_text()
+            if 'Melemele' in path.parent.name or 'MrPokemon' in path.parent.name:
+                self.assertNotIn('VAR_STARTER_MON', text)
 
 
 if __name__ == '__main__':

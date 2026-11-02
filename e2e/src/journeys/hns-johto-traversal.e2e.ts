@@ -291,6 +291,9 @@ describe.sequential("HNS Johto traversal bypasses", () => {
       await finishScriptedBattle(game, "Cherrygrove Silver battle")
       await expect(game.story.var("cherrygroveCityState")).resolves.toBe(3)
       await expect(game.story.flag("hideSilverCherrygrove")).resolves.toBe(false)
+      // Starting the battle stored the chapter; a loss leaves it offered again.
+      await expect(game.story.var("silverChapter")).resolves.toBe(2)
+      await expect(game.story.flag("silverWon2")).resolves.toBe(false)
     })
   }
 
@@ -349,7 +352,7 @@ describe.sequential("HNS Johto traversal bypasses", () => {
       player: { facing: "right", position: { map: "azalea-town", x: 10, y: 16 } },
       story: {
         vars: { azaleaTownState: 5, starterMon: 0 },
-        flags: { hideAzaleaSilver: true },
+        flags: { hideAzaleaSilver: true, defeatedAzaleaGym: true },
       },
       party: [{ species: "rattata", level: 1, moves: ["tackle"] }],
       determinism: { rngSeed: 1, textSpeed: "instant" },
@@ -364,87 +367,36 @@ describe.sequential("HNS Johto traversal bypasses", () => {
     await finishScriptedBattle(game, "Azalea Silver battle")
     await expect(game.story.var("azaleaTownState")).resolves.toBe(5)
     await expect(game.story.flag("hideAzaleaSilver")).resolves.toBe(false)
+    await expect(game.story.var("silverChapter")).resolves.toBe(4)
+    await expect(game.story.flag("silverWon4")).resolves.toBe(false)
   })
 
-  for (const prerequisite of [
-    {
-      name: "Sprout Tower",
-      flags: {
-        hideSproutTowerSilver: false,
-        defeatedVioletGym: false,
-        receivedTogepiEgg: false,
-      },
-      text: "SPROUT TOWER",
-    },
-    {
-      name: "Violet Gym",
-      flags: {
-        hideSproutTowerSilver: true,
-        defeatedVioletGym: false,
-        receivedTogepiEgg: false,
-      },
-      text: "POKéMON GY",
-    },
-    {
-      name: "Togepi Egg",
-      flags: {
-        hideSproutTowerSilver: true,
-        defeatedVioletGym: true,
-        receivedTogepiEgg: false,
-      },
-      text: "Some guy wearing",
-    },
-  ] as const) {
-    it(`checks the Route 32 guard's ${prerequisite.name} prerequisite in order`, async () => {
-      await game.arrange({
-        checkpoint: "new-bark-after-intro",
-        player: { facing: "right", position: { map: "route-32", x: 25, y: 10 } },
-        story: { vars: { violetCityState: 4 }, flags: prerequisite.flags },
-        determinism: { textSpeed: "instant" },
-      })
-
-      await game.player.interact()
-      await waitForDialogueText(game, prerequisite.text)
-      await expect(game.story.var("violetCityState")).resolves.toBe(4)
-      await expect(game.inventory.contains("miracleSeed")).resolves.toBe(false)
-      await expect(game.state.read()).resolves.toMatchObject({ player: { x: 25, y: 10 } })
-      await finishFieldScript(game, `Route 32 ${prerequisite.name} prerequisite script`)
-    })
-  }
-
-  it("keeps the Route 32 guard reward pending when Items are full, then grants it once", async () => {
-    const completedFlags = {
-      hideSproutTowerSilver: true,
-      defeatedVioletGym: true,
-      receivedTogepiEgg: true,
-    } as const
-    const arrangeAtGuard = (state: number, full: boolean, miracleSeed = 0) =>
+  it("gives the Route 32 guard's Miracle Seed on the first conversation, then never again", async () => {
+    const arrangeAtGuard = (full: boolean, flags: { miracleSeedReceived?: boolean } = {}) =>
       game.arrange({
         checkpoint: "new-bark-after-intro",
         player: { facing: "right" as const, position: { map: "route-32" as const, x: 25, y: 10 } },
-        story: { vars: { violetCityState: state }, flags: completedFlags },
-        bag: {
-          items: miracleSeed ? { miracleSeed } : undefined,
-          fullPockets: full ? (["items"] as const) : undefined,
-        },
+        // No Sprout Tower Silver, Violet Gym or Togepi Egg: the seed needs none of them.
+        story: { vars: { violetCityState: 1 }, flags },
+        bag: { fullPockets: full ? (["items"] as const) : undefined },
         determinism: { textSpeed: "instant" as const },
       })
 
-    await arrangeAtGuard(4, true)
+    await arrangeAtGuard(true)
     await game.player.interact()
     await finishFieldScript(game, "Route 32 full-pocket reward attempt")
-    await expect(game.story.var("violetCityState")).resolves.toBe(4)
+    await expect(game.story.flag("miracleSeedReceived")).resolves.toBe(false)
     await expect(game.inventory.contains("miracleSeed")).resolves.toBe(false)
     await expect(game.state.read()).resolves.toMatchObject({ player: { x: 25, y: 10 } })
 
-    await arrangeAtGuard(4, false)
+    await arrangeAtGuard(false)
     await game.player.interact()
     await finishFieldScript(game, "Route 32 reward retry")
-    await expect(game.story.var("violetCityState")).resolves.toBe(5)
+    await expect(game.story.flag("miracleSeedReceived")).resolves.toBe(true)
+    await expect(game.story.var("violetCityState")).resolves.toBe(1)
     await expect(game.inventory.contains("miracleSeed")).resolves.toBe(true)
     await expect(game.state.read()).resolves.toMatchObject({ player: { x: 25, y: 10 } })
 
-    await arrangeAtGuard(5, false, 1)
     await game.player.interact()
     await finishFieldScript(game, "Route 32 completed reward interaction")
     await expect(game.state.read()).resolves.toMatchObject({ bag: { items: { miracleSeed: 1 } } })
