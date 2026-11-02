@@ -14,7 +14,7 @@ Build facts: `WAYFARER_LEAGUE_CIRCUIT_ENABLED` is 1
 `game/src/field_move.c`, Surf, Strength, Waterfall, Whirlpool, Fly, and Cut
 carry no badge checks.
 
-## Two cross-cutting problems
+## Three cross-cutting problems
 
 1. **Adventures share linear state variables, and many writes are
    unconditional.** `VAR_MAHOGANY_TOWN_STATE` carries the Lake of Rage, the
@@ -28,7 +28,19 @@ carry no badge checks.
    progress.** Every deferred Silver trigger starts with
    `goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED → releaseall; end`.
    When a Silver scene carries a host adventure's next step, a player without
-   that flag is stuck there.
+   that flag is stuck there. The flag has other readers: Jessica's Tauros
+   trade on Melemele (`Melemele_House_hns:67-69`) and the starter preview
+   (`game/src/scrcmd.c:2664`).
+3. **Town setup runs from one approach road.** Goldenrod's first-visit script
+   is a coordinate trigger on Route 34, Ecruteak's on Route 37, Olivine's on
+   Route 39, and Mahogany's on Route 42, each at town state 0. Entering by
+   another road, ship, or train skips it; crossing the trigger later runs it
+   then and overwrites live progress. Goldenrod's resets `VAR_LUGIA_OR_HOOH`
+   and clears gift flags such as the Bike and Eevee (`GoldenrodCity_hns:4-41`).
+   Ecruteak's resets the theater, both legendaries' progress, and the beasts'
+   release (`EcruteakCity_hns:19-57`). Olivine's resets Olivine, Cianwood, and
+   Suicune progress. Mahogany's also resets Blackthorn and Dragon's Den state
+   and `FLAG_GOT_DRATINI` (`Mahoganytown_hns:38-90`).
 
 ## Activation gates
 
@@ -38,12 +50,12 @@ carry no badge checks.
 | Burned Tower | Eusine on 1F at Ecruteak state 1 (`BurnedTower_1F_hns:21-36`). Silver's 1F trigger at state 2 drops the player to B1F (state 3), where the beasts release and Morty's gym-door sage is hidden (state 4; `BurnedTower_B1F_hns:12,118,121`). | The Silver trigger is deferred without the Johto starter flag (`BurnedTower_1F_hns:102-103`), so the release and Morty's Gym access wait on Elm's lab choice. |
 | Theater Rocket and Surf | Enter the theater at theater state 0; beating the Rocket sets 2; the Surf man then gives HM Surf and sets 3 (`EcruteakCity_Theater_hns:265-293`). | The Surf man's talk script sets 3 whenever Surf is unreceived and state is not 1 (`:258-272`), which can rewind a ceremony state. Elm's Master Ball scene sets theater 4 and hides the theater NPCs unconditionally (`NewBarkTown_Lab_hns:537`). |
 | Lighthouse medicine | Jasmine at the lighthouse sets Olivine 3 (`OlivineCity_Lighthouse_hns:255-263`); the Cianwood pharmacist sets 4 below 5 (`CianwoodShop_hns:9-18`); delivery sets 5. | Medicine-first works mechanically, but Jasmine's delivery prompt assumes her request. Cianwood needs Surf. |
-| Lake of Rage and hideout | Mahogany first entry sets state 1 (`Mahoganytown_hns:~45-89`); red Gyarados 2 (`LakeOfRage_hns:110`); Lance 3-4; shop raid 5; hideout 6-14 (finale `RocketHideout_B2F_hns:520`). Route 43 toll at states 1-5. | No badge gate. Pryce's win sets 15 unconditionally (`MahoganyTown_Gym_hns:88`), and the Gyarados win sets 2 unconditionally, rewinding 15-17. After a Radio Tower-first run, a later Lake run ends at 14 and nothing restores 17, so the merchant block returns for good. |
+| Lake of Rage and hideout | Mahogany's setup, triggered on Route 42 (`Route42_hns/map.json:327-360`), sets state 1 (`Mahoganytown_hns:38-90`); red Gyarados 2 (`LakeOfRage_hns:110`); Lance 3-4; shop raid 5; hideout 6-14 (finale `RocketHideout_B2F_hns:520`). Route 43 toll at states 1-5. | No badge gate. Pryce's win sets 15 unconditionally (`MahoganyTown_Gym_hns:88`), and the Gyarados win sets 2 unconditionally, rewinding 15-17. After a Radio Tower-first run, a later Lake run ends at 14 and nothing restores 17, so the merchant block returns for good. |
 | Radio Tower takeover | `MahoganyTown_Gym_EventScript_TryArmRocketTakeover` (`MahoganyTown_Gym_hns:103-112`) arms Elm's call only with badges 5, 6, and 7 and Mahogany state exactly 15 (Pryce's win). It runs from Mahogany OnLoad and the Chuck, Jasmine, and Pryce victory scripts; the call fires in Mahogany, Olivine, or the Cianwood Fly handoff (`Mahoganytown_hns:22-37`). | Chuck, Jasmine's whole errand, and Pryce are unrelated. A Mahogany rewind below 15 before arming stops the takeover from ever arming. The 1F radio quiz sets Goldenrod 2 unconditionally (`GoldenrodCity_RadioTower_1F_hns:143`) and can regress a running takeover (states 6-9). |
 | Radio Tower internals | Petrel on 5F gives the Basement Key (state 7); Underground Kimono (8); Underground Silver (9; `GoldenrodCity_UndergroundSwitches_hns:379,415`); Director's Card Key; Archer (10, `GoldenrodCity_RadioTower_5F_hns:160`); Wing; Mahogany 17 (`:248`). | The Underground Silver scene is deferred without the starter flag and leaves state at 8. The Director's Wing depends on `VAR_LUGIA_OR_HOOH` (`:182-183`); finishing the Tower before Baoba's Route 39 choice plays the Wing line but gives nothing, once. |
 | Clair and Dragon's Den | Gym boy blocks Blackthorn Gym without badges 5, 6, and 7 (`BlackthornCity_hns:8-16,80-101`). Clair, then the Den; badge 8 recovery is resumable (`DragonsDen_Shrine_hns`). | The badge check is the only gate on Clair. |
 | Kimono ceremony | Still Clair → Elm: the Master Ball scene sets theater 4 (`NewBarkTown_Lab_hns:522-537`); an Ecruteak Silver trigger at theater 4 sets 5 (`EcruteakCity_hns:61`, not deferred); then the five dancers, Bell, and ceremony (state 7). Encounters dispatch on legendary progress, not Wing or Bell inventory (`TinTower_RoofDay_hns:5`, `WhirlIslands_LugiaChamber_hns:5`). | Clair, the Den, Elm, and the Ecruteak Silver scene are all unrelated to the ceremony. Reception Gate's theater ≥ 8 check is skipped under the circuit (`ReceptionGate_hns:31-60`). |
-| Pewter alternate Wing | `PewterCity_EventScript_Gramps` (`PewterCity_hns:17`) checks only the branch choice and Wing ownership. | No TR, badge, League, or ceremony check. With no branch chosen the script ends with the lock held. |
+| Pewter alternate Wing | `PewterCity_EventScript_Gramps` (`PewterCity_hns:17`) checks only the branch choice and Wing ownership. | No TR, badge, League, or ceremony check. With no branch chosen the script ends with the lock held. A tossed Wing is given again, and each gift resets the legendary's progress to 4 (`:24-41`). |
 | Suicune pursuit | Olivine's first arrival via Route 39 sets sightings to 1 (`OlivineCity_hns:~54-66`); Cianwood and Route 42 in either order, then the Kanto half. | No Burned Tower prerequisite. Arriving in Olivine by ship may skip the init (unverified). Eusine greets as if already met (`CianwoodCity_hns:271`). |
 
 Elm's Master Ball handoff fires from Blackthorn state 4 (Clair's Den
@@ -84,7 +96,7 @@ set, and a scene lost to a state change never returns.
 | 8 | Mahogany hideout B3F | Coord (8,13), Mahogany state 7 | No | "Didn't I tell you I'd destroy Team Rocket?" Inside the hideout. |
 | 9 | Ecruteak | Coord (39,41), theater state 4 | No | "Don't get cocky just because you defeated Team Rocket!" On the Kimono chain. |
 | 10 | Route 22 | Celebi check and Route 22 Giovanni state 0 | No | Giovanni flashback; tied to Celebi. |
-| 11 | Victory Road 1F | Coords (27-29,7), Route 27 state 2; deferred | Yes | Lance's lesson. Never fires under the circuit: only the skipped Reception Gate trigger sets Route 27 state 2. |
+| 11 | Victory Road 1F | Coords (27-29,7), Route 27 state 2; deferred | Yes | Lance's lesson. Never fires under the circuit: only the skipped Reception Gate trigger sets Route 27 state 2, and the trigger also skips Silver once `LeagueCircuit_IsKnownThere` (pinned by `game/tools/league_circuit/test_scripts.py:287-294`). A forced fight with no prompt. |
 | 12 | Mt. Moon | Static NPC; deferred | Yes | "Since I lost to you..." |
 | 13 | Indigo Center | Static NPC after Mt. Moon; daily (`FLAG_DAILY_BEAT_SILVER`); deferred | Yes | Daily rematch. |
 

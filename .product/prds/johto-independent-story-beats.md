@@ -73,16 +73,14 @@ In Johto the exception covers:
 | --- | --- | --- |
 | Main legendary (Lugia or Ho-Oh) | The five-Kimono-Girl trial | Radio Tower completed and its Wing received |
 | Other legendary | Pewter's old man giving the other Wing | Main legendary encounter resolved |
-| Elm's Master Ball | Elm's handoff after Clair's trial | Clair's trial completed |
 
-The Master Ball is new to this list. Clair's eighth-badge position used to make
-it a late reward. Once Clair can be challenged first, it becomes an early one.
-Like Silph's Master Ball in Kanto, it waits for TR; Clair's badge and the rest
-of her sequence do not.
+Both stages use TR 55 on today's scale (TR 120 on the v0 scale), the same
+threshold as Kanto's Zapdos, so legendaries share one tier across regions.
 
-Both legendary stages use TR 55, the same threshold as Kanto's Zapdos, so
-legendaries share one tier across regions. Elm's Master Ball threshold is set
-together with Silph's in one balance pass, so the two regions agree.
+Elm's Master Ball is not on this list. Like
+[Silph's](../specs/silph-president-master-ball.md), it is immediate: Elm hands it
+over after Clair's trial with no TR gate, even when Clair is the player's first
+Gym.
 
 ### Who plays which story
 
@@ -97,11 +95,16 @@ Egg, and no Silver scenes. Mr. Pokémon is an ordinary resident to them, and
 Elm is a professor they have not met. Every other Johto adventure, Gym,
 reward, and the legendary ceremony stays available.
 
-Visitors still receive Elm's Master Ball after Clair's trial, under the same
-TR threshold. With no errand or phone call behind them, Elm introduces himself
-and hands it over in person at his lab, and a local line after Clair's trial
-points them there. This mirrors Kanto, where visitors do not play the Parcel opening
-or Blue's rivalry.
+This mirrors Kanto, where visitors do not play the Parcel opening or Blue's
+rivalry.
+
+Visitors still receive Elm's Master Ball after Clair's trial. With no errand or
+phone call behind them, Elm introduces himself and hands it over in person at
+his lab, and a local line after Clair's trial points them there.
+
+Other content that reads the Johto starter choice must not lock visitors out.
+Jessica's Tauros trade on Melemele picks its Tauros from the player's starter;
+for visitors it uses their own origin's starter choice instead.
 
 This supersedes the start-choice PRD's
 [visiting-Johto rule](wayfarer-regional-start-choice.md#visiting-another-starting-region)
@@ -246,31 +249,55 @@ Silver's rivalry belongs to Johto-origin players and follows the forward
 progression of
 [Blue's Kanto rivalry](frlg-kanto-story-on-hns-maps.md#blues-origin-specific-role-and-forward-progression).
 
-Keep his scenes at their existing locations in a stable chapter order that
-follows the original story and does not depend on map discovery order. His
-story moves forward when the player actually starts a later scene with him.
-That retires every earlier scene, so returning to an earlier location never
-starts an obsolete chapter. Entering a map, passing a deferred trigger, or
-declining an optional encounter before it begins does not advance him.
+Keep his scenes at their existing locations. This is his chapter order; it
+follows the original story and does not depend on map discovery order:
+
+| Order | Scene | Battle |
+| --- | --- | --- |
+| 1 | New Bark | No |
+| 2 | Cherrygrove | Yes |
+| 3 | Sprout Tower | No |
+| 4 | Azalea | Yes |
+| 5 | Burned Tower | Yes |
+| 6 | Olivine | No |
+| 7 | Mahogany hideout | No |
+| 8 | Goldenrod Underground | Yes |
+| 9 | Ecruteak | No |
+| 10 | Victory Road | Yes |
+| 11 | Mt. Moon | Yes |
+| 12 | Indigo rematches | Yes, daily |
+
+His battles move the story forward. Starting a later battle retires every
+earlier scene, so returning to an earlier location never starts an obsolete
+chapter. Entering a map, passing a trigger, or declining an optional battle
+before it begins does not advance him. His non-battle scenes advance nothing.
+Each plays only while no later battle has started, and is retired once one has.
+Walking into Olivine early therefore never costs the player his Azalea or
+Burned Tower battles.
 
 Retiring a scene does not claim the player fought or beat Silver there. It
 awards no skipped battle money, experience, items, or victory credit. A loss in
-the current scene leaves that scene retryable; earlier scenes stay retired.
+the current battle leaves it retryable; earlier scenes stay retired.
 
-His chapters span Johto and Kanto: New Bark, Cherrygrove, Sprout Tower, Azalea,
-Burned Tower, Olivine, the Mahogany hideout, the Goldenrod Underground,
-Ecruteak, Victory Road, Mt. Moon, and his Indigo rematches. The Route 22 scene stays with
-the optional Celebi adventure the
+Mt. Moon and the Indigo rematches keep one retained dependency. They appear
+only after his Victory Road battle has started, because both scenes speak as
+the calmer Silver who lost there. A Johto-origin player who reaches Kanto early
+does not find him at Mt. Moon, so that early visit cannot retire his Johto
+chapters.
+
+The Route 22 scene stays with the optional Celebi adventure the
 [Kanto story PRD](frlg-kanto-story-on-hns-maps.md#selected-hns-story-adaptations)
 owns.
 
 Restore his Victory Road battle. It is his last main-story fight and the turn
 in his arc: he loses, admits Lance was right, and sets up his calmer Mt. Moon
 and Indigo scenes. Today it never fires, because the League circuit skips the
-Reception Gate step it waits for. It plays on a Johto-origin player's first
-trip through Victory Road, whether or not they already compete at Indigo, and
-follows the same forward-retire rule. Adjust his opening line, which assumes a
-first League challenge, when the player has already competed there.
+Reception Gate step it waits for. Like his Mt. Moon battle, it is an offer
+beside the lane, not a forced fight: Victory Road never requires accepting or
+winning it. It is available to a Johto-origin player whether or not they
+already compete at Indigo, until a later battle retires it. Adjust his opening
+line, which assumes a first League challenge, when the player has already
+competed there.
 
 No host adventure waits on Silver. The Burned Tower release, the Radio Tower
 Underground, the Mahogany hideout, and the Kimono ceremony all continue
@@ -335,6 +362,13 @@ records concrete cases:
 
 Each of these must work in every supported order.
 
+Each town's first-visit setup runs however the player first arrives: by any
+road, by ship, by train, or by Fly. It runs once and never overwrites progress
+made since. Today Goldenrod, Ecruteak, Olivine, and Mahogany run their setup
+only from one approach road, and running it late resets Baoba's choice, the
+theater, the beasts, and Suicune's chase. A player who enters Ecruteak from
+Route 38 must still find Eusine at the Burned Tower.
+
 When adventures share an NPC or location, each unfinished adventure must remain
 discoverable. Ceremony staging must not erase an unfinished theater rescue or
 its Surf reward. A necessary local sequence may be retained where the same
@@ -353,16 +387,22 @@ encounter activation must not bypass its new prerequisites.
 
 ### Related product contracts
 
-- [League circuit](wayfarer-interregional-league-circuit.md): this design
-  revises its retained Johto story prerequisites, namely Radio Tower activation
-  and Clair's three-badge requirement. It does not change League admission,
-  the TR calculation, or badge accounting.
-- [HNS traversal](hns-open-world-region-traversal.md): this design opens
-  Mahogany's east road, which that pass left in place. A hidden story scene
+- [League circuit](wayfarer-interregional-league-circuit.md) and
+  [its specification](../specs/wayfarer-interregional-league-circuit.md):
+  this design removes the retained Johto prerequisites the specification
+  holds, namely the takeover's badge 5–7 arming and Clair's Chuck, Jasmine,
+  and Pryce badges. It also replaces the corridor rule that skips Silver once
+  Indigo knows the player. It does not change League admission, the TR
+  calculation, or badge accounting.
+- [HNS traversal](hns-open-world-region-traversal.md) and
+  [its specification](../specs/hns-open-world-region-traversal.md): this
+  design opens Mahogany's east road, which that pass deliberately left
+  closed. A hidden story scene
   must not restore an old roadblock, and walking past an adventure must not
   complete it.
-- [Regional start choice](wayfarer-regional-start-choice.md): visitors lose
-  Elm's errand, the Johto starter choice, and its gift.
+- [Regional start choice](wayfarer-regional-start-choice.md) and
+  [its specification](../specs/wayfarer-regional-start-choice.md): visitors
+  lose Elm's errand, the Johto starter choice, and its gift.
 - [Kanto story on HNS maps](frlg-kanto-story-on-hns-maps.md): Silver's
   forward progression follows Blue's rule. Silver's Mt. Moon battle stays
   optional on the traversal lane.
@@ -395,8 +435,9 @@ Acceptance covers both understandable storytelling and recoverable state:
   chapter retires with no credit, a loss leaves only the current one
   retryable, and his lines mention only what happened.
 - As a Johto-origin player, reach Victory Road for the first time both before
-  and after competing at Indigo. Silver's battle plays once, with an opener
-  that fits.
+  and after competing at Indigo. Silver offers his battle with an opener that
+  fits; declining or losing never blocks the corridor. Visit Mt. Moon before
+  and after that battle.
 - Discover the ceremony below the TR threshold without Clair or Elm. The
   characters explain what is needed; discovery grants no Wing, Bell, or
   encounter.
@@ -406,12 +447,16 @@ Acceptance covers both understandable storytelling and recoverable state:
   trial but before resolving the encounter, and after resolving it. Only the
   last, with sufficient TR, grants the other Wing. Cover both branches and
   each completing encounter outcome.
-- Complete Clair's trial below the Master Ball threshold; her badge arrives,
-  and Elm's Master Ball arrives once the threshold is reached. As a visitor,
-  follow the local lead to Elm's lab and receive it there once.
+- Complete Clair's trial as the first Gym, with no TR. Her badge and Elm's
+  Master Ball both arrive. As a visitor, follow the local lead to Elm's lab and
+  receive it there once.
+- As a visitor, trade with Jessica on Melemele.
 - Obtain medicine before visiting Jasmine, and also in the original order.
 - Reach Olivine first by ship and by Route 39; Suicune's chase starts either
   way.
+- Enter Goldenrod from Route 35 or the Magnet Train, Ecruteak from Route 38,
+  and Johto by ship before walking the original roads. Every adventure starts
+  normally, and walking the original roads later resets nothing.
 - Interrupt multi-step adventures with a loss, save/reload, and regional
   travel. The next step remains clear and available.
 
@@ -430,8 +475,6 @@ These are bounded scene decisions, not permission to expand the feature:
    and later Kanto dialogue before choosing a global disbandment outcome.
 3. **Ceremony introduction.** Which Ecruteak interaction introduces the
    ceremony and explains the Wing and TR gate with the least dialogue change?
-4. **Master Ball threshold.** What TR gates Elm's and Silph's Master Balls?
-   Settle both in one balance pass before implementing Elm's handoff.
 
 ## References
 
