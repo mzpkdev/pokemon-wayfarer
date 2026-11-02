@@ -790,6 +790,7 @@ gSpecials::
     def_special WayfarerCanReceiveSlateportTicket
     def_special WayfarerCanUseAquaMaidenVoyage
     def_special WayfarerGetJohtoStarterSpecies
+    def_special WayfarerIsJohtoOrigin
     def_special WayfarerGrantSharedEquipment
     def_special WayfarerGrantRunningShoes
     def_special WayfarerHasSharedPokedex

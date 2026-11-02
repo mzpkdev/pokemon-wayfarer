@@ -68,8 +68,8 @@ class CircuitScriptTests(unittest.TestCase):
         recovery = block(source, "MahoganyTown_Gym_EventScript_TryArmRocketTakeover")
         self.assertIn("goto_if_ne VAR_TRIGGER_ELM_ROCKET_CALL, 0", recovery)
         self.assertIn("goto_if_ge VAR_GOLDENROD_CITY_STATE, 6", recovery)
-        self.assertIn("goto_if_ge VAR_MAHOGANY_TOWN_STATE, 16", recovery)
-        self.assertIn("goto_if_lt VAR_MAHOGANY_TOWN_STATE, 15", recovery)
+        self.assertIn("goto_if_unset FLAG_DEFEATED_MAHOGANY_TOWN_GYM", recovery)
+        self.assertNotIn("VAR_MAHOGANY_TOWN_STATE", recovery)
         for flag in ("FLAG_BADGE05_GET", "FLAG_BADGE06_GET", "FLAG_BADGE07_GET"):
             self.assertIn("goto_if_unset " + flag, recovery)
         self.assertIn("setvar VAR_TRIGGER_ELM_ROCKET_CALL, 1", recovery)
@@ -106,7 +106,7 @@ class CircuitScriptTests(unittest.TestCase):
         award = block(whitney, "GoldenrodCity_Gym_EventScript_WhitneyBadge")
         self.assertIn("goto_if_set FLAG_BADGE03_GET", award)
         self.assertIn("goto_if_defeated TRAINER_WHITNEY_1_HNS", award)
-        self.assertIn("goto_if_ge VAR_GOLDENROD_CITY_STATE, 5", whitney)
+        self.assertIn("goto_if_ge VAR_WAYFARER_JOHTO_WHITNEY_STATE, 5", whitney)
 
         shrine = script("DragonsDen_Shrine_hns")
         shrine_on_load = block(shrine, "DragonsDen_Shrine_OnLoad")

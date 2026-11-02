@@ -4,11 +4,13 @@ AzaleaTown_KurtsHouse_hns_MapScripts::
 	.byte 0
 
 AzaleaTown_KurtsHouse_OnTransition::
-	goto_if_eq VAR_AZALEA_TOWN_STATE, 3, AzaleaTown_KurtsHouse_EventScript_ReturnFromWellSetup
+	goto_if_eq VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 3, AzaleaTown_KurtsHouse_EventScript_ReturnFromWellSetup
 	end
 
+@ VAR_TEMP_2 arms Kurt's Well reward once per visit, so a full Bag leaves it
+@ owed for the next visit instead of replaying it every frame.
 AzaleaTown_KurtsHouse_OnFrame::
-	map_script_2 VAR_AZALEA_TOWN_STATE, 3, AzaleaTown_KurtsHouse_EventScript_ReturnFromWell
+	map_script_2 VAR_TEMP_2, 1, AzaleaTown_KurtsHouse_EventScript_ReturnFromWell
 	.2byte 0
 
 AzaleaTown_KurtsHouse_EventScript_KurtBefore::
@@ -23,7 +25,7 @@ AzaleaTown_KurtsHouse_EventScript_KurtBefore::
 	removeobject LOCALID_AZALEA_TOWN_KURT_BEFORE
 	setflag FLAG_HIDE_KURT_1
 	setflag FLAG_HIDE_AZALEA_TOWN_WELL_ROCKET
-	setvar VAR_AZALEA_TOWN_STATE, 2
+	setvar_forward VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 2
 	release
 	end
 
@@ -36,6 +38,7 @@ AzaleaTown_KurtsHouse_EventScript_PlayerMove::
 	removeobject LOCALID_AZALEA_TOWN_KURT_BEFORE
 	setflag FLAG_HIDE_KURT_1
 	setflag FLAG_HIDE_AZALEA_TOWN_WELL_ROCKET
+	setvar_forward VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 2
 	release
 	end
 
@@ -49,12 +52,9 @@ AzaleaTown_KurtsHouse_EventScript_Girl::
 	end
 
 AzaleaTown_KurtsHouse_EventScript_Girl2::
-	goto_if_eq VAR_AZALEA_TOWN_STATE, 3, AzaleaTown_KurtsHouse_EventScript_Girl4
-	goto_if_eq VAR_AZALEA_TOWN_STATE, 4, AzaleaTown_KurtsHouse_EventScript_Girl4
-	goto_if_eq VAR_AZALEA_TOWN_STATE, 5, AzaleaTown_KurtsHouse_EventScript_Girl4
-	goto_if_eq VAR_AZALEA_TOWN_STATE, 6, AzaleaTown_KurtsHouse_EventScript_Girl4
 	goto_if_eq VAR_AZALEA_TOWN_STATE, 8, AzaleaTown_KurtsHouse_EventScript_Girl5
 	goto_if_eq VAR_AZALEA_TOWN_STATE, 9, AzaleaTown_KurtsHouse_EventScript_Girl5
+	goto_if_ge VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 3, AzaleaTown_KurtsHouse_EventScript_Girl4
 
 	msgbox KurtsHouse_Text_GranddaughterDad, MSGBOX_DEFAULT
 	closemessage
@@ -81,18 +81,20 @@ AzaleaTown_KurtsHouse_EventScript_Girl5::
 
 AzaleaTown_KurtsHouse_EventScript_ReturnFromWellSetup::
 	setobjectmovementtype LOCALID_AZALEA_TOWN_KURT, MOVEMENT_TYPE_FACE_DOWN
+	setvar VAR_TEMP_2, 1
 	end
 
 AzaleaTown_KurtsHouse_EventScript_ReturnFromWell::
 	lock
+	setvar VAR_TEMP_2, 0
 	turnobject OBJ_EVENT_ID_PLAYER, DIR_NORTH
 	msgbox KurtsHouse_Text_KurtHonoredToMakeBalls, MSGBOX_DEFAULT
 	giveitem ITEM_FAST_BALL
-	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_BagIsFull
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
 	msgbox KurtsHouse_Text_KurtBallsFromApricorns, MSGBOX_DEFAULT
 	closemessage
 	turnobject LOCALID_AZALEA_TOWN_KURT, DIR_NORTH
-	setvar VAR_AZALEA_TOWN_STATE, 4
+	setvar_forward VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 4
 	release
 	end
 
@@ -196,10 +198,22 @@ AzaleaTown_KurtsHouse_EventScript_KurtGsBall::
 	waitmovement 0
 AzaleaTown_KurtsHouse_EventScript_KurtGsBall2::
 	msgbox KurtsHouse_Text_Kurt_Whatwasthat, MSGBOX_DEFAULT
-	setvar VAR_AZALEA_TOWN_STATE, 8
+	call AzaleaTown_KurtsHouse_EventScript_KurtGsBallState
 	closemessage
 	release
 	end
+
+@ The GS Ball chain moves Azalea forward to 8, except that it re-enters from its
+@ own last step: after a Celebi encounter that ended without a catch (state 10,
+@ written only by this chain), Kurt takes the GS Ball again and restarts it.
+AzaleaTown_KurtsHouse_EventScript_KurtGsBallState::
+	goto_if_ne VAR_AZALEA_TOWN_STATE, 10, AzaleaTown_KurtsHouse_EventScript_KurtGsBallForward
+	setvar VAR_AZALEA_TOWN_STATE, 8
+	return
+
+AzaleaTown_KurtsHouse_EventScript_KurtGsBallForward::
+	setvar_forward VAR_AZALEA_TOWN_STATE, 8
+	return
 
 AzaleaTown_KurtsHouse_EventScript_KurtGsBall3::
 	msgbox KurtsHouse_Text_Forest, MSGBOX_DEFAULT

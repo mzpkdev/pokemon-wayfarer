@@ -156,6 +156,14 @@
 	.2byte \value
 	.endm
 
+	@ Changes the value of destination to value only if that raises it. Story scenes use it so
+	@ one adventure's write can never rewind the progress another scene already recorded.
+	.macro setvar_forward destination:req, value:req
+	goto_if_ge \destination, \value, 1f
+	setvar \destination, \value
+1:
+	.endm
+
 	@ Changes the value of destination by adding value to it. Overflow is not prevented (0xFFFF + 1 = 0x0000).
 	.macro addvar destination:req, value:req
 	.byte SCR_OP_ADDVAR

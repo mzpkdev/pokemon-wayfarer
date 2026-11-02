@@ -331,6 +331,23 @@ EventScript_ResetAllMapFlags::
 #endif
 #if IS_HNS
 EventScript_ResetAllMapFlagsHnS::
+	@ Ruins of Alph puzzle rewards, revealed by their own puzzles.
+	setflag FLAG_ITEM_GS_BALL
+	setflag FLAG_ITEM_DOME_FOSSIL
+	setflag FLAG_ITEM_HELIX_FOSSIL
+	setflag FLAG_ITEM_OLD_AMBER
+	@ Route 42's Eusine waits for Suicune's Route 42 scene, whichever town comes first.
+	setflag FLAG_HIDE_ROUTE42_EUSINE
+	@ Ilex Forest's errand and Celebi, revealed by Bugsy's win and Kurt's GS Ball.
+	@ Ilex can be entered from Route 34 before Azalea's first load.
+	setflag FLAG_HIDE_ILEX_FOREST_APPRENTICE
+	setflag FLAG_HIDE_ILEX_FOREST_MASTER
+	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_1
+	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_2
+	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_3
+	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_4
+	setflag FLAG_HIDE_CELEBI
+	setflag FLAG_HIDE_ILEX_FOREST_KURT
 	setflag FLAG_HIDE_BATTLE_TOWER_OPPONENT
 	setflag FLAG_HIDE_DEOXYS @???
 	setflag FLAG_HIDE_CONTEST_POKE_BALL @???

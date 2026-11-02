@@ -336,13 +336,13 @@ shortcuts. It never closes a core route to a named Kanto settlement.
 
 ### Deferred-content invariants
 
-The implementation must not otherwise edit or bypass the Mahogany merchant
-that guards Route 44, the Ice Path Kimono scene, the Route 13 Alola boat,
-Meara, New Sinjoh, Snowswept Cavern, the League corridor, Mt. Silver,
+The implementation must not otherwise edit or bypass the Ice Path Kimono scene,
+the Route 13 Alola boat, Meara, New Sinjoh, Snowswept Cavern, the League corridor, Mt. Silver,
 Vermilion Snorlax, or either Underground Path. The returned-part consumers
 described above keep their authored state changes. Source assertions should
 pin the late Johto, Alola, and Sinjoh gates that are most vulnerable to broad
-state cleanup.
+state cleanup. The Mahogany RageCandyBar merchant no longer blocks Route 44
+(see the Johto independent story beats specification); he keeps his shop.
 
 ### Native Surf crossings
 

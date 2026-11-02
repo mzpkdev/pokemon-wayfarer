@@ -714,6 +714,8 @@ static bool32 IsValidFixtureVar(u16 id)
 
         return sourceId >= VARS_START && sourceId <= VARS_END;
     }
+    if (IS_WAYFARER_COAST_VAR_ID(id))
+        return WAYFARER_COAST_ID_INDEX(id) < WAYFARER_COAST_VAR_COUNT;
 #endif
 
     return FALSE;

@@ -21,8 +21,24 @@ BlackthornCity_OnFrame::
 
 BlackthornCity_EventScript_CityEnter:: 
 	setflag FLAG_VISITED_BLACKTHORN_CITY
+	call_if_unset FLAG_WAYFARER_JOHTO_SETUP_BLACKTHORN, BlackthornCity_EventScript_Setup
 	callnative SetTimeBasedEncounters
 	end
+
+@ Blackthorn and Dragon's Den start-up, run on the first load of Blackthorn
+@ however the player reached it (it no longer rides on Mahogany's setup). The
+@ Den's hide flags are only set while Blackthorn's state is still 0, and
+@ new-game defaults (Dratini, the Den quiz, the gym state) are not restated.
+BlackthornCity_EventScript_Setup:: @flagheap
+	setflag FLAG_WAYFARER_JOHTO_SETUP_BLACKTHORN
+	goto_if_ne VAR_BLACKTHORN_CITY_STATE, 0, BlackthornCity_Setup_Started
+	setflag FLAG_HIDE_DRAGONS_DEN_CAVERN_SILVER
+	setflag FLAG_HIDE_DRAGONS_DEN_CAVERN_CLAIR
+	setflag FLAG_HIDE_DRAGONS_DEN_CAVERN_LANCE
+	setflag FLAG_HIDE_DRAGONS_DEN_SHRINE_CLAIR
+BlackthornCity_Setup_Started:
+	setvar_forward VAR_BLACKTHORN_CITY_STATE, 1
+	return
 
 BlackthornCity_EventScript_Call::
 	lock

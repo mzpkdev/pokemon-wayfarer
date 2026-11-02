@@ -230,7 +230,7 @@
       "x": 10,
       "y": 16,
       "elevation": 0,
-      "var": "VAR_ECRUTEAK_CITY_THEATER",
+      "var": "VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE",
       "var_value": "5",
       "script": "EcruteakCity_Theater_Trigger_PreBattleCutsceneTop"
     },
@@ -239,7 +239,7 @@
       "x": 11,
       "y": 17,
       "elevation": 0,
-      "var": "VAR_ECRUTEAK_CITY_THEATER",
+      "var": "VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE",
       "var_value": "5",
       "script": "EcruteakCity_Theater_Trigger_PreBattleCutsceneRight"
     },
@@ -248,7 +248,7 @@
       "x": 9,
       "y": 17,
       "elevation": 0,
-      "var": "VAR_ECRUTEAK_CITY_THEATER",
+      "var": "VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE",
       "var_value": "5",
       "script": "EcruteakCity_Theater_Trigger_PreBattleCutsceneLeft"
     }

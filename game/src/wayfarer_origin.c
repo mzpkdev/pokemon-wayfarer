@@ -199,6 +199,8 @@ bool8 WayfarerConfirmPendingOrigin(u16 id)
 }
 u16 WayfarerGetConfirmedPendingOrigin(void) { return sConfirmedOrigin; }
 u16 WayfarerGetStartingOriginId(void) { return gSaveBlock3Ptr->wayfarerHoenn.startingOriginId; }
+// Special: Johto story beats that only the New Bark origin sees read this.
+u16 WayfarerIsJohtoOrigin(void) { return WayfarerGetStartingOriginId() == ORIGIN_NEW_BARK; }
 
 bool8 WayfarerInitializeOrigin(u16 id)
 {
