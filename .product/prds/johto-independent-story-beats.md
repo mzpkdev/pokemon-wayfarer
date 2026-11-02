@@ -1,13 +1,16 @@
 # Johto independent story beats
 
-Status: Draft product design, revised 2026-11-02 against current main and the
-Kanto story rules settled since the first draft. Not implemented. The open
-questions below need scene-level answers before the implementation
-specifications are complete.
+Specification: [Johto independent story beats](../specs/johto-independent-story-beats.md)
+
+Status: Agreed product design, revised 2026-11-02 against current main and the
+Kanto story rules settled since the first draft. Not implemented. The
+specification settles the scene-level choices: the Rocket scout starts the
+Radio Tower takeover, Zuki introduces the ceremony, and Archer's ending becomes
+neutral unless the other operations are resolved.
 
 HNS Johto is already Wayfarer's live map and story base, so unlike Kanto
 there is no separate map-adaptation PRD. This document owns Johto's story
-contract, and per-adventure specifications follow it. The
+contract, and one specification covers every adventure. The
 [gate audit](../research/johto-story-beat-gates.md) records what the scripts
 do today.
 
@@ -463,18 +466,6 @@ Acceptance covers both understandable storytelling and recoverable state:
 A player unfamiliar with the original campaign should understand each
 adventure's problem, motivation, and conclusion. A player familiar with it
 should recognize the same adventure without a new cast or replacement plot.
-
-## Open questions
-
-These are bounded scene decisions, not permission to expand the feature:
-
-1. **Radio Tower start.** Which existing Goldenrod interaction starts the
-   occupation by player choice?
-2. **Rocket endings.** What are the smallest truthful variants for the
-   broadcast motive and Archer's ending in each order? Review shared executives
-   and later Kanto dialogue before choosing a global disbandment outcome.
-3. **Ceremony introduction.** Which Ecruteak interaction introduces the
-   ceremony and explains the Wing and TR gate with the least dialogue change?
 
 ## References
 
