@@ -105,8 +105,8 @@ S.S. Tidal trainers are no longer excluded: the [S.S. ferries](ss-ferries.md#pas
 put them in the rotation like route trainers, and their first battles still run
 where they are authored. Of 901 `ORDINARY` trainer slots
 (1,051 trainer objects in all, pairs counting once per trainer), 705 are daily
-(676 singles and 29 pairs, 734 objects): 571 with a class range, 26 with a
-place range and 108 with a home range, 7 of the slots at 0% absence; the report lists why each of the others
+(676 singles and 29 pairs, 734 objects): 562 with a class range, 26 with a
+place range and 117 with a home range, 7 of the slots at 0% absence; the report lists why each of the others
 is not daily.
 
 **Place ranges.** A trainer whose lines need a kind of place ("this cave", "in

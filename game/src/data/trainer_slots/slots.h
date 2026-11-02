@@ -798,7 +798,7 @@ static const struct WorldTrainerSlot sWorldTrainerSlots[WORLD_TRAINER_SLOT_COUNT
     { TRAINER_MATHEW_HNS, MAP_GROUP(MAP_ROUTE41_HNS), MAP_NUM(MAP_ROUTE41_HNS), { 9, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_SWIMMER_M_HNS, 0 }, { Route41_EventScript_Mathew, NULL } }, // Route41_hns home 25%
     { TRAINER_WENDY_HNS, MAP_GROUP(MAP_ROUTE41_HNS), MAP_NUM(MAP_ROUTE41_HNS), { 10, 0 }, 81, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_SWIMMER_F_HNS, 0 }, { Route41_EventScript_Wendy, NULL } }, // Route41_hns SWIMMER_F 25%
     { TRAINER_SHANE_HNS, MAP_GROUP(MAP_ROUTE42_HNS), MAP_NUM(MAP_ROUTE42_HNS), { 5, 0 }, 76, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { Route42_EventScript_Shane, NULL } }, // Route42_hns POKEMANIAC 25%
-    { TRAINER_BENJAMIN_HNS, MAP_GROUP(MAP_ROUTE42_HNS), MAP_NUM(MAP_ROUTE42_HNS), { 6, 0 }, 70, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route42_EventScript_Ben, NULL } }, // Route42_hns HIKER 25%
+    { TRAINER_BENJAMIN_HNS, MAP_GROUP(MAP_ROUTE42_HNS), MAP_NUM(MAP_ROUTE42_HNS), { 6, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Route42_EventScript_Ben, NULL } }, // Route42_hns home 25%
     { TRAINER_SPENCER_HNS, MAP_GROUP(MAP_ROUTE43_HNS), MAP_NUM(MAP_ROUTE43_HNS), { 1, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_CAMPER_HNS, 0 }, { Route43_EventScript_Spencer, NULL } }, // Route43_hns home 25%
     { TRAINER_TIFFANY_HNS, MAP_GROUP(MAP_ROUTE43_HNS), MAP_NUM(MAP_ROUTE43_HNS), { 2, 0 }, 74, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { Route43_EventScript_Tiffany, NULL } }, // Route43_hns PICNICKER 25%
     { TRAINER_BEN_HNS, MAP_GROUP(MAP_ROUTE43_HNS), MAP_NUM(MAP_ROUTE43_HNS), { 3, 0 }, 76, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_FAT_MAN_HNS, 0 }, { Route43_EventScript_Ben, NULL } }, // Route43_hns POKEMANIAC 25%
@@ -851,7 +851,7 @@ static const struct WorldTrainerSlot sWorldTrainerSlots[WORLD_TRAINER_SLOT_COUNT
     { TRAINER_ROBERT_HNS, MAP_GROUP(MAP_ROUTE10_HNS), MAP_NUM(MAP_ROUTE10_HNS), { 3, 0 }, 17, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_BALDING_MAN_HNS, 0 }, { Route10_EventScript_Robert, NULL } }, // Route10_hns POKEFAN 25%
     { TRAINER_FIDEL_HNS, MAP_GROUP(MAP_ROUTE11_HNS), MAP_NUM(MAP_ROUTE11_HNS), { 1, 0 }, 18, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { Route11_EventScript_Fidel, NULL } }, // Route11_hns PSYCHIC_M 25%
     { TRAINER_OWEN_HNS, MAP_GROUP(MAP_ROUTE11_HNS), MAP_NUM(MAP_ROUTE11_HNS), { 2, 0 }, 26, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route11_EventScript_Owen, NULL } }, // Route11_hns YOUNGSTER 25%
-    { TRAINER_JASON_HNS, MAP_GROUP(MAP_ROUTE11_HNS), MAP_NUM(MAP_ROUTE11_HNS), { 3, 0 }, 26, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route11_EventScript_Jason, NULL } }, // Route11_hns YOUNGSTER 25%
+    { TRAINER_JASON_HNS, MAP_GROUP(MAP_ROUTE11_HNS), MAP_NUM(MAP_ROUTE11_HNS), { 3, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_YOUNGSTER_HNS, 0 }, { Route11_EventScript_Jason, NULL } }, // Route11_hns home 25%
     { TRAINER_HERMAN_HNS, MAP_GROUP(MAP_ROUTE11_HNS), MAP_NUM(MAP_ROUTE11_HNS), { 5, 0 }, 18, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_PSYCHIC_M_HNS, 0 }, { Route11_EventScript_Herman, NULL } }, // Route11_hns PSYCHIC_M 25%
     { TRAINER_MARTIN_HNS, MAP_GROUP(MAP_ROUTE12_HNS), MAP_NUM(MAP_ROUTE12_HNS), { 1, 0 }, 11, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route12_EventScript_Martin, NULL } }, // Route12_hns FISHERMAN 25%
     { TRAINER_STEPHEN_HNS, MAP_GROUP(MAP_ROUTE12_HNS), MAP_NUM(MAP_ROUTE12_HNS), { 3, 0 }, 11, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { Route12_EventScript_Stephen, NULL } }, // Route12_hns FISHERMAN 25%
@@ -965,7 +965,7 @@ static const struct WorldTrainerSlot sWorldTrainerSlots[WORLD_TRAINER_SLOT_COUNT
     { TRAINER_DEBRA_HNS, MAP_GROUP(MAP_SSAQUA_B1F_HNS), MAP_NUM(MAP_SSAQUA_B1F_HNS), { 5, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_PICNICKER_HNS, 0 }, { SSAqua_B1F_EventScript_Debra, NULL } }, // SSAqua_B1F_hns home 25%
     { TRAINER_KENNETH_HNS, MAP_GROUP(MAP_SSAQUA_B1F_HNS), MAP_NUM(MAP_SSAQUA_B1F_HNS), { 6, 0 }, 79, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_SAILOR_HNS, 0 }, { SSAqua_B1F_EventScript_Kenneth, NULL } }, // SSAqua_B1F_hns SAILOR 25%
     { TRAINER_JONAH_HNS, MAP_GROUP(MAP_SSAQUA_B1F_HNS), MAP_NUM(MAP_SSAQUA_B1F_HNS), { 8, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_FISHERMAN_HNS, 0 }, { SSAqua_B1F_EventScript_Jonah, NULL } }, // SSAqua_B1F_hns home 25%
-    { TRAINER_FRITZ_HNS, MAP_GROUP(MAP_SSAQUA_B1F_HNS), MAP_NUM(MAP_SSAQUA_B1F_HNS), { 9, 0 }, 71, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_JUGGLER_HNS, 0 }, { SSAqua_B1F_EventScript_Fritz, NULL } }, // SSAqua_B1F_hns JUGGLER 25%
+    { TRAINER_FRITZ_HNS, MAP_GROUP(MAP_SSAQUA_B1F_HNS), MAP_NUM(MAP_SSAQUA_B1F_HNS), { 9, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_JUGGLER_HNS, 0 }, { SSAqua_B1F_EventScript_Fritz, NULL } }, // SSAqua_B1F_hns home 25%
     { TRAINER_GARRETT_HNS, MAP_GROUP(MAP_SSAQUA_B1F_HNS), MAP_NUM(MAP_SSAQUA_B1F_HNS), { 11, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_SAILOR_HNS, 0 }, { SSAqua_B1F_EventScript_Garrett, NULL } }, // SSAqua_B1F_hns home 25%
     { TRAINER_EDWARD_HNS, MAP_GROUP(MAP_SSAQUA_ROOM_NW_HNS), MAP_NUM(MAP_SSAQUA_ROOM_NW_HNS), { 2, 0 }, 69, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_GENTLEMAN_HNS, 0 }, { SSAqua_RoomNW_EventScript_Edward, NULL } }, // SSAqua_RoomNW_hns GENTLEMAN 25%
     { TRAINER_COREY_HNS, MAP_GROUP(MAP_SSAQUA_ROOM_NW_HNS), MAP_NUM(MAP_SSAQUA_ROOM_NW_HNS), { 3, 0 }, 67, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_BURGLAR_HNS, 0 }, { SSAqua_RoomNW_EventScript_Corey, NULL } }, // SSAqua_RoomNW_hns FIREBREATHER 25%
@@ -973,11 +973,11 @@ static const struct WorldTrainerSlot sWorldTrainerSlots[WORLD_TRAINER_SLOT_COUNT
     { TRAINER_ETHAN_HNS, MAP_GROUP(MAP_SSAQUA_ROOM_NE_HNS), MAP_NUM(MAP_SSAQUA_ROOM_NE_HNS), { 2, 0 }, 76, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_SUPER_NERD_HNS, 0 }, { SSAqua_RoomNE_EventScript_Ethan, NULL } }, // SSAqua_RoomNE_hns POKEMANIAC 25%
     { TRAINER_CAROL_HNS, MAP_GROUP(MAP_SSAQUA_ROOM_NNE_HNS), MAP_NUM(MAP_SSAQUA_ROOM_NNE_HNS), { 1, 0 }, 66, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { SSAqua_RoomNNE_EventScript_Carol, NULL } }, // SSAqua_RoomNNE_hns COOLTRAINER 25%
     { TRAINER_SEAN_HNS, MAP_GROUP(MAP_SSAQUA_ROOM_NNE_HNS), MAP_NUM(MAP_SSAQUA_ROOM_NNE_HNS), { 2, 0 }, 66, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_COOLTRAINER_M_HNS, 0 }, { SSAqua_RoomNNE_EventScript_Sean, NULL } }, // SSAqua_RoomNNE_hns COOLTRAINER 25%
-    { TRAINER_LYLE_HNS, MAP_GROUP(MAP_SSAQUA_ROOM_SSW_HNS), MAP_NUM(MAP_SSAQUA_ROOM_SSW_HNS), { 1, 0 }, 67, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_FIREBREATHER_HNS, 0 }, { SSAqua_RoomSSW_EventScript_Lyle, NULL } }, // SSAqua_RoomSSW_hns FIREBREATHER 25%
+    { TRAINER_LYLE_HNS, MAP_GROUP(MAP_SSAQUA_ROOM_SSW_HNS), MAP_NUM(MAP_SSAQUA_ROOM_SSW_HNS), { 1, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_FIREBREATHER_HNS, 0 }, { SSAqua_RoomSSW_EventScript_Lyle, NULL } }, // SSAqua_RoomSSW_hns home 25%
     { TRAINER_KEN_HNS, MAP_GROUP(MAP_SSAQUA_ROOM_SSW_HNS), MAP_NUM(MAP_SSAQUA_ROOM_SSW_HNS), { 2, 0 }, 63, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { SSAqua_RoomSSW_EventScript_Ken, NULL } }, // SSAqua_RoomSSW_hns BUG_CATCHER 25%
     { TRAINER_MEG_AND_PEG_HNS, MAP_GROUP(MAP_SSAQUA_ROOM_SE_HNS), MAP_NUM(MAP_SSAQUA_ROOM_SE_HNS), { 2, 3 }, 83, WORLD_TRAINER_SLOT_PAIR | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_TWIN_HNS, OBJ_EVENT_GFX_TWIN_HNS }, { SSAqua_RoomSE_EventScript_Peg, SSAqua_RoomSE_EventScript_Meg } }, // SSAqua_RoomSE_hns TWINS 25%
     { TRAINER_COLIN_HNS, MAP_GROUP(MAP_SSAQUA_ROOM_SE_HNS), MAP_NUM(MAP_SSAQUA_ROOM_SE_HNS), { 4, 0 }, 75, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_BALDING_MAN_HNS, 0 }, { SSAqua_RoomSE_EventScript_Colin, NULL } }, // SSAqua_RoomSE_hns POKEFAN 25%
-    { TRAINER_CASSIE_HNS, MAP_GROUP(MAP_SSAQUA_ROOM_SW_HNS), MAP_NUM(MAP_SSAQUA_ROOM_SW_HNS), { 1, 0 }, 60, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_WOMAN_2_HNS, 0 }, { SSAqua_RoomSW_EventScript_Cassie, NULL } }, // SSAqua_RoomSW_hns BEAUTY 25%
+    { TRAINER_CASSIE_HNS, MAP_GROUP(MAP_SSAQUA_ROOM_SW_HNS), MAP_NUM(MAP_SSAQUA_ROOM_SW_HNS), { 1, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_WOMAN_2_HNS, 0 }, { SSAqua_RoomSW_EventScript_Cassie, NULL } }, // SSAqua_RoomSW_hns home 25%
     { TRAINER_CLYDE_HNS, MAP_GROUP(MAP_SSAQUA_ROOM_SW_HNS), MAP_NUM(MAP_SSAQUA_ROOM_SW_HNS), { 2, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_ROCKER_HNS, 0 }, { SSAqua_RoomSW_EventScript_Clyde, NULL } }, // SSAqua_RoomSW_hns home 25%
     { TRAINER_CALVIN_1, MAP_GROUP(MAP_ROUTE102), MAP_NUM(MAP_ROUTE102), { 2, 0 }, 141, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_YOUNGSTER, 0 }, { Route102_EventScript_Calvin, NULL } }, // Route102 YOUNGSTER 25%
     { TRAINER_RICK, MAP_GROUP(MAP_ROUTE102), MAP_NUM(MAP_ROUTE102), { 3, 0 }, 105, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_BUG_CATCHER, 0 }, { Route102_EventScript_Rick, NULL } }, // Route102 BUG_CATCHER 25%
@@ -1271,7 +1271,7 @@ static const struct WorldTrainerSlot sWorldTrainerSlots[WORLD_TRAINER_SLOT_COUNT
     { TRAINER_AUTUMN, MAP_GROUP(MAP_JAGGED_PASS), MAP_NUM(MAP_JAGGED_PASS), { 6, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_PICNICKER, 0 }, { JaggedPass_EventScript_Autumn, NULL } }, // JaggedPass home 25%
     { TRAINER_JULIO, MAP_GROUP(MAP_JAGGED_PASS), MAP_NUM(MAP_JAGGED_PASS), { 7, 0 }, 137, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_CYCLING_TRIATHLETE_M, 0 }, { JaggedPass_EventScript_Julio, NULL } }, // JaggedPass TRIATHLETE 25%
     { TRAINER_MARK, MAP_GROUP(MAP_MT_PYRE_2F), MAP_NUM(MAP_MT_PYRE_2F), { 1, 0 }, 127, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_MANIAC, 0 }, { MtPyre_2F_EventScript_Mark, NULL } }, // MtPyre_2F POKEMANIAC 25%
-    { TRAINER_DEZ_AND_LUKE, MAP_GROUP(MAP_MT_PYRE_2F), MAP_NUM(MAP_MT_PYRE_2F), { 5, 6 }, 142, WORLD_TRAINER_SLOT_PAIR | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_WOMAN_4, OBJ_EVENT_GFX_MAN_4 }, { MtPyre_2F_EventScript_Dez, MtPyre_2F_EventScript_Luke } }, // MtPyre_2F YOUNG_COUPLE 25%
+    { TRAINER_DEZ_AND_LUKE, MAP_GROUP(MAP_MT_PYRE_2F), MAP_NUM(MAP_MT_PYRE_2F), { 5, 6 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_PAIR | WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_WOMAN_4, OBJ_EVENT_GFX_MAN_4 }, { MtPyre_2F_EventScript_Dez, MtPyre_2F_EventScript_Luke } }, // MtPyre_2F home 25%
     { TRAINER_ZANDER, MAP_GROUP(MAP_MT_PYRE_2F), MAP_NUM(MAP_MT_PYRE_2F), { 7, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_BLACK_BELT, 0 }, { MtPyre_2F_EventScript_Zander, NULL } }, // MtPyre_2F home 25%
     { TRAINER_LEAH, MAP_GROUP(MAP_MT_PYRE_2F), MAP_NUM(MAP_MT_PYRE_2F), { 8, 0 }, 98, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_HEX_MANIAC, 0 }, { MtPyre_2F_EventScript_Leah, NULL } }, // MtPyre_2F @mountain 25%
     { TRAINER_WILLIAM, MAP_GROUP(MAP_MT_PYRE_3F), MAP_NUM(MAP_MT_PYRE_3F), { 1, 0 }, 128, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_PSYCHIC_M, 0 }, { MtPyre_3F_EventScript_William, NULL } }, // MtPyre_3F PSYCHIC 25%
@@ -1308,10 +1308,10 @@ static const struct WorldTrainerSlot sWorldTrainerSlots[WORLD_TRAINER_SLOT_COUNT
     { TRAINER_LEONARD, MAP_GROUP(MAP_SS_TIDAL_LOWER_DECK), MAP_NUM(MAP_SS_TIDAL_LOWER_DECK), { 2, 0 }, 97, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_SAILOR, 0 }, { SSTidalLowerDeck_EventScript_Leonard, NULL } }, // SSTidalLowerDeck @liner 25%
     { TRAINER_COLTON, MAP_GROUP(MAP_SS_TIDAL_ROOMS), MAP_NUM(MAP_SS_TIDAL_ROOMS), { 1, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_POKEFAN_M, 0 }, { SSTidalRooms_EventScript_Colton, NULL } }, // SSTidalRooms home 25%
     { TRAINER_MICAH, MAP_GROUP(MAP_SS_TIDAL_ROOMS), MAP_NUM(MAP_SS_TIDAL_ROOMS), { 2, 0 }, 113, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_GENTLEMAN, 0 }, { SSTidalRooms_EventScript_Micah, NULL } }, // SSTidalRooms GENTLEMAN 25%
-    { TRAINER_THOMAS, MAP_GROUP(MAP_SS_TIDAL_ROOMS), MAP_NUM(MAP_SS_TIDAL_ROOMS), { 3, 0 }, 113, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_GENTLEMAN, 0 }, { SSTidalRooms_EventScript_Thomas, NULL } }, // SSTidalRooms GENTLEMAN 25%
+    { TRAINER_THOMAS, MAP_GROUP(MAP_SS_TIDAL_ROOMS), MAP_NUM(MAP_SS_TIDAL_ROOMS), { 3, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_GENTLEMAN, 0 }, { SSTidalRooms_EventScript_Thomas, NULL } }, // SSTidalRooms home 25%
     { TRAINER_LEA_AND_JED, MAP_GROUP(MAP_SS_TIDAL_ROOMS), MAP_NUM(MAP_SS_TIDAL_ROOMS), { 4, 5 }, 142, WORLD_TRAINER_SLOT_PAIR | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_MAN_4, OBJ_EVENT_GFX_WOMAN_4 }, { SSTidalRooms_EventScript_Jed, SSTidalRooms_EventScript_Lea } }, // SSTidalRooms YOUNG_COUPLE 25%
     { TRAINER_GARRET, MAP_GROUP(MAP_SS_TIDAL_ROOMS), MAP_NUM(MAP_SS_TIDAL_ROOMS), { 6, 0 }, 129, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_RICH_BOY, 0 }, { SSTidalRooms_EventScript_Garret, NULL } }, // SSTidalRooms RICH_BOY 25%
-    { TRAINER_NAOMI, MAP_GROUP(MAP_SS_TIDAL_ROOMS), MAP_NUM(MAP_SS_TIDAL_ROOMS), { 7, 0 }, 118, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_WOMAN_2, 0 }, { SSTidalRooms_EventScript_Naomi, NULL } }, // SSTidalRooms LADY 25%
+    { TRAINER_NAOMI, MAP_GROUP(MAP_SS_TIDAL_ROOMS), MAP_NUM(MAP_SS_TIDAL_ROOMS), { 7, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_WOMAN_2, 0 }, { SSTidalRooms_EventScript_Naomi, NULL } }, // SSTidalRooms home 25%
     { TRAINER_WAYFARER_SS_ANNE_SAILOR_TREVOR, MAP_GROUP(MAP_SSANNE_DECK), MAP_NUM(MAP_SSANNE_DECK), { 1, 0 }, 19, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_SAILOR_FRLG, 0 }, { SSAnne_Deck_EventScript_Trevor, NULL } }, // SSAnne_Deck_Frlg SAILOR 25%
     { TRAINER_WAYFARER_SS_ANNE_SAILOR_EDMOND, MAP_GROUP(MAP_SSANNE_DECK), MAP_NUM(MAP_SSANNE_DECK), { 4, 0 }, 19, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_SAILOR_FRLG, 0 }, { SSAnne_Deck_EventScript_Edmond, NULL } }, // SSAnne_Deck_Frlg SAILOR 25%
     { TRAINER_WAYFARER_SS_ANNE_LASS_ANN, MAP_GROUP(MAP_SSANNE_1F_ROOM2), MAP_NUM(MAP_SSANNE_1F_ROOM2), { 1, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_LASS_FRLG, 0 }, { SSAnne_1F_Room2_EventScript_Ann, NULL } }, // SSAnne_1F_Room2_Frlg home 25%
@@ -1321,7 +1321,7 @@ static const struct WorldTrainerSlot sWorldTrainerSlots[WORLD_TRAINER_SLOT_COUNT
     { TRAINER_WAYFARER_SS_ANNE_FISHERMAN_DALE, MAP_GROUP(MAP_SSANNE_2F_ROOM2), MAP_NUM(MAP_SSANNE_2F_ROOM2), { 1, 0 }, 1, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_FISHER, 0 }, { SSAnne_2F_Room2_EventScript_Dale, NULL } }, // SSAnne_2F_Room2_Frlg @liner 25%
     { TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_BROOKS, MAP_GROUP(MAP_SSANNE_2F_ROOM2), MAP_NUM(MAP_SSANNE_2F_ROOM2), { 2, 0 }, 12, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_GENTLEMAN_FRLG, 0 }, { SSAnne_2F_Room2_EventScript_Brooks, NULL } }, // SSAnne_2F_Room2_Frlg GENTLEMAN 25%
     { TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_LAMAR, MAP_GROUP(MAP_SSANNE_2F_ROOM4), MAP_NUM(MAP_SSANNE_2F_ROOM4), { 1, 0 }, 12, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_GENTLEMAN_FRLG, 0 }, { SSAnne_2F_Room4_EventScript_Lamar, NULL } }, // SSAnne_2F_Room4_Frlg GENTLEMAN 25%
-    { TRAINER_WAYFARER_SS_ANNE_LASS_DAWN, MAP_GROUP(MAP_SSANNE_2F_ROOM4), MAP_NUM(MAP_SSANNE_2F_ROOM4), { 2, 0 }, 15, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_LASS_FRLG, 0 }, { SSAnne_2F_Room4_EventScript_Dawn, NULL } }, // SSAnne_2F_Room4_Frlg LASS 25%
+    { TRAINER_WAYFARER_SS_ANNE_LASS_DAWN, MAP_GROUP(MAP_SSANNE_2F_ROOM4), MAP_NUM(MAP_SSANNE_2F_ROOM4), { 2, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_LASS_FRLG, 0 }, { SSAnne_2F_Room4_EventScript_Dawn, NULL } }, // SSAnne_2F_Room4_Frlg home 25%
     { TRAINER_WAYFARER_SS_ANNE_FISHERMAN_BARNY, MAP_GROUP(MAP_SSANNE_B1F_ROOM1), MAP_NUM(MAP_SSANNE_B1F_ROOM1), { 1, 0 }, 11, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_FISHER, 0 }, { SSAnne_B1F_Room1_EventScript_Barny, NULL } }, // SSAnne_B1F_Room1_Frlg FISHERMAN 25%
     { TRAINER_WAYFARER_SS_ANNE_SAILOR_PHILLIP, MAP_GROUP(MAP_SSANNE_B1F_ROOM1), MAP_NUM(MAP_SSANNE_B1F_ROOM1), { 2, 0 }, 19, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_SAILOR_FRLG, 0 }, { SSAnne_B1F_Room1_EventScript_Phillip, NULL } }, // SSAnne_B1F_Room1_Frlg SAILOR 25%
     { TRAINER_WAYFARER_SS_ANNE_SAILOR_HUEY, MAP_GROUP(MAP_SSANNE_B1F_ROOM2), MAP_NUM(MAP_SSANNE_B1F_ROOM2), { 1, 0 }, 19, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_SAILOR_FRLG, 0 }, { SSAnne_B1F_Room2_EventScript_Huey, NULL } }, // SSAnne_B1F_Room2_Frlg SAILOR 25%
@@ -1455,52 +1455,51 @@ static const u16 sWorldTrainerGroupSlots[] =
     122, 130, 131, 132, 133, 91, 118, 134, 625, 194, 195, 196,
     592, 93, 100, 103, 128, 88, 89, 112, 113, 114, 115, 581,
     632, 633, 637, 575, 576, 578, 579, 104, 106, 116, 117, 123,
-    126, 580, 92, 101, 102, 94, 107, 119, 121, 108, 111, 571,
-    572, 582, 583, 584, 586, 124, 125, 127, 129, 587, 621, 635,
-    95, 96, 136, 618, 619, 620, 624, 631, 611, 612, 613, 614,
-    615, 616, 626, 628, 629, 634, 638, 639, 640, 86, 87, 109,
-    110, 574, 653, 654, 689, 669, 670, 649, 600, 601, 606, 650,
-    698, 699, 700, 594, 646, 647, 694, 652, 645, 671, 704, 685,
-    677, 693, 663, 664, 604, 605, 660, 661, 662, 607, 651, 597,
-    667, 595, 596, 692, 696, 697, 687, 688, 682, 683, 674, 641,
-    642, 658, 679, 644, 672, 678, 695, 656, 657, 659, 680, 602,
-    603, 665, 690, 168, 169, 170, 172, 217, 158, 34, 37, 236,
-    10, 21, 35, 70, 142, 75, 0, 2, 27, 178, 233, 147,
-    148, 184, 5, 14, 23, 24, 79, 83, 16, 68, 69, 72,
-    74, 139, 140, 141, 143, 145, 175, 176, 177, 190, 193, 230,
-    231, 25, 227, 232, 6, 7, 8, 61, 65, 66, 146, 188,
-    189, 153, 226, 11, 57, 71, 73, 76, 77, 81, 82, 166,
-    167, 171, 228, 26, 224, 33, 181, 39, 179, 4, 19, 20,
-    22, 59, 80, 13, 40, 182, 235, 56, 60, 62, 63, 67,
-    173, 174, 186, 229, 28, 31, 38, 64, 137, 144, 164, 159,
-    161, 162, 163, 32, 41, 149, 151, 157, 216, 222, 29, 36,
-    180, 42, 44, 48, 53, 55, 43, 45, 47, 30, 192, 234,
-    1, 3, 9, 12, 15, 84, 85, 214, 211, 212, 213, 215,
-    207, 198, 205, 203, 206, 197, 554, 352, 307, 311, 321, 563,
-    564, 532, 556, 562, 242, 318, 329, 380, 428, 357, 377, 414,
-    517, 420, 557, 262, 337, 379, 382, 396, 397, 403, 404, 437,
-    470, 506, 513, 246, 314, 351, 353, 471, 497, 514, 239, 361,
-    386, 392, 393, 440, 522, 523, 374, 387, 388, 390, 407, 421,
-    308, 310, 313, 317, 323, 325, 335, 340, 299, 354, 435, 278,
-    315, 316, 408, 415, 425, 426, 427, 439, 472, 476, 477, 500,
-    502, 507, 515, 543, 546, 548, 550, 551, 553, 512, 350, 438,
-    456, 499, 501, 508, 509, 244, 251, 256, 266, 267, 288, 300,
-    343, 344, 349, 381, 383, 399, 467, 468, 469, 475, 498, 418,
-    566, 567, 247, 306, 384, 402, 436, 419, 324, 327, 339, 369,
-    320, 328, 345, 401, 254, 366, 570, 240, 250, 363, 356, 394,
-    395, 398, 412, 413, 433, 520, 332, 400, 410, 411, 434, 312,
-    319, 322, 326, 336, 341, 347, 348, 371, 372, 422, 423, 535,
-    389, 391, 405, 406, 245, 303, 304, 417, 334, 342, 529, 297,
-    298, 358, 359, 376, 430, 431, 533, 534, 539, 253, 367, 569,
-    261, 263, 309, 561, 279, 282, 283, 516, 518, 364, 365, 272,
-    446, 346, 375, 416, 248, 259, 260, 265, 271, 275, 277, 281,
-    443, 444, 451, 452, 459, 460, 461, 478, 482, 486, 490, 491,
-    496, 504, 511, 249, 257, 258, 264, 268, 269, 274, 280, 441,
-    442, 447, 449, 450, 457, 464, 479, 483, 484, 485, 487, 488,
-    489, 495, 503, 510, 273, 293, 294, 295, 296, 301, 305, 355,
-    370, 373, 378, 448, 462, 463, 465, 466, 473, 474, 480, 481,
-    528, 285, 286, 287, 290, 291, 243, 252, 333, 429, 238, 241,
-    255, 302, 331, 360, 368, 385, 558, 530, 568,
+    126, 92, 101, 102, 94, 107, 119, 121, 108, 111, 571, 572,
+    582, 583, 584, 586, 124, 125, 127, 129, 587, 621, 635, 95,
+    96, 136, 618, 619, 620, 624, 631, 611, 612, 613, 614, 615,
+    616, 626, 628, 629, 634, 638, 639, 640, 86, 87, 109, 574,
+    653, 654, 689, 669, 670, 649, 600, 601, 606, 650, 698, 699,
+    700, 594, 646, 647, 694, 652, 645, 671, 704, 685, 677, 693,
+    663, 664, 604, 605, 660, 661, 662, 607, 651, 597, 667, 595,
+    596, 692, 696, 697, 687, 688, 682, 683, 674, 641, 642, 658,
+    679, 644, 672, 678, 695, 656, 657, 659, 680, 602, 603, 665,
+    690, 168, 169, 170, 172, 217, 158, 34, 37, 10, 21, 35,
+    70, 142, 75, 0, 2, 27, 178, 233, 147, 148, 184, 5,
+    14, 23, 24, 79, 83, 16, 68, 69, 72, 74, 139, 140,
+    141, 143, 145, 175, 176, 177, 190, 193, 230, 231, 25, 227,
+    6, 7, 8, 61, 65, 66, 146, 188, 189, 153, 226, 11,
+    71, 73, 76, 77, 81, 82, 166, 167, 171, 228, 26, 33,
+    181, 39, 179, 4, 19, 20, 22, 59, 80, 13, 40, 182,
+    235, 56, 60, 62, 63, 67, 173, 174, 186, 229, 28, 31,
+    38, 64, 137, 144, 164, 159, 161, 162, 163, 32, 41, 149,
+    151, 157, 216, 222, 29, 36, 180, 42, 44, 48, 53, 55,
+    43, 45, 47, 30, 192, 234, 1, 3, 9, 12, 15, 84,
+    85, 214, 211, 212, 213, 215, 207, 198, 205, 203, 206, 197,
+    554, 352, 307, 311, 321, 563, 564, 532, 556, 562, 242, 318,
+    329, 380, 428, 357, 377, 414, 517, 420, 557, 262, 337, 379,
+    382, 396, 397, 403, 404, 437, 470, 506, 513, 246, 314, 351,
+    353, 471, 497, 514, 239, 361, 386, 392, 393, 440, 522, 523,
+    374, 387, 388, 390, 407, 421, 308, 310, 313, 317, 323, 325,
+    335, 340, 299, 354, 435, 278, 315, 316, 408, 415, 425, 426,
+    427, 439, 472, 476, 477, 500, 502, 507, 515, 543, 546, 548,
+    550, 551, 553, 512, 350, 438, 456, 499, 501, 508, 509, 244,
+    251, 256, 266, 267, 288, 300, 343, 344, 349, 381, 383, 399,
+    467, 468, 469, 475, 498, 418, 566, 247, 306, 384, 402, 436,
+    419, 324, 327, 339, 369, 320, 328, 345, 401, 254, 366, 240,
+    250, 363, 356, 394, 395, 398, 412, 413, 433, 520, 332, 400,
+    410, 411, 434, 312, 319, 322, 326, 336, 341, 347, 348, 371,
+    372, 422, 423, 535, 389, 391, 405, 406, 245, 303, 304, 417,
+    334, 342, 529, 297, 298, 358, 359, 376, 430, 431, 533, 534,
+    539, 253, 367, 569, 261, 263, 309, 561, 279, 282, 283, 516,
+    518, 364, 365, 272, 446, 346, 375, 416, 248, 259, 260, 265,
+    271, 275, 277, 281, 443, 444, 451, 452, 459, 460, 461, 478,
+    482, 486, 490, 491, 496, 504, 511, 249, 257, 258, 264, 268,
+    269, 274, 280, 441, 442, 447, 449, 450, 457, 464, 479, 483,
+    484, 485, 487, 488, 489, 495, 503, 510, 273, 293, 294, 295,
+    296, 301, 305, 355, 370, 373, 378, 448, 462, 463, 465, 466,
+    473, 474, 480, 481, 528, 285, 286, 287, 290, 291, 243, 252,
+    333, 429, 238, 241, 255, 302, 331, 360, 368, 385, 558, 568,
 };
 
 static const struct WorldTrainerGroup sWorldTrainerGroups[WORLD_TRAINER_GROUP_COUNT] =
@@ -1520,134 +1519,134 @@ static const struct WorldTrainerGroup sWorldTrainerGroups[WORLD_TRAINER_GROUP_CO
     { 39, 4 }, // 12: Kanto GENTLEMAN
     { 43, 3 }, // 13: Kanto HIKER
     { 46, 2 }, // 14: Kanto JUGGLER
-    { 48, 2 }, // 15: Kanto LASS
-    { 50, 3 }, // 16: Kanto PICNICKER
-    { 53, 4 }, // 17: Kanto POKEFAN
-    { 57, 2 }, // 18: Kanto PSYCHIC_M
-    { 59, 6 }, // 19: Kanto SAILOR
-    { 65, 4 }, // 20: Kanto SCHOOL_KID
-    { 69, 1 }, // 21: Kanto SCIENTIST
-    { 70, 2 }, // 22: Kanto SIS_AND_BRO (pairs)
-    { 72, 3 }, // 23: Kanto SUPER_NERD
-    { 75, 5 }, // 24: Kanto SWIMMER_F
-    { 80, 13 }, // 25: Kanto SWIMMER_M
-    { 93, 5 }, // 26: Kanto YOUNGSTER
-    { 98, 1 }, // 27: Sevii @coast
-    { 99, 2 }, // 28: Sevii AROMA_LADY
-    { 101, 2 }, // 29: Sevii BIRD_KEEPER
-    { 103, 1 }, // 30: Sevii BLACK_BELT
-    { 104, 2 }, // 31: Sevii BUG_CATCHER
-    { 106, 2 }, // 32: Sevii CAMPER
-    { 108, 2 }, // 33: Sevii COOLTRAINER
-    { 110, 1 }, // 34: Sevii COOL_COUPLE (pairs)
-    { 111, 4 }, // 35: Sevii CRUSH_GIRL
-    { 115, 1 }, // 36: Sevii CRUSH_KIN (pairs)
-    { 116, 2 }, // 37: Sevii FISHERMAN
-    { 118, 1 }, // 38: Sevii GENTLEMAN
-    { 119, 1 }, // 39: Sevii HIKER
-    { 120, 2 }, // 40: Sevii JUGGLER
-    { 122, 2 }, // 41: Sevii LADY
-    { 124, 2 }, // 42: Sevii LASS
-    { 126, 3 }, // 43: Sevii PAINTER
-    { 129, 2 }, // 44: Sevii PICNICKER
-    { 131, 2 }, // 45: Sevii PKMN_BREEDER
-    { 133, 5 }, // 46: Sevii PKMN_RANGER
-    { 138, 2 }, // 47: Sevii PSYCHIC
-    { 140, 2 }, // 48: Sevii RUIN_MANIAC
-    { 142, 1 }, // 49: Sevii SIS_AND_BRO (pairs)
-    { 143, 4 }, // 50: Sevii SWIMMER_F
-    { 147, 3 }, // 51: Sevii SWIMMER_M
-    { 150, 1 }, // 52: Sevii TAMER
-    { 151, 2 }, // 53: Sevii TUBER
-    { 153, 2 }, // 54: Sevii TWINS (pairs)
-    { 155, 3 }, // 55: Sevii YOUNGSTER
-    { 158, 1 }, // 56: Sevii YOUNG_COUPLE (pairs)
-    { 159, 4 }, // 57: Johto @cave
-    { 163, 1 }, // 58: Johto @liner
-    { 164, 1 }, // 59: Johto @tower
-    { 165, 3 }, // 60: Johto BEAUTY
-    { 168, 5 }, // 61: Johto BIRD_KEEPER
-    { 173, 1 }, // 62: Johto BLACK_BELT
-    { 174, 5 }, // 63: Johto BUG_CATCHER
-    { 179, 3 }, // 64: Johto BURGLAR
-    { 182, 6 }, // 65: Johto CAMPER
-    { 188, 17 }, // 66: Johto COOLTRAINER
-    { 205, 3 }, // 67: Johto FIREBREATHER
-    { 208, 9 }, // 68: Johto FISHERMAN
-    { 217, 2 }, // 69: Johto GENTLEMAN
-    { 219, 12 }, // 70: Johto HIKER
-    { 231, 2 }, // 71: Johto JUGGLER
-    { 233, 2 }, // 72: Johto LASS
-    { 235, 2 }, // 73: Johto PARASOL_LADY
-    { 237, 6 }, // 74: Johto PICNICKER
-    { 243, 4 }, // 75: Johto POKEFAN
-    { 247, 9 }, // 76: Johto POKEMANIAC
-    { 256, 7 }, // 77: Johto PSYCHIC_M
-    { 263, 4 }, // 78: Johto SAGE
-    { 267, 7 }, // 79: Johto SAILOR
-    { 274, 3 }, // 80: Johto SCHOOL_KID
-    { 277, 5 }, // 81: Johto SWIMMER_F
-    { 282, 3 }, // 82: Johto SWIMMER_M
-    { 285, 3 }, // 83: Johto TWINS (pairs)
-    { 288, 5 }, // 84: Johto YOUNGSTER
-    { 293, 2 }, // 85: Johto YOUNG_COUPLE (pairs)
-    { 295, 1 }, // 86: Alola @cave
-    { 296, 2 }, // 87: Alola BUG_CATCHER
-    { 298, 1 }, // 88: Alola CAMPER
-    { 299, 1 }, // 89: Alola HIKER
-    { 300, 1 }, // 90: Alola PICNICKER
-    { 301, 2 }, // 91: Alola SWIMMER_F
-    { 303, 2 }, // 92: Alola SWIMMER_M
-    { 305, 1 }, // 93: Alola TUBER_M
-    { 306, 1 }, // 94: Hoenn @cave
-    { 307, 1 }, // 95: Hoenn @coast
-    { 308, 3 }, // 96: Hoenn @desert
-    { 311, 2 }, // 97: Hoenn @liner
-    { 313, 1 }, // 98: Hoenn @mountain
-    { 314, 2 }, // 99: Hoenn @ship
-    { 316, 5 }, // 100: Hoenn AROMA_LADY
-    { 321, 4 }, // 101: Hoenn BATTLE_GIRL
-    { 325, 2 }, // 102: Hoenn BEAUTY
-    { 327, 12 }, // 103: Hoenn BIRD_KEEPER
-    { 339, 7 }, // 104: Hoenn BLACK_BELT
-    { 346, 8 }, // 105: Hoenn BUG_CATCHER
-    { 354, 6 }, // 106: Hoenn BUG_MANIAC
-    { 360, 8 }, // 107: Hoenn CAMPER
-    { 368, 3 }, // 108: Hoenn COLLECTOR
-    { 371, 22 }, // 109: Hoenn COOLTRAINER
-    { 393, 1 }, // 110: Hoenn DRAGON_TAMER
-    { 394, 7 }, // 111: Hoenn EXPERT
-    { 401, 18 }, // 112: Hoenn FISHERMAN
-    { 419, 3 }, // 113: Hoenn GENTLEMAN
-    { 422, 5 }, // 114: Hoenn GUITARIST
-    { 427, 1 }, // 115: Hoenn HEX_MANIAC
-    { 428, 4 }, // 116: Hoenn HIKER
-    { 432, 4 }, // 117: Hoenn KINDLER
-    { 436, 3 }, // 118: Hoenn LADY
-    { 439, 3 }, // 119: Hoenn LASS
-    { 442, 7 }, // 120: Hoenn NINJA_BOY
-    { 449, 1 }, // 121: Hoenn OLD_COUPLE (pairs)
-    { 450, 5 }, // 122: Hoenn PARASOL_LADY
-    { 455, 8 }, // 123: Hoenn PICNICKER
-    { 463, 5 }, // 124: Hoenn PKMN_BREEDER
-    { 468, 4 }, // 125: Hoenn PKMN_RANGER
-    { 472, 4 }, // 126: Hoenn POKEFAN
-    { 476, 3 }, // 127: Hoenn POKEMANIAC
-    { 479, 10 }, // 128: Hoenn PSYCHIC
-    { 489, 3 }, // 129: Hoenn RICH_BOY
-    { 492, 4 }, // 130: Hoenn RUIN_MANIAC
-    { 496, 5 }, // 131: Hoenn SAILOR
-    { 501, 2 }, // 132: Hoenn SCHOOL_KID
-    { 503, 2 }, // 133: Hoenn SIS_AND_BRO (pairs)
-    { 505, 3 }, // 134: Hoenn SR_AND_JR (pairs)
-    { 508, 23 }, // 135: Hoenn SWIMMER_F
-    { 531, 25 }, // 136: Hoenn SWIMMER_M
-    { 556, 21 }, // 137: Hoenn TRIATHLETE
-    { 577, 4 }, // 138: Hoenn TUBER_F
-    { 581, 1 }, // 139: Hoenn TUBER_M
-    { 582, 4 }, // 140: Hoenn TWINS (pairs)
-    { 586, 9 }, // 141: Hoenn YOUNGSTER
-    { 595, 2 }, // 142: Hoenn YOUNG_COUPLE (pairs)
+    { 48, 1 }, // 15: Kanto LASS
+    { 49, 3 }, // 16: Kanto PICNICKER
+    { 52, 4 }, // 17: Kanto POKEFAN
+    { 56, 2 }, // 18: Kanto PSYCHIC_M
+    { 58, 6 }, // 19: Kanto SAILOR
+    { 64, 4 }, // 20: Kanto SCHOOL_KID
+    { 68, 1 }, // 21: Kanto SCIENTIST
+    { 69, 2 }, // 22: Kanto SIS_AND_BRO (pairs)
+    { 71, 3 }, // 23: Kanto SUPER_NERD
+    { 74, 5 }, // 24: Kanto SWIMMER_F
+    { 79, 13 }, // 25: Kanto SWIMMER_M
+    { 92, 4 }, // 26: Kanto YOUNGSTER
+    { 96, 1 }, // 27: Sevii @coast
+    { 97, 2 }, // 28: Sevii AROMA_LADY
+    { 99, 2 }, // 29: Sevii BIRD_KEEPER
+    { 101, 1 }, // 30: Sevii BLACK_BELT
+    { 102, 2 }, // 31: Sevii BUG_CATCHER
+    { 104, 2 }, // 32: Sevii CAMPER
+    { 106, 2 }, // 33: Sevii COOLTRAINER
+    { 108, 1 }, // 34: Sevii COOL_COUPLE (pairs)
+    { 109, 4 }, // 35: Sevii CRUSH_GIRL
+    { 113, 1 }, // 36: Sevii CRUSH_KIN (pairs)
+    { 114, 2 }, // 37: Sevii FISHERMAN
+    { 116, 1 }, // 38: Sevii GENTLEMAN
+    { 117, 1 }, // 39: Sevii HIKER
+    { 118, 2 }, // 40: Sevii JUGGLER
+    { 120, 2 }, // 41: Sevii LADY
+    { 122, 2 }, // 42: Sevii LASS
+    { 124, 3 }, // 43: Sevii PAINTER
+    { 127, 2 }, // 44: Sevii PICNICKER
+    { 129, 2 }, // 45: Sevii PKMN_BREEDER
+    { 131, 5 }, // 46: Sevii PKMN_RANGER
+    { 136, 2 }, // 47: Sevii PSYCHIC
+    { 138, 2 }, // 48: Sevii RUIN_MANIAC
+    { 140, 1 }, // 49: Sevii SIS_AND_BRO (pairs)
+    { 141, 4 }, // 50: Sevii SWIMMER_F
+    { 145, 3 }, // 51: Sevii SWIMMER_M
+    { 148, 1 }, // 52: Sevii TAMER
+    { 149, 2 }, // 53: Sevii TUBER
+    { 151, 2 }, // 54: Sevii TWINS (pairs)
+    { 153, 3 }, // 55: Sevii YOUNGSTER
+    { 156, 1 }, // 56: Sevii YOUNG_COUPLE (pairs)
+    { 157, 4 }, // 57: Johto @cave
+    { 161, 1 }, // 58: Johto @liner
+    { 162, 1 }, // 59: Johto @tower
+    { 163, 2 }, // 60: Johto BEAUTY
+    { 165, 5 }, // 61: Johto BIRD_KEEPER
+    { 170, 1 }, // 62: Johto BLACK_BELT
+    { 171, 5 }, // 63: Johto BUG_CATCHER
+    { 176, 3 }, // 64: Johto BURGLAR
+    { 179, 6 }, // 65: Johto CAMPER
+    { 185, 17 }, // 66: Johto COOLTRAINER
+    { 202, 2 }, // 67: Johto FIREBREATHER
+    { 204, 9 }, // 68: Johto FISHERMAN
+    { 213, 2 }, // 69: Johto GENTLEMAN
+    { 215, 11 }, // 70: Johto HIKER
+    { 226, 1 }, // 71: Johto JUGGLER
+    { 227, 2 }, // 72: Johto LASS
+    { 229, 2 }, // 73: Johto PARASOL_LADY
+    { 231, 6 }, // 74: Johto PICNICKER
+    { 237, 4 }, // 75: Johto POKEFAN
+    { 241, 9 }, // 76: Johto POKEMANIAC
+    { 250, 7 }, // 77: Johto PSYCHIC_M
+    { 257, 4 }, // 78: Johto SAGE
+    { 261, 7 }, // 79: Johto SAILOR
+    { 268, 3 }, // 80: Johto SCHOOL_KID
+    { 271, 5 }, // 81: Johto SWIMMER_F
+    { 276, 3 }, // 82: Johto SWIMMER_M
+    { 279, 3 }, // 83: Johto TWINS (pairs)
+    { 282, 5 }, // 84: Johto YOUNGSTER
+    { 287, 2 }, // 85: Johto YOUNG_COUPLE (pairs)
+    { 289, 1 }, // 86: Alola @cave
+    { 290, 2 }, // 87: Alola BUG_CATCHER
+    { 292, 1 }, // 88: Alola CAMPER
+    { 293, 1 }, // 89: Alola HIKER
+    { 294, 1 }, // 90: Alola PICNICKER
+    { 295, 2 }, // 91: Alola SWIMMER_F
+    { 297, 2 }, // 92: Alola SWIMMER_M
+    { 299, 1 }, // 93: Alola TUBER_M
+    { 300, 1 }, // 94: Hoenn @cave
+    { 301, 1 }, // 95: Hoenn @coast
+    { 302, 3 }, // 96: Hoenn @desert
+    { 305, 2 }, // 97: Hoenn @liner
+    { 307, 1 }, // 98: Hoenn @mountain
+    { 308, 2 }, // 99: Hoenn @ship
+    { 310, 5 }, // 100: Hoenn AROMA_LADY
+    { 315, 4 }, // 101: Hoenn BATTLE_GIRL
+    { 319, 2 }, // 102: Hoenn BEAUTY
+    { 321, 12 }, // 103: Hoenn BIRD_KEEPER
+    { 333, 7 }, // 104: Hoenn BLACK_BELT
+    { 340, 8 }, // 105: Hoenn BUG_CATCHER
+    { 348, 6 }, // 106: Hoenn BUG_MANIAC
+    { 354, 8 }, // 107: Hoenn CAMPER
+    { 362, 3 }, // 108: Hoenn COLLECTOR
+    { 365, 22 }, // 109: Hoenn COOLTRAINER
+    { 387, 1 }, // 110: Hoenn DRAGON_TAMER
+    { 388, 7 }, // 111: Hoenn EXPERT
+    { 395, 18 }, // 112: Hoenn FISHERMAN
+    { 413, 2 }, // 113: Hoenn GENTLEMAN
+    { 415, 5 }, // 114: Hoenn GUITARIST
+    { 420, 1 }, // 115: Hoenn HEX_MANIAC
+    { 421, 4 }, // 116: Hoenn HIKER
+    { 425, 4 }, // 117: Hoenn KINDLER
+    { 429, 2 }, // 118: Hoenn LADY
+    { 431, 3 }, // 119: Hoenn LASS
+    { 434, 7 }, // 120: Hoenn NINJA_BOY
+    { 441, 1 }, // 121: Hoenn OLD_COUPLE (pairs)
+    { 442, 5 }, // 122: Hoenn PARASOL_LADY
+    { 447, 8 }, // 123: Hoenn PICNICKER
+    { 455, 5 }, // 124: Hoenn PKMN_BREEDER
+    { 460, 4 }, // 125: Hoenn PKMN_RANGER
+    { 464, 4 }, // 126: Hoenn POKEFAN
+    { 468, 3 }, // 127: Hoenn POKEMANIAC
+    { 471, 10 }, // 128: Hoenn PSYCHIC
+    { 481, 3 }, // 129: Hoenn RICH_BOY
+    { 484, 4 }, // 130: Hoenn RUIN_MANIAC
+    { 488, 5 }, // 131: Hoenn SAILOR
+    { 493, 2 }, // 132: Hoenn SCHOOL_KID
+    { 495, 2 }, // 133: Hoenn SIS_AND_BRO (pairs)
+    { 497, 3 }, // 134: Hoenn SR_AND_JR (pairs)
+    { 500, 23 }, // 135: Hoenn SWIMMER_F
+    { 523, 25 }, // 136: Hoenn SWIMMER_M
+    { 548, 21 }, // 137: Hoenn TRIATHLETE
+    { 569, 4 }, // 138: Hoenn TUBER_F
+    { 573, 1 }, // 139: Hoenn TUBER_M
+    { 574, 4 }, // 140: Hoenn TWINS (pairs)
+    { 578, 9 }, // 141: Hoenn YOUNGSTER
+    { 587, 1 }, // 142: Hoenn YOUNG_COUPLE (pairs)
 };
 
 // Contacts that are not daily stay at home: where a rematch family's first trainer stands (WhereIsTrainerToday).

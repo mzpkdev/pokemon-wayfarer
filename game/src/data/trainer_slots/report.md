@@ -12,12 +12,12 @@ trainers the scaling classification keeps out of the daily slots (Gym members, b
 
 | Region | Class range | Place range | Home range | Not daily (ORDINARY) | Other trainers |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Kanto | 90 | 8 | 9 | 70 | 30 |
+| Kanto | 88 | 8 | 11 | 70 | 30 |
 | Sevii | 60 | 1 | 20 | 4 | 6 |
-| Johto | 130 | 6 | 29 | 45 | 30 |
+| Johto | 126 | 6 | 33 | 45 | 30 |
 | Alola | 10 | 1 | 8 | 0 | 0 |
-| Hoenn | 281 | 10 | 42 | 78 | 53 |
-| total | 571 | 26 | 108 | 197 | 119 |
+| Hoenn | 278 | 10 | 45 | 78 | 53 |
+| total | 562 | 26 | 117 | 197 | 119 |
 
 705 daily slots. Absence chances (default 25%): 25%: 698, 0%: 7. 7 slot(s) at 0% (someone is always there).
 
@@ -68,7 +68,7 @@ group: the slot is its own range (the row's group field is the home marker), so 
 | 12 | Kanto | GENTLEMAN |  | 4 |
 | 13 | Kanto | HIKER |  | 3 |
 | 14 | Kanto | JUGGLER |  | 2 |
-| 15 | Kanto | LASS |  | 2 |
+| 15 | Kanto | LASS |  | 1 |
 | 16 | Kanto | PICNICKER |  | 3 |
 | 17 | Kanto | POKEFAN |  | 4 |
 | 18 | Kanto | PSYCHIC_M |  | 2 |
@@ -79,7 +79,7 @@ group: the slot is its own range (the row's group field is the home marker), so 
 | 23 | Kanto | SUPER_NERD |  | 3 |
 | 24 | Kanto | SWIMMER_F |  | 5 |
 | 25 | Kanto | SWIMMER_M |  | 13 |
-| 26 | Kanto | YOUNGSTER |  | 5 |
+| 26 | Kanto | YOUNGSTER |  | 4 |
 | 27 | Sevii | @coast |  | 1 |
 | 28 | Sevii | AROMA_LADY |  | 2 |
 | 29 | Sevii | BIRD_KEEPER |  | 2 |
@@ -113,18 +113,18 @@ group: the slot is its own range (the row's group field is the home marker), so 
 | 57 | Johto | @cave |  | 4 |
 | 58 | Johto | @liner |  | 1 |
 | 59 | Johto | @tower |  | 1 |
-| 60 | Johto | BEAUTY |  | 3 |
+| 60 | Johto | BEAUTY |  | 2 |
 | 61 | Johto | BIRD_KEEPER |  | 5 |
 | 62 | Johto | BLACK_BELT |  | 1 |
 | 63 | Johto | BUG_CATCHER |  | 5 |
 | 64 | Johto | BURGLAR |  | 3 |
 | 65 | Johto | CAMPER |  | 6 |
 | 66 | Johto | COOLTRAINER |  | 17 |
-| 67 | Johto | FIREBREATHER |  | 3 |
+| 67 | Johto | FIREBREATHER |  | 2 |
 | 68 | Johto | FISHERMAN |  | 9 |
 | 69 | Johto | GENTLEMAN |  | 2 |
-| 70 | Johto | HIKER |  | 12 |
-| 71 | Johto | JUGGLER |  | 2 |
+| 70 | Johto | HIKER |  | 11 |
+| 71 | Johto | JUGGLER |  | 1 |
 | 72 | Johto | LASS |  | 2 |
 | 73 | Johto | PARASOL_LADY |  | 2 |
 | 74 | Johto | PICNICKER |  | 6 |
@@ -166,12 +166,12 @@ group: the slot is its own range (the row's group field is the home marker), so 
 | 110 | Hoenn | DRAGON_TAMER |  | 1 |
 | 111 | Hoenn | EXPERT |  | 7 |
 | 112 | Hoenn | FISHERMAN |  | 18 |
-| 113 | Hoenn | GENTLEMAN |  | 3 |
+| 113 | Hoenn | GENTLEMAN |  | 2 |
 | 114 | Hoenn | GUITARIST |  | 5 |
 | 115 | Hoenn | HEX_MANIAC |  | 1 |
 | 116 | Hoenn | HIKER |  | 4 |
 | 117 | Hoenn | KINDLER |  | 4 |
-| 118 | Hoenn | LADY |  | 3 |
+| 118 | Hoenn | LADY |  | 2 |
 | 119 | Hoenn | LASS |  | 3 |
 | 120 | Hoenn | NINJA_BOY |  | 7 |
 | 121 | Hoenn | OLD_COUPLE | yes | 1 |
@@ -195,11 +195,11 @@ group: the slot is its own range (the row's group field is the home marker), so 
 | 139 | Hoenn | TUBER_M |  | 1 |
 | 140 | Hoenn | TWINS | yes | 4 |
 | 141 | Hoenn | YOUNGSTER |  | 9 |
-| 142 | Hoenn | YOUNG_COUPLE | yes | 2 |
+| 142 | Hoenn | YOUNG_COUPLE | yes | 1 |
 
-14 place-type groups, 8 of one slot; 26 trainers in them. 108 trainers have a home range.
+14 place-type groups, 8 of one slot; 26 trainers in them. 117 trainers have a home range.
 
-143 groups of 255 possible; sizes: 1 slot(s) x 29, 2 slot(s) x 35, 3 slot(s) x 22, 4 slot(s) x 17, 5 slot(s) x 13, 6 slot(s) x 4, 7 slot(s) x 5, 8 slot(s) x 5, 9 slot(s) x 3, 10 slot(s) x 1, 12 slot(s) x 2, 13 slot(s) x 1, 17 slot(s) x 1, 18 slot(s) x 1, 21 slot(s) x 1, 22 slot(s) x 1, 23 slot(s) x 1, 25 slot(s) x 1
+143 groups of 255 possible; sizes: 1 slot(s) x 32, 2 slot(s) x 36, 3 slot(s) x 18, 4 slot(s) x 18, 5 slot(s) x 12, 6 slot(s) x 4, 7 slot(s) x 5, 8 slot(s) x 5, 9 slot(s) x 3, 10 slot(s) x 1, 11 slot(s) x 1, 12 slot(s) x 1, 13 slot(s) x 1, 17 slot(s) x 1, 18 slot(s) x 1, 21 slot(s) x 1, 22 slot(s) x 1, 23 slot(s) x 1, 25 slot(s) x 1
 
 ## Dialogue audit
 
@@ -208,7 +208,7 @@ reword (the line was edited to neutral wording in the script source, the audit t
 joins the group of that place type, whose slots are all that kind of place), **home** (the lines are about the spot itself, so the
 trainer is placed only in its own slot), or **not daily** (its absence would break its lines).
 
-Resolutions: 65 class (reworded), 26 place, 108 home, 6 not daily.
+Resolutions: 64 class (reworded), 26 place, 117 home, 6 not daily.
 
 | Trainer | Slot | Range | Absence | Reason |
 | --- | --- | --- | --- | --- |
@@ -233,6 +233,7 @@ Resolutions: 65 class (reworded), 26 place, 108 home, 6 not daily.
 | TRAINER_BARNEY_HNS | Route12_hns | class | 25 | Reworded: Quiz banter; the landmark is only the example. (the lines now read: I think electricity is the most important thing in our daily lives. If it weren't, people wouldn't have made such a fuss when the power went out.) |
 | TRAINER_BECK | Route133 | class | 25 | Reworded: Homesickness chatter. (the lines now read: I came all the way here with my BIRD POKéMON. / I'd like to go back home, but I've grown to like it here, too.) |
 | TRAINER_BECKY | Route111 | place:desert ("in the desert") | 25 | The lines need a desert ("in the desert"); the trainer rotates only among desert spots, which the generator checks against the map. |
+| TRAINER_BENJAMIN_HNS | Route42_hns | home | 25 | Lines are about the open land or a haunt ("the big sky"), so the trainer stays at home. |
 | TRAINER_BERKE_HNS | Route41_hns | home | 25 | refers to its surroundings ("the islands", "those islands"). The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_BIANCA | Route111 | class | 25 | Reworded: Travel chatter. (the lines now read: Did you come from far? Then you should be full of energy! / The road ahead… You have quite a ways to travel.) |
 | TRAINER_BILL_HNS | UnionCave_1F_hns | place:cave ("in the cave") | 25 | The lines need a cave ("in the cave"); the trainer rotates only among cave spots, which the generator checks against the map. |
@@ -244,6 +245,7 @@ Resolutions: 65 class (reworded), 26 place, 108 home, 6 not daily.
 | TRAINER_CARA_HNS | DragonsDen_Cavern_hns | class | 25 | Intro: "You shouldn't be in here!" now reads "You shouldn't be here!" (data/maps/DragonsDen_Cavern_hns/scripts.inc). |
 | TRAINER_CARLEE | Route128 | class | 25 | Intro: "more harsh in this area" now reads "more harsh than usual" (data/text/trainers.inc). |
 | TRAINER_CAROLINE | VictoryRoad_B2F | home | 25 | names POKéMON LEAGUE, VICTORY ROAD; names a building or local event (LEAGUE). The post-battle line is about the place the trainer was written for, so it stays at home. |
+| TRAINER_CASSIE_HNS | SSAqua_RoomSW_hns | home | 25 | Lines are about the ship ("FAST SHIP trip"), so the trainer stays on its own ship. |
 | TRAINER_CHAD | Route124 | home | 25 | names underwater; refers to its surroundings ("around here"). The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_CHARLIE | AbandonedShip_Corridors_1F | place:ship ("the ship") | 25 | The lines need a ship ("the ship"); the trainer rotates only among ship spots, which the generator checks against the map. |
 | TRAINER_CHIP | Route120 | home | 25 | 'That giant rock… ancient ruins. But I see no entrance': the rock beside this stretch of ROUTE 120. |
@@ -261,7 +263,7 @@ Resolutions: 65 class (reworded), 26 place, 108 home, 6 not daily.
 | TRAINER_DEBRA_HNS | SSAqua_B1F_hns | home | 25 | names SAFFRON. The line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_DENISE | Route107 | home | 25 | names DEWFORD. The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_DENIS_HNS | OlivineCity_Lighthouse_hns | home | 25 | names CIANWOOD; refers to its surroundings ("up here"). The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
-| TRAINER_DEZ_AND_LUKE | MtPyre_2F | class | 25 | Post-battle line: "I'm right here by your side" now reads "I'm here by your side" (data/maps/MtPyre_2F/scripts.inc). |
+| TRAINER_DEZ_AND_LUKE | MtPyre_2F | home | 25 | The lines are about Mt. Pyre ("I came here on a dare"), so the trainer stays at home. Post-battle "I'm here by your side" was reworded earlier. |
 | TRAINER_DIANA_1 | JaggedPass | home | 25 | refers to its surroundings ("This place"). The intro is about the place the trainer was written for, so it stays at home. |
 | TRAINER_DIANNE | VictoryRoad_B2F | place:cave ("this cave") | 25 | The lines need a cave ("this cave"); the trainer rotates only among cave spots, which the generator checks against the map. |
 | TRAINER_DOMINIK | Route105 | class | 25 | Reworded: Trivia chatter. (the lines now read: Why is the sea blue? I learned about that at a MUSEUM, but I forgot.) |
@@ -279,6 +281,7 @@ Resolutions: 65 class (reworded), 26 place, 108 home, 6 not daily.
 | TRAINER_EUGENE_HNS | Route39_hns | class | 25 | Reworded: Where he docked is chatter. (the lines now read: I just got back to port. So how about a POKéMON battle?) |
 | TRAINER_FELIX | VictoryRoad_B2F | home | 25 | names POKéMON LEAGUE; names a building or local event (LEAGUE). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_FOSTER | Route105 | class | 25 | Intro: "a mystical rock around here" now reads "a mystical rock somewhere" (data/text/trainers.inc). |
+| TRAINER_FRITZ_HNS | SSAqua_B1F_hns | home | 25 | Lines are about the ship ("I'm seasick!"), so the trainer stays on its own ship. |
 | TRAINER_GARRETT_HNS | SSAqua_B1F_hns | home | 25 | names the sailors' work deck and VERMILION CITY. The lines are about the place the trainer was written for, so it stays at home. |
 | TRAINER_GAVEN_HNS | Route26_hns | home | 25 | names POKéMON LEAGUE, VICTORY ROAD; names a building or local event (LEAGUE). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_GEORGE_HNS | Route41_hns | home | 25 | names CIANWOOD, OLIVINE. The post-battle line is about the place the trainer was written for, so it stays at home. |
@@ -297,6 +300,7 @@ Resolutions: 65 class (reworded), 26 place, 108 home, 6 not daily.
 | TRAINER_ISABELLA | Route124 | class | 25 | Post-battle line: "shards of things around here" now reads "shards of things lying around" (data/text/trainers.inc). |
 | TRAINER_ISAIAH_1 | Route128 | class | 25 | Reworded: Triathlon goal chatter (intro, rematch, say). (the lines now read: The finish is still a long ways away… / I'm still feeling good. I'll keep on swimming to the finish. / I'll eventually reach the finish where I can eventually win…) |
 | TRAINER_JANI | AbandonedShip_Rooms2_1F | place:ship ("this ship") | 25 | The lines need a ship ("this ship"); the trainer rotates only among ship spots, which the generator checks against the map. |
+| TRAINER_JASON_HNS | Route11_hns | home | 25 | Lines are about the open land or a haunt ("shorts in the grass"), so the trainer stays at home. |
 | TRAINER_JAYLEN | Route113 | home | 25 | refers to its surroundings ("around here"). The intro is about the place the trainer was written for, so it stays at home. |
 | TRAINER_JENNY_1 | Route124 | class | 25 | Reworded: The line itself says it is unrelated. (the lines now read: This has nothing to do with anything, but maybe I'll take a trip somewhere.) |
 | TRAINER_JERRY_1 | Route116 | class | 25 | Reworded: Schoolchild chatter (intro, say, rematch). (the lines now read: We learn all sorts of things at school. I want to test things out for real! / I'll have to redo some courses at school. If I don't, my teacher will be steamed. / I've been studying seriously at school. I won't lose like I did last time.) |
@@ -320,9 +324,10 @@ Resolutions: 65 class (reworded), 26 place, 108 home, 6 not daily.
 | TRAINER_LAURA_HNS | Route25_hns | not daily | - | Route 25's six-trainer challenge numbers its opponents ("No. 3", "second", "last in line", "the six of us"); the line is about this trainer's place in the sequence, so it stays at home. |
 | TRAINER_LEAH | MtPyre_2F | place:mountain ("this mountain") | 25 | The lines need a mountain ("this mountain"); the trainer rotates only among mountain spots, which the generator checks against the map. |
 | TRAINER_LENNY | Route114 | home | 25 | 'You're supposed to shout yodelayhihoo since it doesn't echo here': an open route with a view. |
-| TRAINER_LEONARD | SSTidalLowerDeck | place:liner ("the ship") | 25 | The lines need a liner ("the ship"); the trainer rotates only among the S.S. liners' decks and rooms, which the generator checks against the map. |
+| TRAINER_LEONARD | SSTidalLowerDeck | place:liner ("the ship") | 25 | The lines need a liner ("the ship"); each region's liner group is a single ship, so it keeps the trainer on its own ship. |
 | TRAINER_LEONARD_HNS | UnionCave_B1F_hns | place:cave ("down here") | 25 | The lines need a cave ("down here"); the trainer rotates only among cave spots, which the generator checks against the map. |
 | TRAINER_LLOYD_HNS | Route25_hns | not daily | - | Route 25's six-trainer challenge numbers its opponents ("No. 3", "second", "last in line", "the six of us"); the line is about this trainer's place in the sequence, so it stays at home. |
+| TRAINER_LYLE_HNS | SSAqua_RoomSSW_hns | home | 25 | Lines are about the ship ("fire is weak on the sea"), so the trainer stays on its own ship. |
 | TRAINER_MARCEL | Route121 | home | 25 | 'Oh, now what happened here?': the scene of this route. |
 | TRAINER_MARKUS_HNS | MtMortar_1F_North_hns | home | 25 | Searches MT.MORTAR for his partner Hugh (they call each other by name); the two stay where they are written. |
 | TRAINER_MARLENE | Route115 | class | 25 | Post-battle line: "But this place isn't very peaceful…" now reads "But it isn't very peaceful…" (data/text/trainers.inc). |
@@ -331,13 +336,14 @@ Resolutions: 65 class (reworded), 26 place, 108 home, 6 not daily.
 | TRAINER_MEL_AND_PAUL | Route109 | home | 25 | 'Don't tell anyone that we're here. This is just our private world of two': a hideaway spot. |
 | TRAINER_MICHELLE | VictoryRoad_B1F | home | 25 | names POKéMON LEAGUE; names a building or local event (LEAGUE). The intro is about the place the trainer was written for, so it stays at home. |
 | TRAINER_MIKE_2 | RusturfTunnel | home | 25 | 'They halted development here to protect POKéMON': RUSTURF TUNNEL itself. |
+| TRAINER_NAOMI | SSTidalRooms | home | 25 | Lines are about the ship ("A world cruise on a luxury liner"), so the trainer stays on its own ship. |
 | TRAINER_NARD_HNS | BurnedTower_1F_hns | home | 25 | refers to its surroundings ("this tower"). The post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_NATE_HNS | SSAqua_B1F_hns | home | 25 | names the RUINS OF ALPH. The line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_NICOLAS_1 | MeteorFalls_1F_2R | home | 25 | 'This is where we DRAGON users do our training' and 'how special it is here': METEOR FALLS itself. |
 | TRAINER_NICO_HNS | SproutTower_2F_hns | home | 0 | refers to its surroundings ("the TOWER"). The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_OWEN | VictoryRoad_B2F | class | 25 | Reworded: Rumor chatter. (the lines now read: The rumors I heard, that tough little kid is from a small town.) |
 | TRAINER_PETER_HNS | Route32_hns | class | 25 | Reworded: Gym-badge chatter; the city is incidental. (the lines now read: That BADGE! You beat FALKNER? / I should train again before my next challenge.) |
-| TRAINER_PHILLIP | SSTidalLowerDeck | place:liner ("this huge place") | 25 | The lines need a liner ("this huge place"); the trainer rotates only among the S.S. liners' decks and rooms, which the generator checks against the map. |
+| TRAINER_PHILLIP | SSTidalLowerDeck | place:liner ("this huge place") | 25 | The lines need a liner ("this huge place"); each region's liner group is a single ship, so it keeps the trainer on its own ship. |
 | TRAINER_PRESLEY | Route125 | home | 25 | 'Why would a BIRDKEEPER like me come out to the sea?' and his message in a bottle: a Bird Keeper standing in the sea, which his class group of land routes cannot do. |
 | TRAINER_QUENTIN_HNS | Route45_hns | home | 25 | names TRAINER HILL. The defeat and post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_QUINCY | VictoryRoad_1F | home | 0 | names VICTORY ROAD. The intro and post-battle line is about the place the trainer was written for, so it stays at home. |
@@ -363,6 +369,7 @@ Resolutions: 65 class (reworded), 26 place, 108 home, 6 not daily.
 | TRAINER_TASHA | MtPyre_4F | home | 25 | 'When I'm here… I shiver with fear': the horror of MT. PYRE. |
 | TRAINER_TERRELL_HNS | OlivineCity_Lighthouse_hns | class | 25 | Reworded: Sailor port chatter. (the lines now read: Every time I return to port, I check in on an old rival. His POKéMON type changed without me noticing.) |
 | TRAINER_THEO_HNS | OlivineCity_Lighthouse_hns | home | 25 | 'Why are you here? Are you just going to gawk?' and wanting to reach the sick POKéMON at the top: the OLIVINE LIGHTHOUSE. |
+| TRAINER_THOMAS | SSTidalRooms | home | 25 | Lines are about the ship ("Did you knock on the door?"), so the trainer stays on its own ship. |
 | TRAINER_TIFFANY_HNS | Route43_hns | class | 25 | Reworded: Destination chatter (intro and rematch). (the lines now read: Are you going far too? Let's play for a little while!) |
 | TRAINER_TIMMY | Route110 | class | 25 | Intro: "in the grass around here" now reads "in the grass" (data/text/trainers.inc). |
 | TRAINER_TIM_HNS | Route9_hns | class | 25 | Reworded: MT.SILVER is dropped (data/maps/Route9_hns/scripts.inc). |
@@ -373,7 +380,7 @@ Resolutions: 65 class (reworded), 26 place, 108 home, 6 not daily.
 | TRAINER_ULAULA_YOUNGSTER_HNS | UlaulaIsle_hns | home | 25 | names MT. LANIKALA; refers to its surroundings ("this mountain"). The defeat and intro and post-battle line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_VALERIE_1 | MtPyre_6F | home | 25 | The spirits of POKéMON 'sleep here' and 'rest here': MT. PYRE. |
 | TRAINER_VANESSA | Route121 | class | 25 | Reworded: Contest boast; Contest is an allowed phrase. (the lines now read: I'm going to a big show. My POKéMON should have no problem sweeping the MASTER CLASS.) |
-| TRAINER_WAI_HNS | SSAqua_B1F_hns | place:liner ("the ship") | 25 | The lines need a liner ("the ship"); the trainer rotates only among the S.S. liners' decks and rooms, which the generator checks against the map. |
+| TRAINER_WAI_HNS | SSAqua_B1F_hns | place:liner ("the ship") | 25 | The lines need a liner ("the ship"); each region's liner group is a single ship, so it keeps the trainer on its own ship. |
 | TRAINER_WAYFARER_COAST_BURGLAR_ARNIE | PokemonMansion_2F_Frlg | place:mansion ("This old place") | 25 | The lines need a mansion ("This old place"); the trainer rotates only among mansion spots, which the generator checks against the map. |
 | TRAINER_WAYFARER_COAST_BURGLAR_SIMON | PokemonMansion_3F_Frlg | place:mansion ("This place") | 25 | The lines need a mansion ("This place"); the trainer rotates only among mansion spots, which the generator checks against the map. |
 | TRAINER_WAYFARER_COAST_FISHERMAN_CLAUDE | Route21_South_Frlg | place:coast ("this place") | 25 | The lines need a coast ("this place"); the trainer rotates only among coast spots, which the generator checks against the map. |
@@ -412,8 +419,9 @@ Resolutions: 65 class (reworded), 26 place, 108 home, 6 not daily.
 | TRAINER_WAYFARER_SEVII_SWIMMER_MALE_FINN | OneIsland_KindleRoad_Frlg | home | 25 | names MT. EMBER. The intro is about the place the trainer was written for, so it stays at home. |
 | TRAINER_WAYFARER_SEVII_SWIMMER_MALE_MYMO | SixIsland_OutcastIsland_Frlg | class | 25 | Reworded: Where he swam from is chatter. The intro line names SIX ISLE PORT but the audit does not flag it; reword both together. Generated Sevii script. (the lines now read: Gasp… Gasp… I swam here in one go again. / Gasp… Gasp… I swam here in one go.) |
 | TRAINER_WAYFARER_SEVII_SWIMMER_MALE_TOBY | FiveIsland_ResortGorgeous_Frlg | home | 25 | 'The marine life here at this resort': the RESORT GORGEOUS. |
-| TRAINER_WAYFARER_SS_ANNE_FISHERMAN_DALE | SSAnne_2F_Room2_Frlg | place:liner ("The cruise ship") | 25 | The lines need a liner ("The cruise ship"); the trainer rotates only among the S.S. liners' decks and rooms, which the generator checks against the map. |
+| TRAINER_WAYFARER_SS_ANNE_FISHERMAN_DALE | SSAnne_2F_Room2_Frlg | place:liner ("The cruise ship") | 25 | The lines need a liner ("The cruise ship"); each region's liner group is a single ship, so it keeps the trainer on its own ship. |
 | TRAINER_WAYFARER_SS_ANNE_LASS_ANN | SSAnne_1F_Room2_Frlg | home | 25 | names a POKéMON CENTER. The line is about the place the trainer was written for, so it stays at home. |
+| TRAINER_WAYFARER_SS_ANNE_LASS_DAWN | SSAnne_2F_Room4_Frlg | home | 25 | Lines are about the ship ("the party"), so the trainer stays on its own ship. |
 | TRAINER_WAYFARER_SS_ANNE_SAILOR_DUNCAN | SSAnne_B1F_Room4_Frlg | home | 25 | names VERMILION CITY. The line is about the place the trainer was written for, so it stays at home. |
 | TRAINER_WAYNE | Route128 | class | 25 | Reworded: Goal chatter. The defeat line names EVER GRANDE but is not flagged; reword both. (the lines now read: I want to go far, so I caught myself a POKéMON that knows the move WATERFALL to crest steep rapids. / Awww, phooey! My POKéMON knows WATERFALL, but I'm not ready for the big trip yet!) |
 | TRAINER_ZANDER | MtPyre_2F | home | 25 | Freaked out by every movement and 'shouldn't have come here to train': a haunted MT. PYRE floor. |
@@ -501,7 +509,7 @@ Every trainer slot with an `ORDINARY` trainer: daily slots by index, then the on
 | 54 | Route41_hns local id 9 | TRAINER_MATHEW_HNS | home | - | 25% | daily |
 | 55 | Route41_hns local id 10 | TRAINER_WENDY_HNS | SWIMMER_F | 81 | 25% | daily |
 | 56 | Route42_hns local id 5 | TRAINER_SHANE_HNS | POKEMANIAC | 76 | 25% | daily |
-| 57 | Route42_hns local id 6 | TRAINER_BENJAMIN_HNS | HIKER | 70 | 25% | daily |
+| 57 | Route42_hns local id 6 | TRAINER_BENJAMIN_HNS | home | - | 25% | daily |
 | 58 | Route43_hns local id 1 | TRAINER_SPENCER_HNS | home | - | 25% | daily |
 | 59 | Route43_hns local id 2 | TRAINER_TIFFANY_HNS | PICNICKER | 74 | 25% | daily |
 | 60 | Route43_hns local id 3 | TRAINER_BEN_HNS | POKEMANIAC | 76 | 25% | daily |
@@ -554,7 +562,7 @@ Every trainer slot with an `ORDINARY` trainer: daily slots by index, then the on
 | 107 | Route10_hns local id 3 | TRAINER_ROBERT_HNS | POKEFAN | 17 | 25% | daily |
 | 108 | Route11_hns local id 1 | TRAINER_FIDEL_HNS | PSYCHIC_M | 18 | 25% | daily |
 | 109 | Route11_hns local id 2 | TRAINER_OWEN_HNS | YOUNGSTER | 26 | 25% | daily |
-| 110 | Route11_hns local id 3 | TRAINER_JASON_HNS | YOUNGSTER | 26 | 25% | daily |
+| 110 | Route11_hns local id 3 | TRAINER_JASON_HNS | home | - | 25% | daily |
 | 111 | Route11_hns local id 5 | TRAINER_HERMAN_HNS | PSYCHIC_M | 18 | 25% | daily |
 | 112 | Route12_hns local id 1 | TRAINER_MARTIN_HNS | FISHERMAN | 11 | 25% | daily |
 | 113 | Route12_hns local id 3 | TRAINER_STEPHEN_HNS | FISHERMAN | 11 | 25% | daily |
@@ -668,7 +676,7 @@ Every trainer slot with an `ORDINARY` trainer: daily slots by index, then the on
 | 221 | SSAqua_B1F_hns local id 5 | TRAINER_DEBRA_HNS | home | - | 25% | daily |
 | 222 | SSAqua_B1F_hns local id 6 | TRAINER_KENNETH_HNS | SAILOR | 79 | 25% | daily |
 | 223 | SSAqua_B1F_hns local id 8 | TRAINER_JONAH_HNS | home | - | 25% | daily |
-| 224 | SSAqua_B1F_hns local id 9 | TRAINER_FRITZ_HNS | JUGGLER | 71 | 25% | daily |
+| 224 | SSAqua_B1F_hns local id 9 | TRAINER_FRITZ_HNS | home | - | 25% | daily |
 | 225 | SSAqua_B1F_hns local id 11 | TRAINER_GARRETT_HNS | home | - | 25% | daily |
 | 226 | SSAqua_RoomNW_hns local id 2 | TRAINER_EDWARD_HNS | GENTLEMAN | 69 | 25% | daily |
 | 227 | SSAqua_RoomNW_hns local id 3 | TRAINER_COREY_HNS | FIREBREATHER | 67 | 25% | daily |
@@ -676,11 +684,11 @@ Every trainer slot with an `ORDINARY` trainer: daily slots by index, then the on
 | 229 | SSAqua_RoomNE_hns local id 2 | TRAINER_ETHAN_HNS | POKEMANIAC | 76 | 25% | daily |
 | 230 | SSAqua_RoomNNE_hns local id 1 | TRAINER_CAROL_HNS | COOLTRAINER | 66 | 25% | daily |
 | 231 | SSAqua_RoomNNE_hns local id 2 | TRAINER_SEAN_HNS | COOLTRAINER | 66 | 25% | daily |
-| 232 | SSAqua_RoomSSW_hns local id 1 | TRAINER_LYLE_HNS | FIREBREATHER | 67 | 25% | daily |
+| 232 | SSAqua_RoomSSW_hns local id 1 | TRAINER_LYLE_HNS | home | - | 25% | daily |
 | 233 | SSAqua_RoomSSW_hns local id 2 | TRAINER_KEN_HNS | BUG_CATCHER | 63 | 25% | daily |
 | 234 | SSAqua_RoomSE_hns local id 2+3 | TRAINER_MEG_AND_PEG_HNS | TWINS | 83 | 25% | daily |
 | 235 | SSAqua_RoomSE_hns local id 4 | TRAINER_COLIN_HNS | POKEFAN | 75 | 25% | daily |
-| 236 | SSAqua_RoomSW_hns local id 1 | TRAINER_CASSIE_HNS | BEAUTY | 60 | 25% | daily |
+| 236 | SSAqua_RoomSW_hns local id 1 | TRAINER_CASSIE_HNS | home | - | 25% | daily |
 | 237 | SSAqua_RoomSW_hns local id 2 | TRAINER_CLYDE_HNS | home | - | 25% | daily |
 | 238 | Route102 local id 2 | TRAINER_CALVIN_1 | YOUNGSTER | 141 | 25% | daily |
 | 239 | Route102 local id 3 | TRAINER_RICK | BUG_CATCHER | 105 | 25% | daily |
@@ -974,7 +982,7 @@ Every trainer slot with an `ORDINARY` trainer: daily slots by index, then the on
 | 527 | JaggedPass local id 6 | TRAINER_AUTUMN | home | - | 25% | daily |
 | 528 | JaggedPass local id 7 | TRAINER_JULIO | TRIATHLETE | 137 | 25% | daily |
 | 529 | MtPyre_2F local id 1 | TRAINER_MARK | POKEMANIAC | 127 | 25% | daily |
-| 530 | MtPyre_2F local id 5+6 | TRAINER_DEZ_AND_LUKE | YOUNG_COUPLE | 142 | 25% | daily |
+| 530 | MtPyre_2F local id 5+6 | TRAINER_DEZ_AND_LUKE | home | - | 25% | daily |
 | 531 | MtPyre_2F local id 7 | TRAINER_ZANDER | home | - | 25% | daily |
 | 532 | MtPyre_2F local id 8 | TRAINER_LEAH | @mountain | 98 | 25% | daily |
 | 533 | MtPyre_3F local id 1 | TRAINER_WILLIAM | PSYCHIC | 128 | 25% | daily |
@@ -1011,10 +1019,10 @@ Every trainer slot with an `ORDINARY` trainer: daily slots by index, then the on
 | 564 | SSTidalLowerDeck local id 2 | TRAINER_LEONARD | @liner | 97 | 25% | daily |
 | 565 | SSTidalRooms local id 1 | TRAINER_COLTON | home | - | 25% | daily |
 | 566 | SSTidalRooms local id 2 | TRAINER_MICAH | GENTLEMAN | 113 | 25% | daily |
-| 567 | SSTidalRooms local id 3 | TRAINER_THOMAS | GENTLEMAN | 113 | 25% | daily |
+| 567 | SSTidalRooms local id 3 | TRAINER_THOMAS | home | - | 25% | daily |
 | 568 | SSTidalRooms local id 4+5 | TRAINER_LEA_AND_JED | YOUNG_COUPLE | 142 | 25% | daily |
 | 569 | SSTidalRooms local id 6 | TRAINER_GARRET | RICH_BOY | 129 | 25% | daily |
-| 570 | SSTidalRooms local id 7 | TRAINER_NAOMI | LADY | 118 | 25% | daily |
+| 570 | SSTidalRooms local id 7 | TRAINER_NAOMI | home | - | 25% | daily |
 | 571 | SSAnne_Deck_Frlg local id 1 | TRAINER_WAYFARER_SS_ANNE_SAILOR_TREVOR | SAILOR | 19 | 25% | daily |
 | 572 | SSAnne_Deck_Frlg local id 4 | TRAINER_WAYFARER_SS_ANNE_SAILOR_EDMOND | SAILOR | 19 | 25% | daily |
 | 573 | SSAnne_1F_Room2_Frlg local id 1 | TRAINER_WAYFARER_SS_ANNE_LASS_ANN | home | - | 25% | daily |
@@ -1024,7 +1032,7 @@ Every trainer slot with an `ORDINARY` trainer: daily slots by index, then the on
 | 577 | SSAnne_2F_Room2_Frlg local id 1 | TRAINER_WAYFARER_SS_ANNE_FISHERMAN_DALE | @liner | 1 | 25% | daily |
 | 578 | SSAnne_2F_Room2_Frlg local id 2 | TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_BROOKS | GENTLEMAN | 12 | 25% | daily |
 | 579 | SSAnne_2F_Room4_Frlg local id 1 | TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_LAMAR | GENTLEMAN | 12 | 25% | daily |
-| 580 | SSAnne_2F_Room4_Frlg local id 2 | TRAINER_WAYFARER_SS_ANNE_LASS_DAWN | LASS | 15 | 25% | daily |
+| 580 | SSAnne_2F_Room4_Frlg local id 2 | TRAINER_WAYFARER_SS_ANNE_LASS_DAWN | home | - | 25% | daily |
 | 581 | SSAnne_B1F_Room1_Frlg local id 1 | TRAINER_WAYFARER_SS_ANNE_FISHERMAN_BARNY | FISHERMAN | 11 | 25% | daily |
 | 582 | SSAnne_B1F_Room1_Frlg local id 2 | TRAINER_WAYFARER_SS_ANNE_SAILOR_PHILLIP | SAILOR | 19 | 25% | daily |
 | 583 | SSAnne_B1F_Room2_Frlg local id 1 | TRAINER_WAYFARER_SS_ANNE_SAILOR_HUEY | SAILOR | 19 | 25% | daily |
