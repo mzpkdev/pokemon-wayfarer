@@ -29,9 +29,11 @@ EcruteakCity_EventScript_Setup::
 	setflag FLAG_HIDE_ROUTE42_EUSINE
 EcruteakCity_Setup_EusineGone:
 	setflag FLAG_HIDE_ROUTE39_SHADOW
-	goto_if_ne VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 0, EcruteakCity_Setup_CeremonyStarted
+	@ Only the theater ceremony shows these, so they are hidden however far
+	@ Elm's handoff has moved the ceremony before the first visit.
 	setflag FLAG_HIDE_TIN_TOWER_KIMONO_GIRLS
 	setflag FLAG_HIDE_WHIRL_ISLANDS_KIMONO_GIRLS
+	goto_if_ne VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 0, EcruteakCity_Setup_CeremonyStarted
 	setflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS
 	setflag FLAG_HIDE_ECRUTEAK_SILVER
 EcruteakCity_Setup_CeremonyStarted:

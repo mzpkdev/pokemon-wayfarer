@@ -334,11 +334,16 @@ class TownSetup(unittest.TestCase):
 
     def test_ruins_rewards_start_hidden_from_the_new_game(self):
         new_game = (GAME / 'data/scripts/new_game.inc').read_text()
-        reset = new_game.split('EventScript_ResetAllMapFlagsHnS::', 1)[1].split('\treturn', 1)[0]
+        reset = new_game.split('EventScript_ResetAllMapFlagsHnS::', 1)[1].split('\n\n', 1)[0]
         for flag in ('FLAG_ITEM_GS_BALL', 'FLAG_ITEM_DOME_FOSSIL', 'FLAG_ITEM_HELIX_FOSSIL',
                      'FLAG_ITEM_OLD_AMBER'):
             self.assertIn('setflag %s\n' % flag, reset)
             self.assertNotIn(flag, raw_text('VioletCity_hns'))
+
+    def test_ecruteak_hides_the_remote_kimono_girls_after_an_early_elm_handoff(self):
+        interp = run_setup('ecruteak', vars={CEREMONY: 4})
+        self.assertTrue({'FLAG_HIDE_TIN_TOWER_KIMONO_GIRLS', 'FLAG_HIDE_WHIRL_ISLANDS_KIMONO_GIRLS'} <= interp.flags)
+        self.assertNotIn('FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS', interp.written())
 
     def test_azalea_hides_celebi_and_ilex_kurt_after_an_early_ilex_visit(self):
         interp = run_setup('azalea', vars={'VAR_ILEX_FOREST_FARFETCHD': 1})
@@ -407,7 +412,7 @@ class AzaleaAndSlowpokeWell(unittest.TestCase):
                 for other in (AZ, WELL):
                     self.assertGreaterEqual(interp.vars.get(other, 0), before.get(other, 0), (order, name))
                 # A step only ever writes its own adventure's variable.
-                self.assertEqual(interp.written('var') - {'VAR_TEMP_0', 'VAR_TEMP_1', 'VAR_RESULT',
+                self.assertEqual(interp.written('var') - {'VAR_TEMP_0', 'VAR_TEMP_1', 'VAR_TEMP_2', 'VAR_RESULT',
                                                            'VAR_ILEX_FOREST_FARFETCHD', 'VAR_0x8008', 'VAR_NUM_BADGES'} - {var}, set(),
                                  (order, name))
             self.assertEqual(interp.vars[WELL], 4, order)
@@ -421,16 +426,52 @@ class AzaleaAndSlowpokeWell(unittest.TestCase):
             interp.run(self.STEPS[name][0])
         self.assertEqual((interp.vars[WELL], interp.vars[AZ]), (4, 5))  # Silver's tile fires at Azalea == 5
 
-    def test_kurt_gs_ball_never_downgrades_celebi(self):
-        for start in (8, 9, 10):
+    def test_kurt_gs_ball_never_downgrades_a_running_chain(self):
+        for start in (8, 9):
             interp = Interp(*self.MAPS, vars={AZ: start})
             interp.run('AzaleaTown_KurtsHouse_EventScript_KurtGsBall2')
             self.assertEqual(interp.vars[AZ], start)
+        for start in (1, 5, 6, 7):
+            interp = Interp(*self.MAPS, vars={AZ: start})
+            interp.run('AzaleaTown_KurtsHouse_EventScript_KurtGsBall2')
+            self.assertEqual(interp.vars[AZ], 8)
+
+    def test_gs_ball_restarts_after_celebi_escapes(self):
+        # Ilex Kurt writes 10 after the shrine whether or not Celebi was caught; with
+        # the GS Ball still in the Bag, Kurt restarts the chain so Celebi isn't lost.
+        interp = Interp(*self.MAPS, vars={AZ: 10})
+        interp.run('AzaleaTown_KurtsHouse_EventScript_KurtGsBall2')
+        self.assertEqual(interp.vars[AZ], 8)
+
+    def test_fast_ball_survives_a_full_bag_without_replaying_every_frame(self):
+        interp = Interp(*self.MAPS, vars={WELL: 3}, bag_full=True)
+        interp.run('AzaleaTown_KurtsHouse_OnTransition')
+        self.assertEqual(interp.vars['VAR_TEMP_2'], 1)
+        interp.run('AzaleaTown_KurtsHouse_EventScript_ReturnFromWell')
+        self.assertEqual(interp.vars[WELL], 3)       # still owed
+        self.assertEqual(interp.vars['VAR_TEMP_2'], 0)  # OnFrame disarmed for this visit
+        retry = Interp(*self.MAPS, vars={WELL: 3})
+        retry.run('AzaleaTown_KurtsHouse_OnTransition')
+        retry.run('AzaleaTown_KurtsHouse_EventScript_ReturnFromWell')
+        self.assertEqual(retry.vars[WELL], 4)
+
+    def test_bugsy_after_an_early_ilex_leaves_the_farfetchd_errand(self):
+        for farfetchd in (1, 3):
+            interp = Interp(*self.MAPS, vars={'VAR_ILEX_FOREST_FARFETCHD': farfetchd})
+            interp.run('AzaleaTown_Gym_EventScript_Bugsy')
+            self.assertEqual(interp.written('flag') & {'FLAG_HIDE_AZALEA_TOWN_FARFETCHD',
+                                                       'FLAG_HIDE_ILEX_FOREST_APPRENTICE',
+                                                       'FLAG_HIDE_ILEX_FOREST_FARFETCHD_1'}, set())
+        interp = Interp(*self.MAPS)
+        interp.run('AzaleaTown_Gym_EventScript_Bugsy')
+        self.assertIn('FLAG_HIDE_AZALEA_TOWN_FARFETCHD', interp.flags)
+        self.assertIn('FLAG_HIDE_ILEX_FOREST_APPRENTICE', interp.written('flag'))
 
     def test_kurts_house_reads_the_right_state(self):
         text = raw_text('AzaleaTown_KurtsHouse_hns')
+        self.assertIn(WELL, _label_block(text, 'AzaleaTown_KurtsHouse_OnTransition'))
+        self.assertIn('VAR_TEMP_2', _label_block(text, 'AzaleaTown_KurtsHouse_OnFrame'))
         for label in ('AzaleaTown_KurtsHouse_OnTransition', 'AzaleaTown_KurtsHouse_OnFrame'):
-            self.assertIn(WELL, _label_block(text, label))
             self.assertNotIn(AZ, _label_block(text, label))
         # Well dialogue ignores Bugsy and Silver; GS Ball dialogue ignores the Well.
         interp = Interp('AzaleaTown_KurtsHouse_hns', vars={WELL: 4, AZ: 7}, flags=set())
@@ -571,6 +612,21 @@ class EcruteakAndMorty(unittest.TestCase):
             self.assertNotIn('ITEM_HM_SURF', again.messages)
             self.assertEqual(again.written(), set(), label)
 
+    def test_ceremony_gives_back_the_theater_npcs_it_removes(self):
+        text = raw_text('EcruteakCity_Theater_hns')
+        removals = text.count('removeobject LOCALID_ECRUTEAK_SISTER')
+        self.assertEqual(removals, 2)
+        self.assertEqual(text.count('removeobject LOCALID_ECRUTEAK_SISTER\n'
+                                    '\t@ removeobject hides her through the theater NPCs\' shared flag; give it back.\n'
+                                    '\tclearflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS'), removals)
+
+    def test_surf_trigger_with_a_full_bag_walks_him_back(self):
+        text = raw_text('EcruteakCity_Theater_hns')
+        block = _label_block(text, 'EcruteakCity_Theater_EventScript_TriggerSurfGuyBagFull')
+        self.assertIn('EcruteakCity_Theater_Movement_SurfGuy2', block)
+        self.assertIn('EcruteakCity_Theater_EventScript_TriggerSurfGuyBagFull',
+                      _label_block(text, 'EcruteakCity_Theater_EventScript_TriggerSurfGuy'))
+
     def test_elm_handoff_leaves_the_theater_npcs_and_surf_giver_visible(self):
         handoff = raw_text('NewBarkTown_Lab_hns')
         self.assertNotIn('setflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS', handoff)
@@ -635,6 +691,10 @@ class SharedStateWrites(unittest.TestCase):
             for number, line in enumerate(path.read_text().splitlines(), 1):
                 parts = line.split('@')[0].split()
                 if len(parts) >= 2 and parts[0] == 'setvar' and parts[1].rstrip(',') in self.FORWARD_ONLY:
+                    # The GS Ball chain's own restart from 10 after Celebi escapes.
+                    if (path.parent.name, line.strip()) == ('AzaleaTown_KurtsHouse_hns',
+                                                             'setvar VAR_AZALEA_TOWN_STATE, 8'):
+                        continue
                     offenders.append('%s:%d %s' % (path.parent.name, number, line.strip()))
         self.assertEqual(offenders, [])
 

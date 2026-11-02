@@ -286,6 +286,14 @@ EcruteakCity_Theater_EventScript_SurfGivenAfterRocketDone::
 	return
 
 @ A full Bag leaves Surf with him: his conversation offers it again.
+EcruteakCity_Theater_EventScript_TriggerSurfGuyBagFull::
+	call Common_EventScript_BagIsFull
+	closemessage
+	applymovement LOCALID_SURF_GUY, EcruteakCity_Theater_Movement_SurfGuy2
+	waitmovement 0
+	release
+	end
+
 EcruteakCity_Theater_EventScript_SurfGuyBagFull::
 	call Common_EventScript_BagIsFull
 	closemessage
@@ -305,7 +313,7 @@ EcruteakCity_Theater_EventScript_TriggerSurfGuy::
 	turnobject OBJ_EVENT_ID_PLAYER, DIR_NORTH
 	msgbox EcruteakCity_Theater_Text_SurfGuyGiveSurf, MSGBOX_DEFAULT
 	giveitem ITEM_HM_SURF
-	goto_if_eq VAR_RESULT, FALSE, EcruteakCity_Theater_EventScript_SurfGuyBagFull
+	goto_if_eq VAR_RESULT, FALSE, EcruteakCity_Theater_EventScript_TriggerSurfGuyBagFull
 	setflag FLAG_RECEIVED_HM_SURF
 	msgbox EcruteakCity_Theater_Text_SurfGuyGaveSurf
 	closemessage
@@ -841,6 +849,8 @@ EcruteakCity_Theater_EventScript_Lugia::
 	removeobject LOCALID_ECRUTEAK_MIKI
 
 	removeobject LOCALID_ECRUTEAK_SISTER
+	@ removeobject hides her through the theater NPCs' shared flag; give it back.
+	clearflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS
 	playse SE_EXIT
 	delay 120
 	fadescreenswapbuffers FADE_FROM_BLACK
@@ -887,6 +897,8 @@ EcruteakCity_Theater_EventScript_Hooh::
 	removeobject LOCALID_ECRUTEAK_MIKI
 
 	removeobject LOCALID_ECRUTEAK_SISTER
+	@ removeobject hides her through the theater NPCs' shared flag; give it back.
+	clearflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS
 	playse SE_EXIT
 	delay 120
 	fadescreenswapbuffers FADE_FROM_BLACK
