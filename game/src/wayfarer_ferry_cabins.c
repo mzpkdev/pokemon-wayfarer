@@ -97,8 +97,7 @@ static struct ObjectEventTemplate *FindTemplate(u8 localId)
     return NULL;
 }
 
-// Map load, after the temp flags are cleared: each host spot of the map takes its host's graphics, or is
-// hidden when the host wasn't drawn for this voyage (or the player isn't aboard). Runs from Ferry_OnMapLoad.
+// Map load, after the temp flags are cleared: each host spot of the map is hidden when the host wasn't drawn for this voyage (or the player isn't aboard). Runs from Ferry_OnMapLoad.
 void Ferry_PlaceHosts(void)
 {
     const struct WayfarerVoyage *voyage = Voyage();
@@ -115,7 +114,6 @@ void Ferry_PlaceHosts(void)
         template = FindTemplate(host->localId);
         if (template == NULL)
             continue;
-        template->graphicsId = host->gfx;
         template->flagId = drawn ? 0 : FERRY_HIDE_FLAG;
         if (!drawn)
             FlagSet(FERRY_HIDE_FLAG);

@@ -87,11 +87,11 @@ static struct WayfarerDailySlots *Daily(void)
     return &gPokemonStoragePtr->dailySlots;
 }
 
-// Aboard a ferry the day stays the one frozen at boarding (the spec's Passengers): the draw, the phone's
+// Aboard a ferry (on a ship map: the first port map after a gangway warp already takes the real day) the day stays the one frozen at boarding (the spec's Passengers): the draw, the phone's
 // picks and the snapshots stamped from it hold until the player goes ashore.
 u32 DailySlots_GetDay(void)
 {
-    if (Ferry_IsAboard())
+    if (Ferry_IsAboard() && Ferry_IsShipMap(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum))
         return Ferry_GetVoyage()->slotDay;
 #if TESTING || defined(E2E_TESTING)
     if (gDailySlotsDebugFlags & DAILY_DEBUG_DAY)

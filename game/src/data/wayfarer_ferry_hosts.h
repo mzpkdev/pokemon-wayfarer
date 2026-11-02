@@ -1,7 +1,7 @@
 // The S.S. ferries' cabin hosts (Wayfarer only). Spec: .product/specs/ss-ferries.md, Cabins.
 //
 // One row per host: the ship whose pool it is in, the cabin room and the host spot object authored in
-// that room (a LOCALID_FERRY_HOST_* object running Ferry_EventScript_Host), the request kind with its
+// that room (a LOCALID_FERRY_HOST_* object running Ferry_EventScript_Host, whose graphics are authored in the map), the request kind with its
 // list of parameters, whether the cabin has a bed event, and the host's two lines. Hosts of one ship are
 // contiguous. Boarding draws two distinct rows of the ship's pool and one parameter index for each.
 
@@ -13,7 +13,6 @@ struct FerryHost
     u8 mapGroup;
     u8 mapNum;
     u8 localId;
-    u16 gfx;
     u8 kind;
     bool8 hasBed;           // the cabin's bed event (the Tidal's) belongs to this host
     u8 paramCount;
@@ -26,7 +25,7 @@ struct FerryHost
 
 static const u16 sParamsNone[] = {0};
 // A battle borrows an existing trainer's party (the "party template").
-static const u16 sParamsGentleman[] = {TRAINER_EDWARD};
+static const u16 sParamsGentleman[] = {TRAINER_EDWARD_HNS};
 static const u16 sParamsCouple[] = {TRAINER_MEL_AND_PAUL};
 static const u16 sParamsAllTypes[] =
 {
@@ -55,49 +54,49 @@ static const struct FerryHost sHosts[] =
 {
     // The Aqua: sailors, merchants, a gambler.
     {
-        FERRY_SHIP_AQUA, HOST_MAP(MAP_SSAQUA_ROOM_NE_HNS), LOCALID_FERRY_HOST_AQUA_NE, OBJ_EVENT_GFX_SAILOR_HNS,
+        FERRY_SHIP_AQUA, HOST_MAP(MAP_SSAQUA_ROOM_NE_HNS), LOCALID_FERRY_HOST_AQUA_NE,
         FERRY_REQ_MOVE, FALSE, PARAMS(sParamsFieldMoves),
         COMPOUND_STRING("Ahoy! I'm a deckhand off duty.\n"
           "I've cut and smashed my share."),
         COMPOUND_STRING("Fair winds, matey!"),
     },
     {
-        FERRY_SHIP_AQUA, HOST_MAP(MAP_SSAQUA_ROOM_NNE_HNS), LOCALID_FERRY_HOST_AQUA_NNE, OBJ_EVENT_GFX_OLD_MAN_2_HNS,
+        FERRY_SHIP_AQUA, HOST_MAP(MAP_SSAQUA_ROOM_NNE_HNS), LOCALID_FERRY_HOST_AQUA_NNE,
         FERRY_REQ_ITEM, FALSE, PARAMS(sParamsBerries),
         COMPOUND_STRING("I'm a berry merchant on my way\n"
           "to market. Business is business."),
         COMPOUND_STRING("A fine trip for trade, this."),
     },
     {
-        FERRY_SHIP_AQUA, HOST_MAP(MAP_SSAQUA_ROOM_NW_HNS), LOCALID_FERRY_HOST_AQUA_NW, OBJ_EVENT_GFX_BURGLAR_HNS,
+        FERRY_SHIP_AQUA, HOST_MAP(MAP_SSAQUA_ROOM_NW_HNS), LOCALID_FERRY_HOST_AQUA_NW,
         FERRY_REQ_COIN, FALSE, PARAMS(sParamsNone),
         COMPOUND_STRING("Heh heh. I'm a gambler, kid.\n"
           "I live on luck."),
         COMPOUND_STRING("Luck comes and goes, like the tide."),
     },
     {
-        FERRY_SHIP_AQUA, HOST_MAP(MAP_SSAQUA_ROOM_SE_HNS), LOCALID_FERRY_HOST_AQUA_SE, OBJ_EVENT_GFX_SAILOR_HNS,
+        FERRY_SHIP_AQUA, HOST_MAP(MAP_SSAQUA_ROOM_SE_HNS), LOCALID_FERRY_HOST_AQUA_SE,
         FERRY_REQ_MOVE, FALSE, PARAMS(sParamsCutRockSmash),
         COMPOUND_STRING("I'm a sailor who knows his knots\n"
           "and his POKéMON's moves."),
         COMPOUND_STRING("Smooth seas ahead, they say."),
     },
     {
-        FERRY_SHIP_AQUA, HOST_MAP(MAP_SSAQUA_ROOM_SSE_HNS), LOCALID_FERRY_HOST_AQUA_SSE, OBJ_EVENT_GFX_FAT_MAN_HNS,
+        FERRY_SHIP_AQUA, HOST_MAP(MAP_SSAQUA_ROOM_SSE_HNS), LOCALID_FERRY_HOST_AQUA_SSE,
         FERRY_REQ_ITEM, FALSE, PARAMS(sParamsMedicine),
         COMPOUND_STRING("I sell remedies for the road.\n"
           "I'm out of stock myself, ironically."),
         COMPOUND_STRING("Mind your health at sea."),
     },
     {
-        FERRY_SHIP_AQUA, HOST_MAP(MAP_SSAQUA_ROOM_SSW_HNS), LOCALID_FERRY_HOST_AQUA_SSW, OBJ_EVENT_GFX_OLD_MAN_HNS,
+        FERRY_SHIP_AQUA, HOST_MAP(MAP_SSAQUA_ROOM_SSW_HNS), LOCALID_FERRY_HOST_AQUA_SSW,
         FERRY_REQ_QUIZ, FALSE, PARAMS(sParamsQuiz),
         COMPOUND_STRING("I've ridden this ship since before\n"
           "you were born. I know her timetable."),
         COMPOUND_STRING("Ah, the sea air keeps a man sharp."),
     },
     {
-        FERRY_SHIP_AQUA, HOST_MAP(MAP_SSAQUA_ROOM_SW_HNS), LOCALID_FERRY_HOST_AQUA_SW, OBJ_EVENT_GFX_WOMAN_2_HNS,
+        FERRY_SHIP_AQUA, HOST_MAP(MAP_SSAQUA_ROOM_SW_HNS), LOCALID_FERRY_HOST_AQUA_SW,
         FERRY_REQ_KEY_ITEM, FALSE, PARAMS(sParamsFlute),
         COMPOUND_STRING("I'm a traveling musician.\n"
           "I'm collecting tunes from every port."),
@@ -106,56 +105,56 @@ static const struct FerryHost sHosts[] =
 
     // The Anne: tourists, well-off guests, an Alolan tourist, a gentleman.
     {
-        FERRY_SHIP_ANNE, HOST_MAP(MAP_SSANNE_1F_ROOM1), LOCALID_FERRY_HOST_ANNE_1F_ROOM1, OBJ_EVENT_GFX_GENTLEMAN_FRLG,
+        FERRY_SHIP_ANNE, HOST_MAP(MAP_SSANNE_1F_ROOM1), LOCALID_FERRY_HOST_ANNE_1F_ROOM1,
         FERRY_REQ_BATTLE, FALSE, PARAMS(sParamsGentleman),
         COMPOUND_STRING("Good day. I'm a gentleman of leisure,\n"
           "and I do enjoy a proper contest."),
         COMPOUND_STRING("A civilized voyage, wouldn't you say?"),
     },
     {
-        FERRY_SHIP_ANNE, HOST_MAP(MAP_SSANNE_1F_ROOM3), LOCALID_FERRY_HOST_ANNE_1F_ROOM3, OBJ_EVENT_GFX_FAT_MAN_FRLG,
+        FERRY_SHIP_ANNE, HOST_MAP(MAP_SSANNE_1F_ROOM3), LOCALID_FERRY_HOST_ANNE_1F_ROOM3,
         FERRY_REQ_ITEM, FALSE, PARAMS(sParamsNuggetMilk),
         COMPOUND_STRING("I'm a collector of fine things.\n"
           "My cabin is rather bare today."),
         COMPOUND_STRING("The finest things are the rarest."),
     },
     {
-        FERRY_SHIP_ANNE, HOST_MAP(MAP_SSANNE_1F_ROOM4), LOCALID_FERRY_HOST_ANNE_1F_ROOM4, OBJ_EVENT_GFX_BEAUTY_FRLG,
+        FERRY_SHIP_ANNE, HOST_MAP(MAP_SSANNE_1F_ROOM4), LOCALID_FERRY_HOST_ANNE_1F_ROOM4,
         FERRY_REQ_REGION, FALSE, PARAMS(sParamsNone),
         COMPOUND_STRING("Alola! I'm a tourist from the\n"
           "Alolan islands, seeing the world."),
         COMPOUND_STRING("Everyone here has such lovely\nPOKéMON!"),
     },
     {
-        FERRY_SHIP_ANNE, HOST_MAP(MAP_SSANNE_1F_ROOM6), LOCALID_FERRY_HOST_ANNE_1F_ROOM6, OBJ_EVENT_GFX_WOMAN_2_FRLG,
+        FERRY_SHIP_ANNE, HOST_MAP(MAP_SSANNE_1F_ROOM6), LOCALID_FERRY_HOST_ANNE_1F_ROOM6,
         FERRY_REQ_TYPE, FALSE, PARAMS(sParamsAllTypes),
         COMPOUND_STRING("I'm touring the ports with my\n"
           "sketchbook. I draw POKéMON."),
         COMPOUND_STRING("So many shapes and colors out here!"),
     },
     {
-        FERRY_SHIP_ANNE, HOST_MAP(MAP_SSANNE_2F_ROOM1), LOCALID_FERRY_HOST_ANNE_2F_ROOM1, OBJ_EVENT_GFX_CAMPER_FRLG,
+        FERRY_SHIP_ANNE, HOST_MAP(MAP_SSANNE_2F_ROOM1), LOCALID_FERRY_HOST_ANNE_2F_ROOM1,
         FERRY_REQ_COLOUR, FALSE, PARAMS(sParamsColours),
         COMPOUND_STRING("I'm a tourist with a camera.\n"
           "I'm after a colorful photo."),
         COMPOUND_STRING("Say cheese! Oh, that was the sea."),
     },
     {
-        FERRY_SHIP_ANNE, HOST_MAP(MAP_SSANNE_2F_ROOM3), LOCALID_FERRY_HOST_ANNE_2F_ROOM3, OBJ_EVENT_GFX_WOMAN_3_FRLG,
+        FERRY_SHIP_ANNE, HOST_MAP(MAP_SSANNE_2F_ROOM3), LOCALID_FERRY_HOST_ANNE_2F_ROOM3,
         FERRY_REQ_FRIENDSHIP, FALSE, PARAMS(sParamsNone),
         COMPOUND_STRING("I'm a lady of means. I judge a\n"
           "trainer by how their POKéMON feel."),
         COMPOUND_STRING("Do give your partners my regards."),
     },
     {
-        FERRY_SHIP_ANNE, HOST_MAP(MAP_SSANNE_2F_ROOM5), LOCALID_FERRY_HOST_ANNE_2F_ROOM5, OBJ_EVENT_GFX_LITTLE_BOY_FRLG,
+        FERRY_SHIP_ANNE, HOST_MAP(MAP_SSANNE_2F_ROOM5), LOCALID_FERRY_HOST_ANNE_2F_ROOM5,
         FERRY_REQ_EVOLVED, FALSE, PARAMS(sParamsNone),
         COMPOUND_STRING("My family owns half the docks.\n"
           "I only care about the very best."),
         COMPOUND_STRING("Father says I'm spoiled. Hmph."),
     },
     {
-        FERRY_SHIP_ANNE, HOST_MAP(MAP_SSANNE_2F_ROOM6), LOCALID_FERRY_HOST_ANNE_2F_ROOM6, OBJ_EVENT_GFX_OLD_WOMAN_FRLG,
+        FERRY_SHIP_ANNE, HOST_MAP(MAP_SSANNE_2F_ROOM6), LOCALID_FERRY_HOST_ANNE_2F_ROOM6,
         FERRY_REQ_QUIZ, FALSE, PARAMS(sParamsQuiz),
         COMPOUND_STRING("I sail the Anne every season,\n"
           "dear. I know her schedule by heart."),
@@ -164,56 +163,56 @@ static const struct FerryHost sHosts[] =
 
     // The Tidal: families, fishermen, a breeder, honeymooners. All eight cabins are rooms of SSTidalRooms.
     {
-        FERRY_SHIP_TIDAL, HOST_MAP(MAP_SS_TIDAL_ROOMS), LOCALID_FERRY_HOST_TIDAL_A, OBJ_EVENT_GFX_POKEFAN_M,
+        FERRY_SHIP_TIDAL, HOST_MAP(MAP_SS_TIDAL_ROOMS), LOCALID_FERRY_HOST_TIDAL_A,
         FERRY_REQ_COLOUR, FALSE, PARAMS(sParamsColours),
         COMPOUND_STRING("We're a family on holiday.\n"
           "The kids love colorful POKéMON."),
         COMPOUND_STRING("The kids are asleep. Shh!"),
     },
     {
-        FERRY_SHIP_TIDAL, HOST_MAP(MAP_SS_TIDAL_ROOMS), LOCALID_FERRY_HOST_TIDAL_B, OBJ_EVENT_GFX_FISHERMAN,
+        FERRY_SHIP_TIDAL, HOST_MAP(MAP_SS_TIDAL_ROOMS), LOCALID_FERRY_HOST_TIDAL_B,
         FERRY_REQ_SPECIES, FALSE, PARAMS(sParamsFishermanA),
         COMPOUND_STRING("I'm a fisherman. I've fished every\n"
           "sea from here to the horizon."),
         COMPOUND_STRING("The fish are biting, I hear."),
     },
     {
-        FERRY_SHIP_TIDAL, HOST_MAP(MAP_SS_TIDAL_ROOMS), LOCALID_FERRY_HOST_TIDAL_C, OBJ_EVENT_GFX_POKEFAN_F,
+        FERRY_SHIP_TIDAL, HOST_MAP(MAP_SS_TIDAL_ROOMS), LOCALID_FERRY_HOST_TIDAL_C,
         FERRY_REQ_TYPE, FALSE, PARAMS(sParamsFamilyTypes),
         COMPOUND_STRING("My family's traveling to LILYCOVE.\n"
           "My little one has a favorite kind."),
         COMPOUND_STRING("Look at the waves, sweetie!"),
     },
     {
-        FERRY_SHIP_TIDAL, HOST_MAP(MAP_SS_TIDAL_ROOMS), LOCALID_FERRY_HOST_TIDAL_D, OBJ_EVENT_GFX_WOMAN_5,
+        FERRY_SHIP_TIDAL, HOST_MAP(MAP_SS_TIDAL_ROOMS), LOCALID_FERRY_HOST_TIDAL_D,
         FERRY_REQ_DOUBLE_BATTLE, FALSE, PARAMS(sParamsCouple),
         COMPOUND_STRING("We're honeymooners! We do everything\n"
           "together, even battle."),
         COMPOUND_STRING("Isn't the sea romantic?"),
     },
     {
-        FERRY_SHIP_TIDAL, HOST_MAP(MAP_SS_TIDAL_ROOMS), LOCALID_FERRY_HOST_TIDAL_E, OBJ_EVENT_GFX_FISHERMAN,
+        FERRY_SHIP_TIDAL, HOST_MAP(MAP_SS_TIDAL_ROOMS), LOCALID_FERRY_HOST_TIDAL_E,
         FERRY_REQ_SPECIES, FALSE, PARAMS(sParamsFishermanB),
         COMPOUND_STRING("I'm a fisherman, and I keep a life\n"
           "list of the sea's little wonders."),
         COMPOUND_STRING("Something's biting out there."),
     },
     {
-        FERRY_SHIP_TIDAL, HOST_MAP(MAP_SS_TIDAL_ROOMS), LOCALID_FERRY_HOST_TIDAL_F, OBJ_EVENT_GFX_WOMAN_2,
+        FERRY_SHIP_TIDAL, HOST_MAP(MAP_SS_TIDAL_ROOMS), LOCALID_FERRY_HOST_TIDAL_F,
         FERRY_REQ_FRIENDSHIP, TRUE, PARAMS(sParamsNone),
         COMPOUND_STRING("I'm a POKéMON breeder. I can tell\n"
           "at a glance how fond they are of you."),
         COMPOUND_STRING("Raise them with love."),
     },
     {
-        FERRY_SHIP_TIDAL, HOST_MAP(MAP_SS_TIDAL_ROOMS), LOCALID_FERRY_HOST_TIDAL_G, OBJ_EVENT_GFX_MAN_3,
+        FERRY_SHIP_TIDAL, HOST_MAP(MAP_SS_TIDAL_ROOMS), LOCALID_FERRY_HOST_TIDAL_G,
         FERRY_REQ_EVOLVED, FALSE, PARAMS(sParamsNone),
         COMPOUND_STRING("I'm a trainer on a pilgrimage.\n"
           "I admire POKéMON that grew up."),
         COMPOUND_STRING("Growth takes time."),
     },
     {
-        FERRY_SHIP_TIDAL, HOST_MAP(MAP_SS_TIDAL_ROOMS), LOCALID_FERRY_HOST_TIDAL_H, OBJ_EVENT_GFX_OLD_WOMAN,
+        FERRY_SHIP_TIDAL, HOST_MAP(MAP_SS_TIDAL_ROOMS), LOCALID_FERRY_HOST_TIDAL_H,
         FERRY_REQ_ITEM, FALSE, PARAMS(sParamsMilk),
         COMPOUND_STRING("I'm a grandmother heading home.\n"
           "My grandchildren love a treat."),

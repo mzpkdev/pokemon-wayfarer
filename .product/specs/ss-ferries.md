@@ -8,8 +8,7 @@ dynamic warp, the story-trip guards, sailing (cast-off and arrival announcements
 and catch-up), service, the old menus and the Lilycove charters, and the region
 and save changes. Part 2: the cabins and the daily-slot freeze. Boarding draws
 two distinct hosts of the ship's pool (`Random()`, saved with a parameter each);
-the drawn hosts' spots in their cabin rooms take their graphics at map load and
-the rest hide; the talk flow and every v0 request kind work (a host battle
+the undrawn hosts' spots in their cabin rooms hide at map load; the talk flow and every v0 request kind work (a host battle
 borrows an existing trainer's party and never whites out); sleeping at sea jumps
 the clock to `eventAt` and reloads the map, and the arrival then plays from the
 field poll; no ship bed heals; and `DailySlots_GetDay` returns `slotDay` while

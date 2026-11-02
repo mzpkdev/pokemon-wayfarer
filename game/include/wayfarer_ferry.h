@@ -53,7 +53,7 @@ bool8 Ferry_ArmAnneDeparture(void);        // the captain's reward
 
 // ---- Cabins (wayfarer_ferry_cabins.c) ----
 void Ferry_DrawHosts(u8 ship);             // boarding: two distinct hosts of the ship's pool with their parameters
-void Ferry_PlaceHosts(void);               // map load: the drawn hosts' spots take their graphics, the rest hide
+void Ferry_PlaceHosts(void);               // map load: the undrawn hosts' spots hide
 void Ferry_BufferPortName(u8 port);        // STR_VAR_1
 bool8 Ferry_RequestMet(u8 kind, u16 param);
 bool8 Ferry_SleepUntilEvent(void);         // at sea: the clock to eventAt, no further; FALSE in port

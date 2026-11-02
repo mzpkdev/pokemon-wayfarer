@@ -1141,6 +1141,7 @@ TEST("Ferry: the daily slots' day holds while aboard and is released ashore")
     EXPECT_EQ(gPokemonStoragePtr->dailySlots.stampDay, 10);
 
     EXPECT(Ferry_BoardAt(FERRY_PORT_VERMILION, FERRY_SHIP_AQUA, Ferry_GetNow()));
+    StandAt(MAP_GROUP(MAP_SSAQUA_1F_HNS), MAP_NUM(MAP_SSAQUA_1F_HNS));
     EXPECT_EQ(Ferry_GetVoyage()->slotDay, 10);
     // Days pass aboard, and nothing new starts: the draw's day, and so every pick and snapshot stamped from it, stays.
     gDailySlotsDebugDay = 12;
@@ -1148,6 +1149,16 @@ TEST("Ferry: the daily slots' day holds while aboard and is released ashore")
     DailySlots_OnMapLoad();
     EXPECT_EQ(gPokemonStoragePtr->dailySlots.stampDay, 10);
 
+    // Going ashore by the Anne's gangway warp loads the port map while the voyage is still set (it is cleared
+    // after the daily slots' map load): that first port load already takes the real day.
+    StandAt(MAP_GROUP(MAP_VERMILION_CITY_PORT_INSIDE_HNS), MAP_NUM(MAP_VERMILION_CITY_PORT_INSIDE_HNS));
+    EXPECT(Ferry_IsAboard());
+    EXPECT_EQ(DailySlots_GetDay(), 12);
+    DailySlots_OnMapLoad();
+    EXPECT_EQ(gPokemonStoragePtr->dailySlots.stampDay, 12);
+
+    StandAt(MAP_GROUP(MAP_SSAQUA_1F_HNS), MAP_NUM(MAP_SSAQUA_1F_HNS));
+    gPokemonStoragePtr->dailySlots.stampDay = 10;
     Ferry_ClearVoyage();
     EXPECT_EQ(DailySlots_GetDay(), 12);
     DailySlots_OnMapLoad();
