@@ -1,12 +1,20 @@
+#include "constants/wayfarer_johto_story.h"
+
 WhirlIslands_LugiaChamber_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, WhirlIslands_LugiaChamber_OnTransition
 	.byte 0
 
 WhirlIslands_LugiaChamber_OnTransition:
+	@ Lugia shows only from progress 2 on; the flag is shared with Navel Rock, so hide it first.
+	call_if_lt VAR_COMPLETED_LUGIA, 2, WhirlIslands_LugiaChamber_MapScript_HideLugia
 	goto_if_eq VAR_COMPLETED_LUGIA, 2, WhirlIslands_LugiaChamber_MapScript_LugiaStory
 	goto_if_eq VAR_COMPLETED_LUGIA, 3, WhirlIslands_LugiaChamber_MapScript_LugiaPostStoryGone
 	goto_if_eq VAR_COMPLETED_LUGIA, 4, WhirlIslands_LugiaChamber_MapScript_LugiaPostStoryEncounter
 	end
+
+WhirlIslands_LugiaChamber_MapScript_HideLugia::
+	setflag FLAG_HIDE_LUGIA
+	return
 
 WhirlIslands_LugiaChamber_MapScript_LugiaStory::
 	clearflag FLAG_HIDE_LUGIA
@@ -194,7 +202,7 @@ WhirlIslands_LugiaChamber_EventScript_Lugia::
 	clearflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS
 	clearflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_ZUKI
 	clearflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS
-	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 8
+	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, KIMONO_CEREMONY_RESOLVED
 	setvar VAR_COMPLETED_LUGIA, 3
 	releaseall
 	end

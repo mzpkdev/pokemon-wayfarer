@@ -792,6 +792,9 @@ gSpecials::
     def_special WayfarerIsJohtoOrigin
     def_special WayfarerGetOriginStarterSlot
     def_special WayfarerJohtoSilverAvailable
+    def_special WayfarerJohtoKimonoMissing
+    def_special WayfarerJohtoKimonoTrialAvailable
+    def_special WayfarerJohtoPewterWingMissing
     def_special WayfarerGrantSharedEquipment
     def_special WayfarerGrantRunningShoes
     def_special WayfarerHasSharedPokedex

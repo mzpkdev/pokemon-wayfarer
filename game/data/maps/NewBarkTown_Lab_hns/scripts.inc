@@ -1,4 +1,5 @@
 #include "constants/wayfarer_origin.h"
+#include "constants/wayfarer_johto_story.h"
 
 .set PLAYER_STARTER_SPECIES,  VAR_TEMP_2
 .set PLAYER_STARTER_CANDIDATE, VAR_TEMP_3
@@ -93,12 +94,13 @@ NewBarkTown_Lab_EventScript_ElmCampaignNoBall::
 	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED, NewBarkTown_Lab_EventScript_ElmSSTicket
 NewBarkTown_Lab_EventScript_ElmCampaignNoTicket::
 	goto_if_set FLAG_HIDE_NEWBARKTOWN_LAB_AIDE, NewBarkTown_Lab_EventScript_ElmAideIsWaiting
-	@ After the Ball, the ceremony lines read the ceremony's own state: the Kimono Girls are
-	@ waiting while it is activated and unfinished (5-6); once it is done (7) and until the
-	@ S.S. ticket arrives, Elm sends the player to the League.
+	@ After the Ball, the ceremony lines: the Kimono Girls are waiting only while the trial is
+	@ available and unfinished; once the encounter is resolved and until the S.S. ticket
+	@ arrives, Elm sends the player to the League.
 	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_RECEIVED, NewBarkTown_Lab_EventScript_ElmCampaignErrand
-	goto_if_lt VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 5, NewBarkTown_Lab_EventScript_ElmCampaignErrand
-	goto_if_lt VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 7, NewBarkTown_Lab_EventScript_ElmKimono
+	specialvar VAR_RESULT, WayfarerJohtoKimonoTrialAvailable
+	goto_if_eq VAR_RESULT, TRUE, NewBarkTown_Lab_EventScript_ElmKimono
+	goto_if_lt VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, KIMONO_CEREMONY_RESOLVED, NewBarkTown_Lab_EventScript_ElmCampaignErrand
 	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED, NewBarkTown_Lab_EventScript_ElmLeague
 NewBarkTown_Lab_EventScript_ElmCampaignErrand:
 
@@ -483,21 +485,21 @@ NewBarkTown_Lab_EventScript_ElmMasterBall::
 	setflag FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_RECEIVED
 	msgbox NewBarkTown_Lab_Text_ElmGiveMasterBall2, MSGBOX_DEFAULT
 	closemessage
+	@ The ceremony is not Elm's to start: he mentions the Kimono Girls only while the trial is open.
+	specialvar VAR_RESULT, WayfarerJohtoKimonoTrialAvailable
+	call_if_eq VAR_RESULT, TRUE, NewBarkTown_Lab_EventScript_ElmTellsKimonoGirls
+	closemessage
+	release
+	end
+
+NewBarkTown_Lab_EventScript_ElmTellsKimonoGirls::
 	delay 20
 	playse SE_PIN
 	applymovement LOCALID_ELM, Common_Movement_ExclamationMark
 	delay 55
 	waitmovement LOCALID_ELM
 	msgbox NewBarkTown_Lab_Text_KimonoGirls, MSGBOX_DEFAULT
-	closemessage
-	@ INTERIM: keeps the ceremony completable until the ceremony rework removes the theater's
-	@ state-5 entry triggers (it deletes this activation). Ecruteak's Silver no longer sits on
-	@ the Kimono chain, so the handoff moves the ceremony straight from 4 to 5.
-	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 4
-	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 5
-	clearflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS
-	release
-	end
+	return
 
 NewBarkTown_Lab_EventScript_ElmMasterBallBagFull::
 	call Common_EventScript_BagIsFull
@@ -947,8 +949,7 @@ NewBarkTown_Lab_Text_KimonoGirls:
 	.string "waiting for you at the\l" 
 	.string "ECRUTEAK DANCE THEATER.\p"
 	.string "I know you've gone through many\n"
-	.string "things since that EGG got you\l"
-	.string "involved in all this...\p"
+	.string "things on your journey...\p"
 	.string "I hope you'll carry through it.$"
 
 NewBarkTown_Lab_Text_KimonoWaiting:

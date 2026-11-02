@@ -1,9 +1,11 @@
+#include "constants/wayfarer_johto_story.h"
+
 EcruteakCity_Theater_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, EcruteakCity_Theater_OnTransition
 	.byte 0
 EcruteakCity_Theater_OnTransition::
 	call_if_eq VAR_ECRUTEAK_CITY_THEATER, 1, EcruteakCity_Theater_MapScript_SetRocketSceneActive
-	call_if_eq VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 8, EcruteakCity_Theater_MapScript_SetKimonoMovement
+	call_if_eq VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, KIMONO_CEREMONY_RESOLVED, EcruteakCity_Theater_MapScript_SetKimonoMovement
 	end
 
 EcruteakCity_Theater_MapScript_SetRocketSceneActive::
@@ -208,7 +210,7 @@ EcruteakCity_Theater_Text_KimonoRocket3:
 EcruteakCity_Theater_EventScript_KimonoGirl::
 	lock
 	faceplayer
-	goto_if_eq VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 6, EcruteakCity_Theater_EventScript_KimonoGirlDuringEvent
+	goto_if_eq VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, KIMONO_CEREMONY_STARTED, EcruteakCity_Theater_EventScript_KimonoGirlDuringEvent
 	msgbox EcruteakCity_Theater_Text_KimonoDone, MSGBOX_DEFAULT
 	closemessage
 	release
@@ -220,13 +222,56 @@ EcruteakCity_Theater_EventScript_KimonoGirlDuringEvent::
 	end
 
 
+@ Zuki's conversation. The trial is offered when the Rocket is beaten and the branch's Wing, the
+@ resolved Radio Tower and TR all hold; otherwise she says what is still missing. Once the trial
+@ has started she keeps offering it, and the Kimono Girls stay on stage.
 EcruteakCity_Theater_EventScript_Zuki::
 	lock
 	faceplayer
-	goto_if_ge VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 8, EcruteakCity_Theater_EventScript_ZukiAfterLegendary
-	goto_if_eq VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 6, EcruteakCity_Theater_EventScript_ZukiBattle
+	goto_if_ge VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, KIMONO_CEREMONY_DONE, EcruteakCity_Theater_EventScript_ZukiAfterLegendary
 	goto_if_eq VAR_ECRUTEAK_CITY_THEATER, 1, EcruteakCity_Theater_EventScript_ZukiDuringRocket
-	msgbox EcruteakCity_Theater_Text_Kimono, MSGBOX_DEFAULT
+	specialvar VAR_RESULT, WayfarerJohtoKimonoMissing
+	goto_if_ne VAR_RESULT, 0, EcruteakCity_Theater_EventScript_ZukiExplains
+	goto_if_lt VAR_ECRUTEAK_CITY_THEATER, 2, EcruteakCity_Theater_EventScript_ZukiExplains
+	goto_if_ge VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, KIMONO_CEREMONY_STARTED, EcruteakCity_Theater_EventScript_ZukiBattle
+	goto EcruteakCity_Theater_EventScript_LegendaryCutscene
+
+@ What the Kimono Girls test, and what the player still lacks.
+EcruteakCity_Theater_EventScript_ZukiExplains::
+	call_if_eq VAR_LUGIA_OR_HOOH, 0, EcruteakCity_Theater_EventScript_ZukiNoBranch
+	call_if_ne VAR_LUGIA_OR_HOOH, 0, EcruteakCity_Theater_EventScript_ZukiBranch
+	specialvar VAR_RESULT, WayfarerJohtoKimonoMissing
+	goto_if_eq VAR_RESULT, KIMONO_MISSING_WING, EcruteakCity_Theater_EventScript_ZukiNeedsWing
+	goto_if_eq VAR_RESULT, KIMONO_MISSING_TR, EcruteakCity_Theater_EventScript_ZukiNeedsTr
+	goto_if_eq VAR_RESULT, KIMONO_MISSING_BOTH, EcruteakCity_Theater_EventScript_ZukiNeedsBoth
+	closemessage
+	release
+	end
+
+EcruteakCity_Theater_EventScript_ZukiNoBranch::
+	msgbox EcruteakCity_Theater_Text_ZukiTestsNoBranch, MSGBOX_DEFAULT
+	return
+
+EcruteakCity_Theater_EventScript_ZukiBranch::
+	call_if_eq VAR_LUGIA_OR_HOOH, 1, EcruteakCity_Theater_EventScript_LugiaBuffer
+	call_if_eq VAR_LUGIA_OR_HOOH, 2, EcruteakCity_Theater_EventScript_HoohBuffer
+	msgbox EcruteakCity_Theater_Text_ZukiTests, MSGBOX_DEFAULT
+	return
+
+EcruteakCity_Theater_EventScript_ZukiNeedsWing::
+	msgbox EcruteakCity_Theater_Text_ZukiNeedsWing, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+EcruteakCity_Theater_EventScript_ZukiNeedsTr::
+	msgbox EcruteakCity_Theater_Text_ZukiNeedsTr, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+EcruteakCity_Theater_EventScript_ZukiNeedsBoth::
+	msgbox EcruteakCity_Theater_Text_ZukiNeedsBoth, MSGBOX_DEFAULT
 	closemessage
 	release
 	end
@@ -243,14 +288,29 @@ EcruteakCity_Theater_EventScript_ZukiDuringRocket::
 	release
 	end
 
-EcruteakCity_Theater_Text_Kimono:
-	.string "For KIMONO GIRLS like me,\n"
-	.string "dancing is everything.\p"
-	.string "I have never gone a day\n"
-	.string "without a dance practice.\p"
-	.string "POKéMON are the same.\n"
-	.string "They grow with you little\l"
-	.string "by little each day.$"
+EcruteakCity_Theater_Text_ZukiTestsNoBranch:
+	.string "The KIMONO GIRLS test Trainers\n"
+	.string "worthy of the legendary POKéMON.\p"
+	.string "BAOBA, at the farm on ROUTE 39,\n"
+	.string "can tell you about it.$"
+
+EcruteakCity_Theater_Text_ZukiTests:
+	.string "The KIMONO GIRLS test Trainers\n"
+	.string "worthy of {STR_VAR_1}.$"
+
+EcruteakCity_Theater_Text_ZukiNeedsWing:
+	.string "You still need the WING that the\n"
+	.string "Director of the RADIO TOWER holds.$"
+
+EcruteakCity_Theater_Text_ZukiNeedsTr:
+	.string "You already carry the WING.\n"
+	.string "What you lack is more experience\l"
+	.string "as a Trainer.$"
+
+EcruteakCity_Theater_Text_ZukiNeedsBoth:
+	.string "You need the WING that the\n"
+	.string "Director of the RADIO TOWER holds,\l"
+	.string "and more experience as a Trainer.$"
 
 EcruteakCity_Theater_EventScript_SurfGuy::
 	lock
@@ -508,188 +568,6 @@ EcruteakCity_Theater_Text_FancyPanel:
 	.string "It's a fancy panel that's\n"
 	.string "decorated with flowers.$"
 
-@ The trial shares its entry tiles with the Theater Rocket and waits until the
-@ Rocket is beaten.
-EcruteakCity_Theater_Trigger_PreBattleNotYet::
-	end
-
-EcruteakCity_Theater_Trigger_PreBattleCutsceneLeft::
-	goto_if_lt VAR_ECRUTEAK_CITY_THEATER, 2, EcruteakCity_Theater_Trigger_PreBattleNotYet
-	lock
-	applymovement2 OBJ_EVENT_ID_PLAYER, EcruteakCity_Theater_Movement_PlayerWalkToZukiLeft
-	applymovement2 OBJ_EVENT_ID_FOLLOWER, EcruteakCity_Theater_Movement_MonWalkToZukiLeft
-	waitmovement OBJ_EVENT_ID_FOLLOWER
-	waitmovement OBJ_EVENT_ID_PLAYER
-	delay 10
-	lockall
-	goto EcruteakCity_Theater_EventScript_LegendaryCutscene
-
-EcruteakCity_Theater_Trigger_PreBattleCutsceneTop::
-	goto_if_lt VAR_ECRUTEAK_CITY_THEATER, 2, EcruteakCity_Theater_Trigger_PreBattleNotYet
-	lock
-	applymovement2 OBJ_EVENT_ID_PLAYER, EcruteakCity_Theater_Movement_PlayerWalkToZukiTop
-	applymovement2 OBJ_EVENT_ID_FOLLOWER, EcruteakCity_Theater_Movement_MonWalkToZukiTop
-	waitmovement OBJ_EVENT_ID_FOLLOWER
-	waitmovement OBJ_EVENT_ID_PLAYER
-	delay 10
-	lockall
-	goto EcruteakCity_Theater_EventScript_LegendaryCutscene
-
-EcruteakCity_Theater_Trigger_PreBattleCutsceneRight::
-	goto_if_lt VAR_ECRUTEAK_CITY_THEATER, 2, EcruteakCity_Theater_Trigger_PreBattleNotYet
-	lock
-	applymovement2 OBJ_EVENT_ID_PLAYER, EcruteakCity_Theater_Movement_PlayerWalkToZukiRight
-	applymovement2 OBJ_EVENT_ID_FOLLOWER, EcruteakCity_Theater_Movement_MonWalkToZukiRight
-	waitmovement OBJ_EVENT_ID_FOLLOWER
-	waitmovement OBJ_EVENT_ID_PLAYER
-	delay 10
-	lockall
-	goto EcruteakCity_Theater_EventScript_LegendaryCutscene
-
-
-EcruteakCity_Theater_Movement_PlayerWalkToZukiLeft:
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_left
-	walk_left
-	walk_left
-	walk_up
-	walk_up
-	walk_up
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	face_up
-	step_end
-EcruteakCity_Theater_Movement_MonWalkToZukiLeft:
-	walk_left
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_left
-	walk_left
-	walk_left
-	walk_up
-	walk_up
-	walk_up
-	walk_right
-	walk_right
-	walk_right
-	step_end
-
-EcruteakCity_Theater_Movement_PlayerWalkToZukiTop:
-	walk_left
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_left
-	walk_left
-	walk_left
-	walk_up
-	walk_up
-	walk_up
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	face_up
-	step_end
-EcruteakCity_Theater_Movement_MonWalkToZukiTop:
-	walk_up
-	walk_left
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_left
-	walk_left
-	walk_left
-	walk_up
-	walk_up
-	walk_up
-	walk_right
-	walk_right
-	walk_right
-	step_end
-
-EcruteakCity_Theater_Movement_PlayerWalkToZukiRight:
-	walk_right
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_right
-	walk_right
-	walk_right
-	walk_up
-	walk_up
-	walk_up
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	face_up
-	step_end
-EcruteakCity_Theater_Movement_MonWalkToZukiRight::
-	walk_right
-	walk_right
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_up
-	walk_right
-	walk_right
-	walk_right
-	walk_up
-	walk_up
-	walk_up
-	walk_left
-	walk_left
-	walk_left
-	walk_left
-	step_end
-
-
 EcruteakCity_Theater_Movement_KimonoSpin:
 	face_right
 	delay_8
@@ -717,13 +595,32 @@ EcruteakCity_Theater_EventScript_HoohBuffer::
 EcruteakCity_Theater_EventScript_LegendaryCutscene::
 	call_if_eq VAR_LUGIA_OR_HOOH, 1, EcruteakCity_Theater_EventScript_LugiaBuffer
 	call_if_eq VAR_LUGIA_OR_HOOH, 2, EcruteakCity_Theater_EventScript_HoohBuffer 
-	msgbox EcruteakCity_Theater_Text_ZukiSeen, MSGBOX_DEFAULT
+	msgbox EcruteakCity_Theater_Text_ZukiWelcome, MSGBOX_DEFAULT
+	@ The Mystery Egg's journey is Zuki's memory only for a Johto-origin player whose egg Elm took.
+	specialvar VAR_RESULT, WayfarerIsJohtoOrigin
+	goto_if_eq VAR_RESULT, FALSE, EcruteakCity_Theater_EventScript_ZukiFirstMeeting
+	goto_if_lt VAR_NEWBARKTOWN_LABSTATE, 5, EcruteakCity_Theater_EventScript_ZukiFirstMeeting
+	msgbox EcruteakCity_Theater_Text_ZukiMetInVioletEgg, MSGBOX_DEFAULT
+	msgbox EcruteakCity_Theater_Text_ZukiBringBack, MSGBOX_DEFAULT
+	msgbox EcruteakCity_Theater_Text_ZukiEggPassed, MSGBOX_DEFAULT
+	goto EcruteakCity_Theater_EventScript_ZukiPure
+EcruteakCity_Theater_EventScript_ZukiFirstMeeting::
+	msgbox EcruteakCity_Theater_Text_ZukiFirstMeeting, MSGBOX_DEFAULT
+	msgbox EcruteakCity_Theater_Text_ZukiBringBack, MSGBOX_DEFAULT
+EcruteakCity_Theater_EventScript_ZukiPure::
+	msgbox EcruteakCity_Theater_Text_ZukiPure, MSGBOX_DEFAULT
 	closemessage
 	delay 20
 	playse SE_M_PETAL_DANCE
+	@ The Kimono Girls appear for the trial and stay afterwards.
+	clearflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS
+	addobject LOCALID_ECRUTEAK_NAOKO
+	addobject LOCALID_ECRUTEAK_MIKI
+	addobject LOCALID_ECRUTEAK_SAYO
+	addobject LOCALID_ECRUTEAK_KUNI
 	applymovement2 LOCALID_ECRUTEAK_ZUKI, EcruteakCity_Theater_Movement_KimonoSpin
 	waitmovement 0
-	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 6
+	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, KIMONO_CEREMONY_STARTED
 EcruteakCity_Theater_EventScript_ZukiBattle::
 	msgbox EcruteakCity_Theater_Text_ZukiSeenAgain, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, EcruteakCity_Theater_EventScript_LegendaryDenied
@@ -740,7 +637,11 @@ EcruteakCity_Theater_EventScript_NaokoBattle::
 	waitmovement 0
 	applymovement2 LOCALID_ECRUTEAK_NAOKO, EcruteakCity_Theater_Movement_NaokoWalkToPlayer
 	waitmovement 0
-	msgbox EcruteakCity_Theater_Text_NaokoSeen, MSGBOX_DEFAULT
+	msgbox EcruteakCity_Theater_Text_NaokoStrong, MSGBOX_DEFAULT
+	call_if_eq VAR_ILEX_FOREST_FARFETCHD, 4, EcruteakCity_Theater_EventScript_NaokoIlex
+	msgbox EcruteakCity_Theater_Text_NaokoName, MSGBOX_DEFAULT
+	call_if_ge VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 3, EcruteakCity_Theater_EventScript_NaokoWell
+	msgbox EcruteakCity_Theater_Text_NaokoChallenge, MSGBOX_DEFAULT
 	settotemboost B_POSITION_OPPONENT_LEFT, 0, 1, 0, 1, 1, 0
 	trainerbattle_no_intro TRAINER_NAOKO_HNS, EcruteakCity_Theater_Text_KimonoGirlBeaten
 	applymovement2 LOCALID_ECRUTEAK_NAOKO, EcruteakCity_Theater_Movement_NaokoWalkBack
@@ -751,7 +652,9 @@ EcruteakCity_Theater_EventScript_MikiBattle::
 	waitmovement 0
 	applymovement2 LOCALID_ECRUTEAK_MIKI, EcruteakCity_Theater_Movement_MikiWalkToPlayer
 	waitmovement 0
-	msgbox EcruteakCity_Theater_Text_MikiSeen, MSGBOX_DEFAULT
+	msgbox EcruteakCity_Theater_Text_MikiTrainer, MSGBOX_DEFAULT
+	call_if_ge VAR_ECRUTEAK_CITY_THEATER, 2, EcruteakCity_Theater_EventScript_MikiRocket
+	msgbox EcruteakCity_Theater_Text_MikiName, MSGBOX_DEFAULT
 	settotemboost B_POSITION_OPPONENT_LEFT, 0, 0, 0, 1, 2, 0
 	trainerbattle_no_intro TRAINER_MIKI_HNS, EcruteakCity_Theater_Text_KimonoGirlBeaten
 	applymovement2 LOCALID_ECRUTEAK_MIKI, EcruteakCity_Theater_Movement_MikiWalkBack
@@ -762,7 +665,11 @@ EcruteakCity_Theater_EventScript_SayoBattle::
 	waitmovement 0
 	applymovement2 LOCALID_ECRUTEAK_SAYO, EcruteakCity_Theater_Movement_SayoWalkToPlayer
 	waitmovement 0
-	msgbox EcruteakCity_Theater_Text_SayoSeen, MSGBOX_DEFAULT
+	msgbox EcruteakCity_Theater_Text_SayoSpirit, MSGBOX_DEFAULT
+	call_if_ge VAR_ICE_PATH_STATE, 1, EcruteakCity_Theater_EventScript_SayoIce
+	msgbox EcruteakCity_Theater_Text_SayoName, MSGBOX_DEFAULT
+	call_if_set FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_OWED, EcruteakCity_Theater_EventScript_SayoDen
+	msgbox EcruteakCity_Theater_Text_SayoChallenge, MSGBOX_DEFAULT
 	settotemboost B_POSITION_OPPONENT_LEFT, 0, 0, 2, 1, 0, 0
 	trainerbattle_no_intro TRAINER_SAYO_HNS, EcruteakCity_Theater_Text_KimonoGirlBeaten
 	applymovement2 LOCALID_ECRUTEAK_SAYO, EcruteakCity_Theater_Movement_SayoWalkBack
@@ -856,12 +763,11 @@ EcruteakCity_Theater_EventScript_Lugia::
 	fadescreenswapbuffers FADE_FROM_BLACK
 	clearflag FLAG_HIDE_WHIRL_ISLANDS_KIMONO_GIRLS
 	clearflag FLAG_HIDE_WHIRL_ISLANDS_TENTACRUEL
-	setvar VAR_COMPLETED_LUGIA, 2
-	setvar VAR_COMPLETED_HO_OH, 3
+	setvar_forward VAR_COMPLETED_LUGIA, 2
 	setflag FLAG_HIDE_WHIRL_ISLANDS_TENTACRUEL
 	setflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_ZUKI
 	setflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS
-	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 7
+	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, KIMONO_CEREMONY_DONE
 	release
 	end
 EcruteakCity_Theater_EventScript_Hooh::
@@ -904,11 +810,10 @@ EcruteakCity_Theater_EventScript_Hooh::
 
 	clearflag FLAG_HIDE_TINTOWER_GUARD
 	clearflag FLAG_HIDE_TIN_TOWER_KIMONO_GIRLS
-	setvar VAR_COMPLETED_HO_OH, 2
-	setvar VAR_COMPLETED_LUGIA, 3
+	setvar_forward VAR_COMPLETED_HO_OH, 2
 	setflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_ZUKI
 	setflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS
-	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 7
+	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, KIMONO_CEREMONY_DONE
 	release
 	end
 
@@ -926,6 +831,27 @@ EcruteakCity_Theater_Movement_Sister:
 	walk_fast_up
 	walk_fast_right
 	step_end
+
+@ Callbacks: each plays only when its event happened (Kuni's two always have).
+EcruteakCity_Theater_EventScript_NaokoIlex::
+	msgbox EcruteakCity_Theater_Text_NaokoIlex, MSGBOX_DEFAULT
+	return
+
+EcruteakCity_Theater_EventScript_NaokoWell::
+	msgbox EcruteakCity_Theater_Text_NaokoWell, MSGBOX_DEFAULT
+	return
+
+EcruteakCity_Theater_EventScript_MikiRocket::
+	msgbox EcruteakCity_Theater_Text_MikiRocket, MSGBOX_DEFAULT
+	return
+
+EcruteakCity_Theater_EventScript_SayoIce::
+	msgbox EcruteakCity_Theater_Text_SayoIce, MSGBOX_DEFAULT
+	return
+
+EcruteakCity_Theater_EventScript_SayoDen::
+	msgbox EcruteakCity_Theater_Text_SayoDen, MSGBOX_DEFAULT
+	return
 
 EcruteakCity_Theater_EventScript_LegendaryDenied::
 	msgbox EcruteakCity_Theater_Text_ZukiNo, MSGBOX_DEFAULT
@@ -1004,18 +930,29 @@ EcruteakCity_Theater_Movement_KuniWalkBack:
 EcruteakCity_Theater_Text_KimonoGirlBeaten:
 	.string "...$"
 
-EcruteakCity_Theater_Text_ZukiSeen:
-	.string "Welcome. My name is ZUKI.\n"
-	.string "I met you previously in VIOLET\l"
-	.string "CITY.\p"
+EcruteakCity_Theater_Text_ZukiWelcome:
+	.string "Welcome. My name is ZUKI.$"
+
+EcruteakCity_Theater_Text_ZukiMetInVioletEgg:
+	.string "I met you previously in VIOLET\n"
+	.string "CITY.$"
+
+EcruteakCity_Theater_Text_ZukiFirstMeeting:
+	.string "I am pleased to meet you.$"
+
+EcruteakCity_Theater_Text_ZukiBringBack:
 	.string "To bring back {STR_VAR_1}, we\n"
 	.string "needed someone with the right bond\l"
-	.string "with POKéMON.\p"
+	.string "with POKéMON.$"
+
+EcruteakCity_Theater_Text_ZukiEggPassed:
 	.string "We asked MR. POKéMON to give this\n"
 	.string "MYSTERY EGG to\l"
 	.string "whoever showed potential.\p"
 	.string "The EGG went from MR. POKéMON\n"
-	.string "to PROF.ELM, then to you.\p"
+	.string "to PROF.ELM, then to you.$"
+
+EcruteakCity_Theater_Text_ZukiPure:
 	.string "But being pure alone is not enough\n"
 	.string "to face the power of this POKéMON.$"
 
@@ -1029,36 +966,57 @@ EcruteakCity_Theater_Text_ZukiNo:
 	.string "I will wait for you to get\l"
 	.string "ready.$"
 
-EcruteakCity_Theater_Text_NaokoSeen:
-	.string "You are quite strong. You helped\n"
-	.string "me in the ILEX FOREST.\p"
+EcruteakCity_Theater_Text_NaokoStrong:
+	.string "You are quite strong.$"
+
+EcruteakCity_Theater_Text_NaokoIlex:
+	.string "You helped me in the ILEX FOREST.$"
+
+EcruteakCity_Theater_Text_NaokoName:
 	.string "I'm NAOKO--not so good with\n"
-	.string "directions.\p"
+	.string "directions.$"
+
+EcruteakCity_Theater_Text_NaokoWell:
 	.string "I saw you defeat Team Rocket\n"
 	.string "when KURT was in trouble at\l"
-	.string "the SLOWPOKE WELL.\p"
+	.string "the SLOWPOKE WELL.$"
+
+EcruteakCity_Theater_Text_NaokoChallenge:
 	.string "Let me challenge you and your\n"
 	.string "POKéMON!$"
 
-EcruteakCity_Theater_Text_MikiSeen:
-	.string "You're quite the Trainer. I\n"
-	.string "remember you chased off that\l"
+EcruteakCity_Theater_Text_MikiTrainer:
+	.string "You're quite the Trainer.$"
+
+EcruteakCity_Theater_Text_MikiRocket:
+	.string "I remember you chased off that\n"
 	.string "Rocket Grunt from right here.\p"
-	.string "Thank you for that.\p"
-	.string "Though, I'm a Trainer too.\n"
+	.string "Thank you for that.$"
+
+EcruteakCity_Theater_Text_MikiName:
+	.string "I'm a Trainer too.\n"
 	.string "She who knows the most speaks\l"
 	.string "the least!\p"
 	.string "I am MIKI--the KIMONO GIRL!\p"
 	.string "Let me challenge you and your\n"
 	.string "POKéMON!$"
 
-EcruteakCity_Theater_Text_SayoSeen:
-	.string "Excellent spirit! You got me\n"
-	.string "off the ice by pushing me.\p"
+EcruteakCity_Theater_Text_SayoSpirit:
+	.string "Excellent spirit!$"
+
+EcruteakCity_Theater_Text_SayoIce:
+	.string "You got me off the ice by\n"
+	.string "pushing me.$"
+
+EcruteakCity_Theater_Text_SayoName:
 	.string "I skate in sandals.\n"
-	.string "I am SAYO--the KIMONO GIRL!\p"
+	.string "I am SAYO--the KIMONO GIRL!$"
+
+EcruteakCity_Theater_Text_SayoDen:
 	.string "I listened in the DRAGON'S DEN\n"
-	.string "when you passed the Elder's test.\p"
+	.string "when you passed the Elder's test.$"
+
+EcruteakCity_Theater_Text_SayoChallenge:
 	.string "Let me challenge you and your\n"
 	.string "POKéMON!$"
 

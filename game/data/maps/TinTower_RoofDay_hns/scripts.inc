@@ -1,3 +1,5 @@
+#include "constants/wayfarer_johto_story.h"
+
 TinTower_RoofDay_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, TinTower_RoofDay_OnTransition
 	.byte 0
@@ -5,6 +7,8 @@ TinTower_RoofDay_hns_MapScripts::
 TinTower_RoofDay_OnTransition:
 	call_if_set FLAG_DAY_POKEMON, TinTower_RoofDay_EventScript_SetNight
 	call_if_unset FLAG_DAY_POKEMON, TinTower_RoofDay_EventScript_SetDay
+	@ Ho-Oh shows only from progress 2 on.
+	call_if_lt VAR_COMPLETED_HO_OH, 2, TinTower_RoofDay_MapScript_HideHoOh
 	goto_if_eq VAR_COMPLETED_HO_OH, 2, TinTower_RoofDay_MapScript_HoohStory
 	goto_if_eq VAR_COMPLETED_HO_OH, 3, TinTower_RoofDay_MapScript_HoohPostStoryGone
 	goto_if_eq VAR_COMPLETED_HO_OH, 4, TinTower_RoofDay_MapScript_HoohPostStoryEncounter
@@ -16,6 +20,10 @@ TinTower_RoofDay_EventScript_SetNight::
 
 TinTower_RoofDay_EventScript_SetDay::
 	setmaplayoutindex LAYOUT_TIN_TOWER_ROOF_DAY_HNS
+	return
+
+TinTower_RoofDay_MapScript_HideHoOh::
+	setflag FLAG_HIDE_HO_OH
 	return
 
 TinTower_RoofDay_MapScript_HoohStory::
@@ -191,7 +199,7 @@ TinTower_RoofDay_EventScript_HoOh::
 	clearflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS
 	clearflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_ZUKI
 	clearflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS
-	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 8
+	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, KIMONO_CEREMONY_RESOLVED
 	setvar VAR_COMPLETED_HO_OH, 3
 	releaseall
 	end

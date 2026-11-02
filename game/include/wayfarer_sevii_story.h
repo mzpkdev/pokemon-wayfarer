@@ -3,15 +3,17 @@
 
 #include "global.h"
 
-// The three Kanto birds share this readiness policy. It is deliberately a
-// threshold rather than a cost, and it is independent of story completion.
+// Every legendary stage shares this readiness policy: the three Kanto birds and Johto's
+// Kimono trial and Pewter Wing. It is deliberately a threshold rather than a cost, and it is
+// independent of story completion. TR 55 on today's scale, TR 120 on the v0 scale.
 #include "config/notable_trainers.h"
 
 #if WAYFARER_V0_TRAINERS
-#define WAYFARER_BIRD_CAPTURE_TR 120
+#define WAYFARER_LEGENDARY_TR 120
 #else
-#define WAYFARER_BIRD_CAPTURE_TR 55
+#define WAYFARER_LEGENDARY_TR 55
 #endif
+#define WAYFARER_BIRD_CAPTURE_TR WAYFARER_LEGENDARY_TR
 
 bool8 WayfarerSeviiPartyHasSpecies(u16 species);
 bool8 WayfarerSeviiPartyMonHasSpecies(u8 partyIndex, u16 species);

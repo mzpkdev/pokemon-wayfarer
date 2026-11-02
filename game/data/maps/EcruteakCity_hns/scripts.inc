@@ -20,9 +20,8 @@ EcruteakCity_Test_League::
 
 
 @ First-visit setup, run once from the map load however the player arrives.
-@ New-game defaults are not restated. The Kimono ceremony's hide flags are left
-@ alone once the ceremony has started, and Route 42's Eusine is left alone once
-@ Suicune's Route 42 scene is over.
+@ New-game defaults are not restated (the Kimono Girls' hide flags start set there).
+@ Route 42's Eusine is left alone once Suicune's Route 42 scene is over.
 EcruteakCity_EventScript_Setup::
 	@flagheap
 	setflag FLAG_WAYFARER_JOHTO_SETUP_ECRUTEAK
@@ -30,15 +29,7 @@ EcruteakCity_EventScript_Setup::
 	goto_if_ge VAR_SUICUNE_ENCOUNTERS, 3, EcruteakCity_Setup_EusineGone
 	setflag FLAG_HIDE_ROUTE42_EUSINE
 EcruteakCity_Setup_EusineGone:
-	setflag FLAG_HIDE_ROUTE39_SHADOW
-	@ Only the theater ceremony shows these, so they are hidden however far
-	@ Elm's handoff has moved the ceremony before the first visit.
 	setflag FLAG_HIDE_ECRUTEAK_SILVER
-	setflag FLAG_HIDE_TIN_TOWER_KIMONO_GIRLS
-	setflag FLAG_HIDE_WHIRL_ISLANDS_KIMONO_GIRLS
-	goto_if_ne VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 0, EcruteakCity_Setup_CeremonyStarted
-	setflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS
-EcruteakCity_Setup_CeremonyStarted:
 	setvar_forward VAR_ECRUTEAK_CITY_STATE, 1
 	return
 
