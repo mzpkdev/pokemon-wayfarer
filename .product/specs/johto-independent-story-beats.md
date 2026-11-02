@@ -279,7 +279,9 @@ pin the block.
 **Start.** The Rocket scout outside the Radio Tower at `(18,22)` is visible from
 the player's first Goldenrod visit until the takeover starts. His conversation
 keeps "So this is the Radio Tower…" and "What do you want, pest? Scram
-already!", then asks: "Follow the suspicious man into the Radio Tower?"
+already!", then warns: "If you follow him, Team Rocket will take over
+Goldenrod. Their leader is tough!" and asks: "Follow the suspicious man into
+the Radio Tower?" The warning is the only guard: there is no badge floor.
 Accepting starts the occupation, using the setup in
 `Mahoganytown_EventScript_RocketTrigger` without the phone call. That setup
 shows the Rockets, hides the Goldenrod NPCs, hides the scout and the 2F
@@ -343,10 +345,12 @@ After the Den, Blackthorn advances from its post-Den state (today 4) to done
 
 - **Johto-origin:** Elm's call plays, as today, and Elm gives the Master Ball
   at the lab.
-- **Visitors:** there is no call. The Dragon's Den Elder's closing line tells
-  the player that Professor Elm in New Bark asked to meet whoever earned the
-  Rising Badge, and Blackthorn advances there. At the lab, Elm introduces
-  himself in one short line and gives the Master Ball.
+- **Visitors:** there is no call, and Blackthorn advances when they arrive.
+  The call is a frame script, so it must leave the post-Den state or it would
+  hold the player. While Elm's Master Ball is owed and not received, the
+  Dragon's Den Elder's closing line tells the player that Professor Elm in New
+  Bark asked to meet whoever earned the Rising Badge. At the lab, Elm
+  introduces himself in one short line and gives the Master Ball.
 
 The Master Ball has its own owed and received state, set when the Den trial
 completes. Elm checks it before any other lab branch, so it works:

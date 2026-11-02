@@ -759,7 +759,9 @@ class MahoganyLakeAndRadioTower(unittest.TestCase):
         self.assertEqual(interp.vars[GOLD], 1)
         self.assertFalse(interp.written('var') - {'VAR_RESULT'})
         self.assertNotIn('FLAG_HIDE_GOLDENROD_ROCKET_SCOUT', interp.flags)
+        # The warning comes right before the choice.
         self.assertEqual(interp.messages, ['GoldenrodCity_Text_RocketScout1', 'GoldenrodCity_Text_RocketScout2',
+                                           'GoldenrodCity_Text_RocketScoutWarning',
                                            'GoldenrodCity_Text_RocketScoutFollow'])
         # Accepting starts the occupation: Goldenrod only, no Mahogany state, no phone call.
         interp.answers = [1]
