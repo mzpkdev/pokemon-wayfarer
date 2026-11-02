@@ -43,6 +43,8 @@ town variables are shared and overwritten:
 | `VAR_ECRUTEAK_CITY_THEATER` | The Theater Rocket, the Surf giver, Elm, the ceremony |
 | `VAR_GOLDENROD_CITY_STATE` | Whitney, the radio quiz, the takeover |
 | `VAR_ECRUTEAK_CITY_STATE` | Ecruteak setup, the Burned Tower, Morty |
+| `VAR_VIOLET_CITY_STATE` | Violet setup, Falkner, Elm's Togepi call, the Route 32 guard |
+| `VAR_NEWBARKTOWN_LABSTATE` | Elm's errand, Blackthorn's Elm call, Elm's Master Ball, the ceremony, the post-League call |
 
 Split them into per-adventure Wayfarer state, or guard every write so it
 cannot rewind or skip another adventure. Either way, every interleaving in
@@ -51,17 +53,32 @@ for object visibility or dialogue must read the owning adventure's state.
 Allocate new flags and variables through the existing Wayfarer framework, as
 the Kanto local adventures do.
 
-**Town setup.** Goldenrod, Ecruteak, Olivine, Mahogany, Azalea, and Blackthorn
-run their first-visit setup on the player's first entry into the town by any
-route, including ship, Magnet Train, and Fly. Today it runs from coordinate
-triggers on approach roads (Routes 34, 37, 39, 42, and 33). Blackthorn's setup
-lives inside Mahogany's, so arriving by Routes 45 and 46 skips it. Move it to the town's map load, once, behind its visited flag.
+**Town setup.** Violet, Azalea, Goldenrod, Ecruteak, Olivine, Mahogany, and
+Blackthorn run their first-visit setup on the player's first entry into the
+town by any route, including ship, Magnet Train, and Fly. Today it runs from
+coordinate triggers on approach roads: the Route 31 gate for Violet, and Routes
+33, 34, 37, 39, and 42 for the others. Blackthorn's setup lives inside
+Mahogany's, so arriving by Routes 45 and 46 skips it. Move each to its own
+town's map load, behind a dedicated setup-done flag. Don't reuse the visited
+flags: `FLAG_VISITED_BLACKTHORN_CITY` is set on transition, before load
+scripts run, and `FLAG_VISITED_MAHOGANY_TOWN` is set only by the setup itself.
+Move the Blackthorn and Dragon's Den writes, including the Den cavern hides
+for Clair, Lance, and Silver, out of Mahogany's setup into Blackthorn's.
+Goldenrod's setup starts with Elm's Togepi call, which a load script cannot
+show. Do the state initialization on load, and play the call, which is
+Johto-origin only, from an OnFrame entry. Remove the old road triggers.
+
 Setup only initializes state that is still at its initial value, and never
-clears a reward, a branch choice, or another adventure's progress. Among the
-current writes, Goldenrod must keep `VAR_LUGIA_OR_HOOH` and its gift flags,
-Ecruteak must keep the theater, legendary progress, and
-`FLAG_RELEASED_BEASTS`, and Mahogany must keep Blackthorn, Dragon's Den, and
-`FLAG_GOT_DRATINI`. Remove the old road triggers.
+clears a reward, a branch choice, or another adventure's progress, including
+on other maps the player may have reached first. Among the current writes:
+
+- Violet must keep `FLAG_RECEIVED_TOGEPI_EGG`, the Sprout Tower state, and the
+  Ruins of Alph state.
+- Goldenrod must keep `VAR_LUGIA_OR_HOOH` and its gift flags.
+- Ecruteak must keep the theater, legendary progress, `FLAG_RELEASED_BEASTS`,
+  `FLAG_AMPHAROS_HEALED`, the Route 42 Suicune, and the Tin Tower guard.
+- Mahogany and Blackthorn must keep Dragon's Den progress and
+  `FLAG_GOT_DRATINI`.
 
 **Reward handoffs.** Every one-time handoff checks for room before giving,
 records receipt only after the item or Pokémon is added, and leaves the reward
@@ -84,14 +101,24 @@ and the visitor starter choice, gift, and storage retry, plus their
   and never resets lab state.
 - Mr. Pokémon has ordinary dialogue and gives no Mystery Egg.
   `MrPokemonHouse_EventScript_WaitForElm` must not hold a visitor.
+- Elm's calls are Johto-origin only: the Togepi call after Falkner
+  (`VioletCity_hns:9,178-188`), the Goldenrod call, the Blackthorn call, and
+  the post-League call. The Violet Pokémon Center aide never appears for
+  visitors, so they get no Togepi Egg.
 - Silver never appears. Every Silver object and trigger stays hidden or inert,
-  and no host adventure waits on him (see [Silver](#silver)).
+  and no host adventure waits on him (see [Silver](#silver)). That includes
+  the New Bark Silver, which the Hoenn-origin setup reveals today
+  (`wayfarer_origin.c:53-56`, `NewBarkTown_hns:26-33`). The Route 22 Celebi
+  scene is exempt: the Kanto story PRD owns it, and it plays for every origin
+  that meets its conditions.
 - The Route 32 guard gives the Miracle Seed on first conversation, with no
   Silver, Togepi Egg, or Violet Gym check. The same applies to Johto-origin
-  players.
+  players. Record it with its own receipt flag. Today its completion is Violet
+  state 5, which Falkner's win rewrites to 3.
 - Jessica's Tauros trade on Melemele (`Melemele_House_hns:67-69`) uses the
-  visitor's own origin starter slot in place of the Johto starter slot. It
-  keeps the rule of covering one of the starter's weaknesses.
+  visitor's own origin starter slot in place of the Johto starter slot. The
+  slot order is Grass, Fire, Water in all three regions, so today's mapping
+  carries over unchanged.
 - Audit every other reader of `FLAG_JOHTO_STARTER_CHOICE_COMMITTED` or
   `VAR_STARTER_MON`, including the starter preview at `game/src/scrcmd.c:2664`.
   No reader may lock a visitor out of content or default to a Johto starter.
@@ -101,10 +128,15 @@ specification defines them, including the Togepi Egg.
 
 ### Silver
 
-Silver's scenes exist only for Johto-origin players. Store one saved value: the
-highest battle chapter the player has started. A battle chapter has started
-when its battle begins. The intro text alone, a trigger with no battle, or a
-declined offer does not start it.
+Silver's scenes exist only for Johto-origin players. Save:
+
+- the highest battle chapter the player has started;
+- a win flag per battle chapter, set for any of the three starter variants;
+- whether the player has ever won a Silver battle;
+- whether the Olivine (chapter 6) and hideout (chapter 7) scenes played.
+
+A battle chapter has started when its battle begins. The intro text alone, a
+trigger with no battle, or a declined offer does not start it.
 
 | Chapter | Scene | Battle | Plays when |
 | --- | --- | --- | --- |
@@ -123,7 +155,8 @@ declined offer does not start it.
 
 In this table "not won" refers to that chapter's own battle. Each scene also
 keeps its local condition, for example being inside the hideout or the
-occupation. Starting a battle sets the stored value to that chapter, which
+occupation. Azalea's battle still follows Bugsy's win, as today; that is
+Silver's own scene, not a host adventure. Starting a battle sets the stored value to that chapter, which
 retires every earlier scene. A retired scene's object is hidden and its
 trigger does nothing. Retiring grants no money, experience, items, or victory
 credit. A loss leaves the stored value unchanged, so the same battle is
@@ -136,14 +169,21 @@ Silver with these checks.
 
 - Burned Tower: when the chapter 5 battle is unavailable (visitor, retired, or
   won earlier), the 1F trigger runs the floor collapse and B1F release without
-  Silver. The release, roamers, and Morty's sage follow as today.
+  Silver, using neutral text. The release, roamers, and Morty's sage follow as
+  today. Give Silver his own hide flag; today he shares
+  `FLAG_HIDE_BURNED_TOWER_NPCS` with Eusine and Morty.
 - Goldenrod Underground: the occupation's step past the Switches room (today
   Goldenrod state 8 → 9) happens without Silver when chapter 8 is unavailable.
 - Mahogany hideout and Ecruteak: their scenes are skipped; nothing depends on
   them.
 
-**Victory Road.** Replace the coordinate trigger with a Silver object beside the
-lane, shown while chapter 10 is playable. Talking to him asks whether to
+When his battle is available, the forced Burned Tower and Underground battles
+keep today's loss behavior: a loss sends the player back, and the host step
+waits for a win or for a later chapter to retire the battle.
+
+**Victory Road.** Replace the coordinate trigger with a Silver object on a tile
+beside the three-tile lane at `(27-29,7)`, off every traversal path, shown while
+chapter 10 is playable. Talking to him asks whether to
 battle. Declining or losing never blocks the corridor. Remove his dependency
 on `VAR_ROUTE27_STATE` and on the `LeagueCircuit_IsKnownThere` skip. Update
 `game/tools/league_circuit/test_scripts.py:287-294`
@@ -153,8 +193,15 @@ If the player has already competed at Indigo, his opener drops "Are you going
 to take the Pokémon League challenge?" and opens from "…Don't make me laugh."
 
 **Ecruteak.** The chapter 9 scene leaves the Kimono chain. It plays at its
-existing tile once the Radio Tower is resolved, and no longer reads the theater
-variable or Elm's handoff.
+existing tile once the Radio Tower is resolved. It no longer reads or writes
+the theater variable (today it sets theater 5, `EcruteakCity_hns:97`) and no
+longer reads Elm's handoff.
+
+**Mt. Moon.** Silver at Mt. Moon is hidden until chapter 11 is playable. This
+supersedes the Mt. Moon specification's always-visible Silver
+(`frlg-kanto-mt-moon.md:26-29`), the new-game flag clear
+(`data/scripts/new_game.inc:438`), and its traversal test
+(`test_hns_open_world_traversal.py:523-550`). Crossing the cave never needs him.
 
 **Dialogue that must match what happened:**
 
@@ -162,9 +209,10 @@ variable or Elm's handoff.
 | --- | --- | --- |
 | Azalea (chapter 4) | "Is it true that Team Rocket has returned? What? You beat them?" | Without the Well resolved: drop the Rocket question and open from "Then let's see how good you are." |
 | Underground (chapter 8) | Before: "You beat me before, didn't you?" | Only if the player has won a Silver battle; otherwise a first-battle line. |
-| Underground (chapter 8) | After: "Is what that Lance guy said true?" | Only if the hideout's Lance scene has played; otherwise end before the question. |
+| Underground (chapter 8) | After: "Is what that Lance guy said true?" | Only if chapter 7 (hideout) played, where Silver met Lance; otherwise end before the question. |
 | Hideout B3F (chapter 7) | "Didn't I tell you that I was going to destroy Team Rocket?" | Neutral variant when chapter 6 (Olivine) did not play. |
 | Ecruteak (chapter 9) | "Don't get cocky just because you defeated Team Rocket!" | Plays only after the Radio Tower is resolved, so the line holds. |
+| Victory Road (chapter 10) | After: "I'm beginning to understand what that dragon master said to me…" | Only if chapter 7 played; otherwise end at "What you possess, and what I lack…" |
 | Mt. Moon (chapter 11) | "It's been a while… Since I lost to you…" | If the player has never won a Silver battle, drop "Since I lost to you". |
 
 ### Slowpoke Well and Azalea
@@ -220,8 +268,8 @@ menu, and neutral dialogue that no longer refers to the road. Route 44, Ice
 Path, and Blackthorn follow ordinary traversal; the Ice Path Kimono push stays.
 
 Update the HNS traversal specification's merchant invariant
-(`hns-open-world-region-traversal.md:339`) and
-`game/tools/traversal/tests/test_hns_open_world_traversal.py:1027-1035`, which
+(`hns-open-world-region-traversal.md:339`) and the merchant test at
+`game/tools/traversal/tests/test_hns_open_world_traversal.py:1116-1144`, which
 pin the block.
 
 ### Radio Tower takeover
@@ -235,13 +283,17 @@ Accepting starts the occupation, using the setup in
 shows the Rockets, hides the Goldenrod NPCs, hides the scout and the 2F
 policeman, and sets the takeover's first step. The player stays in Goldenrod.
 Declining changes nothing, and the nearby Cooltrainer's line about the man
-still stands.
+still stands. The scout's start writes no Mahogany state and no
+`VAR_TRIGGER_ELM_ROCKET_CALL`; today's setup sets Mahogany 16 and the call
+variable 2 (`Mahoganytown_hns:32-33`), and those writes must not carry over.
 
 Remove `MahoganyTown_Gym_EventScript_TryArmRocketTakeover`, its calls from the
 Chuck, Jasmine, and Pryce victories and Mahogany's OnLoad, and the
-`Mahoganytown_EventScript_RocketTrigger` OnFrame calls in Mahogany, Olivine,
-and Cianwood. Remove Elm's takeover call. Update
-`game/tools/league_circuit/test_scripts.py:67-87`, which pins the arming.
+`Mahoganytown_EventScript_RocketTrigger` calls: the OnFrame entries in
+Mahogany and Olivine and the `goto` in Cianwood's Fly handoff
+(`CianwoodCity_hns:46`). Remove Elm's takeover call. Update the tests that pin
+the arming: `game/tools/league_circuit/test_scripts.py:67-87` and
+`game/tools/traversal/tests/test_hns_open_world_traversal.py:1026-1049`.
 
 **During the occupation.** It persists through travel and save/reload until
 resolved. The 1F radio quiz is unavailable while it runs and can never regress
@@ -250,9 +302,12 @@ stays the same: Petrel's Basement Key, the Underground Kimono Girl, the
 Switches room, the Director's Card Key, Archer, and the Wing.
 
 **The Wing.** When Archer is beaten and `VAR_LUGIA_OR_HOOH` is 0, record the
-Wing as owed. Once Baoba's choice sets the branch, the Director gives the
-selected Wing on the next conversation, under the handoff rule. The Wing is
-given exactly once.
+Wing as owed. The office Director (`LOCALID_DIRECTOR_OFFICE`, whose script
+routes to the Director at Goldenrod state ≥ 10) holds it. Until a branch is
+chosen, his line says the Wing will go to the trainer who hears out the man at
+the Route 39 farm, Baoba. Once Baoba's choice sets the branch, the Director
+gives the selected Wing on the next conversation, under the handoff rule. The
+Wing is given exactly once.
 
 **Resolution.** Finishing the takeover unlocks the Mahogany merchant's dialogue
 only, not the road. It does not resolve the Well or the hideout.
@@ -265,7 +320,7 @@ only, not the road. It does not resolve the Well or the hideout.
 | Hideout grunt (`GruntM28Seen`) | "I remember you from the well!" | Without the Well: drop the recognition. |
 | Ariana, hideout retreat | "The broadcast experiment was a total success… We have much bigger plans." | If the Radio Tower is resolved: "The broadcast experiment was a total success. GOLDENROD was a setback, nothing more." |
 | Ariana, Radio Tower 5F | "Remember me from the hideout in Mahogany Town?" | Without the hideout: a first-meeting line. |
-| Radio Tower 3F grunt | "You made it past our men in the Underground?" | Only once the Underground step is done; otherwise a neutral challenge. |
+| Radio Tower 3F grunt, after battle | "You made it past our men in the Underground?" | Only once the Underground step is done; otherwise a neutral after-battle line. |
 | Archer, after battle | "Like Giovanni did before me, I will disband Team Rocket here today." | If the Well and the hideout are both resolved, keep it. Otherwise: "This operation is over. Withdraw, all of you!" followed by "Farewell." |
 
 Backstory lines such as "Team Rocket was broken up three years ago" stay. The
@@ -277,18 +332,34 @@ back") stays, since it holds in every order.
 Remove the Blackthorn gym boy's badge 5–7 check (`BlackthornCity_hns:8-16,80-101`)
 and any Wayfarer-only Clair badge branch in `BlackthornCity_Gym_hns`. Clair,
 the Den, and the deferred Rising Badge keep their sequence and recovery. Update
-the circuit specification's line on Clair's Chuck, Jasmine, and Pryce badges.
+the circuit specification's line on Clair's Chuck, Jasmine, and Pryce badges
+and the traversal test that pins the gym boy
+(`test_hns_open_world_traversal.py:1178-1206`).
 
-After the Den:
+After the Den, Blackthorn advances from its post-Den state (today 4) to done
+(today 5) for every origin:
 
-- **Johto-origin:** Elm's call and lab handoff stay as today, with no TR gate.
-- **Visitors:** the Dragon's Den Elder's closing line tells the player that
-  Professor Elm in New Bark asked to meet whoever earned the Rising Badge. At
-  the lab, Elm introduces himself in one short line and gives the Master Ball.
+- **Johto-origin:** Elm's call plays, as today, and Elm gives the Master Ball
+  at the lab.
+- **Visitors:** there is no call. The Dragon's Den Elder's closing line tells
+  the player that Professor Elm in New Bark asked to meet whoever earned the
+  Rising Badge, and Blackthorn advances there. At the lab, Elm introduces
+  himself in one short line and gives the Master Ball.
 
-Either way Elm gives exactly one Master Ball under the handoff rule. His
+The Master Ball has its own owed and received state, set when the Den trial
+completes. Elm checks it before any other lab branch, so it works:
+
+- before the errand's egg return;
+- before the Violet aide has been met (today `FLAG_HIDE_NEWBARKTOWN_LAB_AIDE`
+  is checked first, `NewBarkTown_Lab_hns:97`);
+- after the ceremony.
+
+Clair's trial no longer writes lab state, so it cannot overwrite the errand.
+Elm gives exactly one Master Ball under the handoff rule, with no TR gate. His
 handoff no longer writes theater state, `FLAG_HIDE_ECRUTEAK_SILVER`, the
-theater NPC flag, or the Kimono flag. Silph's Master Ball is unaffected.
+theater NPC flag, or the Kimono flag. His "the Kimono Girls are waiting" line
+plays only while the trial is available and unfinished. The ceremony stops
+writing lab state. Silph's Master Ball is unaffected.
 
 ### Kimono ceremony
 
@@ -301,7 +372,7 @@ missing:
 - more experience as a trainer (TR below 55).
 
 With no branch chosen yet, she speaks of the legendary Pokémon without naming
-one.
+one, and points the player to Baoba at the Route 39 farm.
 
 **Trial.** With the selected branch's Wing in the Bag, the Radio Tower
 resolved, and TR ≥ 55, Zuki offers the trial. Accepting runs the existing
@@ -309,7 +380,7 @@ resolved, and TR ≥ 55, Zuki offers the trial. Accepting runs the existing
 trial and afterwards. Remove the theater state-5 entry triggers and Elm's
 activation. The Bell, the sage-office Clear Bell access, the ceremony, and the
 level 50 encounter follow as today. The encounter maps keep dispatching on
-legendary progress, which only the ceremony can now set.
+legendary progress, which only the ceremony and Pewter's gift can now set.
 
 **Callbacks.** Each Kimono Girl line plays only when its event happened:
 
@@ -331,17 +402,20 @@ memory.
 Pewter's old man gives the other branch's Wing only when all hold:
 
 - a branch is chosen;
-- the main legendary encounter is resolved (caught, defeated, or a completing
-  flee);
+- the main legendary encounter is resolved, meaning its progress is 3, which
+  both chambers set on a win, a catch, or the Pokémon fleeing
+  (`WhirlIslands_LugiaChamber_hns:184-198`, `TinTower_RoofDay_hns:184-195`); a
+  run or Teleport writes nothing and leaves it unresolved;
 - TR ≥ 55;
 - he has not given it before.
 
-Otherwise he has ordinary dialogue, and before the main encounter he explains
-what is missing. Record his gift in its own flag; a tossed Wing is not given
-again. His gift sets the other legendary's progress to its available state only
-if that legendary has not progressed further. Fix the branch-0 path, which ends
-with the lock held. Verify that a completing flee from the first Lugia
-encounter counts, matching the Ho-Oh path.
+Before a branch is chosen he has ordinary dialogue, and the branch-0 path no
+longer ends with the lock held. Once a branch is chosen, he explains whichever
+requirement is unmet. Record his gift in its own flag; a tossed Wing is not
+given again. His gift sets the other legendary's progress to its level 70
+available state (4) only while that legendary's own encounter is unresolved.
+It keeps the `FLAG_HIDE_TINTOWER_GUARD` or `FLAG_HIDE_WHIRL_ISLANDS_TENTACRUEL`
+write (`PewterCity_hns:24-41`).
 
 ### Suicune and Eusine
 
@@ -354,11 +428,15 @@ when the player has not seen his Burned Tower introduction.
 
 When implementing, update:
 
-- the league circuit specification's Johto story lines: the takeover's arming
-  and Clair's badges;
+- the league circuit specification's Johto story lines: the takeover's arming,
+  Clair's badges, and the Victory Road corridor rule;
 - the HNS traversal specification's merchant invariant;
-- the start-choice specification's visitor Elm flow (lines 317–372 and 461), marking it
-  superseded;
+- the start-choice specification's visitor Elm flow, marking it superseded:
+  step 4's dormant Johto pre-Elm state (lines 222–223), the visitor Elm
+  section (lines 317–372), and Validation lines 461 and 465;
+- the Mt. Moon specification's always-visible Silver;
+- `notable-world-simulation.md:297-301`, which assumes Silver blocks the Burned
+  Tower for visitors;
 - this specification's `Implemented` marker.
 
 ## Validation
@@ -371,24 +449,35 @@ Mechanical checks extend the existing script and journey tests. Cover:
 - **Interleavings:** the Well before and after Bugsy, Azalea Silver, Ilex, and
   the GS Ball; the Lake before and after Pryce and the Radio Tower. The
   merchant's block never returns.
-- **Town setup:** enter Goldenrod from Route 35 and by Magnet Train, Ecruteak
-  from Route 38, Olivine by ship, and Mahogany by Fly where available. Then walk
+- **Town setup:** enter Violet from Route 32 or 36, Azalea from Ilex Forest,
+  Goldenrod from Route 35 and by Magnet Train, Ecruteak from Route 38, Olivine
+  by ship, Mahogany from Route 43 or 44, and Blackthorn from Route 45. Then walk
   the old trigger roads. Setup ran once, and nothing resets.
 - **Radio Tower:** start with zero badges. Use the radio quiz before starting,
   decline the scout, then accept. Save/reload and travel mid-occupation. Finish
   it before Baoba's choice, then claim the owed Wing exactly once.
 - **Road and Clair:** walk Mahogany → Route 44 → Ice Path → Blackthorn with no
   Radio Tower progress. Beat Clair and the Den with zero other badges. Elm's
-  Master Ball arrives with TR 0, once, including after a full Ball pocket.
+  Master Ball arrives with TR 0, once, including after a full Ball pocket. As
+  Johto-origin, claim it before returning the Mystery Egg, before meeting the
+  Violet aide, and after the ceremony; the errand still completes.
 - **Visitors:** as both Kanto- and Hoenn-origin visitors, Elm and Mr. Pokémon
-  offer nothing, no Silver object ever shows, and the Burned Tower release,
-  Morty's Gym, the Underground step, and the ceremony all complete. Jessica
-  trades.
+  offer nothing, no Elm call plays in Violet, Goldenrod, or Blackthorn, the
+  Violet aide never appears, and no Silver object ever shows, including in New
+  Bark. The Burned Tower release, Morty's Gym, the Underground step, and the
+  ceremony all complete. Jessica trades. The starter preview shows no Johto
+  starter.
+- **Miracle Seed:** take it before and after Falkner; it is given once, and
+  Elm's Violet call does not repeat.
 - **Silver:** as Johto-origin, start a later battle first and confirm earlier
   scenes retire with no rewards. Walk into Olivine before Azalea and confirm
   both Azalea and Burned Tower battles remain. Lose a battle and retry it.
   Decline and lose Victory Road and confirm the corridor stays passable.
+  Meet him there before and after competing at Indigo and check the opener.
   Visit Mt. Moon before and after Victory Road. Check every dialogue variant.
+- **Theater:** beat the Rocket before and after the ceremony is available.
+  Take Surf from the giver's conversation and from his trigger; it is given
+  once.
 - **Ceremony:** Zuki with neither requirement, with only the Wing, with only
   TR 55, and with both. Only both offers the trial. Cover both branches, the
   Kimono callbacks with and without their events, and visitors.
@@ -396,7 +485,9 @@ Mechanical checks extend the existing script and journey tests. Cover:
   before resolving the encounter, after each completing outcome, and below TR
   55. Toss the Wing and confirm no second gift.
 - **Lighthouse:** medicine first and Jasmine first.
-- **Suicune:** first Olivine arrival by ship and by Route 39.
+- **Lake:** the Route 43 toll stops once the Lake and hideout are resolved.
+- **Suicune:** first Olivine arrival by ship and by Route 39. Meet Eusine in
+  Cianwood before and after the Burned Tower.
 - **Persistence:** save/reload and regional travel at each multi-step boundary.
   Full-Bag retries for every one-time handoff listed above.
 
