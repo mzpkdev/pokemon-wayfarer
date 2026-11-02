@@ -2747,7 +2747,7 @@
 #define FLAG_WAYFARER_COAST_TRAINER_DEFEAT_LAST  WAYFARER_COAST_FLAG_ID(108)
 #define FLAG_WAYFARER_COAST_REMATCH_PENDING_FIRST WAYFARER_COAST_FLAG_ID(109)
 #define FLAG_WAYFARER_COAST_REMATCH_PENDING_LAST  WAYFARER_COAST_FLAG_ID(117)
-// Johto story flags occupy the coast bank's slots 128-191; 149-191 are reserved.
+// Johto story flags occupy the coast bank's slots 128-191; 155-191 are reserved.
 #define FLAG_WAYFARER_JOHTO_RADIO_TOWER_RESOLVED WAYFARER_COAST_FLAG_ID(128)
 // Town setup-done flags: each town's first-visit setup runs once behind its own flag.
 #define FLAG_WAYFARER_JOHTO_SETUP_VIOLET         WAYFARER_COAST_FLAG_ID(129)
@@ -2775,6 +2775,16 @@
 #define FLAG_WAYFARER_JOHTO_HIDE_BURNED_TOWER_SILVER WAYFARER_COAST_FLAG_ID(146)
 #define FLAG_WAYFARER_JOHTO_MIRACLE_SEED_RECEIVED WAYFARER_COAST_FLAG_ID(147)
 #define FLAG_WAYFARER_JOHTO_SILVER_PLAYED_9     WAYFARER_COAST_FLAG_ID(148)
+// Radio Tower Wing: owed once Archer is beaten, given by the office Director.
+#define FLAG_WAYFARER_JOHTO_RADIO_TOWER_WING_OWED     WAYFARER_COAST_FLAG_ID(149)
+#define FLAG_WAYFARER_JOHTO_RADIO_TOWER_WING_GIVEN    WAYFARER_COAST_FLAG_ID(150)
+// Elm's Master Ball (owed when the Den trial completes) and his S.S. ticket (owed by the
+// post-League call). Each has its own state, so none of them rides on VAR_NEWBARKTOWN_LABSTATE,
+// which holds only Elm's errand.
+#define FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_OWED      WAYFARER_COAST_FLAG_ID(151)
+#define FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_RECEIVED  WAYFARER_COAST_FLAG_ID(152)
+#define FLAG_WAYFARER_JOHTO_ELM_TICKET_OWED           WAYFARER_COAST_FLAG_ID(153)
+#define FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED       WAYFARER_COAST_FLAG_ID(154)
 // Background hidden-item fields are 13 bits, so reserve distinct HNS-bank
 // slots below 0x1000 for the seven coast hidden items.
 #define FLAG_WAYFARER_HIDDEN_ITEM_ROUTE20_STARDUST 0x942

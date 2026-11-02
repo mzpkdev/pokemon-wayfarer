@@ -270,8 +270,8 @@ class VisitorScripts(unittest.TestCase):
             script = Script(LAB, policy=0)
             script.vars['VAR_NEWBARKTOWN_LABSTATE'] = state
             script.run(PREFIX + 'Elm')
-            # Only the Master Ball (7) and S.S. ticket (10) handoffs move the lab state, as before.
-            self.assertEqual(script.vars['VAR_NEWBARKTOWN_LABSTATE'], {7: 8, 10: 11}.get(state, state))
+            # The Master Ball and S.S. ticket follow their own flags, so no lab state moves at all.
+            self.assertEqual(script.vars['VAR_NEWBARKTOWN_LABSTATE'], state)
             self.assertNotIn(CHOSEN, script.flags)
             self.assertNotIn(RECEIVED, script.flags)
             self.assertNotIn('VAR_NEWBARK_TOWN_STATE', script.vars)

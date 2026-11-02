@@ -63,29 +63,20 @@ class CircuitScriptTests(unittest.TestCase):
         )
         self.assertNotIn("PalletTown_Lab_EventScript_OakKantoLeague", circuit_pallet)
 
-    def test_rocket_takeover_recovers_from_mixed_badge_orders(self):
-        source = script("MahoganyTown_Gym_hns")
-        recovery = block(source, "MahoganyTown_Gym_EventScript_TryArmRocketTakeover")
-        self.assertIn("goto_if_ne VAR_TRIGGER_ELM_ROCKET_CALL, 0", recovery)
-        self.assertIn("goto_if_ge VAR_GOLDENROD_CITY_STATE, 6", recovery)
-        self.assertIn("goto_if_unset FLAG_DEFEATED_MAHOGANY_TOWN_GYM", recovery)
-        self.assertNotIn("VAR_MAHOGANY_TOWN_STATE", recovery)
-        for flag in ("FLAG_BADGE05_GET", "FLAG_BADGE06_GET", "FLAG_BADGE07_GET"):
-            self.assertIn("goto_if_unset " + flag, recovery)
-        self.assertIn("setvar VAR_TRIGGER_ELM_ROCKET_CALL, 1", recovery)
-        self.assertNotIn("VAR_NUM_BADGES", recovery)
-
-        for name, award in (
-            ("CianwoodGym_hns", "CianwoodGym_EventScript_ChuckVictory"),
-            ("OlivineCity_Gym_hns", "OlivineCity_Gym_EventScript_JasmineVictory"),
-            ("MahoganyTown_Gym_hns", "MahoganyTown_Gym_EventScript_PryceVictory"),
-        ):
+    def test_rocket_takeover_is_started_by_the_scout_and_never_armed(self):
+        for name in ("MahoganyTown_Gym_hns", "CianwoodGym_hns", "OlivineCity_Gym_hns", "Mahoganytown_hns",
+                     "OlivineCity_hns", "CianwoodCity_hns"):
             with self.subTest(name=name):
-                self.assertIn("call MahoganyTown_Gym_EventScript_TryArmRocketTakeover", block(script(name), award))
-        self.assertIn(
-            "call MahoganyTown_Gym_EventScript_TryArmRocketTakeover",
-            block(script("Mahoganytown_hns"), "Mahoganytown_OnLoad"),
-        )
+                text = script(name)
+                self.assertNotIn("TryArmRocketTakeover", text)
+                self.assertNotIn("VAR_TRIGGER_ELM_ROCKET_CALL", text)
+                self.assertNotIn("Mahoganytown_EventScript_RocketTrigger", text)
+        scout = block(script("GoldenrodCity_hns"), "GoldenrodCity_EventScript_RocketScout")
+        self.assertIn("GoldenrodCity_EventScript_StartTakeover", scout)
+        start = block(script("GoldenrodCity_hns"), "GoldenrodCity_EventScript_StartTakeover")
+        self.assertIn("setvar_forward VAR_GOLDENROD_CITY_STATE, 6", start)
+        self.assertNotIn("BADGE", scout + start)
+        self.assertNotIn("VAR_MAHOGANY_TOWN_STATE", start)
 
     def test_wattson_relocation_is_order_independent(self):
         helper = block(script("MauvilleCity_Gym"), "MauvilleCity_Gym_EventScript_TryRelocateWattson")

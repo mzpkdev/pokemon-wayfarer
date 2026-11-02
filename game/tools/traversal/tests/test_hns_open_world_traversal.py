@@ -1041,28 +1041,21 @@ class HnsTraversalContractTest(unittest.TestCase):
             without_wayfarer_circuit_branches(guard + "#if OTHER\nnested\n#endif\n#endif")
 
     def test_league_circuit_regional_hazards_are_recoverable(self) -> None:
-        rocket = self.scripts.block("MahoganyTown_Gym_EventScript_TryArmRocketTakeover")
-        self.assertOrderedText(
-            rocket,
-            [
-                "goto_if_ne VAR_TRIGGER_ELM_ROCKET_CALL, 0",
-                "goto_if_ge VAR_GOLDENROD_CITY_STATE, 6",
-                "goto_if_unset FLAG_DEFEATED_MAHOGANY_TOWN_GYM",
-                "goto_if_unset FLAG_BADGE05_GET",
-                "goto_if_unset FLAG_BADGE06_GET",
-                "goto_if_unset FLAG_BADGE07_GET",
-                "setvar VAR_TRIGGER_ELM_ROCKET_CALL, 1",
-            ],
-            "takeover recovery must require the local story matrix before arming once",
-        )
-        self.assertNotIn("VAR_NUM_BADGES", rocket)
         for label in (
             "CianwoodGym_EventScript_ChuckVictory",
             "OlivineCity_Gym_EventScript_JasmineVictory",
             "MahoganyTown_Gym_EventScript_PryceVictory",
             "Mahoganytown_OnLoad",
+            "CianwoodCity_EventScript_Flytrigger",
         ):
-            self.assertIn("MahoganyTown_Gym_EventScript_TryArmRocketTakeover", self.scripts.block(label))
+            self.assertNotIn("RocketTakeover", self.scripts.block(label))
+            self.assertNotIn("RocketTrigger", self.scripts.block(label))
+        scout = self.scripts.block("GoldenrodCity_EventScript_RocketScout")
+        self.assertOrderedText(
+            scout,
+            ["MSGBOX_YESNO", "GoldenrodCity_EventScript_StartTakeover"],
+            "the Goldenrod scout must ask before starting the takeover; nothing else arms it",
+        )
 
         wattson = self.scripts.block("MauvilleCity_Gym_EventScript_TryRelocateWattson")
         self.assertOrderedText(
@@ -1195,19 +1188,10 @@ class HnsTraversalContractTest(unittest.TestCase):
                 }
             ],
         )
-        self.assertOrderedText(
-            self.scripts.block("BlackthornCity_OnLoad"),
-            [
-                "goto_if_unset FLAG_BADGE05_GET, BlackThornCity_EventScript_MoveGymBoy",
-                "goto_if_unset FLAG_BADGE06_GET, BlackThornCity_EventScript_MoveGymBoy",
-                "goto_if_unset FLAG_BADGE07_GET, BlackThornCity_EventScript_MoveGymBoy",
-            ],
-            "Blackthorn Gym admission must continue to require Badges 5, 6, and 7",
-        )
-        self.assertIn(
-            "setobjectxyperm LOCALID_BLACKTHORN_BOY, 24, 27",
-            self.scripts.block("BlackThornCity_EventScript_MoveGymBoy"),
-        )
+        gym_boy_script = self.scripts.block("BlackthornCity_EventScript_GymBoy")
+        self.assertNotIn("FLAG_BADGE0", gym_boy_script)
+        self.assertNotIn("BlackThornCity_EventScript_MoveGymBoy", self.scripts.blocks)
+        self.assertNotIn("BlackthornCity_OnLoad", self.scripts.blocks)
         self.assertNotIn(
             "FLAG_BADGE08_GET",
             without_wayfarer_circuit_branches(self.scripts.block("BlackthornGym_EventScript_Clair")),

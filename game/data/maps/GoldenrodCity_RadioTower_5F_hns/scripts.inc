@@ -50,13 +50,55 @@ GoldenrodCity_RadioTower_5F_EventScript_Petrel2::
 	release
 	end
 
+@ The office Director holds the Wing Archer's defeat owes the player. Until Baoba's choice
+@ names a branch he only says where it will go; afterwards the next conversation gives it.
 GoldenrodCity_RadioTower_5F_EventScript_Director::
 	lock
 	faceplayer
+	goto_if_unset FLAG_WAYFARER_JOHTO_RADIO_TOWER_WING_OWED, GoldenrodCity_RadioTower_5F_EventScript_DirectorChat
+	goto_if_set FLAG_WAYFARER_JOHTO_RADIO_TOWER_WING_GIVEN, GoldenrodCity_RadioTower_5F_EventScript_DirectorChat
+	goto_if_eq VAR_LUGIA_OR_HOOH, 0, GoldenrodCity_RadioTower_5F_EventScript_DirectorHoldsWing
+	call GoldenrodCity_RadioTower_5F_EventScript_ClaimWing
+	release
+	end
+
+GoldenrodCity_RadioTower_5F_EventScript_DirectorChat::
 	msgbox GoldenrodCity_RadioTower_5F_Text_DirectorIntro, MSGBOX_DEFAULT
 	closemessage
 	release
 	end
+
+GoldenrodCity_RadioTower_5F_EventScript_DirectorHoldsWing::
+	msgbox GoldenrodCity_RadioTower_5F_Text_DirectorHoldsWing, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+@ Gives the selected Wing once. Receipt is recorded only after the add; a full Bag leaves it owed.
+GoldenrodCity_RadioTower_5F_EventScript_ClaimWing::
+	goto_if_set FLAG_WAYFARER_JOHTO_RADIO_TOWER_WING_GIVEN, GoldenrodCity_RadioTower_5F_EventScript_ClaimWingDone
+	goto_if_eq VAR_LUGIA_OR_HOOH, 1, GoldenrodCity_RadioTower_5F_EventScript_GiveTidalWing
+	goto_if_eq VAR_LUGIA_OR_HOOH, 2, GoldenrodCity_RadioTower_5F_EventScript_GiveClearWing
+GoldenrodCity_RadioTower_5F_EventScript_ClaimWingDone::
+	return
+
+GoldenrodCity_RadioTower_5F_EventScript_ClaimWingBagFull::
+	call Common_EventScript_BagIsFull
+	closemessage
+	return
+
+@ The studio Director's thanks. With no branch chosen yet the Wing stays owed, so the thanks
+@ does not offer it.
+GoldenrodCity_RadioTower_5F_EventScript_DirectorThanksAndWing::
+	goto_if_eq VAR_LUGIA_OR_HOOH, 0, GoldenrodCity_RadioTower_5F_EventScript_ThanksNoWing
+	msgbox GoldenrodCity_RadioTower_5F_Text_DirectorThanks, MSGBOX_DEFAULT
+	closemessage
+	goto GoldenrodCity_RadioTower_5F_EventScript_ClaimWing
+
+GoldenrodCity_RadioTower_5F_EventScript_ThanksNoWing::
+	msgbox GoldenrodCity_RadioTower_5F_Text_DirectorThanksNoWing, MSGBOX_DEFAULT
+	closemessage
+	return
 
 GoldenrodCity_RadioTower_5F_Movement_Spin:
 	face_right
@@ -156,6 +198,8 @@ GoldenrodCity_RadioTower_5F_EventScript_Archer::
 	closemessage
 	fadescreen FADE_TO_BLACK
 	setflag FLAG_HIDE_GOLDENROD_ROCKETS
+	@ The Wing is owed whatever the branch; the cutscene and the office Director both deliver it.
+	setflag FLAG_WAYFARER_JOHTO_RADIO_TOWER_WING_OWED
 	playse SE_EXIT
 	setvar_forward VAR_GOLDENROD_CITY_STATE, 10
 	removeobject LOCALID_GOLDENROD_ARCHER
@@ -177,10 +221,7 @@ GoldenrodCity_RadioTower_5F_EventScript_WingTop::
 	applymovement LOCALID_DIRECTOR_STUDIO, GoldenrodCity_RadioTower_5F_Movement_WalkToPlayerTop
 	waitmovement 0
 	turnobject OBJ_EVENT_ID_PLAYER, DIR_EAST
-	msgbox GoldenrodCity_RadioTower_5F_Text_DirectorThanks, MSGBOX_DEFAULT
-	closemessage
-	call_if_eq VAR_LUGIA_OR_HOOH, 1,  GoldenrodCity_RadioTower_5F_EventScript_GiveTidalWing
-	call_if_eq VAR_LUGIA_OR_HOOH, 2, GoldenrodCity_RadioTower_5F_EventScript_GiveClearWing
+	call GoldenrodCity_RadioTower_5F_EventScript_DirectorThanksAndWing
 	applymovement LOCALID_DIRECTOR_STUDIO, GoldenrodCity_RadioTower_5F_Movement_LeaveTop
 	waitmovement 0
 	goto GoldenrodCity_RadioTower_5F_Fakeout
@@ -190,10 +231,7 @@ GoldenrodCity_RadioTower_5F_EventScript_WingMid::
 	applymovement LOCALID_DIRECTOR_STUDIO, GoldenrodCity_RadioTower_5F_Movement_WalkToPlayerMid
 	waitmovement 0
 	turnobject OBJ_EVENT_ID_PLAYER, DIR_EAST
-	msgbox GoldenrodCity_RadioTower_5F_Text_DirectorThanks, MSGBOX_DEFAULT
-	closemessage
-	call_if_eq VAR_LUGIA_OR_HOOH, 1,  GoldenrodCity_RadioTower_5F_EventScript_GiveTidalWing
-	call_if_eq VAR_LUGIA_OR_HOOH, 2, GoldenrodCity_RadioTower_5F_EventScript_GiveClearWing
+	call GoldenrodCity_RadioTower_5F_EventScript_DirectorThanksAndWing
 	applymovement LOCALID_DIRECTOR_STUDIO, GoldenrodCity_RadioTower_5F_Movement_LeaveMid
 	waitmovement 0
 	goto GoldenrodCity_RadioTower_5F_Fakeout
@@ -203,10 +241,7 @@ GoldenrodCity_RadioTower_5F_EventScript_WingBot::
 	applymovement LOCALID_DIRECTOR_STUDIO, GoldenrodCity_RadioTower_5F_Movement_WalkToPlayerBot
 	waitmovement 0
 	turnobject OBJ_EVENT_ID_PLAYER, DIR_EAST
-	msgbox GoldenrodCity_RadioTower_5F_Text_DirectorThanks, MSGBOX_DEFAULT
-	closemessage
-	call_if_eq VAR_LUGIA_OR_HOOH, 1,  GoldenrodCity_RadioTower_5F_EventScript_GiveTidalWing
-	call_if_eq VAR_LUGIA_OR_HOOH, 2, GoldenrodCity_RadioTower_5F_EventScript_GiveClearWing
+	call GoldenrodCity_RadioTower_5F_EventScript_DirectorThanksAndWing
 	applymovement LOCALID_DIRECTOR_STUDIO, GoldenrodCity_RadioTower_5F_Movement_LeaveBot
 	waitmovement 0
 	goto GoldenrodCity_RadioTower_5F_Fakeout
@@ -214,16 +249,18 @@ GoldenrodCity_RadioTower_5F_EventScript_WingBot::
 
 GoldenrodCity_RadioTower_5F_EventScript_GiveTidalWing::
 	giveitem ITEM_SILVER_WING
+	goto_if_eq VAR_RESULT, FALSE, GoldenrodCity_RadioTower_5F_EventScript_ClaimWingBagFull
+	setflag FLAG_WAYFARER_JOHTO_RADIO_TOWER_WING_GIVEN
 	msgbox GoldenrodCity_RadioTower_5F_Text_DirectorTidalWingExplanation, MSGBOX_DEFAULT
 	closemessage
-	release
 	return
 
 GoldenrodCity_RadioTower_5F_EventScript_GiveClearWing::
 	giveitem ITEM_RAINBOW_WING
+	goto_if_eq VAR_RESULT, FALSE, GoldenrodCity_RadioTower_5F_EventScript_ClaimWingBagFull
+	setflag FLAG_WAYFARER_JOHTO_RADIO_TOWER_WING_GIVEN
 	msgbox GoldenrodCity_RadioTower_5F_Text_DirectorClearWingExplanation, MSGBOX_DEFAULT
 	closemessage
-	release
 	return
 
 GoldenrodCity_RadioTower_5F_Fakeout::
@@ -369,6 +406,20 @@ GoldenrodCity_RadioTower_5F_Text_DirectorThanks:
 	.string "POKéMON nationwide.\p"
 	.string "I know it's not much, but please\n"
 	.string "take this.$"
+
+GoldenrodCity_RadioTower_5F_Text_DirectorThanksNoWing:
+	.string "DIRECTOR: {PLAYER}, thank you!\p"
+	.string "Your courageous actions have saved\n"
+	.string "POKéMON nationwide.$"
+
+GoldenrodCity_RadioTower_5F_Text_DirectorHoldsWing:
+	.string "DIRECTOR: I'm keeping a WING for you\n"
+	.string "as thanks.\p"
+	.string "It should go to the trainer who hears\n"
+	.string "out BAOBA, the man at the farm on\l"
+	.string "ROUTE 39.\p"
+	.string "Go and listen to him, then come see\n"
+	.string "me again.$"
 
 GoldenrodCity_RadioTower_5F_Text_DirectorClearWingExplanation:
 	.string "There used to be a tower right here\n"

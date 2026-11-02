@@ -1,7 +1,6 @@
 Mahoganytown_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Mahoganytown_OnTransition
 	map_script MAP_SCRIPT_ON_LOAD, Mahoganytown_OnLoad
-	map_script MAP_SCRIPT_ON_FRAME_TABLE, Mahoganytown_OnFrame
 	.byte 0
 
 Mahoganytown_OnTransition::
@@ -9,34 +8,12 @@ Mahoganytown_OnTransition::
 	end
 
 Mahoganytown_OnLoad::
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	call MahoganyTown_Gym_EventScript_TryArmRocketTakeover
-#endif
 	call_if_ge VAR_MAHOGANY_TOWN_STATE, 13, MahoganyTown_EventScript_FixTree
 	end
 
 MahoganyTown_EventScript_FixTree::
 	setmetatile 18, 8, 0x378, FALSE
 	setmetatile 19, 8, 0x379, FALSE
-	end
-
-Mahoganytown_OnFrame::
-	map_script_2 VAR_TRIGGER_ELM_ROCKET_CALL, 1, Mahoganytown_EventScript_RocketTrigger
-	.2byte 0
-
-Mahoganytown_EventScript_RocketTrigger::
-	lock
-	setspeaker Route30_Text_ElmName
-	pokenavcall ElmPhoneRadioTowerRocketTakeoverText
-	waitmessage
-	setvar_forward VAR_GOLDENROD_CITY_STATE, 6
-	clearflag FLAG_HIDE_GOLDENROD_ROCKETS
-	setflag FLAG_HIDE_GOLDENROD_ROCKET_SCOUT
-	setflag FLAG_HIDE_GOLDENROD_NPCS
-	clearflag FLAG_HIDE_ROCKET_GOLDENROD_RADIOTOWER_1
-	setvar VAR_TRIGGER_ELM_ROCKET_CALL, 2
-	delay 10
-	release
 	end
 
 @ First-visit setup, run once from the map load however the player arrives.
@@ -271,18 +248,3 @@ MahoganyTown_Text_GymSign:
     .string "MAHOGANY TOWN POKéMON GYM\p"
     .string "LEADER: PRYCE\p"
     .string "The Teacher of Winter's Harshness$"
-
-ElmPhoneRadioTowerRocketTakeoverText:
-	.string "PROF.ELM: {PLAYER}, how are\n"
-	.string "things going?\p"
-	.string "I called because something weird\n"
-	.string "is happening with the radio\l"
-	.string "broadcasts.\p"
-	.string "They were talking about TEAM\n"
-	.string "ROCKET.\p"
-	.string "{PLAYER}, do you know anything\n"
-	.string "about it?\p"
-	.string "Maybe TEAM ROCKET has returned.\n"
-	.string "No, that just can't be true.\p"
-	.string "Sorry to bug you.\n"
-	.string "Take care!$"

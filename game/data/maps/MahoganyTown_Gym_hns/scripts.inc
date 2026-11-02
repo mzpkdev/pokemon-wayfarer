@@ -86,34 +86,9 @@ MahoganyTown_Gym_EventScript_PryceVictory::
 	giveitem ITEM_TM_HAIL
 	msgbox MahoganyTown_Gym_Text_HailSpeech, MSGBOX_DEFAULT
     setrespawn HEAL_LOCATION_MAHOGANY_TOWN_HNS
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	call MahoganyTown_Gym_EventScript_TryArmRocketTakeover
-#else
-	call_if_eq VAR_NUM_BADGES, 7, MahoganyTown_Gym_EventScript_SetupElmRocketCall
-#endif
 	closemessage
 	release
 	end
-
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-@ The Radio Tower takeover follows the three local west-Johto badges and Pryce's
-@ defeat.  This check is intentionally repeatable so a
-@ mixed-region badge order cannot skip the old exact-seven trigger.
-MahoganyTown_Gym_EventScript_TryArmRocketTakeover::
-	goto_if_ne VAR_TRIGGER_ELM_ROCKET_CALL, 0, MahoganyTown_Gym_EventScript_RocketRecoveryDone
-	goto_if_ge VAR_GOLDENROD_CITY_STATE, 6, MahoganyTown_Gym_EventScript_RocketRecoveryDone
-	goto_if_unset FLAG_DEFEATED_MAHOGANY_TOWN_GYM, MahoganyTown_Gym_EventScript_RocketRecoveryDone
-	goto_if_unset FLAG_BADGE05_GET, MahoganyTown_Gym_EventScript_RocketRecoveryDone
-	goto_if_unset FLAG_BADGE06_GET, MahoganyTown_Gym_EventScript_RocketRecoveryDone
-	goto_if_unset FLAG_BADGE07_GET, MahoganyTown_Gym_EventScript_RocketRecoveryDone
-	setvar VAR_TRIGGER_ELM_ROCKET_CALL, 1
-MahoganyTown_Gym_EventScript_RocketRecoveryDone::
-	return
-#endif
-
-MahoganyTown_Gym_EventScript_SetupElmRocketCall::
-	setvar VAR_TRIGGER_ELM_ROCKET_CALL, 1
-	return
 
 MahoganyTown_Gym_EventScript_OlivineCheckCianwood::
 	goto_if_set FLAG_DEFEATED_CIANWOOD_GYM, MahoganyTown_Gym_EventScript_Pryce_Battle3
