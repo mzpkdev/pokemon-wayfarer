@@ -173,15 +173,15 @@
     {
       "local_id": "LOCALID_VICTORYROAD_SILVER",
       "graphics_id": "OBJ_EVENT_GFX_SILVER_HNS",
-      "x": 19,
-      "y": 11,
+      "x": 26,
+      "y": 6,
       "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "NULL",
+      "script": "VictoryRoadKanto_1F_EventScript_Silver",
       "flag": "FLAG_HIDE_VICTORY_ROAD_SILVER"
     }
   ],
@@ -257,35 +257,7 @@
       "dest_warp_id": "9"
     }
   ],
-  "coord_events": [
-    {
-      "type": "trigger",
-      "x": 28,
-      "y": 7,
-      "elevation": 0,
-      "var": "VAR_ROUTE27_STATE",
-      "var_value": "2",
-      "script": "VictoryRoadKanto_1F_Trigger"
-    },
-    {
-      "type": "trigger",
-      "x": 27,
-      "y": 7,
-      "elevation": 0,
-      "var": "VAR_ROUTE27_STATE",
-      "var_value": "2",
-      "script": "VictoryRoadKanto_1F_Trigger"
-    },
-    {
-      "type": "trigger",
-      "x": 29,
-      "y": 7,
-      "elevation": 0,
-      "var": "VAR_ROUTE27_STATE",
-      "var_value": "2",
-      "script": "VictoryRoadKanto_1F_Trigger"
-    }
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "hidden_item",

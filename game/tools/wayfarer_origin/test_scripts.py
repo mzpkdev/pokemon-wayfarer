@@ -13,7 +13,8 @@ GAME = Path(__file__).resolve().parents[2]
 CONSTANTS = {'FALSE': 0, 'TRUE': 1, 'NO': 0, 'YES': 1,
              'MON_GIVEN_TO_PARTY': 0, 'MON_GIVEN_TO_PC': 1, 'MON_CANT_GIVE': 2,
              'HOENN_STARTER_CHOICE_TREECKO': 0, 'HOENN_STARTER_CHOICE_TORCHIC': 1,
-             'HOENN_STARTER_CHOICE_MUDKIP': 2, 'HOENN_STARTER_CHOICE_NONE': 65535}
+             'HOENN_STARTER_CHOICE_MUDKIP': 2, 'HOENN_STARTER_CHOICE_NONE': 65535,
+             'ORIGIN_SCENE_VISITOR': 0, 'ORIGIN_SCENE_NATIVE': 1, 'ORIGIN_SCENE_AUTHORED': 2}
 
 
 def source(map_name, wayfarer=True):
@@ -34,6 +35,8 @@ class Script:
         self.answers = iter(answers)
         self.delivery = delivery
         self.native = native
+        self.johto = native
+        self.starter_slot = 3
         self.policy = policy
         self.effects = []
         self.grants = []
@@ -86,7 +89,10 @@ class Script:
                 fn = args[1]
                 self.vars[args[0]] = ({'WayfarerDispatchOriginScene': self.policy,
                                      'WayfarerUsesNativeJohtoOpening': int(self.native),
+                                     'WayfarerIsJohtoOrigin': int(self.johto),
+                                     'WayfarerGetOriginStarterSlot': self.starter_slot,
                                      'WayfarerGetJohtoStarterSpecies': 'selected-species',
+                                     'GetInGameTradeSpeciesInfo': 0,
                                      'IsNuzlockeNicknamingActive': 0}[fn])
             elif command == 'msgbox':
                 self.messages.append(args[0])
@@ -104,8 +110,8 @@ class Script:
                         taken = (args[0] in self.flags) == (cond == 'set')
                     else:
                         a, b = self.value(args[0]), self.value(args[1])
-                        taken = {'eq': lambda: a == b, 'ne': lambda: a != b,
-                                 'ge': lambda: a >= b}[cond]()
+                        taken = {'eq': lambda: a == b, 'ne': lambda: a != b, 'ge': lambda: a >= b,
+                                 'lt': lambda: a < b, 'gt': lambda: a > b, 'le': lambda: a <= b}[cond]()
                 if taken:
                     target = args[-1]
                     if command.startswith('call'):
@@ -132,16 +138,6 @@ RECEIVED = 'FLAG_JOHTO_STARTER_RECEIVED'
 
 
 class JohtoOriginScripts(unittest.TestCase):
-    def test_postponement_does_not_start_errand_or_choose(self):
-        script = Script(LAB, answers=[0])
-        script.vars.update(VAR_STARTER_MON=0, VAR_NEWBARKTOWN_LABSTATE=0,
-                           VAR_NEWBARK_TOWN_STATE=2)
-        script.run(PREFIX + 'VisitorIntro')
-        self.assertNotIn(CHOSEN, script.flags)
-        self.assertEqual(script.vars['VAR_NEWBARKTOWN_LABSTATE'], 0)
-        self.assertEqual(script.vars['VAR_NEWBARK_TOWN_STATE'], 2)
-        self.assertEqual(script.grants, [])
-
     def test_declined_ball_never_writes_committed_choice(self):
         for name in ('Chikorita', 'Cyndaquil', 'Totodile'):
             with self.subTest(name=name):
@@ -150,41 +146,6 @@ class JohtoOriginScripts(unittest.TestCase):
                 script.run(PREFIX + name + 'Ball_Choice')
                 self.assertEqual(script.vars['VAR_STARTER_MON'], 99)
                 self.assertNotIn(CHOSEN, script.flags)
-
-    def test_visitor_commits_every_slot_before_declined_gift(self):
-        for slot in range(3):
-            with self.subTest(slot=slot):
-                script = Script(LAB, answers=[0])
-                script.vars['PLAYER_STARTER_CANDIDATE'] = slot
-                script.run(PREFIX + 'ChoseStarter', stop=[PREFIX + 'ElmCampaign'])
-                self.assertEqual(script.vars['VAR_STARTER_MON'], slot)
-                self.assertIn(CHOSEN, script.flags)
-                self.assertNotIn(RECEIVED, script.flags)
-                self.assertEqual(script.vars['VAR_NEWBARKTOWN_LABSTATE'], 2)
-                self.assertEqual(script.vars['VAR_NEWBARK_TOWN_STATE'], 3)
-                self.assertEqual(script.grants, [])
-
-    def test_full_storage_and_retry_preserve_choice_and_progress(self):
-        for slot in range(3):
-            for delivery in (0, 1, 2):
-                with self.subTest(slot=slot, delivery=delivery):
-                    script = Script(LAB, answers=[1], delivery=delivery)
-                    script.flags.add(CHOSEN)
-                    script.vars.update(VAR_STARTER_MON=slot, VAR_NEWBARKTOWN_LABSTATE=9,
-                                       VAR_NEWBARK_TOWN_STATE=7)
-                    script.run(PREFIX + 'VisitorOfferGift', stop=[PREFIX + 'ElmCampaign'])
-                    self.assertEqual(script.vars['VAR_STARTER_MON'], slot)
-                    self.assertEqual(script.vars['VAR_NEWBARKTOWN_LABSTATE'], 9)
-                    self.assertEqual(script.vars['VAR_NEWBARK_TOWN_STATE'], 7)
-                    self.assertEqual(RECEIVED in script.flags, delivery != 2)
-                    self.assertEqual(len(script.grants), int(delivery != 2))
-
-    def test_received_gift_never_reenters_delivery(self):
-        script = Script(LAB)
-        script.flags.update([CHOSEN, RECEIVED])
-        script.run(PREFIX + 'VisitorElm', stop=[PREFIX + 'ElmCampaign'])
-        self.assertEqual(script.grants, [])
-        self.assertEqual(script.stopped, PREFIX + 'ElmCampaign')
 
     def test_native_receipt_requires_successful_delivery(self):
         for delivery in (0, 2):
@@ -237,24 +198,6 @@ class JohtoOriginScripts(unittest.TestCase):
         self.assertEqual(script.flags, set())
         self.assertFalse(any('SetWallClock' in call for call in script.calls))
 
-    def test_deferred_silver_never_moves_player_or_starts_battle(self):
-        maps = {
-            'CherrygroveCity': 'CherryGroveCity_EventScript_TriggerSilver',
-            'AzaleaTown': 'AzaleaTown_EventScript_SilverTriggerTop',
-            'BurnedTower_1F': 'BurnedTower_1F_EventScript_Silver',
-            'GoldenrodCity_UndergroundSwitches': 'GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerTop',
-            'VictoryRoadKanto_1F': 'VictoryRoadKanto_1F_Trigger',
-            'MtMoon_Cave': 'MtMoon_Cave_EventScript_Silver',
-            'IndigoPlateau_PokemonCenter': 'IndigoPlateau_EventScript_Silver',
-        }
-        for name, label in maps.items():
-            with self.subTest(map=name):
-                script = Script(name + '_hns')
-                script.run(label)
-                self.assertEqual(script.effects, [])
-                self.assertEqual(script.calls, [])
-                self.assertEqual(script.flags, set())
-
     def test_town_dialogue_keeps_family_framing_native(self):
         entries = {
             'Lass': ('NewBarkTown_Text_VisitorLass', 'NewBarkTown_Text_LassState4'),
@@ -301,12 +244,101 @@ class JohtoOriginScripts(unittest.TestCase):
         self.assertEqual(len(set(values)), 2)
         self.assertTrue(all(0x91A < value < 0x960 for value in values))
 
-    def test_standalone_has_no_wayfarer_state_or_helpers(self):
-        for name in (LAB, 'NewBarkTown_PlayersHouse_1F_hns', 'NewBarkTown_PlayersHouse_2F_hns'):
-            compiled = source(name, wayfarer=False)
-            self.assertNotIn('Wayfarer', compiled)
-            self.assertNotIn(CHOSEN, compiled)
-            self.assertNotIn(RECEIVED, compiled)
+
+class VisitorScripts(unittest.TestCase):
+    """Elm, Mr. Pokemon and Jessica for every origin but New Bark's: nothing is offered or written."""
+
+    @staticmethod
+    def untouched(test, script, preset=()):
+        test.assertEqual(script.flags, set())
+        test.assertEqual(script.grants, [])
+        test.assertEqual(script.effects, [])
+        test.assertLessEqual(set(script.vars), {'VAR_RESULT', 'VAR_0x8004', 'VAR_TEMP_1'} | set(preset))
+
+    def test_elm_is_an_ordinary_professor_with_a_release(self):
+        script = Script(LAB, policy=0)
+        script.run(PREFIX + 'Elm')
+        self.assertEqual(script.messages, ['NewBarkTown_Lab_Text_VisitorElm'])
+        self.untouched(self, script)
+        # lock; faceplayer is followed by a release, so the player is never left frozen.
+        block = source(LAB).split('NewBarkTown_Lab_EventScript_VisitorElm::', 1)[1].split('\n\n', 1)[0]
+        self.assertIn('NewBarkTown_Lab_EventScript_ReleaseEnd', block)
+        self.assertRegex(source(LAB).split('NewBarkTown_Lab_EventScript_ReleaseEnd::', 1)[1], r'^\s*closemessage\s+releaseall\s+end')
+
+    def test_elm_never_resets_lab_state_for_visitors(self):
+        for state in range(0, 11):
+            script = Script(LAB, policy=0)
+            script.vars['VAR_NEWBARKTOWN_LABSTATE'] = state
+            script.run(PREFIX + 'Elm')
+            # Only the Master Ball (7) and S.S. ticket (10) handoffs move the lab state, as before.
+            self.assertEqual(script.vars['VAR_NEWBARKTOWN_LABSTATE'], {7: 8, 10: 11}.get(state, state))
+            self.assertNotIn(CHOSEN, script.flags)
+            self.assertNotIn(RECEIVED, script.flags)
+            self.assertNotIn('VAR_NEWBARK_TOWN_STATE', script.vars)
+            self.assertEqual(script.grants, [])
+
+    def test_lab_entry_triggers_end_cleanly(self):
+        for entry in ('TriggerStartLabLeft', 'TriggerStartLabRight', 'TriggerStartLab', 'ElmIntro'):
+            script = Script(LAB, policy=0)
+            script.run(PREFIX + entry)
+            self.assertEqual(script.messages, [])
+            self.untouched(self, script)
+
+    def test_visitor_flow_is_gone_from_the_lab(self):
+        lab = source(LAB)
+        for gone in ('VisitorIntro', 'VisitorOfferGift', 'VisitorCommitChoice', 'VisitorChikorita',
+                     'VisitorAfterTheft', 'Text_VisitorGift', 'WayfarerGetJohtoStarterSpecies'):
+            self.assertNotIn(gone, lab)
+
+    def test_mr_pokemon_gives_visitors_no_egg_and_does_not_hold_them(self):
+        house = 'Route30_MrPokemonsHouse_hns'
+        for entry in ('MrPokemonHouse_OriginOnTransition', 'MrPokemonHouse_EventScript_GiveEgg'):
+            for lab_state in range(0, 6):
+                script = Script(house)
+                script.johto = False
+                script.vars.update(VAR_NEWBARKTOWN_LABSTATE=lab_state, VAR_CHERRYGROVE_CITY_STATE=1)
+                script.run(entry)
+                self.assertEqual(script.vars.get('VAR_TEMP_1', 0), 0)
+                self.assertEqual(script.vars['VAR_NEWBARKTOWN_LABSTATE'], lab_state)
+                self.untouched(self, script, preset=('VAR_NEWBARKTOWN_LABSTATE', 'VAR_CHERRYGROVE_CITY_STATE'))
+
+    def test_mr_pokemon_egg_still_follows_the_johto_errand(self):
+        house = 'Route30_MrPokemonsHouse_hns'
+        # Later lab states (Blackthorn's call, the ceremony, the League) never close the errand;
+        # Cherrygrove 1 -> 2, written by the Egg scene, is what stops a repeat.
+        expected = {0: 0, 1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 7: 1, 9: 1, 10: 1}
+        for lab_state, wanted in expected.items():
+            script = Script(house)
+            script.johto = True
+            script.vars.update(VAR_NEWBARKTOWN_LABSTATE=lab_state, VAR_CHERRYGROVE_CITY_STATE=1)
+            script.run('MrPokemonHouse_OriginOnTransition')
+            self.assertEqual(script.vars['VAR_TEMP_1'], wanted, lab_state)
+        script = Script(house)
+        script.johto = True
+        script.vars.update(VAR_NEWBARKTOWN_LABSTATE=1, VAR_CHERRYGROVE_CITY_STATE=0)
+        script.run('MrPokemonHouse_OriginOnTransition')
+        self.assertEqual(script.vars['VAR_TEMP_1'], 0)
+
+    def test_jessica_trades_for_every_origin_starter_slot(self):
+        trades = {0: 'INGAME_TRADE_TAUROS_WATER', 1: 'INGAME_TRADE_TAUROS_FIRE', 2: 'INGAME_TRADE_TAUROS_FIGHT'}
+        for slot, trade in trades.items():
+            script = Script('Melemele_House_hns', answers=[0])
+            script.starter_slot = slot
+            script.run('Alola_Melemele_Pokecenter_Jessica')
+            self.assertEqual(script.vars['VAR_0x8005'], trade)
+        script = Script('Melemele_House_hns', answers=[0])
+        script.run('Alola_Melemele_Pokecenter_Jessica')
+        self.assertIn('Alola_Melemele_Pokecenter_Jessica_Text_Deferred', script.messages)
+        jessica = source('Melemele_House_hns')
+        self.assertNotIn('FLAG_JOHTO_STARTER_CHOICE_COMMITTED', jessica)
+        self.assertNotIn('VAR_STARTER_MON', jessica)
+        self.assertIn('WayfarerGetOriginStarterSlot', jessica)
+
+    def test_no_wayfarer_script_reads_the_johto_starter_flag_outside_the_lab(self):
+        for path in sorted((GAME / 'data/maps').glob('*_hns/scripts.inc')):
+            if path.parent.name == LAB:
+                continue
+            self.assertNotIn(CHOSEN, path.read_text(), path.parent.name)
 
 
 class HoennDeferredStarterScripts(unittest.TestCase):

@@ -70,6 +70,7 @@
 #include "battle.h"
 #include "challenge_menu.h"
 #include "starter_choose.h"
+#include "wayfarer_origin.h"
 #include "constants/event_objects.h"
 #include "constants/map_types.h"
 #include "constants/battle_frontier.h"
@@ -2659,8 +2660,10 @@ bool8 ScrCmd_showmonpic(struct ScriptContext *ctx)
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
 #if IS_WAYFARER
+    // Only the Johto origin's lab choice previews the Johto starters.
     if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_NEW_BARK_TOWN_LAB_HNS)
      && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_NEW_BARK_TOWN_LAB_HNS)
+     && WayfarerIsJohtoOrigin()
      && !FlagGet(FLAG_JOHTO_STARTER_CHOICE_COMMITTED))
 #else
     // If we have not gotten a pokemon yet, assume this is the starter preview

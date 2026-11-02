@@ -288,10 +288,16 @@ class CircuitScriptTests(unittest.TestCase):
         gate = script("ReceptionGate_hns").split("ReceptionGate_Trigger::\n", 1)[1].split("#endif", 1)[0]
         self.assertIn("\tend", gate)
         self.assertNotIn("setvar", gate)
-        rival = block(script("VictoryRoadKanto_1F_hns"), "VictoryRoadKanto_1F_Trigger").split("\tlock\n", 1)[0]
-        # Story gates ask whether a league knows the player, never whether an event is accepted there.
-        self.assertIn("LeagueCircuit_IsKnownThere", rival)
-        self.assertNotIn("setflag", rival)
+        # Victory Road's Silver is a talk-to object off the corridor lane: no coordinate trigger fires
+        # on the lane, so crossing writes no story state, and his offer never asks whether a league
+        # knows the player (the old IsKnownThere skip is gone).
+        victory_road = script("VictoryRoadKanto_1F_hns")
+        self.assertEqual(json.loads((GAME / "data/maps/VictoryRoadKanto_1F_hns/map.json").read_text())["coord_events"], [])
+        self.assertNotIn("LeagueCircuit_IsKnownThere", victory_road)
+        self.assertNotIn("VAR_ROUTE27_STATE", victory_road)
+        offer = block(victory_road, "VictoryRoadKanto_1F_EventScript_Silver")
+        self.assertIn("MSGBOX_YESNO", offer)
+        self.assertIn("goto_if_eq VAR_RESULT, NO, VictoryRoadKanto_1F_EventScript_SilverDeclined", offer)
 
     def test_johto_opening_establishes_the_complete_interregional_ferry_loop(self):
         olivine = script("OlivineCity_PortInside_hns")

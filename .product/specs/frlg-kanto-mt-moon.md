@@ -20,13 +20,19 @@ The four grunts are optional. Miguel is an optional side interaction and is the
 only battle that opens the local fossil choice.
 
 The imported scenes must leave every existing HNS cave exit open. They must also
-leave Silver, all existing ambient Pokemon, the hidden Revive, the sign, the
-existing inert fossil tableau, `MtMoon_Outside_hns`, and `MtMoon_Shop_hns`
+leave Silver's object, all existing ambient Pokemon, the hidden Revive, the sign,
+the existing inert fossil tableau, `MtMoon_Outside_hns`, and `MtMoon_Shop_hns`
 unchanged. On transition, the cave continues to advance
-`VAR_PEWTER_CITY_STATE` only from 0 to 1. Silver remains at `(9, 11)` with its
-current Yes/No interaction: declining, losing, crossing the cave, and leaving
-keep state 1 and Silver visible; only Silver's own win removes him and sets
-state 2. The Mt. Moon adventure must neither run nor suppress that writer.
+`VAR_PEWTER_CITY_STATE` only from 0 to 1. Silver stays at `(9, 11)` with its
+current Yes/No interaction, but he is no longer always visible. Per the
+[Johto independent story beats](johto-independent-story-beats.md), he is hidden
+until his chapter 11 battle is playable (a Johto-origin player whose Victory
+Road battle has started, and who has not yet beaten him here); the cave's
+transition script sets or clears his hide flag on every load, and a new game no
+longer clears it. While he is shown, declining, losing, crossing the cave, and
+leaving keep state 1 and Silver visible; only Silver's own win removes him and
+sets state 2. Crossing the cave never needs him. The Mt. Moon adventure must
+neither run nor suppress that writer.
 
 This does not import an FRLG map, layout, tileset, connection, warp, collision
 change, or `map.bin`. `MtMoon_B2F_Frlg` remains source evidence only. Its
@@ -226,7 +232,8 @@ fossils changes the Ruins of Alph rewards, flags, or fossil-lab interactions.
 
 Emulator coverage must cross every HNS cave exit in both directions with none,
 some, and all local encounters complete, then repeat Silver decline, loss, and
-win. It must complete each grunt independently, reveal the choice only after
+win while he is shown, and prove he is hidden before Victory Road and for
+every other origin. It must complete each grunt independently, reveal the choice only after
 Miguel's win, prove both fossils are immediately visible and interactable before
 any map transition, take each local fossil on separate saves, and prove no Gym,
 badge, Celadon, Silph, Tower, or Kanto-origin state is required. Run the focused

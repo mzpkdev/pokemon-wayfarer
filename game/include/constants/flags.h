@@ -2747,7 +2747,7 @@
 #define FLAG_WAYFARER_COAST_TRAINER_DEFEAT_LAST  WAYFARER_COAST_FLAG_ID(108)
 #define FLAG_WAYFARER_COAST_REMATCH_PENDING_FIRST WAYFARER_COAST_FLAG_ID(109)
 #define FLAG_WAYFARER_COAST_REMATCH_PENDING_LAST  WAYFARER_COAST_FLAG_ID(117)
-// Johto story flags occupy the coast bank's slots 128-191; 136-191 are reserved.
+// Johto story flags occupy the coast bank's slots 128-191; 149-191 are reserved.
 #define FLAG_WAYFARER_JOHTO_RADIO_TOWER_RESOLVED WAYFARER_COAST_FLAG_ID(128)
 // Town setup-done flags: each town's first-visit setup runs once behind its own flag.
 #define FLAG_WAYFARER_JOHTO_SETUP_VIOLET         WAYFARER_COAST_FLAG_ID(129)
@@ -2757,6 +2757,24 @@
 #define FLAG_WAYFARER_JOHTO_SETUP_OLIVINE        WAYFARER_COAST_FLAG_ID(133)
 #define FLAG_WAYFARER_JOHTO_SETUP_MAHOGANY       WAYFARER_COAST_FLAG_ID(134)
 #define FLAG_WAYFARER_JOHTO_SETUP_BLACKTHORN     WAYFARER_COAST_FLAG_ID(135)
+// Silver's chapters (include/constants/wayfarer_johto_story.h): a win flag per battle chapter,
+// an any-win flag, the played flags of the non-battle scenes that play once (6 and 7 also drive
+// dialogue; 9 keeps the Ecruteak scene from repeating), and the
+// Victory Road opener's "has entered the Indigo League" flag.
+#define FLAG_WAYFARER_JOHTO_SILVER_WON_2         WAYFARER_COAST_FLAG_ID(136)
+#define FLAG_WAYFARER_JOHTO_SILVER_WON_4         WAYFARER_COAST_FLAG_ID(137)
+#define FLAG_WAYFARER_JOHTO_SILVER_WON_5         WAYFARER_COAST_FLAG_ID(138)
+#define FLAG_WAYFARER_JOHTO_SILVER_WON_8         WAYFARER_COAST_FLAG_ID(139)
+#define FLAG_WAYFARER_JOHTO_SILVER_WON_10        WAYFARER_COAST_FLAG_ID(140)
+#define FLAG_WAYFARER_JOHTO_SILVER_WON_11        WAYFARER_COAST_FLAG_ID(141)
+#define FLAG_WAYFARER_JOHTO_SILVER_WON_ANY       WAYFARER_COAST_FLAG_ID(142)
+#define FLAG_WAYFARER_JOHTO_SILVER_PLAYED_6      WAYFARER_COAST_FLAG_ID(143)
+#define FLAG_WAYFARER_JOHTO_SILVER_PLAYED_7      WAYFARER_COAST_FLAG_ID(144)
+#define FLAG_WAYFARER_JOHTO_INDIGO_ENTERED       WAYFARER_COAST_FLAG_ID(145)
+// Derived from Silver's chapters on every Burned Tower 1F load (not saved progress).
+#define FLAG_WAYFARER_JOHTO_HIDE_BURNED_TOWER_SILVER WAYFARER_COAST_FLAG_ID(146)
+#define FLAG_WAYFARER_JOHTO_MIRACLE_SEED_RECEIVED WAYFARER_COAST_FLAG_ID(147)
+#define FLAG_WAYFARER_JOHTO_SILVER_PLAYED_9     WAYFARER_COAST_FLAG_ID(148)
 // Background hidden-item fields are 13 bits, so reserve distinct HNS-bank
 // slots below 0x1000 for the seven coast hidden items.
 #define FLAG_WAYFARER_HIDDEN_ITEM_ROUTE20_STARDUST 0x942

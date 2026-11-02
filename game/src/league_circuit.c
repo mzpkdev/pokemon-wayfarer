@@ -735,6 +735,10 @@ bool8 BeginCircuitRun(enum CircuitStage stage)
     run->ratingAtEntry = GetTrainerRating();
 #endif
     run->active = TRUE;
+    // Silver's Victory Road opener drops its League question once the player has entered the
+    // Indigo League at least once, win or lose.
+    if (stage == CIRCUIT_STAGE_INDIGO)
+        FlagSet(FLAG_WAYFARER_JOHTO_INDIGO_ENTERED);
 #if WAYFARER_LEAGUE_EVENTS
     sLeagueSavePending = TRUE;
 #endif

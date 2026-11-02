@@ -1,37 +1,66 @@
+#include "constants/wayfarer_johto_story.h"
+
 MtMoon_Cave_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, MtMoon_Cave_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters
 	.byte 0
 
 MtMoon_Cave_OnTransition: 
-	#if IS_WAYFARER
 	call WayfarerMtMoon_OnTransition
-	#endif
+	@ Silver is hidden until his chapter 11 battle is playable (the Victory Road scene started).
+	setvar VAR_0x8004, SILVER_CHAPTER_MT_MOON
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	call_if_eq VAR_RESULT, TRUE, MtMoon_Cave_EventScript_ShowSilver
+	call_if_eq VAR_RESULT, FALSE, MtMoon_Cave_EventScript_HideSilver
 	callnative SetTimeBasedEncounters
 	goto_if_ne VAR_PEWTER_CITY_STATE, 0, MtMoon_Cave_EventScript_EndTransition
 	setvar VAR_PEWTER_CITY_STATE, 1
 MtMoon_Cave_EventScript_EndTransition::
 	end
 
+MtMoon_Cave_EventScript_ShowSilver::
+	clearflag FLAG_HIDE_MTMOON_SILVER
+	return
+
+MtMoon_Cave_EventScript_HideSilver::
+	setflag FLAG_HIDE_MTMOON_SILVER
+	return
+
 MtMoon_Cave_EventScript_Sign::
 	msgbox MtMoon_Cave_Text_Sign, MSGBOX_SIGN
 	end
 
 MtMoon_Cave_EventScript_Silver::
-#if IS_WAYFARER
-	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, MtMoon_Cave_EventScript_DeferredSilver
-#endif
+	setvar VAR_0x8004, SILVER_CHAPTER_MT_MOON
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	goto_if_eq VAR_RESULT, FALSE, MtMoon_Cave_EventScript_SilverInert
 	lock
 	faceplayer
 	msgbox MtMoon_Cave_Text_Rival_Before, MSGBOX_DEFAULT
+	call_if_set FLAG_WAYFARER_JOHTO_SILVER_WON_ANY, MtMoon_Cave_EventScript_RivalBeforeBeaten
+	call_if_unset FLAG_WAYFARER_JOHTO_SILVER_WON_ANY, MtMoon_Cave_EventScript_RivalBeforeFirst
+	msgbox MtMoon_Cave_Text_Rival_BeforeEnd, MSGBOX_DEFAULT
 	msgbox MtMoon_Cave_Text_Rival_BattleOffer, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, MtMoon_Cave_EventScript_SilverDeclined
 	playbgm MUS_HG_ENCOUNTER_RIVAL, FALSE
+	setvar_forward VAR_WAYFARER_JOHTO_SILVER_CHAPTER, SILVER_CHAPTER_MT_MOON
 	goto_if_eq VAR_STARTER_MON, 0, MtMoon_Cave_EventScript_Silver_Battle_Cyndaquil
 	goto_if_eq VAR_STARTER_MON, 1, MtMoon_Cave_EventScript_Silver_Battle_Totodile
 	goto_if_eq VAR_STARTER_MON, 2, MtMoon_Cave_EventScript_Silver_Battle_Chikorita
 	release
 	end
+
+@ Not on Silver's chapter 11 (not the Johto origin, before Victory Road, or already won).
+MtMoon_Cave_EventScript_SilverInert::
+	end
+
+MtMoon_Cave_EventScript_RivalBeforeBeaten::
+	msgbox MtMoon_Cave_Text_Rival_BeforeBeaten, MSGBOX_DEFAULT
+	return
+
+MtMoon_Cave_EventScript_RivalBeforeFirst::
+	msgbox MtMoon_Cave_Text_Rival_BeforeFirst, MSGBOX_DEFAULT
+	return
 
 MtMoon_Cave_EventScript_SilverDeclined::
 	msgbox MtMoon_Cave_Text_Rival_Declined, MSGBOX_DEFAULT
@@ -51,6 +80,8 @@ MtMoon_Cave_EventScript_Silver_Battle_Chikorita::
 	goto MtMoon_Cave_EventScript_SilverAfterBattle
 
 MtMoon_Cave_EventScript_SilverAfterBattle::
+	setflag FLAG_WAYFARER_JOHTO_SILVER_WON_11
+	setflag FLAG_WAYFARER_JOHTO_SILVER_WON_ANY
 	playbgm MUS_HG_RIVAL_EXIT, FALSE
 	msgbox MtMoon_Cave_Text_Rival_After, MSGBOX_DEFAULT
 	closemessage
@@ -66,9 +97,17 @@ MtMoon_Cave_EventScript_SilverAfterBattle::
 
 MtMoon_Cave_Text_Rival_Before:
 	.string "..................................\p"
-	.string "It's been a while, {PLAYER}.\p"
+	.string "It's been a while, {PLAYER}.$"
+
+MtMoon_Cave_Text_Rival_BeforeBeaten:
 	.string "…Since I lost to you, I thought about\n"
-	.string "what I was lacking with my POKéMON…\p"
+	.string "what I was lacking with my POKéMON…$"
+
+MtMoon_Cave_Text_Rival_BeforeFirst:
+	.string "…I thought about what I was lacking\n"
+	.string "with my POKéMON…$"
+
+MtMoon_Cave_Text_Rival_BeforeEnd:
 	.string "And we came up with an answer.\p"
 	.string "{PLAYER}, now we'll show you!$"
 
@@ -105,8 +144,3 @@ MtMoon_Cave_Text_Rival_Loss:
 MtMoon_Cave_Text_Sign:
 	.string "MT MOON SQUARE ->$"
 
-#if IS_WAYFARER
-MtMoon_Cave_EventScript_DeferredSilver::
-	releaseall
-	end
-#endif

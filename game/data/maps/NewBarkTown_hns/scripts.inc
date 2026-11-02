@@ -1,4 +1,5 @@
 #include "constants/wayfarer_origin.h"
+#include "constants/wayfarer_johto_story.h"
 
 NewBarkTown_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, NewBarkTown_OnTransition
@@ -10,7 +11,11 @@ NewBarkTown_OnFrame::
 	map_script_2 VAR_NEWBARK_TOWN_STATE, 6, NewBarkTown_EventScript_ElmCallAfterLeague
 	.2byte 0
 
+@ Elm calls only the Johto origin after the League. A visitor hears nothing, but the lab state
+@ still moves on to Elm's S.S. ticket.
 NewBarkTown_EventScript_ElmCallAfterLeague::
+	specialvar VAR_RESULT, WayfarerIsJohtoOrigin
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_EventScript_ElmCallAfterLeagueSkipped
 	lock
 	setspeaker NewBarkTown_Text_ElmName
 	pokenavcall BlackthornCity_Text_ElmCall
@@ -21,19 +26,37 @@ NewBarkTown_EventScript_ElmCallAfterLeague::
 	release
 	end
 
+NewBarkTown_EventScript_ElmCallAfterLeagueSkipped::
+	setvar VAR_NEWBARK_TOWN_STATE, 7
+	setvar VAR_NEWBARKTOWN_LABSTATE, 10
+	end
+
 NewBarkTown_Text_ElmName:
 	.string "PROF.ELM$"
 
 NewBarkTown_OnTransition::
+	@ The static Silver (chapter 1) exists only for the Johto origin, and only while no later
+	@ Silver battle has started.
+	setvar VAR_0x8004, SILVER_CHAPTER_NEW_BARK
+	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
+	call_if_eq VAR_RESULT, FALSE, NewBarkTown_EventScript_HideSilver
 	goto_if_eq VAR_NEWBARK_TOWN_STATE, 2, NewBarkTown_Set_TalkToElm
 	goto_if_eq VAR_NEWBARK_TOWN_STATE, 4, NewBarkTown_Set_TalkToMom
 	end
 
+NewBarkTown_EventScript_HideSilver::
+	setflag FLAG_HIDE_SILVER_NEWBARKTOWN
+	return
+
 NewBarkTown_Set_TalkToElm::
-	clearflag FLAG_HIDE_SILVER_NEWBARKTOWN
+	call_if_eq VAR_RESULT, TRUE, NewBarkTown_EventScript_ShowSilver
 	setobjectxyperm LOCALID_LASS, 0, 11
 	callnative SetTimeBasedEncounters
 	end
+
+NewBarkTown_EventScript_ShowSilver::
+	clearflag FLAG_HIDE_SILVER_NEWBARKTOWN
+	return
 
 NewBarkTown_Set_TalkToMom::
 	setobjectxyperm LOCALID_LASS, 0, 11
