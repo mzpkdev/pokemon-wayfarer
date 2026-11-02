@@ -8,6 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "assets": "node scripts/game-assets.mjs",
+    "sketch:world": "node scripts/sketch/world-data.mjs public/sketch/world",
     "check": "pnpm run typecheck && pnpm run lint && pnpm run format:check",
     "clean": "node -e \"for (const d of ['dist', '.astro']) require('node:fs').rmSync(d, { recursive: true, force: true })\"",
     "format": "oxfmt",

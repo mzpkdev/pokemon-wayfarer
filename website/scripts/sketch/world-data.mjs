@@ -1,13 +1,15 @@
-// Sketch: render a region's outdoor maps with their real metatiles, laid out by connections.
-// Sketch: the overworld as a metatile atlas and index grid for the world explorer.
-// usage: node scripts/sketch/world-data.mjs public/sketch/world MAP_NEW_BARK_TOWN_HNS
+// Sketch: the whole overworld as a metatile atlas and index grid for the
+// world explorer: every region's outdoor maps in their real metatiles, laid
+// out by their connections, loose pieces placed by their Town Map cells, and
+// the regions arranged on one sea.
+// usage: pnpm sketch:world
 import fs from "node:fs"
 const game = "/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/website-landing/pokemon-wayfarer/game"
 const lib =
   "/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/website-landing/pokemon-wayfarer/website/scripts/lib/"
 const { readPng, writePng } = await import(lib + "png.mjs")
 const { readJascPalette } = await import(lib + "gba.mjs")
-const [outDir, root] = process.argv.slice(2)
+const [outDir] = process.argv.slice(2)
 
 // Tileset symbol -> files, read from the C sources that INCBIN them.
 const src = [
@@ -19,6 +21,7 @@ const src = [
   "sinnoh_metatiles.h",
 ]
   .map((f) => fs.readFileSync(`${game}/src/data/tilesets/${f}`, "utf8"))
+  .concat(fs.readFileSync(`${game}/src/graphics.c`, "utf8"))
   .join("\n")
 const field = (name, key) =>
   src.match(
@@ -34,7 +37,9 @@ const paletteFiles = (symbol) => {
 const tilesetCache = new Map()
 const tileset = (name) => {
   if (tilesetCache.has(name)) return tilesetCache.get(name)
-  const tilesPath = incbin(field(name, "tiles")).replace(/\.4bpp.*$/, ".png")
+  const tilesSymbol = field(name, "tiles")
+  if (!incbin(tilesSymbol)) throw new Error(`no tiles for ${name}: ${tilesSymbol}`)
+  const tilesPath = incbin(tilesSymbol).replace(/\.4bpp.*$/, ".png")
   const png = readPng(`${game}/${tilesPath}`)
   const palettes = paletteFiles(field(name, "palettes")).map((f) => {
     const jasc = `${game}/${f.replace(/\.gbapal$/, ".pal")}`
@@ -78,13 +83,26 @@ const REWIRED = {
   "Route19_Frlg|MAP_FUCHSIA_CITY": "MAP_FUCHSIA_CITY_HNS",
   "Route21_North_Frlg|MAP_PALLET_TOWN": "MAP_PALLET_TOWN_HNS",
 }
+const sevii = new Set(
+  JSON.parse(fs.readFileSync(`${game}/src/data/wayfarer_sevii_maps.json`, "utf8")).maps.map(
+    (entry) => entry.source_map,
+  ),
+)
+const OUTDOOR = new Set([
+  "MAP_TYPE_TOWN",
+  "MAP_TYPE_CITY",
+  "MAP_TYPE_ROUTE",
+  "MAP_TYPE_OCEAN_ROUTE",
+])
 const compiled = (m) => {
+  if (!OUTDOOR.has(m.map_type)) return false
   if (REPLACED.has(m.id) || m.id.endsWith("_POC") || m.name.endsWith("_Port")) return false
   // Another state of a map already drawn (the Lake of Rage at low tide), and
   // Trainer Hill, a special area hung off Olivine, are not part of the land.
   if (m.name.includes("LowTide") || m.name.startsWith("TrainerHill_")) return false
   const layout = layouts[m.layout]
-  if (layout?.game_version === "frlg") return COAST.has(m.name) || Boolean(m.wayfarer_include)
+  if (layout?.game_version === "frlg")
+    return COAST.has(m.name) || sevii.has(m.name) || Boolean(m.wayfarer_include)
   return true
 }
 const maps = {}
@@ -94,14 +112,18 @@ for (const dir of fs.readdirSync(`${game}/data/maps`)) {
   const m = JSON.parse(fs.readFileSync(f))
   if (compiled(m)) maps[m.id] = m
 }
+const byName = Object.fromEntries(Object.values(maps).map((m) => [m.name, m]))
+const connections = (m) => (Array.isArray(m.connections) ? m.connections : [])
+const targetOf = (m, c) => REWIRED[`${m.name}|${c.map}`] ?? c.map
+
 // Connections only promise that each pair of neighbors lines up; around a
 // loop of maps the offsets need not add up, so one link per loop must give.
-// Place the maps along a spanning tree of links, and choose which links to
-// leave out so the fewest map rows and columns end up drawn over each other:
-// a leftover mismatch then shows as a gap, filled like any other, instead
-// of one map cut through another.
+// Place a piece's maps along a spanning tree of links, and choose which links
+// to leave out so the fewest tiles end up drawn over each other: a leftover
+// mismatch then shows as a gap, filled like any other, instead of one map cut
+// through another.
 const edgeKey = (a, b) => [a, b].toSorted().join(" ~ ")
-const place = (forbidden) => {
+const walk = (root, forbidden) => {
   const placed = new Map()
   const queue = [[root, 0, 0]]
   while (queue.length > 0) {
@@ -110,8 +132,8 @@ const place = (forbidden) => {
     const m = maps[id],
       l = layouts[m.layout]
     placed.set(id, { x, y, m, l })
-    for (const c of Array.isArray(m.connections) ? m.connections : []) {
-      const target = REWIRED[`${m.name}|${c.map}`] ?? c.map
+    for (const c of connections(m)) {
+      const target = targetOf(m, c)
       const t = maps[target]
       if (!t || placed.has(target) || forbidden.has(edgeKey(id, target))) continue
       const tl = layouts[t.layout],
@@ -127,8 +149,7 @@ const place = (forbidden) => {
   }
   return placed
 }
-const overlap = (placed) => {
-  const list = [...placed.values()]
+const overlap = (list) => {
   let area = 0
   for (let i = 0; i < list.length; i++)
     for (let j = i + 1; j < list.length; j++) {
@@ -140,42 +161,282 @@ const overlap = (placed) => {
     }
   return area
 }
-const links = new Set()
-for (const [id, m] of Object.entries(maps))
-  for (const c of Array.isArray(m.connections) ? m.connections : []) {
-    const target = REWIRED[`${m.name}|${c.map}`] ?? c.map
-    if (maps[target]) links.add(edgeKey(id, target))
-  }
-const forbidden = new Set()
-let placed = place(forbidden)
-const total = placed.size
-let best = overlap(placed)
-console.log("overlap before:", best)
-for (let round = 0; round < 12 && best > 0; round++) {
-  let pick = null
-  for (const link of links) {
-    if (forbidden.has(link)) continue
-    forbidden.add(link)
-    const trial = place(forbidden)
-    forbidden.delete(link)
-    if (trial.size < total) continue
-    const area = overlap(trial)
-    if (area < best) {
-      best = area
-      pick = link
+const layOut = (root) => {
+  const forbidden = new Set()
+  let placed = walk(root, forbidden)
+  const total = placed.size
+  const links = new Set()
+  for (const id of placed.keys())
+    for (const c of connections(maps[id]))
+      if (placed.has(targetOf(maps[id], c))) links.add(edgeKey(id, targetOf(maps[id], c)))
+  let best = overlap([...placed.values()])
+  for (let round = 0; round < 12 && best > 0; round++) {
+    let pick = null
+    for (const link of links) {
+      if (forbidden.has(link)) continue
+      forbidden.add(link)
+      const trial = walk(root, forbidden)
+      forbidden.delete(link)
+      if (trial.size < total) continue
+      const area = overlap([...trial.values()])
+      if (area < best) {
+        best = area
+        pick = link
+      }
     }
+    if (!pick) break
+    forbidden.add(pick)
   }
-  if (!pick) break
-  forbidden.add(pick)
-  console.log("leave out:", pick, "-> overlap", best)
+  placed = walk(root, forbidden)
+  if (forbidden.size > 0) console.log(`  ${maps[root].name}: left out ${[...forbidden].join(", ")}`)
+  return [...placed.values()]
 }
-placed = place(forbidden)
-const all = [...placed.values()]
-const minX = Math.min(...all.map((p) => p.x)),
-  minY = Math.min(...all.map((p) => p.y))
-const W = Math.max(...all.map((p) => p.x + p.l.width)) - minX,
-  H = Math.max(...all.map((p) => p.y + p.l.height)) - minY
-console.log(root, all.length, "maps,", W, "x", H, "metatiles")
+
+// Town Map cells, to place the pieces no connection reaches: the game's own
+// sections, and Sinnoh's from the project its maps came from.
+const cells = new Map(
+  JSON.parse(fs.readFileSync(`${game}/src/data/region_map/region_map_sections.json`, "utf8"))
+    .map_sections.filter((section) => section.x !== undefined)
+    .map((section) => [section.id, section]),
+)
+for (const section of JSON.parse(
+  fs.readFileSync(new URL("../source/sinnoh/sections.json", import.meta.url), "utf8"),
+).map_sections)
+  cells.set(section.map_section.replace("MAPSEC_", "MAPSEC_SINNOH_"), section)
+const cellOf = (m) => {
+  const section = cells.get(m.region_map_section)
+  return section && { x: section.x + section.width / 2, y: section.y + section.height / 2 }
+}
+
+/**
+ * The regions, each a set of pieces in one Town Map's cell space. The first
+ * root's piece is laid out by its connections; the cell scale (metatiles per
+ * cell) and the region's origin then place every other piece by one of its
+ * map's cells. `at` puts the region in the world, in metatiles.
+ */
+const REGIONS = [
+  { name: "Johto and Kanto", roots: ["MAP_NEW_BARK_TOWN_HNS"], at: [0, 0] },
+  {
+    name: "Hoenn",
+    roots: ["MAP_LITTLEROOT_TOWN", "MAP_SOOTOPOLIS_CITY"],
+    at: [-260, 560],
+  },
+  { name: "Sinjoh", roots: ["MAP_ROUTE49_HNS"], at: [0, 0], beside: "Sinjoh" },
+  {
+    name: "Sinnoh",
+    roots: [
+      "MAP_TWINLEAF_TOWN",
+      "MAP_HEARTHOME_CITY",
+      "MAP_FIGHT_AREA",
+      "MAP_SNOWPOINT_CITY",
+      "MAP_ROUTE224",
+    ],
+    at: [0, 0],
+    beside: "Sinnoh",
+  },
+  {
+    name: "Sevii Islands",
+    roots: [
+      "MAP_ONE_ISLAND",
+      "MAP_TWO_ISLAND",
+      "MAP_THREE_ISLAND",
+      "MAP_THREE_ISLAND_BERRY_FOREST",
+      "MAP_MT_EMBER_EXTERIOR",
+      "MAP_FOUR_ISLAND",
+      "MAP_FIVE_ISLAND",
+      "MAP_SIX_ISLAND",
+      "MAP_SIX_ISLAND_PATTERN_BUSH",
+      "MAP_SEVEN_ISLAND",
+    ],
+    at: [760, 640],
+  },
+  { name: "Alola", roots: ["MAP_MELEMELE_ISLE_HNS"], at: [1500, 760] },
+]
+// Each Sevii Town Map is its own cell space; set them out like the islands lie.
+const SEVII_MAPS = [
+  {
+    islands: [
+      "ONE",
+      "TWO",
+      "THREE",
+      "KINDLE",
+      "TREASURE",
+      "CAPE",
+      "BOND",
+      "BERRY",
+      "MT_EMBER",
+      "THREE_ISLE",
+    ],
+    at: [0, 0],
+  },
+  { islands: ["FOUR", "FIVE", "RESORT", "WATER_LABYRINTH", "FIVE_ISLE", "MEMORIAL"], at: [6, 14] },
+  {
+    islands: [
+      "SIX",
+      "SEVEN",
+      "TRAINER_TOWER",
+      "CANYON",
+      "SEVAULT",
+      "TANOBY",
+      "WATER_PATH",
+      "GREEN_PATH",
+      "RUIN_VALLEY",
+      "OUTCAST",
+      "PATTERN",
+    ],
+    at: [-6, 30],
+  },
+]
+const seviiCell = (m) => {
+  const cell = cellOf(m)
+  if (!cell) return null
+  const name = m.region_map_section.replace("MAPSEC_", "")
+  const group = SEVII_MAPS.find(({ islands }) => islands.some((island) => name.startsWith(island)))
+  return group ? { x: cell.x + group.at[0], y: cell.y + group.at[1] } : cell
+}
+
+// Metatiles per Town Map cell, measured on Hoenn, whose maps all connect.
+const hoennPiece = layOut("MAP_LITTLEROOT_TOWN")
+const center = (p) => ({ x: p.x + p.l.width / 2, y: p.y + p.l.height / 2 })
+const CELL = (() => {
+  const towns = hoennPiece.filter((p) => cellOf(p.m))
+  let num = 0,
+    den = 0
+  for (const a of towns)
+    for (const b of towns) {
+      const ca = cellOf(a.m),
+        cb = cellOf(b.m),
+        pa = center(a),
+        pb = center(b)
+      num += (pa.x - pb.x) * (ca.x - cb.x) + (pa.y - pb.y) * (ca.y - cb.y)
+      den += (ca.x - cb.x) ** 2 + (ca.y - cb.y) ** 2
+    }
+  return num / den
+})()
+console.log("metatiles per Town Map cell:", CELL.toFixed(1))
+
+const all = []
+const regionBounds = {}
+for (const region of REGIONS) {
+  const cellFor = region.name === "Sevii Islands" ? seviiCell : cellOf
+  // The Sevii Town Maps are drawn much closer in than Hoenn's.
+  const scale = region.name === "Sevii Islands" ? CELL * 0.4 : CELL
+  let origin = null
+  const pieces = []
+  for (const root of region.roots) {
+    if (!maps[root]) {
+      console.log(`  missing root ${root}`)
+      continue
+    }
+    if (pieces.some((piece) => piece.some((p) => p.m.id === root))) continue
+    const piece = root === "MAP_LITTLEROOT_TOWN" ? hoennPiece : layOut(root)
+    // Line the piece up on the region's cells, by the average of its maps' cells.
+    const anchored = piece.filter((p) => cellFor(p.m))
+    if (origin === null) {
+      origin = anchored.length
+        ? {
+            x:
+              anchored.reduce((sum, p) => sum + (p.x + p.l.width / 2 - cellFor(p.m).x * scale), 0) /
+              anchored.length,
+            y:
+              anchored.reduce(
+                (sum, p) => sum + (p.y + p.l.height / 2 - cellFor(p.m).y * scale),
+                0,
+              ) / anchored.length,
+          }
+        : { x: 0, y: 0 }
+    } else if (anchored.length) {
+      const dx =
+        anchored.reduce(
+          (sum, p) => sum + (cellFor(p.m).x * scale + origin.x - (p.x + p.l.width / 2)),
+          0,
+        ) / anchored.length
+      const dy =
+        anchored.reduce(
+          (sum, p) => sum + (cellFor(p.m).y * scale + origin.y - (p.y + p.l.height / 2)),
+          0,
+        ) / anchored.length
+      for (const p of piece) {
+        p.x += Math.round(dx)
+        p.y += Math.round(dy)
+      }
+    }
+    pieces.push(piece)
+  }
+  const placed = pieces.flat()
+  const left = Math.min(...placed.map((p) => p.x)),
+    top = Math.min(...placed.map((p) => p.y))
+  for (const p of placed) {
+    p.x += region.at[0] - left
+    p.y += region.at[1] - top
+    p.region = region.name
+  }
+  regionBounds[region.name] = {
+    width: Math.max(...placed.map((p) => p.x + p.l.width)) - region.at[0],
+    height: Math.max(...placed.map((p) => p.y + p.l.height)) - region.at[1],
+  }
+  console.log(
+    `${region.name}: ${placed.length} maps in ${pieces.length} pieces, ${regionBounds[region.name].width}x${regionBounds[region.name].height}`,
+  )
+  all.push(...placed)
+}
+// Sinjoh lies past MT. SILVER, north of Route 28, and Sinnoh beyond it, with
+// MT. CORONET's south side facing Sinjoh, close enough that the fill between
+// them reads as one stretch of land.
+const shift = (region, dx, dy) => {
+  for (const p of all)
+    if (p.region === region) {
+      p.x += dx
+      p.y += dy
+    }
+}
+const bounds = (region) => {
+  const list = all.filter((p) => p.region === region)
+  return {
+    left: Math.min(...list.map((p) => p.x)),
+    top: Math.min(...list.map((p) => p.y)),
+    right: Math.max(...list.map((p) => p.x + p.l.width)),
+    bottom: Math.max(...list.map((p) => p.y + p.l.height)),
+  }
+}
+const route28 = all.find((p) => p.m.name === "Route28_hns")
+{
+  const sinjoh = bounds("Sinjoh")
+  shift("Sinjoh", Math.round(route28.x + route28.l.width / 2 - (sinjoh.left + sinjoh.right) / 2), 0)
+  // Seat it on whichever Johto and Kanto maps lie below it.
+  const placed = bounds("Sinjoh")
+  const below = all.filter(
+    (p) => p.region === "Johto and Kanto" && p.x < placed.right && p.x + p.l.width > placed.left,
+  )
+  shift("Sinjoh", 0, Math.min(...below.map((p) => p.y)) - 6 - placed.bottom)
+  const sinjohNow = bounds("Sinjoh")
+  const sinnohBelow = all.filter(
+    (p) => p.region === "Sinnoh" && p.x < sinjohNow.right && p.x + p.l.width > sinjohNow.left,
+  )
+  const coronet = all.find((p) => p.m.name === "Route207")
+  const dx = Math.round((sinjohNow.left + sinjohNow.right) / 2 - (coronet.x + coronet.l.width / 2))
+  const sinnohBottom = Math.max(
+    ...all
+      .filter(
+        (p) =>
+          p.region === "Sinnoh" &&
+          p.x + dx < sinjohNow.right &&
+          p.x + p.l.width + dx > sinjohNow.left,
+      )
+      .map((p) => p.y + p.l.height),
+  )
+  void sinnohBelow
+  shift("Sinnoh", dx, sinjohNow.top - 6 - sinnohBottom)
+}
+for (const p of all.filter((q) => q.region === "Sinjoh"))
+  console.log("  ", p.m.name, p.x, p.y, p.l.width, p.l.height)
+// Open sea all round.
+const MARGIN = 48
+const minX = Math.min(...all.map((p) => p.x)) - MARGIN,
+  minY = Math.min(...all.map((p) => p.y)) - MARGIN
+const W = Math.max(...all.map((p) => p.x + p.l.width)) - minX + MARGIN,
+  H = Math.max(...all.map((p) => p.y + p.l.height)) - minY + MARGIN
+console.log("world", all.length, "maps,", W, "x", H, "metatiles")
 
 // One metatile's 16x16 RGBA.
 const metatileCache = new Map()
@@ -251,10 +512,18 @@ all.forEach((p, mapIndex) => {
 })
 // Fill the gaps the way the game fills past a map's edge: with the nearest
 // map's border blocks, tiled on the world grid.
+// Sinjoh's maps are bordered by a cave's black void; give them the snow past
+// Route 217's edge instead, so Sinjoh joins the land on either side.
+const route217 = layouts[byName.Route217.layout]
 const borders = all.map((p) => {
+  if (p.region === "Sinjoh")
+    p = { ...p, l: { ...route217, primary_tileset: route217.primary_tileset } }
   const bin = fs.readFileSync(`${game}/${p.l.border_filepath}`)
-  const bw = p.l.border_width ?? 2,
-    bh = p.l.border_height ?? 2
+  // A few layouts declare a bigger border than their file holds; fall back to 2x2.
+  const declared = (p.l.border_width ?? 2) * (p.l.border_height ?? 2)
+  const fits = bin.length / 2 >= declared
+  const bw = fits ? (p.l.border_width ?? 2) : 2,
+    bh = fits ? (p.l.border_height ?? 2) : 2
   return {
     bw,
     bh,
@@ -263,9 +532,20 @@ const borders = all.map((p) => {
     ),
   }
 })
+// Only near the maps, though: a border spread over open ocean would paint
+// whole seas in one map's trees. Maps whose border is the black void past a
+// cave's edge don't spread at all. Past the fill, it's open sea.
+const FILL = 20
+const average = (k) => {
+  const tile = atlasTiles[k]
+  let sum = 0
+  for (let i = 0; i < 256; i++) sum += tile[i * 4] + tile[i * 4 + 1] + tile[i * 4 + 2]
+  return sum / 256
+}
+const spreads = borders.map((b) => b.ids.every((k) => average(k) > 60))
 let frontier = []
-for (let i = 0; i < W * H; i++) if (owner[i] >= 0) frontier.push(i)
-while (frontier.length) {
+for (let i = 0; i < W * H; i++) if (owner[i] >= 0 && spreads[owner[i]]) frontier.push(i)
+for (let step = 0; step < FILL && frontier.length; step++) {
   const next = []
   for (const i of frontier) {
     const x = i % W,
@@ -288,6 +568,13 @@ while (frontier.length) {
     }
   }
   frontier = next
+}
+const ocean = borders[all.findIndex((p) => p.m.name === "Route105")]
+for (let i = 0; i < W * H; i++) {
+  if (grid[i] !== EMPTY) continue
+  const x = i % W,
+    y = (i - x) / W
+  grid[i] = ocean.ids[(y % ocean.bh) * ocean.bw + (x % ocean.bw)]
 }
 // The atlas: 64 metatiles a row.
 const COLUMNS = 64
