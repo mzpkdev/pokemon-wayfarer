@@ -1,12 +1,16 @@
 #include "global.h"
+#include "battle.h"
+#include "battle_setup.h"
 #include "event_data.h"
 #include "fake_rtc.h"
 #include "field_specials.h"
 #include "heal_location.h"
 #include "item.h"
 #include "overworld.h"
+#include "pokemon.h"
 #include "pokemon_storage_system.h"
 #include "rtc.h"
+#include "wayfarer_daily_slots.h"
 #include "wayfarer_ferry.h"
 #include "wayfarer_origin.h"
 #include "wayfarer_persistence.h"
@@ -18,6 +22,11 @@
 #include "constants/heal_locations.h"
 #include "constants/items.h"
 #include "constants/maps.h"
+#include "constants/script_commands.h"
+#include "constants/moves.h"
+#include "constants/opponents.h"
+#include "constants/pokemon.h"
+#include "constants/species.h"
 #include "constants/vars.h"
 #include "constants/wayfarer_ferry.h"
 #include "constants/wayfarer_persistence.h"
@@ -188,9 +197,8 @@ TEST("Ferry: boarding sets every field of the voyage state and keeps a pending A
     EXPECT_EQ(voyage->eventAt, 5000 + FERRY_PORT_MINUTES);
     EXPECT_EQ(voyage->slotDay, 0x1234);
     EXPECT_EQ((u32)voyage->annePending, 0);
-    // The cabin fields are written at boarding but go unused until the cabins part: they start zero.
-    EXPECT_EQ(voyage->hosts[0] | voyage->hosts[1], 0);
-    EXPECT_EQ(voyage->hostParams[0] | voyage->hostParams[1], 0);
+    // Two hosts are drawn (the draw has its own test); nothing is earned or settled yet.
+    EXPECT(voyage->hosts[0] != 0 && voyage->hosts[1] != 0);
     EXPECT_EQ((u32)voyage->cabin, 0);
     EXPECT_EQ((u32)voyage->hostsDone, 0);
     EXPECT(Ferry_IsAboard());
@@ -742,6 +750,443 @@ TEST("Ferry: the Lilycove charters are offered by their conditions, and none mea
     EXPECT(!FlagGet(FLAG_SYS_GAME_CLEAR));
     EXPECT(AddBagItem(ITEM_EON_TICKET, 1));
     EXPECT_EQ(GetFerryLilycoveCharterCount(), 1);
+}
+
+
+// ---------- Cabins ----------
+
+extern MainCallback Test_EndTrainerBattleCallback(void);
+
+static void GiveParty(u32 species, u32 level)
+{
+    ZeroPlayerPartyMons();
+    CreateMon(&gPlayerParty[0], species, level, 0, OTID_STRUCT_PLAYER_ID);
+    CalculateMonStats(&gPlayerParty[0]);
+    gPlayerPartyCount = 1;
+}
+
+static void AddToParty(u32 species, u32 level)
+{
+    CreateMon(&gPlayerParty[gPlayerPartyCount], species, level, 0, OTID_STRUCT_PLAYER_ID);
+    CalculateMonStats(&gPlayerParty[gPlayerPartyCount]);
+    gPlayerPartyCount++;
+}
+
+static void SetHp(u32 slot, u16 hp)
+{
+    SetMonData(&gPlayerParty[slot], MON_DATA_HP, &hp);
+}
+
+// Boards a ship and puts the two drawn hosts to the ones given (table indexes), params at the list's first entry.
+static void BoardWithHosts(u8 ship, u8 first, u8 second)
+{
+    struct WayfarerVoyage voyage = *Ferry_GetVoyage();
+
+    EXPECT(Ferry_BoardAt(Ferry_GetLoopPort(ship, 0), ship, Ferry_GetNow()));
+    voyage = *Ferry_GetVoyage();
+    voyage.hosts[0] = first + 1;
+    voyage.hosts[1] = second + 1;
+    voyage.hostParams[0] = 0;
+    voyage.hostParams[1] = 0;
+    Test_Ferry_SetVoyage(&voyage);
+}
+
+TEST("Ferry: boarding draws two distinct hosts of the ship's own pool, with a parameter each, and saves them")
+{
+    const struct WayfarerVoyage *voyage = Ferry_GetVoyage();
+    u8 ships[] = {FERRY_SHIP_AQUA, FERRY_SHIP_ANNE, FERRY_SHIP_TIDAL};
+    u32 ship, attempt, host, pool;
+    bool32 sawDifferentPair = FALSE;
+    u8 firstPair = 0;
+
+    ResetFerryFixture();
+    for (ship = 0; ship < ARRAY_COUNT(ships); ship++)
+    {
+        pool = 0;
+        for (host = 0; host < Test_Ferry_HostCount(); host++)
+            if (Test_Ferry_HostShip(host) == ships[ship])
+                pool++;
+        EXPECT(pool >= 7);
+        for (attempt = 0; attempt < 40; attempt++)
+        {
+            u32 slot;
+
+            EXPECT(Ferry_BoardAt(Ferry_GetLoopPort(ships[ship], 0), ships[ship], 100));
+            EXPECT(voyage->hosts[0] != voyage->hosts[1]);
+            for (slot = 0; slot < 2; slot++)
+            {
+                EXPECT(voyage->hosts[slot] >= 1 && voyage->hosts[slot] <= Test_Ferry_HostCount());
+                EXPECT_EQ(Test_Ferry_HostShip(voyage->hosts[slot] - 1), ships[ship]);
+                EXPECT(voyage->hostParams[slot] < Test_Ferry_HostParamCount(voyage->hosts[slot] - 1));
+            }
+            if (attempt == 0)
+                firstPair = voyage->hosts[0] * 64 + voyage->hosts[1];
+            else if (voyage->hosts[0] * 64 + voyage->hosts[1] != firstPair)
+                sawDifferentPair = TRUE;
+        }
+    }
+    // The draw is random (not the same pair every time), and what was drawn stays through the voyage's events.
+    EXPECT(sawDifferentPair);
+    {
+        u8 hosts0 = voyage->hosts[0], hosts1 = voyage->hosts[1], param0 = voyage->hostParams[0];
+
+        Ferry_Advance(voyage->eventAt + FERRY_SEA_MINUTES + FERRY_PORT_MINUTES);
+        EXPECT_EQ(voyage->hosts[0], hosts0);
+        EXPECT_EQ(voyage->hosts[1], hosts1);
+        EXPECT_EQ(voyage->hostParams[0], param0);
+    }
+}
+
+TEST("Ferry: the Anne's, Aqua's and Tidal's pools carry the spec's kinds")
+{
+    ResetFerryFixture();
+    EXPECT(Test_Ferry_FindHost(FERRY_SHIP_ANNE, FERRY_REQ_BATTLE) != 0xFF);
+    EXPECT(Test_Ferry_FindHost(FERRY_SHIP_ANNE, FERRY_REQ_REGION) != 0xFF);
+    EXPECT(Test_Ferry_FindHost(FERRY_SHIP_AQUA, FERRY_REQ_MOVE) != 0xFF);
+    EXPECT(Test_Ferry_FindHost(FERRY_SHIP_AQUA, FERRY_REQ_ITEM) != 0xFF);
+    EXPECT(Test_Ferry_FindHost(FERRY_SHIP_AQUA, FERRY_REQ_COIN) != 0xFF);
+    EXPECT(Test_Ferry_FindHost(FERRY_SHIP_TIDAL, FERRY_REQ_DOUBLE_BATTLE) != 0xFF);
+    EXPECT(Test_Ferry_FindHost(FERRY_SHIP_TIDAL, FERRY_REQ_FRIENDSHIP) != 0xFF);
+    EXPECT(Test_Ferry_FindHost(FERRY_SHIP_TIDAL, FERRY_REQ_COLOUR) != 0xFF);
+}
+
+TEST("Ferry: a request is met by an item in the Bag, which is taken, or a key item, which is not")
+{
+    ResetFerryFixture();
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_ITEM, ITEM_ORAN_BERRY));
+    EXPECT(AddBagItem(ITEM_ORAN_BERRY, 1));
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_ITEM, ITEM_PECHA_BERRY));
+    EXPECT(Ferry_RequestMet(FERRY_REQ_ITEM, ITEM_ORAN_BERRY));
+    EXPECT_EQ(CountTotalItemQuantityInBag(ITEM_ORAN_BERRY), 0);
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_ITEM, ITEM_ORAN_BERRY));
+
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_KEY_ITEM, ITEM_POKE_FLUTE));
+    EXPECT(AddBagItem(ITEM_POKE_FLUTE, 1));
+    EXPECT(Ferry_RequestMet(FERRY_REQ_KEY_ITEM, ITEM_POKE_FLUTE));
+    EXPECT_EQ(CountTotalItemQuantityInBag(ITEM_POKE_FLUTE), 1);
+}
+
+TEST("Ferry: a request is met by a party Pokemon's type, species, colour, move or fully evolved form, never an Egg's")
+{
+    u16 move = MOVE_CUT;
+    u8 egg = TRUE;
+
+    ResetFerryFixture();
+    GiveParty(SPECIES_MACHAMP, 40);
+    EXPECT(Ferry_RequestMet(FERRY_REQ_TYPE, TYPE_FIGHTING));
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_TYPE, TYPE_FIRE));
+    EXPECT(Ferry_RequestMet(FERRY_REQ_SPECIES, SPECIES_MACHAMP));
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_SPECIES, SPECIES_MACHOP));
+    EXPECT(Ferry_RequestMet(FERRY_REQ_COLOUR, gSpeciesInfo[SPECIES_MACHAMP].bodyColor));
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_COLOUR, gSpeciesInfo[SPECIES_MACHAMP].bodyColor == BODY_COLOR_PINK ? BODY_COLOR_BLUE : BODY_COLOR_PINK));
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_MOVE, MOVE_CUT));
+    SetMonData(&gPlayerParty[0], MON_DATA_MOVE1, &move);
+    EXPECT(Ferry_RequestMet(FERRY_REQ_MOVE, MOVE_CUT));
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_MOVE, MOVE_FLASH));
+    EXPECT(Ferry_RequestMet(FERRY_REQ_EVOLVED, 0));
+
+    // Not fully evolved (Machop evolves), and no pre-evolution (Tauros stands alone).
+    GiveParty(SPECIES_MACHOP, 5);
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_EVOLVED, 0));
+    GiveParty(SPECIES_TAUROS, 30);
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_EVOLVED, 0));
+
+    // An Egg shows nothing: not its type, species, colour or form.
+    GiveParty(SPECIES_MACHAMP, 40);
+    SetMonData(&gPlayerParty[0], MON_DATA_IS_EGG, &egg);
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_TYPE, TYPE_FIGHTING));
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_SPECIES, SPECIES_MACHAMP));
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_COLOUR, gSpeciesInfo[SPECIES_MACHAMP].bodyColor));
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_EVOLVED, 0));
+    // A second party Pokemon is looked at too.
+    AddToParty(SPECIES_PIKACHU, 20);
+    EXPECT(Ferry_RequestMet(FERRY_REQ_TYPE, TYPE_ELECTRIC));
+}
+
+TEST("Ferry: a request is met by a Pokemon from the start region's Pokedex or one that adores the player")
+{
+    u8 friendship = 219;
+
+    ResetFerryFixture();
+    GiveParty(SPECIES_CHIKORITA, 10);
+    gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_NEW_BARK;
+    EXPECT(Ferry_RequestMet(FERRY_REQ_REGION, 0));
+    gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_PALLET;
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_REGION, 0));
+    gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_LITTLEROOT;
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_REGION, 0));
+    GiveParty(SPECIES_TREECKO, 10);
+    EXPECT(Ferry_RequestMet(FERRY_REQ_REGION, 0));
+    gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_PALLET;
+    GiveParty(SPECIES_PIKACHU, 10);
+    EXPECT(Ferry_RequestMet(FERRY_REQ_REGION, 0));
+
+    SetMonData(&gPlayerParty[0], MON_DATA_FRIENDSHIP, &friendship);
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_FRIENDSHIP, 0));
+    friendship = 220;
+    SetMonData(&gPlayerParty[0], MON_DATA_FRIENDSHIP, &friendship);
+    EXPECT(Ferry_RequestMet(FERRY_REQ_FRIENDSHIP, 0));
+}
+
+TEST("Ferry: the coin flip comes up both ways, and the quiz takes the right answer only")
+{
+    u32 i, heads = 0;
+    u8 host;
+
+    ResetFerryFixture();
+    for (i = 0; i < 100; i++)
+        heads += Ferry_RequestMet(FERRY_REQ_COIN, 0);
+    EXPECT(heads > 10 && heads < 90);
+
+    host = Test_Ferry_FindHost(FERRY_SHIP_AQUA, FERRY_REQ_QUIZ);
+    BoardWithHosts(FERRY_SHIP_AQUA, host, Test_Ferry_FindHost(FERRY_SHIP_AQUA, FERRY_REQ_COIN));
+    Test_Ferry_StandBeforeHost(host);
+    for (i = 0; i < Test_Ferry_HostParamCount(host); i++)
+    {
+        u32 choice, right = 0;
+        struct WayfarerVoyage voyage = *Ferry_GetVoyage();
+
+        voyage.hostParams[0] = i;
+        Test_Ferry_SetVoyage(&voyage);
+        Ferry_BufferQuiz();
+        for (choice = 0; choice < 3; choice++)
+        {
+            gSpecialVar_0x8004 = choice;
+            right += Ferry_QuizCorrect();
+        }
+        EXPECT_EQ(right, 1);
+    }
+}
+
+TEST("Ferry: talking to a host: the request while open, small talk once settled, the bed or the sleep once earned")
+{
+    u8 mover = 0, fisher = 0;
+    struct WayfarerVoyage voyage;
+
+    ResetFerryFixture();
+    mover = Test_Ferry_FindHost(FERRY_SHIP_AQUA, FERRY_REQ_MOVE);
+    fisher = Test_Ferry_FindHost(FERRY_SHIP_TIDAL, FERRY_REQ_FRIENDSHIP);
+    BoardWithHosts(FERRY_SHIP_AQUA, mover, Test_Ferry_FindHost(FERRY_SHIP_AQUA, FERRY_REQ_COIN));
+    // Standing before somebody who isn't one of the voyage's hosts.
+    Test_Ferry_StandBeforeHost(Test_Ferry_FindHost(FERRY_SHIP_AQUA, FERRY_REQ_QUIZ));
+    EXPECT_EQ(Ferry_HostTalk(), FERRY_HOST_NONE);
+
+    Test_Ferry_StandBeforeHost(mover);
+    GiveParty(SPECIES_MACHAMP, 40);
+    EXPECT_EQ(Ferry_HostTalk(), FERRY_HOST_ASK);
+    // Not met: a retry kind stays open.
+    EXPECT(!Ferry_CheckRequest());
+    EXPECT(!Ferry_IsHostOneTry());
+    Ferry_HostMissed();
+    EXPECT_EQ((u32)Ferry_GetVoyage()->hostsDone, 0);
+    EXPECT_EQ(Ferry_HostTalk(), FERRY_HOST_ASK);
+    // Met: the cabin is the player's and the request is settled; the Aqua's cabins have no bed, so they offer the sleep.
+    Ferry_HostMet();
+    EXPECT_EQ((u32)Ferry_GetVoyage()->cabin, 1);
+    EXPECT_EQ((u32)Ferry_GetVoyage()->hostsDone, 1);
+    EXPECT_EQ(Ferry_HostTalk(), FERRY_HOST_SLEEP);
+
+    // The other host is still open; earning one cabin settles nothing else.
+    Test_Ferry_StandBeforeHost(Test_Ferry_FindHost(FERRY_SHIP_AQUA, FERRY_REQ_COIN));
+    EXPECT_EQ(Ferry_HostTalk(), FERRY_HOST_ASK);
+    EXPECT(Ferry_IsHostOneTry());
+    // A one-try kind is settled when failed: small talk afterwards, and the cabin isn't theirs.
+    Ferry_HostMissed();
+    EXPECT_EQ((u32)Ferry_GetVoyage()->hostsDone, 3);
+    EXPECT_EQ((u32)Ferry_GetVoyage()->cabin, 1);
+    EXPECT_EQ(Ferry_HostTalk(), FERRY_HOST_CHAT);
+
+    // On the Tidal the breeder's cabin has the bed: earning it makes them point at it.
+    BoardWithHosts(FERRY_SHIP_TIDAL, fisher, Test_Ferry_FindHost(FERRY_SHIP_TIDAL, FERRY_REQ_COLOUR));
+    Test_Ferry_StandBeforeHost(fisher);
+    Ferry_HostMet();
+    EXPECT_EQ(Ferry_HostTalk(), FERRY_HOST_BED);
+    EXPECT(Ferry_IsBedMine());
+    voyage = *Ferry_GetVoyage();
+    voyage.cabin = 0;
+    Test_Ferry_SetVoyage(&voyage);
+    EXPECT(!Ferry_IsBedMine());
+}
+
+TEST("Ferry: a lost host battle leaves the player aboard with the fainted at 1 HP, and never whites out")
+{
+    u8 host;
+    u32 i;
+
+    ResetFerryFixture();
+    host = Test_Ferry_FindHost(FERRY_SHIP_ANNE, FERRY_REQ_BATTLE);
+    BoardWithHosts(FERRY_SHIP_ANNE, host, Test_Ferry_FindHost(FERRY_SHIP_ANNE, FERRY_REQ_QUIZ));
+    Test_Ferry_StandBeforeHost(host);
+    GiveParty(SPECIES_MACHAMP, 40);
+    AddToParty(SPECIES_PIKACHU, 20);
+    AddToParty(SPECIES_PIKACHU, 20);
+    EXPECT_EQ(Ferry_HostTalk(), FERRY_HOST_ASK);
+    EXPECT(Ferry_IsHostOneTry());
+
+    EXPECT(Ferry_SetUpHostBattle());
+    EXPECT(FlagGet(FLAG_NO_WHITEOUT));
+    EXPECT(TRAINER_BATTLE_PARAM.opponentA != TRAINER_NONE);
+    // The party is beaten (one Pokemon is left with an HP of 7).
+    SetHp(0, 0);
+    SetHp(1, 7);
+    SetHp(2, 0);
+    gBattleTypeFlags = BATTLE_TYPE_TRAINER;
+    gBattleOutcome = B_OUTCOME_LOST;
+    EXPECT(Test_EndTrainerBattleCallback() == CB2_ReturnToFieldContinueScriptPlayMapMusic);
+    EXPECT(!Ferry_EndHostBattle());
+    EXPECT(!FlagGet(FLAG_NO_WHITEOUT));
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP), 1);
+    EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_HP), 7);
+    EXPECT_EQ(GetMonData(&gPlayerParty[2], MON_DATA_HP), 1);
+    Ferry_HostMissed();
+    EXPECT_EQ((u32)Ferry_GetVoyage()->hostsDone, 1);
+    EXPECT_EQ((u32)Ferry_GetVoyage()->cabin, 0);
+    EXPECT(Ferry_IsAboard());
+
+    // Without the flag the same loss whites out (so the flag is what keeps the player aboard).
+    for (i = 0; i < 3; i++)
+        SetHp(i, 0);
+    EXPECT(Test_EndTrainerBattleCallback() == CB2_WhiteOut);
+}
+
+TEST("Ferry: a won host battle earns the cabin and leaves the borrowed trainer's own flag as it was")
+{
+    u8 host;
+    u16 trainer;
+
+    ResetFerryFixture();
+    host = Test_Ferry_FindHost(FERRY_SHIP_TIDAL, FERRY_REQ_DOUBLE_BATTLE);
+    BoardWithHosts(FERRY_SHIP_TIDAL, host, Test_Ferry_FindHost(FERRY_SHIP_TIDAL, FERRY_REQ_COLOUR));
+    Test_Ferry_StandBeforeHost(host);
+    // A double battle needs two Pokemon able to fight.
+    GiveParty(SPECIES_MACHAMP, 40);
+    EXPECT(!Ferry_SetUpHostBattle());
+    EXPECT(!FlagGet(FLAG_NO_WHITEOUT));
+    AddToParty(SPECIES_PIKACHU, 20);
+    EXPECT(Ferry_SetUpHostBattle());
+    trainer = TRAINER_BATTLE_PARAM.opponentA;
+    EXPECT(!HasTrainerBeenFought(trainer));
+    gBattleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE;
+    gBattleOutcome = B_OUTCOME_WON;
+    Test_EndTrainerBattleCallback();
+    EXPECT(HasTrainerBeenFought(trainer));
+    EXPECT(Ferry_EndHostBattle());
+    EXPECT(!HasTrainerBeenFought(trainer));
+    EXPECT(!FlagGet(FLAG_NO_WHITEOUT));
+    Ferry_HostMet();
+    EXPECT_EQ((u32)Ferry_GetVoyage()->cabin, 1);
+
+    // A trainer already beaten elsewhere stays beaten.
+    SetTrainerFlag(trainer);
+    EXPECT(Ferry_SetUpHostBattle());
+    Test_EndTrainerBattleCallback();
+    EXPECT(Ferry_EndHostBattle());
+    EXPECT(HasTrainerBeenFought(trainer));
+    ClearTrainerFlag(trainer);
+}
+
+// Puts the voyage at sea, its next event `minutes` of in-game time ahead of now.
+static void SailWithEventIn(u32 minutes)
+{
+    struct WayfarerVoyage voyage = *Ferry_GetVoyage();
+
+    voyage.phase = FERRY_PHASE_SEA;
+    voyage.eventAt = Ferry_GetNow() + minutes;
+    Test_Ferry_SetVoyage(&voyage);
+}
+
+TEST("Ferry: sleeping at sea moves the clock to the arrival exactly, and refuses in port")
+{
+    const struct WayfarerVoyage *voyage = Ferry_GetVoyage();
+    u32 minutes, before;
+
+    ResetFerryFixture();
+    EXPECT(Ferry_BoardAt(FERRY_PORT_VERMILION, FERRY_SHIP_AQUA, Ferry_GetNow()));
+    // In port: nothing moves.
+    FakeRtc_ManuallySetTime(1, 9, 13, 20);
+    before = Ferry_GetNow();
+    EXPECT(Ferry_SleepUntilEvent() == FALSE);
+    EXPECT_EQ(Ferry_GetNow(), before);
+    EXPECT_EQ(Ferry_Sleep(), FALSE);
+    EXPECT_EQ(Ferry_GetNow(), before);
+
+    // At sea: from any point of the leg, and across midnight, the clock lands on eventAt and no later.
+    for (minutes = 1; minutes <= FERRY_SEA_MINUTES; minutes += 59)
+    {
+        FakeRtc_ManuallySetTime(1, 21, 40, 0);
+        SailWithEventIn(minutes);
+        EXPECT(Ferry_SleepUntilEvent());
+        EXPECT_EQ(Ferry_GetNow(), voyage->eventAt);
+        // The arrival is then due, and it's the voyage's, not the sleep's: it still has to be run.
+        EXPECT(Ferry_IsAtSea());
+        EXPECT_EQ(Ferry_Advance(Ferry_GetNow()), FERRY_ANNOUNCE_ARRIVAL);
+        EXPECT(!Ferry_IsAtSea());
+        EXPECT_EQ(voyage->eventAt, Ferry_GetNow() + FERRY_PORT_MINUTES);
+    }
+    // Sleeping again at the arrival minute changes nothing, and the port stay is not skipped.
+    FakeRtc_ManuallySetTime(1, 12, 0, 0);
+    before = Ferry_GetNow();
+    SailWithEventIn(0);
+    EXPECT(Ferry_SleepUntilEvent());
+    EXPECT_EQ(Ferry_GetNow(), before);
+}
+
+TEST("Ferry: the daily slots' day holds while aboard and is released ashore")
+{
+    ResetFerryFixture();
+    gDailySlotsDebugFlags = DAILY_DEBUG_DAY;
+    gDailySlotsDebugDay = 10;
+    DailySlots_OnMapLoad();
+    EXPECT_EQ(DailySlots_GetDay(), 10);
+    EXPECT_EQ(gPokemonStoragePtr->dailySlots.stampDay, 10);
+
+    EXPECT(Ferry_BoardAt(FERRY_PORT_VERMILION, FERRY_SHIP_AQUA, Ferry_GetNow()));
+    EXPECT_EQ(Ferry_GetVoyage()->slotDay, 10);
+    // Days pass aboard, and nothing new starts: the draw's day, and so every pick and snapshot stamped from it, stays.
+    gDailySlotsDebugDay = 12;
+    EXPECT_EQ(DailySlots_GetDay(), 10);
+    DailySlots_OnMapLoad();
+    EXPECT_EQ(gPokemonStoragePtr->dailySlots.stampDay, 10);
+
+    Ferry_ClearVoyage();
+    EXPECT_EQ(DailySlots_GetDay(), 12);
+    DailySlots_OnMapLoad();
+    EXPECT_EQ(gPokemonStoragePtr->dailySlots.stampDay, 12);
+    gDailySlotsDebugFlags = 0;
+}
+
+TEST("Ferry: a ship's beds no longer heal")
+{
+    extern const u8 SSTidalRooms_EventScript_Bed[];
+    extern const u8 SSAquaRooms_EventScript_Bed[];
+    extern const u8 Ferry_EventScript_Bed[];
+    extern const u8 Common_EventScript_OutOfCenterPartyHeal[];
+    extern const u8 Route119_WeatherInstitute_1F_EventScript_Bed[];
+    const u8 *scripts[] = {SSTidalRooms_EventScript_Bed, SSAquaRooms_EventScript_Bed, Ferry_EventScript_Bed};
+    u32 i, offset;
+
+    const u8 *healPointer = Common_EventScript_OutOfCenterPartyHeal;
+    bool32 found;
+
+    // Neither bed script calls the party heal. The Ferry bed is where both go, and it is checked through its
+    // whole stretch of the script (the bed, the sleep question and its answers).
+    for (i = 0; i < ARRAY_COUNT(scripts); i++)
+    {
+        u32 length = i == 2 ? 200 : 8;
+
+        found = FALSE;
+        for (offset = 0; offset + 4 <= length; offset++)
+            found |= memcmp(scripts[i] + offset, &healPointer, 4) == 0;
+        EXPECT(!found);
+    }
+    // The same scan does find the call in an ordinary bed (a bed of Route 119's Weather Institute).
+    found = FALSE;
+    for (offset = 0; offset < 24; offset++)
+        found |= memcmp(Route119_WeatherInstitute_1F_EventScript_Bed + offset, &healPointer, 4) == 0;
+    EXPECT(found);
+    // The beds go to the Ferry bed.
+    EXPECT_EQ(scripts[0][0], SCR_OP_GOTO);
+    EXPECT_EQ(scripts[1][0], SCR_OP_GOTO);
 }
 
 #endif // IS_WAYFARER
