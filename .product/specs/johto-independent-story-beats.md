@@ -14,8 +14,10 @@ Tower takeover, who introduces the ceremony, and how the Rocket endings read.
 The [gate audit](../research/johto-story-beat-gates.md) is the evidence for
 today's behavior. It names the scripts and lines quoted here.
 
-Every change is Wayfarer-only, behind `IS_WAYFARER`; standalone HNS keeps its
-campaign. Changes are scripts, `map.json` events, and local Wayfarer state.
+Only the Wayfarer build matters. Edit shared HNS scripts in place, and add no
+`IS_WAYFARER` guards or dual paths just to preserve standalone HNS. Standalone
+HNS may pick up the new behavior. Changes are scripts, `map.json` events, and
+local Wayfarer state.
 No `map.bin`, layout, tileset, collision, or elevation edit is authorized.
 Prerelease saves need no migration. Packaging the work into one or several PRs
 is up to the implementation, as long as each merged step leaves every adventure
