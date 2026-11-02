@@ -455,8 +455,10 @@ and the Tidal's `SSTidalRooms` beds lose their free heal.
   separate from the existing `ship` type (the Abandoned Ship), and the
   [daily world slots](daily-world-slots.md) place-type list gains it,
   so they rotate like route trainers.
-- Other trainers whose class fits `liner` (sailors, gentlemen, ladies,
-  swimmers, fishermen, tubers, beauties, rich boys) may be drawn there.
+- Ship slots draw like any other slot: a ship's sailor or gentleman slot is
+  filled from that class's regional group, so route trainers of fitting
+  classes turn up aboard. `liner` itself only holds the trainers whose own
+  lines are about the ship.
 - Cabin hosts stand apart from the slots and are never drawn into them.
 
 **The Anne's completion check.**
