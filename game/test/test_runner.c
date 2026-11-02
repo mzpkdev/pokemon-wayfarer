@@ -7,6 +7,7 @@
 #include "malloc.h"
 #include "random.h"
 #include "task.h"
+#include "wayfarer_ferry.h"
 #include "constants/characters.h"
 #include "test_runner.h"
 #include "test/test.h"
@@ -204,6 +205,11 @@ static void ClearSaveBlocks(void)
     ClearSav1();
     ClearSav2();
     ClearSav3();
+#if IS_WAYFARER
+    // The voyage lives in the Pokemon storage, which the clears above leave alone, and being aboard freezes the
+    // daily slots' day: a test that boarded must not leak it into the next.
+    Ferry_InitNewGame();
+#endif
     gSaveBlock3Ptr->challengeSettings.tx_Challenges_OneTypeChallenge = TEST_ONE_TYPE_CHALLENGE_DISABLED;
 }
 

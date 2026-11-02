@@ -2412,12 +2412,21 @@ static void CB2_EndRematchBattle(void);
 #if TESTING
 // The ends of the trainer and rematch battles, run by the mechanics tests with the battle outcome they set.
 // The test runner is the main callback, so it is put back after the end picks the field's own.
-void Test_EndTrainerBattle(void)
+// Returns the callback the end picked (the field, or the whiteout).
+MainCallback Test_EndTrainerBattleCallback(void)
 {
     MainCallback runner = gMain.callback2;
+    MainCallback picked;
 
     CB2_EndTrainerBattle();
+    picked = gMain.callback2;
     gMain.callback2 = runner;
+    return picked;
+}
+
+void Test_EndTrainerBattle(void)
+{
+    Test_EndTrainerBattleCallback();
 }
 
 void Test_EndRematchBattle(void)

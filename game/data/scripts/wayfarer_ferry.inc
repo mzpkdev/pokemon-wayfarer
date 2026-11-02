@@ -117,6 +117,131 @@ Ferry_EventScript_AtSeaTrigger::
 	releaseall
 	end
 
+@ ---- Cabins ----
+
+@ The host spot object of every cabin room. Ferry_HostTalk says what this host does: small talk once the
+@ request is settled, the bed or the sleep once their cabin is the player's, otherwise their request.
+Ferry_EventScript_Host::
+	lock
+	faceplayer
+	specialvar VAR_RESULT, Ferry_HostTalk
+	switch VAR_RESULT
+	case FERRY_HOST_CHAT, Ferry_EventScript_HostChat
+	case FERRY_HOST_BED, Ferry_EventScript_HostBed
+	case FERRY_HOST_SLEEP, Ferry_EventScript_SleepAsk
+	case FERRY_HOST_ASK, Ferry_EventScript_HostAsk
+	release
+	end
+
+Ferry_EventScript_HostChat::
+	msgbox gStringVar4, MSGBOX_DEFAULT
+	release
+	end
+
+Ferry_EventScript_HostBed::
+	msgbox Ferry_Text_HostBed, MSGBOX_DEFAULT
+	release
+	end
+
+@ The request is stated (gStringVar4) and checked at once, with a battle or a menu where the kind needs one.
+Ferry_EventScript_HostAsk::
+	msgbox gStringVar4, MSGBOX_DEFAULT
+	specialvar VAR_RESULT, Ferry_GetHostKind
+	switch VAR_RESULT
+	case FERRY_REQ_BATTLE, Ferry_EventScript_HostBattleSingle
+	case FERRY_REQ_DOUBLE_BATTLE, Ferry_EventScript_HostBattleDouble
+	case FERRY_REQ_QUIZ, Ferry_EventScript_HostQuiz
+	specialvar VAR_RESULT, Ferry_CheckRequest
+	goto_if_eq VAR_RESULT, TRUE, Ferry_EventScript_HostMet
+	goto Ferry_EventScript_HostMissed
+
+Ferry_EventScript_HostMet::
+	special Ferry_HostMet
+	playfanfare MUS_OBTAIN_ITEM
+	msgbox Ferry_Text_HostMet, MSGBOX_DEFAULT
+	waitfanfare
+	release
+	end
+
+Ferry_EventScript_HostMissed::
+	special Ferry_HostMissed
+	specialvar VAR_RESULT, Ferry_IsHostOneTry
+	goto_if_eq VAR_RESULT, TRUE, Ferry_EventScript_HostMissedOneTry
+	msgbox Ferry_Text_HostMissed, MSGBOX_DEFAULT
+	release
+	end
+
+Ferry_EventScript_HostMissedOneTry::
+	msgbox Ferry_Text_HostMissedOneTry, MSGBOX_DEFAULT
+	release
+	end
+
+@ A host battle never whites out: a loss restores every fainted Pokemon to 1 HP and settles the host. The
+@ battles borrow an existing trainer's party (the host's parameter).
+Ferry_EventScript_HostBattleSingle::
+Ferry_EventScript_HostBattleDouble::
+	specialvar VAR_RESULT, Ferry_SetUpHostBattle
+	goto_if_eq VAR_RESULT, FALSE, Ferry_EventScript_HostCantBattle
+	closemessage
+	special PlayTrainerEncounterMusic
+	dotrainerbattle
+	specialvar VAR_RESULT, Ferry_EndHostBattle
+	goto_if_eq VAR_RESULT, TRUE, Ferry_EventScript_HostMet
+	special Ferry_HostMissed
+	msgbox Ferry_Text_HostBattleLost, MSGBOX_DEFAULT
+	release
+	end
+
+Ferry_EventScript_HostCantBattle::
+	msgbox Ferry_Text_HostCantBattle, MSGBOX_DEFAULT
+	release
+	end
+
+@ The quiz: the question, three choices, one try.
+Ferry_EventScript_HostQuiz::
+	special Ferry_BufferQuiz
+	message gStringVar4
+	waitmessage
+	dynmultichoice 12, 4, TRUE, 3, 0, DYN_MULTICHOICE_CB_NONE, gStringVar1, gStringVar2, gStringVar3
+	copyvar VAR_0x8004, VAR_RESULT
+	closemessage
+	specialvar VAR_RESULT, Ferry_QuizCorrect
+	goto_if_eq VAR_RESULT, TRUE, Ferry_EventScript_HostMet
+	goto Ferry_EventScript_HostMissed
+
+@ ---- Sleeping ----
+
+@ Asked by a host whose cabin has no bed, and by the bed of a cabin that is the player's.
+Ferry_EventScript_SleepAsk::
+	specialvar VAR_RESULT, Ferry_IsAtSeaForScript
+	goto_if_eq VAR_RESULT, FALSE, Ferry_EventScript_SleepInPort
+	special Ferry_BufferSleepPort
+	msgbox Ferry_Text_SleepAsk, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, Ferry_EventScript_SleepNo
+	closemessage
+	specialvar VAR_RESULT, Ferry_Sleep
+	waitstate
+	releaseall
+	end
+
+Ferry_EventScript_SleepNo::
+	releaseall
+	end
+
+Ferry_EventScript_SleepInPort::
+	msgbox Ferry_Text_SleepInPort, MSGBOX_DEFAULT
+	releaseall
+	end
+
+@ A ship's bed (the Aqua's and the Tidal's): no free heal. It lets the player sleep only in a cabin they earned.
+Ferry_EventScript_Bed::
+	lockall
+	specialvar VAR_RESULT, Ferry_IsBedMine
+	goto_if_eq VAR_RESULT, TRUE, Ferry_EventScript_SleepAsk
+	msgbox Ferry_Text_BedNotYours, MSGBOX_DEFAULT
+	releaseall
+	end
+
 @ ---- The PA ----
 
 Ferry_EventScript_PA_CastOff::
@@ -220,3 +345,42 @@ Ferry_Text_PA_ArrivalAlola:
 Ferry_Text_PA_AnneFirstDeparture:
 	.string "We sail for ONE ISLAND in half\n"
 	.string "an hour.$"
+
+Ferry_Text_HostBed:
+	.string "The bed's right over there.\n"
+	.string "Rest whenever you like!$"
+
+Ferry_Text_HostMet:
+	.string "That's just what I wanted!\p"
+	.string "My cabin is yours for the trip.\n"
+	.string "Rest whenever you like!$"
+
+Ferry_Text_HostMissed:
+	.string "Hmm, that's not it.\p"
+	.string "Come back when you have what\n"
+	.string "I'm looking for.$"
+
+Ferry_Text_HostMissedOneTry:
+	.string "Oh well. Not this time.\p"
+	.string "My cabin isn't for you, I'm afraid.$"
+
+Ferry_Text_HostBattleLost:
+	.string "Not this time!\p"
+	.string "Your POKéMON look worn out.\n"
+	.string "I'll let them rest a little.$"
+
+Ferry_Text_HostCantBattle:
+	.string "You don't have enough POKéMON\n"
+	.string "ready to battle. Come back later.$"
+
+Ferry_Text_SleepAsk:
+	.string "Sleep until we reach\n"
+	.string "{STR_VAR_1}?$"
+
+Ferry_Text_SleepInPort:
+	.string "We're in port.\n"
+	.string "No need to sleep now.$"
+
+Ferry_Text_BedNotYours:
+	.string "There's a bed, but it isn't yours\n"
+	.string "to use.$"

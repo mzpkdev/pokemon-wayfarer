@@ -19,15 +19,17 @@ SSTidalRooms_EventScript_ExplainSnatch::
 	end
 
 SSTidalRooms_EventScript_Bed::
+#if IS_WAYFARER
+	goto Ferry_EventScript_Bed
+#else
 	lockall
 	msgbox SSTidalRooms_Text_TakeRestOnBed, MSGBOX_DEFAULT
 	closemessage
 	call Common_EventScript_OutOfCenterPartyHeal
-#if !IS_WAYFARER
 	call SSTidalRooms_EventScript_ProgessCruiseAfterBed
-#endif
 	releaseall
 	end
+#endif
 
 SSTidalRooms_EventScript_Colton::
 	trainerbattle_single TRAINER_COLTON, SSTidalRooms_Text_ColtonIntro, SSTidalRooms_Text_ColtonDefeat

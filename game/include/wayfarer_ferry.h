@@ -12,15 +12,15 @@
 struct WayfarerVoyage
 {
     u32 eventAt;        // in-game minute count of the next cast-off (in port) or arrival (at sea)
-    u16 slotDay;        // the daily-slot day frozen at boarding (the freeze itself is the passengers part)
-    u8 hosts[2];        // the two cabin hosts drawn at boarding (cabins part; zero until then)
-    u8 hostParams[2];   // each host's drawn request parameter (cabins part)
+    u16 slotDay;        // the daily-slot day frozen at boarding; DailySlots_GetDay returns it while aboard
+    u8 hosts[2];        // the two cabin hosts drawn at boarding: host table index plus one
+    u8 hostParams[2];   // each host's drawn request parameter: an index into the host's list
     u8 ship:2;          // FERRY_SHIP_*, none when not aboard
     u8 stop:2;          // index in the ship's loop of the port it's at or sailing to
     u8 phase:1;         // FERRY_PHASE_PORT or FERRY_PHASE_SEA
     u8 annePending:1;   // the Anne's first departure from Vermilion is armed
-    u8 cabin:2;         // bit n set: host n's cabin is earned (cabins part)
-    u8 hostsDone:2;     // bit n set: host n's request is settled (cabins part)
+    u8 cabin:2;         // bit n set: host n's cabin is earned
+    u8 hostsDone:2;     // bit n set: host n's request is settled
 };
 
 #if IS_WAYFARER
@@ -51,6 +51,26 @@ bool8 Ferry_BoardAt(u8 port, u8 ship, u32 now);
 u8 Ferry_Advance(u32 now);                 // applies every elapsed transition; returns what to announce
 bool8 Ferry_ArmAnneDeparture(void);        // the captain's reward
 
+// ---- Cabins (wayfarer_ferry_cabins.c) ----
+void Ferry_DrawHosts(u8 ship);             // boarding: two distinct hosts of the ship's pool with their parameters
+void Ferry_PlaceHosts(void);               // map load: the undrawn hosts' spots hide
+void Ferry_BufferPortName(u8 port);        // STR_VAR_1
+bool8 Ferry_RequestMet(u8 kind, u16 param);
+bool8 Ferry_SleepUntilEvent(void);         // at sea: the clock to eventAt, no further; FALSE in port
+u16 Ferry_HostTalk(void);
+u16 Ferry_GetHostKind(void);
+u16 Ferry_CheckRequest(void);
+void Ferry_HostMet(void);
+void Ferry_HostMissed(void);
+u16 Ferry_IsHostOneTry(void);
+u16 Ferry_SetUpHostBattle(void);
+u16 Ferry_EndHostBattle(void);
+void Ferry_BufferQuiz(void);
+u16 Ferry_QuizCorrect(void);
+void Ferry_BufferSleepPort(void);
+u16 Ferry_Sleep(void);
+u16 Ferry_IsBedMine(void);
+
 // ---- Field hooks (overworld.c, field_control_avatar.c) ----
 void Ferry_OnMapLoad(void);
 bool8 Ferry_TryStartFieldEvent(void);
@@ -78,6 +98,12 @@ void Ferry_ArmAnneDepartureScript(void);
 // Debug/test accessors.
 #if TESTING
 void Test_Ferry_SetVoyage(const struct WayfarerVoyage *voyage);
+u8 Test_Ferry_HostCount(void);
+u8 Test_Ferry_HostShip(u8 index);
+u8 Test_Ferry_HostKind(u8 index);
+u8 Test_Ferry_HostParamCount(u8 index);
+u8 Test_Ferry_FindHost(u8 ship, u8 kind);
+void Test_Ferry_StandBeforeHost(u8 index);
 #endif
 
 #endif // IS_WAYFARER

@@ -2837,6 +2837,7 @@
 #define FLAG_NO_WILD_RUNNING                      (ENGINE_FLAGS_START + 10)
 #define FLAG_NO_WILD_CATCHING                      (ENGINE_FLAGS_START + 11)
 #define FLAG_DISABLE_EXP_GAIN                      (ENGINE_FLAGS_START + 12)
+#define FLAG_NO_WHITEOUT                           (ENGINE_FLAGS_START + 13)
 #define ENGINE_FLAGS_END                        (ENGINE_FLAGS_START + NUM_ENGINE_FLAGS - 1)
 
 // A temporary authoring gate, deliberately outside the persisted engine block.

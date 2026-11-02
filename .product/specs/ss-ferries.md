@@ -1,15 +1,22 @@
 # S.S. ferries
 
 PRD: [S.S. ferries](../prds/ss-ferries.md)
-Implemented: Partial. Part 1 of 3 is built: ports and ships, the schedule
-(`Ferry_ShipAt`), the saved voyage state with every field, boarding at the four
-dock ports and the three launch ports, the ships' exits and the Anne's dynamic
-warp, the story-trip guards, sailing (cast-off and arrival announcements and
-catch-up), service, the old menus and the Lilycove charters, and the region and
-save changes. The cabin fields (`hosts`, `hostParams`, `cabin`, `hostsDone`)
-are saved but written as zero at boarding and unused. Not built yet: the
-cabins (hosts, request kinds, sleeping, the bed heal removal) and the
-passengers (the `liner` trainer rotation and the daily-slot freeze).
+Implemented: Partial. Parts 1 and 2 of 3 are built. Part 1: ports and ships, the
+schedule (`Ferry_ShipAt`), the saved voyage state with every field, boarding at
+the four dock ports and the three launch ports, the ships' exits and the Anne's
+dynamic warp, the story-trip guards, sailing (cast-off and arrival announcements
+and catch-up), service, the old menus and the Lilycove charters, and the region
+and save changes. Part 2: the cabins and the daily-slot freeze. Boarding draws
+two distinct hosts of the ship's pool (`Random()`, saved with a parameter each);
+the undrawn hosts' spots in their cabin rooms hide at map load; the talk flow and every v0 request kind work (a host battle
+borrows an existing trainer's party and never whites out); sleeping at sea jumps
+the clock to `eventAt` and reloads the map, and the arrival then plays from the
+field poll; no ship bed heals; and `DailySlots_GetDay` returns `slotDay` while
+aboard. Host table: seven hosts on the Aqua (it has seven cabin rooms), eight on
+the Anne and eight on the Tidal. Only the Tidal's existing bed event (the
+breeder's cabin) is a bed; every other host offers the sleep themselves, so the
+extra Tidal bed events are not built. Not built yet: the passengers' `liner`
+trainer rotation.
 
 ## Scope
 
