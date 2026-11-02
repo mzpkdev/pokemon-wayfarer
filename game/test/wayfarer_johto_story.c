@@ -2,12 +2,16 @@
 #include "event_data.h"
 #include "new_game.h"
 #include "script.h"
+#include "item.h"
+#include "trainer_rating.h"
+#include "wayfarer_sevii_story.h"
 #include "starter_choose.h"
 #include "wayfarer_appearance.h"
 #include "wayfarer_johto_story.h"
 #include "wayfarer_origin.h"
 #include "wayfarer_persistence.h"
 #include "test/test.h"
+#include "constants/items.h"
 #include "constants/species.h"
 #include "constants/wayfarer_johto_story.h"
 
@@ -169,6 +173,61 @@ TEST("The credits starter is the origin's own, with a neutral stand-in before a 
     FlagSet(FLAG_JOHTO_STARTER_CHOICE_COMMITTED);
     VarSet(VAR_STARTER_MON, 0);
     EXPECT_EQ(WayfarerGetOriginStarterSpecies(), GetJohtoStarterPokemon(0));
+}
+
+TEST("The Kimono trial needs the branch's Wing in the Bag, the resolved Radio Tower and the shared TR")
+{
+    u32 branch;
+    static const u16 wings[] = {ITEM_NONE, ITEM_SILVER_WING, ITEM_RAINBOW_WING};
+
+    StartAs(ORIGIN_NEW_BARK);
+    SetTrainerRating(WAYFARER_LEGENDARY_TR);
+    EXPECT_EQ(WAYFARER_BIRD_CAPTURE_TR, WAYFARER_LEGENDARY_TR);
+    for (branch = 0; branch <= 2; branch++)
+    {
+        VarSet(VAR_LUGIA_OR_HOOH, branch);
+        FlagClear(FLAG_WAYFARER_JOHTO_RADIO_TOWER_RESOLVED);
+        SetTrainerRating(0);
+        EXPECT_EQ(WayfarerJohtoKimonoMissing(), KIMONO_MISSING_BOTH);
+        SetTrainerRating(WAYFARER_LEGENDARY_TR);
+        EXPECT_EQ(WayfarerJohtoKimonoMissing(), KIMONO_MISSING_WING);
+        FlagSet(FLAG_WAYFARER_JOHTO_RADIO_TOWER_RESOLVED);
+        EXPECT_EQ(WayfarerJohtoKimonoMissing(), KIMONO_MISSING_WING);
+        if (branch == 0)
+            continue;
+        EXPECT(AddBagItem(wings[branch], 1));
+        EXPECT_EQ(WayfarerJohtoKimonoMissing(), 0);
+        EXPECT(WayfarerJohtoKimonoTrialAvailable());
+        SetTrainerRating(WAYFARER_LEGENDARY_TR - 1);
+        EXPECT_EQ(WayfarerJohtoKimonoMissing(), KIMONO_MISSING_TR);
+        SetTrainerRating(WAYFARER_LEGENDARY_TR);
+        VarSet(VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, KIMONO_CEREMONY_STARTED);
+        EXPECT(WayfarerJohtoKimonoTrialAvailable());
+        VarSet(VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, KIMONO_CEREMONY_DONE);
+        EXPECT(!WayfarerJohtoKimonoTrialAvailable());
+        VarSet(VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 0);
+        EXPECT(RemoveBagItem(wings[branch], 1));
+        EXPECT_EQ(WayfarerJohtoKimonoMissing(), KIMONO_MISSING_WING);
+    }
+}
+
+TEST("Pewter's other Wing needs the main encounter resolved and the shared TR")
+{
+    StartAs(ORIGIN_NEW_BARK);
+    VarSet(VAR_LUGIA_OR_HOOH, 1);
+    SetTrainerRating(WAYFARER_LEGENDARY_TR);
+    VarSet(VAR_COMPLETED_LUGIA, 2);
+    EXPECT_EQ(WayfarerJohtoPewterWingMissing(), PEWTER_MISSING_ENCOUNTER);
+    VarSet(VAR_COMPLETED_LUGIA, 4);
+    EXPECT_EQ(WayfarerJohtoPewterWingMissing(), PEWTER_MISSING_ENCOUNTER);
+    VarSet(VAR_COMPLETED_LUGIA, 3);
+    EXPECT_EQ(WayfarerJohtoPewterWingMissing(), 0);
+    SetTrainerRating(WAYFARER_LEGENDARY_TR - 1);
+    EXPECT_EQ(WayfarerJohtoPewterWingMissing(), PEWTER_MISSING_TR);
+    VarSet(VAR_LUGIA_OR_HOOH, 2);
+    EXPECT_EQ(WayfarerJohtoPewterWingMissing(), PEWTER_MISSING_BOTH);
+    VarSet(VAR_COMPLETED_HO_OH, 3);
+    EXPECT_EQ(WayfarerJohtoPewterWingMissing(), PEWTER_MISSING_TR);
 }
 
 #endif

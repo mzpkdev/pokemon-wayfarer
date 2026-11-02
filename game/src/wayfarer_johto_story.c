@@ -2,6 +2,10 @@
 #include "wayfarer_johto_story.h"
 #if IS_WAYFARER
 #include "event_data.h"
+#include "item.h"
+#include "trainer_rating.h"
+#include "wayfarer_sevii_story.h"
+#include "constants/items.h"
 #include "script.h"
 #include "wayfarer_origin.h"
 #include "constants/flags.h"
@@ -48,5 +52,42 @@ u16 WayfarerJohtoSilverAvailable(void)
         return FlagGet(FLAG_WAYFARER_JOHTO_SILVER_WON_11);
     }
     return FALSE;
+}
+// Special: what keeps the player from Zuki's trial, as KIMONO_MISSING_* bits (0 = nothing). The
+// selected branch's Wing must be in the Bag (a tossed Wing counts as missing), the Radio Tower
+// resolved, and TR at the shared legendary threshold. With no branch chosen the Wing is missing.
+u16 WayfarerJohtoKimonoMissing(void)
+{
+    u16 branch = VarGet(VAR_LUGIA_OR_HOOH);
+    u16 wing = branch == 1 ? ITEM_SILVER_WING : branch == 2 ? ITEM_RAINBOW_WING : ITEM_NONE;
+    u16 missing = 0;
+
+    if (wing == ITEM_NONE || !CheckBagHasItem(wing, 1) || !FlagGet(FLAG_WAYFARER_JOHTO_RADIO_TOWER_RESOLVED))
+        missing |= KIMONO_MISSING_WING;
+    if (GetTrainerRating() < WAYFARER_LEGENDARY_TR)
+        missing |= KIMONO_MISSING_TR;
+    return missing;
+}
+
+// Special: the trial can be offered now. It is over once the ceremony is done.
+u16 WayfarerJohtoKimonoTrialAvailable(void)
+{
+    return WayfarerJohtoKimonoMissing() == 0
+        && VarGet(VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE) < KIMONO_CEREMONY_DONE;
+}
+
+// Special: what keeps Pewter's old man from giving the other branch's Wing, as PEWTER_MISSING_*
+// bits. The main legendary's encounter is resolved at progress 3, which a win, a catch or a
+// flee sets; running or Teleporting writes nothing.
+u16 WayfarerJohtoPewterWingMissing(void)
+{
+    u16 main = VarGet(VAR_LUGIA_OR_HOOH) == 1 ? VarGet(VAR_COMPLETED_LUGIA) : VarGet(VAR_COMPLETED_HO_OH);
+    u16 missing = 0;
+
+    if (main != 3)
+        missing |= PEWTER_MISSING_ENCOUNTER;
+    if (GetTrainerRating() < WAYFARER_LEGENDARY_TR)
+        missing |= PEWTER_MISSING_TR;
+    return missing;
 }
 #endif
