@@ -66,49 +66,55 @@ const addMinutes = async (
 }
 
 /**
+ * Waits for the PA script a changed clock starts (it plays once the field is free) and reads it through.
+ * Returning before the script has started would let the next step press its buttons into the message.
+ */
+const readAnnouncement = async (game: GameSession, description: string): Promise<void> => {
+  let seen = false
+  for (let attempt = 0; attempt < 60; attempt++) {
+    await game.wait.frames(30)
+    const state = await game.state.read()
+    if (state.scriptActive || state.dialogueOpen || !state.ready) {
+      seen = true
+      await game.controls.press("a")
+    } else if (seen) return
+  }
+  throw new Error(`${description}: ${JSON.stringify(await game.state.read())}`)
+}
+
+/**
  * Rides one leg: the ship casts off half an in-game hour after it was boarded or arrived, and
  * arrives six hours later. Each announcement plays once the field is free and is read through.
  */
 export const sailFerryLeg = async (game: GameSession): Promise<void> => {
   await game.clock.setTimeOfDay(await addMinutes(game, 31))
-  await advanceUntil(
-    game,
-    async () => (await game.state.read()).ready,
-    "The cast-off was not announced",
-  )
-  await game.wait.frames(60)
-  await game.controls.press("a")
-  await game.wait.frames(30)
+  await readAnnouncement(game, "The cast-off was not announced")
   await game.clock.setTimeOfDay(await addMinutes(game, 361))
-  await game.wait.frames(60)
-  await game.controls.press("a")
-  await game.wait.frames(30)
-  await advanceUntil(
-    game,
-    async () => (await game.state.read()).ready,
-    "The arrival was not announced",
-  )
+  await readAnnouncement(game, "The arrival was not announced")
 }
 
 /**
  * Goes ashore from the Aqua or the Tidal: the exit sailor stands next to the entry tile (the
- * Aqua's above it, the Tidal's below), so the player turns to face him and talks.
+ * Aqua's above it, the Tidal's below). Each attempt turns the player toward him while the field is
+ * free (a turn into a blocked tile is only a turn), talks, and reads the dialogue through.
  */
 export const goAshoreFromExitSailor = async (
   game: GameSession,
   facing: "up" | "down",
   destination: GameMap,
 ): Promise<void> => {
-  await game.controls.press(facing)
-  await game.wait.frames(12)
-  await game.player.interact()
-  await advanceUntil(
-    game,
-    async () => {
-      const state = await game.state.read()
-      return state.map.name === destination && state.ready
-    },
-    `Going ashore did not reach ${destination}`,
+  for (let attempt = 0; attempt < 60; attempt++) {
+    const state = await game.state.read()
+    if (state.map.name === destination && state.ready) return
+    if (state.ready && !state.scriptActive && !state.dialogueOpen) {
+      await game.controls.press(facing)
+      await game.wait.frames(12)
+      await game.player.interact()
+    } else await game.controls.press("a")
+    await game.wait.frames(30)
+  }
+  throw new Error(
+    `Going ashore did not reach ${destination}: ${JSON.stringify(await game.state.read())}`,
   )
 }
 

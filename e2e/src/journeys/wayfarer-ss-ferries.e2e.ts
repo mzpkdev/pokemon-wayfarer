@@ -145,10 +145,9 @@ describe.sequential("Wayfarer S.S. ferries", () => {
     // Rows: the ship in port (the Aqua by day), BATTLE FRONTIER, CANCEL. Pick the charter and confirm.
     await game.player.interact()
     await game.wait.frames(60)
+    // "May I see your ticket?" waits for a press, then the menu opens on its first row.
     await game.controls.press("a")
-    await game.wait.frames(30)
-    await game.controls.press("a")
-    await game.wait.frames(30)
+    await game.wait.frames(60)
     await game.controls.press("down")
     await game.wait.frames(10)
     await game.controls.press("a")

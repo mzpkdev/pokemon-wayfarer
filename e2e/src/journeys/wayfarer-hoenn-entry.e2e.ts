@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it } from "webanvil/test"
 
-import { GameSession, type Direction } from "../harness/game-session"
+import { GameSession } from "../harness/game-session"
 import {
   boardFerryAtDock,
   goAshoreFromExitSailor,
@@ -8,23 +8,6 @@ import {
   sailFerryLeg,
   waitAboard,
 } from "../playbooks/wayfarer-ports"
-
-const moveOneTile = async (game: GameSession, direction: Direction): Promise<void> => {
-  await game.wait.forReady()
-  const before = await game.state.read()
-  for (let attempt = 0; attempt < 3; attempt++) {
-    await game.player.move(direction)
-    await game.wait.frames(12)
-    const after = await game.state.read()
-    if (
-      after.map.name !== before.map.name ||
-      after.player.x !== before.player.x ||
-      after.player.y !== before.player.y
-    )
-      return
-  }
-  throw new Error(`Could not move ${direction}: ${JSON.stringify(await game.state.read())}`)
-}
 
 describe.sequential("Wayfarer Hoenn entry", () => {
   let game: GameSession
@@ -69,9 +52,7 @@ describe.sequential("Wayfarer Hoenn entry", () => {
     await expect(game.inventory.contains("ssTicket")).resolves.toBe(true)
 
     // The Tidal is Slateport's ship by day: step to the attendant at (8,10), who boards with no question.
-    await moveOneTile(game, "left")
-    await game.controls.press("up")
-    await game.wait.frames(12)
+    await game.player.warp("slateport-city-harbor", 8, 11, "up")
     await boardFerryAtDock(game)
     await waitAboard(game, "ss-tidal-corridor")
     await expect(game.state.read()).resolves.toMatchObject({ player: { x: 1, y: 10 } })

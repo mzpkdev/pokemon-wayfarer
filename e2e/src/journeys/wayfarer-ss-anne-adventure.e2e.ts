@@ -2,6 +2,7 @@ import { beforeAll, describe, expect, it } from "webanvil/test"
 
 import { GameSession, type GameMap } from "../harness/game-session"
 import { advanceOpeningUntil } from "../playbooks/regional-opening"
+import { waitAboard } from "../playbooks/wayfarer-ports"
 
 const vermilionDock = { map: "vermilion-port-inside", x: 8, y: 9 } as const
 const billPosition = { map: "route25-bills-house", x: 5, y: 6, facing: "left" } as const
@@ -247,11 +248,8 @@ describe.sequential("Wayfarer S.S. Anne persistent adventure", () => {
     await game.player.interact()
     await game.wait.frames(30)
     await game.controls.press("a")
-    await waitForMap(
-      game,
-      "ss-anne-1f-corridor",
-      "S.S. Anne did not board through the ferry at night",
-    )
+    // "Welcome aboard" waits for a button press; the playbook reads it through and rides the walk aboard.
+    await waitAboard(game, "ss-anne-1f-corridor")
     await expect(game.state.read()).resolves.toMatchObject({ player: { x: 19, y: 2 } })
     await expect(game.story.flag("ssAnneCaptainRewarded")).resolves.toBe(true)
   })
