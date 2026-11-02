@@ -1,5 +1,6 @@
 ---
 import CtaProfessor from "~/components/cta/CtaProfessor.astro"
+import WorldSection from "~/components/WorldSection.astro"
 import { TitleScene } from "~/components/TitleScene"
 import Layout from "~/layouts/Layout.astro"
 import { FEATURES, ORIGINS, REPOSITORY_URL, STATS } from "~/lib/content"
@@ -29,7 +30,7 @@ const volbeats = [
       </div>
 
       <!-- Content starts over the edge's solid ground, so it follows the plants closely. -->
-      <div class="relative -mt-[calc(12*var(--scene-px))] overflow-hidden bg-ground">
+      <div class="relative -mt-[calc(12*var(--scene-px))] overflow-x-clip bg-ground">
         <div class="pointer-events-none absolute inset-0 hidden md:block" aria-hidden="true">
           {
             volbeats.map(({ top, duration, delay, rightward }) => (
@@ -49,7 +50,10 @@ const volbeats = [
           }
         </div>
 
-        <!-- The focal point after the Poké Ball: PROF. OAK asks for your email. -->
+        <!-- The highlights come first: the size of the world. -->
+        <WorldSection />
+
+        <!-- Then PROF. OAK asks for your email. -->
         <CtaProfessor />
 
         <section aria-labelledby="about" class="relative mx-auto max-w-5xl px-6 py-16">

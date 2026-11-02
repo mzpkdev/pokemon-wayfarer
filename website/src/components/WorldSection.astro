@@ -1,0 +1,52 @@
+---
+/**
+ * The size of the world, the first highlight under the title scene: the
+ * region maps on one ocean, pulled back from LITTLEROOT TOWN as you scroll.
+ */
+import { type Caption, WorldZoom } from "~/components/WorldZoom"
+
+// Counted from what the build compiles and a player can reach (see the
+// website-landing task note): Sinnoh's maps are compiled but unreachable.
+const captions: Caption[] = [
+  {
+    place: "LITTLEROOT TOWN",
+    title: "It starts in one small town.",
+    body: "Begin in Johto, Hoenn or Kanto. Wherever you start, everywhere else is a walk, a surf or a ferry ride away.",
+  },
+  {
+    place: "HOENN",
+    title: "Then a whole region opens up.",
+    body: "16 towns and cities and 34 routes, over land and sea. All of it is yours to roam.",
+  },
+  {
+    place: "THE WORLD",
+    title: "And Hoenn is only one of four.",
+    body: "Johto, Kanto, Hoenn and the Sevii Islands, on one save. Three ships sail between them, and the S.S. Anne sails on to Alola.",
+    stats: [
+      { value: "43", label: "towns and cities" },
+      { value: "82", label: "routes" },
+      { value: "7", label: "ports" },
+    ],
+  },
+]
+---
+
+<section aria-labelledby="world" class="world relative">
+  <h2 id="world" class="sr-only">The world of Pokémon Wayfarer</h2>
+  <div class="sticky top-0 h-svh overflow-hidden">
+    <WorldZoom client:visible captions={captions} />
+  </div>
+</section>
+
+<style>
+  /* The scroll the camera's pull-back plays over; one screen when it can't move. */
+  .world {
+    height: 420svh;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .world {
+      height: 100svh;
+    }
+  }
+</style>

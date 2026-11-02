@@ -284,6 +284,70 @@ for (const species of ["wooper", "torchic", "manectric", "volbeat", "flygon"]) {
   manifest[name].art = opaqueBounds(image)
 }
 
+// The region maps the POKéNAV and Town Map draw, for the world section. Each
+// is an 8bpp affine background, one byte per tile on a 64x64 tile grid. Its
+// sea is a two-color stripe; drop it so every region can sit on one shared
+// ocean, and keep the stripe's colors to paint that ocean with.
+const regionMap = (name, { width = 512 } = {}) => {
+  const sheet = readPng(source(`pokenav/region_map/${name}.png`))
+  const map = fs.readFileSync(source(`pokenav/region_map/${name}.bin`))
+  const palette = sheet.palette
+  const tilesPerRow = sheet.width / 8
+  const counts = new Map()
+  for (const tile of map) counts.set(tile, (counts.get(tile) ?? 0) + 1)
+  const seaTile = [...counts].toSorted((a, b) => b[1] - a[1])[0][0]
+  const seaIndex = (row) =>
+    sheet.samples[
+      (Math.floor(seaTile / tilesPerRow) * 8 + row) * sheet.width + (seaTile % tilesPerRow) * 8
+    ]
+  const sea = [seaIndex(0), seaIndex(1)]
+  const seaColors = sea.map((index) => palette[index].slice(0, 3))
+  const isSea = (index) =>
+    seaColors.some((color) => color.every((channel, i) => channel === palette[index][i]))
+
+  const image = { width, height: 512, rgba: new Uint8Array(width * 512 * 4) }
+  map.forEach((tile, i) => {
+    const originX = (i % 64) * 8
+    const originY = Math.floor(i / 64) * 8
+    if (originX >= width) return
+    const tileX = (tile % tilesPerRow) * 8
+    const tileY = Math.floor(tile / tilesPerRow) * 8
+    for (let y = 0; y < 8; y++)
+      for (let x = 0; x < 8; x++) {
+        const index = sheet.samples[(tileY + y) * sheet.width + tileX + x]
+        if (index === 0 || isSea(index)) continue
+        image.rgba.set(
+          [...palette[index].slice(0, 3), 255],
+          ((originY + y) * width + originX + x) * 4,
+        )
+      }
+  })
+  return { image: trim(image), seaColors }
+}
+
+// The Sevii maps end in the Town Map's switch-map button at column 22; leave it off.
+for (const [name, file, width] of [
+  ["hoenn", "map"],
+  ["johto-kanto", "map_jk"],
+  ["sevii-123", "map_sevii_123", 168],
+  ["sevii-45", "map_sevii_45", 168],
+  ["sevii-67", "map_sevii_67", 168],
+]) {
+  const { image, seaColors } = regionMap(file, { width })
+  save(`world/${name}.png`, image)
+  manifest[`world/${name}.png`].sea = seaColors
+}
+
+// The player's icon on the region map, and the SEAGALLOP ferry to sail the lanes.
+save("world/brendan.png", renderIndexed(source("pokenav/region_map/brendan_icon.png")))
+save(
+  "world/ferry.png",
+  renderIndexed(
+    source("seagallop/ferry_sprite.png"),
+    readJascPalette(source("seagallop/ferry_and_wake.pal")),
+  ),
+)
+
 // Key item icons, each colored by its palette (named when the icon shares one).
 for (const [item, palette = item] of [
   ["town_map"],
