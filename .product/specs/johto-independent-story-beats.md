@@ -51,10 +51,11 @@ for object visibility or dialogue must read the owning adventure's state.
 Allocate new flags and variables through the existing Wayfarer framework, as
 the Kanto local adventures do.
 
-**Town setup.** Goldenrod, Ecruteak, Olivine, and Mahogany run their first-visit
-setup on the player's first entry into the town by any route, including ship,
-Magnet Train, and Fly. Today it runs from coordinate triggers on Routes 34, 37,
-39, and 42. Move it to the town's map load, once, behind its visited flag.
+**Town setup.** Goldenrod, Ecruteak, Olivine, Mahogany, Azalea, and Blackthorn
+run their first-visit setup on the player's first entry into the town by any
+route, including ship, Magnet Train, and Fly. Today it runs from coordinate
+triggers on approach roads (Routes 34, 37, 39, 42, and 33). Blackthorn's setup
+lives inside Mahogany's, so arriving by Routes 45 and 46 skips it. Move it to the town's map load, once, behind its visited flag.
 Setup only initializes state that is still at its initial value, and never
 clears a reward, a branch choice, or another adventure's progress. Among the
 current writes, Goldenrod must keep `VAR_LUGIA_OR_HOOH` and its gift flags,
