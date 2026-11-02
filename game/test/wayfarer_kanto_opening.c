@@ -78,7 +78,6 @@ TEST("Pallet origin has stable profile bedroom recovery catalog and isolated fre
     EXPECT(WayfarerPersistentStateIsValid());
     EXPECT(!FlagGet(FLAG_JOHTO_STARTER_RECEIVED));
     EXPECT(!FlagGet(FLAG_HOENN_STARTER_RECEIVED));
-    EXPECT(!WayfarerCanUseRegularAqua());
     EXPECT(!WayfarerCanReceiveSlateportTicket());
 }
 

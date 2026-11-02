@@ -13,6 +13,7 @@
 #include "wayfarer_persistence.h"
 #include "wayfarer_sevii_state.h"
 #include "wayfarer_origin.h"
+#include "wayfarer_ferry.h"
 #include "wayfarer_kanto_opening.h"
 #include "wayfarer_appearance.h"
 #include "wayfarer_sevii_story.h"
@@ -475,6 +476,12 @@ void WayfarerUpdateHnsRegionContextForMap(s16 mapGroup, s16 mapNum)
      || mapNum < 0 || mapNum >= MAP_GROUP_COUNT[mapGroup])
         return;
 
+    // Aboard a ferry the ship maps keep their own fixed regions (Aqua Johto, Anne Kanto, Tidal Hoenn-source):
+    // loading one neither changes the saved current region nor marks one visited. Going ashore sets the
+    // region through the port's normal map load (.product/specs/ss-ferries.md#region-and-saves).
+    if (Ferry_IsAboard() && Ferry_IsShipMap(mapGroup, mapNum))
+        return;
+
     if (IsWayfarerMastersCircuitMap(mapGroup, mapNum))
     {
         WayfarerSetSavedCurrentRegion(REGION_KANTO);
@@ -545,15 +552,12 @@ u16 WayfarerShouldWhiteOutToLavaridge(void)
         && FlagGet(HOENN_FLAG_ID(WAYFARER_HOENN_WHITEOUT_TO_LAVARIDGE_FLAG));
 }
 
-static bool8 IsWayfarerHoennEntryDestinationValid(s16 mapGroup, s16 mapNum, s16 x, s16 y,
-                                                  u8 healLocationId)
+// A tile on a Hoenn-source map the player can stand on. Boarding the Tidal only needs this much of its
+// entry tile; going ashore also checks the tile's elevation, coordinate events and heal location.
+static bool8 IsWayfarerHoennTileStandable(s16 mapGroup, s16 mapNum, s16 x, s16 y, u16 *metatile)
 {
     const struct MapHeader *mapHeader;
     const struct MapLayout *mapLayout;
-    const struct MapEvents *events;
-    const struct HealLocation *healLocation;
-    u32 i;
-    u16 metatile;
     enum MapLayoutLoadError layoutError;
 
     if (!IsWayfarerMapHoennSource(mapGroup, mapNum))
@@ -567,16 +571,28 @@ static bool8 IsWayfarerHoennEntryDestinationValid(s16 mapGroup, s16 mapNum, s16 
     if (x < 0 || y < 0 || x >= mapLayout->width || y >= mapLayout->height)
         return FALSE;
 
-    layoutError = MapLayoutReadTile(mapLayout, x, y, &metatile);
+    layoutError = MapLayoutReadTile(mapLayout, x, y, metatile);
     if (layoutError != MAP_LAYOUT_LOAD_OK)
     {
         AbortMapLayoutLoad(layoutError, mapGroup, mapNum, mapHeader->mapLayoutId);
         return FALSE;
     }
-    if (UNPACK_COLLISION(metatile) != 0 || UNPACK_ELEVATION(metatile) != ELEVATION_DEFAULT)
+    return UNPACK_COLLISION(*metatile) == 0;
+}
+
+static bool8 IsWayfarerHoennEntryDestinationValid(s16 mapGroup, s16 mapNum, s16 x, s16 y,
+                                                  u8 healLocationId)
+{
+    const struct MapEvents *events;
+    const struct HealLocation *healLocation;
+    u32 i;
+    u16 metatile;
+
+    if (!IsWayfarerHoennTileStandable(mapGroup, mapNum, x, y, &metatile)
+     || UNPACK_ELEVATION(metatile) != ELEVATION_DEFAULT)
         return FALSE;
 
-    events = mapHeader->events;
+    events = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum)->events;
     for (i = 0; i < events->coordEventCount; i++)
     {
         if (events->coordEvents[i].x == x && events->coordEvents[i].y == y)
@@ -591,52 +607,52 @@ static bool8 IsWayfarerHoennEntryDestinationValid(s16 mapGroup, s16 mapNum, s16 
     return TRUE;
 }
 
-static bool8 PrepareWayfarerHoennEntryAt(s16 mapGroup, s16 mapNum, s16 x, s16 y,
-                                         u8 healLocationId)
+// Hoenn's one-time baseline: Emerald's pre-campaign object visibility, the starter choice and the marker.
+// It sets neither the saved region nor the respawn, so it can run when the player merely boards a ship
+// whose maps are Hoenn-source.
+static void InitializeWayfarerHoennBaseline(void)
+{
+    if (WayfarerHoennStateIsInitialized())
+        return;
+
+    // This script is assembled inside the fixed Hoenn source boundary.
+    // It establishes only Emerald's pre-campaign object visibility and
+    // deliberately does not initialize the shared HNS berry state.
+    RunScriptImmediately(WayfarerHoennEntry_EventScript_InitializeBaseline);
+    RunScriptImmediately(WayfarerHoennVisitor_EventScript_InitializeArrival);
+    VarSet(VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_NONE);
+    FlagClear(FLAG_HOENN_STARTER_RECEIVED);
+
+    // The marker is the commit point. No operation that can fail may be
+    // added after this write.
+    WayfarerSetHoennStateInitialized(TRUE);
+}
+
+// Initializing Hoenn's state, before the first warp onto any Hoenn-source map (boarding the Tidal, or going
+// ashore at Slateport or Lilycove). A refusal changes nothing.
+bool8 WayfarerInitializeHoennState(s16 mapGroup, s16 mapNum, s16 x, s16 y)
+{
+    u16 metatile;
+
+    if (!IsWayfarerHoennTileStandable(mapGroup, mapNum, x, y, &metatile))
+        return FALSE;
+    InitializeWayfarerHoennBaseline();
+    return TRUE;
+}
+
+// Arriving in Hoenn: validates the tile and heal location, initializes the state if this is the first time,
+// then sets the saved region to Hoenn and the respawn. A refusal changes nothing.
+bool8 WayfarerPrepareHoennEntry(s16 mapGroup, s16 mapNum, s16 x, s16 y, u8 healLocationId)
 {
     if (!IsWayfarerHoennEntryDestinationValid(mapGroup, mapNum, x, y, healLocationId))
         return FALSE;
 
-    if (!WayfarerHoennStateIsInitialized())
-    {
-        // This script is assembled inside the fixed Hoenn source boundary.
-        // It establishes only Emerald's pre-campaign object visibility and
-        // deliberately does not initialize the shared HNS berry state.
-        RunScriptImmediately(WayfarerHoennEntry_EventScript_InitializeBaseline);
-        RunScriptImmediately(WayfarerHoennVisitor_EventScript_InitializeArrival);
-        VarSet(VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_NONE);
-        FlagClear(FLAG_HOENN_STARTER_RECEIVED);
-        SetRegionVisitedState(REGION_HOENN, TRUE);
-        WayfarerSetSavedCurrentRegion(REGION_HOENN);
-        SetLastHealLocationWarp(healLocationId);
-
-        // The marker is the commit point. No operation that can fail may be
-        // added after this write.
-        WayfarerSetHoennStateInitialized(TRUE);
-        return TRUE;
-    }
-
-    // Future/debug repeat arrivals refresh travel state without touching any
-    // Hoenn campaign progress.
+    InitializeWayfarerHoennBaseline();
+    SetRegionVisitedState(REGION_HOENN, TRUE);
     WayfarerSetSavedCurrentRegion(REGION_HOENN);
     SetLastHealLocationWarp(healLocationId);
     return TRUE;
 }
-
-u16 WayfarerPrepareHoennEntry(void)
-{
-    return PrepareWayfarerHoennEntryAt(MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR),
-                                       MAP_NUM(MAP_SLATEPORT_CITY_HARBOR),
-                                       9, 11, HEAL_LOCATION_SLATEPORT_CITY);
-}
-
-#if TESTING
-bool8 Test_WayfarerPrepareHoennEntryAt(s16 mapGroup, s16 mapNum, s16 x, s16 y,
-                                       u8 healLocationId)
-{
-    return PrepareWayfarerHoennEntryAt(mapGroup, mapNum, x, y, healLocationId);
-}
-#endif
 #endif
 
 static u16 GetFieldMoveFlagForCurrentSource(u16 flagId)

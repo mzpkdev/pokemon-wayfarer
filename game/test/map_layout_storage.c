@@ -923,7 +923,7 @@ TEST("Map layout storage propagates every loader error through Hoenn entry befor
         WayfarerSetSavedCurrentRegion(REGION_JOHTO);
         Test_MapLayoutResetHooks();
         Test_MapLayoutInjectOpenError(1, error);
-        EXPECT(!Test_WayfarerPrepareHoennEntryAt(
+        EXPECT(!WayfarerPrepareHoennEntry(
             MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR), MAP_NUM(MAP_SLATEPORT_CITY_HARBOR),
             9, 11, HEAL_LOCATION_SLATEPORT_CITY));
         EXPECT(gMapLayoutLoadError.active);

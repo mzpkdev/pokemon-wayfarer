@@ -17,9 +17,14 @@
 
 #define HOENN_FLAG_HIDE_SLATEPORT_CAPTAIN_STERN HOENN_FLAG_ID(0x349)
 #define HOENN_FLAG_HIDE_SLATEPORT_SS_TIDAL      HOENN_FLAG_ID(0x35C)
-#define HOENN_FLAG_HIDE_SLATEPORT_WAYFARER_AQUA_ATTENDANT HOENN_FLAG_ID(0x493)
 #define HOENN_FLAG_HIDE_ROUTE_101_BIRCH         HOENN_FLAG_ID(0x381)
 #define HOENN_VAR_SLATEPORT_HARBOR_STATE        HOENN_VAR_ID(0x40A0)
+
+static bool8 PrepareSlateportEntry(void)
+{
+    return WayfarerPrepareHoennEntry(MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR), MAP_NUM(MAP_SLATEPORT_CITY_HARBOR),
+                                     9, 11, HEAL_LOCATION_SLATEPORT_CITY);
+}
 
 static const struct MapHeader *GetSlateportHarborHeader(void)
 {
@@ -102,7 +107,7 @@ TEST("Wayfarer first Hoenn entry establishes only the Hoenn baseline")
     CreateMon(&gPlayerParty[0], SPECIES_TYPHLOSION, 42, 0, OTID_STRUCT_PLAYER_ID);
     memcpy(&partyBefore, &gPlayerParty[0], sizeof(partyBefore));
 
-    EXPECT(WayfarerPrepareHoennEntry());
+    EXPECT(PrepareSlateportEntry());
 
     EXPECT(WayfarerHoennStateIsInitialized());
     EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_HOENN);
@@ -111,7 +116,6 @@ TEST("Wayfarer first Hoenn entry establishes only the Hoenn baseline")
     EXPECT(!FlagGet(FLAG_HOENN_STARTER_RECEIVED));
     EXPECT(FlagGet(HOENN_FLAG_HIDE_SLATEPORT_CAPTAIN_STERN));
     EXPECT(FlagGet(HOENN_FLAG_HIDE_SLATEPORT_SS_TIDAL));
-    EXPECT(!FlagGet(HOENN_FLAG_HIDE_SLATEPORT_WAYFARER_AQUA_ATTENDANT));
     EXPECT(FlagGet(HOENN_FLAG_HIDE_ROUTE_101_BIRCH));
     EXPECT_EQ(VarGet(HOENN_VAR_SLATEPORT_HARBOR_STATE), 0);
     EXPECT(!GetChampionStateForRegion(REGION_HOENN));
@@ -137,7 +141,7 @@ TEST("Wayfarer repeat Hoenn entry preserves campaign progress and refreshes trav
     const struct HealLocation *slateportHeal = GetHealLocation(HEAL_LOCATION_SLATEPORT_CITY);
 
     WayfarerInitPersistentState();
-    EXPECT(WayfarerPrepareHoennEntry());
+    EXPECT(PrepareSlateportEntry());
     FlagSet(progressFlag);
     VarSet(progressVar, 2);
     SetBadgeStateForRegion(REGION_HOENN, 3, TRUE);
@@ -145,7 +149,7 @@ TEST("Wayfarer repeat Hoenn entry preserves campaign progress and refreshes trav
 
     WayfarerSetSavedCurrentRegion(REGION_KANTO);
     SetLastHealLocationWarp(HEAL_LOCATION_NEW_BARK_TOWN_HNS);
-    EXPECT(WayfarerPrepareHoennEntry());
+    EXPECT(PrepareSlateportEntry());
 
     EXPECT(WayfarerHoennStateIsInitialized());
     EXPECT(FlagGet(progressFlag));
@@ -172,18 +176,18 @@ TEST("Wayfarer Hoenn entry preflight failure is atomic")
 
     // (8, 11) is a real harbor coordinate event and therefore an invalid
     // arrival tile even though its collision permits walking.
-    EXPECT(!Test_WayfarerPrepareHoennEntryAt(MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR),
+    EXPECT(!WayfarerPrepareHoennEntry(MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR),
                                              MAP_NUM(MAP_SLATEPORT_CITY_HARBOR),
                                              8, 11, HEAL_LOCATION_SLATEPORT_CITY));
     EXPECT_EQ(memcmp(&stateBefore, &gSaveBlock3Ptr->wayfarerHoenn, sizeof(stateBefore)), 0);
     EXPECT_EQ(memcmp(&healBefore, &gSaveBlock1Ptr->lastHealLocation, sizeof(healBefore)), 0);
 
-    EXPECT(!Test_WayfarerPrepareHoennEntryAt(MAP_GROUP(MAP_NEW_BARK_TOWN_HNS),
+    EXPECT(!WayfarerPrepareHoennEntry(MAP_GROUP(MAP_NEW_BARK_TOWN_HNS),
                                              MAP_NUM(MAP_NEW_BARK_TOWN_HNS),
                                              9, 11, HEAL_LOCATION_SLATEPORT_CITY));
     EXPECT_EQ(memcmp(&stateBefore, &gSaveBlock3Ptr->wayfarerHoenn, sizeof(stateBefore)), 0);
 
-    EXPECT(!Test_WayfarerPrepareHoennEntryAt(MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR),
+    EXPECT(!WayfarerPrepareHoennEntry(MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR),
                                              MAP_NUM(MAP_SLATEPORT_CITY_HARBOR),
                                              9, 11, HEAL_LOCATION_NONE));
     EXPECT_EQ(memcmp(&stateBefore, &gSaveBlock3Ptr->wayfarerHoenn, sizeof(stateBefore)), 0);

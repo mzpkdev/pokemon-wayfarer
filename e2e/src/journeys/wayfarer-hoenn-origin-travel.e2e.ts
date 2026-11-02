@@ -1,26 +1,16 @@
 import { describe, expect, it } from "webanvil/test"
 
-import { GameSession, type GameMap } from "../harness/game-session"
+import { GameSession } from "../harness/game-session"
 import { advanceOpeningUntil, receiveBirchStarter } from "../playbooks/regional-opening"
-import { beginWayfarerRegularAquaDeparture } from "../playbooks/wayfarer-ports"
+import {
+  boardFerryAtDock,
+  goAshoreFromExitSailor,
+  sailFerryLeg,
+  waitAboard,
+} from "../playbooks/wayfarer-ports"
 
-const finishDeparture = async (game: GameSession, destination: GameMap): Promise<void> => {
-  for (let attempt = 0; attempt < 100; attempt++) {
-    await game.wait.frames(45)
-    const state = await game.state.read()
-    if (state.map.name === destination && state.ready) return
-    await game.controls.press("a")
-  }
-  throw new Error(`Aqua did not reach ${destination}: ${JSON.stringify(await game.state.read())}`)
-}
-
-const depart = async (game: GameSession, destination: GameMap): Promise<void> => {
-  await game.player.interact()
-  await finishDeparture(game, destination)
-}
-
-describe.sequential("Littleroot-origin regular Aqua circuit", () => {
-  it("grants its Ticket, visits both HNS ports, and returns without maiden-voyage progress", async () => {
+describe.sequential("Littleroot-origin ferry network", () => {
+  it("grants its Ticket at Slateport, rides the S.S. Aqua to Olivine and Vermilion and keeps its own origin state", async () => {
     const game = await GameSession.launch()
     try {
       await game.arrange({
@@ -30,24 +20,32 @@ describe.sequential("Littleroot-origin regular Aqua circuit", () => {
       })
       await receiveBirchStarter(game, 1)
       const partner = (await game.state.read()).party
-      await game.player.warp("slateport-city-harbor", 14, 11, "right")
-      await depart(game, "olivine-port-inside")
+      // Slateport's ship at night is the Aqua (Lilycove -> Olivine -> Vermilion lie on its loop). Starting at 4:00
+      // leaves room for three legs before midnight, and the clock never crosses it.
+      await game.clock.setTimeOfDay({ hour: 4, minute: 0, second: 0 })
+      // The Hoenn start's Ticket moved to the Slateport gangway sailor (the attendant at (8,10)).
+      await game.player.warp("slateport-city-harbor", 8, 11, "up")
+      expect(await game.inventory.contains("ssTicket")).toBe(false)
+      await boardFerryAtDock(game)
+      await waitAboard(game, "ss-aqua-1f")
       expect(await game.inventory.contains("ssTicket")).toBe(true)
+
+      // Slateport -> Lilycove (stay aboard) -> Olivine.
+      await sailFerryLeg(game)
+      await sailFerryLeg(game)
+      await goAshoreFromExitSailor(game, "up", "olivine-port-inside")
+
       for (const [port, recovery] of [
         ["olivine-port-inside", "olivine-city"],
         ["vermilion-port-inside", "vermilion-city"],
-        ["slateport-city-harbor", "slateport-city"],
       ] as const) {
         if (port === "vermilion-port-inside") {
-          await game.controls.press("down")
-          await game.wait.frames(24)
-          await depart(game, port)
-        }
-        if (port === "slateport-city-harbor") {
-          await game.controls.press("down")
-          await game.wait.frames(24)
-          await beginWayfarerRegularAquaDeparture(game)
-          await finishDeparture(game, port)
+          // Olivine -> Vermilion by day on the same ship.
+          await game.player.warp("olivine-port-inside", 8, 16, "down")
+          await boardFerryAtDock(game)
+          await waitAboard(game, "ss-aqua-1f")
+          await sailFerryLeg(game)
+          await goAshoreFromExitSailor(game, "up", port)
         }
         const state = await game.state.read()
         expect(state).toMatchObject({
@@ -72,17 +70,16 @@ describe.sequential("Littleroot-origin regular Aqua circuit", () => {
         expect((await game.state.read()).origin).toEqual(state.origin)
         await game.battle.startWild({ species: "pidgey", level: 2, moves: ["tackle"] })
         await game.battle.lose()
-        const center = port === "slateport-city-harbor" ? "slateport-pokemon-center" : recovery
         await advanceOpeningUntil(
           game,
-          (current) => current.ready && current.map.name === center,
+          (current) => current.ready && current.map.name === recovery,
           `blackout did not reach the local recovery point after ${port}`,
         )
         expect((await game.state.read()).origin.id).toBe(2)
         expect(await game.inventory.contains("ssTicket")).toBe(true)
         expect((await game.state.read()).party.every((mon) => !mon.fainted)).toBe(true)
-        await game.player.warp(port, state.player.x, state.player.y, "down")
       }
+      // Johto, Kanto and Hoenn have all been visited.
       expect((await game.state.read()).origin.visitedRegions).toBe(7)
     } finally {
       await game.close()

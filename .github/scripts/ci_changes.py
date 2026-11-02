@@ -25,6 +25,7 @@ BUILD_INPUT_DOCS = frozenset({
     ".product/specs/phone-rematches.md",
     ".product/specs/prowlers.md",
     ".product/specs/reach-assignments.md",
+    ".product/specs/ss-ferries.md",
     ".product/specs/wayfarer-hoenn-content-port.md",
     ".product/specs/wayfarer-regional-start-choice.md",
     ".product/specs/world-items.md",

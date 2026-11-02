@@ -27,12 +27,14 @@ SSAnne_CaptainsOffice_EventScript_Captain::
 	goto_if_eq VAR_RESULT, FALSE, SSAnne_CaptainsOffice_EventScript_NoRoomForCut
 	msgbox SSAnne_CaptainsOffice_Text_ExplainCut
 	setflag FLAG_WAYFARER_SS_ANNE_CAPTAIN_REWARDED
+	call Ferry_EventScript_AnneFirstDeparture
 	release
 	end
 
 SSAnne_CaptainsOffice_EventScript_WayfarerAlreadyOwnsCut::
 	msgbox SSAnne_CaptainsOffice_Text_WayfarerAlreadyOwnsCut
 	setflag FLAG_WAYFARER_SS_ANNE_CAPTAIN_REWARDED
+	call Ferry_EventScript_AnneFirstDeparture
 	release
 	end
 

@@ -1,7 +1,15 @@
 # S.S. ferries
 
 PRD: [S.S. ferries](../prds/ss-ferries.md)
-Implemented: No
+Implemented: Partial. Part 1 of 3 is built: ports and ships, the schedule
+(`Ferry_ShipAt`), the saved voyage state with every field, boarding at the four
+dock ports and the three launch ports, the ships' exits and the Anne's dynamic
+warp, the story-trip guards, sailing (cast-off and arrival announcements and
+catch-up), service, the old menus and the Lilycove charters, and the region and
+save changes. The cabin fields (`hosts`, `hostParams`, `cabin`, `hostsDone`)
+are saved but written as zero at boarding and unused. Not built yet: the
+cabins (hosts, request kinds, sleeping, the bed heal removal) and the
+passengers (the `liner` trainer rotation and the daily-slot freeze).
 
 ## Scope
 
@@ -139,8 +147,9 @@ scheduled ship, or nothing when the berth is empty.
 - The Aqua and Tidal sprites are both 96×40.
 - The Anne's sprite (`OBJ_EVENT_GFX_SS_ANNE`, 128×64) shows at Vermilion. It
   has to be placed so it sits on the berth's water without covering the
-  sailor's tile or the walkway. That needs a visual check in Porymap; this
-  spec doesn't fix pixel offsets.
+  sailor's tile or the walkway. At Vermilion she is one row further out than
+  the Aqua (object at (8,14), rows 11–14 of water, clear of the sailor at
+  (8,10)). That still needs a visual check in Porymap.
 
 **Talking to the sailor:**
 - **No ship in, or the scheduled ship not in service:** the sailor says which
@@ -188,10 +197,12 @@ and without `setrespawn`:
   hidden whatever the table says, and nobody boards there. Arrivals still land
   at (9,11), which is outside the scene's x=8 triggers.
 
-**The departure board.** Each dock port's existing sign, or a new sign event
-next to the sailor if there is none, reads the port's by-day and by-night
-ships and where each sails next. At One Island and Melemele it also says the
-berth is empty 0:00–4:00. It shows no hosts.
+**The departure board.** A new sign event on a wall tile next to the sailor's
+path (none of the docks has a sign) reads the port's by-day and by-night
+ships and where each sails next. Melemele has one too, and says the berth is
+empty 0:00–4:00. The One Island and Seven Island harbors have no board (their
+maps come from the Sevii manifest): their launch sailors announce the next
+ship instead. It shows no hosts.
 
 #### At a launch port
 
@@ -321,8 +332,8 @@ the exit closes as it plays.
 2. `phase` becomes in port.
 3. `eventAt` += 30.
 
-The Anne's arrival at Melemele names Alola ("...the Alolan islands!"). She's
-the only ship that does.
+The Anne's cast-off toward Melemele and her arrival at Melemele both name Alola
+("...the Alolan islands!"). She's the only ship that does.
 
 Arrival ignores the schedule.
 
@@ -455,10 +466,12 @@ and the Tidal's `SSTidalRooms` beds lose their free heal.
 
 | Ship | In service when |
 | --- | --- |
-| Aqua | the Bag holds `ITEM_SS_TICKET` and no maiden voyage is pending (see [Ships](#ships)) |
+| Aqua | no maiden voyage is pending (see [Ships](#ships)) |
 | Anne | `FLAG_WAYFARER_SS_ANNE_CAPTAIN_REWARDED` is set |
-| Tidal | always, for a Ticket holder |
+| Tidal | always |
 
+- The Ticket gates **boarding only**, never whether a ship is in service: a berth shows its in-service ship even to a
+  player with no Ticket, and the sailor then asks for one.
 - `WayfarerCanUseRegularAqua` and its per-start policies go. The Ticket is
   the only gate for any start, including Kanto.
 - The Seagallop's Birth Island trip, which also read

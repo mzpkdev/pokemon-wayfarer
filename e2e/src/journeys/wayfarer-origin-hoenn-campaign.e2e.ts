@@ -9,7 +9,7 @@ import {
   receiveBirchStarter,
   receiveElmStarter,
 } from "../playbooks/regional-opening"
-import { beginWayfarerRegularAquaDeparture } from "../playbooks/wayfarer-ports"
+import { rideAquaFromVermilionToSlateport } from "../playbooks/wayfarer-ports"
 
 describe.sequential("Wayfarer Hoenn native and visitor campaign handoffs", () => {
   it("continues the native rescue through Route 103, shared Dex, and Mom's running shoes", async () => {
@@ -117,12 +117,9 @@ describe.sequential("Wayfarer Hoenn native and visitor campaign handoffs", () =>
       })
       await receiveElmStarter(game, 1)
       await game.player.warp("vermilion-port-inside", 8, 9, "down")
-      await beginWayfarerRegularAquaDeparture(game)
-      await advanceOpeningUntil(
-        game,
-        (state) => state.ready && state.map.name === "slateport-city-harbor",
-        "Visitor did not enter Hoenn by Aqua",
-      )
+      // The S.S. Aqua is Vermilion's ship by day: one leg to Slateport.
+      await rideAquaFromVermilionToSlateport(game)
+      expect((await game.state.read()).map.name).toBe("slateport-city-harbor")
       await game.player.warp("route-101", 9, 19, "right")
       await game.player.move("right")
       await finishOpeningDialogue(game)

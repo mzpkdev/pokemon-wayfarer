@@ -298,7 +298,6 @@ gSpecials::
 	def_special WayfarerGetKantoBadgeCountForScript
 	def_special WayfarerGetHoennBadgeCountForScript
 	def_special WayfarerShouldWhiteOutToLavaridge
-	def_special WayfarerPrepareHoennEntry
 	def_special WayfarerCoast_IsArticunoEligible
 	def_special WayfarerPowerPlant_IsZapdosEligible
 	def_special WayfarerGrantKantoBadge15
@@ -788,7 +787,6 @@ gSpecials::
     def_special WayfarerUsesNativeHoennHousehold
     def_special WayfarerUsesNativeJohtoOpening
     def_special WayfarerUsesNativeHoennOpening
-    def_special WayfarerCanUseRegularAqua
     def_special WayfarerCanReceiveSlateportTicket
     def_special WayfarerCanUseAquaMaidenVoyage
     def_special WayfarerIsJohtoOrigin
@@ -823,6 +821,23 @@ gSpecials::
     def_special WayfarerGetRocketHideoutElevatorFloorForScript
     def_special DrawWayfarerVermilionPortMenu
     def_special GetWayfarerVermilionPortChoice
+    def_special Ferry_GetBerthShip
+    def_special Ferry_GetBerthPort
+    def_special Ferry_BufferNextShip
+    def_special Ferry_BufferBoarding
+    def_special Ferry_Board
+    def_special Ferry_WarpAboard
+    def_special Ferry_RefreshAnneWarp
+    def_special Ferry_IsAtSeaForScript
+    def_special Ferry_IsAboardForScript
+    def_special Ferry_CanDisembark
+    def_special Ferry_BufferArrivalPort
+    def_special Ferry_Disembark
+    def_special Ferry_IsAnnePendingAtVermilion
+    def_special Ferry_ArmAnneDepartureScript
+    def_special DrawFerryLilycoveCharterMenu
+    def_special GetFerryLilycoveCharter
+    def_special GetFerryLilycoveCharterCount
     def_special DrawWayfarerVermilionSeviiDestinationMenu
     def_special GetWayfarerVermilionSeviiDestination
     def_special WayfarerCanSailToBirthIsland

@@ -304,3 +304,8 @@ WayfarerSevii_Text_DepartingVermilion:
 WayfarerSevii_Text_AllAboard:
 	.string "All right!\n"
 	.string "All aboard SEAGALLOP HI-SPEED {STR_VAR_1}!$"
+
+@ The S.S. ferries' launch sailor at the Sevii harbors (.product/specs/ss-ferries.md). The ferry scripts and the
+@ voyage state are Wayfarer-owned elsewhere; this wrapper only reaches them.
+WayfarerSevii_EventScript_FerryLaunchSailor::
+	goto Ferry_EventScript_LaunchSailor

@@ -102,6 +102,17 @@ static EWRAM_DATA u8 sE2EChoiceOptionCount = 0;
 
 static u8 sLilycoveSSTidalSelections[SSTIDAL_SELECTION_COUNT];
 
+// Wayfarer's Lilycove charters read the Bag items alone, with no FLAG_ENABLE_SHIP_* flags (the real sources of the
+// Eon Ticket and the Old Sea Map never set them); Birth Island and Navel Rock stay on the Seagallop only
+// (.product/specs/ss-ferries.md#old-menus-and-event-islands).
+#if IS_WAYFARER
+#define LILYCOVE_SHIP_ENABLED(flag) TRUE
+#define LILYCOVE_SHIP_ENABLED_SEAGALLOP_ONLY(flag) FALSE
+#else
+#define LILYCOVE_SHIP_ENABLED(flag) (FlagGet(flag) == TRUE)
+#define LILYCOVE_SHIP_ENABLED_SEAGALLOP_ONLY(flag) (FlagGet(flag) == TRUE)
+#endif
+
 static void FreeListMenuItems(struct ListMenuItem *items, u32 count);
 static void Task_HandleScrollingMultichoiceInput(u8 taskId);
 static void Task_HandleMultichoiceInput(u8 taskId);
@@ -918,6 +929,7 @@ static void CreateLilycoveSSTidalMultichoice(void)
 
     GetFontAttribute(FONT_NORMAL, FONTATTR_MAX_LETTER_WIDTH);
 
+#if !IS_WAYFARER
     if (gSpecialVar_0x8004 == 0)
     {
         sLilycoveSSTidalSelections[selectionCount] = SSTIDAL_SELECTION_SLATEPORT;
@@ -929,8 +941,9 @@ static void CreateLilycoveSSTidalMultichoice(void)
             selectionCount++;
         }
     }
+#endif
 
-    if (CheckBagHasItem(ITEM_EON_TICKET, 1) == TRUE && FlagGet(FLAG_ENABLE_SHIP_SOUTHERN_ISLAND) == TRUE)
+    if (CheckBagHasItem(ITEM_EON_TICKET, 1) == TRUE && LILYCOVE_SHIP_ENABLED(FLAG_ENABLE_SHIP_SOUTHERN_ISLAND))
     {
         if (gSpecialVar_0x8004 == 0)
         {
@@ -946,7 +959,7 @@ static void CreateLilycoveSSTidalMultichoice(void)
         }
     }
 
-    if (CheckBagHasItem(ITEM_MYSTIC_TICKET, 1) == TRUE && FlagGet(FLAG_ENABLE_SHIP_NAVEL_ROCK) == TRUE)
+    if (CheckBagHasItem(ITEM_MYSTIC_TICKET, 1) == TRUE && LILYCOVE_SHIP_ENABLED_SEAGALLOP_ONLY(FLAG_ENABLE_SHIP_NAVEL_ROCK))
     {
         if (gSpecialVar_0x8004 == 0)
         {
@@ -962,7 +975,7 @@ static void CreateLilycoveSSTidalMultichoice(void)
         }
     }
 
-    if (CheckBagHasItem(ITEM_AURORA_TICKET, 1) == TRUE && FlagGet(FLAG_ENABLE_SHIP_BIRTH_ISLAND) == TRUE)
+    if (CheckBagHasItem(ITEM_AURORA_TICKET, 1) == TRUE && LILYCOVE_SHIP_ENABLED_SEAGALLOP_ONLY(FLAG_ENABLE_SHIP_BIRTH_ISLAND))
     {
         if (gSpecialVar_0x8004 == 0)
         {
@@ -978,7 +991,7 @@ static void CreateLilycoveSSTidalMultichoice(void)
         }
     }
 
-    if (CheckBagHasItem(ITEM_OLD_SEA_MAP, 1) == TRUE && FlagGet(FLAG_ENABLE_SHIP_FARAWAY_ISLAND) == TRUE)
+    if (CheckBagHasItem(ITEM_OLD_SEA_MAP, 1) == TRUE && LILYCOVE_SHIP_ENABLED(FLAG_ENABLE_SHIP_FARAWAY_ISLAND))
     {
         if (gSpecialVar_0x8004 == 0)
         {

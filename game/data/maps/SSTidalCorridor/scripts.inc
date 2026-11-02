@@ -1,7 +1,30 @@
 SSTidalCorridor_MapScripts::
+#if IS_WAYFARER
+	map_script MAP_SCRIPT_ON_TRANSITION, SSTidalCorridor_OnTransition
+#endif
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, SSTidalCorridor_OnFrame
 	.byte 0
 
+#if IS_WAYFARER
+@ Scott is aboard only once Hoenn's League is won (FLAG_SYS_GAME_CLEAR) and his scene is still due; the Tidal
+@ itself no longer waits for the League. The cruise state machine (VAR_SS_TIDAL_STATE) is retired: the ferry
+@ voyage state announces and casts off instead (.product/specs/ss-ferries.md).
+SSTidalCorridor_OnTransition:
+	setflag FLAG_HIDE_SS_TIDAL_CORRIDOR_SCOTT
+	goto_if_unset FLAG_SYS_GAME_CLEAR, SSTidalCorridor_EventScript_ScottNotYet
+	goto_if_ne VAR_SS_TIDAL_SCOTT_STATE, 0, Ferry_EventScript_Nop
+	clearflag FLAG_HIDE_SS_TIDAL_CORRIDOR_SCOTT
+	end
+
+SSTidalCorridor_EventScript_ScottNotYet::
+	setvar VAR_TEMP_0, 1
+	end
+
+SSTidalCorridor_OnFrame:
+	map_script_2 VAR_TEMP_0, 1, 0
+	map_script_2 VAR_SS_TIDAL_SCOTT_STATE, 0, SSTidalCorridor_EventScript_ScottScene
+	.2byte 0
+#else
 SSTidalCorridor_OnFrame:
 	map_script_2 VAR_SS_TIDAL_SCOTT_STATE, 0, SSTidalCorridor_EventScript_ScottScene
 	map_script_2 VAR_SS_TIDAL_STATE, SS_TIDAL_BOARD_SLATEPORT, SSTidalCorridor_EventScript_DepartSlateportForLilycove
@@ -9,6 +32,7 @@ SSTidalCorridor_OnFrame:
 	map_script_2 VAR_SS_TIDAL_STATE, SS_TIDAL_EXIT_CURRENTS_RIGHT, SSTidalCorridor_EventScript_HalfwayToLilycove
 	map_script_2 VAR_SS_TIDAL_STATE, SS_TIDAL_EXIT_CURRENTS_LEFT, SSTidalCorridor_EventScript_ArrivedInSlateport
 	.2byte 0
+#endif
 
 SSTidalCorridor_EventScript_DepartSlateportForLilycove::
 	special SetSSTidalFlag
@@ -112,6 +136,10 @@ SSTidalCorridor_EventScript_Cabin4Sign::
 SSTidalCorridor_EventScript_ExitSailor::
 	lock
 	faceplayer
+#if IS_WAYFARER
+	@ Ashore at the port the voyage is at; at sea he says so. With no voyage it is Slateport.
+	goto Ferry_EventScript_ExitSailor
+#endif
 	goto_if_eq VAR_SS_TIDAL_STATE, SS_TIDAL_LAND_LILYCOVE, SSTidalCorridor_EventScript_ExitLilycove
 	goto_if_eq VAR_SS_TIDAL_STATE, SS_TIDAL_LAND_SLATEPORT, SSTidalCorridor_EventScript_ExitSlateport
 	msgbox SSTidalCorridor_Text_CanRestInCabin2, MSGBOX_DEFAULT
@@ -142,8 +170,10 @@ SSTidalCorridor_EventScript_HideSnatchGiver::
 
 SSTidalCorridor_EventScript_Porthole::
 	lockall
+#if !IS_WAYFARER
 	goto_if_eq VAR_SS_TIDAL_STATE, SS_TIDAL_DEPART_SLATEPORT, SSTidalCorridor_EventScript_LookThroughPorthole
 	goto_if_eq VAR_SS_TIDAL_STATE, SS_TIDAL_HALFWAY_SLATEPORT, SSTidalCorridor_EventScript_LookThroughPorthole
+#endif
 	msgbox SSTidalCorridor_Text_HorizonSpreadsBeyondPorthole, MSGBOX_DEFAULT
 	releaseall
 	end

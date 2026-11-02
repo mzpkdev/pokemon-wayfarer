@@ -133,32 +133,39 @@ class RepositoryContractTest(unittest.TestCase):
             with self.assertRaisesRegex(AUDIT.AuditError, message):
                 audit(AUDIT.GAME_ROOT)
 
-    def test_regular_circuit_rejects_raw_voyage_gate(self):
+    def test_vermilion_cannot_reintroduce_the_regular_aqua_gate(self):
         self.assert_script_mutation_rejected(
             "data/maps/VermilionCity_PortInside_hns/scripts.inc",
-            "specialvar VAR_RESULT, WayfarerCanUseRegularAqua",
-            "specialvar VAR_RESULT, WayfarerCanUseAquaMaidenVoyage",
-            AUDIT.audit_menus_and_routes, "profile eligibility")
+            "\tsetvar VAR_0x8004, FERRY_BERTH_DOCK\n\tcall Ferry_EventScript_SailorTalk",
+            "\tspecialvar VAR_RESULT, WayfarerCanUseRegularAqua\n\tcall Ferry_EventScript_SailorTalk",
+            AUDIT.audit_menus_and_routes, "regular-Aqua gate")
 
-    def test_non_native_origin_cannot_fall_through_to_maiden_voyage(self):
+    def test_vermilion_ship_row_must_use_the_ferry_boarding(self):
+        self.assert_script_mutation_rejected(
+            "data/maps/VermilionCity_PortInside_hns/scripts.inc",
+            "\tcall Ferry_EventScript_SailorTalk\n\tgoto_if_eq VAR_RESULT, FALSE, Ferry_EventScript_SailorEnd\n\tcall VermilionPort_EventScript_FerryBoardingWalk",
+            "\tcall VermilionPort_EventScript_FerryBoardingWalk",
+            AUDIT.audit_menus_and_routes, "ferry specials")
+
+    def test_ferry_boarding_walk_does_not_set_the_respawn(self):
         self.assert_script_mutation_rejected(
             "data/maps/OlivineCity_PortInside_hns/scripts.inc",
-            "goto_if_eq VAR_RESULT, FALSE, OlivinePort_EventScript_Sailor_CantBoard",
-            "goto_if_eq VAR_RESULT, TRUE, OlivinePort_EventScript_Sailor_CantBoard",
-            AUDIT.audit_menus_and_routes, "reject profiles")
+            "\tplayse SE_EXIT\n\tdelay 20\n\treturn\n#else",
+            "\tsetrespawn HEAL_LOCATION_OLIVINE_CITY_HNS\n\tplayse SE_EXIT\n\tdelay 20\n\treturn\n#else",
+            AUDIT.audit_menus_and_routes, "respawn")
 
-    def test_sevii_service_is_available_before_the_regular_aqua_gate(self):
+    def test_olivine_maiden_voyage_stays_a_johto_only_special_case(self):
         self.assert_script_mutation_rejected(
-            "data/maps/VermilionCity_PortInside_hns/scripts.inc",
-            "special DrawWayfarerVermilionPortMenu",
-            "specialvar VAR_RESULT, WayfarerCanUseRegularAqua",
-            AUDIT.audit_menus_and_routes, "fixed Sevii")
+            "data/maps/OlivineCity_PortInside_hns/scripts.inc",
+            "goto_if_eq VAR_RESULT, FALSE, OlivinePort_EventScript_Sailor_Ferry\n\tgoto_if_ge VAR_SSAQUA_STATE, 8",
+            "goto_if_eq VAR_RESULT, TRUE, OlivinePort_EventScript_Sailor_Ferry\n\tgoto_if_ge VAR_SSAQUA_STATE, 8",
+            AUDIT.audit_menus_and_routes, "maiden voyage")
 
-    def test_birth_eligibility_requires_the_aqua_gate_and_aurora_ticket(self):
+    def test_birth_eligibility_is_the_aurora_ticket_alone(self):
         self.assert_script_mutation_rejected(
             "src/wayfarer_sevii_ferry.c",
-            "WayfarerCanUseRegularAqua() && CheckBagHasItem(ITEM_AURORA_TICKET, 1)",
-            "CheckBagHasItem(ITEM_AURORA_TICKET, 1)",
+            "return CheckBagHasItem(ITEM_AURORA_TICKET, 1);",
+            "return FlagGet(FLAG_SYS_GAME_CLEAR) && CheckBagHasItem(ITEM_AURORA_TICKET, 1);",
             AUDIT.audit_menus_and_routes, "Birth Island eligibility")
 
     def test_navel_eligibility_does_not_use_the_unavailable_ship_flag(self):
@@ -179,43 +186,55 @@ class RepositoryContractTest(unittest.TestCase):
         self.assert_script_mutation_rejected(
             "data/maps/SlateportCity_Harbor/scripts.inc",
             "specialvar VAR_RESULT, WayfarerCanReceiveSlateportTicket",
-            "specialvar VAR_RESULT, WayfarerCanUseRegularAqua",
-            AUDIT.audit_hoenn_ports_and_ticket, "handoff policy")
+            "specialvar VAR_RESULT, WayfarerCanUseAquaMaidenVoyage",
+            AUDIT.audit_hoenn_ports_and_ticket, "profile handoff policy")
 
-    def test_free_ticket_failure_cannot_depart(self):
+    def test_free_ticket_failure_cannot_board(self):
         self.assert_script_mutation_rejected(
             "data/maps/SlateportCity_Harbor/scripts.inc",
-            "goto_if_eq VAR_RESULT, FALSE, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_TicketFailed",
-            "goto_if_eq VAR_RESULT, FALSE, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_OfferDeparture",
-            AUDIT.audit_hoenn_ports_and_ticket, "stop on failure")
+            "goto_if_eq VAR_RESULT, FALSE, SlateportCity_Harbor_EventScript_TicketFailed",
+            "goto_if_eq VAR_RESULT, FALSE, SlateportCity_Harbor_EventScript_FerryTalk",
+            AUDIT.audit_hoenn_ports_and_ticket, "failed Ticket grant")
 
     def test_existing_ticket_skips_free_grant(self):
         self.assert_script_mutation_rejected(
             "data/maps/SlateportCity_Harbor/scripts.inc",
-            "goto_if_eq VAR_RESULT, TRUE, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_OfferDeparture",
-            "goto_if_eq VAR_RESULT, FALSE, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_OfferDeparture",
-            AUDIT.audit_hoenn_ports_and_ticket, "skip its grant")
+            "goto_if_eq VAR_RESULT, TRUE, SlateportCity_Harbor_EventScript_FerryTalk",
+            "goto_if_eq VAR_RESULT, FALSE, SlateportCity_Harbor_EventScript_FerryTalk",
+            AUDIT.audit_hoenn_ports_and_ticket, "skip the free grant")
+
+    def test_slateport_berth_cannot_regain_the_game_clear_gate(self):
+        self.assert_script_mutation_rejected(
+            "data/maps/SlateportCity_Harbor/scripts.inc",
+            "SlateportCity_Harbor_EventScript_FerryTalk::\n\tsetvar VAR_0x8004, FERRY_BERTH_DOCK",
+            "SlateportCity_Harbor_EventScript_FerryTalk::\n\tgoto_if_set FLAG_SYS_GAME_CLEAR, SlateportCity_Harbor_EventScript_AskForTicket\n\tsetvar VAR_0x8004, FERRY_BERTH_DOCK",
+            AUDIT.audit_hoenn_ports_and_ticket, "game-clear gate")
+
+    def test_lilycove_cannot_regain_ship_enable_flags(self):
+        self.assert_script_mutation_rejected(
+            "data/maps/LilycoveCity_Harbor/scripts.inc",
+            "LilycoveCity_Harbor_EventScript_FerryBoard::\n\tsetvar VAR_0x8004, FERRY_BERTH_DOCK",
+            "LilycoveCity_Harbor_EventScript_FerryBoard::\n\tgoto_if_unset FLAG_ENABLE_SHIP_SOUTHERN_ISLAND, Ferry_EventScript_SailorEnd\n\tsetvar VAR_0x8004, FERRY_BERTH_DOCK",
+            AUDIT.audit_hoenn_ports_and_ticket, "FLAG_ENABLE_SHIP")
+
+    def test_state_initialization_cannot_set_the_region_or_respawn(self):
+        self.assert_script_mutation_rejected(
+            "src/wayfarer_persistence.c",
+            "    WayfarerSetHoennStateInitialized(TRUE);\n}",
+            "    SetLastHealLocationWarp(HEAL_LOCATION_SLATEPORT_CITY);\n    WayfarerSetHoennStateInitialized(TRUE);\n}",
+            AUDIT.audit_initialization, "SetLastHealLocationWarp")
 
     def test_repository_hoenn_entry_contract(self) -> None:
         result = AUDIT.build_audit(AUDIT.GAME_ROOT)
         self.assertEqual(result["status"], "pass")
-        self.assertEqual(result["travel"]["menu"]["slateportSlot"], 0)
+        self.assertEqual(result["travel"]["boarding"]["specials"], ["Ferry_GetBerthShip", "Ferry_Board", "Ferry_WarpAboard"])
+        self.assertFalse(result["travel"]["boarding"]["ticketConsumed"])
         self.assertTrue(result["initialization"]["initializedCommittedLast"])
-        self.assertEqual(
-            result["hoennPorts"]["hoennSsAquaDepartures"],
-            ["data/maps/SlateportCity_Harbor/scripts.inc"],
-        )
-        self.assertEqual(
-            result["hoennPorts"]["slateportAqua"]["localId"],
-            AUDIT.SLATEPORT_AQUA_LOCAL_ID,
-        )
-        self.assertEqual(result["hoennPorts"]["slateportAqua"]["coordinate"], [15, 11])
-        self.assertEqual(result["hoennPorts"]["slateportAqua"]["tileSafety"]["collision"], 0)
-        self.assertEqual(result["hoennPorts"]["slateportAqua"]["tileSafety"]["elevation"], 3)
-        self.assertEqual(result["hoennPorts"]["slateportAqua"]["tileSafety"]["ordinaryExit"], [12, 14])
-        self.assertEqual(result["hoennPorts"]["slateportAqua"]["olivineHealLocation"]["map"], "MAP_OLIVINE_CITY_HNS")
-        self.assertFalse(result["hoennPorts"]["slateportAqua"]["nonWayfarerTransport"])
-        self.assertTrue(result["hoennPorts"]["ssTidal"]["lilycovePreserved"])
+        self.assertEqual(result["initialization"]["stateInitializationFunction"], "WayfarerInitializeHoennState")
+        self.assertTrue(result["hoennPorts"]["slateportBerth"]["retiredAquaAttendant"])
+        self.assertEqual(result["hoennPorts"]["slateportBerth"]["coordinate"], [8, 10])
+        self.assertFalse(result["hoennPorts"]["ssTidal"]["gameClearGate"])
+        self.assertEqual(result["hoennPorts"]["lilycoveBerth"]["charters"], ["SOUTHERN", "FARAWAY", "FRONTIER"])
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 import { beforeAll, describe, expect, it } from "webanvil/test"
 
 import { GameSession, type Button, type GameMap } from "../harness/game-session"
-import { beginWayfarerRegularAquaDeparture } from "../playbooks/wayfarer-ports"
+import { rideAquaFromVermilionToSlateport } from "../playbooks/wayfarer-ports"
 
 const emptyRods = { oldRod: 0, goodRod: 0, superRod: 0 }
 
@@ -272,8 +272,8 @@ describe.sequential("Wayfarer Standard Rod givers", () => {
       determinism: { textSpeed: "instant" },
     })
 
-    await beginWayfarerRegularAquaDeparture(game)
-    await game.dialogue.waitForOpen()
+    // The S.S. Aqua is Vermilion's ship by day: one leg to Slateport.
+    await rideAquaFromVermilionToSlateport(game)
     await advanceUntilMap(game, "slateport-city-harbor")
 
     await expect(contributionFlags(game)).resolves.toEqual(

@@ -2,6 +2,7 @@
 #include "wayfarer_world.h"
 #include "wayfarer_walkers.h"
 #include "wayfarer_daily_slots.h"
+#include "wayfarer_ferry.h"
 #include "trainer_only_encounter.h"
 #include "league_circuit.h"
 #include "overworld.h"
@@ -830,6 +831,8 @@ void SetWarpDestinationToLastHealLocation(void)
                                           &sWarpDestination))
         return;
     WayfarerEnsureRecoveryDestination();
+    // A blackout aboard ends the voyage; the player returns to the last heal location as on any ship.
+    Ferry_OnBlackout();
 #endif
     if (IsWhiteoutCutscene())
         SetWhiteoutRespawnWarpAndHealerNPC(&sWarpDestination);
@@ -1013,6 +1016,9 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
 #endif
     TrySetMapSaveWarpStatus();
     ClearTempFieldEventData();
+#if IS_WAYFARER
+    Ferry_OnMapLoad();
+#endif
     ResetDexNavSearch();
     ResetCyclingRoadChallengeData();
     RestartWildEncounterImmunitySteps();
@@ -1117,6 +1123,9 @@ static bool32 LoadMapFromWarp(bool32 a1)
     CheckLeftFriendsSecretBase();
     TrySetMapSaveWarpStatus();
     ClearTempFieldEventData();
+#if IS_WAYFARER
+    Ferry_OnMapLoad();
+#endif
     ResetDexNavSearch();
     // reset hours override on every warp
     sHoursOverride = 0;
@@ -2042,6 +2051,9 @@ static void OverworldBasic(void)
         gTimeUpdateCounter = (SECONDS_PER_MINUTE * 60 / FakeRtc_GetSecondsRatio());
         UpdateTimeOfDay();
         FormChangeTimeUpdate();
+#if IS_WAYFARER
+        Ferry_OnMinute();
+#endif
         if (MapHasNaturalLight(gMapHeader.mapType) &&
            (bld0[0] != bld1[0]
          || bld0[1] != bld1[1]
@@ -2413,6 +2425,7 @@ void CB2_ContinueSavedGame(void)
     // from the stamped day (Continue applies no day change); the trainer slots rebuild their occupants too.
     DailyItems_RewriteTemplates();
     DailyTrainers_RewriteTemplates();
+    Ferry_OnMapLoad();
 #endif
 
     UnfreezeObjectEvents();

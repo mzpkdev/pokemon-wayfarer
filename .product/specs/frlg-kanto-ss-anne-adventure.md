@@ -2,6 +2,8 @@
 
 PRD: [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md)
 
+Superseded in part by [S.S. ferries](ss-ferries.md): boarding and return through the Vermilion menu's "Board S.S. Anne" row after the captain's reward, "leaving the ship does not start a voyage", and "must not add destinations, voyages or schedules".
+
 Supporting requirements:
 
 - [FRLG Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md): local adventures remain independently playable;

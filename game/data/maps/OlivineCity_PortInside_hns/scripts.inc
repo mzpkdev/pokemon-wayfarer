@@ -108,10 +108,10 @@ OlivinePort_EventScript_Sailor::
 	lock
 	faceplayer
 #if IS_WAYFARER
-	specialvar VAR_RESULT, WayfarerCanUseRegularAqua
-	goto_if_eq VAR_RESULT, TRUE, OlivinePort_EventScript_Sailor_AfterKanto
+	@ Until the maiden voyage is over the Johto start's sailor runs it, whatever the table says.
 	specialvar VAR_RESULT, WayfarerCanUseAquaMaidenVoyage
-	goto_if_eq VAR_RESULT, FALSE, OlivinePort_EventScript_Sailor_CantBoard
+	goto_if_eq VAR_RESULT, FALSE, OlivinePort_EventScript_Sailor_Ferry
+	goto_if_ge VAR_SSAQUA_STATE, 8, OlivinePort_EventScript_Sailor_Ferry
 #else
 	goto_if_ge VAR_SSAQUA_STATE, 8, OlivinePort_EventScript_Sailor_AfterKanto
 #endif
@@ -120,6 +120,28 @@ OlivinePort_EventScript_Sailor::
 	goto_if_ge VAR_SSAQUA_STATE, 1, OlivinePort_EventScript_Sailor_ResumeMaidenVoyage
 	goto OlivinePort_EventScript_Sailor_MaidenVoyage
 
+#if IS_WAYFARER
+OlivinePort_EventScript_Sailor_Ferry::
+	setvar VAR_0x8004, FERRY_BERTH_DOCK
+	call Ferry_EventScript_SailorTalk
+	goto_if_eq VAR_RESULT, FALSE, Ferry_EventScript_SailorEnd
+	call OlivinePort_EventScript_FerryBoardingWalk
+	special Ferry_WarpAboard
+	waitstate
+	release
+	end
+
+@ The ferry-only boarding walk: the gangway walk of EnterShip, without moving the boat and without setrespawn.
+OlivinePort_EventScript_FerryBoardingWalk::
+	applymovement LOCALID_OLIVINEPORT_SAILOR, OlivinePort_Movement_SailorEnterBoat
+	waitmovement 0
+	playse SE_EXIT
+	applymovement OBJ_EVENT_ID_PLAYER, OlivinePort_Movement_PlayerEnterBoat
+	waitmovement 0
+	playse SE_EXIT
+	delay 20
+	return
+#else
 OlivinePort_EventScript_Sailor_AfterKanto::
 	message OlivinePort_Text_WhereSail
 	multichoice 20, 0, MULTI_OLIVINE_HARBOR, FALSE
@@ -193,6 +215,8 @@ OlivinePort_EventScript_ChoseBattleFrontier::
 	waitstate
 	release
 	end	
+
+#endif
 
 OlivinePort_EventScript_Sailor_MaidenVoyage::
 	setvar VAR_SSAQUA_STATE, 1
@@ -331,3 +355,16 @@ OlivinePort_Text_CooltrainerF:
 OlivinePort_Text_SailorBeforeHOF:
     .string "We don't want you to fall into the\n"
     .string "sea, so you're not allowed in.$"
+
+#if IS_WAYFARER
+OlivinePort_EventScript_DepartureBoard::
+	msgbox OlivinePort_Text_DepartureBoard, MSGBOX_SIGN
+	end
+
+OlivinePort_Text_DepartureBoard:
+	.string "DEPARTURES - OLIVINE CITY\p"
+	.string "By day (8:00-20:00):\n"
+	.string "S.S. AQUA for VERMILION CITY\p"
+	.string "By night (20:00-8:00):\n"
+	.string "S.S. TIDAL for SLATEPORT CITY$"
+#endif

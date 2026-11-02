@@ -1,39 +1,13 @@
 import { beforeAll, describe, expect, it } from "webanvil/test"
 
-import { GameSession, type Direction, type GameMap } from "../harness/game-session"
-import { beginWayfarerRegularAquaDeparture } from "../playbooks/wayfarer-ports"
-
-const moveOneTile = async (game: GameSession, direction: Direction): Promise<void> => {
-  await game.wait.forReady()
-  const before = await game.state.read()
-  for (let attempt = 0; attempt < 3; attempt++) {
-    await game.player.move(direction)
-    await game.wait.frames(12)
-    const after = await game.state.read()
-    if (
-      after.map.name !== before.map.name ||
-      after.player.x !== before.player.x ||
-      after.player.y !== before.player.y
-    )
-      return
-  }
-  throw new Error(`Could not move ${direction}: ${JSON.stringify(await game.state.read())}`)
-}
-
-const completeDeparture = async (game: GameSession, destination: GameMap): Promise<void> => {
-  for (let attempt = 0; attempt < 60; attempt++) {
-    const state = await game.state.read()
-    if (state.map.name === destination) {
-      await game.wait.forMap(destination)
-      return
-    }
-    await game.wait.frames(30)
-    await game.controls.press("a")
-  }
-  throw new Error(
-    `S.S. Aqua did not reach ${destination}: ${JSON.stringify(await game.state.read())}`,
-  )
-}
+import { GameSession } from "../harness/game-session"
+import {
+  boardFerryAtDock,
+  goAshoreFromExitSailor,
+  rideAquaFromVermilionToSlateport,
+  sailFerryLeg,
+  waitAboard,
+} from "../playbooks/wayfarer-ports"
 
 describe.sequential("Wayfarer Hoenn entry", () => {
   let game: GameSession
@@ -43,7 +17,8 @@ describe.sequential("Wayfarer Hoenn entry", () => {
     return () => game.close()
   })
 
-  it("completes the Vermilion-to-Slateport-to-Olivine-to-Vermilion circuit", async () => {
+  it("rides the S.S. Aqua to Slateport and the S.S. Tidal on to Lilycove, entering Hoenn on the way", async () => {
+    // The Johto start with its maiden voyage done and the Ticket in the Bag; a new game starts at 8:00.
     await game.arrange({
       checkpoint: "new-bark-after-intro",
       player: {
@@ -55,14 +30,16 @@ describe.sequential("Wayfarer Hoenn entry", () => {
       determinism: { textSpeed: "instant" },
     })
 
-    await beginWayfarerRegularAquaDeparture(game)
-    await completeDeparture(game, "slateport-city-harbor")
+    // Aqua by day: Vermilion -> Slateport, one leg of six in-game hours.
+    await rideAquaFromVermilionToSlateport(game)
 
     await expect(game.state.read()).resolves.toMatchObject({
       ready: true,
       map: { name: "slateport-city-harbor" },
       player: { x: 9, y: 11 },
     })
+    // Going ashore in Hoenn for the first time set up Hoenn and the respawn.
+    expect((await game.state.read()).origin.hoennInitialized).toBe(true)
 
     await game.saveAndReload()
 
@@ -74,28 +51,23 @@ describe.sequential("Wayfarer Hoenn entry", () => {
     await expect(game.story.var("ssAquaState")).resolves.toBe(8)
     await expect(game.inventory.contains("ssTicket")).resolves.toBe(true)
 
-    for (const direction of ["right", "right", "right", "right", "right"] as const)
-      await moveOneTile(game, direction)
-    await game.player.interact()
-    await completeDeparture(game, "olivine-port-inside")
+    // The Tidal is Slateport's ship by day: step to the attendant at (8,10), who boards with no question.
+    await game.player.warp("slateport-city-harbor", 8, 11, "up")
+    await boardFerryAtDock(game)
+    await waitAboard(game, "ss-tidal-corridor")
+    await expect(game.state.read()).resolves.toMatchObject({ player: { x: 1, y: 10 } })
 
+    // Saving aboard resumes on the same leg.
+    await game.saveAndReload()
+    await game.wait.forMap("ss-tidal-corridor")
+
+    // Tidal: Slateport -> Lilycove, and the exit sailor is below the entry tile.
+    await sailFerryLeg(game)
+    await goAshoreFromExitSailor(game, "down", "lilycove-city-harbor")
     await expect(game.state.read()).resolves.toMatchObject({
       ready: true,
-      map: { name: "olivine-port-inside" },
-      player: { x: 8, y: 16 },
-    })
-    // The public journey harness exposes map/player state but not SaveBlock1's
-    // last-heal warp. The focused static audit resolves the exact Olivine heal location.
-
-    await game.controls.press("down")
-    await game.wait.frames(12)
-    await game.player.interact()
-    await completeDeparture(game, "vermilion-port-inside")
-
-    await expect(game.state.read()).resolves.toMatchObject({
-      ready: true,
-      map: { name: "vermilion-port-inside" },
-      player: { x: 8, y: 9 },
+      map: { name: "lilycove-city-harbor" },
+      player: { x: 8, y: 11 },
     })
     await expect(game.story.var("ssAquaState")).resolves.toBe(8)
     await expect(game.inventory.contains("ssTicket")).resolves.toBe(true)

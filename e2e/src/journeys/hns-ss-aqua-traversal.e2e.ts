@@ -1,7 +1,12 @@
 import { beforeAll, describe, expect, it } from "webanvil/test"
 
 import { GameSession, type GameMap } from "../harness/game-session"
-import { beginWayfarerRegularAquaDeparture } from "../playbooks/wayfarer-ports"
+import {
+  boardFerryAtDock,
+  goAshoreFromExitSailor,
+  sailFerryLeg,
+  waitAboard,
+} from "../playbooks/wayfarer-ports"
 
 const finishScript = async (game: GameSession): Promise<void> => {
   for (let attempt = 0; attempt < 30; attempt++) {
@@ -337,8 +342,12 @@ describe.sequential("HNS S.S. Aqua voyage rewards", () => {
         determinism: { textSpeed: "instant" },
       })
 
-      await ferryGame.player.interact()
-      await advanceUntilMap(ferryGame, "vermilion-port-inside")
+      // The ferry network (.product/specs/ss-ferries.md): the Aqua is Olivine's ship by day, the Ticket is
+      // the only gate, and the ride is one leg of six in-game hours.
+      await boardFerryAtDock(ferryGame)
+      await waitAboard(ferryGame, "ss-aqua-1f")
+      await sailFerryLeg(ferryGame)
+      await goAshoreFromExitSailor(ferryGame, "up", "vermilion-port-inside")
       await expect(ferryGame.story.flag("returnedMachinePart")).resolves.toBe(false)
       await expect(ferryGame.inventory.contains("ssTicket")).resolves.toBe(true)
       await expect(ferryGame.story.var("ssAquaState")).resolves.toBe(8)
@@ -368,8 +377,13 @@ describe.sequential("HNS S.S. Aqua voyage rewards", () => {
       })
 
       await expect(game.inventory.contains("ssTicket")).resolves.toBe(false)
-      if (port.map === "vermilion-port-inside") await beginWayfarerRegularAquaDeparture(game)
-      else await game.player.interact()
+      // The Ticket gates boarding only: the Aqua is in port by day, and its sailor asks for the Ticket.
+      // At Vermilion the ship is the first row of the menu.
+      await game.player.interact()
+      if (port.map === "vermilion-port-inside") {
+        await game.wait.frames(30)
+        await game.controls.press("a")
+      }
       await finishScript(game)
 
       await expect(game.state.read()).resolves.toMatchObject({ map: { name: port.map } })

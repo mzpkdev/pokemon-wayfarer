@@ -43,13 +43,11 @@ u16 WayfarerGetCurrentRegionForScript(void);
 u16 WayfarerGetKantoBadgeCountForScript(void);
 u16 WayfarerGetHoennBadgeCountForScript(void);
 u16 WayfarerShouldWhiteOutToLavaridge(void);
-u16 WayfarerPrepareHoennEntry(void);
+bool8 WayfarerInitializeHoennState(s16 mapGroup, s16 mapNum, s16 x, s16 y);
+bool8 WayfarerPrepareHoennEntry(s16 mapGroup, s16 mapNum, s16 x, s16 y, u8 healLocationId);
 u16 WayfarerCoast_IsArticunoEligible(void);
 u16 WayfarerPowerPlant_IsZapdosEligible(void);
 void WayfarerGrantKantoBadge15(void);
-#if TESTING
-bool8 Test_WayfarerPrepareHoennEntryAt(s16 mapGroup, s16 mapNum, s16 x, s16 y, u8 healLocationId);
-#endif
 #endif
 
 bool8 WayfarerFieldMoveFlagGet(u16 flagId);

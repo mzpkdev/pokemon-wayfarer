@@ -3,6 +3,8 @@
 PRD: [Wayfarer Hoenn integration](../prds/wayfarer-hoenn-integration.md)
 Implemented: Yes
 
+Superseded in part by [S.S. ferries](ss-ferries.md): the Aqua circuit as a destination menu, "the circuit is the only approved Hoenn-to-HNS route", "S.S. Tidal remains unchanged" with its Champion gate, and the validation items that check them.
+
 The S.S. Anne port is not implemented. This status describes the existing Aqua
 circuit only.
 

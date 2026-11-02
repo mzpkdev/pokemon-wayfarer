@@ -37,7 +37,6 @@ static u8 LittlerootRecovery(void)
         : HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F;
 }
 static u8 PalletRecovery(void) { return HEAL_LOCATION_PALLET_HOME_WAYFARER; }
-static bool8 NewBarkAqua(void) { return VarGet(VAR_SSAQUA_STATE) >= 8; }
 static bool8 LittlerootAqua(void) { return FlagGet(FLAG_HOENN_STARTER_RECEIVED); }
 static bool8 NoTicket(void) { return FALSE; }
 static void InitializeNewBark(void) { Dex_SetActiveRegion(DEX_REGION_JOHTO); }
@@ -50,10 +49,20 @@ static void MarkSharedWallClocksSet(void)
     FlagSet(FLAG_SET_WALL_CLOCK);
 }
 
+// Only the Johto start has the S.S. Aqua's maiden voyage. For the other starts its granddaughter stays out of
+// the Aqua's rooms for good, so the ferry's rooms never show the maiden voyage's story objects.
+static void HideMaidenVoyageObjects(void)
+{
+    FlagSet(FLAG_HIDE_SSAQUA_CAPTAINS_ROOM_GRANDDAUGHTER);
+    FlagSet(FLAG_HIDE_SSAQUA_ROOM_SSE_GRANDDAUGHTER);
+    FlagSet(FLAG_HIDE_SSAQUA_1F_GRANDPA);
+}
+
 static void InitializeLittleroot(void)
 {
     Dex_SetActiveRegion(DEX_REGION_HOENN);
     MarkSharedWallClocksSet();
+    HideMaidenVoyageObjects();
     VarSet(VAR_NEWBARK_TOWN_STATE, 2);
     VarSet(VAR_NEWBARKTOWN_LABSTATE, 0);
     FlagSet(FLAG_HIDE_LAB_POLICEMAN);
@@ -65,6 +74,7 @@ static void InitializePallet(void)
 {
     Dex_SetActiveRegion(DEX_REGION_KANTO);
     MarkSharedWallClocksSet();
+    HideMaidenVoyageObjects();
     WayfarerKanto_InitializeOpening();
 }
 
@@ -77,7 +87,7 @@ static const struct WayfarerOriginProfile sOriginProfiles[] =
         .scenePolicies = {ORIGIN_SCENE_NATIVE, ORIGIN_SCENE_NATIVE, ORIGIN_SCENE_VISITOR, ORIGIN_SCENE_VISITOR},
         .initialRecovery = NewBarkRecovery, .initialize = InitializeNewBark,
         .openingCallback = FieldCB_WarpExitFadeFromBlack,
-        .regularAqua = NewBarkAqua, .slateportTicket = NoTicket, .maidenVoyage = TRUE,
+        .slateportTicket = NoTicket, .maidenVoyage = TRUE,
     },
     {
         .id = ORIGIN_LITTLEROOT, .selectionLabel = COMPOUND_STRING("HOENN"), .entryRegion = REGION_HOENN,
@@ -86,7 +96,7 @@ static const struct WayfarerOriginProfile sOriginProfiles[] =
         .scenePolicies = {ORIGIN_SCENE_VISITOR, ORIGIN_SCENE_VISITOR, ORIGIN_SCENE_NATIVE, ORIGIN_SCENE_NATIVE},
         .initialRecovery = LittlerootRecovery, .initialize = InitializeLittleroot,
         .openingCallback = ExecuteTruckSequence,
-        .regularAqua = LittlerootAqua, .slateportTicket = LittlerootAqua, .maidenVoyage = FALSE,
+        .slateportTicket = LittlerootAqua, .maidenVoyage = FALSE,
     },
     {
         .id = ORIGIN_PALLET, .selectionLabel = COMPOUND_STRING("KANTO"), .entryRegion = REGION_KANTO,
@@ -96,7 +106,7 @@ static const struct WayfarerOriginProfile sOriginProfiles[] =
         .scenePolicies = {ORIGIN_SCENE_VISITOR, ORIGIN_SCENE_VISITOR, ORIGIN_SCENE_VISITOR, ORIGIN_SCENE_VISITOR},
         .initialRecovery = PalletRecovery, .initialize = InitializePallet,
         .openingCallback = FieldCB_WarpExitFadeFromBlack,
-        .regularAqua = NoTicket, .slateportTicket = NoTicket, .maidenVoyage = FALSE,
+        .slateportTicket = NoTicket, .maidenVoyage = FALSE,
     },
 };
 
@@ -119,7 +129,7 @@ static bool8 IsProfileValid(const struct WayfarerOriginProfile *profile)
     const struct MapHeader *map;
     s16 x, y;
     if (profile == NULL || profile->id == ORIGIN_NONE || profile->initialRecovery == NULL
-     || profile->initialize == NULL || profile->openingCallback == NULL || profile->regularAqua == NULL || profile->slateportTicket == NULL
+     || profile->initialize == NULL || profile->openingCallback == NULL || profile->slateportTicket == NULL
      || GetHealLocation(profile->initialRecovery()) == NULL
      || (profile->entryRegion != REGION_JOHTO && profile->entryRegion != REGION_HOENN && profile->entryRegion != REGION_KANTO)
      || profile->mapGroup < 0 || profile->mapGroup >= MAP_GROUPS_COUNT
@@ -282,11 +292,6 @@ u16 WayfarerUsesNativeJohtoHousehold(void) { return WayfarerGetOriginScenePolicy
 u16 WayfarerUsesNativeHoennHousehold(void) { return WayfarerGetOriginScenePolicy(ORIGIN_SCENE_HOENN_HOUSEHOLD) == ORIGIN_SCENE_NATIVE; }
 u16 WayfarerUsesNativeJohtoOpening(void) { return WayfarerGetOriginScenePolicy(ORIGIN_SCENE_JOHTO_PROFESSOR) == ORIGIN_SCENE_NATIVE; }
 u16 WayfarerUsesNativeHoennOpening(void) { return WayfarerGetOriginScenePolicy(ORIGIN_SCENE_HOENN_RESCUE) == ORIGIN_SCENE_NATIVE; }
-u16 WayfarerCanUseRegularAqua(void)
-{
-    const struct WayfarerOriginProfile *profile = WayfarerGetOriginProfile(WayfarerGetStartingOriginId());
-    return profile != NULL && profile->regularAqua();
-}
 u16 WayfarerCanReceiveSlateportTicket(void)
 {
     const struct WayfarerOriginProfile *profile = WayfarerGetOriginProfile(WayfarerGetStartingOriginId());

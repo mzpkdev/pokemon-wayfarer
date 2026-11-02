@@ -25,7 +25,13 @@ const waitForFerry = async (game: GameSession, destination: GameMap): Promise<vo
 const openSeviiMenu = async (game: GameSession): Promise<void> => {
   await game.player.interact()
   await game.wait.frames(30)
-  // SEVII ISLANDS is the fixed first result of the Wayfarer-only port menu.
+  // The sailor's menu lists the ship in port first (the S.S. Aqua by day, once the Johto start's maiden voyage is
+  // over; the Ticket gates boarding, not the berth), then SEVII ISLANDS.
+  const shipInPort = (await game.story.var("ssAquaState")) >= 8
+  if (shipInPort) {
+    await game.controls.press("down")
+    await game.wait.frames(10)
+  }
   await game.controls.press("a")
   await game.wait.frames(30)
 }
@@ -161,10 +167,9 @@ describe.sequential("Wayfarer Sevii exploration", () => {
     expect(await dockSnapshot(game)).toEqual(before)
   })
 
-  it("hides Birth Island unless both the regular Aqua predicate and Aurora Ticket hold", async () => {
+  it("shows Birth Island on the Aurora Ticket alone, with or without the S.S. Ticket", async () => {
     for (const options of [
       { aqua: false, auroraTicket: false },
-      { aqua: false, auroraTicket: true },
       { aqua: true, auroraTicket: false },
     ]) {
       await arrangeAtVermilion(game, options)
@@ -177,18 +182,20 @@ describe.sequential("Wayfarer Sevii exploration", () => {
       expect(await dockSnapshot(game)).toEqual(before)
     }
 
-    await arrangeAtVermilion(game, { aqua: true, auroraTicket: true })
-    const before = await dockSnapshot(game)
-    await openSeviiMenu(game)
-    await chooseSeviiRow(game, 1)
-    await waitForFerry(game, "birth-island-harbor")
-    await expect(game.state.read()).resolves.toMatchObject({
-      map: { name: "birth-island-harbor" },
-      player: { x: 8, y: 5 },
-    })
-    await game.saveAndReload()
-    await game.wait.forMap("birth-island-harbor")
-    expect(await dockSnapshot(game)).toEqual(before)
+    for (const aqua of [true, false]) {
+      await arrangeAtVermilion(game, { aqua, auroraTicket: true })
+      const before = await dockSnapshot(game)
+      await openSeviiMenu(game)
+      await chooseSeviiRow(game, 1)
+      await waitForFerry(game, "birth-island-harbor")
+      await expect(game.state.read()).resolves.toMatchObject({
+        map: { name: "birth-island-harbor" },
+        player: { x: 8, y: 5 },
+      })
+      await game.saveAndReload()
+      await game.wait.forMap("birth-island-harbor")
+      expect(await dockSnapshot(game)).toEqual(before)
+    }
   })
 
   it("hides Navel Rock unless both the League-clear flag and Mystic Ticket hold", async () => {

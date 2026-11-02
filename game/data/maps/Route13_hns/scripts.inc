@@ -250,6 +250,22 @@ Route13_GetOffBoat_2:
 	end
 
 
+@ The first-visit flag block, shared with the S.S. Anne's arrival at Melemele (.product/specs/ss-ferries.md).
+Alola_EventScript_FirstVisitFlags::
+	setflag FLAG_HIDE_MELEMELE_TOTEM
+	setflag FLAG_HIDE_AKALA_TOTEM
+	setflag FLAG_HIDE_ULAULA_TOTEM
+	setflag FLAG_HIDE_PONI_TOTEM
+	setflag FLAG_HIDE_SAMSONOAK_INTRO
+	setflag FLAG_HIDE_TAPU_KOKO
+	setflag FLAG_HIDE_TAPU_LELE
+	setflag FLAG_HIDE_TAPU_BULU
+	setflag FLAG_HIDE_TAPU_FINI
+	setflag FLAG_HIDE_FLYOVER
+	setflag FLAG_HIDE_PHANT_OUTSIDE
+	setflag FLAG_HIDE_PHANT_INSIDE
+	return
+
 Route13_TravelToAlola::
 	lock
 	faceplayer
@@ -307,18 +323,7 @@ Route13_TravelToAlola_13:
 	playse SE_M_SURF
 	applymovement LOCALID_ROUTE13_BOAT, Route13_TravelToAlola_Movement_2
 	setvar VAR_ALOLA_TRAVEL, 1
-	setflag FLAG_HIDE_MELEMELE_TOTEM
-	setflag FLAG_HIDE_AKALA_TOTEM
-	setflag FLAG_HIDE_ULAULA_TOTEM
-	setflag FLAG_HIDE_PONI_TOTEM
-	setflag FLAG_HIDE_SAMSONOAK_INTRO
-	setflag FLAG_HIDE_TAPU_KOKO
-	setflag FLAG_HIDE_TAPU_LELE
-	setflag FLAG_HIDE_TAPU_BULU
-	setflag FLAG_HIDE_TAPU_FINI
-	setflag FLAG_HIDE_FLYOVER
-	setflag FLAG_HIDE_PHANT_OUTSIDE
-	setflag FLAG_HIDE_PHANT_INSIDE
+	call Alola_EventScript_FirstVisitFlags
 	delay 90
 	fadescreenswapbuffers FADE_TO_BLACK
 	removeobject LOCALID_ROUTE13_BOAT

@@ -6,60 +6,14 @@ SlateportCity_Harbor_OnTransition:
 	setescapewarp MAP_SLATEPORT_CITY, 28, 13
 	setvar VAR_TEMP_1, 0
 	call_if_eq VAR_SLATEPORT_HARBOR_STATE, 1, SlateportCity_Harbor_EventScript_ReadyAquaEscapeScene
+#if !IS_WAYFARER
 	call_if_set FLAG_SYS_GAME_CLEAR, SlateportCity_Harbor_EventScript_ShowSSTidal
+#endif
 	end
 
 SlateportCity_Harbor_EventScript_ShowSSTidal::
 	clearflag FLAG_HIDE_SLATEPORT_CITY_HARBOR_SS_TIDAL
 	return
-
-WayfarerHoennEntry_EventScript_SlateportAquaAttendant::
-#if IS_WAYFARER
-	lock
-	faceplayer
-	specialvar VAR_RESULT, WayfarerCanUseRegularAqua
-	goto_if_eq VAR_RESULT, FALSE, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_CantBoard
-	checkitem ITEM_SS_TICKET
-	goto_if_eq VAR_RESULT, TRUE, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_OfferDeparture
-	specialvar VAR_RESULT, WayfarerCanReceiveSlateportTicket
-	goto_if_eq VAR_RESULT, FALSE, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_NoCredentials
-	msgbox WayfarerHoennEntry_Text_SlateportAquaFreeTicket, MSGBOX_DEFAULT
-	giveitem ITEM_SS_TICKET
-	goto_if_eq VAR_RESULT, FALSE, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_TicketFailed
-
-WayfarerHoennEntry_EventScript_SlateportAquaAttendant_OfferDeparture::
-	msgbox WayfarerHoennEntry_Text_SlateportAquaToOlivine, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_Cancelled
-	fadescreenswapbuffers FADE_TO_BLACK
-	setrespawn HEAL_LOCATION_OLIVINE_CITY_HNS
-	warp MAP_OLIVINE_CITY_PORT_INSIDE_HNS, 8, 16
-	waitstate
-	release
-	end
-
-WayfarerHoennEntry_EventScript_SlateportAquaAttendant_CantBoard::
-	msgbox WayfarerHoennEntry_Text_SlateportAquaUnavailable, MSGBOX_DEFAULT
-	release
-	end
-
-WayfarerHoennEntry_EventScript_SlateportAquaAttendant_NoCredentials::
-	bufferitemname STR_VAR_1, ITEM_SS_TICKET
-	msgbox WayfarerHoennEntry_Text_SlateportAquaNoTicket, MSGBOX_DEFAULT
-	release
-	end
-
-WayfarerHoennEntry_EventScript_SlateportAquaAttendant_TicketFailed::
-	msgbox WayfarerHoennEntry_Text_SlateportAquaTicketFailed, MSGBOX_DEFAULT
-	release
-	end
-
-WayfarerHoennEntry_EventScript_SlateportAquaAttendant_Cancelled::
-	msgbox WayfarerHoennEntry_Text_SlateportAquaComeAgain, MSGBOX_DEFAULT
-	release
-	end
-#else
-	end
-#endif
 
 SlateportCity_Harbor_EventScript_ReadyAquaEscapeScene::
 	savebgm MUS_ENCOUNTER_AQUA
@@ -205,6 +159,47 @@ SlateportCity_Harbor_Movement_PlayerWalkUp:
 SlateportCity_Harbor_EventScript_FerryAttendant::
 	lock
 	faceplayer
+#if IS_WAYFARER
+	@ The Hoenn start's S.S. Ticket, once the partner is in hand (the retired Aqua attendant used to give it).
+	checkitem ITEM_SS_TICKET
+	goto_if_eq VAR_RESULT, TRUE, SlateportCity_Harbor_EventScript_FerryTalk
+	specialvar VAR_RESULT, WayfarerCanReceiveSlateportTicket
+	goto_if_eq VAR_RESULT, FALSE, SlateportCity_Harbor_EventScript_FerryTalk
+	msgbox WayfarerHoennEntry_Text_SlateportAquaFreeTicket, MSGBOX_DEFAULT
+	giveitem ITEM_SS_TICKET
+	goto_if_eq VAR_RESULT, FALSE, SlateportCity_Harbor_EventScript_TicketFailed
+
+SlateportCity_Harbor_EventScript_FerryTalk::
+	setvar VAR_0x8004, FERRY_BERTH_DOCK
+	call Ferry_EventScript_SailorTalk
+	goto_if_eq VAR_RESULT, FALSE, Ferry_EventScript_SailorEnd
+	call SlateportCity_Harbor_EventScript_FerryBoardingWalk
+	special Ferry_WarpAboard
+	waitstate
+	release
+	end
+
+SlateportCity_Harbor_EventScript_TicketFailed::
+	msgbox WayfarerHoennEntry_Text_SlateportAquaTicketFailed, MSGBOX_DEFAULT
+	release
+	end
+
+@ The ferry-only boarding walk: SlateportCity_Harbor_EventScript_BoardFerry without the boat's departure.
+SlateportCity_Harbor_EventScript_FerryBoardingWalk::
+	applymovement VAR_LAST_TALKED, Common_Movement_WalkInPlaceFasterUp
+	waitmovement 0
+	delay 30
+	hideobjectat VAR_LAST_TALKED, MAP_SLATEPORT_CITY_HARBOR
+	call_if_eq VAR_FACING, DIR_NORTH, SlateportCity_Harbor_EventScript_BoardFerryNorth
+	call_if_eq VAR_FACING, DIR_EAST, SlateportCity_Harbor_EventScript_BoardFerryEast
+	delay 30
+	hideplayer
+	return
+
+SlateportCity_Harbor_EventScript_DepartureBoard::
+	msgbox SlateportCity_Harbor_Text_DepartureBoard, MSGBOX_SIGN
+	end
+#else
 	goto_if_set FLAG_SYS_GAME_CLEAR, SlateportCity_Harbor_EventScript_AskForTicket
 	msgbox SlateportCity_Harbor_Text_FerryServiceUnavailable, MSGBOX_DEFAULT
 	release
@@ -280,6 +275,8 @@ SlateportCity_Harbor_EventScript_BoardFerry::
 	setvar VAR_0x8004, LOCALID_SLATEPORT_HARBOR_SS_TIDAL
 	call Common_EventScript_FerryDepart
 	return
+
+#endif
 
 SlateportCity_Harbor_EventScript_CancelDestinationSelect::
 	msgbox SlateportCity_Harbor_Text_SailAnotherTime, MSGBOX_DEFAULT
@@ -614,3 +611,12 @@ WayfarerHoennEntry_Text_SlateportAquaFreeTicket:
 WayfarerHoennEntry_Text_SlateportAquaTicketFailed:
 	.string "Make room for your S.S.TICKET,\n"
 	.string "then come speak to me again.$"
+
+#if IS_WAYFARER
+SlateportCity_Harbor_Text_DepartureBoard:
+	.string "DEPARTURES - SLATEPORT CITY\p"
+	.string "By day (8:00-20:00):\n"
+	.string "S.S. TIDAL for LILYCOVE CITY\p"
+	.string "By night (20:00-8:00):\n"
+	.string "S.S. AQUA for LILYCOVE CITY$"
+#endif

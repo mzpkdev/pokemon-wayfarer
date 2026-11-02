@@ -310,16 +310,26 @@ class CircuitScriptTests(unittest.TestCase):
         arrival = script("SSAqua_1F_hns")
         self.assertIn("setvar VAR_SSAQUA_STATE, 8", arrival)
 
-        vermilion = script("VermilionCity_PortInside_hns").split("VermilionPort_EventScript_ChoseSlateport::", 1)[1]
-        self.assertIn("specialvar VAR_RESULT, WayfarerCanUseRegularAqua", vermilion)
-        self.assertIn("checkitem ITEM_SS_TICKET", vermilion)
-        self.assertIn("WayfarerPrepareHoennEntry", vermilion)
-        self.assertIn("MAP_SLATEPORT_CITY_HARBOR", vermilion)
+        # The ferry network replaced the destination menus: the maiden voyage still hands over the Ticket, and the
+        # Vermilion, Olivine and Slateport sailors board the ships through the shared ferry talk.
+        ferry = (GAME / "data/scripts/wayfarer_ferry.inc").read_text()
+        self.assertIn("checkitem ITEM_SS_TICKET", ferry)
+        self.assertIn("specialvar VAR_RESULT, Ferry_Board", ferry)
+        self.assertNotIn("removeitem", ferry)
+        vermilion = block(script("VermilionCity_PortInside_hns"), "VermilionPort_EventScript_Sailor_Ferry")
+        self.assertIn("call Ferry_EventScript_SailorTalk", vermilion)
+        self.assertIn("special Ferry_WarpAboard", vermilion)
+        self.assertNotIn("WayfarerCanUseRegularAqua", script("VermilionCity_PortInside_hns"))
+        self.assertNotIn("VermilionPort_EventScript_ChoseSlateport", script("VermilionCity_PortInside_hns"))
 
-        slateport = script("SlateportCity_Harbor").split("WayfarerHoennEntry_EventScript_SlateportAquaAttendant::", 1)[1]
-        self.assertIn("specialvar VAR_RESULT, WayfarerCanUseRegularAqua", slateport)
-        self.assertIn("checkitem ITEM_SS_TICKET", slateport)
-        self.assertIn("MAP_OLIVINE_CITY_PORT_INSIDE_HNS", slateport)
+        olivine_ferry = block(olivine, "OlivinePort_EventScript_Sailor_Ferry")
+        self.assertIn("call Ferry_EventScript_SailorTalk", olivine_ferry)
+        self.assertIn("specialvar VAR_RESULT, WayfarerCanUseAquaMaidenVoyage", block(olivine, "OlivinePort_EventScript_Sailor"))
+
+        slateport = block(script("SlateportCity_Harbor"), "SlateportCity_Harbor_EventScript_FerryAttendant")
+        self.assertIn("specialvar VAR_RESULT, WayfarerCanReceiveSlateportTicket", slateport)
+        self.assertIn("giveitem ITEM_SS_TICKET", slateport)
+        self.assertNotIn("WayfarerHoennEntry_EventScript_SlateportAquaAttendant::", script("SlateportCity_Harbor"))
 
     def test_league_clear_continuations_preserve_the_interregional_network(self):
         clear = (GAME / "src/post_battle_event_funcs.c").read_text()

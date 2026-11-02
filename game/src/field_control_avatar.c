@@ -1,6 +1,7 @@
 #include "global.h"
 #if IS_WAYFARER
 #include "wayfarer_daily_slots.h"
+#include "wayfarer_ferry.h"
 #include "notable_friendship.h"
 #include "league_phone.h"
 #include "notable_talk.h"
@@ -235,6 +236,10 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     // A league's invitation or result call rings once the field has control (.product/specs/leagues.md),
     // likewise only while the player stands still.
     if (CanStartFieldCall(input) && LeaguePhone_TryStartCall())
+        return TRUE;
+    // Aboard a ferry the clock casts off and arrives (.product/specs/ss-ferries.md#sailing); the PA announces
+    // it once the field is free. The same poll applies a berth's changed ship between conversations.
+    if (CanStartFieldCall(input) && Ferry_TryStartFieldEvent())
         return TRUE;
 #endif
 

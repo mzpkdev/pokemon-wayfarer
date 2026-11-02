@@ -361,30 +361,18 @@ def audit_arrival(game_root: Path) -> dict:
     }
 
 
+FERRY_SCRIPT_PATH = "data/scripts/wayfarer_ferry.inc"
+
+
+def _ferry_index(game_root: Path, extra: list[tuple[Path, str]]) -> ScriptIndex:
+    """A script index of the given map scripts plus the shared ferry scripts (Wayfarer branches)."""
+
+    ferry_path = game_root / FERRY_SCRIPT_PATH
+    return ScriptIndex([*extra, (ferry_path, filter_product(read_text(ferry_path), wayfarer=True))])
+
+
 def audit_menus_and_routes(game_root: Path) -> dict:
-    menu_path = game_root / "src/data/script_menu.h"
-    menu_source = read_text(menu_path)
-    wayfarer_menu_source = filter_product(menu_source, wayfarer=True)
-    hns_menu_source = filter_product(menu_source, wayfarer=False)
-    expected_optional = [
-        "gText_SouthernIsland",
-        "gText_BirthIsland",
-        "gText_FarawayIsland",
-        "gText_BattleFrontier",
-        "gText_Exit",
-    ]
-    hns_vermilion = _extract_initializer(hns_menu_source, "MultichoiceList_VermilionHarbor")
-    wayfarer_vermilion = _extract_initializer(wayfarer_menu_source, "MultichoiceList_VermilionHarbor")
-    hns_olivine = _extract_initializer(hns_menu_source, "MultichoiceList_OlivineHarbor")
-    wayfarer_olivine = _extract_initializer(wayfarer_menu_source, "MultichoiceList_OlivineHarbor")
-    require(hns_vermilion == ["gText_Olivine", *expected_optional], "standalone HNS Vermilion menu changed")
-    require(
-        wayfarer_vermilion == ["gText_SlateportCity", *expected_optional],
-        "Wayfarer Vermilion must replace only menu slot 0 with Slateport",
-    )
-    expected_olivine = ["gText_Vermilion", *expected_optional]
-    require(hns_olivine == expected_olivine, "standalone HNS Olivine menu changed")
-    require(wayfarer_olivine == expected_olivine, "Wayfarer Olivine menu or slot indices changed")
+    """The Vermilion and Olivine sailors board the ferry through the shared ferry specials."""
 
     vermilion_path = game_root / "data/maps/VermilionCity_PortInside_hns/scripts.inc"
     olivine_path = game_root / "data/maps/OlivineCity_PortInside_hns/scripts.inc"
@@ -394,127 +382,49 @@ def audit_menus_and_routes(game_root: Path) -> dict:
     ferry_source = read_text(ferry_path)
     seagallop_path = game_root / "data/scripts/seagallop.inc"
     seagallop_source = read_text(seagallop_path)
-    wayfarer_index = ScriptIndex([(vermilion_path, filter_product(raw_vermilion, wayfarer=True))])
+    wayfarer_index = _ferry_index(game_root, [(vermilion_path, filter_product(raw_vermilion, wayfarer=True))])
     hns_index = ScriptIndex([(vermilion_path, filter_product(raw_vermilion, wayfarer=False))])
-    olivine_index = ScriptIndex([(olivine_path, filter_product(raw_olivine, wayfarer=True))])
+    olivine_index = _ferry_index(game_root, [(olivine_path, filter_product(raw_olivine, wayfarer=True))])
 
+    # ---- Vermilion: one sailor runs the S.S. berth, the Seagallop and the Anne adventure ----
+    wayfarer_top_level = wayfarer_index.block("VermilionPort_EventScript_Sailor")
     wayfarer_root = wayfarer_index.reachable_text("VermilionPort_EventScript_Sailor")
     hns_root = hns_index.reachable_text("VermilionPort_EventScript_Sailor")
-    wayfarer_top_level = wayfarer_index.block("VermilionPort_EventScript_Sailor")
-    wayfarer_regular_branch = wayfarer_index.block("VermilionPort_EventScript_Sailor_OtherDestinations")
     require(
         "special DrawWayfarerVermilionPortMenu" in wayfarer_top_level
         and "specialvar VAR_RESULT, GetWayfarerVermilionPortChoice" in wayfarer_top_level
         and _case_targets(wayfarer_top_level) == {
-            0: "VermilionPort_EventScript_Sailor_Sevii",
-            1: "VermilionPort_EventScript_Sailor_OtherDestinations",
+            0: "VermilionPort_EventScript_Sailor_Ferry",
+            1: "VermilionPort_EventScript_Sailor_Sevii",
             2: "VermilionPort_EventScript_Sailor_BoardSSAnne",
             3: "VermilionPort_EventScript_Sailor_Cancel",
         },
-        "Wayfarer Vermilion must expose fixed Sevii, other-destinations, Anne, and cancel choices",
+        "Wayfarer Vermilion must open the ship / Sevii / Anne adventure menu",
     )
-    require(
-        re.search(r"specialvar\s+VAR_RESULT\s*,\s*WayfarerCanUseRegularAqua\s+goto_if_eq\s+VAR_RESULT\s*,\s*TRUE\s*,\s*VermilionPort_EventScript_Sailor_AfterKanto", wayfarer_regular_branch) is not None,
-        "Wayfarer Vermilion must gate only its regular route on profile eligibility",
-    )
+    require("WayfarerCanUseRegularAqua" not in wayfarer_root and "MULTI_VERMILION_HARBOR" not in wayfarer_root
+            and "WayfarerCanUseRegularAqua" not in ferry_source,
+            "Wayfarer Vermilion still reads the retired regular-Aqua gate or destination menu")
+    require("MAP_SLATEPORT_CITY_HARBOR" not in wayfarer_root and "MAP_OLIVINE_CITY_PORT_INSIDE_HNS" not in wayfarer_root,
+            "Wayfarer Vermilion still offers a fixed destination")
+    require("MULTI_VERMILION_HARBOR" in hns_root and "MAP_OLIVINE_CITY_PORT_INSIDE_HNS" in hns_root,
+            "standalone HNS Vermilion lost its harbor menu")
+    ferry_branch = wayfarer_index.block("VermilionPort_EventScript_Sailor_Ferry")
+    require("call Ferry_EventScript_SailorTalk" in ferry_branch and "call VermilionPort_EventScript_FerryBoardingWalk" in ferry_branch
+            and ferry_branch.index("FerryBoardingWalk") < ferry_branch.index("special Ferry_WarpAboard"),
+            "Vermilion's ship row must talk, walk and then warp aboard through the ferry specials")
+    walk = wayfarer_index.block("VermilionPort_EventScript_FerryBoardingWalk")
+    require("setrespawn" not in walk and "LOCALID_VERMILIONMARINA_BOAT" not in walk,
+            "Vermilion's ferry boarding walk must not set the respawn or move the boat")
+    talk = wayfarer_index.reachable_text("Ferry_EventScript_SailorTalk")
+    for needle in ("specialvar VAR_RESULT, Ferry_GetBerthShip", "checkitem ITEM_SS_TICKET", "specialvar VAR_RESULT, Ferry_Board"):
+        require(needle in talk, f"the shared gangway sailor lost {needle}")
+    require("removeitem" not in talk and "FLAG_SYS_GAME_CLEAR" not in talk, "the shared gangway sailor consumes or gates on something")
     anne_branch = wayfarer_index.block("VermilionPort_EventScript_Sailor_BoardSSAnne")
-    anne_complete = wayfarer_index.block("VermilionPort_EventScript_Sailor_SSAnneComplete")
     require(
         re.search(r"specialvar\s+VAR_RESULT\s*,\s*WayfarerSSAnne_HasUnfinishedContent\s+goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,\s*VermilionPort_EventScript_Sailor_SSAnneComplete", anne_branch) is not None
-        and re.search(r"checkitem\s+ITEM_SS_TICKET", anne_branch) is not None
-        and "WayfarerCanUseRegularAqua" not in anne_branch
-        and "warp MAP_SSANNE_1F_CORRIDOR, 19, 2" in anne_branch,
-        "Wayfarer Anne must be an independent ticket-only unfinished-content route",
+        and "Ferry_" not in anne_branch,
+        "the Anne adventure's entry must stay its own boarding, not the ferry's",
     )
-    require(
-        re.search(r"\b(?:setvar|setflag|clearflag|giveitem|removeitem|setrespawn|warp|warpsilent|special|specialvar)\b", anne_complete) is None,
-        "Wayfarer Anne full-clear refusal must not mutate travel or persistent state",
-    )
-    require(re.search(r"goto_if_ge\s+VAR_SSAQUA_STATE\s*,\s*8\s*,", hns_root) is not None
-            and "WayfarerCanUseRegularAqua" not in hns_root,
-            "standalone HNS Vermilion must retain its completed-voyage gate")
-    require("MULTI_VERMILION_HARBOR" in wayfarer_root, "Wayfarer Vermilion does not use the guarded harbor menu")
-    require("MAP_OLIVINE_CITY_PORT_INSIDE_HNS" not in wayfarer_root,
-            "Wayfarer exposes a Vermilion-to-Olivine S.S. Aqua route")
-    require("MAP_OLIVINE_CITY_PORT_INSIDE_HNS" in hns_root,
-            "standalone HNS lost the Vermilion-to-Olivine route")
-    require("HEAL_LOCATION_OLIVINE_CITY_HNS" in hns_root,
-            "standalone HNS lost its Olivine recovery destination")
-
-    after_wayfarer = wayfarer_index.block("VermilionPort_EventScript_Sailor_AfterKanto")
-    after_hns = hns_index.block("VermilionPort_EventScript_Sailor_AfterKanto")
-    wayfarer_cases = _case_targets(after_wayfarer)
-    hns_cases = _case_targets(after_hns)
-    require(set(wayfarer_cases) == set(range(6)), "Wayfarer Vermilion menu case indices changed")
-    require(set(hns_cases) == set(range(6)), "standalone HNS Vermilion menu case indices changed")
-    require(
-        [wayfarer_cases[index] for index in range(1, 6)] == [hns_cases[index] for index in range(1, 6)],
-        "Wayfarer changed an optional Vermilion destination slot",
-    )
-    for index in range(1, 6):
-        label = wayfarer_cases[index]
-        require(
-            "\n".join(line.strip() for line in wayfarer_index.reachable_text(label).splitlines() if line.strip())
-            == "\n".join(line.strip() for line in hns_index.reachable_text(label).splitlines() if line.strip()),
-            f"Wayfarer changed optional Vermilion destination behavior at slot {index}",
-        )
-    slateport_label = wayfarer_cases[0]
-    require("Slateport" in slateport_label, "Wayfarer Vermilion slot 0 does not select Slateport")
-    departure = wayfarer_index.reachable_text(slateport_label)
-    state_pos = _position(
-        departure,
-        r"specialvar\s+VAR_RESULT\s*,\s*WayfarerCanUseRegularAqua\s+goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,",
-        "Slateport selection must recheck profile eligibility",
-    )
-    ticket_pos = _position(
-        departure,
-        r"checkitem\s+ITEM_SS_TICKET",
-        "Slateport selection must recheck the shared S.S. Ticket",
-        state_pos,
-    )
-    failure_pos = _position(
-        departure,
-        r"goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,",
-        "Slateport selection must branch on a failed ticket recheck",
-        ticket_pos,
-    )
-    require(
-        re.search(r"\b(?:setvar|setflag|clearflag|giveitem|removeitem|setrespawn|warp|warpsilent|special|specialvar)\b",
-                  re.sub(r"specialvar\s+VAR_RESULT\s*,\s*WayfarerCanUseRegularAqua", "", departure[:failure_pos])) is None,
-        "Slateport selection changes persistent or travel state before the ticket failure branch",
-    )
-    preflight_pos = _position(
-        departure,
-        r"specialvar\s+VAR_RESULT\s*,\s*WayfarerPrepareHoennEntry",
-        "Slateport selection must run the destination and initialization preflight",
-        failure_pos,
-    )
-    preflight_failure_pos = _position(
-        departure,
-        r"goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,",
-        "Slateport selection must stop on a failed entry preflight",
-        preflight_pos,
-    )
-    presentation_pos = _position(
-        departure,
-        r"call\s+VermilionPort_EventScript_EnterShip",
-        "Slateport selection must retain the Vermilion S.S. Aqua departure presentation",
-        preflight_failure_pos,
-    )
-    respawn_pos = _position(
-        departure,
-        rf"setrespawn\s+{HEAL_LOCATION}",
-        "Slateport heal destination must be committed before arrival",
-        presentation_pos,
-    )
-    warp_pos = _position(
-        departure,
-        rf"warp(?:silent)?\s+{ARRIVAL_MAP}\s*,\s*{ARRIVAL_COORD[0]}\s*,\s*{ARRIVAL_COORD[1]}",
-        "Slateport warp map or coordinate does not match the audited destination",
-        respawn_pos,
-    )
-    require("removeitem ITEM_SS_TICKET" not in departure, "the shared S.S. Ticket is consumed")
-    require("setvar VAR_SSAQUA_STATE" not in departure, "the Hoenn trip changes completed S.S. Aqua voyage state")
 
     sevii_branch = wayfarer_index.block("VermilionPort_EventScript_Sailor_Sevii")
     require(
@@ -526,9 +436,6 @@ def audit_menus_and_routes(game_root: Path) -> dict:
         ),
         "Wayfarer Sevii selector does not dispatch stable Seagallop destination IDs",
     )
-    require("WayfarerCanUseRegularAqua" not in wayfarer_top_level
-            and "WayfarerCanUseRegularAqua" not in sevii_branch,
-            "Wayfarer Sevii service must be offered before the regular Aqua gate")
     bill_path = game_root / "data/maps/Route25_BillsHouse_hns/scripts.inc"
     bill_raw = read_text(bill_path)
     bill_source = filter_product(bill_raw, wayfarer=True)
@@ -556,8 +463,8 @@ def audit_menus_and_routes(game_root: Path) -> dict:
         "standalone HNS Bill's House service must remain unchanged",
     )
     require(
-        re.search(r"u16\s+WayfarerCanSailToBirthIsland\s*\([^)]*\)\s*\{\s*return\s+WayfarerCanUseRegularAqua\s*\(\s*\)\s*&&\s*CheckBagHasItem\s*\(\s*ITEM_AURORA_TICKET\s*,\s*1\s*\)\s*;\s*\}", ferry_source, re.DOTALL) is not None,
-        "Birth Island eligibility must be the read-only Aqua and Aurora Ticket conjunction",
+        re.search(r"u16\s+WayfarerCanSailToBirthIsland\s*\([^)]*\)\s*\{\s*return\s+CheckBagHasItem\s*\(\s*ITEM_AURORA_TICKET\s*,\s*1\s*\)\s*;\s*\}", ferry_source, re.DOTALL) is not None,
+        "Birth Island eligibility must be the read-only Aurora Ticket check",
     )
     require("FLAG_ENABLE_SHIP_NAVEL_ROCK" not in ferry_source,
             "Wayfarer Navel Rock eligibility must not use the unavailable ship flag")
@@ -588,6 +495,7 @@ def audit_menus_and_routes(game_root: Path) -> dict:
         require("warp MAP_LILYCOVE_CITY_HARBOR, 8, 11" in standalone_harbor,
                 f"{map_name} standalone sailor must retain its Lilycove return")
 
+    # ---- Olivine: the maiden voyage keeps its own boarding; every other case boards the ferry ----
     standalone_olivine_index = ScriptIndex([(olivine_path, filter_product(raw_olivine, wayfarer=False))])
     olivine_root = olivine_index.reachable_text("OlivinePort_EventScript_Sailor")
     standalone_olivine_root = standalone_olivine_index.reachable_text("OlivinePort_EventScript_Sailor")
@@ -595,60 +503,36 @@ def audit_menus_and_routes(game_root: Path) -> dict:
             and "WayfarerCanUseRegularAqua" not in standalone_olivine_root
             and "WayfarerCanUseAquaMaidenVoyage" not in standalone_olivine_root,
             "standalone HNS Olivine must retain its native voyage gates")
-    require("WayfarerCanUseRegularAqua" in olivine_root,
-            "Wayfarer Olivine must query profile regular-service eligibility")
+    require("WayfarerCanUseRegularAqua" not in olivine_root and "MULTI_OLIVINE_HARBOR" not in olivine_root,
+            "Wayfarer Olivine still reads the retired regular-Aqua gate or destination menu")
     root_block = olivine_index.block("OlivinePort_EventScript_Sailor")
-    require(re.search(r"WayfarerCanUseRegularAqua\s+goto_if_eq\s+VAR_RESULT\s*,\s*TRUE\s*,\s*OlivinePort_EventScript_Sailor_AfterKanto", root_block) is not None,
-            "eligible Olivine travelers must enter the regular menu")
-    require(re.search(r"WayfarerCanUseAquaMaidenVoyage\s+goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,\s*OlivinePort_EventScript_Sailor_CantBoard", root_block) is not None,
-            "Olivine must reject profiles that do not author the maiden voyage")
-    for label in ("OlivinePort_EventScript_Sailor_MaidenVoyage",
-                  "OlivinePort_EventScript_Sailor_ResumeMaidenVoyage",
-                  "OlivinePort_EventScript_Sailor_AfterKanto"):
+    require(re.search(r"WayfarerCanUseAquaMaidenVoyage\s+goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,\s*OlivinePort_EventScript_Sailor_Ferry\s+goto_if_ge\s+VAR_SSAQUA_STATE\s*,\s*8\s*,\s*OlivinePort_EventScript_Sailor_Ferry", root_block) is not None,
+            "Olivine must run the maiden voyage only while a Johto start has not finished it")
+    ferry_block = olivine_index.block("OlivinePort_EventScript_Sailor_Ferry")
+    require("call Ferry_EventScript_SailorTalk" in ferry_block and "call OlivinePort_EventScript_FerryBoardingWalk" in ferry_block
+            and "special Ferry_WarpAboard" in ferry_block,
+            "Olivine's ferry boarding must go through the ferry specials")
+    require("setrespawn" not in olivine_index.block("OlivinePort_EventScript_FerryBoardingWalk"),
+            "Olivine's ferry boarding walk must not set the respawn")
+    for label in ("OlivinePort_EventScript_Sailor_MaidenVoyage", "OlivinePort_EventScript_Sailor_ResumeMaidenVoyage"):
         require(olivine_index.reachable_text(label).split() == standalone_olivine_index.reachable_text(label).split(),
-                f"Wayfarer changed native voyage or destination behavior at {label}")
-    require("checkitem ITEM_SS_TICKET" in olivine_root, "Olivine-to-Vermilion lost its ticket gate")
-    require("MAP_VERMILION_CITY_PORT_INSIDE_HNS" in olivine_root,
-            "Wayfarer Olivine lost its Vermilion route")
-    require("MAP_SLATEPORT_CITY_HARBOR" not in olivine_root,
-            "Wayfarer added a direct Olivine-to-Slateport route")
-    olivine_cases = _case_targets(olivine_index.block("OlivinePort_EventScript_Sailor_AfterKanto"))
-    require(
-        olivine_cases == {
-            0: "OlivinePort_EventScript_ChoseVermilion",
-            1: "OlivinePort_EventScript_ChoseSouthernIsland",
-            2: "OlivinePort_EventScript_ChoseBirthIsland",
-            3: "OlivinePort_EventScript_ChoseFarawayIsland",
-            4: "OlivinePort_EventScript_ChoseBattleFrontier",
-            5: "OlivinePort_EventScript_Sailor_Refused",
-        },
-        "Olivine harbor destination indices changed",
-    )
+                f"Wayfarer changed native voyage behavior at {label}")
+    require("MAP_SLATEPORT_CITY_HARBOR" not in olivine_root, "Wayfarer added a direct Olivine-to-Slateport route")
 
     return {
         "menu": {
-            "wayfarerVermilion": wayfarer_vermilion,
-            "standaloneHnsVermilion": hns_vermilion,
-            "wayfarerOlivine": wayfarer_olivine,
-            "slateportSlot": 0,
-            "preservedOptionalSlots": list(range(1, 6)),
-            "wayfarerTopLevel": ["SEVII ISLANDS", "OTHER DESTINATIONS", "BOARD S.S. ANNE", "CANCEL"],
+            "wayfarerVermilionTopLevel": ["S.S. ship in port", "SEVII ISLANDS", "BOARD S.S. ANNE (before the reward)", "CANCEL"],
             "seviiFirstDestination": "ONE ISLAND",
         },
-        "departure": {
-            "selectionLabel": slateport_label,
-            "eligibilityPredicate": "WayfarerCanUseRegularAqua",
+        "boarding": {
+            "talk": "Ferry_EventScript_SailorTalk",
             "ticket": "ITEM_SS_TICKET",
             "ticketConsumed": False,
-            "healBeforeWarp": respawn_pos < warp_pos,
-        },
-        "routes": {
-            "wayfarerVermilionToOlivine": False,
-            "standaloneHnsVermilionToOlivine": True,
-            "wayfarerOlivineToVermilion": True,
+            "specials": ["Ferry_GetBerthShip", "Ferry_Board", "Ferry_WarpAboard"],
+            "walksSetRespawn": False,
         },
         "specialIslandEligibility": {
-            "birthIsland": "WayfarerCanUseRegularAqua && ITEM_AURORA_TICKET",
+            "birthIsland": "ITEM_AURORA_TICKET",
             "navelRock": "FLAG_SYS_GAME_CLEAR && ITEM_MYSTIC_TICKET",
             "readOnly": True,
         },
@@ -661,275 +545,90 @@ def audit_menus_and_routes(game_root: Path) -> dict:
 
 
 def audit_hoenn_ports_and_ticket(game_root: Path) -> dict:
-    emerald_maps = []
-    aqua_departures = []
-    aqua_event_maps = []
-    harbor_map_path = game_root / "data/maps/SlateportCity_Harbor/map.json"
-    for map_path in sorted((game_root / "data/maps").glob("*/map.json")):
-        data = read_json(map_path)
-        if data.get("game_version", "emerald") != "emerald":
-            continue
-        emerald_maps.append(data["id"])
-        script_path = map_path.with_name("scripts.inc")
-        source = read_text(script_path) if script_path.is_file() else ""
-        if re.search(r"SS_?AQUA|S\.S\.?\s*AQUA|SSAqua", source, re.IGNORECASE):
-            aqua_departures.append(str(script_path.relative_to(game_root)))
-        for event in data.get("object_events", []):
-            if any(event.get(field) in (SLATEPORT_AQUA_LOCAL_ID, SLATEPORT_AQUA_SCRIPT, SLATEPORT_AQUA_HIDE_FLAG)
-                   for field in ("local_id", "script", "flag")):
-                aqua_event_maps.append(str(map_path.relative_to(game_root)))
-    expected_aqua_departures = ["data/maps/SlateportCity_Harbor/scripts.inc"]
-    require(
-        sorted(set(aqua_departures)) == expected_aqua_departures,
-        "Hoenn S.S. Aqua content is not limited to the dedicated Slateport attendant: "
-        f"{sorted(set(aqua_departures))}",
-    )
-    require(
-        sorted(set(aqua_event_maps)) == ["data/maps/SlateportCity_Harbor/map.json"],
-        "Wayfarer Aqua map event is not limited to Slateport Harbor: "
-        f"{sorted(set(aqua_event_maps))}",
-    )
+    """Slateport and Lilycove berths call the ferry boarding specials; the Tidal is no longer game-clear gated."""
 
-    harbor_map = read_json(harbor_map_path)
-    objects = harbor_map.get("object_events", [])
-    require(objects, "Slateport Harbor has no object events")
-    aqua_events = [event for event in objects if event.get("local_id") == SLATEPORT_AQUA_LOCAL_ID]
-    require(len(aqua_events) == 1, "Slateport must define exactly one dedicated Wayfarer Aqua attendant")
-    aqua_event = aqua_events[0]
-    require(objects[-1] == aqua_event, "Wayfarer Aqua attendant must be appended after original Harbor objects")
-    require(
-        aqua_event == {
-            "local_id": SLATEPORT_AQUA_LOCAL_ID,
-            "graphics_id": "OBJ_EVENT_GFX_SAILOR",
-            "x": 15,
-            "y": 11,
-            "elevation": 3,
-            "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
-            "movement_range_x": 0,
-            "movement_range_y": 0,
-            "trainer_type": "TRAINER_TYPE_NONE",
-            "trainer_sight_or_berry_tree_id": "0",
-            "script": SLATEPORT_AQUA_SCRIPT,
-            "flag": SLATEPORT_AQUA_HIDE_FLAG,
-        },
-        "Slateport Wayfarer Aqua attendant does not match its fixed event contract",
-    )
-    require(SLATEPORT_AQUA_COORD not in SLATEPORT_AQUA_ESCAPE_RESERVED_COORDS,
-            "Slateport Aqua attendant overlaps an Aqua-escape scene position or movement lane")
-    aqua_geometry = audit_harbor_position(game_root, harbor_map, coordinate=SLATEPORT_AQUA_COORD,
-                                           elevation=SLATEPORT_AQUA_ELEVATION,
-                                           excluded_local_id=SLATEPORT_AQUA_LOCAL_ID)
-    slateport_tidal_attendants = [event for event in objects[:-1]
-                                  if event.get("script") == "SlateportCity_Harbor_EventScript_FerryAttendant"]
-    require(len(slateport_tidal_attendants) == 1, "Slateport S.S. Tidal attendant was changed or removed")
-    require(slateport_tidal_attendants[0] == {
-        "graphics_id": "OBJ_EVENT_GFX_BEAUTY", "x": 8, "y": 10, "elevation": 3,
-        "movement_type": "MOVEMENT_TYPE_FACE_DOWN", "movement_range_x": 0, "movement_range_y": 0,
-        "trainer_type": "TRAINER_TYPE_NONE", "trainer_sight_or_berry_tree_id": "0",
-        "script": "SlateportCity_Harbor_EventScript_FerryAttendant",
-        "flag": "FLAG_HIDE_SLATEPORT_CITY_HARBOR_PATRONS",
-    }, "Slateport S.S. Tidal attendant changed")
-    tidal_objects = [event for event in objects[:-1] if event.get("local_id") == "LOCALID_SLATEPORT_HARBOR_SS_TIDAL"]
-    require(len(tidal_objects) == 1, "Slateport S.S. Tidal object was changed or removed")
-    require(
-        tidal_objects[0] == {
-            "local_id": "LOCALID_SLATEPORT_HARBOR_SS_TIDAL",
-            "graphics_id": "OBJ_EVENT_GFX_SS_TIDAL",
-            "x": 8,
-            "y": 9,
-            "elevation": 1,
-            "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
-            "movement_range_x": 0,
-            "movement_range_y": 0,
-            "trainer_type": "TRAINER_TYPE_NONE",
-            "trainer_sight_or_berry_tree_id": "0",
-            "script": "0x0",
-            "flag": "FLAG_HIDE_SLATEPORT_CITY_HARBOR_SS_TIDAL",
-        },
-        "Slateport S.S. Tidal object changed",
-    )
-
-    harbor_path = game_root / "data/maps/SlateportCity_Harbor/scripts.inc"
-    raw_harbor = read_text(harbor_path)
-    harbor = strip_comments(filter_product(raw_harbor, wayfarer=True))
-    harbor_index = ScriptIndex([(harbor_path, harbor)])
-    require(
-        re.search(
-            r"SlateportCity_Harbor_OnTransition:.*?call_if_set\s+FLAG_SYS_GAME_CLEAR\s*,\s*"
-            r"SlateportCity_Harbor_EventScript_ShowSSTidal",
-            harbor,
-            re.DOTALL,
-        ) is not None,
-        "S.S. Tidal visibility must remain gated by Hoenn game-clear state",
-    )
-    tidal = harbor_index.reachable_text("SlateportCity_Harbor_EventScript_FerryAttendant")
-    require("FLAG_SYS_GAME_CLEAR" in tidal, "S.S. Tidal service lost its Hoenn game-clear gate")
-    require("VAR_SSAQUA_STATE" not in tidal, "S.S. Tidal was coupled to HNS S.S. Aqua voyage state")
-    for required in (
-        "SlateportCity_Harbor_EventScript_BoardFerry",
-        "Common_EventScript_FerryDepart",
-        "LOCALID_SLATEPORT_HARBOR_SS_TIDAL",
-        "VAR_SS_TIDAL_STATE",
-        "FLAG_MET_SCOTT_ON_SS_TIDAL",
-        "SlateportCity_Harbor_EventScript_BattleFrontier",
-    ):
-        require(required in tidal, f"S.S. Tidal reachable script graph lost {required}")
-    require(SLATEPORT_AQUA_SCRIPT not in tidal, "S.S. Tidal graph reaches the Wayfarer Aqua attendant")
-
-    lilycove_map_path = game_root / "data/maps/LilycoveCity_Harbor/map.json"
+    slateport_path = game_root / "data/maps/SlateportCity_Harbor/scripts.inc"
     lilycove_path = game_root / "data/maps/LilycoveCity_Harbor/scripts.inc"
-    lilycove_objects = read_json(lilycove_map_path).get("object_events", [])
-    expected_lilycove = (
-        {"local_id": "LOCALID_LILYCOVE_HARBOR_ATTENDANT", "graphics_id": "OBJ_EVENT_GFX_BEAUTY",
-         "x": 8, "y": 10, "elevation": 3, "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
-         "movement_range_x": 0, "movement_range_y": 0, "trainer_type": "TRAINER_TYPE_NONE",
-         "trainer_sight_or_berry_tree_id": "0", "script": "LilycoveCity_Harbor_EventScript_FerryAttendant",
-         "flag": "FLAG_HIDE_LILYCOVE_HARBOR_FERRY_ATTENDANT"},
-        {"local_id": "LOCALID_LILYCOVE_HARBOR_SS_TIDAL", "graphics_id": "OBJ_EVENT_GFX_SS_TIDAL",
-         "x": 8, "y": 9, "elevation": 1, "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
-         "movement_range_x": 0, "movement_range_y": 0, "trainer_type": "TRAINER_TYPE_NONE",
-         "trainer_sight_or_berry_tree_id": "0", "script": "0x0", "flag": "FLAG_HIDE_LILYCOVE_HARBOR_SSTIDAL"},
-    )
-    for expected_event in expected_lilycove:
-        require(expected_event in lilycove_objects, "Lilycove S.S. Tidal object changed or removed")
-    lilycove_index = ScriptIndex([(lilycove_path, strip_comments(read_text(lilycove_path)))])
-    lilycove_tidal = lilycove_index.reachable_text("LilycoveCity_Harbor_EventScript_FerryAttendant")
-    for required in ("FLAG_SYS_GAME_CLEAR", "LilycoveCity_Harbor_EventScript_GoToSlateport",
-                     "LilycoveCity_Harbor_EventScript_GoToBattleFrontier", "VAR_SS_TIDAL_STATE",
-                     "LilycoveCity_Harbor_EventScript_BoardFerry", "Common_EventScript_FerryDepart",
-                     "LOCALID_LILYCOVE_HARBOR_SS_TIDAL"):
-        require(required in lilycove_tidal, f"Lilycove S.S. Tidal reachable script graph lost {required}")
+    tidal_path = game_root / "data/maps/SSTidalCorridor/scripts.inc"
+    slateport_raw = read_text(slateport_path)
+    lilycove_raw = read_text(lilycove_path)
+    slateport_index = _ferry_index(game_root, [(slateport_path, filter_product(slateport_raw, wayfarer=True))])
+    lilycove_index = _ferry_index(game_root, [(lilycove_path, filter_product(lilycove_raw, wayfarer=True))])
+    tidal_index = _ferry_index(game_root, [(tidal_path, filter_product(read_text(tidal_path), wayfarer=True))])
+    standalone_slateport = ScriptIndex([(slateport_path, filter_product(slateport_raw, wayfarer=False))])
 
-    aqua = harbor_index.reachable_text(SLATEPORT_AQUA_SCRIPT)
-    state_pos = _position(
-        aqua,
-        r"specialvar\s+VAR_RESULT\s*,\s*WayfarerCanUseRegularAqua\s+goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,",
-        "Slateport Aqua attendant must recheck profile eligibility",
-    )
-    ticket_pos = _position(
-        aqua,
-        r"checkitem\s+ITEM_SS_TICKET",
-        "Slateport Aqua attendant must recheck the shared S.S. Ticket",
-        state_pos,
-    )
-    ticket_failure_pos = _position(
-        aqua,
-        r"goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,",
-        "Slateport Aqua attendant must branch on a failed ticket recheck",
-        ticket_pos,
-    )
-    require(
-        re.search(r"\b(?:setvar|setflag|clearflag|giveitem|removeitem|setrespawn|warp|warpsilent|special|specialvar)\b",
-                  re.sub(r"specialvar\s+VAR_RESULT\s*,\s*WayfarerCan(?:UseRegularAqua|ReceiveSlateportTicket)", "", aqua[:ticket_failure_pos])) is None,
-        "Slateport Aqua attendant changes persistent or travel state before its ticket failure branch",
-    )
-    require("0x408B" not in aqua and "VAR_SSAQUA_STATE" not in aqua,
-            "Slateport must not access the HNS voyage bank directly")
-    root = harbor_index.block(SLATEPORT_AQUA_SCRIPT)
-    require(re.search(r"checkitem\s+ITEM_SS_TICKET\s+goto_if_eq\s+VAR_RESULT\s*,\s*TRUE\s*,\s*WayfarerHoennEntry_EventScript_SlateportAquaAttendant_OfferDeparture", root) is not None,
-            "Slateport must skip its grant when the shared Ticket is already owned")
-    require(re.search(r"WayfarerCanReceiveSlateportTicket\s+goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,\s*WayfarerHoennEntry_EventScript_SlateportAquaAttendant_NoCredentials", root) is not None,
-            "Slateport free Ticket must use the profile's handoff policy")
-    require(re.search(r"giveitem\s+ITEM_SS_TICKET\s+goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,\s*WayfarerHoennEntry_EventScript_SlateportAquaAttendant_TicketFailed", root) is not None,
-            "Slateport Ticket grant must stop on failure and remain retryable")
-    failed = harbor_index.block("WayfarerHoennEntry_EventScript_SlateportAquaAttendant_TicketFailed")
-    require(re.search(r"\b(?:warp|warpsilent|setflag|setvar|giveitem)\b", failed) is None
-            and "release" in failed and "end" in failed,
-            "failed Slateport Ticket delivery must leave the player at the port")
-    require("removeitem" not in aqua and "setflag" not in aqua and "setvar" not in aqua,
-            "Slateport circuit must preserve its Ticket and stock story milestones")
-    confirmation_pos = _position(
-        aqua,
-        r"msgbox\s+WayfarerHoennEntry_Text_SlateportAquaToOlivine\s*,\s*MSGBOX_YESNO",
-        "Slateport Aqua attendant must confirm its Olivine journey",
-        ticket_failure_pos,
-    )
-    fade_pos = _position(
-        aqua,
-        r"fadescreenswapbuffers\s+FADE_TO_BLACK",
-        "Slateport Aqua attendant must use its independent fade departure",
-        confirmation_pos,
-    )
-    respawn_pos = _position(
-        aqua,
-        rf"setrespawn\s+{OLIVINE_HEAL_LOCATION}",
-        "Slateport Aqua attendant must commit Olivine recovery before warping",
-        fade_pos,
-    )
-    warp_pos = _position(
-        aqua,
-        rf"warp\s+{OLIVINE_PORT_MAP}\s*,\s*{OLIVINE_PORT_COORD[0]}\s*,\s*{OLIVINE_PORT_COORD[1]}",
-        "Slateport Aqua attendant has an invalid Olivine warp",
-        respawn_pos,
-    )
-    olivine_heal_matches = [
-        row for row in read_json(game_root / "src/data/heal_locations.json")["heal_locations"]
-        if row.get("id") == OLIVINE_HEAL_LOCATION
-    ]
-    require(len(olivine_heal_matches) == 1, "Olivine circuit heal location must resolve exactly once")
-    olivine_heal = olivine_heal_matches[0]
-    require(olivine_heal.get("source") == "HNS", "Olivine circuit heal location must retain HNS provenance")
-    require(olivine_heal.get("map") == "MAP_OLIVINE_CITY_HNS", "Olivine circuit heal location has an invalid map")
-    for forbidden in (
-        "SlateportCity_Harbor_EventScript_BoardFerry",
-        "Common_EventScript_FerryDepart",
-        "LOCALID_SLATEPORT_HARBOR_SS_TIDAL",
-        "VAR_SS_TIDAL_STATE",
-        "FLAG_MET_SCOTT_ON_SS_TIDAL",
-    ):
-        require(forbidden not in aqua, f"Slateport Aqua attendant is coupled to S.S. Tidal through {forbidden}")
+    # ---- Slateport: the attendant is the gangway sailor and gives the Hoenn start's Ticket ----
+    attendant = slateport_index.block("SlateportCity_Harbor_EventScript_FerryAttendant")
+    ticket_pos = _position(attendant, r"checkitem\s+ITEM_SS_TICKET\s+goto_if_eq\s+VAR_RESULT\s*,\s*TRUE\s*,\s*SlateportCity_Harbor_EventScript_FerryTalk",
+                           "an existing Ticket must skip the free grant")
+    grant_pos = _position(attendant, r"specialvar\s+VAR_RESULT\s*,\s*WayfarerCanReceiveSlateportTicket\s+goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,\s*SlateportCity_Harbor_EventScript_FerryTalk",
+                          "the free Ticket must stay under the profile handoff policy", ticket_pos)
+    _position(attendant, r"giveitem\s+ITEM_SS_TICKET\s+goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,\s*SlateportCity_Harbor_EventScript_TicketFailed",
+              "a failed Ticket grant must stop", grant_pos)
+    ferry_talk = slateport_index.block("SlateportCity_Harbor_EventScript_FerryTalk")
+    require("call Ferry_EventScript_SailorTalk" in ferry_talk and "call SlateportCity_Harbor_EventScript_FerryBoardingWalk" in ferry_talk
+            and "special Ferry_WarpAboard" in ferry_talk, "the Slateport berth must board through the ferry specials")
+    attendant_graph = slateport_index.reachable_text("SlateportCity_Harbor_EventScript_FerryAttendant")
+    require("FLAG_SYS_GAME_CLEAR" not in attendant_graph and "WayfarerCanUseRegularAqua" not in attendant_graph
+            and "MULTI_SSTIDAL" not in attendant_graph and "VAR_SS_TIDAL_STATE" not in attendant_graph,
+            "the Slateport berth still has a game-clear gate, a destination menu or the cruise state")
+    require("WayfarerHoennEntry_EventScript_SlateportAquaAttendant" not in slateport_index.blocks,
+            "the retired Slateport Aqua attendant is still defined")
+    require("FLAG_SYS_GAME_CLEAR" in standalone_slateport.reachable_text("SlateportCity_Harbor_EventScript_FerryAttendant"),
+            "standalone Emerald Slateport lost its game-clear gate")
+    map_data = read_json(game_root / "data/maps/SlateportCity_Harbor/map.json")
+    require(not [event for event in map_data["object_events"]
+                 if event.get("script") == "WayfarerHoennEntry_EventScript_SlateportAquaAttendant"],
+            "the retired Slateport Aqua attendant object is still placed")
+    tidal_objects = [event for event in map_data["object_events"] if event.get("local_id") == "LOCALID_SLATEPORT_HARBOR_SS_TIDAL"]
+    require(len(tidal_objects) == 1 and tidal_objects[0]["graphics_id"] == "OBJ_EVENT_GFX_VAR_E"
+            and tidal_objects[0]["flag"] == "FLAG_TEMP_1F",
+            "the Slateport berth ship must be a variable-graphics object hidden by the berth temp flag")
+    attendants = [event for event in map_data["object_events"]
+                  if event.get("script") == "SlateportCity_Harbor_EventScript_FerryAttendant"]
+    require(len(attendants) == 1 and (attendants[0]["x"], attendants[0]["y"]) == (8, 10)
+            and attendants[0]["flag"] == "FLAG_HIDE_SLATEPORT_CITY_HARBOR_PATRONS",
+            "the Slateport attendant must stay at (8,10) and hide for the Aqua escape")
 
-    standalone_index = ScriptIndex([(harbor_path, strip_comments(filter_product(raw_harbor, wayfarer=False)))])
-    standalone_aqua = standalone_index.block(SLATEPORT_AQUA_SCRIPT)
-    require(standalone_aqua.strip() == "end", "non-Wayfarer Slateport Aqua attendant may not transport")
+    # ---- Lilycove: the attendant boards the ship in port or opens the charter menu ----
+    lilycove_map = read_json(game_root / "data/maps/LilycoveCity_Harbor/map.json")
+    lilycove_tidal = [event for event in lilycove_map["object_events"] if event.get("local_id") == "LOCALID_LILYCOVE_HARBOR_SS_TIDAL"]
+    require(len(lilycove_tidal) == 1 and lilycove_tidal[0]["graphics_id"] == "OBJ_EVENT_GFX_VAR_E"
+            and lilycove_tidal[0]["flag"] == "FLAG_TEMP_1F",
+            "the Lilycove berth ship must be a variable-graphics object hidden by the berth temp flag")
+    lilycove_attendant = lilycove_index.reachable_text("LilycoveCity_Harbor_EventScript_FerryAttendant")
+    for needle in ("GetFerryLilycoveCharterCount", "DrawFerryLilycoveCharterMenu", "GetFerryLilycoveCharter",
+                   "call Ferry_EventScript_SailorTalk", "special Ferry_WarpAboard"):
+        require(needle in lilycove_attendant, f"the Lilycove attendant lost {needle}")
+    require("FLAG_SYS_GAME_CLEAR" not in lilycove_attendant and "FLAG_ENABLE_SHIP_" not in lilycove_attendant
+            and "SS_TIDAL_BOARD" not in lilycove_attendant and "MULTI_SSTIDAL" not in lilycove_attendant
+            and "BirthIsland" not in lilycove_attendant.replace("BirthIslandFirstTime", "")
+            and "NavelRock" not in lilycove_attendant.replace("NavelRockFirstTime", ""),
+            "the Lilycove attendant still reads the game-clear gate, FLAG_ENABLE_SHIP_* flags or a Tidal destination menu")
 
-    ticket_source = strip_comments(
-        filter_product(read_text(game_root / "data/scripts/players_house.inc"), wayfarer=True)
-    )
-    ticket_index = ScriptIndex(
-        [(game_root / "data/scripts/players_house.inc", ticket_source)]
-    )
-    ticket = ticket_index.block("PlayersHouse_1F_EventScript_GetSSTicketAndSeeLatiTV")
-    check_pos = _position(ticket, r"checkitem\s+ITEM_SS_TICKET", "ticket event must check for the shared ticket")
-    branch_pos = _position(
-        ticket,
-        r"goto_if_eq\s+VAR_RESULT\s*,\s*TRUE\s*,",
-        "ticket event must skip a duplicate grant when the shared ticket is owned",
-        check_pos,
-    )
-    grant_pos = _position(ticket, r"giveitem\s+ITEM_SS_TICKET", "ticket event lost its normal grant", branch_pos)
-    duplicate_target = re.search(
-        r"goto_if_eq\s+VAR_RESULT\s*,\s*TRUE\s*,\s*([A-Za-z_][A-Za-z0-9_]*)",
-        ticket[branch_pos:],
-    )
-    require(duplicate_target is not None, "ticket duplicate guard has no success target")
-    after_ticket = ticket_index.block(duplicate_target.group(1))
-    require(
-        re.search(r"setflag\s+FLAG_RECEIVED_SS_TICKET", after_ticket) is not None,
-        "ticket event must record Hoenn receipt state on both paths",
-    )
-    require("giveitem ITEM_SS_TICKET" not in after_ticket, "duplicate ticket path still grants the key item")
+    # ---- Tidal: no cruise state machine, Scott gated on the League, the exit sailor goes ashore by the voyage ----
+    tidal_text = "\n".join(tidal_index.blocks[label] for label in tidal_index.blocks if label.startswith("SSTidalCorridor_OnFrame"))
+    require("VAR_SS_TIDAL_STATE" not in tidal_text, "the Tidal's cruise state machine still runs on frame")
+    require("FLAG_SYS_GAME_CLEAR" in tidal_index.block("SSTidalCorridor_OnTransition"),
+            "Scott aboard the Tidal must wait for the League")
+    require("goto Ferry_EventScript_ExitSailor" in tidal_index.block("SSTidalCorridor_EventScript_ExitSailor"),
+            "the Tidal's exit sailor must go ashore by the voyage state")
+
+    ferry_source = filter_product(read_text(game_root / "src/wayfarer_ferry.c"), wayfarer=True)
+    require("case FERRY_SHIP_TIDAL:\n        return TRUE;" in ferry_source, "the Tidal must be in service for a Ticket holder, with no game-clear gate")
+    require("FLAG_SYS_GAME_CLEAR" not in ferry_source, "the ferry service reads the Hoenn game-clear flag")
 
     return {
-        "emeraldMapsScanned": len(emerald_maps),
-        "hoennSsAquaDepartures": expected_aqua_departures,
-        "slateportAqua": {
-            "localId": SLATEPORT_AQUA_LOCAL_ID,
-            "coordinate": [aqua_event["x"], aqua_event["y"]],
-            "elevation": aqua_event["elevation"],
-            "hideFlag": SLATEPORT_AQUA_HIDE_FLAG,
-            "tileSafety": aqua_geometry,
-            "olivineHealLocation": {"map": olivine_heal["map"], "coordinate": [olivine_heal["x"], olivine_heal["y"]]},
-            "olivineHealBeforeWarp": respawn_pos < warp_pos,
-            "nonWayfarerTransport": False,
+        "hoennSsAquaDepartures": [],
+        "slateportBerth": {
+            "attendant": "SlateportCity_Harbor_EventScript_FerryAttendant",
+            "coordinate": [8, 10],
+            "freeTicketPolicy": "WayfarerCanReceiveSlateportTicket",
+            "retiredAquaAttendant": True,
+            "shipObject": "OBJ_EVENT_GFX_VAR_E",
         },
-        "ssTidal": {"visibilityGate": "FLAG_SYS_GAME_CLEAR", "coupledToSsAqua": False, "lilycovePreserved": True},
-        "postgameTicket": {
-            "sharedItem": "ITEM_SS_TICKET",
-            "duplicateGuard": True,
-            "receiptFlag": "FLAG_RECEIVED_SS_TICKET",
-            "receiptCommittedAfterGrantPath": True,
-        },
+        "lilycoveBerth": {"attendant": "LilycoveCity_Harbor_EventScript_FerryAttendant", "charters": ["SOUTHERN", "FARAWAY", "FRONTIER"]},
+        "ssTidal": {"visibilityGate": None, "gameClearGate": False, "scottGate": "FLAG_SYS_GAME_CLEAR"},
     }
 
 
@@ -965,10 +664,10 @@ def audit_initialization(game_root: Path) -> dict:
             enclosing = _enclosing_function(source, marker.start())
             if enclosing is not None:
                 candidates.append((path, enclosing[0], enclosing[1], marker.group(0)))
-    require(len(candidates) == 2, f"expected native and visitor Hoenn initialization commits, found {len(candidates)}")
+    require(len(candidates) == 2, f"expected native and baseline Hoenn initialization commits, found {len(candidates)}")
     commits = {entry[1]: entry for entry in candidates}
-    require(set(commits) == {"InitializeLittleroot", "PrepareWayfarerHoennEntryAt"},
-            "Hoenn initialization may only commit in the native profile or visitor entry")
+    require(set(commits) == {"InitializeLittleroot", "InitializeWayfarerHoennBaseline"},
+            "Hoenn initialization may only commit in the native profile or the shared baseline")
     native_path, native_function, native_body, native_marker = commits["InitializeLittleroot"]
     require(native_path == game_root / "src/wayfarer_origin.c",
             "native Hoenn initialization must be owned by the origin profile")
@@ -981,26 +680,35 @@ def audit_initialization(game_root: Path) -> dict:
     require("VarSet(VAR_NEWBARK_TOWN_STATE, 2)" in native_before
             and "VarSet(VAR_NEWBARKTOWN_LABSTATE, 0)" in native_before,
             "native Hoenn must establish dormant pre-Elm Johto state")
-    path, function, body, marker_text = commits["PrepareWayfarerHoennEntryAt"]
+    path, function, body, marker_text = commits["InitializeWayfarerHoennBaseline"]
     marker_pos = body.index(marker_text)
     after = body[marker_pos + len(marker_text) :]
-    require(
-        re.match(r"\s*;?\s*return\s+TRUE\s*;", after) is not None,
-        "Hoenn initialized state must be the final commit before successful return",
-    )
-    require("REGION_HOENN" in body[:marker_pos], "Hoenn entry initialization must record Hoenn as current/visited")
-    require("SetLastHealLocationWarp(healLocationId)" in body[:marker_pos],
-            "Hoenn entry initialization must register its preflighted recovery location")
+    require(re.fullmatch(r"\s*;\s*", after) is not None,
+            "Hoenn initialized state must be the final commit of the state initialization")
+    # Initializing Hoenn's state sets neither the saved region nor the respawn (boarding the Tidal elsewhere must not).
+    for forbidden in ("REGION_HOENN", "SetLastHealLocationWarp", "WayfarerSetSavedCurrentRegion", "SetRegionVisitedState"):
+        require(forbidden not in body, f"Hoenn state initialization must not touch {forbidden}")
     require("HOENN_STARTER_CHOICE_NONE" in body[:marker_pos], "Hoenn entry must preserve an unchosen starter baseline")
     require(
         re.search(r"WayfarerHoennStateIsInitialized\s*\(\s*\)", body[:marker_pos]) is not None,
         "Hoenn entry initialization must be idempotently guarded",
     )
     public_source = filter_product(read_text(game_root / "src/wayfarer_persistence.c"), wayfarer=True)
-    public = re.search(r"u16\s+WayfarerPrepareHoennEntry\s*\([^)]*\)\s*\{(.*?)\n\}", public_source, re.DOTALL)
+    public = re.search(r"bool8\s+WayfarerPrepareHoennEntry\s*\([^)]*\)\s*\{(.*?)\n\}", public_source, re.DOTALL)
     require(public is not None, "WayfarerPrepareHoennEntry is missing")
-    for value in (ARRIVAL_MAP, str(ARRIVAL_COORD[0]), str(ARRIVAL_COORD[1]), HEAL_LOCATION):
-        require(value in public.group(1), f"WayfarerPrepareHoennEntry does not pin {value}")
+    arrival = public.group(1)
+    require("InitializeWayfarerHoennBaseline()" in arrival
+            and arrival.index("InitializeWayfarerHoennBaseline()") < arrival.index("WayfarerSetSavedCurrentRegion(REGION_HOENN)")
+            and "SetLastHealLocationWarp(healLocationId)" in arrival,
+            "Hoenn arrival must validate, initialize the state, then set the region and the respawn")
+    require(arrival.index("IsWayfarerHoennEntryDestinationValid") < arrival.index("InitializeWayfarerHoennBaseline()"),
+            "Hoenn arrival must preflight before changing anything")
+    ferry_source = filter_product(read_text(game_root / "src/wayfarer_ferry.c"), wayfarer=True)
+    for port, tile, heal in (("FERRY_PORT_SLATEPORT", "MAP_SLATEPORT_CITY_HARBOR", "HEAL_LOCATION_SLATEPORT_CITY"),
+                             ("FERRY_PORT_LILYCOVE", "MAP_LILYCOVE_CITY_HARBOR", "HEAL_LOCATION_LILYCOVE_CITY")):
+        entry = re.search(rf"\[{port}\]\s*=\s*\{{(.*?)\}},", ferry_source, re.DOTALL)
+        require(entry is not None and tile in entry.group(1) and heal in entry.group(1) and "TRUE" in entry.group(1),
+                f"the ferry port table does not pin {port}")
 
     event_scripts = filter_product(read_text(game_root / "data/event_scripts.s"), wayfarer=True)
     includes = re.findall(r"(?m)^\s*\.include\s+\"([^\"]+)\"", event_scripts)
@@ -1044,8 +752,8 @@ def audit_initialization(game_root: Path) -> dict:
     for forbidden in ("FLAG_SYS_GAME_CLEAR", "FLAG_RECEIVED_SS_TICKET"):
         require(forbidden not in baseline_body, f"Hoenn entry baseline advances {forbidden}")
     require(
-        re.search(rf"clearflag\s+{SLATEPORT_AQUA_HIDE_FLAG}", baseline_body) is not None,
-        "Wayfarer Hoenn entry baseline must reveal the dedicated Slateport Aqua attendant",
+        SLATEPORT_AQUA_HIDE_FLAG not in baseline_body,
+        "Wayfarer Hoenn entry baseline must not place the retired Slateport Aqua attendant",
     )
     raw_new_game = read_text(new_game_path)
     standalone_new_game = strip_comments(filter_product(raw_new_game, wayfarer=False, emerald=True))
@@ -1059,12 +767,9 @@ def audit_initialization(game_root: Path) -> dict:
         SLATEPORT_AQUA_HIDE_FLAG not in hns_new_game,
         "standalone HNS initialization must not reference the Emerald-only Aqua attendant flag",
     )
-    require(
-        re.search(rf"clearflag\s+{SLATEPORT_AQUA_HIDE_FLAG}", wayfarer_new_game) is not None,
-        "Wayfarer initialization must reveal the dedicated Slateport Aqua attendant",
-    )
     return {
         "function": "WayfarerPrepareHoennEntry",
+        "stateInitializationFunction": "WayfarerInitializeHoennState",
         "implementationFunction": function,
         "nativeInitializationFunction": native_function,
         "nativeInitializedCommittedLast": True,
@@ -1081,7 +786,7 @@ def audit_initialization(game_root: Path) -> dict:
             "resetsBerries": False,
             "fixedHoennAliasScope": True,
             "engineAliasesRestored": True,
-            "slateportAquaAttendantVisible": True,
+            "slateportAquaAttendantRetired": True,
         },
     }
 
