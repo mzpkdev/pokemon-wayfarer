@@ -255,8 +255,11 @@ EcruteakCity_Theater_Text_Kimono:
 EcruteakCity_Theater_EventScript_SurfGuy::
 	lock
 	faceplayer
-	goto_if_eq VAR_ECRUTEAK_CITY_THEATER, 1, EcruteakCity_Theater_EventScript_SurfGuyDuringRocket
-	goto_if_unset FLAG_RECEIVED_HM_SURF, EcruteakCity_Theater_EventScript_SurfGuy_GiveSurf
+	goto_if_set FLAG_RECEIVED_HM_SURF, EcruteakCity_Theater_EventScript_SurfGuyAfter
+	goto_if_lt VAR_ECRUTEAK_CITY_THEATER, 2, EcruteakCity_Theater_EventScript_SurfGuyDuringRocket
+	goto EcruteakCity_Theater_EventScript_SurfGuy_GiveSurf
+
+EcruteakCity_Theater_EventScript_SurfGuyAfter::
 	msgbox EcruteakCity_Theater_Text_SurfGuyAfter, MSGBOX_DEFAULT
 	closemessage
 	release
@@ -265,10 +268,10 @@ EcruteakCity_Theater_EventScript_SurfGuy::
 EcruteakCity_Theater_EventScript_SurfGuy_GiveSurf::
 	msgbox EcruteakCity_Theater_Text_SurfGuyGiveSurf, MSGBOX_DEFAULT
 	giveitem ITEM_HM_SURF
+	goto_if_eq VAR_RESULT, FALSE, EcruteakCity_Theater_EventScript_SurfGuyBagFull
 	setflag FLAG_RECEIVED_HM_SURF
 	msgbox EcruteakCity_Theater_Text_SurfGuyGaveSurf
 	closemessage
-	setflag FLAG_RECEIVED_HM_SURF
 	call EcruteakCity_Theater_EventScript_SurfGivenAfterRocket
 	release
 	end
@@ -281,6 +284,13 @@ EcruteakCity_Theater_EventScript_SurfGivenAfterRocket::
 	setvar VAR_ECRUTEAK_CITY_THEATER, 3
 EcruteakCity_Theater_EventScript_SurfGivenAfterRocketDone::
 	return
+
+@ A full Bag leaves Surf with him: his conversation offers it again.
+EcruteakCity_Theater_EventScript_SurfGuyBagFull::
+	call Common_EventScript_BagIsFull
+	closemessage
+	release
+	end
 
 EcruteakCity_Theater_EventScript_SurfGuyDuringRocket::
 	msgbox EcruteakCity_Theater_Text_SurfGuyRocket, MSGBOX_DEFAULT
@@ -295,10 +305,10 @@ EcruteakCity_Theater_EventScript_TriggerSurfGuy::
 	turnobject OBJ_EVENT_ID_PLAYER, DIR_NORTH
 	msgbox EcruteakCity_Theater_Text_SurfGuyGiveSurf, MSGBOX_DEFAULT
 	giveitem ITEM_HM_SURF
+	goto_if_eq VAR_RESULT, FALSE, EcruteakCity_Theater_EventScript_SurfGuyBagFull
 	setflag FLAG_RECEIVED_HM_SURF
 	msgbox EcruteakCity_Theater_Text_SurfGuyGaveSurf
 	closemessage
-	setflag FLAG_RECEIVED_HM_SURF
 	call EcruteakCity_Theater_EventScript_SurfGivenAfterRocket
 	applymovement LOCALID_SURF_GUY, EcruteakCity_Theater_Movement_SurfGuy2
 	waitmovement 0 

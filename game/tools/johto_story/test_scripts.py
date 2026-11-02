@@ -113,7 +113,7 @@ def all_script_files():
 class Interp:
     """Runs labels from one or more maps against shared variable and flag state."""
 
-    def __init__(self, *maps, vars=None, flags=(), johto=True, answers=1):
+    def __init__(self, *maps, vars=None, flags=(), johto=True, answers=1, bag_full=False):
         self.lines = []
         self.labels = {}
         for name in maps:
@@ -126,6 +126,7 @@ class Interp:
         self.flags = set(flags)
         self.johto = johto
         self.answer = answers
+        self.bag_full = bag_full
         self.writes = []      # (name, value, kind) in order
         self.messages = []
 
@@ -194,7 +195,9 @@ class Interp:
                 self.messages.append(args[0])
                 if args[-1] == 'MSGBOX_YESNO':
                     self.vars['VAR_RESULT'] = self.answer
-            elif command in ('giveitem', 'checkitem', 'checkmoney'):
+            elif command == 'giveitem':
+                self.vars['VAR_RESULT'] = 0 if self.bag_full else 1
+            elif command in ('checkitem', 'checkmoney'):
                 self.vars['VAR_RESULT'] = 1
             elif command == 'goto':
                 if args[0] not in self.labels:
@@ -521,7 +524,7 @@ class EcruteakAndMorty(unittest.TestCase):
 
     def test_surf_giver_only_advances_from_a_beaten_rocket(self):
         maps = ('EcruteakCity_Theater_hns',)
-        for label in ('EcruteakCity_Theater_EventScript_SurfGuy_GiveSurf',
+        for label in ('EcruteakCity_Theater_EventScript_SurfGuy',
                       'EcruteakCity_Theater_EventScript_TriggerSurfGuy'):
             for state in range(0, 4):
                 for ceremony in (0, 4, 6, 8):
@@ -529,7 +532,32 @@ class EcruteakAndMorty(unittest.TestCase):
                     interp.run(label)
                     self.assertEqual(interp.vars[THEATER], 3 if state == 2 else state, (label, state))
                     self.assertEqual(interp.vars[CEREMONY], ceremony)
-                    self.assertIn('FLAG_RECEIVED_HM_SURF', interp.flags)
+                    # His conversation gives Surf only once the Rocket is beaten; the
+                    # trigger itself only fires at theater state 2.
+                    gives = state >= 2 or label.endswith('TriggerSurfGuy')
+                    self.assertEqual('FLAG_RECEIVED_HM_SURF' in interp.flags, gives, (label, state))
+
+    def test_surf_handoff_survives_a_full_bag_and_is_given_once(self):
+        maps = ('EcruteakCity_Theater_hns',)
+        for label in ('EcruteakCity_Theater_EventScript_SurfGuy',
+                      'EcruteakCity_Theater_EventScript_TriggerSurfGuy'):
+            full = Interp(*maps, vars={THEATER: 2}, bag_full=True)
+            full.run(label)
+            self.assertNotIn('FLAG_RECEIVED_HM_SURF', full.flags, label)
+            self.assertEqual(full.vars[THEATER], 2, label)
+            retry = Interp(*maps, vars={THEATER: 2})
+            retry.run('EcruteakCity_Theater_EventScript_SurfGuy')
+            self.assertIn('FLAG_RECEIVED_HM_SURF', retry.flags)
+            again = Interp(*maps, vars=dict(retry.vars), flags=retry.flags)
+            again.run('EcruteakCity_Theater_EventScript_SurfGuy')
+            self.assertNotIn('ITEM_HM_SURF', again.messages)
+            self.assertEqual(again.written(), set(), label)
+
+    def test_elm_handoff_leaves_the_theater_npcs_and_surf_giver_visible(self):
+        handoff = raw_text('NewBarkTown_Lab_hns')
+        self.assertNotIn('setflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS', handoff)
+        for name in ('EcruteakCity_Theater_hns', 'EcruteakCity_hns'):
+            self.assertNotIn('setflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_NPCS', raw_text(name), name)
 
     def test_ceremony_scenes_move_the_ceremony_variable_forward_only(self):
         interp = Interp('EcruteakCity_Theater_hns', vars={CEREMONY: 8, THEATER: 3})
