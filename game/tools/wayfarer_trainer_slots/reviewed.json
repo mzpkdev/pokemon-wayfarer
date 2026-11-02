@@ -7,18 +7,6 @@
   },
   "not_daily_maps": [
     {
-      "prefix": "SSAnne",
-      "reason": "S.S. Anne trainers are one-time ship content (S.S. Anne spec)"
-    },
-    {
-      "prefix": "SSAqua",
-      "reason": "S.S. Aqua trainers are one-time ferry content"
-    },
-    {
-      "prefix": "SSTidal",
-      "reason": "S.S. Tidal trainers are one-time ferry content"
-    },
-    {
       "prefix": "PokemonTower",
       "reason": "Pokemon Tower is a story place: its Channelers and Rockets guard the way up"
     },
@@ -1338,6 +1326,88 @@
       "trainer": "TRAINER_CHIP",
       "range": "home",
       "reason": "'That giant rock… ancient ruins. But I see no entrance': the rock beside this stretch of ROUTE 120."
+    },
+    {
+      "trainer": "TRAINER_CLYDE_HNS",
+      "range": "home",
+      "reason": "names GOLDENROD. The line is about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_COLTON",
+      "range": "home",
+      "reason": "names LILYCOVE CITY. The line is about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_DEBRA_HNS",
+      "range": "home",
+      "reason": "names SAFFRON. The line is about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_GARRETT_HNS",
+      "range": "home",
+      "reason": "names the sailors' work deck and VERMILION CITY. The lines are about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_JONAH_HNS",
+      "range": "home",
+      "reason": "names VERMILION. The line is about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_LEONARD",
+      "range": "place:liner",
+      "phrases": [
+        "the ship"
+      ],
+      "reason": "The lines need a liner (\"the ship\"); the trainer rotates only among the S.S. liners' decks and rooms, which the generator checks against the map."
+    },
+    {
+      "trainer": "TRAINER_NATE_HNS",
+      "range": "home",
+      "reason": "names the RUINS OF ALPH. The line is about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_PHILLIP",
+      "range": "place:liner",
+      "phrases": [
+        "this huge place"
+      ],
+      "reason": "The lines need a liner (\"this huge place\"); the trainer rotates only among the S.S. liners' decks and rooms, which the generator checks against the map."
+    },
+    {
+      "trainer": "TRAINER_RICKY_HNS",
+      "range": "home",
+      "reason": "names the RUINS OF ALPH. The line is about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_SHIRLEY_HNS",
+      "range": "home",
+      "reason": "names VIOLET. The line is about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_WAI_HNS",
+      "range": "place:liner",
+      "phrases": [
+        "the ship"
+      ],
+      "reason": "The lines need a liner (\"the ship\"); the trainer rotates only among the S.S. liners' decks and rooms, which the generator checks against the map."
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_SS_ANNE_FISHERMAN_DALE",
+      "range": "place:liner",
+      "phrases": [
+        "The cruise ship"
+      ],
+      "reason": "The lines need a liner (\"The cruise ship\"); the trainer rotates only among the S.S. liners' decks and rooms, which the generator checks against the map."
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_SS_ANNE_LASS_ANN",
+      "range": "home",
+      "reason": "names a POKéMON CENTER. The line is about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_SS_ANNE_SAILOR_DUNCAN",
+      "range": "home",
+      "reason": "names VERMILION CITY. The line is about the place the trainer was written for, so it stays at home."
     }
   ]
 }

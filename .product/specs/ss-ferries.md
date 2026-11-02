@@ -1,7 +1,7 @@
 # S.S. ferries
 
 PRD: [S.S. ferries](../prds/ss-ferries.md)
-Implemented: Partial. Parts 1 and 2 of 3 are built. Part 1: ports and ships, the
+Implemented: Yes. All three parts are built. Part 1: ports and ships, the
 schedule (`Ferry_ShipAt`), the saved voyage state with every field, boarding at
 the four dock ports and the three launch ports, the ships' exits and the Anne's
 dynamic warp, the story-trip guards, sailing (cast-off and arrival announcements
@@ -15,8 +15,15 @@ field poll; no ship bed heals; and `DailySlots_GetDay` returns `slotDay` while
 aboard. Host table: seven hosts on the Aqua (it has seven cabin rooms), eight on
 the Anne and eight on the Tidal. Only the Tidal's existing bed event (the
 breeder's cabin) is a bed; every other host offers the sleep themselves, so the
-extra Tidal bed events are not built. Not built yet: the passengers' `liner`
-trainer rotation.
+extra Tidal bed events are not built. Part 3: the passengers. The Anne, Aqua and
+Tidal trainers left the generator's reviewed exclusion and rotate as daily
+slots. A new `liner` place type (map-name prefixes SSAnne, SSAqua, SSTidal) holds
+the trainers whose lines need a ship (Dale, Wai, Phillip and Leonard); the ones
+whose lines name a town or place stay at home; the rest are class-range slots.
+Class groups are per region, so a ship's slot is drawn from its class family
+there. The Anne's first battles run where they are authored and set the 16
+defeat flags as before; the captain does not need any of them. Stanly (hidden by
+the maiden voyage's flag) stays fixed.
 
 ## Scope
 

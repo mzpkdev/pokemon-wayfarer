@@ -9,8 +9,9 @@
 #define T_SAVEBLOCK2_SIZE 3892
 #define T_SAVEBLOCK3_SIZE 4
 #if IS_WAYFARER
-// 33724 plus the 12-byte ferry voyage state (S.S. ferries spec, Voyage state).
-#define T_POKEMONSTORAGE_SIZE 33736
+// 33724 plus the 12-byte ferry voyage state (S.S. ferries spec, Voyage state), plus the 8 bytes the S.S. liners'
+// 46 trainer slots add to the daily state.
+#define T_POKEMONSTORAGE_SIZE 33744
 #else
 #define T_POKEMONSTORAGE_SIZE 34144
 #endif
