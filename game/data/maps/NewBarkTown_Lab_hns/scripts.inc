@@ -94,11 +94,11 @@ NewBarkTown_Lab_EventScript_ElmCampaignNoBall::
 NewBarkTown_Lab_EventScript_ElmCampaignNoTicket::
 	goto_if_set FLAG_HIDE_NEWBARKTOWN_LAB_AIDE, NewBarkTown_Lab_EventScript_ElmAideIsWaiting
 	@ After the Ball, the ceremony lines read the ceremony's own state: the Kimono Girls are
-	@ waiting while it is activated and unfinished; once it is done and until the S.S. ticket
-	@ arrives, Elm sends the player to the League.
+	@ waiting while it is activated and unfinished (5-6); once it is done (7) and until the
+	@ S.S. ticket arrives, Elm sends the player to the League.
 	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_RECEIVED, NewBarkTown_Lab_EventScript_ElmCampaignErrand
 	goto_if_lt VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 5, NewBarkTown_Lab_EventScript_ElmCampaignErrand
-	goto_if_lt VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 8, NewBarkTown_Lab_EventScript_ElmKimono
+	goto_if_lt VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, 7, NewBarkTown_Lab_EventScript_ElmKimono
 	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED, NewBarkTown_Lab_EventScript_ElmLeague
 NewBarkTown_Lab_EventScript_ElmCampaignErrand:
 

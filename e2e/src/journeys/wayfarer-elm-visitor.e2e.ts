@@ -56,6 +56,27 @@ describe.sequential("Littleroot trainer visiting Elm", () => {
       expect(await game.story.flag("hideSilverInNewBark")).toBe(true)
       await game.saveAndReload()
       await untouched()
+
+      // After the Dragon's Den, Blackthorn's Elm call is a frame script. A visitor gets no
+      // call, but the city must still move on, or the player is held in place on arrival.
+      // (Blackthorn's first-load setup leaves a started city's state alone.)
+      await game.story.setVar("blackthornCityState", 4)
+      await game.player.warp("blackthorn-city", 27, 49, "down")
+      await game.wait.frames(60)
+      expect(await game.story.var("blackthornCityState")).toBe(5)
+      const arrived = await game.state.read()
+      expect(arrived.scriptActive).toBe(false)
+      let walked = false
+      for (const direction of ["down", "left", "right", "up"] as const) {
+        await game.player.move(direction)
+        await game.wait.frames(30)
+        const now = await game.state.read()
+        if (now.player.x !== arrived.player.x || now.player.y !== arrived.player.y) {
+          walked = true
+          break
+        }
+      }
+      expect(walked).toBe(true)
     } finally {
       await game.close()
     }

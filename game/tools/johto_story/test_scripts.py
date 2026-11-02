@@ -1629,8 +1629,8 @@ class ElmAndSeedForVisitors(unittest.TestCase):
         # League line after it until the ticket, in a real late save: egg hatched and shown,
         # Goldenrod visited.
         late = {BALL_OWED, BALL_GOT, 'FLAG_RECEIVED_TOGEPI_EGG', 'FLAG_SHOWN_ELM_TOGEPI'}
-        for ceremony, expected in ((0, None), (4, None), (5, 'KimonoWaiting'), (7, 'KimonoWaiting'),
-                                   (8, 'League')):
+        for ceremony, expected in ((0, None), (4, None), (5, 'KimonoWaiting'), (6, 'KimonoWaiting'),
+                                   (7, 'League'), (8, 'League')):
             for egg_flags in (set(), late):
                 interp = Interp('NewBarkTown_Lab_hns', vars={LAB: 6, CEREMONY: ceremony, 'VAR_GOLDENROD_CITY_STATE': 1},
                                 flags={BALL_OWED, BALL_GOT} | egg_flags)
