@@ -27,6 +27,17 @@ export type Highlight = {
   icon: string
 }
 
+/**
+ * The world's size, as the world tour's last card counts it (see
+ * WorldSection.astro), plus the Gyms.
+ */
+export const NUMBERS: { value: string; label: string }[] = [
+  { value: "62", label: "towns and cities" },
+  { value: "114", label: "routes" },
+  { value: "24", label: "Gyms" },
+  { value: "7", label: "ports" },
+]
+
 /** What the world tour showed, in short, for anyone who scrolled past it. */
 export const HIGHLIGHTS: Highlight[] = [
   {
@@ -35,34 +46,34 @@ export const HIGHLIGHTS: Highlight[] = [
     icon: "town-map",
   },
   {
+    title: "Every land, its own Pokémon",
+    body: "Kanto and Johto are home to Gens I and II, Hoenn to III and V, Alola to VII and Sevii to Galar's VIII. Kalos is split across the three Safari Zones.",
+    icon: "safari-ball",
+  },
+  {
     title: "24 Gyms, any order",
-    body: "Any 8 badges qualify you. Win Indigo and the Hoenn League in either order, and the Sevii Masters opens.",
+    body: "Earn any 8 badges and a league phones. Win Indigo and the Hoenn League in either order, and the Masters opens on Seven Island.",
     icon: "master-ball",
   },
   {
-    title: "Routes that change daily",
-    body: "Trainers and items move from day to day. Beat a trainer and they may give you their number for a rematch.",
-    icon: "vs-seeker",
+    title: "Gym Leaders on the road",
+    body: "Gym Leaders and the Elite Four keep their own routines around the world. Make friends and they'll give you their number.",
+    icon: "soothe-bell",
   },
   {
-    title: "Ferries that keep a schedule",
-    body: "The S.S. Aqua, Anne and Tidal sail four-port loops and change ships at 8:00 and 20:00. The Anne sails on to Alola.",
+    title: "Ships you actually ride",
+    body: "The S.S. Aqua, Anne and Tidal sail real loops, and the Anne goes on to Alola. When your port is called, walk down the gangway. Stay aboard and you sail on to the next.",
     icon: "ss-ticket",
+  },
+  {
+    title: "Routes that change daily",
+    body: "Trainers and items move from day to day, ships' passengers too. Beat a trainer and they may give you their number for a rematch.",
+    icon: "vs-seeker",
   },
   {
     title: "A two-hour day",
     body: "Morning, Day, Evening and Night pass in two hours of play. Time only runs while you play.",
     icon: "sun-stone",
-  },
-  {
-    title: "Gym Leaders on the road",
-    body: "Gym Leaders and the Elite Four keep their own routines. Make friends and they'll give you their number.",
-    icon: "soothe-bell",
-  },
-  {
-    title: "The Sevii Islands",
-    body: "All seven islands are open, with their own stories, trainers and the Trainer Tower.",
-    icon: "tri-pass",
   },
   {
     title: "Free, made in the open",

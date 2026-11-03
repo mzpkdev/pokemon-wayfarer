@@ -8,7 +8,7 @@ import { StoryShuffle } from "~/components/StoryShuffle"
 import WorldSection from "~/components/WorldSection.astro"
 import { TitleScene } from "~/components/TitleScene"
 import Layout from "~/layouts/Layout.astro"
-import { HIGHLIGHTS, LEVELS, REPOSITORY_URL } from "~/lib/content"
+import { HIGHLIGHTS, LEVELS, NUMBERS, REPOSITORY_URL } from "~/lib/content"
 import { RELEASE_LABEL } from "~/lib/release"
 ---
 
@@ -161,7 +161,17 @@ import { RELEASE_LABEL } from "~/lib/release"
         <section aria-labelledby="highlights" class="relative mx-auto max-w-5xl px-6 py-16">
           <p class="pixel-label text-logo-yellow">The short version</p>
           <h2 id="highlights" class="pixel-heading mt-4">A world that keeps moving</h2>
-          <ul class="mt-10 grid gap-x-8 gap-y-6 sm:grid-cols-2">
+          <dl class="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
+            {
+              NUMBERS.map((number) => (
+                <div class="flex flex-col">
+                  <dt class="order-2 mt-3 text-sm text-paper/75">{number.label}</dt>
+                  <dd class="logo-number order-1">{number.value}</dd>
+                </div>
+              ))
+            }
+          </dl>
+          <ul class="mt-14 grid gap-x-8 gap-y-6 sm:grid-cols-2">
             {
               HIGHLIGHTS.map((highlight) => (
                 <li class="flex gap-4">
