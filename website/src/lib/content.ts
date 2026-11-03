@@ -2,18 +2,65 @@
 
 export const REPOSITORY_URL = "https://github.com/mzpkdev/pokemon-wayfarer"
 
-export type Feature = {
+/** The patcher the FAQ points to for applying the .ups patch in a browser. */
+export const PATCHER_URL = "https://www.marcrobledo.com/RomPatcher.js/"
+
+export type Concern = {
+  /** What a player asks on seeing an open world, printed in a text window. */
+  question: string
+  answer: string
+}
+
+/**
+ * The worries an open world raises, which the map can't answer. Wayfarer is
+ * open but not frictionless: a blocked road always has a way around it.
+ */
+export const CONCERNS: Concern[] = [
+  {
+    question: "Can I really go anywhere?",
+    answer:
+      "Yes, from the first step. Wayfarer doesn't take every obstacle away: a road can still be blocked, a sea too wide or a door shut. But a blocked road is never the only one. There's always another way around.",
+  },
+  {
+    question: "Won't I outlevel everything?",
+    answer:
+      "Every badge, from any region, raises your level cap, and wild Pokémon, trainers and Poké Mart shelves grow with it. Early on, the grass off the road is dangerous. Later, routes become home ground and the Gym Leaders and leagues bring the real fights.",
+  },
+  {
+    question: "Do I need badges for HMs?",
+    answer:
+      "No. Wild Pokémon can already know field moves when you catch them, so a Pokémon that knows Surf lets you surf straight away. Once you find an HM, it works whenever someone in your party could learn it, without teaching it to them.",
+  },
+  {
+    question: "What happens to the story?",
+    answer:
+      "It's still there. The original games' stories are split into standalone beats, each of which makes sense whatever order you play them in.",
+  },
+]
+
+export type Highlight = {
   title: string
   body: string
   /** A key item icon from public/game/items. */
   icon: string
 }
 
-export const FEATURES: Feature[] = [
+/** What the world tour showed, in short, for anyone who scrolled past it. */
+export const HIGHLIGHTS: Highlight[] = [
   {
-    title: "One world, one save",
-    body: "Kanto, Johto and Hoenn share a single world. Your party, Bag and Pokédex go everywhere you do.",
+    title: "Seven lands, one save",
+    body: "Start in Kanto, Johto or Hoenn. Your party, Bag and Pokédex go everywhere you do.",
     icon: "town-map",
+  },
+  {
+    title: "24 Gyms, any order",
+    body: "Any 8 badges qualify you. Win Indigo and the Hoenn League in either order, and the Sevii Masters opens.",
+    icon: "master-ball",
+  },
+  {
+    title: "Routes that change daily",
+    body: "Trainers and items move from day to day. Beat a trainer and they may give you their number for a rematch.",
+    icon: "vs-seeker",
   },
   {
     title: "Ferries that keep a schedule",
@@ -21,67 +68,23 @@ export const FEATURES: Feature[] = [
     icon: "ss-ticket",
   },
   {
-    title: "A clock of its own",
-    body: "A day lasts two hours of play, from Morning through Day and Evening to Night. Time only runs while you play.",
+    title: "A two-hour day",
+    body: "Morning, Day, Evening and Night pass in two hours of play. Time only runs while you play.",
     icon: "sun-stone",
   },
   {
-    title: "Routes that change daily",
-    body: "Trainers and items move around from day to day. Beat a trainer and they may give you their number for a rematch.",
-    icon: "vs-seeker",
-  },
-  {
-    title: "Trainer Rating",
-    body: "Every badge, from any region, raises your rating. Wild Pokémon, trainers and Poké Mart shelves grow with it.",
-    icon: "rare-candy",
-  },
-  {
-    title: "A league circuit",
-    body: "Any 8 badges qualify you, with one from the league's own side. Indigo and Hoenn phone with invitations and can be won in either order; the Sevii Masters opens once you've won both.",
-    icon: "master-ball",
-  },
-  {
     title: "Gym Leaders on the road",
-    body: "Gym Leaders and the Elite Four keep their own routines around the world. Make friends and they'll give you their number.",
+    body: "Gym Leaders and the Elite Four keep their own routines. Make friends and they'll give you their number.",
     icon: "soothe-bell",
   },
   {
     title: "The Sevii Islands",
-    body: "All seven islands are open to explore, with their own stories, trainers and the Trainer Tower.",
+    body: "All seven islands are open, with their own stories, trainers and the Trainer Tower.",
     icon: "tri-pass",
   },
-]
-
-export type Origin = {
-  region: string
-  town: string
-  body: string
-}
-
-export const ORIGINS: Origin[] = [
   {
-    region: "Kanto",
-    town: "Pallet Town",
-    body: "Set out with a first partner from Professor Oak.",
+    title: "Free, made in the open",
+    body: "A fan game built on pokeemerald-expansion, with every change on GitHub.",
+    icon: "rare-candy",
   },
-  {
-    region: "Johto",
-    town: "New Bark Town",
-    body: "Wake up next door to Professor Elm's lab.",
-  },
-  {
-    region: "Hoenn",
-    town: "Littleroot Town",
-    body: "Choose Treecko, Torchic or Mudkip.",
-  },
-]
-
-export type Stat = { value: string; label: string }
-
-export const STATS: Stat[] = [
-  { value: "3", label: "starting regions" },
-  { value: "3", label: "ships at sea" },
-  { value: "7", label: "ports of call" },
-  { value: "24", label: "Gym Badges" },
-  { value: "2 h", label: "in a day" },
 ]

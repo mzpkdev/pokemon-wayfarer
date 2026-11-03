@@ -1,9 +1,13 @@
 ---
+import CtaLinks from "~/components/cta/CtaLinks.astro"
 import CtaProfessor from "~/components/cta/CtaProfessor.astro"
+import Faq from "~/components/Faq.astro"
+import SignupForm from "~/components/SignupForm.astro"
 import WorldSection from "~/components/WorldSection.astro"
 import { TitleScene } from "~/components/TitleScene"
 import Layout from "~/layouts/Layout.astro"
-import { FEATURES, ORIGINS, REPOSITORY_URL, STATS } from "~/lib/content"
+import { CONCERNS, HIGHLIGHTS, REPOSITORY_URL } from "~/lib/content"
+import { RELEASE_LABEL } from "~/lib/release"
 ---
 
 <Layout title="Pokémon Wayfarer">
@@ -33,98 +37,66 @@ import { FEATURES, ORIGINS, REPOSITORY_URL, STATS } from "~/lib/content"
         <!-- Then PROF. OAK asks for your email. -->
         <CtaProfessor />
 
-        <section aria-labelledby="about" class="relative mx-auto max-w-5xl px-6 py-16">
-          <div class="pixel-corners pixel-panel grid gap-8 p-8 sm:p-12 lg:grid-cols-[1fr_auto] lg:items-center">
-            <div>
-              <p class="pixel-label text-logo-yellow">About</p>
-              <h2 id="about" class="pixel-heading mt-4">One save. Three home regions. Every road open.</h2>
-              <p class="mt-6 max-w-2xl text-lg leading-relaxed text-paper/80">
-                Pokémon Wayfarer is a free fan-made GBA game built on pokeemerald-expansion. Start your
-                journey in Kanto, Johto or Hoenn, then sail on to the Sevii Islands and Alola, all on the
-                same save.
-              </p>
-            </div>
-            <img
-              src="/game/intro/pokeball.png"
-              alt=""
-              width="64"
-              height="64"
-              class="pixelated hidden size-48 lg:block"
-            />
-          </div>
-        </section>
-
-        <section aria-labelledby="features" class="relative mx-auto max-w-5xl px-6 py-16">
-          <p class="pixel-label text-logo-yellow">Features</p>
-          <h2 id="features" class="pixel-heading mt-4">A world that keeps moving</h2>
-          <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <!--
+          What the map can't show: the worries an open world raises, asked in
+          the game's text window and answered underneath.
+        -->
+        <section aria-labelledby="open-world" class="relative mx-auto max-w-5xl px-6 py-16">
+          <p class="pixel-label text-logo-yellow">Open world</p>
+          <h2 id="open-world" class="pixel-heading mt-4">Go anywhere. There's always a way.</h2>
+          <p class="mt-6 max-w-2xl text-lg leading-relaxed text-paper/80">
+            Every region is open from the start, in any order. Here's how Wayfarer keeps that fair.
+          </p>
+          <ul class="mt-10 grid gap-4 md:grid-cols-2">
             {
-              FEATURES.map((feature) => (
-                <li class="pixel-corners pixel-panel p-6">
-                  <div class="pixel-corners grid size-16 place-items-center bg-ground">
-                    <img
-                      src={`/game/items/${feature.icon}.png`}
-                      alt=""
-                      width="48"
-                      height="48"
-                      class="pixelated size-12"
-                    />
-                  </div>
-                  <h3 class="mt-5 font-semibold">{feature.title}</h3>
-                  <p class="mt-2 text-sm leading-relaxed text-paper/75">{feature.body}</p>
+              CONCERNS.map((concern) => (
+                <li class="pixel-corners pixel-panel flex flex-col p-5 sm:p-6">
+                  <h3 class="gba-window gba-text font-normal [--px:2px]">{concern.question}</h3>
+                  <p class="mt-5 px-1 leading-relaxed text-paper/80">{concern.answer}</p>
                 </li>
               ))
             }
           </ul>
         </section>
 
-        <section aria-labelledby="origins" class="relative mx-auto max-w-5xl px-6 py-16">
-          <div class="grid items-center gap-12 lg:grid-cols-2">
-            <div class="pixel-corners pixel-panel p-2">
-              <img
-                src="/game/title/dawn.png"
-                alt="Pixel art of islands at dawn, joined by dotted sea routes beneath a compass rose."
-                width="240"
-                height="160"
-                loading="lazy"
-                class="pixelated pixel-corners aspect-[3/2] w-full"
-              />
-            </div>
-            <div>
-              <p class="pixel-label text-logo-yellow">Starting regions</p>
-              <h2 id="origins" class="pixel-heading mt-4">Where will your journey begin?</h2>
-              <p class="mt-4 leading-relaxed text-paper/80">
-                Professor Oak asks once you've chosen your name and look. Each region has its own opening,
-                and wherever you start, the other two are a journey away.
-              </p>
-              <dl class="mt-8 grid gap-3">
-                {
-                  ORIGINS.map((origin) => (
-                    <div class="pixel-corners pixel-panel grid gap-1 px-5 py-4 sm:grid-cols-[7rem_1fr] sm:gap-6">
-                      <dt class="pixel-label text-paper">{origin.region}</dt>
-                      <dd>
-                        <span class="block text-sm text-logo-yellow">{origin.town}</span>
-                        <span class="mt-1 block text-paper/80">{origin.body}</span>
-                      </dd>
-                    </div>
-                  ))
-                }
-              </dl>
-            </div>
-          </div>
-        </section>
-
-        <section aria-label="Wayfarer in numbers" class="relative mx-auto max-w-5xl px-6 py-16">
-          <dl class="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-5">
+        <!-- The tour in short, for anyone who scrolled past it. -->
+        <section aria-labelledby="highlights" class="relative mx-auto max-w-5xl px-6 py-16">
+          <p class="pixel-label text-logo-yellow">The short version</p>
+          <h2 id="highlights" class="pixel-heading mt-4">A world that keeps moving</h2>
+          <ul class="mt-10 grid gap-x-8 gap-y-6 sm:grid-cols-2">
             {
-              STATS.map((stat) => (
-                <div class="flex flex-col">
-                  <dt class="order-2 mt-3 text-sm text-paper/75">{stat.label}</dt>
-                  <dd class="logo-number order-1">{stat.value}</dd>
-                </div>
+              HIGHLIGHTS.map((highlight) => (
+                <li class="flex gap-4">
+                  <div class="pixel-corners pixel-panel grid size-16 shrink-0 place-items-center">
+                    <img
+                      src={`/game/items/${highlight.icon}.png`}
+                      alt=""
+                      width="48"
+                      height="48"
+                      class="pixelated size-12"
+                    />
+                  </div>
+                  <div>
+                    <h3 class="font-semibold">{highlight.title}</h3>
+                    <p class="mt-1 text-sm leading-relaxed text-paper/75">{highlight.body}</p>
+                  </div>
+                </li>
               ))
             }
-          </dl>
+          </ul>
+        </section>
+
+        <Faq />
+
+        <!-- One more chance to sign up, for anyone the questions won over. -->
+        <section aria-labelledby="notify-again" class="relative mx-auto max-w-3xl px-6 py-16">
+          <p class="pixel-label text-logo-yellow">{RELEASE_LABEL}</p>
+          <h2 id="notify-again" class="pixel-heading mt-4">Your journey is almost ready.</h2>
+          <p class="mt-6 text-lg leading-relaxed text-paper/80">
+            Leave your email and Professor Oak will write the moment it begins.
+          </p>
+          <SignupForm id="signup-email-again" class="mt-8" />
+          <CtaLinks class="mt-8" />
         </section>
 
         <footer class="relative mx-auto flex max-w-5xl flex-col gap-6 px-6 pt-16 pb-10 text-sm text-paper/70 sm:flex-row sm:justify-between">
