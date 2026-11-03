@@ -66,7 +66,7 @@ export const PlaceExtra = ({ place, base = DATA }: { place: PlaceInfo; base?: st
             }}
           />
           <span className="pixel-label text-[16px] leading-none">
-            {gym.region.toUpperCase()} GYM · BADGE {(gym.badge % 8) + 1}
+            {gym.region.toUpperCase()} GYM{gym.name ? ` · ${gym.name}` : ""}
           </span>
         </li>
       )}

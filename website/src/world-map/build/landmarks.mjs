@@ -156,6 +156,18 @@ export const buildLandmarks = (game, world, regionOf) => {
       ? { name: entry.name, slug: first, also: second, simulated: false, pic }
       : { name: entry.name, slug: entry.slug, simulated: false, pic }
   }
+  // A badge's name, as the Gym's own lines give it ("BOULDERBADGE", "STONE
+  // BADGE"): the badge its map's text names most, written as two words.
+  const badgeNameOf = (dir) => {
+    const counts = new Map()
+    for (const file of fs.readdirSync(`${root}/data/maps/${dir}`).filter((f) => f.endsWith(".inc")))
+      for (const [, name] of fs
+        .readFileSync(`${root}/data/maps/${dir}/${file}`, "utf8")
+        .matchAll(/\b([A-Z]+) ?BADGE\b/g))
+        if (!["GYM", "A", "LEAGUE"].includes(name)) counts.set(name, (counts.get(name) ?? 0) + 1)
+    const best = [...counts].toSorted((a, b) => b[1] - a[1])[0]?.[0]
+    return best && `${best} BADGE`
+  }
   const gyms = []
   for (const map of Object.values(every)) {
     const file = `${root}/data/maps/${map.dir}/scripts.inc`
@@ -174,6 +186,7 @@ export const buildLandmarks = (game, world, regionOf) => {
       region: region[0] + region.slice(1).toLowerCase(),
       order,
       town: townName(door.p.m.name),
+      name: badgeNameOf(map.dir),
       x: door.x,
       y: door.y,
       leader: leaderOf(
@@ -213,10 +226,11 @@ export const buildLandmarks = (game, world, regionOf) => {
     return { id, name, x: p.x - minX + warp.x + 0.5, y: p.y - minY + warp.y + 0.5 }
   })
   return {
-    badges: badges.map(({ badge, region, town, x, y, leader }) => ({
+    badges: badges.map(({ badge, region, town, name, x, y, leader }) => ({
       badge,
       region,
       town,
+      name,
       x,
       y,
       ...(leader ? { leader } : {}),

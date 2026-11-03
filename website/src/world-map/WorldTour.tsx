@@ -175,7 +175,7 @@ const GymCard = ({
     >
       <div className="flex items-start justify-between gap-3">
         <p className="pixel-label text-[16px] leading-none text-logo-yellow">
-          {gym.region.toUpperCase()} GYM · BADGE {(gym.badge % 8) + 1}
+          {gym.region.toUpperCase()} GYM{gym.name ? ` · ${gym.name}` : ""}
         </p>
         <button
           type="button"

@@ -11,6 +11,8 @@ export type Gym = {
   badge: number
   region: "Johto" | "Kanto" | "Hoenn"
   town: string
+  /** The badge's name, as the Gym's lines give it: "BOULDER BADGE". */
+  name?: string
   x: number
   y: number
   /** Who leads it, from the game's notable routines; `simulated` ones walk the map. */
