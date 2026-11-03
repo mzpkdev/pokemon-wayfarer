@@ -254,9 +254,6 @@ const pattern = (b, i, W) => {
   return b.ids[(y % b.bh) * b.bw + (x % b.bw)]
 }
 
-/** Regions of small islands on open sea: land grown round their maps is only a shore. */
-const ISLANDS = new Set(["Sevii Islands"])
-
 // The land between the maps. Map tiles say where the world is land and where
 // it is water; land grows out from the maps' land to a coastline that wanders
 // with fractal noise, sea stays sea, and stretches of water that no open sea
@@ -299,27 +296,16 @@ const growLand = (world, grid, owner, { isWater, tileColor }) => {
     }
   const toLand = distanceFrom(mapLand, W, H)
   const toSeaRoute = distanceFrom(mapSea, W, H)
-  const landOwner = new Int32Array(N).fill(-1)
-  for (let i = 0; i < N; i++) if (mapLand[i]) landOwner[i] = owner[i]
-  const nearestLand = nearestOf(landOwner, W, H)
   // How far land reaches past the maps: about 18 metatiles, give or take 24.
-  // Round an island region's maps it is only a shore, so the islands stay
-  // apart and their towns' harbours open on the sea, as in their own game.
   const REACH = 18,
     WANDER = 24
-  const SHORE = 6,
-    SHORE_WANDER = 6
   let land = new Uint8Array(N)
   for (let i = 0; i < N; i++) {
     if (owner[i] >= 0) land[i] = owner[i] >= 0 && !isWater(grid[i]) ? 1 : 0
     else {
       const x = i % W,
         y = (i - x) / W
-      const island = nearestLand[i] >= 0 && ISLANDS.has(all[owner[nearestLand[i]]].region)
-      const reach = island
-        ? SHORE + SHORE_WANDER * fractal(x + 5200, y - 3100, 1 / 16)
-        : REACH + WANDER * coastNoise(x, y)
-      land[i] = toLand[i] < reach && toLand[i] < toSeaRoute[i] ? 1 : 0
+      land[i] = toLand[i] < REACH + WANDER * coastNoise(x, y) && toLand[i] < toSeaRoute[i] ? 1 : 0
     }
   }
   // Water at a map's edge (a river, a lake's shore, a bay) runs on past it a
@@ -329,6 +315,9 @@ const growLand = (world, grid, owner, { isWater, tileColor }) => {
   // It keeps clear of other maps' land, so it doesn't run up against the
   // straight edge of the next map instead.
   const nearestCell = nearestOf(owner, W, H)
+  const landOwner = new Int32Array(N).fill(-1)
+  for (let i = 0; i < N; i++) if (mapLand[i]) landOwner[i] = owner[i]
+  const nearestLand = nearestOf(landOwner, W, H)
   const spill = new Int32Array(N).fill(-1)
   for (let i = 0; i < N; i++) {
     if (owner[i] >= 0) continue
@@ -506,13 +495,21 @@ const HARBOURS = [
   "SevenIsland_Frlg",
   "MelemeleIsle_hns",
 ]
-/** How wide a channel cut through to a harbour is, either side of its middle, in metatiles. */
-const CHANNEL = 3
+/** A Sevii Island town whose warp leads into a harbour building has a dock to keep open too. */
+const HARBOUR_DOOR = /_HARBOR$/
+/** A channel's half width: narrow by the dock, wider out toward the sea, in metatiles. */
+const CHANNEL = 3,
+  CHANNEL_GROWTH = 0.25,
+  CHANNEL_MAX = 8
+/** How far off any coast the ocean counts as open, in metatiles. */
+const OPEN_SEA = 6
 
-// Keeps every ferry port on the open sea. Land grown around an island can
-// close the bay its harbour sits in; then the shortest way from the
-// harbour's water to the open ocean, through the land grown between maps
-// (never a map's own cells), is cut back to sea.
+// Keeps every harbour on the open sea. Land grown around an island can close
+// the bay its dock sits in; then the cheapest way from the dock's water to the
+// open ocean, through the land grown between maps (never a map's own cells),
+// is cut back to sea. Water on the way costs little, so the channel takes the
+// narrowest land; it widens toward the sea and its banks wander, like a
+// natural inlet.
 const openHarbours = (world, owner, land, grid, isWater) => {
   const { all, W, H } = world
   const N = W * H
@@ -529,48 +526,163 @@ const openHarbours = (world, owner, land, grid, isWater) => {
         queue.push(j)
       }
   }
-  let cut = 0
-  for (const name of HARBOURS) {
-    const m = all.findIndex((p) => p.m.name === name)
-    if (m < 0) continue
-    // A search out of the harbour's water, through anything outside the maps.
-    const parent = new Int32Array(N).fill(-2)
-    const search = []
-    for (let i = 0; i < N; i++)
-      if (owner[i] === m && isWater(grid[i])) {
-        parent[i] = -1
-        search.push(i)
+  // A channel ends where the ocean is wide open, a few cells off any coast,
+  // so a dock behind a gap a cell or two wide gets a real way out too.
+  const shore = new Uint8Array(N)
+  for (let i = 0; i < N; i++) shore[i] = ocean[i] ? 0 : 1
+  const offShore = distanceFrom(shore, W, H)
+  const harbours = all
+    .map((p, m) => {
+      const door =
+        p.region === "Sevii Islands" &&
+        (p.m.warp_events ?? []).find((w) => HARBOUR_DOOR.test(w.wayfarer_dest_map ?? w.dest_map))
+      if (!door && !HARBOURS.includes(p.m.name)) return null
+      return {
+        m,
+        door: door ? (p.y - world.minY + door.y) * W + (p.x - world.minX + door.x) : undefined,
       }
+    })
+    .filter(Boolean)
+  const neighbours = (i) => {
+    const x = i % W,
+      y = (i - x) / W
+    const out = []
+    for (let dy = -1; dy <= 1; dy++)
+      for (let dx = -1; dx <= 1; dx++)
+        if ((dx || dy) && x + dx >= 0 && x + dx < W && y + dy >= 0 && y + dy < H)
+          out.push([i + dy * W + dx, dx && dy ? Math.SQRT2 : 1])
+    return out
+  }
+  let cut = 0
+  for (const { m, door } of harbours) {
+    // The dock's water: the map's water joined to the cells by its harbour
+    // door (all the map's water for a port with no door on the map).
+    const start = []
+    if (door === undefined) {
+      for (let i = 0; i < N; i++) if (owner[i] === m && isWater(grid[i])) start.push(i)
+    } else {
+      const seen = new Set([door])
+      const near = [door]
+      for (let head = 0; head < near.length && start.length === 0; head++)
+        for (const [j] of neighbours(near[head]))
+          if (owner[j] === m && !seen.has(j)) {
+            seen.add(j)
+            ;(isWater(grid[j]) ? start : near).push(j)
+          }
+      for (let head = 0; head < start.length; head++)
+        for (const [j] of neighbours(start[head]))
+          if (owner[j] === m && !seen.has(j) && isWater(grid[j])) {
+            seen.add(j)
+            start.push(j)
+          }
+    }
+    // The cheapest way out to the ocean, outside the maps.
+    const cost = new Float64Array(N).fill(Infinity)
+    const parent = new Int32Array(N).fill(-1)
+    const heap = new MinHeap()
+    for (const i of start) {
+      cost[i] = 0
+      heap.push(i, 0)
+    }
     let reached = -1
-    for (let head = 0; head < search.length && reached < 0; head++) {
-      const i = search[head]
-      const x = i % W
-      for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, i - W, i + W]) {
-        if (j < 0 || j >= N || parent[j] !== -2 || owner[j] >= 0) continue
-        parent[j] = i
-        if (ocean[j]) {
-          reached = j
-          break
+    while (heap.size) {
+      const [i, c] = heap.pop()
+      if (c > cost[i]) continue
+      if (offShore[i] >= OPEN_SEA) {
+        reached = i
+        break
+      }
+      for (const [j, step] of neighbours(i)) {
+        if (owner[j] >= 0 && !start.includes(j)) continue
+        const next = c + step * (land[j] ? 1 : 0.15)
+        if (next < cost[j]) {
+          cost[j] = next
+          parent[j] = i
+          heap.push(j, next)
         }
-        search.push(j)
       }
     }
-    // Cut the land along the way, a channel wide.
-    for (let i = reached; i >= 0; i = parent[i]) {
-      const x = i % W
-      const y = (i - x) / W
-      for (let dy = -CHANNEL; dy <= CHANNEL; dy++)
-        for (let dx = -CHANNEL; dx <= CHANNEL; dx++) {
-          const j = (y + dy) * W + (x + dx)
+    if (reached < 0) continue
+    const path = []
+    for (let i = reached; i >= 0; i = parent[i]) if (owner[i] < 0) path.push(i)
+    path.reverse()
+    // Nothing to cut where the way out is already open water, wide enough.
+    if (!path.some((i) => land[i] || offShore[i] < CHANNEL)) continue
+    // Cut the land along the way, wider the further from the dock.
+    const channel = new Map()
+    path.forEach((i, t) => {
+      const x = i % W,
+        y = (i - x) / W
+      const r = Math.min(
+        CHANNEL_MAX,
+        CHANNEL + CHANNEL_GROWTH * t + 1.5 * fractal(x + 9100, y - 4700, 1 / 9),
+      )
+      const R = Math.ceil(r)
+      for (let dy = -R; dy <= R; dy++)
+        for (let dx = -R; dx <= R; dx++) {
           if (x + dx < 0 || x + dx >= W || y + dy < 0 || y + dy >= H) continue
-          if (owner[j] < 0 && land[j] && dx * dx + dy * dy <= CHANNEL * CHANNEL) {
-            land[j] = 0
-            cut++
-          }
+          const j = (y + dy) * W + (x + dx)
+          const d = Math.hypot(dx, dy) - r
+          if (d <= 2 && owner[j] < 0) channel.set(j, Math.min(channel.get(j) ?? Infinity, d))
         }
+    })
+    for (const [j, d] of channel)
+      if (d <= 0 && land[j]) {
+        land[j] = 0
+        cut++
+      }
+    // Round its banks off: each cell near the channel takes the majority of
+    // its 5x5 neighbourhood, so the cut doesn't leave corners and specks.
+    for (let pass = 0; pass < 2; pass++) {
+      const next = new Map()
+      for (const [j, d] of channel) {
+        if (d <= -1) continue
+        let count = 0
+        for (let dy = -2; dy <= 2; dy++)
+          for (let dx = -2; dx <= 2; dx++) count += land[j + dy * W + dx] ?? 0
+        next.set(j, count > 12 ? 1 : 0)
+      }
+      for (const [j, v] of next) land[j] = v
     }
   }
   return cut
+}
+
+// A binary min-heap of [item, priority].
+class MinHeap {
+  items = []
+  get size() {
+    return this.items.length
+  }
+  push(item, priority) {
+    const a = this.items
+    a.push([item, priority])
+    for (let k = a.length - 1; k > 0;) {
+      const up = (k - 1) >> 1
+      if (a[up][1] <= a[k][1]) break
+      ;[a[up], a[k]] = [a[k], a[up]]
+      k = up
+    }
+  }
+  pop() {
+    const a = this.items
+    const top = a[0]
+    const last = a.pop()
+    if (a.length) {
+      a[0] = last
+      for (let k = 0; ;) {
+        const l = 2 * k + 1,
+          r = l + 1
+        let low = k
+        if (l < a.length && a[l][1] < a[low][1]) low = l
+        if (r < a.length && a[r][1] < a[low][1]) low = r
+        if (low === k) break
+        ;[a[low], a[k]] = [a[k], a[low]]
+        k = low
+      }
+    }
+    return top
+  }
 }
 
 // Fills every cell outside the maps: land takes the nearest map's border
@@ -620,16 +732,13 @@ const fillBorders = (world, { grid, owner, land, spill, borders, isWater, tileCo
   // The water each map lends the sea beside it: its border if that is water,
   // else the water tile it draws most, else none. The sea near the coasts takes
   // the nearest such map's, so a sea route's water runs on in its own tiles.
-  // A map with only a pond corner of water (Three Island) lends none, so the
-  // sea by it isn't that one odd tile.
-  const MIN_WATER = 16
   const waterOf = borders.map((b, m) => {
     if (b.kind === "water") return b
     const counts = new Map()
     for (let i = 0; i < N; i++)
       if (owner[i] === m && isWater(grid[i])) counts.set(grid[i], (counts.get(grid[i]) ?? 0) + 1)
     const [top] = [...counts].toSorted((p, q) => q[1] - p[1])
-    return top && top[1] >= MIN_WATER ? { bw: 1, bh: 1, ids: [top[0]] } : null
+    return top ? { bw: 1, bh: 1, ids: [top[0]] } : null
   })
   const waterOwner = new Int32Array(N).fill(-1)
   for (let i = 0; i < N; i++)
