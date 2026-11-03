@@ -176,7 +176,9 @@ Plain Node scripts. Each stage gets a module:
   edge line up; a connection that would lay maps deep over each other is given
   up.
   Pieces no connection reaches are placed by their Town Map cells, overlaps are
-  pushed apart, and the regions are arranged on the sea, wide straits apart.
+  pushed apart (the event islands, off any Town Map in Emerald, are given cells:
+  Navel Rock and Birth Island near FRLG's on the Sevii Town Maps, just clear
+  of the Five and Six Island pieces, and Faraway Island one south of Hoenn), and the regions are arranged on the sea, wide straits apart.
   Sinnoh sits well north of Kanto; Sinjoh, under it, is bridged to it by land.
 - `land.mjs`: fills in land between the maps, so no map's rectangle shows.
   A gap between two connected maps is bridged by stretching both edges across
@@ -224,7 +226,13 @@ Plain Node scripts. Each stage gets a module:
   from. Its README gives the credit.
 
 The builder only reads the maps the wayfarer build compiles, and connects them
-the way `tools/mapjson` does.
+the way `tools/mapjson` does. It takes the outdoor ones (towns, cities, routes
+and sea routes) and three the game types otherwise: Faraway Island and Navel
+Rock, which Emerald calls indoor, and Sinnoh's Pokémon League, between Routes
+223 and 224, which has no type. Besides the mainland it places the islands the
+boats sail to: Southern Island, Faraway Island and the Battle Frontier off
+Hoenn (Lilycove's charters), and Navel Rock and Birth Island among the Sevii
+Islands (Vermilion's Seagallop).
 
 ## Client
 
@@ -298,7 +306,7 @@ live game state: the game advances them on map changes (see
   is picked by a hash of trainer, round and step), the walking pace, and the
   routes. Steps with no favourite are spent in the home town (the Gym for a
   Gym Leader's home and training). Favourites in places the grid doesn't hold
-  (the Battle Frontier) are dropped; Trainer Hill's courtyard is put on Route 40.
+  are dropped (none today); Trainer Hill's courtyard is put on Route 40.
 - Routes: A* over the world grid's land (placed maps cost less than filler
   land), simplified. Where no land joins two places, the route crosses water;
   its water segments are marked (`w`), and there the trainer leaves a white

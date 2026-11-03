@@ -313,8 +313,19 @@ const report = (list) => {
   return list
 }
 
-// Town Map cells, to place the pieces no connection reaches.
+// Town Map cells, to place the pieces no connection reaches. Emerald's event
+// islands have none. Faraway Island, on no Town Map at all, lies out at sea
+// south of Hoenn. Navel Rock and Birth Island sit near FRLG's cells for them
+// on the Sevii Town Maps (10,8 and 18,13), moved just clear of the Five and
+// Six Island pieces, which the world draws bigger than their cells: on the
+// cells themselves the pieces pushed apart would shuffle the islands round.
+const STAND_IN_CELLS = {
+  MAPSEC_FARAWAY_ISLAND: { x: 15, y: 16 },
+  MAPSEC_NAVEL_ROCK: { x: 8, y: 9 },
+  MAPSEC_BIRTH_ISLAND: { x: 18, y: 20 },
+}
 export const cellLookup = (cells) => (m) => {
+  if (STAND_IN_CELLS[m.region_map_section]) return STAND_IN_CELLS[m.region_map_section]
   const section = cells.get(m.region_map_section)
   return section && { x: section.x + section.width / 2, y: section.y + section.height / 2 }
 }
@@ -329,7 +340,14 @@ const REGIONS = [
   { name: "Johto and Kanto", roots: ["MAP_NEW_BARK_TOWN_HNS"], at: [0, 0] },
   {
     name: "Hoenn",
-    roots: ["MAP_LITTLEROOT_TOWN", "MAP_SOOTOPOLIS_CITY"],
+    roots: [
+      "MAP_LITTLEROOT_TOWN",
+      "MAP_SOOTOPOLIS_CITY",
+      // The islands Lilycove's charters sail to.
+      "MAP_SOUTHERN_ISLAND_EXTERIOR",
+      "MAP_FARAWAY_ISLAND_ENTRANCE",
+      "MAP_BATTLE_FRONTIER_OUTSIDE_WEST",
+    ],
     at: [-280, 740],
   },
   { name: "Sinjoh", roots: ["MAP_ROUTE49_HNS"], at: [0, 0], beside: "Sinjoh" },
@@ -358,6 +376,9 @@ const REGIONS = [
       "MAP_SIX_ISLAND",
       "MAP_SIX_ISLAND_PATTERN_BUSH",
       "MAP_SEVEN_ISLAND",
+      // Vermilion's Seagallop sails to these two too.
+      "MAP_NAVEL_ROCK_EXTERIOR",
+      "MAP_BIRTH_ISLAND_EXTERIOR_HNS",
     ],
     at: [780, 700],
   },
@@ -380,7 +401,10 @@ const SEVII_MAPS = [
     ],
     at: [0, 0],
   },
-  { islands: ["FOUR", "FIVE", "RESORT", "WATER_LABYRINTH", "FIVE_ISLE", "MEMORIAL"], at: [6, 14] },
+  {
+    islands: ["FOUR", "FIVE", "RESORT", "WATER_LABYRINTH", "FIVE_ISLE", "MEMORIAL", "NAVEL_ROCK"],
+    at: [6, 14],
+  },
   {
     islands: [
       "SIX",
@@ -394,6 +418,7 @@ const SEVII_MAPS = [
       "RUIN_VALLEY",
       "OUTCAST",
       "PATTERN",
+      "BIRTH_ISLAND",
     ],
     at: [-6, 30],
   },
