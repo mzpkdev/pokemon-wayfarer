@@ -176,9 +176,9 @@ Plain Node scripts. Each stage gets a module:
   edge line up; a connection that would lay maps deep over each other is given
   up.
   Pieces no connection reaches are placed by their Town Map cells, overlaps are
-  pushed apart (the event islands, off any Town Map in Emerald, borrow FRLG's
-  Sevii cells for Navel Rock and Birth Island and a cell of their own south
-  of Hoenn for Faraway Island), and the regions are arranged on the sea, wide straits apart.
+  pushed apart (the event islands, off any Town Map in Emerald, are given cells:
+  Navel Rock and Birth Island near FRLG's on the Sevii Town Maps, just clear
+  of the Five and Six Island pieces, and Faraway Island one south of Hoenn), and the regions are arranged on the sea, wide straits apart.
   Sinnoh sits well north of Kanto; Sinjoh, under it, is bridged to it by land.
 - `land.mjs`: fills in land between the maps, so no map's rectangle shows.
   A gap between two connected maps is bridged by stretching both edges across

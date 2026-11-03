@@ -314,17 +314,19 @@ const report = (list) => {
 }
 
 // Town Map cells, to place the pieces no connection reaches. Emerald's event
-// islands have none: Navel Rock and Birth Island take FRLG's cells on the
-// Sevii Town Maps, and Faraway Island, on no Town Map at all, lies out at sea
-// south of Hoenn.
-const STAND_IN_SECTIONS = {
-  MAPSEC_NAVEL_ROCK: "MAPSEC_NAVEL_ROCK_FRLG",
-  MAPSEC_BIRTH_ISLAND: "MAPSEC_BIRTH_ISLAND_FRLG",
+// islands have none. Faraway Island, on no Town Map at all, lies out at sea
+// south of Hoenn. Navel Rock and Birth Island sit near FRLG's cells for them
+// on the Sevii Town Maps (10,8 and 18,13), moved just clear of the Five and
+// Six Island pieces, which the world draws bigger than their cells: on the
+// cells themselves the pieces pushed apart would shuffle the islands round.
+const STAND_IN_CELLS = {
+  MAPSEC_FARAWAY_ISLAND: { x: 15, y: 16 },
+  MAPSEC_NAVEL_ROCK: { x: 8, y: 9 },
+  MAPSEC_BIRTH_ISLAND: { x: 18, y: 20 },
 }
-const STAND_IN_CELLS = { MAPSEC_FARAWAY_ISLAND: { x: 15, y: 16 } }
 export const cellLookup = (cells) => (m) => {
   if (STAND_IN_CELLS[m.region_map_section]) return STAND_IN_CELLS[m.region_map_section]
-  const section = cells.get(STAND_IN_SECTIONS[m.region_map_section] ?? m.region_map_section)
+  const section = cells.get(m.region_map_section)
   return section && { x: section.x + section.width / 2, y: section.y + section.height / 2 }
 }
 
