@@ -1,0 +1,141 @@
+// The tour's landmarks, read from the game: where each of the 24 Gym Badges is
+// won, and where the three leagues of the league circuit are held. Positions
+// are door tiles on the world grid, in metatiles.
+import fs from "node:fs"
+import { readTownMapCells } from "./game.mjs"
+import { cellLookup, measureCell } from "./layout.mjs"
+
+/** The three regions' badges, in the order the badge art sheet holds them. */
+export const BADGE_REGIONS = ["Johto", "Kanto", "Hoenn"]
+/** The league circuit in the order it is climbed (include/constants/league_circuit.h). */
+const LEAGUES = [
+  // A town map, the door in it, and the map that door leads to.
+  // INDIGO PLATEAU's maps are not part of the world map, so it sits where its
+  // Town Map cell puts it, off ROUTE 22's.
+  { id: "indigo", name: "INDIGO PLATEAU", map: "MAP_INDIGO_PLATEAU_HNS", near: "MAP_ROUTE22_HNS" },
+  {
+    id: "masters",
+    name: "SEVII MASTERS",
+    map: "MAP_SEVEN_ISLAND",
+    to: "MAP_SEVEN_ISLAND_HOUSE_ROOM1",
+  },
+  {
+    id: "hoenn",
+    name: "HOENN LEAGUE",
+    map: "MAP_EVER_GRANDE_CITY",
+    to: "MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F",
+  },
+]
+
+/** "VIOLET CITY" from "VioletCity_hns", "MAHOGANY TOWN" from "Mahoganytown_hns". */
+const townName = (name) =>
+  name
+    .replace(/_.*$/, "")
+    .replace(/([a-z])(?=[A-Z])/g, "$1 ")
+    .replace(/([a-z])(town)$/, "$1 $2")
+    .toUpperCase()
+
+/**
+ * `all` is the placed maps and `minX`/`minY` the world's origin, as
+ * `placeWorld` returns them; `regionOf` names a placed map's region as the
+ * explorer's labels do (JOHTO, KANTO, HOENN, ...).
+ */
+export const buildLandmarks = (game, { all, minX, minY }, regionOf) => {
+  const { root } = game
+  const placed = new Map(all.map((p) => [p.m.id, p]))
+
+  // Every map in the tree, to follow warps from a gym back out to the land.
+  const every = {}
+  for (const dir of fs.readdirSync(`${root}/data/maps`)) {
+    const file = `${root}/data/maps/${dir}/map.json`
+    if (!fs.existsSync(file)) continue
+    const map = JSON.parse(fs.readFileSync(file, "utf8"))
+    every[map.id] = { ...map, dir }
+  }
+  // Where each map is entered from: a warp's destination, with the
+  // Wayfarer override the game honors, leads back to the map holding the warp.
+  const entrances = {}
+  for (const map of Object.values(every))
+    for (const warp of map.warp_events ?? [])
+      (entrances[warp.wayfarer_dest_map ?? warp.dest_map] ??= []).push({
+        from: map.id,
+        x: warp.x,
+        y: warp.y,
+      })
+
+  /** The door in a placed map the way into `target` starts from, found through any caves or halls between. */
+  const doorTo = (target) => {
+    const seen = new Set([target])
+    const queue = [target]
+    while (queue.length) {
+      const current = queue.shift()
+      for (const entrance of entrances[current] ?? []) {
+        if (seen.has(entrance.from)) continue
+        seen.add(entrance.from)
+        const p = placed.get(entrance.from)
+        if (p) return { p, x: p.x - minX + entrance.x + 0.5, y: p.y - minY + entrance.y + 0.5 }
+        queue.push(entrance.from)
+      }
+    }
+    return null
+  }
+
+  // A gym is a map whose script gives a badge (setflag FLAG_BADGEnn_GET). Each
+  // region numbers its eight badges in the order they are earned, and the
+  // Kanto and Hoenn maps number them from 1 or 9 on, so the place in a
+  // region's order is the flag's number less one, modulo eight.
+  const gyms = []
+  for (const map of Object.values(every)) {
+    const file = `${root}/data/maps/${map.dir}/scripts.inc`
+    if (!fs.existsSync(file)) continue
+    const flags = [...fs.readFileSync(file, "utf8").matchAll(/setflag FLAG_BADGE(\d+)_GET/g)].map(
+      (m) => Number(m[1]),
+    )
+    if (!flags.length) continue
+    const door = doorTo(map.id)
+    // The Viridian gym is reached twice over (a Kanto-only copy); a gym no
+    // town leads to is not part of the world.
+    if (!door) continue
+    const region = regionOf(door.p)
+    const order = (flags[0] - 1) % 8
+    gyms.push({
+      region: region[0] + region.slice(1).toLowerCase(),
+      order,
+      town: townName(door.p.m.name),
+      x: door.x,
+      y: door.y,
+    })
+  }
+  const badges = gyms
+    .map((gym) => ({ ...gym, badge: BADGE_REGIONS.indexOf(gym.region) * 8 + gym.order }))
+    .toSorted((a, b) => a.badge - b.badge)
+  if (badges.length !== 24 || badges.some((gym, i) => gym.badge !== i))
+    throw new Error(`expected 24 gyms, one per badge: ${badges.map((g) => g.badge).join(",")}`)
+
+  const cellOf = cellLookup(readTownMapCells(game))
+  const cell = measureCell(
+    all.filter((p) => p.region === "Hoenn"),
+    cellOf,
+  )
+  const circuit = LEAGUES.map(({ id, name, map, to, near }) => {
+    if (near) {
+      const from = placed.get(near)
+      const there = cellOf(every[map])
+      const here = cellOf(from.m)
+      return {
+        id,
+        name,
+        x: from.x - minX + from.l.width / 2 + (there.x - here.x) * cell,
+        y: from.y - minY + from.l.height / 2 + (there.y - here.y) * cell,
+      }
+    }
+    const p = placed.get(map)
+    const warp = every[map].warp_events.find((w) => (w.wayfarer_dest_map ?? w.dest_map) === to)
+    if (!p || !warp) throw new Error(`no door from ${map} to ${to}`)
+    return { id, name, x: p.x - minX + warp.x + 0.5, y: p.y - minY + warp.y + 0.5 }
+  })
+  return {
+    badges: badges.map(({ badge, region, town, x, y }) => ({ badge, region, town, x, y })),
+    circuit,
+  }
+}

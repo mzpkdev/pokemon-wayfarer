@@ -1,20 +1,112 @@
-import { useEffect, useRef, useState } from "react"
+import { type ReactNode, useEffect, useRef, useState } from "react"
 
 import { type Camera, fit } from "./camera"
-import { DATA, loadWorld } from "./data"
-import { OPEN_SEA, rendererFor } from "./render"
+import { DATA, type Meta, loadWorld } from "./data"
+import { type Encounters, loadEncounters } from "./encounters"
+import { PlaceCard, type PlaceInfo } from "./PlaceCard"
+import { OPEN_SEA, type Overlay, rendererFor } from "./render"
+
+export type { PlaceInfo } from "./PlaceCard"
 
 /** The closest zoom, in CSS pixels per metatile. */
 const MAX_ZOOM = 48
+/** A press shorter than this, in ms, and moving less than `TAP_SLOP` CSS pixels, is a tap, not a drag. */
+const TAP_TIME = 500
+const TAP_SLOP = 8
+
+type PlacedMap = Meta["maps"][number]
+
+/** The smallest map whose rectangle holds the grid point, if any. */
+const mapAt = (maps: PlacedMap[], x: number, y: number) => {
+  let found: PlacedMap | undefined
+  for (const map of maps)
+    if (x >= map.x && x < map.x + map.width && y >= map.y && y < map.y + map.height)
+      if (!found || map.width * map.height < found.width * found.height) found = map
+  return found
+}
+
+/** A subtle frame and tint over the picked map. */
+const highlight =
+  (map: PlacedMap): Overlay =>
+  (context, { toScreen, ratio }) => {
+    const a = toScreen(map.x, map.y)
+    const b = toScreen(map.x + map.width, map.y + map.height)
+    context.fillStyle = "rgb(255 214 0 / 0.1)"
+    context.fillRect(a.x, a.y, b.x - a.x, b.y - a.y)
+    const line = Math.max(2, Math.round(2 * ratio))
+    context.strokeStyle = "rgb(255 214 0 / 0.85)"
+    context.lineWidth = line
+    context.strokeRect(a.x + line / 2, a.y + line / 2, b.x - a.x - line, b.y - a.y - line)
+  }
+
+/** What the canvas effect offers the component: a redraw and a nudge to bring a map into the free part of the view. */
+type Api = {
+  redraw: () => void
+  /** Pans so the map is clear of `covered` (a box in CSS pixels over the canvas). */
+  reveal: (name: string, covered: { left: number; top: number }) => void
+}
 
 /**
  * The whole world to pan and zoom: drag to pan, pinch, wheel or double-click
- * to zoom, or the buttons. Fills its parent.
+ * to zoom, or the buttons. Tap a map (or press Enter on the one at the center)
+ * for a card with its name and wild Pokémon. Fills its parent.
+ *
+ * `extra` renders into the card under the name, for what else is at the place.
  */
-export const WorldMap = ({ base = DATA, start }: { base?: string; start?: Camera }) => {
+export const WorldMap = ({
+  base = DATA,
+  start,
+  extra,
+}: {
+  base?: string
+  start?: Camera
+  extra?: (place: PlaceInfo) => ReactNode
+}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const cardRef = useRef<HTMLElement>(null)
   const zoomBy = useRef<(factor: number) => void>(() => {})
+  const api = useRef<Api>({ redraw: () => {}, reveal: () => {} })
   const [failed, setFailed] = useState(false)
+  // The picked map (its folder name), and what the explorer has loaded to say about it.
+  const [picked, setPicked] = useState<string | null>(null)
+  const pickedRef = useRef<string | null>(null)
+  const [encounters, setEncounters] = useState<Encounters>()
+  const [encountersFailed, setEncountersFailed] = useState(false)
+  const refocus = useRef(false)
+
+  // Encounters load the first time a place is picked.
+  useEffect(() => {
+    if (!picked || encounters) return
+    void loadEncounters(base).then(
+      (loaded) => {
+        setEncounters(loaded)
+        setEncountersFailed(false)
+      },
+      () => setEncountersFailed(true),
+    )
+  }, [picked, encounters, base])
+
+  // Redraw with the frame on the picked map, and bring the map out from under the card.
+  useEffect(() => {
+    pickedRef.current = picked
+    api.current.redraw()
+    if (!picked || (!encounters && !encountersFailed)) return
+    const frame = requestAnimationFrame(() => {
+      const card = cardRef.current?.getBoundingClientRect()
+      const canvas = canvasRef.current?.getBoundingClientRect()
+      if (!card || !canvas) return
+      // A sheet across the bottom covers from its top; a panel at the left, up to its right edge.
+      const sheet = card.width > canvas.width * 0.8
+      api.current.reveal(
+        picked,
+        sheet
+          ? { left: 0, top: card.top - canvas.top }
+          : { left: card.right - canvas.left, top: 0 },
+      )
+      if (refocus.current) cardRef.current?.querySelector("button")?.focus()
+    })
+    return () => cancelAnimationFrame(frame)
+  }, [picked, encounters, encountersFailed])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -23,6 +115,10 @@ export const WorldMap = ({ base = DATA, start }: { base?: string; start?: Camera
     const listening = new AbortController()
     const { signal } = listening
     let raf = 0
+    const choose = (name: string | null, keyboard = false) => {
+      refocus.current = keyboard
+      setPicked(name)
+    }
 
     void loadWorld(base).then(
       async (world) => {
@@ -40,11 +136,15 @@ export const WorldMap = ({ base = DATA, start }: { base?: string; start?: Camera
 
         const draw = () => {
           raf = 0
+          const highlighted = pickedRef.current
+            ? world.meta.maps.find((map) => map.name === pickedRef.current)
+            : undefined
           const pending = renderer.draw(context, {
             camera,
             focus: { x: canvas.clientWidth / 2, y: canvas.clientHeight / 2 },
             labelWidth: canvas.clientWidth,
             labels: true,
+            overlays: highlighted ? [highlight(highlighted)] : [],
           })
           if (pending) schedule()
         }
@@ -65,16 +165,72 @@ export const WorldMap = ({ base = DATA, start }: { base?: string; start?: Camera
           clamp()
           schedule()
         }
+        api.current = {
+          redraw: schedule,
+          reveal: (name, covered) => {
+            const map = world.meta.maps.find((m) => m.name === name)
+            if (!map) return
+            const w = canvas.clientWidth
+            const h = canvas.clientHeight
+            // The part of the view the card leaves free.
+            const free =
+              covered.left > 0
+                ? { left: covered.left, top: 0, right: w, bottom: h }
+                : { left: 0, top: 0, right: w, bottom: covered.top }
+            const at = (x: number, y: number) => ({
+              x: w / 2 + (x - camera.x) * camera.zoom,
+              y: h / 2 + (y - camera.y) * camera.zoom,
+            })
+            const centre = at(map.x + map.width / 2, map.y + map.height / 2)
+            const margin = 24
+            const inside =
+              centre.x > free.left + margin &&
+              centre.x < free.right - margin &&
+              centre.y > free.top + margin &&
+              centre.y < free.bottom - margin
+            if (inside) return
+            // Ease the map's centre to the middle of the free part.
+            const from = { x: camera.x, y: camera.y }
+            const to = {
+              x: map.x + map.width / 2 - ((free.left + free.right) / 2 - w / 2) / camera.zoom,
+              y: map.y + map.height / 2 - ((free.top + free.bottom) / 2 - h / 2) / camera.zoom,
+            }
+            const began = performance.now()
+            const step = (now: number) => {
+              if (signal.aborted) return
+              const t = Math.min(1, (now - began) / 280)
+              const eased = 1 - (1 - t) ** 3
+              camera.x = from.x + (to.x - from.x) * eased
+              camera.y = from.y + (to.y - from.y) * eased
+              clamp()
+              schedule()
+              if (t < 1) requestAnimationFrame(step)
+            }
+            requestAnimationFrame(step)
+          },
+        }
         zoomBy.current = (factor) => zoomAt(factor, canvas.clientWidth / 2, canvas.clientHeight / 2)
 
         // Drag to pan, pinch to zoom, wheel to zoom at the cursor.
         const pointers = new Map<number, { x: number; y: number }>()
         let pinch = 0
+        // The press that might turn out to be a tap.
+        let press: { id: number; x: number; y: number; at: number } | null = null
+        const placeAt = (screenX: number, screenY: number) =>
+          mapAt(
+            world.meta.maps,
+            camera.x + (screenX - canvas.clientWidth / 2) / camera.zoom,
+            camera.y + (screenY - canvas.clientHeight / 2) / camera.zoom,
+          )
         canvas.addEventListener(
           "pointerdown",
           (event) => {
             canvas.setPointerCapture(event.pointerId)
             pointers.set(event.pointerId, { x: event.offsetX, y: event.offsetY })
+            press =
+              pointers.size === 1
+                ? { id: event.pointerId, x: event.offsetX, y: event.offsetY, at: event.timeStamp }
+                : null
             if (pointers.size === 2) {
               const [a, b] = [...pointers.values()]
               pinch = Math.hypot(a!.x - b!.x, a!.y - b!.y)
@@ -89,6 +245,7 @@ export const WorldMap = ({ base = DATA, start }: { base?: string; start?: Camera
             if (!last) return
             const now = { x: event.offsetX, y: event.offsetY }
             pointers.set(event.pointerId, now)
+            if (press && Math.hypot(now.x - press.x, now.y - press.y) > TAP_SLOP) press = null
             if (pointers.size === 1) {
               camera.x -= (now.x - last.x) / camera.zoom
               camera.y -= (now.y - last.y) / camera.zoom
@@ -107,8 +264,28 @@ export const WorldMap = ({ base = DATA, start }: { base?: string; start?: Camera
           pointers.delete(event.pointerId)
           pinch = 0
         }
-        canvas.addEventListener("pointerup", release, { signal })
-        canvas.addEventListener("pointercancel", release, { signal })
+        canvas.addEventListener(
+          "pointerup",
+          (event) => {
+            const tapped =
+              press?.id === event.pointerId &&
+              event.timeStamp - press.at < TAP_TIME &&
+              Math.hypot(event.offsetX - press.x, event.offsetY - press.y) <= TAP_SLOP
+            release(event)
+            if (!tapped) return
+            // A tap on a map picks it, on the sea or between maps drops the pick.
+            choose(placeAt(event.offsetX, event.offsetY)?.name ?? null)
+          },
+          { signal },
+        )
+        canvas.addEventListener(
+          "pointercancel",
+          (event) => {
+            press = null
+            release(event)
+          },
+          { signal },
+        )
         canvas.addEventListener(
           "wheel",
           (event) => {
@@ -132,7 +309,12 @@ export const WorldMap = ({ base = DATA, start }: { base?: string; start?: Camera
               ArrowDown: [0, step],
             }
             const move = moves[event.key]
-            if (move) {
+            if (event.key === "Enter") {
+              // Picks the map at the center of the view.
+              const found = placeAt(canvas.clientWidth / 2, canvas.clientHeight / 2)
+              if (!found) return
+              choose(found.name, true)
+            } else if (move) {
               camera.x += move[0]
               camera.y += move[1]
               clamp()
@@ -159,13 +341,29 @@ export const WorldMap = ({ base = DATA, start }: { base?: string; start?: Camera
     }
   }, [base, start])
 
+  const close = (focusMap: boolean) => {
+    setPicked(null)
+    if (focusMap) canvasRef.current?.focus()
+  }
+
   return (
-    <div className="relative size-full" style={{ background: OPEN_SEA }}>
+    <div
+      role="presentation"
+      className="relative size-full"
+      style={{ background: OPEN_SEA }}
+      onKeyDown={(event) => {
+        // Esc closes the card first, and only then the dialog around the map.
+        if (event.key !== "Escape" || !picked) return
+        event.preventDefault()
+        event.stopPropagation()
+        close(true)
+      }}
+    >
       <canvas
         ref={canvasRef}
         tabIndex={0}
         aria-roledescription="map"
-        aria-label="Map of the whole world. Drag or use the arrow keys to look around; pinch, scroll or use the plus and minus keys to zoom."
+        aria-label="Map of the whole world. Drag or use the arrow keys to look around; pinch, scroll or use the plus and minus keys to zoom. Tap a place, or press Enter on the one in the middle, to see its wild Pokémon."
         className="block size-full cursor-grab touch-none focus-visible:outline-4 focus-visible:-outline-offset-4 focus-visible:outline-logo-yellow active:cursor-grabbing"
       />
       {failed && (
@@ -173,7 +371,23 @@ export const WorldMap = ({ base = DATA, start }: { base?: string; start?: Camera
           The map didn't load. Check your connection and try again.
         </p>
       )}
-      <div className="absolute right-4 bottom-4 flex flex-col gap-2">
+      {picked && (encounters || encountersFailed) && (
+        <PlaceCard
+          key={picked}
+          ref={cardRef}
+          place={encounters?.maps[picked]}
+          info={{ map: picked, name: encounters?.maps[picked]?.n ?? picked }}
+          encounters={encounters}
+          base={base}
+          failed={encountersFailed}
+          extra={extra}
+          onClose={() => close(true)}
+        />
+      )}
+      <div
+        data-open={picked ? "" : undefined}
+        className="absolute right-4 bottom-4 flex flex-col gap-2 max-sm:data-open:hidden"
+      >
         {(
           [
             ["+", 1.6, "Zoom in"],

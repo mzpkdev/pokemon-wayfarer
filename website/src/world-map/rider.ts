@@ -1,12 +1,8 @@
-// BRENDAN on his MACH BIKE, riding out of the title scene's grass down
-// ROUTE 101 to his front door in LITTLEROOT TOWN as the tour scrolls. The
-// scroll moves him, so he pedals only while the page moves, like holding a
-// direction in the game.
-import type { Meta } from "./data"
+// The player on their bike, riding in from the road to their front door.
+// Where each start's ride goes is in starts.ts; this draws the rider along it.
+// He pedals while he moves, like holding a direction in the game, and stops
+// and faces the door at the end.
 import type { Sprite } from "./render"
-
-/** The overworld sprite sheet: nine 32x32 frames in a row. */
-export const RIDER_SRC = "/game/sprites/brendan-mach-bike.png"
 
 type Facing = "south" | "north" | "west" | "east"
 
@@ -21,25 +17,7 @@ const FRAMES: Record<Facing, { stand: number; pedal: [number, number] }> = {
 /** Metatiles ridden per pedal stroke. */
 const STROKE = 0.5
 
-/**
- * The ride, as tile centers on a map's own grid: in from OLDALE TOWN's edge,
- * down ROUTE 101's path (hopping its ledges), into LITTLEROOT TOWN, and left
- * to the door of the house on the left.
- */
-const ROUTE: { map: string; x: number; y: number }[] = [
-  { map: "Route101", x: 10.5, y: -3.5 },
-  { map: "LittlerootTown", x: 10.5, y: 9.5 },
-  { map: "LittlerootTown", x: 5.5, y: 9.5 },
-]
-
-/** The ride's points on the world grid. */
-export const routeIn = (meta: Meta) =>
-  ROUTE.map(({ map, x, y }) => {
-    const placed = meta.maps.find(({ name }) => name === map)!
-    return { x: placed.x + x, y: placed.y + y }
-  })
-
-/** BRENDAN `t` of the way along `route` (0 to 1), as a sprite to draw. */
+/** The player `t` of the way along `route` (0 to 1), as a sprite to draw. */
 export const riderAt = (
   route: { x: number; y: number }[],
   t: number,

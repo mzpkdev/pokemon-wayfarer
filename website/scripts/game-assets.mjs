@@ -231,6 +231,45 @@ save(
   ),
 )
 
+// The other two starts' players on their bikes, laid out like BRENDAN's sheet:
+// GOLD with his own palette, RED with the FireRed and LeafGreen player's.
+for (const [name, file, palette] of [
+  ["gold", "gold/mach_bike_hns", "gold_hns"],
+  ["red", "red/red_bike", "player_frlg"],
+])
+  save(
+    `sprites/${name}-mach-bike.png`,
+    renderIndexed(
+      source(`object_events/pics/people/${file}.png`),
+      readJascPalette(source(`object_events/palettes/${palette}.pal`)),
+    ),
+  )
+
+// The 24 Gym Badges as the trainer card draws them, 16x16 each in one row:
+// Johto's eight, Kanto's eight, then Hoenn's, each in the order it is earned.
+// The HNS sheet holds Johto's row above Kanto's; Hoenn's has its own sheet.
+const johtoKanto = renderIndexed(source("trainer_card/hns/combined_badges.png"))
+const hoennBadges = renderIndexed(source("trainer_card/badges.png"))
+save(
+  "badges.png",
+  sideBySide([crop(johtoKanto, 0, 0, 128, 16), crop(johtoKanto, 0, 16, 128, 16), hoennBadges]),
+)
+
+// The three ferries as they sit at the game's docks, each with its own palette,
+// for the world map's living overlay.
+for (const [name, file, palette] of [
+  ["aqua", "ss_aqua_hns", "ss_aqua_hns"],
+  ["anne", "ss_anne", "ss_anne"],
+  ["tidal", "ss_tidal", "ss_tidal"],
+])
+  save(
+    `sprites/ss-${name}.png`,
+    renderIndexed(
+      source(`object_events/pics/misc/${file}.png`),
+      readJascPalette(source(`object_events/palettes/${palette}.pal`)),
+    ),
+  )
+
 save("text/down-arrow.png", renderIndexed(source("fonts/down_arrow.png")))
 
 // Text window frame 1, the game's default.

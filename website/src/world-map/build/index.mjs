@@ -10,9 +10,12 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { gzipSync } from "node:zlib"
 import { writePng } from "../../../scripts/lib/png.mjs"
+import { writeEncounters } from "./encounters.mjs"
 import { createAtlas, openGame } from "./game.mjs"
 import { buildLand } from "./land.mjs"
+import { buildLandmarks } from "./landmarks.mjs"
 import { placeWorld } from "./layout.mjs"
+import { writeLiving } from "./living.mjs"
 import { paintOverview } from "./overview.mjs"
 
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -127,6 +130,25 @@ fs.writeFileSync(
     })),
   }),
 )
+// The tour's gym pins and league circuit.
+fs.writeFileSync(`${outDir}/landmarks.json`, JSON.stringify(buildLandmarks(game, world, labelFor)))
+// The ferries, their sea lanes and the times of day.
+writeLiving(
+  {
+    grid,
+    isWater: land.isWater,
+    width: W,
+    height: H,
+    maps: all.map((p) => ({
+      name: p.m.name,
+      x: p.x - minX,
+      y: p.y - minY,
+      width: p.l.width,
+      height: p.l.height,
+    })),
+  },
+  outDir,
+)
 console.log(
   "atlas",
   atlasTiles.length,
@@ -138,4 +160,18 @@ console.log(
   W,
   "x",
   H,
+)
+const places = writeEncounters(
+  game,
+  all.map((p) => p.m.name),
+  outDir,
+)
+console.log(
+  "encounters",
+  places.withEncounters,
+  "of",
+  places.maps,
+  "maps,",
+  places.species,
+  "species",
 )

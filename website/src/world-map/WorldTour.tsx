@@ -4,34 +4,80 @@ import { useReducedMotion } from "~/lib/hooks"
 
 import { type Camera, fit, fly } from "./camera"
 import { type Bounds, DATA, type Meta, loadWorld } from "./data"
-import { OPEN_SEA, rendererFor } from "./render"
-import { RIDER_SRC, riderAt, routeIn } from "./rider"
+import { stepped } from "./fade"
+import {
+  BADGES_SRC,
+  badgeOverlays,
+  landmarkBounds,
+  type Landmarks,
+  loadLandmarks,
+  type StopClock,
+} from "./landmarks"
+import { OPEN_SEA, type Overlay, rendererFor } from "./render"
+import { riderAt } from "./rider"
+import {
+  DEFAULT_START,
+  focusIn,
+  openingIn,
+  placeAt,
+  rideMs,
+  routeIn,
+  type Start,
+  type StartId,
+  STARTS,
+  startOf,
+} from "./starts"
 import { WorldMap } from "./WorldMap"
+
+/** The tour's stops, in the order its cards come. */
+export type StopName = "town" | "region" | "badges" | "world"
+const STOPS: StopName[] = ["town", "region", "badges", "world"]
+const BADGES_STOP = STOPS.indexOf("badges")
 
 export type Caption = {
   place: string
   title: string
   body: string
   stats?: { value: string; label: string }[]
+  /** What the card says instead for each start, in any of the fields above. */
+  variants?: Partial<Record<StartId, Partial<Omit<Caption, "variants">>>>
 }
 
-/** How long BRENDAN's ride from the grass to his door takes, in milliseconds. */
-const RIDE_MS = 3200
+/**
+ * Something drawn over the map while the tour is at `stop`: a hook for what
+ * the page wants to show on a stop that the tour itself doesn't. `animated`
+ * keeps frames coming while it is up.
+ */
+export type StopOverlay = { stop: StopName; overlay: Overlay; animated?: boolean }
+
 /** How long a flight between stops takes: longer the more the zoom changes. */
 const flightMs = (from: Camera, to: Camera) =>
   Math.min(2400, 900 + 450 * Math.abs(Math.log2(to.zoom / from.zoom)))
-/** The closest zoom he is drawn at; further out he is a speck. */
+/** The closest zoom the rider is drawn at; further out he is a speck. */
 const RIDER_MIN_ZOOM = 4
 
-/** A beat between the tour starting and BRENDAN setting off. */
+/** A beat between the tour starting and the rider setting off. */
 const RIDE_DELAY_MS = 250
+
+/** A warp between starts: the game's 8-step fade to black, the cut, and the fade back in. */
+const FADE_OUT_MS = 300
+const FADE_IN_MS = 400
+
+/** The badge stop's pins and trail come in a moment after the camera, and go out quickly. */
+const BADGES_IN_DELAY_MS = 450
+const BADGES_IN_MS = 400
+const BADGES_OUT_MS = 250
 
 /**
  * The game's yellow OK button from the naming screen; pixel corners clip an
  * outline, so focus shows as a blue rim inside instead.
  */
 const BUTTON =
-  "pixel-corners pixel-label bg-[rgb(232_208_64)] px-7 pt-2 pb-3 text-[rgb(56_56_56)] shadow-[inset_0_0_0_4px_rgb(56_56_56),inset_0_-8px_0_rgb(184_160_32),inset_0_8px_0_rgb(248_240_152)] hover:bg-[rgb(248_224_96)] focus-visible:shadow-[inset_0_0_0_4px_rgb(48_80_200),inset_0_-8px_0_rgb(184_160_32),inset_0_8px_0_rgb(248_240_152)] focus-visible:outline-none active:translate-y-0.5"
+  "pixel-corners pixel-label bg-[rgb(232_208_64)] px-7 pt-2 pb-3 text-[rgb(56_56_56)] shadow-[inset_0_0_0_4px_rgb(56_56_56),inset_0_-8px_0_rgb(184_160_32),inset_0_8px_0_rgb(248_240_152)] hover:bg-[rgb(248_224_96)] focus-visible:shadow-[inset_0_0_0_4px_rgb(48_80_200),inset_0_-8px_0_rgb(184_160_32),inset_0_8px_0_rgb(248_240_152)] focus-visible:outline-none active:translate-y-0.5 disabled:opacity-50"
+
+/** A choice of start: the same yellow when picked, a dark plate otherwise. */
+const OPTION =
+  "pixel-corners flex w-full items-baseline justify-between gap-3 px-4 pt-2 pb-3 text-left font-[family-name:var(--font-gba)] text-[16px] leading-[16px] sm:text-[24px] sm:leading-[24px] has-focus-visible:shadow-[inset_0_0_0_4px_rgb(48_80_200)]"
 
 /** Metatiles across and down in the close-up shots. */
 const CLOSE_UP = { width: 44, height: 30 }
@@ -43,55 +89,86 @@ const boundsOf = (maps: Meta["maps"]): Bounds => ({
   bottom: Math.max(...maps.map(({ y, height }) => y + height)),
 })
 
-/** The shots for a map area `width` by `height` CSS pixels. */
-const shotsFor = (meta: Meta, width: number, height: number): Camera[] => {
-  const littleroot = meta.towns.find(({ name }) => name === "LittlerootTown")!
-  const route101 = meta.maps.find(({ name }) => name === "Route101")!
-  const hoenn =
-    meta.regions.find(({ name }) => name === "HOENN")?.bounds ??
-    boundsOf(meta.maps.filter(({ region }) => region === "Hoenn"))
+const unionOf = (boxes: Bounds[]): Bounds => ({
+  left: Math.min(...boxes.map(({ left }) => left)),
+  top: Math.min(...boxes.map(({ top }) => top)),
+  right: Math.max(...boxes.map(({ right }) => right)),
+  bottom: Math.max(...boxes.map(({ bottom }) => bottom)),
+})
+
+/** Where a region (by its label) lies, from its bounds or else the maps its pieces hold. */
+const regionBounds = (meta: Meta, name: string): Bounds =>
+  meta.regions.find((region) => region.name === name)?.bounds ??
+  boundsOf(
+    meta.maps.filter(({ region }) => region === (name === "HOENN" ? "Hoenn" : "Johto and Kanto")),
+  )
+
+/**
+ * The shots for a map area `width` by `height` CSS pixels, for a start: the
+ * opening on the road, then the stops: the town, its region (or regions), every
+ * Gym and the league circuit, and the whole world.
+ */
+const shotsFor = (
+  meta: Meta,
+  landmarks: Landmarks,
+  start: Start,
+  width: number,
+  height: number,
+): Camera[] => {
   const close = Math.min(width / CLOSE_UP.width, height / CLOSE_UP.height)
+  const region = unionOf(start.regions.map((name) => regionBounds(meta, name)))
+  const regions = ["JOHTO", "KANTO", "HOENN"].map((name) => regionBounds(meta, name))
+  const gyms = landmarkBounds(landmarks, 36) ?? unionOf(regions)
   return [
-    // Close enough that ROUTE 101, grass and all, fills the frame.
-    {
-      x: route101.x + route101.width / 2,
-      y: route101.y + route101.height / 2,
-      zoom: Math.min(width / (route101.width + 4), height / (route101.height + 2)),
-    },
-    { x: littleroot.x, y: littleroot.y, zoom: close },
-    fit(hoenn, width, height, 0.95),
+    { ...fit(openingIn(meta, start), width, height, 1) },
+    { ...focusIn(meta, start), zoom: close },
+    fit(region, width, height, 0.95),
+    fit(gyms, width, height, 0.95),
     fit(boundsOf(meta.maps), width, height, 0.92),
   ]
 }
 
 /**
  * The world in the game's own tiles, held still at one stop at a time with a
- * card beside it. When the section comes into view, BRENDAN rides out of the
- * grass down ROUTE 101 to his door in LITTLEROOT TOWN; the card's button then
- * flies the camera on to all of Hoenn and the whole world, and the last one
- * opens the map to look around. The page scrolls past it as usual. Fills its
- * section.
+ * card beside it. It opens with the player riding in on their bike to their
+ * front door, in the town the first card picks (LITTLEROOT TOWN, NEW BARK TOWN
+ * or PALLET TOWN; another start plays a warp: the screen fades to black and
+ * back in). The card's button then flies the camera on: the region, every Gym
+ * Badge and the league circuit, and the whole world. The last one opens the
+ * map to look around. The page scrolls past it as usual. Fills its section.
  *
  * The ride starts the first time nearly all of the section is on screen, or,
  * given `startOn`, when the section receives that event (or already carries
  * `data-started`), for a page that brings the map in its own way.
+ *
+ * `captions` are one card per stop, in order: the town, the region, the
+ * badges, the world. `stopOverlays` draw over the map at a stop.
  */
 export const WorldTour = ({
   captions,
   base = DATA,
   startOn,
+  stopOverlays,
 }: {
   captions: Caption[]
   base?: string
   startOn?: string
+  stopOverlays?: StopOverlay[]
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const captionRef = useRef<HTMLDivElement>(null)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const cameraRef = useRef<Camera | null>(null)
   const goRef = useRef<(stop: number) => void>(() => {})
+  const chooseRef = useRef<(id: StartId) => void>(() => {})
+  const stopOverlaysRef = useRef(stopOverlays)
+  useEffect(() => {
+    stopOverlaysRef.current = stopOverlays
+  }, [stopOverlays])
   const reducedMotion = useReducedMotion()
   const [stop, setStop] = useState(0)
+  const [chosen, setChosen] = useState<StartId>(DEFAULT_START)
+  const [warping, setWarping] = useState(false)
   const [exploring, setExploring] = useState<Camera | null>(null)
   const [popup, setPopup] = useState<{ label: string | null; shown: boolean }>({
     label: null,
@@ -119,19 +196,40 @@ export const WorldTour = ({
       if (next) popupTimer = window.setTimeout(() => setPopup({ label: next, shown: true }), 340)
     }
 
-    // Where the tour is: the stop shown (its shot is one past it, after ROUTE
-    // 101), the flight under way if any, and when the ride began.
+    // Where the tour is: the stop shown (its shot is one past it, after the
+    // opening), the flight under way if any, and when the ride began.
     let current = 0
     let flight: { from: Camera; to: number; start: number; duration: number } | null = null
     let started: number | null = null
+    // The warp to another start, if one is playing: when it began and, once
+    // the screen is black, when the cut happened.
+    let warp: { to: StartId; start: number; cut: number | null } | null = null
+    // The badge stop's clock: when the camera set off for it and when it left.
+    let badgesSince: number | null = null
+    let badgesLeft: number | null = null
 
-    const rider = new Image()
-    rider.src = RIDER_SRC
-    void Promise.all([loadWorld(base), rider.decode().catch(() => {})]).then(([world]) => {
+    const sheets = new Map<StartId, HTMLImageElement>()
+    const images = STARTS.map((start) => {
+      const image = new Image()
+      image.src = start.rider
+      sheets.set(start.id, image)
+      return image
+    })
+    const badgeSheet = new Image()
+    badgeSheet.src = BADGES_SRC
+    images.push(badgeSheet)
+    void Promise.all([
+      loadWorld(base),
+      loadLandmarks(base),
+      ...images.map((image) => image.decode().catch(() => {})),
+    ]).then(([world, landmarks]) => {
       if (disposed) return
       const renderer = rendererFor(world)
-      const route = routeIn(world.meta)
-      const littlerootTop = world.meta.maps.find(({ name }) => name === "LittlerootTown")!.y
+      let start = startOf(DEFAULT_START)
+      let route = routeIn(world.meta, start)
+      let ride = rideMs(route)
+      const stopClock: StopClock = { alpha: 0, elapsed: 0, animate: !reducedMotion }
+      const pins = badgeOverlays(landmarks, badgeSheet, stopClock)
 
       const area = () => {
         // The map gets the screen beside the caption on wide screens, above
@@ -146,34 +244,88 @@ export const WorldTour = ({
         return size
       }
 
+      /** The cut: the screen is black, so everything switches to the new start. */
+      const cut = (to: StartId, now: number) => {
+        start = startOf(to)
+        route = routeIn(world.meta, start)
+        ride = rideMs(route)
+        current = 0
+        flight = null
+        badgesSince = null
+        badgesLeft = null
+        // The ride begins once the screen has faded back in.
+        started = now + (reducedMotion ? 0 : FADE_IN_MS)
+      }
+
       const draw = (now: number) => {
         raf = 0
+
+        // The warp's fade: 0 clear to 1 black, in the game's whole steps.
+        let fade = 0
+        if (warp) {
+          if (warp.cut === null) {
+            const t = (now - warp.start) / FADE_OUT_MS
+            if (t >= 1) {
+              cut(warp.to, now)
+              warp.cut = now
+              fade = 1
+            } else fade = stepped(t)
+          } else {
+            const t = (now - warp.cut) / FADE_IN_MS
+            if (t >= 1) {
+              warp = null
+              setWarping(false)
+            } else fade = stepped(1 - t)
+          }
+        }
+
         const { width, height } = area()
-        const shots = shotsFor(world.meta, width, height)
+        const shots = shotsFor(world.meta, landmarks, start, width, height)
         const rideStart = started === null ? null : started + RIDE_DELAY_MS
-        const ride = reducedMotion
+        const progress = reducedMotion
           ? 1
           : rideStart === null
             ? 0
-            : Math.max(0, (now - rideStart) / RIDE_MS)
+            : Math.max(0, (now - rideStart) / ride)
         let camera: Camera
         if (flight) {
           const t = (now - flight.start) / flight.duration
           camera = fly(flight.from, shots[flight.to + 1]!, t)
           if (t >= 1) flight = null
-        } else if (current === 0) camera = fly(shots[0]!, shots[1]!, ride)
+        } else if (current === 0) camera = fly(shots[0]!, shots[1]!, progress)
         else camera = shots[current + 1]!
         cameraRef.current = camera
 
-        const brendan = riderAt(route, ride, rider)
-        // The popup names where BRENDAN is while the camera is with him.
+        const sheet = sheets.get(start.id)!
+        const rider = riderAt(route, progress, sheet)
+        // The popup names where the rider is while the camera is with them.
         showPlace(
           current > 0 || rideStart === null || now < rideStart
             ? null
-            : brendan.y + 2 < littlerootTop
-              ? "ROUTE 101"
-              : "LITTLEROOT TOWN",
+            : placeAt(world.meta, start, { x: rider.x + 1, y: rider.y + 2 }),
         )
+
+        // The badge stop's pins and trail show while the tour is there, and
+        // fade as it leaves.
+        let badgesUp = false
+        if (current === BADGES_STOP && badgesSince !== null) {
+          stopClock.elapsed = now - badgesSince
+          stopClock.alpha = reducedMotion
+            ? 1
+            : Math.min(1, Math.max(0, (stopClock.elapsed - BADGES_IN_DELAY_MS) / BADGES_IN_MS))
+          badgesUp = true
+        } else if (badgesLeft !== null && !reducedMotion) {
+          stopClock.alpha = Math.max(0, 1 - (now - badgesLeft) / BADGES_OUT_MS)
+          badgesUp = stopClock.alpha > 0
+        } else stopClock.alpha = 0
+        const overlays = badgesUp ? [...pins] : []
+        let animated = badgesUp && !reducedMotion
+        for (const entry of stopOverlaysRef.current ?? [])
+          if (entry.stop === STOPS[current]) {
+            overlays.push(entry.overlay)
+            animated ||= Boolean(entry.animated)
+          }
+
         const pending = renderer.draw(context, {
           camera,
           focus: { x: width / 2, y: height / 2 },
@@ -181,46 +333,71 @@ export const WorldTour = ({
           // The popup names the close-ups; names on the map come in as it pulls back.
           labels: camera.zoom < shots[1]!.zoom * 0.7,
           sprites:
-            rider.complete && rider.naturalWidth && camera.zoom >= RIDER_MIN_ZOOM ? [brendan] : [],
+            rider.image && sheet.complete && sheet.naturalWidth && camera.zoom >= RIDER_MIN_ZOOM
+              ? [rider]
+              : [],
+          overlays,
         })
-        const riding = rideStart !== null && ride < 1
-        if (pending || flight || riding) schedule()
+        if (fade > 0) {
+          context.setTransform(1, 0, 0, 1, 0, 0)
+          context.fillStyle = `rgb(0 0 0 / ${fade})`
+          context.fillRect(0, 0, canvas.width, canvas.height)
+        }
+        const riding = rideStart !== null && progress < 1
+        if (pending || flight || riding || warp || animated) schedule()
       }
       const schedule = () => {
         if (!raf) raf = requestAnimationFrame(draw)
       }
 
       goRef.current = (next) => {
-        if (next === current) return
+        if (next === current || warp) return
         const { width, height } = area()
-        const from = cameraRef.current ?? shotsFor(world.meta, width, height)[current + 1]!
-        const to = shotsFor(world.meta, width, height)[next + 1]!
-        flight = reducedMotion
-          ? null
-          : { from, to: next, start: performance.now(), duration: flightMs(from, to) }
+        const now = performance.now()
+        const shots = shotsFor(world.meta, landmarks, start, width, height)
+        const from = cameraRef.current ?? shots[current + 1]!
+        const to = shots[next + 1]!
+        flight = reducedMotion ? null : { from, to: next, start: now, duration: flightMs(from, to) }
+        if (next === BADGES_STOP) {
+          badgesSince = now
+          badgesLeft = null
+        } else if (current === BADGES_STOP) badgesLeft = now
         current = next
         schedule()
       }
 
-      const start = () => {
+      chooseRef.current = (id) => {
+        if (id === start.id || warp) return
+        const now = performance.now()
+        warp = { to: id, start: now, cut: null }
+        // With reduced motion there is no fade: the new start is just there.
+        if (reducedMotion) {
+          cut(id, now)
+          warp = null
+          setWarping(false)
+        }
+        schedule()
+      }
+
+      const go = () => {
         if (started !== null) return
         started = performance.now()
         schedule()
       }
       const watcher = new IntersectionObserver(
         ([entry]) => {
-          if (entry?.isIntersecting) start()
+          if (entry?.isIntersecting) go()
         },
         { threshold: 0.7 },
       )
       if (!startOn) watcher.observe(section)
-      else if (section.dataset.started) start()
-      else section.addEventListener(startOn, start, { once: true })
+      else if (section.dataset.started) go()
+      else section.addEventListener(startOn, go, { once: true })
       const resizer = new ResizeObserver(schedule)
       resizer.observe(canvas)
       cleanup = () => {
         watcher.disconnect()
-        if (startOn) section.removeEventListener(startOn, start)
+        if (startOn) section.removeEventListener(startOn, go)
         resizer.disconnect()
       }
       void document.fonts.ready.then(schedule)
@@ -238,6 +415,13 @@ export const WorldTour = ({
   const go = (next: number) => {
     setStop(next)
     goRef.current(next)
+  }
+
+  const choose = (id: StartId) => {
+    if (id === chosen || warping) return
+    setChosen(id)
+    setWarping(!reducedMotion)
+    chooseRef.current(id)
   }
 
   // The explorer opens as a modal over the page, starting where the tour is.
@@ -271,15 +455,17 @@ export const WorldTour = ({
           <div className="grid" aria-live="polite">
             {captions.map((caption, i) => {
               const shown = stop === i
+              const text = { ...caption, ...caption.variants?.[chosen] }
               return (
                 <div
                   key={caption.place}
                   aria-hidden={!shown}
+                  inert={!shown}
                   className="col-start-1 row-start-1 transition-opacity duration-300"
-                  style={{ opacity: shown ? 1 : 0 }}
+                  style={{ opacity: shown ? 1 : 0, pointerEvents: shown ? undefined : "none" }}
                 >
                   <p className="pixel-label flex justify-between gap-4 text-logo-yellow">
-                    <span>{caption.place}</span>
+                    <span>{text.place}</span>
                     <span
                       className="text-paper/60"
                       aria-label={`Stop ${i + 1} of ${captions.length}`}
@@ -287,11 +473,45 @@ export const WorldTour = ({
                       {i + 1}/{captions.length}
                     </span>
                   </p>
-                  <p className="pixel-heading mt-3">{caption.title}</p>
-                  <p className="mt-4 text-lg leading-relaxed text-paper/80">{caption.body}</p>
-                  {caption.stats && (
+                  <p className="pixel-heading mt-3">{text.title}</p>
+                  <p className="mt-4 text-lg leading-relaxed text-paper/80">{text.body}</p>
+                  {i === 0 && (
+                    <fieldset className="mt-5 grid gap-2">
+                      <legend className="sr-only">Where to begin</legend>
+                      {STARTS.map((option) => {
+                        const picked = option.id === chosen
+                        return (
+                          <label
+                            key={option.id}
+                            className={`${OPTION} ${
+                              picked
+                                ? "bg-[rgb(232_208_64)] text-[rgb(56_56_56)] shadow-[inset_0_0_0_4px_rgb(56_56_56),inset_0_-4px_0_rgb(184_160_32),inset_0_4px_0_rgb(248_240_152)]"
+                                : "cursor-pointer bg-black/30 text-paper/80 shadow-[inset_0_0_0_4px_rgb(0_0_0/0.4)] hover:bg-black/50 hover:text-paper"
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              name="start"
+                              className="sr-only"
+                              checked={picked}
+                              disabled={warping}
+                              onChange={() => choose(option.id)}
+                            />
+                            <span>
+                              {picked ? "▶ " : ""}
+                              {option.label}
+                            </span>
+                            <span className={picked ? "text-[rgb(56_56_56)]/70" : "text-paper/50"}>
+                              {option.region}
+                            </span>
+                          </label>
+                        )
+                      })}
+                    </fieldset>
+                  )}
+                  {text.stats && (
                     <dl className="mt-6 grid grid-cols-3 gap-4">
-                      {caption.stats.map(({ value, label }) => (
+                      {text.stats.map(({ value, label }) => (
                         <div key={label}>
                           <dt className="sr-only">{label}</dt>
                           <dd className="logo-number text-4xl">{value}</dd>
@@ -310,6 +530,7 @@ export const WorldTour = ({
             {stop > 0 ? (
               <button
                 type="button"
+                disabled={warping}
                 onClick={() => go(stop - 1)}
                 className="pixel-label px-2 pt-2 pb-3 text-paper/70 hover:text-paper focus-visible:text-paper focus-visible:underline focus-visible:outline-none"
               >
@@ -319,7 +540,12 @@ export const WorldTour = ({
               <span />
             )}
             {stop < captions.length - 1 ? (
-              <button type="button" onClick={() => go(stop + 1)} className={BUTTON}>
+              <button
+                type="button"
+                disabled={warping}
+                onClick={() => go(stop + 1)}
+                className={BUTTON}
+              >
                 NEXT ▶
               </button>
             ) : (

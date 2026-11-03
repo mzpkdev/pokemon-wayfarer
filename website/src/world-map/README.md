@@ -6,17 +6,28 @@ that turns the game's maps into data and a client that draws that data.
 
 The rest of the site uses it only through `index.ts`:
 
-- `WorldTour` is the landing page's world section, one screen tall. It opens
-  in ROUTE 101's tall grass. When it starts, BRENDAN rides down to his door in
-  LITTLEROOT TOWN, with the game's map name popups. It starts when its section
-  is mostly on screen, or on an event the page sends (`startOn`; the landing
-  page sends one when its warp from the title scene fades in, see
-  `src/lib/warp.ts`). After that the map holds still beside a card, and its
-  NEXT and BACK buttons fly the camera between the stops: LITTLEROOT, all of
-  Hoenn, then the whole world. It never takes over the page's scrolling. The
-  last card's EXPLORE THE MAP opens the explorer full screen.
+- `WorldTour` is the landing page's world section, one screen tall. When it
+  starts, the player rides in on their bike to their front door, with the
+  game's map name popups. The first card picks where: LITTLEROOT TOWN (BRENDAN,
+  down ROUTE 101; the default), NEW BARK TOWN (GOLD, out of ROUTE 29's grass)
+  or PALLET TOWN (RED). Choosing another plays the game's warp on the map: an
+  8-step fade to black, a cut, and an 8-step fade in, then the new ride. It
+  starts when its section is mostly on screen, or on an event the page sends
+  (`startOn`; the landing page sends one when its warp from the title scene
+  fades in, see `src/lib/warp.ts`). After that the map holds still beside a
+  card, and NEXT and BACK fly the camera between four stops: the town, its
+  region (Hoenn, or Johto and Kanto), the 24 Gym Badges with the league
+  circuit, and the whole world. It never takes over the page's scrolling. The
+  last card's EXPLORE THE MAP opens the explorer full screen. Captions are one
+  per stop, with per-start `variants`; `stopOverlays` lets the page draw over
+  the map at any stop (the hook for a living-world overlay on the world stop).
 - `WorldMap` is the explorer. Drag, pinch, wheel, double-click, the arrow keys
   and +/- all pan and zoom it.
+  Tapping a map (or Enter on the one at the center) frames it and opens a place
+  card: its name and wild Pokémon by method and time of day, as icon, name and
+  percent. The card is a bottom sheet on a phone and a left panel from `sm` up.
+  `WorldMap`'s `extra` render prop puts more (a town's Gym, ports) under the
+  card's name.
 
 Outside this folder, the module uses the site's pixel CSS utilities
 (`pixel-panel`, `pixel-label`, …), `useReducedMotion` from `~/lib/hooks`, and the
@@ -30,12 +41,14 @@ PNG/palette helpers in `scripts/lib/`.
 the site doesn't need the game tree. Rebuild it after maps, tilesets or the
 builder change.
 
-| File           | What it holds                                                                          |
-| -------------- | -------------------------------------------------------------------------------------- |
-| `atlas.png`    | Every metatile the world uses, 16×16 each, 64 to a row                                 |
-| `grid.bin.gz`  | The world as gzipped little-endian u16 atlas indices, row by row; `0xffff` is open sea |
-| `overview.jpg` | The far-out view, one pixel per metatile, painted like a map                           |
-| `meta.json`    | Grid size, atlas columns, towns, region labels with bounds, and placed maps            |
+| File              | What it holds                                                                                  |
+| ----------------- | ---------------------------------------------------------------------------------------------- |
+| `atlas.png`       | Every metatile the world uses, 16×16 each, 64 to a row                                         |
+| `grid.bin.gz`     | The world as gzipped little-endian u16 atlas indices, row by row; `0xffff` is open sea         |
+| `overview.jpg`    | The far-out view, one pixel per metatile, painted like a map                                   |
+| `encounters.json` | Per placed map, its name and wild Pokémon (species slot and percent) by method and time of day |
+| `icons.png`       | One 32×32 icon per species used, 16 to a row, indexed by the slot in `encounters.json`         |
+| `meta.json`       | Grid size, atlas columns, towns, region labels with bounds, and placed maps                    |
 
 The builder writes `overview.jpg` with ffmpeg. Without ffmpeg it writes
 `overview.png` instead, and the client falls back to that.
@@ -54,8 +67,21 @@ Plain Node scripts. Each stage gets a module:
 - `land.mjs`: fills in land between the maps. Coasts are grown with noise, the
   insides of loops are filled, straits keep regions apart, and each filled cell
   takes the border blocks of the nearest map.
+- `encounters.mjs`: the wild Pokémon and icons. The wayfarer build compiles only
+  `game/src/data/wild_encounters_v2/*.json` (not `wild_encounters.json`, which
+  is for the standalone builds). Those hold a day table (morning and day) and
+  a night table (evening and night) per method, no seasons. Shares come from
+  the slot weights: `wild_encounters.json` field rates for land, surf and rock
+  smash, `standard_rod_fishing.json` for each rod. Names are the Town Map
+  sections' (`region_map_sections.json`) and species names and icon palettes
+  (`.iconPalIndex`, `graphics/pokemon/icon_palettes`) come from the species info.
 - `overview.mjs`: paints the far-out view in one style. Sea depth, a smoothed
   coast, and one palette per kind of ground make every game's tiles match.
+- `landmarks.mjs`: finds each gym by the maps whose scripts set a `FLAG_BADGEnn_GET`
+  and follows warps out to the town (the badge's place in its region is the flag
+  number less one, modulo 8), and the league doors from `league_circuit.c`.
+  INDIGO PLATEAU isn't a placed map, so its pin sits at its Town Map cell
+  relative to ROUTE 22.
 - `source/`: Sinnoh's Town Map cells, borrowed from the project its maps came
   from. Its README gives the credit.
 
@@ -65,11 +91,37 @@ the way `tools/mapjson` does.
 ## Client
 
 - `data.ts`: loads and caches the data, shared by the tour and the explorer.
+- `encounters.ts` and `PlaceCard.tsx`: the encounters, loaded the first time a place is picked, and the card.
 - `camera.ts`: the camera (a world point and CSS pixels per metatile), fitting
   bounds into a view, and the eased flight between two cameras.
 - `render.ts`: draws a view. Far out it draws the overview. Close in it draws
   32×32-metatile chunks, cross-fading between the two. Chunks are drawn a few
   per frame, and the overview shows through until they're done. It also draws
   the region and town names.
-- `rider.ts`: BRENDAN on his MACH BIKE riding ROUTE 101 into LITTLEROOT TOWN. His path is set in each map's own tiles, so it follows the maps if the layout moves.
+- `starts.ts`: the three starts: town, player sprite, ride path (in each map's own tiles, so it follows the maps if the layout moves), opening shot and popup names.
+- `rider.ts`: draws the player on their bike along a ride.
+- `fade.ts`: the game's 8-step fade, shared with `src/lib/warp.ts`.
+- `landmarks.ts`: loads `landmarks.json`; draws the badge pins and the animated dotted league trail as overlays. Badge art is `public/game/badges.png` (from the trainer card, `pnpm assets`).
 - `WorldTour.tsx` and `WorldMap.tsx`: the two components.
+
+## The living world
+
+`living.mjs` (builder) writes `living.json`; `living.ts` loads and draws it;
+`LivingClock.tsx` is the clock badge. Nothing is wired into the tour or the
+explorer yet.
+
+- The ferries' loops, port and sea minutes (30 and 360), ship names, the
+  Day hours and the time-of-day tint colors are read from the game's source
+  (`wayfarer_ferry.c`, `constants/wayfarer_ferry.h`, `constants/rtc.h`,
+  `overworld.c`). The sea lanes are not the game's: it has no ship on a map,
+  so they are routed over the grid's open water, kept off coasts where the
+  straits allow, and rounded. Each ship's cycle starts at the first moment the
+  game's schedule table has it at its first port (Aqua and Tidal 8:00, Anne
+  20:00). In the game a voyage starts at boarding, so on the map this is an
+  illustration of the loop, not a live position.
+- `loadLiving(base)`, `gameClock(rate, start)` (`LIVING_RATE.game` is the game's
+  day per 2 hours, `.page` a day per 2 minutes), `livingOverlay(living, minutes)`
+  for `View.overlays` (lanes, ships, then the tint as a multiply), `periodAt`,
+  `shipsAt`, and `pickShip` with `shipReach(zoom)` for hover labels.
+- Gym Leaders and the Elite Four are not shown: the game's simulation runs on
+  map changes, not on the clock, so there are no times to show.

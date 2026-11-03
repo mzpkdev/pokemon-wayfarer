@@ -101,6 +101,42 @@
     "x": 0,
     "y": 0
   },
+  "sprites/gold-mach-bike.png": {
+    "width": 288,
+    "height": 32,
+    "x": 0,
+    "y": 0
+  },
+  "sprites/red-mach-bike.png": {
+    "width": 288,
+    "height": 32,
+    "x": 0,
+    "y": 0
+  },
+  "badges.png": {
+    "width": 384,
+    "height": 16,
+    "x": 0,
+    "y": 0
+  },
+  "sprites/ss-aqua.png": {
+    "width": 96,
+    "height": 40,
+    "x": 0,
+    "y": 0
+  },
+  "sprites/ss-anne.png": {
+    "width": 128,
+    "height": 64,
+    "x": 0,
+    "y": 0
+  },
+  "sprites/ss-tidal.png": {
+    "width": 96,
+    "height": 40,
+    "x": 0,
+    "y": 0
+  },
   "text/down-arrow.png": {
     "width": 8,
     "height": 48,

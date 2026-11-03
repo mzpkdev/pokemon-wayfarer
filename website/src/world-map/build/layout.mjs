@@ -175,7 +175,7 @@ const relax = (list) => {
 }
 
 // Town Map cells, to place the pieces no connection reaches.
-const cellLookup = (cells) => (m) => {
+export const cellLookup = (cells) => (m) => {
   const section = cells.get(m.region_map_section)
   return section && { x: section.x + section.width / 2, y: section.y + section.height / 2 }
 }
@@ -269,7 +269,7 @@ const seviiCellLookup = (cellOf) => (m) => {
 
 const center = (p) => ({ x: p.x + p.l.width / 2, y: p.y + p.l.height / 2 })
 // Metatiles per Town Map cell, measured on Hoenn, whose maps all connect.
-const measureCell = (hoennPiece, cellOf) => {
+export const measureCell = (hoennPiece, cellOf) => {
   const towns = hoennPiece.filter((p) => cellOf(p.m))
   let num = 0,
     den = 0

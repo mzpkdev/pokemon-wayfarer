@@ -1,18 +1,15 @@
 // The warp between the title scene and the world map, as the game plays a
 // door: the screen fades to black, the scene changes, and it fades back in.
 // Fading out follows the scroll, so the visitor walks into it; fading in
-// plays on its own, so nobody is left on a black screen.
+// plays on its own, so nobody is left on a black screen. The fade's 8 steps
+// are the world map's too, for the tour's own warps.
+import { stepped } from "~/world-map/fade"
 
-/** The game fades in 8 steps (deltaY 2 in palette.c). */
-const STEPS = 8
 /** How long the fade-in takes: the game's 8 frames, slowed a little to read on a page. */
 const FADE_IN_MS = 400
 /** Screens before the map's arrival where the fade to black begins, and where it is black. */
 const FADE_OUT_FROM = 0.6
 const BLACK_FROM = 0.05
-
-/** Rounds a fade level (0 clear, 1 black) to the game's whole steps, toward black. */
-const stepped = (level: number) => Math.ceil(Math.min(1, Math.max(0, level)) * STEPS) / STEPS
 
 /**
  * Drives `overlay`'s opacity from where `stage` is: hidden until its top

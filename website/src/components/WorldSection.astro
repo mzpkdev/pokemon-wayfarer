@@ -2,24 +2,61 @@
 /**
  * The size of the world, the first highlight, reached from the title scene's
  * Poké Ball by the game's warp: a tour of the overworld in the game's own
- * tiles, LITTLEROOT TOWN to Hoenn to the whole world, a button press per stop,
- * then open to look around. The map itself lives in `~/world-map`.
+ * tiles. Pick a start (LITTLEROOT TOWN, NEW BARK TOWN or PALLET TOWN), then a
+ * button press per stop: the region, the 24 badges and the league circuit,
+ * and the world, then open to look around. The map itself lives in
+ * `~/world-map`; its cards are one per stop, with what changes by start.
  */
 import { type Caption, WorldTour } from "~/world-map"
 
 // Counted from the outdoor maps the build compiles (see the website-landing
 // task note): towns and cities by map type, numbered routes by number.
-// Sinnoh counts too; it opens up by launch.
+// Sinnoh counts too; it opens up by launch. Johto has 10 towns and cities and
+// 23 routes, Kanto 10 and 25, Hoenn 16 and 34. The badges and the league
+// circuit (Indigo, the Sevii Masters, then the Hoenn League) are the game's.
+const FROM_HERE = "From here everywhere else is a walk, a surf or a ferry ride away."
 const captions: Caption[] = [
   {
     place: "LITTLEROOT TOWN",
     title: "It starts in one small town.",
-    body: "Begin in Johto, Hoenn or Kanto. Wherever you start, everywhere else is a walk, a surf or a ferry ride away.",
+    body: `Choose Treecko, Torchic or Mudkip. ${FROM_HERE}`,
+    variants: {
+      johto: {
+        place: "NEW BARK TOWN",
+        body: `Wake up next door to Professor Elm's lab. ${FROM_HERE}`,
+      },
+      kanto: {
+        place: "PALLET TOWN",
+        body: `Set out with a first partner from Professor Oak. ${FROM_HERE}`,
+      },
+    },
   },
   {
     place: "HOENN",
     title: "Then a whole region opens up.",
     body: "16 towns and cities and 34 routes, over land and sea. All of it is yours to roam.",
+    variants: {
+      johto: {
+        place: "JOHTO AND KANTO",
+        title: "Then two regions open up.",
+        body: "20 towns and cities and 48 routes, over land and sea. All of it is yours to roam.",
+      },
+      kanto: {
+        place: "JOHTO AND KANTO",
+        title: "Then two regions open up.",
+        body: "20 towns and cities and 48 routes, over land and sea. All of it is yours to roam.",
+      },
+    },
+  },
+  {
+    place: "GYMS AND LEAGUES",
+    title: "Every Gym Badge, one circuit.",
+    body: "Win all 24 Gym Badges across Kanto, Johto and Hoenn. Then climb the league circuit: Indigo Plateau, the Sevii Masters, and the Hoenn League at Ever Grande.",
+    stats: [
+      { value: "24", label: "Gym Badges" },
+      { value: "3", label: "regions" },
+      { value: "3", label: "leagues" },
+    ],
   },
   {
     place: "THE WORLD",
@@ -30,6 +67,10 @@ const captions: Caption[] = [
       { value: "114", label: "routes" },
       { value: "7", label: "ports" },
     ],
+    variants: {
+      johto: { title: "And that is only part of it." },
+      kanto: { title: "And that is only part of it." },
+    },
   },
 ]
 ---
