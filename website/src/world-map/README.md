@@ -21,8 +21,10 @@ The rest of the site uses it only through `index.ts`:
   map can be panned in place, the way an embedded map shares a page: a mouse
   drags, and on touch two fingers move it while one still scrolls the page (a
   hint says so). The zoom stays each stop's. At the badge stop the pins answer the
-  pointer (a hover lights one and names its town, a press dips it, an open card
-  gilds it and dims the rest; hidden buttons do the same for a keyboard), and a
+  pointer: each is just its badge over a soft shadow; a hover lifts it with a
+  white glow and names its town, a press settles and darkens it, and an open
+  card makes it glow gold and bob while the rest dim (hidden buttons do the
+  same for a keyboard), and a
   pin opens its
   Gym's card: the badge, the leader's battle portrait (`leaders/`, from the
   pic of their leader battle in the party files) and what they are

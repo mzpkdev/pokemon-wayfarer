@@ -61,13 +61,6 @@ export const landmarkBounds = ({ badges, circuit }: Landmarks, room: number): Bo
   }
 }
 
-/** The ring round each region's pins: the gold of Johto's name on the map, Kanto's red, Hoenn's sky. */
-const RINGS: Record<Gym["region"], string> = {
-  Johto: "rgb(248 208 64)",
-  Kanto: "rgb(232 72 56)",
-  Hoenn: "rgb(96 176 248)",
-}
-
 /** What the tour tells the overlays about the stop. */
 export type StopClock = {
   /** How much of the stop is shown, 0 to 1: fades in on arriving and out on leaving. */
@@ -216,38 +209,33 @@ export const badgeOverlays = (
         : 1
       if (pop <= 0) continue
       const { x, y } = toScreen(gym.x, gym.y)
-      // A pin grows under the pointer, dips while held, and wears gold while
-      // its card is open; the rest step back then.
+      // Just the badge, crisp, over a soft shadow that keeps it readable on
+      // the map. Under the pointer it lifts and glows white; held, it
+      // settles and darkens; with its card open it glows gold and bobs,
+      // while the rest step back.
       const hovered = clock.hover === gym.badge
       const pressed = clock.pressed === gym.badge
       const selected = clock.selected === gym.badge
       const others = clock.selected != null && !selected
-      const grow = pressed ? 0.92 : hovered || selected ? 1.18 : 1
-      const size = icon * (0.5 + 0.5 * pop) * (pressed ? 0.92 : 1)
-      const radius = icon * 0.78 * grow
-      context.globalAlpha = clock.alpha * pop * (others && !hovered ? 0.55 : 1)
-      if (hovered || selected) {
-        context.save()
-        context.shadowColor = selected ? "rgb(255 214 0 / 0.9)" : "rgb(255 255 255 / 0.7)"
-        context.shadowBlur = 10 * ratio
-      }
-      context.fillStyle = pressed
-        ? "rgb(12 16 32 / 0.95)"
-        : hovered || selected
-          ? "rgb(48 64 112 / 0.95)"
-          : "rgb(24 32 56 / 0.92)"
-      context.strokeStyle = selected
-        ? "rgb(255 214 0)"
+      const size = Math.round(icon * (0.5 + 0.5 * pop))
+      const step = Math.round(2 * ratio)
+      const bob = selected && clock.animate ? (Math.floor(performance.now() / 320) % 2) * step : 0
+      const lift = pressed ? 0 : hovered ? step * 2 : selected ? step + bob : 0
+      const left = Math.round(x - size / 2)
+      const top = Math.round(y - size / 2 - lift + (pressed ? step / 2 : 0))
+      context.globalAlpha = clock.alpha * pop * (others && !hovered ? 0.45 : 1)
+      context.save()
+      context.shadowColor = selected
+        ? "rgb(255 214 0 / 0.95)"
         : hovered
-          ? "rgb(248 248 248)"
-          : RINGS[gym.region]
-      context.lineWidth = Math.max(2, Math.round((hovered || selected ? 3 : 2) * ratio))
-      context.beginPath()
-      context.arc(x, y, radius * (0.5 + 0.5 * pop), 0, Math.PI * 2)
-      context.fill()
-      context.stroke()
-      if (hovered || selected) context.restore()
-      context.drawImage(sheet, gym.badge * 16, 0, 16, 16, x - size / 2, y - size / 2, size, size)
+          ? "rgb(255 255 255 / 0.9)"
+          : "rgb(0 0 0 / 0.75)"
+      context.shadowBlur = (selected || hovered ? 10 : 4) * ratio
+      context.shadowOffsetY = selected || hovered ? 0 : ratio
+      // Darker while held.
+      if (pressed) context.filter = "brightness(0.75)"
+      context.drawImage(sheet, gym.badge * 16, 0, 16, 16, left, top, size, size)
+      context.restore()
     }
     // The hovered pin's town, over it.
     const named = badges.find((gym) => gym.badge === clock.hover)
@@ -257,7 +245,7 @@ export const badgeOverlays = (
       context.font = `${Math.round(16 * ratio)}px "Wayfarer Text", monospace`
       context.textAlign = "center"
       context.textBaseline = "bottom"
-      const above = y - icon * 0.78 * 1.18 - 6 * ratio
+      const above = y - icon / 2 - Math.round(2 * ratio) * 2 - 6 * ratio
       context.fillStyle = "rgb(0 0 0 / 0.8)"
       context.fillText(named.town, x + ratio * 1.5, above + ratio * 1.5)
       context.fillStyle = "rgb(248 248 248)"
