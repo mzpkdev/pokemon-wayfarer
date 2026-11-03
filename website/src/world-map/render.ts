@@ -226,21 +226,38 @@ const createRenderer = ({ meta, atlas, grid, overview }: World) => {
     const regionAlpha = Math.min(1, Math.max(0, (1.1 - camera.zoom) / 0.4))
     if (regionAlpha > 0) {
       context.globalAlpha = regionAlpha
-      // Sized to the map's space; the lesser lands smaller, and Sinjoh's name
-      // set beside its narrow neck rather than over it.
-      const big = Math.min(28, Math.max(14, view.labelWidth / 36))
+      // Each name on a plate like the game's map name signs: dark, rimmed in
+      // gold for the four main regions and white for the lesser lands, so it
+      // reads over land, sea, ships and the night alike. Sizes are whole
+      // steps of the game font; Sinjoh's sits beside its narrow neck.
+      const wide = view.labelWidth >= 700
       context.textBaseline = "middle"
       for (const region of meta.regions) {
         const minor = MINOR_REGIONS.has(region.name)
-        context.font = `${Math.round((minor ? big * 0.7 : big) * ratio)}px "Wayfarer Text", monospace`
+        const size = Math.round((minor ? (wide ? 20 : 16) : wide ? 28 : 20) * ratio)
+        context.font = `${size}px "Wayfarer Text", monospace`
         const aside = region.name === "SINJOH"
-        context.textAlign = aside ? "left" : "center"
-        const x = (region.x - left) * scale + (aside ? 70 * scale : 0)
-        const y = (region.y - top) * scale
-        context.fillStyle = "rgb(0 0 0 / 0.75)"
-        context.fillText(region.name, x + ratio * 2, y + ratio * 2)
+        const text = context.measureText(region.name).width
+        const padX = Math.round(size * 0.45)
+        const padY = Math.round(size * 0.3)
+        const boxW = Math.round(text + padX * 2)
+        const boxH = Math.round(size + padY * 2)
+        const cx = (region.x - left) * scale + (aside ? 70 * scale + boxW / 2 : 0)
+        const cy = (region.y - top) * scale
+        const bx = Math.round(cx - boxW / 2)
+        const by = Math.round(cy - boxH / 2)
+        const rim = Math.max(2, Math.round(2 * ratio))
+        context.fillStyle = "rgb(0 0 0 / 0.35)"
+        context.fillRect(bx + rim, by + rim, boxW, boxH)
         context.fillStyle = minor ? "rgb(248 248 248)" : "rgb(255 214 0)"
-        context.fillText(region.name, x, y)
+        context.fillRect(bx, by, boxW, boxH)
+        context.fillStyle = "rgb(8 41 0 / 0.92)"
+        context.fillRect(bx + rim, by + rim, boxW - rim * 2, boxH - rim * 2)
+        context.textAlign = "center"
+        context.fillStyle = "rgb(0 0 0 / 0.8)"
+        context.fillText(region.name, cx + ratio, cy + ratio * 1.5)
+        context.fillStyle = minor ? "rgb(248 248 248)" : "rgb(255 214 0)"
+        context.fillText(region.name, cx, cy + ratio * 0.5)
       }
       context.globalAlpha = 1
       context.textBaseline = "alphabetic"
