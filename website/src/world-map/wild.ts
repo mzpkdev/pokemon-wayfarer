@@ -3,10 +3,9 @@
 // and II in Kanto and Johto, III and V in Hoenn, Kalos in the Safari Zones,
 // Galar in the Sevii Islands, VII in Alola, Hisui in Sinjoh, and Gen IV
 // waits for Sinnoh. A wave pops its home's species where they really live,
-// crowding the home region, with a few of the real strays elsewhere; the rest
-// of the world dims under it. Then a mix of everyone, looping, while a tally
-// per home counts up beside them. The data is what `build/encounters.mjs`
-// writes.
+// crowding the home region, with a few of the real strays elsewhere. Then a
+// mix of everyone, looping, while a tally per home counts up beside them. The
+// data is what `build/encounters.mjs` writes.
 import { DATA, loadWorld } from "./data"
 import { ICON, loadEncounters } from "./encounters"
 import type { Overlay } from "./render"
@@ -83,9 +82,6 @@ const POP_MS = 260
 const HOP_MS = 260
 const LIFE_MS = 1650
 const SPREAD_MS = 600
-/** How long the rest of the world takes to dim, and how dark it gets. */
-const VEIL_MS = 300
-const VEIL = 0.4
 /** How long a chip's count takes to tick up, in ms. */
 export const TICK_MS = 700
 /** The most icons up per wave, on a wide screen and on a narrow one. */
@@ -128,8 +124,6 @@ export type Wild = {
   counts: number[]
   /** Per wave, the icons in the order they pop. */
   waves: Icon[][]
-  /** Per wave, the boxes left bright while it plays (none for the mix). */
-  lit: { x: number; y: number; width: number; height: number }[][]
   /** The icon atlas, once decoded, and its silhouettes for the homes still to come. */
   icons: HTMLImageElement
   silhouettes: HTMLCanvasElement | undefined
@@ -213,7 +207,7 @@ const huddle = (
     return { ...anchor, slot, offset }
   })
 
-/** The atlas in one dark color: who isn't in the wild yet. */
+/** The atlas in black: who isn't in the wild yet, the way the Pokédex shows one unseen. */
 const silhouette = (icons: HTMLImageElement) => {
   if (!icons.naturalWidth) return undefined
   const canvas = document.createElement("canvas")
@@ -222,7 +216,7 @@ const silhouette = (icons: HTMLImageElement) => {
   const context = canvas.getContext("2d")!
   context.drawImage(icons, 0, 0)
   context.globalCompositeOperation = "source-in"
-  context.fillStyle = "rgb(24 48 72)"
+  context.fillStyle = "rgb(16 16 24)"
   context.fillRect(0, 0, canvas.width, canvas.height)
   return canvas
 }
@@ -258,17 +252,14 @@ export const loadWild = async (base = DATA): Promise<Wild> => {
     y: map.y + map.height / 2,
   })
   const waves: Icon[][] = []
-  const lit: Wild["lit"] = []
   HOMES.forEach((home, wave) => {
     const slots = homes.get(home.id) ?? new Set<number>()
     const used = new Set<number>()
     const seed = (wave + 1) * 1009
     const at = (weights: Map<number, number>) => [...weights].filter(([slot]) => slots.has(slot))
     let crowd: Icon[]
-    let maps: (typeof world.meta.maps)[number][]
     if (home.id === "safari") {
       // Each Safari Zone's own Kalos, huddled at its gate.
-      maps = encounters.safari.flatMap(({ near }) => placed.get(near) ?? [])
       crowd = encounters.safari.flatMap(({ near, slots: zone }, z) => {
         const map = placed.get(near)
         if (!map) return []
@@ -281,7 +272,7 @@ export const loadWild = async (base = DATA): Promise<Wild> => {
       })
     } else if (home.later) {
       // Nobody lives there yet: some of the roster over its maps, in silhouette.
-      maps = world.meta.maps.filter((map) => home.regions.includes(map.region ?? ""))
+      const maps = world.meta.maps.filter((map) => home.regions.includes(map.region ?? ""))
       const choices = [...slots].map((slot) => [slot, 1] as [number, number])
       crowd = spreadOut(maps.map(centre), LATER, seed).map((point, i) => {
         const slot = choose(choices, used, seed + i)
@@ -292,7 +283,6 @@ export const loadWild = async (base = DATA): Promise<Wild> => {
       const homeRoutes = routes.filter(
         ({ map, weights }) => home.regions.includes(map.region ?? "") && at(weights).length,
       )
-      maps = world.meta.maps.filter((map) => home.regions.includes(map.region ?? ""))
       const points = homeRoutes.map(({ map, weights }) => ({ ...centre(map), weights }))
       crowd =
         homeRoutes.length >= SMALL
@@ -326,7 +316,6 @@ export const loadWild = async (base = DATA): Promise<Wild> => {
     const ordered = [...crowd]
     away.forEach((icon, i) => ordered.splice(Math.min(AWAY_AT[i]!, ordered.length), 0, icon))
     waves.push(ordered)
-    lit.push(maps.map(({ x, y, width, height }) => ({ x, y, width, height })))
   })
   // The mix: a few from every home, taking turns.
   const mix: Icon[] = []
@@ -336,12 +325,10 @@ export const loadWild = async (base = DATA): Promise<Wild> => {
       if (own && mix.length < CAP) mix.push(own)
     }
   waves.push(mix)
-  lit.push([])
 
   return {
     counts: HOMES.map((home) => homes.get(home.id)?.size ?? 0),
     waves,
-    lit,
     icons,
     silhouettes: HOMES.some((home) => home.later) ? silhouette(icons) : undefined,
     columns: encounters.columns,
@@ -361,8 +348,6 @@ export const wildOverlay = (
   animate: boolean,
   now: () => number,
 ): Overlay => {
-  // The dimmed world is drawn apart, then cut out where the home is bright.
-  const scrim = document.createElement("canvas")
   return (context, projection) => {
     if (!wild.icons.complete || !wild.icons.naturalWidth) return
     const narrow = context.canvas.width / projection.ratio < 700
@@ -393,30 +378,6 @@ export const wildOverlay = (
         .map((icon, order) => ({ icon, order }))
         .toSorted((a, b) => place(a.icon).y - place(b.icon).y)
     }
-    // The rest of the world dims while a home's wave plays.
-    const veil = (wave: number, strength: number) => {
-      const boxes = wild.lit[wave]
-      if (!boxes?.length || strength <= 0) return
-      const { width, height } = context.canvas
-      if (scrim.width !== width || scrim.height !== height) {
-        scrim.width = width
-        scrim.height = height
-      }
-      const ink = scrim.getContext("2d")!
-      ink.globalCompositeOperation = "copy"
-      ink.fillStyle = "rgb(0 12 32)"
-      ink.fillRect(0, 0, width, height)
-      ink.globalCompositeOperation = "destination-out"
-      ink.fillStyle = "#000"
-      for (const box of boxes) {
-        const a = projection.toScreen(box.x, box.y)
-        const b = projection.toScreen(box.x + box.width, box.y + box.height)
-        ink.fillRect(Math.round(a.x), Math.round(a.y), Math.round(b.x - a.x), Math.round(b.y - a.y))
-      }
-      context.globalAlpha = VEIL * strength
-      context.drawImage(scrim, 0, 0)
-      context.globalAlpha = 1
-    }
     const draw = (icon: Icon, alpha: number, scale: number, lift: number) => {
       const at = place(icon)
       const w = Math.max(k, Math.round(size * scale))
@@ -438,7 +399,7 @@ export const wildOverlay = (
         const half = Math.round((w * width) / 2 / k) * k
         context.fillRect(cx - half, cy + dy * k, half * 2, k)
       }
-      context.globalAlpha = icon.later ? alpha * 0.7 : alpha
+      context.globalAlpha = alpha
       const sheet = icon.later && wild.silhouettes ? wild.silhouettes : wild.icons
       context.drawImage(
         sheet,
@@ -451,13 +412,25 @@ export const wildOverlay = (
         w,
         w,
       )
+      // A "?" over each one still to come.
+      if (icon.later) {
+        const text = Math.max(10, Math.round(w * 0.45))
+        context.font = `${text}px "Wayfarer Text", monospace`
+        context.textAlign = "center"
+        context.textBaseline = "bottom"
+        const qx = Math.round(at.x)
+        const qy = y + Math.round(w * 0.42)
+        context.fillStyle = "rgb(0 0 0 / 0.8)"
+        context.fillText("?", qx + k, qy + k)
+        context.fillStyle = "rgb(248 248 248)"
+        context.fillText("?", qx, qy)
+      }
     }
     // A held wave stays up (popping in once when it's picked); with reduced
     // motion the mix, or the picked wave, just stands.
     if (!animate || clock.still !== null) {
       const wave = clock.still ?? ALL
       const age = animate ? now() - clock.start : Infinity
-      veil(wave, Math.min(1, age / VEIL_MS))
       const icons = spread(wild.waves[wave]!)
       icons.forEach(({ icon, order }) => {
         const own = age - (order / Math.max(1, icons.length)) * SPREAD_MS
@@ -468,8 +441,7 @@ export const wildOverlay = (
       context.globalAlpha = 1
       return
     }
-    const { wave, into, length } = waveAt(now() - clock.start)
-    veil(wave, Math.min(1, into / VEIL_MS, (length - into) / VEIL_MS))
+    const { wave, into } = waveAt(now() - clock.start)
     const icons = spread(wild.waves[wave]!)
     icons.forEach(({ icon, order }) => {
       const age = into - (order / Math.max(1, icons.length)) * SPREAD_MS

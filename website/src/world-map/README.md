@@ -41,12 +41,12 @@ The rest of the site uses it only through `index.ts`:
   regional forms with their region. A wave pops its home's species only where
   they really live, by the encounter tables (a species picked by how often it
   comes up there, so Hoenn's Gen V share grows to the east), crowding the home
-  region while the rest of the world dims; a small home (Alola, Sinjoh) and
+  region; a small home (Alola, Sinjoh) and
   each Safari Zone, by the town nearest its gate since the Safari Zones aren't
   on the overworld, huddle a few icons together so they still read as a crowd
   at world zoom. Up to three icons per wave are real strays: its species where
   they live away from home. Gen IV waits for Sinnoh, which has no wild
-  Pokémon yet: its wave stands silhouettes over Sinnoh, keeping its count so
+  Pokémon yet: its wave stands black silhouettes with a "?" over Sinnoh, keeping its count so
   the total adds up. Then a mix of every home. The page states the full
   roster, as all of it will be in the final game: every species of Gen I to
   VIII by national dex number (905) and the Alolan, Galarian and Hisuian forms
