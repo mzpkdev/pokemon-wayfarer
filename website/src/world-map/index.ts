@@ -16,3 +16,12 @@ export {
   type LivingWorld,
   type Ship,
 } from "./living"
+export {
+  loadNotables,
+  notablesAt,
+  notablesOn,
+  notablesOverlay,
+  pickNotable,
+  type Notable,
+  type Notables,
+} from "./notables"

@@ -270,6 +270,59 @@ for (const [name, file, palette] of [
     ),
   )
 
+// The 25 simulated Gym Leaders and Elite Four as the overworld draws them, for
+// the world map's walkers: one row per trainer in routines.json order, nine
+// 16x32 frames each (stand south, north, west; walk south, north, west, two
+// frames each). The sheet, palette and frames come from the trainer's
+// OBJ_EVENT_GFX_* graphics info, the way the game looks them up.
+{
+  const objectEvents = (file) =>
+    fs.readFileSync(path.join(game, "src/data/object_events", file), "utf8")
+  const infoSource = objectEvents("object_event_graphics_info.h")
+  const picTables = objectEvents("object_event_pic_tables.h")
+  const pictures = objectEvents("object_event_graphics.h")
+  const pointers = objectEvents("object_event_graphics_info_pointers.h")
+  const movement = fs.readFileSync(path.join(game, "src/event_object_movement.c"), "utf8")
+  const trainers = JSON.parse(
+    fs.readFileSync(path.join(game, "tools/wayfarer_world/routines.json"), "utf8"),
+  ).trainers.filter((trainer) => trainer.simulated)
+  const incbin = (symbol) =>
+    pictures.match(new RegExp(`${symbol}\\[\\]\\s*=\\s*INCBIN_U\\d+\\("([^"]+)"`))?.[1]
+  const sheet = {
+    width: 144,
+    height: 32 * trainers.length,
+    rgba: new Uint8Array(144 * 32 * trainers.length * 4),
+  }
+  trainers.forEach((trainer, row) => {
+    const info = pointers.match(
+      new RegExp(`\\[${trainer.graphics}\\]\\s*=\\s*&(gObjectEventGraphicsInfo_\\w+)`),
+    )?.[1]
+    const body = infoSource.match(new RegExp(`${info} =\\s*\\{([\\s\\S]*?)\\};`))?.[1]
+    if (!body) throw new Error(`no graphics info for ${trainer.graphics}`)
+    const paletteTag = body.match(/paletteTag = (\w+)/)?.[1] ?? body.match(/^\s*\w+,\s*(\w+)/)?.[1]
+    const table = body.match(/sPicTable_\w+/)[0]
+    const picture = picTables.match(
+      new RegExp(`${table}\\[\\] = \\{\\s*overworld_(?:frame|ascending_frames)\\((\\w+),`),
+    )[1]
+    const paletteSymbol = movement.match(
+      new RegExp(`\\{(gObjectEventPal_\\w+),\\s*${paletteTag}\\}`),
+    )?.[1]
+    const pictureFile = incbin(picture)
+    const paletteFile = paletteSymbol && incbin(paletteSymbol)
+    if (!pictureFile || !paletteFile) throw new Error(`no art for ${trainer.graphics}`)
+    const frames = renderIndexed(
+      path.join(game, pictureFile.replace(/\.4bpp$/, ".png")),
+      readJascPalette(path.join(game, paletteFile.replace(/\.gbapal$/, ".pal"))),
+    )
+    if (frames.width !== 144 || frames.height !== 32)
+      throw new Error(
+        `${trainer.graphics}: ${frames.width}x${frames.height}, not 9 frames of 16x32`,
+      )
+    sheet.rgba.set(frames.rgba, row * 144 * 32 * 4)
+  })
+  save("sprites/notables.png", sheet)
+}
+
 save("text/down-arrow.png", renderIndexed(source("fonts/down_arrow.png")))
 
 // Text window frame 1, the game's default.

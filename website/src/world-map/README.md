@@ -48,6 +48,7 @@ builder change.
 | `overview.jpg`    | The far-out view, one pixel per metatile, painted like a map                                   |
 | `encounters.json` | Per placed map, its name and wild Pokémon (species slot and percent) by method and time of day |
 | `icons.png`       | One 32×32 icon per species used, 16 to a row, indexed by the slot in `encounters.json`         |
+| `notables.json`   | The notables' stops, cycles and routes (see below)                                             |
 | `meta.json`       | Grid size, atlas columns, towns, region labels with bounds, and placed maps                    |
 
 The builder writes `overview.jpg` with ffmpeg. Without ffmpeg it writes
@@ -109,8 +110,7 @@ the way `tools/mapjson` does.
 ## The living world
 
 `living.mjs` (builder) writes `living.json`; `living.ts` loads and draws it;
-`LivingClock.tsx` is the clock badge. Nothing is wired into the tour or the
-explorer yet.
+`LivingClock.tsx` is the clock badge. The tour's world stop and the explorer draw it.
 
 - The ferries' loops, port and sea minutes (30 and 360), ship names, the
   Day hours and the time-of-day tint colors are read from the game's source
@@ -125,5 +125,36 @@ explorer yet.
   day per 2 hours, `.page` a day per 2 minutes), `livingOverlay(living, minutes)`
   for `View.overlays` (lanes, ships, then the tint as a multiply), `periodAt`,
   `shipsAt`, and `pickShip` with `shipReach(zoom)` for hover labels.
-- Gym Leaders and the Elite Four are not shown: the game's simulation runs on
-  map changes, not on the clock, so there are no times to show.
+
+## The notables
+
+`build/notables.mjs` writes `notables.json`; `notables.ts` loads it and draws the
+25 simulated Gym Leaders and Elite Four walking the map on the page clock
+(`pageMinutes()`). The tour's world stop and the explorer draw them (under the
+time-of-day tint at the world stop); tapping one in the explorer shows a
+toast like "MISTY · fishing at Nugget Bridge", and a town's place card lists who
+lives there ("HOME OF BROCK") and who is there now.
+
+This is a page-side simulation of the game's routines on the page's clock, not
+live game state: the game advances them on map changes (see
+`.product/specs/notable-world-simulation.md`, `src/wayfarer_world_sim.c`).
+
+- Game-faithful, read from `game/tools/wayfarer_world` (`routines.json`,
+  `named_spots.json`) and `tools/notable_trainers/catalog.json`: who they are,
+  their homes and Gyms, activity cycles, favourites per activity, dwell beats per
+  activity (`sDwell`). Indoor places sit at the door of the outdoor map that
+  leads in (`createDoors` in `landmarks.mjs`).
+- Ours: the timing (a beat is 45 game minutes; dwell is stretched to fill a
+  round of the cycle; each trainer has a phase offset; the favourite for a step
+  is picked by a hash of trainer, round and step), the walking pace, and the
+  routes. Steps with no favourite are spent in the home town (the Gym for a
+  Gym Leader's home and training). Favourites in places the grid doesn't hold
+  (the Battle Frontier) are dropped; Trainer Hill's courtyard is put on Route 40.
+- Routes: A* over the world grid's land (placed maps cost less than filler
+  land), simplified. Where no land joins two places, the route crosses water and
+  is marked `sea`; the trainer is drawn with a white wake and the label says
+  "sailing". It's an illustration, like the ferries, not a ferry schedule.
+- Sprites: `public/game/sprites/notables.png` (`pnpm assets`), one row of nine
+  16x32 frames per trainer in `routines.json` order, from each trainer's
+  `OBJ_EVENT_GFX_*` info. Will and Karen have stand frames only; they hop.
+- Drawn at least 26 CSS pixels tall (18 on a narrow view), true scale zoomed in.

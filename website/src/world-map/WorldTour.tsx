@@ -30,6 +30,7 @@ import {
 import { pageMinutes } from "./clock"
 import { LivingClock } from "./LivingClock"
 import { type LivingWorld, livingOverlay, loadLiving } from "./living"
+import { type Notables, loadNotables, notablesOverlay } from "./notables"
 import { PlaceExtra } from "./PlaceExtra"
 import type { PlaceInfo } from "./PlaceCard"
 import { WorldMap } from "./WorldMap"
@@ -173,18 +174,30 @@ export const WorldTour = ({
   // the time of day, on the page's shared clock.
   const [living, setLiving] = useState<LivingWorld>()
   const [minutes, setMinutes] = useState(pageMinutes)
+  const [notables, setNotables] = useState<Notables>()
   useEffect(() => {
     void loadLiving(base).then(setLiving, () => {})
+    void loadNotables(base).then(setNotables, () => {})
   }, [base])
   const stopOverlaysRef = useRef(stopOverlays)
   useEffect(() => {
+    // The Gym Leaders and Elite Four go under the time of day's tint.
     stopOverlaysRef.current = [
+      ...(notables
+        ? [
+            {
+              stop: "world" as const,
+              overlay: notablesOverlay(notables, pageMinutes),
+              animated: true,
+            },
+          ]
+        : []),
       ...(living
         ? [{ stop: "world" as const, overlay: livingOverlay(living, pageMinutes), animated: true }]
         : []),
       ...(stopOverlays ?? []),
     ]
-  }, [stopOverlays, living])
+  }, [stopOverlays, living, notables])
   const reducedMotion = useReducedMotion()
   const [stop, setStop] = useState(0)
   const atWorld = STOPS[stop] === "world"

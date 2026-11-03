@@ -16,6 +16,7 @@ import { buildLand } from "./land.mjs"
 import { buildLandmarks } from "./landmarks.mjs"
 import { placeWorld } from "./layout.mjs"
 import { writeLiving } from "./living.mjs"
+import { writeNotables } from "./notables.mjs"
 import { paintOverview } from "./overview.mjs"
 
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -131,7 +132,8 @@ fs.writeFileSync(
   }),
 )
 // The tour's gym pins and league circuit.
-fs.writeFileSync(`${outDir}/landmarks.json`, JSON.stringify(buildLandmarks(game, world, labelFor)))
+const landmarks = buildLandmarks(game, world, labelFor)
+fs.writeFileSync(`${outDir}/landmarks.json`, JSON.stringify(landmarks))
 // The ferries, their sea lanes and the times of day.
 writeLiving(
   {
@@ -149,6 +151,8 @@ writeLiving(
   },
   outDir,
 )
+// The Gym Leaders and Elite Four, their places and the routes between them.
+console.log("notables", writeNotables(game, world, land, landmarks, outDir))
 console.log(
   "atlas",
   atlasTiles.length,

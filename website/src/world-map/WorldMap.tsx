@@ -6,6 +6,7 @@ import { type Encounters, loadEncounters } from "./encounters"
 import { pageMinutes } from "./clock"
 import { LivingClock } from "./LivingClock"
 import { type LivingWorld, livingOverlay, loadLiving } from "./living"
+import { type Notable, type Notables, loadNotables, notablesOverlay, pickNotable } from "./notables"
 import { PlaceCard, type PlaceInfo } from "./PlaceCard"
 import { OPEN_SEA, type Overlay, rendererFor } from "./render"
 
@@ -88,6 +89,22 @@ export const WorldMap = ({
     livingRef.current = living
     api.current.redraw()
   }, [living])
+  // The Gym Leaders and Elite Four, and the one a tap last found.
+  const [notables, setNotables] = useState<Notables>()
+  const notablesRef = useRef<Notables>(undefined)
+  const [spotted, setSpotted] = useState<Notable>()
+  useEffect(() => {
+    void loadNotables(base).then(setNotables, () => {})
+  }, [base])
+  useEffect(() => {
+    notablesRef.current = notables
+    api.current.redraw()
+  }, [notables])
+  useEffect(() => {
+    if (!spotted) return
+    const timer = window.setTimeout(() => setSpotted(undefined), 5000)
+    return () => window.clearTimeout(timer)
+  }, [spotted])
   const refocus = useRef(false)
 
   // Encounters load the first time a place is picked.
@@ -161,12 +178,13 @@ export const WorldMap = ({
             labelWidth: canvas.clientWidth,
             labels: true,
             overlays: [
+              ...(notablesRef.current ? [notablesOverlay(notablesRef.current, pageMinutes)] : []),
               ...(livingRef.current ? [livingOverlay(livingRef.current, pageMinutes)] : []),
               ...(highlighted ? [highlight(highlighted)] : []),
             ],
           })
           // The ships keep sailing while the map is open.
-          if (pending || livingRef.current) schedule()
+          if (pending || livingRef.current || notablesRef.current) schedule()
         }
         const schedule = () => {
           if (!raf) raf = requestAnimationFrame(draw)
@@ -293,6 +311,22 @@ export const WorldMap = ({
               Math.hypot(event.offsetX - press.x, event.offsetY - press.y) <= TAP_SLOP
             release(event)
             if (!tapped) return
+            // A tap on a Gym Leader or Elite Four names them and leaves the map alone.
+            const found = notablesRef.current
+              ? pickNotable(
+                  notablesRef.current,
+                  pageMinutes(),
+                  camera.x + (event.offsetX - canvas.clientWidth / 2) / camera.zoom,
+                  camera.y + (event.offsetY - canvas.clientHeight / 2) / camera.zoom,
+                  camera.zoom,
+                  canvas.clientWidth,
+                )
+              : undefined
+            if (found) {
+              setSpotted(found)
+              return
+            }
+            setSpotted(undefined)
             // A tap on a map picks it, on the sea or between maps drops the pick.
             choose(placeAt(event.offsetX, event.offsetY)?.name ?? null)
           },
@@ -403,6 +437,11 @@ export const WorldMap = ({
           extra={extra}
           onClose={() => close(true)}
         />
+      )}
+      {spotted && (
+        <output className="pixel-panel gba-text gba-text-light pointer-events-none absolute top-4 left-1/2 max-w-[calc(100%-2rem)] -translate-x-1/2 px-4 py-3 text-center">
+          {spotted.label}
+        </output>
       )}
       {living && (
         <LivingClock

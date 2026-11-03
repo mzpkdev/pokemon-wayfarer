@@ -3,6 +3,8 @@ import { useEffect, useState } from "react"
 import { DATA, type Meta, loadWorld } from "./data"
 import { BADGES_SRC, type Landmarks, loadLandmarks } from "./landmarks"
 import { type LivingWorld, loadLiving } from "./living"
+import { pageMinutes } from "./clock"
+import { type Notables, loadNotables, notablesOn } from "./notables"
 import type { PlaceInfo } from "./PlaceCard"
 
 /**
@@ -13,7 +15,15 @@ export const PlaceExtra = ({ place, base = DATA }: { place: PlaceInfo; base?: st
   const [landmarks, setLandmarks] = useState<Landmarks>()
   const [living, setLiving] = useState<LivingWorld>()
   const [meta, setMeta] = useState<Meta>()
+  const [notables, setNotables] = useState<Notables>()
+  // Who is here changes with the clock.
+  const [minutes, setMinutes] = useState(pageMinutes)
   useEffect(() => {
+    const timer = window.setInterval(() => setMinutes(pageMinutes()), 1000)
+    return () => window.clearInterval(timer)
+  }, [])
+  useEffect(() => {
+    void loadNotables(base).then(setNotables, () => {})
     void loadWorld(base).then(
       (world) => setMeta(world.meta),
       () => {},
@@ -36,7 +46,11 @@ export const PlaceExtra = ({ place, base = DATA }: { place: PlaceInfo; base?: st
       .map(([id]) => id),
   )
   const ships = living?.ferry.ships.filter((ship) => ship.ports.some((id) => ports.has(id))) ?? []
-  if (!gym && !league && ships.length === 0) return null
+  const { living: residents, present } = notables
+    ? notablesOn(notables, minutes, rect)
+    : { living: [], present: [] }
+  if (!gym && !league && ships.length === 0 && residents.length === 0 && present.length === 0)
+    return null
 
   return (
     <ul className="mt-3 grid gap-2 text-paper">
@@ -66,6 +80,16 @@ export const PlaceExtra = ({ place, base = DATA }: { place: PlaceInfo; base?: st
           FERRY PORT · {ships.map((ship) => ship.name).join(", ")}
         </li>
       )}
+      {residents.length > 0 && (
+        <li className="pixel-label text-[16px] leading-none">
+          HOME OF {residents.map((plan) => plan.name.toUpperCase()).join(", ")}
+        </li>
+      )}
+      {present.map((notable) => (
+        <li key={notable.slug} className="pixel-label text-[16px] leading-none text-logo-yellow">
+          {notable.label}
+        </li>
+      ))}
     </ul>
   )
 }

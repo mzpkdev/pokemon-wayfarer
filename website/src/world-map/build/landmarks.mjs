@@ -28,7 +28,7 @@ const LEAGUES = [
 ]
 
 /** "VIOLET CITY" from "VioletCity_hns", "MAHOGANY TOWN" from "Mahoganytown_hns". */
-const townName = (name) =>
+export const townName = (name) =>
   name
     .replace(/_.*$/, "")
     .replace(/([a-z])(?=[A-Z])/g, "$1 ")
@@ -36,11 +36,12 @@ const townName = (name) =>
     .toUpperCase()
 
 /**
- * `all` is the placed maps and `minX`/`minY` the world's origin, as
- * `placeWorld` returns them; `regionOf` names a placed map's region as the
- * explorer's labels do (JOHTO, KANTO, HOENN, ...).
+ * Every map in the game tree (`every`, by id) and `doorTo`: the door in a
+ * placed map that the way into a given map starts from, found by following
+ * warps out through any halls and caves between. The world simulation's
+ * notables use it to put indoor places (labs, Gyms, Game Corners) on the land.
  */
-export const buildLandmarks = (game, { all, minX, minY }, regionOf) => {
+export const createDoors = (game, { all, minX, minY }) => {
   const { root } = game
   const placed = new Map(all.map((p) => [p.m.id, p]))
 
@@ -79,6 +80,19 @@ export const buildLandmarks = (game, { all, minX, minY }, regionOf) => {
     }
     return null
   }
+  return { every, doorTo }
+}
+
+/**
+ * `all` is the placed maps and `minX`/`minY` the world's origin, as
+ * `placeWorld` returns them; `regionOf` names a placed map's region as the
+ * explorer's labels do (JOHTO, KANTO, HOENN, ...).
+ */
+export const buildLandmarks = (game, world, regionOf) => {
+  const { root } = game
+  const { all, minX, minY } = world
+  const placed = new Map(all.map((p) => [p.m.id, p]))
+  const { every, doorTo } = createDoors(game, world)
 
   // A gym is a map whose script gives a badge (setflag FLAG_BADGEnn_GET). Each
   // region numbers its eight badges in the order they are earned, and the

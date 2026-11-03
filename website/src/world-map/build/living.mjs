@@ -101,7 +101,7 @@ const firstBerth = (source, ship, port) => {
 }
 
 /** A binary min-heap of [cost, cell] pairs. */
-const createHeap = () => {
+export const createHeap = () => {
   const costs = []
   const cells = []
   return {
