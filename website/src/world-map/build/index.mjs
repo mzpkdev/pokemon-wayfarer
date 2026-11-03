@@ -17,6 +17,7 @@ import { buildLandmarks } from "./landmarks.mjs"
 import { placeWorld } from "./layout.mjs"
 import { writeLiving } from "./living.mjs"
 import { writeNotables } from "./notables.mjs"
+import { layRails } from "./rails.mjs"
 import { overviewLevels, packLevels } from "./overview.mjs"
 
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -27,7 +28,9 @@ const metatiles = createAtlas(game)
 const world = placeWorld(game)
 const { all, minX, minY, W, H } = world
 const land = buildLand(game, world, metatiles)
-const { grid } = land
+// What's drawn: the land with the Magnet Train's line laid over it. The
+// ferries and walkers keep to `land.grid`, under the viaduct.
+const grid = layRails(game, world, land, metatiles)
 const atlasTiles = metatiles.tiles
 
 // The atlas: 64 metatiles a row.
@@ -140,7 +143,7 @@ for (const pic of pics) {
 // The ferries, their sea lanes and the times of day.
 writeLiving(
   {
-    grid,
+    grid: land.grid,
     isWater: land.isWater,
     width: W,
     height: H,
