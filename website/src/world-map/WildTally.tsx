@@ -109,9 +109,7 @@ export const WildTally = ({
           )
         })}
       </ul>
-      <p className="mt-3 min-h-[2lh] text-sm leading-snug text-paper/85" aria-live="polite">
-        {HOMES[lit]!.line}
-      </p>
+      <p className="mt-3 min-h-[2lh] text-sm leading-snug text-paper/85">{HOMES[lit]!.line}</p>
       <p className="mt-1 text-xs text-paper/60">
         {held && !reducedMotion
           ? "Held. Tap it again to play them all."

@@ -462,9 +462,7 @@ const DailyCard = ({
         >
           ◀
         </button>
-        <p className="pixel-label text-logo-yellow" aria-live="polite">
-          DAY {day}
-        </p>
+        <p className="pixel-label text-logo-yellow">DAY {day}</p>
         <button
           type="button"
           className={step}
@@ -607,6 +605,7 @@ export const WorldTour = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const captionRef = useRef<HTMLDivElement>(null)
+  const captionsRef = useRef<HTMLDivElement>(null)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const cameraRef = useRef<Camera | null>(null)
   const goRef = useRef<(stop: number) => void>(() => {})
@@ -1324,6 +1323,8 @@ export const WorldTour = ({
   // At the circuit stop, the league the map has flown on to.
   const [focused, setFocused] = useState<LeagueId | null>(null)
   const go = (next: number) => {
+    // Each card starts at its top on a phone, where the cards scroll.
+    captionsRef.current?.scrollTo({ top: 0 })
     setGym(null)
     setFocused(null)
     setStop(next)
@@ -1541,7 +1542,11 @@ export const WorldTour = ({
               return `${text.place}. ${text.title}`
             })()}
           </p>
-          <div className="grid">
+          {/* Below lg the map sits above the card, so the card keeps to a third of the screen and scrolls. */}
+          <div
+            ref={captionsRef}
+            className="grid max-lg:max-h-[34svh] max-lg:overflow-y-auto max-lg:overscroll-contain"
+          >
             {captions.map((caption, i) => {
               const shown = stop === i
               const text = { ...caption, ...caption.variants?.[chosen] }
