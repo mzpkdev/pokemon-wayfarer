@@ -9,7 +9,7 @@ export const OPEN_SEA = "rgb(48 88 176)"
 /** Metatiles a chunk is wide and tall. */
 const CHUNK = 32
 /** Device pixels per metatile where the tiles start fading in over the far-out view, and finish. */
-const FADE_FROM = 4
+const FADE_FROM = 5
 const FADE_TO = 7
 /**
  * The far-out view's pixels are at least this many CSS pixels across: further

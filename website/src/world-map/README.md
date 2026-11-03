@@ -106,7 +106,7 @@ PNG/palette helpers in `scripts/lib/`.
 ## Data
 
 `pnpm world-map` (run from `website/`) builds the data into
-`public/world-map/`. It takes about 5 seconds and needs the game tree at
+`public/world-map/`. It takes about 30 seconds and needs the game tree at
 `../game`. Its output is committed, like the rest of the game art, so building
 the site doesn't need the game tree. Rebuild it after maps, tilesets or the
 builder change.
@@ -215,7 +215,7 @@ the way `tools/mapjson` does.
   20:00). In the game a voyage starts at boarding, so on the map this is an
   illustration of the loop, not a live position.
 - The Magnet Train runs its line (`rails.mjs`) back and forth: half an hour at
-  each station, four hours between, from Goldenrod at 8:00. That timing is
+  each station, eight hours between, from Goldenrod at 8:00. That timing is
   ours; in the game a ride is a cutscene. Its sprite is the game's two train
   ends side by side (`public/game/sprites/magnet-train.png`, `pnpm assets`),
   drawn twice the game's size so it fills the viaduct's deck, each car turned
