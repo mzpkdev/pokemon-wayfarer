@@ -1,0 +1,13 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Pokemon Wayfarer//Release//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:release-2027-01-20@wayfarer
+DTSTAMP:20261102T000000Z
+DTSTART;VALUE=DATE:20270120
+DTEND;VALUE=DATE:20270121
+SUMMARY:Pokémon Wayfarer release
+DESCRIPTION:Pokémon Wayfarer comes out today. https://github.com/mzpkdev/pokemon-wayfarer
+END:VEVENT
+END:VCALENDAR

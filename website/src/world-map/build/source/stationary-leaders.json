@@ -1,0 +1,49 @@
+{
+  "_comment": "Gym Leaders the notable simulation leaves out because their overworld sprite only stands (three 16x32 frames, no walk): on the world map they stand at their Gym. Name, home and Gym come from routines.json where it has them; Tate and Liza are only in the trainer catalog. Tate and Liza stand aside by `offset` sprite widths. Order is their order in the sprite sheet, after the simulated trainers.",
+  "leaders": [
+    {
+      "slug": "roxanne",
+      "graphics": "OBJ_EVENT_GFX_ROXANNE"
+    },
+    {
+      "slug": "brawly",
+      "graphics": "OBJ_EVENT_GFX_BRAWLY"
+    },
+    {
+      "slug": "wattson",
+      "graphics": "OBJ_EVENT_GFX_WATTSON"
+    },
+    {
+      "slug": "flannery",
+      "graphics": "OBJ_EVENT_GFX_FLANNERY"
+    },
+    {
+      "slug": "winona",
+      "graphics": "OBJ_EVENT_GFX_WINONA"
+    },
+    {
+      "slug": "tate",
+      "name": "Tate",
+      "graphics": "OBJ_EVENT_GFX_TATE",
+      "home": "MossdeepCity",
+      "gym": "MossdeepCity_Gym",
+      "offset": -0.55,
+      "badge": {
+        "region": "Hoenn",
+        "index": 6
+      }
+    },
+    {
+      "slug": "liza",
+      "name": "Liza",
+      "graphics": "OBJ_EVENT_GFX_LIZA",
+      "home": "MossdeepCity",
+      "gym": "MossdeepCity_Gym",
+      "offset": 0.55,
+      "badge": {
+        "region": "Hoenn",
+        "index": 6
+      }
+    }
+  ]
+}

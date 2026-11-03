@@ -1,9 +1,289 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Wayfarer Text";
+  src: url("/game/fonts/wayfarer-text.ttf") format("truetype");
+  font-display: block;
+}
+
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --color-wayfarer-50: oklch(0.97 0.02 210);
-  --color-wayfarer-500: oklch(0.62 0.14 220);
-  --color-wayfarer-700: oklch(0.45 0.12 230);
-  --color-wayfarer-950: oklch(0.2 0.05 240);
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-gba: "Wayfarer Text", ui-monospace, monospace;
+  /* Colors sampled from the opening's layers and the game's text palettes. */
+  --color-sky: rgb(131 205 238);
+  --color-ground: rgb(8 41 0);
+  --color-hollow: rgb(0 16 0);
+  --color-leaf: rgb(16 57 0);
+  --color-ink: rgb(56 56 56);
+  --color-ink-shadow: rgb(216 216 216);
+  --color-ink-blue: rgb(48 80 200);
+  --color-ink-blue-shadow: rgb(168 184 248);
+  --color-paper: rgb(248 248 248);
+  /* The opening's greens, darkest first. */
+  --color-grass-1: rgb(16 57 0);
+  --color-grass-2: rgb(24 82 0);
+  --color-grass-3: rgb(41 98 0);
+  /* The Pokémon logo's yellow and blue. */
+  --color-logo-yellow: rgb(255 214 0);
+  --color-logo-blue: rgb(40 72 200);
+}
+
+:root {
+  /* One GBA pixel, in CSS pixels. The title scene sets its own to match its canvas. */
+  --px: 2px;
+  --frame: url("/game/frames/1.png");
+}
+
+@media (min-width: 768px) {
+  :root {
+    --px: 3px;
+  }
+}
+
+@layer base {
+  html {
+    background: var(--color-ground);
+    color: var(--color-paper);
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    /* Sprites run past the edges; clip, unlike hidden, keeps the title scene sticky. */
+    overflow-x: clip;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: var(--color-ink-blue);
+    color: var(--color-paper);
+  }
+}
+
+@utility pixelated {
+  image-rendering: pixelated;
+}
+
+/*
+ * Text drawn the way the game's text printer draws it: ink plus a one-pixel
+ * shadow to the right, below, and diagonally.
+ */
+@utility gba-text {
+  --ink: var(--color-ink);
+  --shadow: var(--color-ink-shadow);
+  --dot: var(--px);
+  font-family: var(--font-gba);
+  font-size: calc(16 * var(--px));
+  line-height: calc(16 * var(--px));
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  color: var(--ink);
+  text-shadow:
+    var(--dot) 0 var(--shadow),
+    0 var(--dot) var(--shadow),
+    var(--dot) var(--dot) var(--shadow);
+}
+
+@utility gba-text-light {
+  --ink: var(--color-paper);
+  --shadow: rgb(80 80 80);
+}
+
+@utility gba-text-blue {
+  --ink: var(--color-ink-blue);
+  --shadow: var(--color-ink-blue-shadow);
+}
+
+@utility gba-text-2x {
+  --dot: calc(2 * var(--px));
+  font-size: calc(32 * var(--px));
+  line-height: calc(32 * var(--px));
+}
+
+/** A text window: the chosen 24x24 frame, 8px edges stretched by whole pixels. */
+@utility gba-window {
+  border-style: solid;
+  border-width: calc(8 * var(--px));
+  border-image: var(--frame) 8 fill / calc(8 * var(--px));
+  image-rendering: pixelated;
+  padding: calc(2 * var(--px)) calc(4 * var(--px));
+  color: var(--color-ink);
+}
+
+/** The bouncing ▼ that waits for A at the end of a message. */
+@utility gba-down-arrow {
+  width: calc(8 * var(--px));
+  height: calc(8 * var(--px));
+  background: url("/game/text/down-arrow.png") 0 0 / calc(8 * var(--px)) calc(48 * var(--px));
+  image-rendering: pixelated;
+  animation: gba-down-arrow 0.53s steps(1) infinite;
+}
+
+@keyframes gba-down-arrow {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  25% {
+    translate: 0 calc(1 * var(--px));
+  }
+  50% {
+    translate: 0 calc(2 * var(--px));
+  }
+  75% {
+    translate: 0 calc(1 * var(--px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gba-down-arrow {
+    animation: none;
+  }
+}
+
+/** A small label in the game's font, drawn at 2x so its pixels stay crisp. */
+@utility pixel-label {
+  font-family: var(--font-gba);
+  font-size: 32px;
+  line-height: 32px;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
+
+/* ---- The page below the title scene ---- */
+
+:root {
+  /* Set by the title scene to its pixel scale and tiling origin. */
+  --scene-px: 4px;
+  --scene-x: 0px;
+}
+
+/** A strip of the opening's art, tiled at the scene's pixel scale and lined up with it. */
+@utility scene-strip {
+  background-repeat: repeat-x;
+  background-size: calc(480 * var(--scene-px)) auto;
+  background-position-x: var(--scene-x);
+  image-rendering: pixelated;
+}
+
+/** Corners cut in two pixel steps, the way GBA windows round theirs. */
+@utility pixel-corners {
+  --step: 4px;
+  clip-path: polygon(
+    0 calc(var(--step) * 2),
+    var(--step) calc(var(--step) * 2),
+    var(--step) var(--step),
+    calc(var(--step) * 2) var(--step),
+    calc(var(--step) * 2) 0,
+    calc(100% - var(--step) * 2) 0,
+    calc(100% - var(--step) * 2) var(--step),
+    calc(100% - var(--step)) var(--step),
+    calc(100% - var(--step)) calc(var(--step) * 2),
+    100% calc(var(--step) * 2),
+    100% calc(100% - var(--step) * 2),
+    calc(100% - var(--step)) calc(100% - var(--step) * 2),
+    calc(100% - var(--step)) calc(100% - var(--step)),
+    calc(100% - var(--step) * 2) calc(100% - var(--step)),
+    calc(100% - var(--step) * 2) 100%,
+    calc(var(--step) * 2) 100%,
+    calc(var(--step) * 2) calc(100% - var(--step)),
+    var(--step) calc(100% - var(--step)),
+    var(--step) calc(100% - var(--step) * 2),
+    0 calc(100% - var(--step) * 2)
+  );
+}
+
+/** A panel in the scene's greens: lit from above like the leaves, shaded below. */
+@utility pixel-panel {
+  background: var(--color-grass-1);
+  box-shadow:
+    inset 0 4px 0 var(--color-grass-3),
+    inset 4px 0 0 var(--color-grass-2),
+    inset -4px 0 0 var(--color-grass-2),
+    inset 0 -4px 0 rgb(0 16 0);
+}
+
+/** Headings in the game's font with its drop shadow, at a whole-pixel scale. */
+@utility pixel-heading {
+  --dot: 2px;
+  font-family: var(--font-gba);
+  font-size: 32px;
+  line-height: 36px;
+  font-weight: normal;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  color: var(--color-paper);
+  text-shadow:
+    var(--dot) 0 rgb(0 16 0),
+    0 var(--dot) rgb(0 16 0),
+    var(--dot) var(--dot) rgb(0 16 0);
+
+  @media (min-width: 640px) {
+    --dot: 3px;
+    font-size: 48px;
+    line-height: 52px;
+  }
+}
+
+/** The lead heading under the title scene, one pixel scale up. */
+@utility pixel-heading-xl {
+  --dot: 3px;
+  font-size: 48px;
+  line-height: 52px;
+
+  @media (min-width: 640px) {
+    --dot: 4px;
+    font-size: 64px;
+    line-height: 68px;
+  }
+}
+
+/** Numbers like the Pokémon logo: yellow with a blue drop shadow. */
+@utility logo-number {
+  --dot: 3px;
+  font-family: var(--font-gba);
+  font-size: 48px;
+  line-height: 48px;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  color: var(--color-logo-yellow);
+  text-shadow:
+    var(--dot) 0 var(--color-logo-blue),
+    0 var(--dot) var(--color-logo-blue),
+    var(--dot) var(--dot) var(--color-logo-blue);
+
+  @media (min-width: 640px) {
+    --dot: 4px;
+    font-size: 64px;
+    line-height: 64px;
+  }
+}
+
+/** A sprite that plays its vertical frame strip. Set --frames, --size and --duration. */
+@utility sprite {
+  width: calc(var(--size) * var(--sprite-px, 3px));
+  height: calc(var(--size) * var(--sprite-px, 3px));
+  background-size: calc(var(--size) * var(--sprite-px, 3px)) auto;
+  image-rendering: pixelated;
+  animation: sprite-frames var(--duration) steps(var(--frames)) infinite;
+}
+
+@keyframes sprite-frames {
+  to {
+    background-position-y: calc(var(--frames) * var(--size) * var(--sprite-px, 3px) * -1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sprite {
+    animation: none;
+  }
 }

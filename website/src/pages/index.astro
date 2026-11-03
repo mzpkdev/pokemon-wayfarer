@@ -1,14 +1,249 @@
 ---
-import { FeatureTabs } from "~/components/FeatureTabs"
+import CtaProfessor from "~/components/cta/CtaProfessor.astro"
+import WorldSection from "~/components/WorldSection.astro"
+import { TitleScene } from "~/components/TitleScene"
 import Layout from "~/layouts/Layout.astro"
+import { FEATURES, ORIGINS, REPOSITORY_URL, STATS } from "~/lib/content"
+
+/** Volbeats drifting through the dark grass behind the page: start height, duration, delay, direction. */
+const volbeats = [
+  { top: "18%", duration: "38s", delay: "-6s", rightward: true },
+  { top: "47%", duration: "46s", delay: "-30s", rightward: false },
+  { top: "78%", duration: "41s", delay: "-17s", rightward: true },
+]
 ---
 
 <Layout title="Pokémon Wayfarer">
-  <main class="mx-auto flex max-w-3xl flex-col items-start gap-8 px-4 py-24">
-    <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl">Pokémon Wayfarer</h1>
-    <p class="text-lg text-wayfarer-50/70">
-      One journey across every region. This site is a work in progress.
-    </p>
-    <FeatureTabs client:visible />
+  <main>
+    <TitleScene client:load />
+
+    <!-- The highlights come first: the size of the world, warped to from the Poké Ball. -->
+    <WorldSection />
+
+    <!--
+      The page is the nearest layer: it overlaps the end of the world map's
+      pinned stretch, so its grass edge rises over the map the way the
+      opening's layers cover one another.
+    -->
+    <div class="relative z-20 -mt-[calc(112*var(--scene-px))]">
+      <div
+        class="scene-strip h-[calc(112*var(--scene-px))] bg-[url(/game/page/edge.png)]"
+        aria-hidden="true"
+      >
+      </div>
+
+      <!-- Content starts over the edge's solid ground, so it follows the plants closely. -->
+      <div class="relative -mt-[calc(12*var(--scene-px))] overflow-x-clip bg-ground">
+        <div class="pointer-events-none absolute inset-0 hidden md:block" aria-hidden="true">
+          {
+            volbeats.map(({ top, duration, delay, rightward }) => (
+              <div
+                class="volbeat-path absolute left-0"
+                style={`top: ${top}; --duration: ${duration}; animation-delay: ${delay}; animation-direction: ${rightward ? "normal" : "reverse"}`}
+              >
+                <div class="volbeat-bob" style={`animation-delay: ${delay}`}>
+                  <div
+                    class="sprite bg-[url(/game/sprites/volbeat.png)]"
+                    style={`--size: 32; --frames: 2; --duration: 0.13s; ${rightward ? "scale: -1 1" : ""}`}
+                  >
+                  </div>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+
+        <!-- Then PROF. OAK asks for your email. -->
+        <CtaProfessor />
+
+        <section aria-labelledby="about" class="relative mx-auto max-w-5xl px-6 py-16">
+          <div class="pixel-corners pixel-panel grid gap-8 p-8 sm:p-12 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div>
+              <p class="pixel-label text-logo-yellow">About</p>
+              <h2 id="about" class="pixel-heading mt-4">One save. Three home regions. Every road open.</h2>
+              <p class="mt-6 max-w-2xl text-lg leading-relaxed text-paper/80">
+                Pokémon Wayfarer is a free fan-made GBA game built on pokeemerald-expansion. Start your
+                journey in Kanto, Johto or Hoenn, then sail on to the Sevii Islands and Alola, all on the
+                same save.
+              </p>
+            </div>
+            <img
+              src="/game/intro/pokeball.png"
+              alt=""
+              width="64"
+              height="64"
+              class="pixelated hidden size-48 lg:block"
+            />
+          </div>
+        </section>
+
+        <section aria-labelledby="features" class="relative mx-auto max-w-5xl px-6 py-16">
+          <p class="pixel-label text-logo-yellow">Features</p>
+          <h2 id="features" class="pixel-heading mt-4">A world that keeps moving</h2>
+          <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {
+              FEATURES.map((feature) => (
+                <li class="pixel-corners pixel-panel p-6">
+                  <div class="pixel-corners grid size-16 place-items-center bg-ground">
+                    <img
+                      src={`/game/items/${feature.icon}.png`}
+                      alt=""
+                      width="48"
+                      height="48"
+                      class="pixelated size-12"
+                    />
+                  </div>
+                  <h3 class="mt-5 font-semibold">{feature.title}</h3>
+                  <p class="mt-2 text-sm leading-relaxed text-paper/75">{feature.body}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </section>
+
+        <section aria-labelledby="origins" class="relative mx-auto max-w-5xl px-6 py-16">
+          <div class="grid items-center gap-12 lg:grid-cols-2">
+            <div class="pixel-corners pixel-panel p-2">
+              <img
+                src="/game/title/dawn.png"
+                alt="Pixel art of islands at dawn, joined by dotted sea routes beneath a compass rose."
+                width="240"
+                height="160"
+                loading="lazy"
+                class="pixelated pixel-corners aspect-[3/2] w-full"
+              />
+            </div>
+            <div>
+              <p class="pixel-label text-logo-yellow">Starting regions</p>
+              <h2 id="origins" class="pixel-heading mt-4">Where will your journey begin?</h2>
+              <p class="mt-4 leading-relaxed text-paper/80">
+                Professor Oak asks once you've chosen your name and look. Each region has its own opening,
+                and wherever you start, the other two are a journey away.
+              </p>
+              <dl class="mt-8 grid gap-3">
+                {
+                  ORIGINS.map((origin) => (
+                    <div class="pixel-corners pixel-panel grid gap-1 px-5 py-4 sm:grid-cols-[7rem_1fr] sm:gap-6">
+                      <dt class="pixel-label text-paper">{origin.region}</dt>
+                      <dd>
+                        <span class="block text-sm text-logo-yellow">{origin.town}</span>
+                        <span class="mt-1 block text-paper/80">{origin.body}</span>
+                      </dd>
+                    </div>
+                  ))
+                }
+              </dl>
+            </div>
+          </div>
+        </section>
+
+        <section aria-label="Wayfarer in numbers" class="relative mx-auto max-w-5xl px-6 py-16">
+          <dl class="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-5">
+            {
+              STATS.map((stat) => (
+                <div class="flex flex-col">
+                  <dt class="order-2 mt-3 text-sm text-paper/75">{stat.label}</dt>
+                  <dd class="logo-number order-1">{stat.value}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </section>
+
+        <footer class="relative mx-auto flex max-w-5xl flex-col gap-6 px-6 pt-16 pb-10 text-sm text-paper/70 sm:flex-row sm:justify-between">
+          <p class="max-w-md leading-relaxed">
+            Pokémon Wayfarer is a free fan game. It is not affiliated with Nintendo, Creatures Inc. or GAME
+            FREAK inc. Pokémon is a trademark of Nintendo.
+          </p>
+          <nav aria-label="Footer" class="flex gap-6">
+            <a href="#top" class="hover:text-paper">Back to the title</a>
+            <a href={REPOSITORY_URL} class="hover:text-paper">GitHub</a>
+          </nav>
+        </footer>
+      </div>
+
+      <!-- The title screen's meadow closes the page, with a Torchic running through it. -->
+      <div class="relative overflow-hidden">
+        <div
+          class="scene-strip h-[calc(64*var(--scene-px))] bg-ground bg-[url(/game/page/meadow.png)]"
+          aria-hidden="true"
+        >
+        </div>
+        <div class="torchic-path absolute bottom-[calc(14*var(--scene-px))] left-0" aria-hidden="true">
+          <div
+            class="sprite torchic bg-[url(/game/sprites/torchic.png)]"
+            style="--size: 32; --sprite-px: var(--scene-px)"
+          >
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 </Layout>
+
+<style>
+  .volbeat-path {
+    animation: drift var(--duration) linear infinite;
+  }
+
+  .volbeat-bob {
+    animation: bob 2.4s ease-in-out infinite alternate;
+  }
+
+  @keyframes drift {
+    from {
+      translate: -120px 0;
+    }
+    to {
+      translate: calc(100vw + 120px) 0;
+    }
+  }
+
+  @keyframes bob {
+    from {
+      translate: 0 -18px;
+    }
+    to {
+      translate: 0 18px;
+    }
+  }
+
+  /* TORCHIC runs rightward (its sprite faces left), cycling frames 0, 1, 2, 1. */
+  .torchic-path {
+    animation: drift 16s linear infinite;
+  }
+
+  .torchic {
+    scale: -1 1;
+    animation: torchic-run 0.2s steps(1) infinite;
+  }
+
+  @keyframes torchic-run {
+    0% {
+      background-position-y: 0;
+    }
+    25% {
+      background-position-y: calc(-32 * var(--scene-px));
+    }
+    50% {
+      background-position-y: calc(-64 * var(--scene-px));
+    }
+    75% {
+      background-position-y: calc(-32 * var(--scene-px));
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .volbeat-path,
+    .volbeat-bob,
+    .torchic-path,
+    .torchic {
+      animation: none;
+    }
+
+    .volbeat-path,
+    .torchic-path {
+      display: none;
+    }
+  }
+</style>
