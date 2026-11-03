@@ -60,6 +60,11 @@ export type Origin = {
 
 export const ORIGINS: Origin[] = [
   {
+    region: "Kanto",
+    town: "Pallet Town",
+    body: "Set out with a first partner from Professor Oak.",
+  },
+  {
     region: "Johto",
     town: "New Bark Town",
     body: "Wake up next door to Professor Elm's lab.",
@@ -68,11 +73,6 @@ export const ORIGINS: Origin[] = [
     region: "Hoenn",
     town: "Littleroot Town",
     body: "Choose Treecko, Torchic or Mudkip.",
-  },
-  {
-    region: "Kanto",
-    town: "Pallet Town",
-    body: "Set out with a first partner from Professor Oak.",
   },
 ]
 

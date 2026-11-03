@@ -42,6 +42,8 @@ const placeExtra = (place: PlaceInfo) => <PlaceExtra place={place} />
 /** The tour's stops, in the order its cards come. */
 export type StopName = "town" | "region" | "badges" | "world"
 const STOPS: StopName[] = ["town", "region", "world", "badges"]
+/** The regions in the order the page names them. */
+const REGION_ORDER = ["Kanto", "Johto", "Hoenn"]
 const BADGES_STOP = STOPS.indexOf("badges")
 
 export type Caption = {
@@ -804,18 +806,20 @@ export const WorldTour = ({
         // The pins for a keyboard: each Gym a button, lighting its pin while focused.
         // Fixed to the screen, so focusing one never scrolls the page.
         <ul className="sr-only" style={{ position: "fixed", top: 0, left: 0 }}>
-          {gymPins.map((pin) => (
-            <li key={pin.badge}>
-              <button
-                type="button"
-                onFocus={() => hoverRef.current(pin.badge)}
-                onBlur={() => hoverRef.current(null)}
-                onClick={() => setGym(pin)}
-              >
-                {pin.town} Gym{pin.leader ? `, ${pin.leader.name}` : ""}
-              </button>
-            </li>
-          ))}
+          {gymPins
+            .toSorted((a, b) => REGION_ORDER.indexOf(a.region) - REGION_ORDER.indexOf(b.region))
+            .map((pin) => (
+              <li key={pin.badge}>
+                <button
+                  type="button"
+                  onFocus={() => hoverRef.current(pin.badge)}
+                  onBlur={() => hoverRef.current(null)}
+                  onClick={() => setGym(pin)}
+                >
+                  {pin.town} Gym{pin.leader ? `, ${pin.leader.name}` : ""}
+                </button>
+              </li>
+            ))}
         </ul>
       )}
       {gym && STOPS[stop] === "badges" && (

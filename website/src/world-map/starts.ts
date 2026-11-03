@@ -1,4 +1,4 @@
-// Where the tour can begin: a town in each of Hoenn, Johto and Kanto, with the
+// Where the tour can begin: a town in each of Kanto, Johto and Hoenn, with the
 // player who rides in on their bike to their front door. Rides are set in each
 // map's own tiles, so they follow the maps if the layout moves.
 import type { Bounds, Meta } from "./data"
@@ -35,24 +35,22 @@ export type Start = {
 
 export const STARTS: Start[] = [
   {
-    id: "hoenn",
-    label: "LITTLEROOT TOWN",
-    region: "HOENN",
-    player: "BRENDAN",
-    town: "LittlerootTown",
-    focus: { x: 10, y: 10 },
-    rider: "/game/sprites/brendan-mach-bike.png",
-    // In from OLDALE TOWN's edge, down ROUTE 101's path (hopping its ledges),
-    // into LITTLEROOT TOWN, and left to the door of the house on the left.
+    id: "kanto",
+    label: "PALLET TOWN",
+    region: "KANTO",
+    player: "RED",
+    town: "PalletTown_hns",
+    focus: { x: 12, y: 10 },
+    rider: "/game/sprites/red-mach-bike.png",
+    // Down the road at the north edge between the two houses, and left along
+    // the row in front of RED's house to its door.
     route: [
-      { map: "Route101", x: 10.5, y: -3.5 },
-      { map: "LittlerootTown", x: 10.5, y: 9.5 },
-      { map: "LittlerootTown", x: 5.5, y: 9.5 },
+      { map: "PalletTown_hns", x: 12.5, y: 0.5 },
+      { map: "PalletTown_hns", x: 12.5, y: 8.5 },
+      { map: "PalletTown_hns", x: 6.5, y: 8.5 },
     ],
-    road: { map: "Route101", label: "ROUTE 101" },
-    // All of ROUTE 101, grass and all.
-    opening: { map: "Route101", left: -2, top: -1, right: 22, bottom: 21 },
-    regions: ["HOENN"],
+    opening: { map: "PalletTown_hns", left: 0, top: -4, right: 24, bottom: 18 },
+    regions: ["KANTO"],
   },
   {
     id: "johto",
@@ -76,22 +74,24 @@ export const STARTS: Start[] = [
     regions: ["JOHTO"],
   },
   {
-    id: "kanto",
-    label: "PALLET TOWN",
-    region: "KANTO",
-    player: "RED",
-    town: "PalletTown_hns",
-    focus: { x: 12, y: 10 },
-    rider: "/game/sprites/red-mach-bike.png",
-    // Down the road at the north edge between the two houses, and left along
-    // the row in front of RED's house to its door.
+    id: "hoenn",
+    label: "LITTLEROOT TOWN",
+    region: "HOENN",
+    player: "BRENDAN",
+    town: "LittlerootTown",
+    focus: { x: 10, y: 10 },
+    rider: "/game/sprites/brendan-mach-bike.png",
+    // In from OLDALE TOWN's edge, down ROUTE 101's path (hopping its ledges),
+    // into LITTLEROOT TOWN, and left to the door of the house on the left.
     route: [
-      { map: "PalletTown_hns", x: 12.5, y: 0.5 },
-      { map: "PalletTown_hns", x: 12.5, y: 8.5 },
-      { map: "PalletTown_hns", x: 6.5, y: 8.5 },
+      { map: "Route101", x: 10.5, y: -3.5 },
+      { map: "LittlerootTown", x: 10.5, y: 9.5 },
+      { map: "LittlerootTown", x: 5.5, y: 9.5 },
     ],
-    opening: { map: "PalletTown_hns", left: 0, top: -4, right: 24, bottom: 18 },
-    regions: ["KANTO"],
+    road: { map: "Route101", label: "ROUTE 101" },
+    // All of ROUTE 101, grass and all.
+    opening: { map: "Route101", left: -2, top: -1, right: 22, bottom: 21 },
+    regions: ["HOENN"],
   },
 ]
 
