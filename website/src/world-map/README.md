@@ -16,14 +16,17 @@ The rest of the site uses it only through `index.ts`:
   (`startOn`; the landing page sends one when its warp from the title scene
   fades in, see `src/lib/warp.ts`). After that the map holds still beside a
   card, and NEXT and BACK fly the camera between six stops, one journey that
-  only pulls out: home; the first route out of town (ROUTE 1, 29 or 101,
-  `firstRoute` in `starts.ts`), close enough for its wild Pokémon to pop out
-  of the grass (`sightings.ts`, as in the explorer) while the card shows who
-  is out at this time of day; the start's region with its eight Gyms; the
+  only pulls out: home; a busy route of the start's region (ROUTE 15, 32 or
+  103, `dailyRoute` in `starts.ts`) changing from day to day (`daily.ts`,
+  `dailyView.ts`): the game's own daily draw for a save that has beaten
+  everyone there, so its trainers stand in new spots or stay away and its
+  item spots roll new items, while the card steps the days (by itself every
+  few seconds until a visitor steps it with ◀ and ▶) and lists who and what
+  is out; the start's region with its eight Gyms; the
   whole world with its ferries and who lives where; the league circuit (all
   24 Gyms and the three leagues); and the whole map again to explore. A
   journey strip on the card marks each stop with an item or sprite from the
-  game (the start's rider, a Poké Ball, the region's first badge, the S.S.
+  game (the start's rider, a Poké Ball for the daily route, the region's first badge, the S.S.
   Ticket, the VS Seeker, the Town Map); a tap on a mark goes there. From the second
   stop on the map can be panned in place, the way an embedded map shares a
   page: a mouse drags, and on touch two fingers move it while one still
@@ -147,15 +150,17 @@ PNG/palette helpers in `scripts/lib/`.
 the site doesn't need the game tree. Rebuild it after maps, tilesets or the
 builder change.
 
-| File              | What it holds                                                                                                                                                                                                                                              |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `atlas.png`       | Every metatile the world uses, 16×16 each, 64 to a row                                                                                                                                                                                                     |
-| `grid.bin.gz`     | The world as gzipped little-endian u16 atlas indices, row by row; `0xffff` is open sea                                                                                                                                                                     |
-| `overview.png`    | The far-out view: the tiles averaged, one pixel per metatile, and coarser levels for further out, packed side by side                                                                                                                                      |
-| `encounters.json` | Per placed map, its name and wild Pokémon (species slot and percent) by method and time of day; its sampled land (`l`) and water (`w`) encounter cells; `gens`, each slot's roster `entry`, the roster by `homes`, and the Safari Zones' Kalos by `safari` |
-| `icons.png`       | One 32×32 icon per species used, 16 to a row, indexed by the slot in `encounters.json`                                                                                                                                                                     |
-| `notables.json`   | The notables' stops, cycles and routes (see below)                                                                                                                                                                                                         |
-| `meta.json`       | Grid size, atlas columns, the overview's levels, the open ocean's tiles and color, towns, region labels with bounds, and placed maps                                                                                                                       |
+| File              | What it holds                                                                                                                                                                                                                                                                            |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `atlas.png`       | Every metatile the world uses, 16×16 each, 64 to a row                                                                                                                                                                                                                                   |
+| `grid.bin.gz`     | The world as gzipped little-endian u16 atlas indices, row by row; `0xffff` is open sea                                                                                                                                                                                                   |
+| `overview.png`    | The far-out view: the tiles averaged, one pixel per metatile, and coarser levels for further out, packed side by side                                                                                                                                                                    |
+| `encounters.json` | Per placed map, its name and wild Pokémon (species slot and percent) by method and time of day; its sampled land (`l`) and water (`w`) encounter cells; `gens`, each slot's roster `entry`, the roster by `homes`, and the Safari Zones' Kalos by `safari`                               |
+| `icons.png`       | One 32×32 icon per species used, 16 to a row, indexed by the slot in `encounters.json`                                                                                                                                                                                                   |
+| `daily.json`      | The game's daily trainer slots (home trainer name, sprite cells, absence chance, group, placed objects' grid cells), the groups in the game's order, the placed item spots with their reach tier and region, and the item pools; `dailyOn` in `daily.ts` replays a day's draws from them |
+| `trainers.png`    | One 32×32 cell per trainer sprite used (first standing frame, facing down, bottom-centred) and the item ball, 16 to a row, indexed by `daily.json`                                                                                                                                       |
+| `notables.json`   | The notables' stops, cycles and routes (see below)                                                                                                                                                                                                                                       |
+| `meta.json`       | Grid size, atlas columns, the overview's levels, the open ocean's tiles and color, towns, region labels with bounds, and placed maps                                                                                                                                                     |
 
 ## Builder (`build/`)
 
@@ -199,6 +204,10 @@ Plain Node scripts. Each stage gets a module:
   city's own track there, and east into SAFFRON CITY up to its station, the cheapest way by a search that counts the map cells
   covered (towns most) and the turns. It is laid on a copy of the grid that
   is only drawn; the ferries and walkers keep to the ground under it.
+- `daily.mjs`: the daily trainer slots and item spots for the tour's daily
+  route. It reads the generated slot and item tables
+  (`src/data/trainer_slots/slots.h`, `src/data/item_slots/`) and names from
+  the party files, `battle_main.c`, `items.h` and `moves_info.h`.
 - `overview.mjs`: the far-out view, each pixel the average of the metatile
   under it in the GBA's 5-bit colors, and four coarser levels. A coarser pixel
   is land or sea by the majority under it and averages only those, so coasts

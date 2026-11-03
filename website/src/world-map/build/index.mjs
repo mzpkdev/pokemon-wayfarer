@@ -10,6 +10,7 @@ import { fileURLToPath } from "node:url"
 import { gzipSync } from "node:zlib"
 import { renderIndexed } from "../../../scripts/lib/gba.mjs"
 import { writePng } from "../../../scripts/lib/png.mjs"
+import { writeDaily } from "./daily.mjs"
 import { writeEncounters } from "./encounters.mjs"
 import { readSpawns } from "./spawns.mjs"
 import { createAtlas, openGame } from "./game.mjs"
@@ -189,3 +190,5 @@ console.log(
   "species; by home:",
   places.homes.join(", "),
 )
+// Where the daily trainers and items can be, for the tour's changing routes.
+console.log("daily", writeDaily(game, world, outDir))

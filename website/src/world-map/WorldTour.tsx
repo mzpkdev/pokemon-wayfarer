@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useRef, useState } from "react"
+import { type ReactNode, useEffect, useMemo, useRef, useState } from "react"
 
 import { useReducedMotion } from "~/lib/hooks"
 
@@ -27,7 +27,7 @@ import { OPEN_SEA, type Overlay, rendererFor } from "./render"
 import { riderAt } from "./rider"
 import {
   DEFAULT_START,
-  firstRouteIn,
+  dailyRouteIn,
   focusIn,
   openingIn,
   placeAt,
@@ -40,12 +40,12 @@ import {
 } from "./starts"
 import { pageMinutes } from "./clock"
 import { LivingClock } from "./LivingClock"
-import { type Encounters, ICON, loadEncounters } from "./encounters"
 import { type LivingWorld, livingOverlay, loadLiving } from "./living"
 import { type Notables, loadNotables, notableAt, notablesOverlay } from "./notables"
 import { PlaceExtra } from "./PlaceExtra"
 import type { PlaceInfo } from "./PlaceCard"
-import { isNight, sightingsOverlay } from "./sightings"
+import { DAILY_SEED, type Daily, dailyOn, loadDaily } from "./daily"
+import { type DailyScene, dailyOverlay } from "./dailyView"
 import { BUTTON } from "./ui"
 import { loadWild, type Wild, type WildClock, wildOverlay } from "./wild"
 import { WildTally } from "./WildTally"
@@ -56,12 +56,13 @@ const placeExtra = (place: PlaceInfo) => <PlaceExtra place={place} />
 
 /**
  * The tour's stops, in the order its cards come: one journey that only pulls
- * out. Home, the first route out of town, the start's region and its Gyms,
+ * out. Home, a busy route of its region changing from day to day, the
+ * start's region and its Gyms,
  * the whole world and who lives where, the league circuit, then the map to
  * explore.
  */
-export type StopName = "town" | "route" | "region" | "world" | "circuit" | "explore"
-const STOPS: StopName[] = ["town", "route", "region", "world", "circuit", "explore"]
+export type StopName = "town" | "daily" | "region" | "world" | "circuit" | "explore"
+const STOPS: StopName[] = ["town", "daily", "region", "world", "circuit", "explore"]
 const stopIndex = (name: StopName) => STOPS.indexOf(name)
 /** The regions in the order the page names them. */
 const REGION_ORDER = ["Kanto", "Johto", "Hoenn"]
@@ -72,7 +73,7 @@ const LEAGUE_ORDER: LeagueId[] = ["indigo", "hoenn", "masters"]
 /** Each stop's mark in the journey strip: an item from the game, or the start's own. */
 const MARKS: Record<StopName, string> = {
   town: "Home",
-  route: "First route",
+  daily: "Routes change daily",
   region: "Your region",
   world: "The world",
   circuit: "The league circuit",
@@ -105,6 +106,9 @@ const flightMs = (from: Camera, to: Camera) =>
   Math.min(2400, 900 + 450 * Math.abs(Math.log2(to.zoom / from.zoom)))
 /** The closest zoom the rider is drawn at; further out he is a speck. */
 const RIDER_MIN_ZOOM = 4
+
+/** How long the daily stop shows each day before stepping on by itself. */
+const DAY_MS = 3200
 
 /** A beat between the tour starting and the rider setting off. */
 const RIDE_DELAY_MS = 250
@@ -158,7 +162,7 @@ const leagueShot = (id: LeagueId) => STOPS.length + 1 + LEAGUE_ORDER.indexOf(id)
 
 /**
  * The shots for a map area `width` by `height` CSS pixels, for a start: the
- * opening on the road, then the stops: the town, its first route, its region
+ * opening on the road, then the stops: the town, its daily route, its region
  * (or regions), the whole world, the circuit and the world again to explore;
  * then each league's, which the circuit stop flies to.
  */
@@ -183,8 +187,8 @@ const shotsFor = (
     // On a wide screen the lineup lies over the map's lower part, so the league sits higher.
     return { x: league.x, y: league.y + (width > 700 ? (height * 0.14) / zoom : 0), zoom }
   }
-  // The first route, close enough for its wild Pokémon to show, never closer than the town.
-  const route = fit(firstRouteIn(meta, start), width, height, 0.9)
+  // The daily route, all of it, never closer than the town.
+  const route = fit(dailyRouteIn(meta, start), width, height, 0.92)
   const world = fit(boundsOf(meta.maps), width, height, 0.92)
   return [
     { ...fit(openingIn(meta, start), width, height, 1) },
@@ -427,52 +431,68 @@ const CircuitLeagues = ({
   )
 }
 
-/** Who lives on the first route now, by the page clock's time of day: its icons, no rates. */
-const RouteRoster = ({
-  encounters,
-  map,
-  minutes,
-  base,
+/**
+ * The daily stop's card body: the day shown, with buttons to step it, and
+ * who and what is out on the route that day. Stepping by hand stops it
+ * stepping by itself.
+ */
+const DailyCard = ({
+  scene,
+  day,
+  onDay,
 }: {
-  encounters: Encounters | undefined
-  map: string
-  minutes: number
-  base: string
+  scene: ReturnType<typeof dailyOn> | null
+  day: number
+  onDay: (day: number) => void
 }) => {
-  const place = encounters?.maps[map]
-  if (!encounters || !place?.e) return null
-  const night = isNight(minutes)
-  const species = [
-    ...new Set(
-      Object.values(place.e).flatMap((table) =>
-        ("a" in table ? table.a : night ? table.n : table.d).map(([slot]) => slot),
-      ),
-    ),
-  ]
-  const { columns } = encounters
+  if (!scene) return null
+  const step =
+    "pixel-label px-3 pt-1 pb-2 text-paper/70 hover:text-paper disabled:opacity-30 focus-visible:text-paper focus-visible:underline focus-visible:outline-none"
   return (
     <div className="mt-4">
-      <p className="pixel-label text-[16px] leading-none text-paper/60">
-        {night ? "OUT TONIGHT" : "OUT TODAY"}
-      </p>
-      <ul className="mt-2 flex flex-wrap gap-1" aria-label="Wild Pokémon here now">
-        {species.map((slot) => (
-          <li
-            key={slot}
-            title={encounters.species[slot]}
-            className="pixelated block"
-            style={{
-              width: ICON,
-              height: ICON,
-              backgroundImage: `url(${base}/icons.png)`,
-              backgroundSize: `${columns * ICON}px auto`,
-              backgroundPosition: `-${(slot % columns) * ICON}px -${Math.floor(slot / columns) * ICON}px`,
-            }}
-          >
-            <span className="sr-only">{encounters.species[slot]}</span>
-          </li>
-        ))}
-      </ul>
+      <div className="pixel-corners flex items-center justify-between bg-black/30 px-2">
+        <button
+          type="button"
+          className={step}
+          disabled={day <= 1}
+          onClick={() => onDay(day - 1)}
+          aria-label="The day before"
+        >
+          ◀
+        </button>
+        <p className="pixel-label text-logo-yellow" aria-live="polite">
+          DAY {day}
+        </p>
+        <button
+          type="button"
+          className={step}
+          onClick={() => onDay(day + 1)}
+          aria-label="The next day"
+        >
+          ▶
+        </button>
+      </div>
+      <dl className="mt-3 grid gap-2 text-[13px] leading-snug sm:text-sm">
+        <div>
+          <dt className="pixel-label text-[16px] leading-none text-paper/60">
+            TRAINERS {scene.trainers.length}
+            {scene.empty.length ? ` · ${scene.empty.length} SPOTS EMPTY` : ""}
+          </dt>
+          <dd className="mt-1 text-paper/85">
+            {scene.trainers.map((trainer) => trainer.name).join(", ") || "Nobody about today."}
+          </dd>
+        </div>
+        <div>
+          <dt className="pixel-label text-[16px] leading-none text-paper/60">
+            ITEMS {scene.items.length}
+          </dt>
+          <dd className="mt-1 text-paper/85">
+            {scene.items
+              .map((item) => (item.hidden ? `${item.item} (hidden)` : item.item))
+              .join(", ") || "Nothing lying around today."}
+          </dd>
+        </div>
+      </dl>
     </div>
   )
 }
@@ -504,7 +524,7 @@ const JourneyStrip = ({
         style={{ backgroundImage: `url(${start.rider})`, backgroundSize: "288px 32px" }}
       />
     ),
-    route: (
+    daily: (
       <img
         src="/game/intro/pokeball.png"
         alt=""
@@ -650,33 +670,26 @@ export const WorldTour = ({
   useEffect(() => {
     if (nearWild) void loadWild(base).then(setWild, () => {})
   }, [base, nearWild])
-  // The first route's wild Pokémon, popping out of its grass, and its card's roster.
-  const [encounters, setEncounters] = useState<Encounters>()
-  const [sightings, setSightings] = useState<Overlay>()
+  // The daily route: its trainers and items, one day after another.
+  const [daily, setDaily] = useState<Daily>()
+  const [trainerSheet, setTrainerSheet] = useState<HTMLImageElement>()
+  const sceneRef = useRef<{ scene: DailyScene; since: number } | null>(null)
   useEffect(() => {
     let live = true
-    const icons = new Image()
-    icons.src = `${base}/icons.png`
-    void Promise.all([loadEncounters(base), icons.decode()]).then(
+    const image = new Image()
+    image.src = `${base}/trainers.png`
+    void Promise.all([loadDaily(base), image.decode()]).then(
       ([loaded]) => {
         if (!live) return
-        setEncounters(loaded)
-        setSightings(() =>
-          sightingsOverlay(
-            loaded,
-            icons,
-            pageMinutes,
-            !reducedMotion,
-            performance.now.bind(performance),
-          ),
-        )
+        setDaily(loaded)
+        setTrainerSheet(image)
       },
       () => {},
     )
     return () => {
       live = false
     }
-  }, [base, reducedMotion])
+  }, [base])
   const nearGyms = stop >= stopIndex("region") - 1
   useEffect(() => {
     if (nearGyms) preloadPortraits(base, roster)
@@ -686,8 +699,19 @@ export const WorldTour = ({
   useEffect(() => {
     // The Gym Leaders and Elite Four go under the time of day's tint.
     stopOverlaysRef.current = [
-      ...(sightings
-        ? [{ stop: "route" as const, overlay: sightings, animated: !reducedMotion }]
+      ...(daily && trainerSheet
+        ? [
+            {
+              stop: "daily" as const,
+              overlay: dailyOverlay(
+                { image: trainerSheet, ...daily.sheet },
+                () => sceneRef.current,
+                !reducedMotion,
+                performance.now.bind(performance),
+              ),
+              animated: !reducedMotion,
+            },
+          ]
         : []),
       ...(notables
         ? [
@@ -722,7 +746,7 @@ export const WorldTour = ({
       ...(stopOverlays ?? []),
     ]
     redrawRef.current()
-  }, [stopOverlays, living, notables, wild, sightings, reducedMotion])
+  }, [stopOverlays, living, notables, wild, daily, trainerSheet, reducedMotion])
   const atWorld = STOPS[stop] === "world" || STOPS[stop] === "explore"
   const ticking = atWorld || gym !== null
   useEffect(() => {
@@ -735,6 +759,25 @@ export const WorldTour = ({
     return () => window.clearInterval(timer)
   }, [ticking, reducedMotion])
   const [chosen, setChosen] = useState<StartId>(DEFAULT_START)
+  // The day the daily stop shows. It steps on by itself while the stop is up,
+  // until a visitor steps it by hand.
+  const [day, setDay] = useState(1)
+  const [stepping, setStepping] = useState(true)
+  const atDaily = STOPS[stop] === "daily"
+  useEffect(() => {
+    if (!atDaily || reducedMotion || !stepping) return
+    const timer = window.setInterval(() => setDay((was) => was + 1), DAY_MS)
+    return () => window.clearInterval(timer)
+  }, [atDaily, reducedMotion, stepping])
+  const dailyMap = startOf(chosen).dailyRoute.map
+  const scene = useMemo(
+    () => (daily ? dailyOn(daily, [dailyMap], day, DAILY_SEED) : null),
+    [daily, dailyMap, day],
+  )
+  useEffect(() => {
+    sceneRef.current = scene ? { scene, since: performance.now() } : null
+    redrawRef.current()
+  }, [scene])
   const [warping, setWarping] = useState(false)
   const [exploring, setExploring] = useState<Camera | null>(null)
   const [popup, setPopup] = useState<{ label: string | null; shown: boolean }>({
@@ -1547,12 +1590,14 @@ export const WorldTour = ({
                       })}
                     </fieldset>
                   )}
-                  {STOPS[i] === "route" && (
-                    <RouteRoster
-                      encounters={encounters}
-                      map={startOf(chosen).firstRoute.map}
-                      minutes={minutes}
-                      base={base}
+                  {STOPS[i] === "daily" && (
+                    <DailyCard
+                      scene={scene}
+                      day={day}
+                      onDay={(next) => {
+                        setStepping(false)
+                        setDay(Math.max(1, next))
+                      }}
                     />
                   )}
                   {STOPS[i] === "world" && (

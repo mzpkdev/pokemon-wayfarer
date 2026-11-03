@@ -31,8 +31,12 @@ export type Start = {
   opening: { map: string } & Bounds
   /** Region names (`meta.regions`) the "region" stop fits. */
   regions: string[]
-  /** The first route out of town, where the "route" stop shows its wild Pokémon. */
-  firstRoute: { map: string; label: string }
+  /**
+   * A busy route of its region, where the "daily" stop shows its trainers and
+   * items moving from day to day: the one with the most daily trainer slots
+   * near the start's side of the region.
+   */
+  dailyRoute: { map: string; label: string }
 }
 
 export const STARTS: Start[] = [
@@ -53,7 +57,7 @@ export const STARTS: Start[] = [
     ],
     opening: { map: "PalletTown_hns", left: 0, top: -4, right: 24, bottom: 18 },
     regions: ["KANTO"],
-    firstRoute: { map: "Route1_hns", label: "ROUTE 1" },
+    dailyRoute: { map: "Route15_hns", label: "ROUTE 15" },
   },
   {
     id: "johto",
@@ -75,7 +79,7 @@ export const STARTS: Start[] = [
     road: { map: "Route29_hns", label: "ROUTE 29" },
     opening: { map: "Route29_hns", left: 48, top: 8, right: 72, bottom: 28 },
     regions: ["JOHTO"],
-    firstRoute: { map: "Route29_hns", label: "ROUTE 29" },
+    dailyRoute: { map: "Route32_hns", label: "ROUTE 32" },
   },
   {
     id: "hoenn",
@@ -96,7 +100,7 @@ export const STARTS: Start[] = [
     // All of ROUTE 101, grass and all.
     opening: { map: "Route101", left: -2, top: -1, right: 22, bottom: 21 },
     regions: ["HOENN"],
-    firstRoute: { map: "Route101", label: "ROUTE 101" },
+    dailyRoute: { map: "Route103", label: "ROUTE 103" },
   },
 ]
 
@@ -126,9 +130,9 @@ export const openingIn = (meta: Meta, start: Start): Bounds => {
   }
 }
 
-/** The first route's box on the world grid. */
-export const firstRouteIn = (meta: Meta, start: Start): Bounds => {
-  const placed = mapIn(meta, start.firstRoute.map)
+/** The daily route's box on the world grid. */
+export const dailyRouteIn = (meta: Meta, start: Start): Bounds => {
+  const placed = mapIn(meta, start.dailyRoute.map)
   return {
     left: placed.x,
     top: placed.y,
