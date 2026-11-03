@@ -44,14 +44,24 @@ import { type Notables, loadNotables, notableAt, notablesOverlay } from "./notab
 import { PlaceExtra } from "./PlaceExtra"
 import type { PlaceInfo } from "./PlaceCard"
 import { BUTTON } from "./ui"
+import { loadWild, type Wild, type WildClock, wildOverlay } from "./wild"
+import { WildTally } from "./WildTally"
 import { WorldMap } from "./WorldMap"
 
 /** The explorer's place cards also name a town's Gym, league stop and ferries. */
 const placeExtra = (place: PlaceInfo) => <PlaceExtra place={place} />
 
 /** The tour's stops, in the order its cards come. */
-export type StopName = "town" | "region" | "world" | "gyms" | "indigo" | "hoenn" | "masters"
-const STOPS: StopName[] = ["town", "region", "world", "gyms", "indigo", "hoenn", "masters"]
+export type StopName =
+  | "town"
+  | "region"
+  | "world"
+  | "wild"
+  | "gyms"
+  | "indigo"
+  | "hoenn"
+  | "masters"
+const STOPS: StopName[] = ["town", "region", "world", "wild", "gyms", "indigo", "hoenn", "masters"]
 /** The regions in the order the page names them. */
 const REGION_ORDER = ["Kanto", "Johto", "Hoenn"]
 /** From the Gym stop on, the pins are up; from the first league's stop on, so are the leagues. */
@@ -165,6 +175,7 @@ const shotsFor = (
     { ...fit(openingIn(meta, start), width, height, 1) },
     { ...focusIn(meta, start), zoom: close },
     fit(region, width, height, 0.95),
+    fit(boundsOf(meta.maps), width, height, 0.92),
     fit(boundsOf(meta.maps), width, height, 0.92),
     fit(gyms, width, height, 0.95),
     leagueShot("indigo"),
@@ -416,6 +427,13 @@ export const WorldTour = ({
   useEffect(() => {
     notablesRef.current = notables
   }, [notables])
+  const reducedMotion = useReducedMotion()
+  // The wild stop: the waves of icons, on a clock that restarts on arriving.
+  const [wild, setWild] = useState<Wild>()
+  useEffect(() => {
+    void loadWild(base).then(setWild, () => {})
+  }, [base])
+  const wildClock = useRef<WildClock>({ start: 0, still: null })
   const stopOverlaysRef = useRef(stopOverlays)
   useEffect(() => {
     // The Gym Leaders and Elite Four go under the time of day's tint.
@@ -432,10 +450,24 @@ export const WorldTour = ({
       ...(living
         ? [{ stop: "world" as const, overlay: livingOverlay(living, pageMinutes), animated: true }]
         : []),
+      ...(wild
+        ? [
+            {
+              stop: "wild" as const,
+              overlay: wildOverlay(
+                wild,
+                wildClock.current,
+                !reducedMotion,
+                performance.now.bind(performance),
+              ),
+              animated: !reducedMotion,
+            },
+          ]
+        : []),
       ...(stopOverlays ?? []),
     ]
-  }, [stopOverlays, living, notables])
-  const reducedMotion = useReducedMotion()
+    redrawRef.current()
+  }, [stopOverlays, living, notables, wild, reducedMotion])
   const [stop, setStop] = useState(0)
   const atWorld = STOPS[stop] === "world"
   const ticking = atWorld || gym !== null
@@ -1174,6 +1206,15 @@ export const WorldTour = ({
                           reducedMotion={reducedMotion}
                         />
                       ))}
+                  {STOPS[i] === "wild" && (
+                    <WildTally
+                      wild={wild}
+                      shared={wildClock}
+                      shown={shown}
+                      reducedMotion={reducedMotion}
+                      onChange={() => redrawRef.current()}
+                    />
+                  )}
                   {text.stats && (
                     <dl className="mt-6 grid grid-cols-3 gap-4">
                       {text.stats.map(({ value, label }) => (

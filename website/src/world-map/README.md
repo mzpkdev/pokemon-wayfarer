@@ -17,7 +17,7 @@ The rest of the site uses it only through `index.ts`:
   fades in, see `src/lib/warp.ts`). After that the map holds still beside a
   card, and NEXT and BACK fly the camera between eight stops: the town, its
   one region (Hoenn, Johto or Kanto), the whole world (wherever you start,
-  you can go anywhere), the 24 Gyms, and each league in turn (Indigo
+  you can go anywhere), who lives on its routes, the 24 Gyms, and each league in turn (Indigo
   Plateau, the Hoenn League, the Sevii Masters). From the second
   stop on the map can be panned in place, the way an embedded map shares a
   page: a mouse drags, and on touch two fingers move it while one still
@@ -32,6 +32,16 @@ The rest of the site uses it only through `index.ts`:
   (GO TO the Gym for a leader who doesn't walk the map). NEXT and BACK fly on
   from wherever the map was moved to. It never takes over the page's
   scrolling.
+- At the wild stop (`wild.ts`, `WildTally.tsx`) the camera stays on the whole
+  world and icons from `icons.png` pop out of routes in waves, Gen I to VIII,
+  the regional forms, then a mix (about 14 s, looping): each wave picks the
+  routes whose tables hold that generation, spread by farthest-point
+  sampling, none overlapping on screen, at a whole multiple of the atlas.
+  The card tallies species per generation, ticking up as each wave plays and
+  ending on the total; a chip replays its wave. Generations come from each
+  species' `.natDexNum` (regional forms, by species id, are counted apart; Gen
+  VI has none in the wild; anything past Gen VIII is marked 9 and left out).
+  Reduced motion shows the full tally and a still scatter; a chip picks whose.
 - At the Gym stop a tap on a pin (or its hidden button, `aria-pressed`)
   toggles the badge earned: earned pins are bright with a gold glow and a
   sparkle (a burst when earned), the rest fainter, and earning opens that
@@ -99,15 +109,15 @@ PNG/palette helpers in `scripts/lib/`.
 the site doesn't need the game tree. Rebuild it after maps, tilesets or the
 builder change.
 
-| File              | What it holds                                                                                  |
-| ----------------- | ---------------------------------------------------------------------------------------------- |
-| `atlas.png`       | Every metatile the world uses, 16×16 each, 64 to a row                                         |
-| `grid.bin.gz`     | The world as gzipped little-endian u16 atlas indices, row by row; `0xffff` is open sea         |
-| `overview.jpg`    | The far-out view, one pixel per metatile, painted like a map                                   |
-| `encounters.json` | Per placed map, its name and wild Pokémon (species slot and percent) by method and time of day |
-| `icons.png`       | One 32×32 icon per species used, 16 to a row, indexed by the slot in `encounters.json`         |
-| `notables.json`   | The notables' stops, cycles and routes (see below)                                             |
-| `meta.json`       | Grid size, atlas columns, towns, region labels with bounds, and placed maps                    |
+| File              | What it holds                                                                                                                                  |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `atlas.png`       | Every metatile the world uses, 16×16 each, 64 to a row                                                                                         |
+| `grid.bin.gz`     | The world as gzipped little-endian u16 atlas indices, row by row; `0xffff` is open sea                                                         |
+| `overview.jpg`    | The far-out view, one pixel per metatile, painted like a map                                                                                   |
+| `encounters.json` | Per placed map, its name and wild Pokémon (species slot and percent) by method and time of day; `gens` (each species' generation) and `counts` |
+| `icons.png`       | One 32×32 icon per species used, 16 to a row, indexed by the slot in `encounters.json`                                                         |
+| `notables.json`   | The notables' stops, cycles and routes (see below)                                                                                             |
+| `meta.json`       | Grid size, atlas columns, towns, region labels with bounds, and placed maps                                                                    |
 
 The builder writes `overview.jpg` with ffmpeg. Without ffmpeg it writes
 `overview.png` instead, and the client falls back to that.

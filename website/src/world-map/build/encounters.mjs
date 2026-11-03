@@ -23,6 +23,28 @@ const REGION_FILES = ["kanto", "johto", "hoenn", "alola", "sevii", "safari", "si
 const COLUMNS = 16
 const ICON = 32
 
+/** Where each generation's national dex numbers end (Gen VII: Meltan and Melmetal; Gen VIII: Enamorus, Hisuian species included). */
+const GEN_ENDS = [151, 251, 386, 493, 649, 721, 809, 905]
+/** The generation of a national dex number: 1 to 8, or 9 for anything after (the client leaves it out). */
+const genOf = (dex) => GEN_ENDS.findIndex((end) => dex <= end) + 1 || 9
+/** Marks a regional form (Alolan, Galarian, Hisuian, Paldean) in `gens`, which holds 1 to 9 otherwise. */
+const FORM = 0
+
+/** The national dex numbers by NATIONAL_DEX_ name: enum order, so NONE is 0. */
+const readDexNumbers = (game) => {
+  const text = game.read("include/constants/pokedex.h").toString()
+  const body = text.slice(text.indexOf("enum NationalDexOrder"), text.indexOf("};"))
+  const numbers = new Map()
+  let next = 0
+  for (const [, name, alias] of body.matchAll(
+    /^\s*NATIONAL_DEX_(\w+)\s*(?:=\s*NATIONAL_DEX_(\w+))?\s*,/gm,
+  )) {
+    numbers.set(name, alias ? numbers.get(alias) : next)
+    next = numbers.get(name) + 1
+  }
+  return numbers
+}
+
 const json = (game, file) => JSON.parse(game.read(file))
 
 /** Each species' name, icon file and icon palette from the species info, with the build's config applied. */
@@ -38,6 +60,7 @@ const readSpecies = (game) => {
     graphics
       .match(new RegExp(`${symbol}\\[\\]\\s*=\\s*INCBIN_U8\\(\\s*"([^"]+?)\\.4bpp"`))?.[1]
       ?.concat(".png")
+  const dexNumbers = readDexNumbers(game)
   const species = new Map()
   for (const file of files) {
     const text = game.read(`${root}/${file}`).toString()
@@ -58,7 +81,12 @@ const readSpecies = (game) => {
       const palette = block.match(/\.iconPalIndex\s*=\s*([^,]+),/)?.[1]?.trim()
       // `P_GBA_STYLE_SPECIES_ICONS ? gba : full`: the build uses the second.
       const index = palette?.includes("?") ? palette.split(":").pop().trim() : palette
+      // The last .natDexNum is the one for a build without separate regional
+      // forms; a regional form has its own species id and is told by it.
+      const dex = [...block.matchAll(/\.natDexNum\s*=\s*NATIONAL_DEX_(\w+)/g)].at(-1)?.[1]
       species.set(start[1], {
+        form: /_(ALOLA|GALAR|HISUI|PALDEA)(_|$)/.test(start[1]),
+        dex: dexNumbers.get(dex),
         name: block.match(/\.speciesName\s*=\s*_\("([^"]*)"\)/)?.[1],
         icon: symbol && iconFile(symbol),
         palette: /^\d$/.test(index ?? "") ? Number(index) : undefined,
@@ -172,10 +200,18 @@ export const writeEncounters = (game, maps, outDir) => {
     readJascPalette(`${game.root}/graphics/pokemon/icon_palettes/pal${i}.pal`),
   )
   const missing = []
+  const gens = []
   const names = ids.map((id, slot) => {
     const info = speciesOf(id)
-    if (info?.icon === undefined || info.palette === undefined || !info.name) missing.push(id)
+    if (
+      info?.icon === undefined ||
+      info.palette === undefined ||
+      !info.name ||
+      info.dex === undefined
+    )
+      missing.push(id)
     else {
+      gens.push(info.form ? FORM : genOf(info.dex))
       const png = readPng(`${game.root}/${info.icon}`)
       const palette = palettes[info.palette]
       for (let y = 0; y < ICON; y++)
@@ -194,9 +230,11 @@ export const writeEncounters = (game, maps, outDir) => {
 
   fs.mkdirSync(outDir, { recursive: true })
   writePng(`${outDir}/icons.png`, width, rows * ICON, rgba)
+  // How many species are met in the wild per generation: I to VIII, then regional forms.
+  const counts = [1, 2, 3, 4, 5, 6, 7, 8, FORM].map((gen) => gens.filter((g) => g === gen).length)
   fs.writeFileSync(
     `${outDir}/encounters.json`,
-    JSON.stringify({ columns: COLUMNS, species: names, maps: out }),
+    JSON.stringify({ columns: COLUMNS, species: names, gens, counts, maps: out }),
   )
-  return { maps: Object.keys(out).length, withEncounters, species: ids.length }
+  return { counts, maps: Object.keys(out).length, withEncounters, species: ids.length }
 }

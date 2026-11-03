@@ -193,5 +193,6 @@ console.log(
   places.maps,
   "maps,",
   places.species,
-  "species",
+  "species; by generation I-VIII, forms:",
+  places.counts.join(" "),
 )
