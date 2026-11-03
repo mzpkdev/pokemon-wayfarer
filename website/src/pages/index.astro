@@ -47,7 +47,7 @@ import { RELEASE_LABEL } from "~/lib/release"
           <p class="pixel-label text-logo-yellow">Open world</p>
           <h2 id="open-world" class="pixel-heading mt-4">Go anywhere. There's always a way.</h2>
           <p class="mt-6 max-w-2xl text-lg leading-relaxed text-paper/80">
-            Every region is open from the first step, in any order. Wayfarer doesn't take every obstacle
+            Every region is open, in any order, with no badge standing in the way. Wayfarer doesn't take every obstacle
             away: a road can still be blocked, a sea too wide or a door shut. But a blocked road is never the
             only one. There's always another way around.
           </p>
@@ -118,16 +118,23 @@ import { RELEASE_LABEL } from "~/lib/release"
                 evolve.
               </p>
             </div>
-            <figure class="pixel-corners pixel-panel grid justify-items-center gap-4 px-4 py-8 sm:px-10 sm:py-10">
-              <div class="gba-window [--px:1px] sm:[--px:2px]">
+            <!-- Whole GBA pixels at 2x. Phones drop the panel and the 4-badge column, and tighten the columns, to fit. -->
+            <figure class="grid justify-items-center gap-4 sm:pixel-corners sm:pixel-panel sm:px-10 sm:py-10">
+              <div class="gba-window [--px:2px]">
                 <table class="gba-text">
                 <caption class="sr-only">Wild Pokémon levels and your level cap by badges earned</caption>
                 <thead>
                   <tr>
-                    <th scope="col" class="gba-text gba-text-blue pr-[calc(8*var(--px))] text-left font-normal">BADGES</th>
+                    <th scope="col" class="gba-text gba-text-blue pr-[calc(6*var(--px))] sm:pr-[calc(8*var(--px))] text-left font-normal">BADGES</th>
                     {
-                      LEVELS.badges.map((badges) => (
-                        <th scope="col" class="gba-text gba-text-blue px-[calc(4*var(--px))] text-right font-normal">
+                      LEVELS.badges.map((badges, column) => (
+                        <th
+                          scope="col"
+                          class:list={[
+                            "gba-text gba-text-blue px-[calc(3*var(--px))] sm:px-[calc(4*var(--px))] text-right font-normal",
+                            column === LEVELS.hiddenOnPhones && "hidden sm:table-cell",
+                          ]}
+                        >
                           {badges}
                         </th>
                       ))
@@ -138,11 +145,18 @@ import { RELEASE_LABEL } from "~/lib/release"
                   {
                     LEVELS.rows.map((row) => (
                       <tr>
-                        <th scope="row" class="pr-[calc(8*var(--px))] text-left font-normal">
+                        <th scope="row" class="pr-[calc(6*var(--px))] sm:pr-[calc(8*var(--px))] text-left font-normal whitespace-nowrap">
                           {row.label}
                         </th>
-                        {row.levels.map((level) => (
-                          <td class="px-[calc(4*var(--px))] text-right">{level}</td>
+                        {row.levels.map((level, column) => (
+                          <td
+                            class:list={[
+                              "px-[calc(3*var(--px))] sm:px-[calc(4*var(--px))] text-right",
+                              column === LEVELS.hiddenOnPhones && "hidden sm:table-cell",
+                            ]}
+                          >
+                            {level}
+                          </td>
                         ))}
                       </tr>
                     ))

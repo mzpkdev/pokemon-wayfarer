@@ -12,11 +12,13 @@ export const PATCHER_URL = "https://www.marcrobledo.com/RomPatcher.js/"
  */
 export const LEVELS = {
   badges: [0, 4, 8, 16, 24],
+  /** The column phones leave out, so the table fits at whole GBA pixels. */
+  hiddenOnPhones: 1,
   rows: [
-    { label: "LEVEL CAP", levels: [15, 28, 50, 75, 100] },
-    { label: "FAR FROM HOME", levels: [13, 28, 50, 74, 98] },
-    { label: "OFF THE ROAD", levels: [9, 25, 44, 65, 85] },
-    { label: "ON THE ROAD", levels: [5, 20, 38, 56, 74] },
+    { label: "LV. CAP", levels: [15, 28, 50, 75, 100] },
+    { label: "FAR AWAY", levels: [13, 28, 50, 74, 98] },
+    { label: "OFF ROAD", levels: [9, 25, 44, 65, 85] },
+    { label: "ON ROAD", levels: [5, 20, 38, 56, 74] },
   ],
 }
 
