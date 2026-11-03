@@ -7,13 +7,14 @@ that turns the game's maps into data and a client that draws that data.
 The rest of the site uses it only through `index.ts`:
 
 - `WorldTour` is the landing page's world section, one screen tall. It opens
-  in ROUTE 101's tall grass. When the section comes into view, the map fades
-  in from the page's color in steps, like stepping out of a door in the game,
-  and BRENDAN rides down to his door in LITTLEROOT TOWN, with the
-  game's map name popups. After that the map holds still beside a card, and
-  its NEXT and BACK buttons fly the camera between the stops: LITTLEROOT, all
-  of Hoenn, then the whole world. It never takes over the page's scrolling.
-  The last card's EXPLORE THE MAP opens the explorer full screen.
+  in ROUTE 101's tall grass. When it starts, BRENDAN rides down to his door in
+  LITTLEROOT TOWN, with the game's map name popups. It starts when its section
+  is mostly on screen, or on an event the page sends (`startOn`; the landing
+  page sends one when its warp from the title scene fades in, see
+  `src/lib/warp.ts`). After that the map holds still beside a card, and its
+  NEXT and BACK buttons fly the camera between the stops: LITTLEROOT, all of
+  Hoenn, then the whole world. It never takes over the page's scrolling. The
+  last card's EXPLORE THE MAP opens the explorer full screen.
 - `WorldMap` is the explorer. Drag, pinch, wheel, double-click, the arrow keys
   and +/- all pan and zoom it.
 

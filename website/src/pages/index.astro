@@ -17,12 +17,15 @@ const volbeats = [
   <main>
     <TitleScene client:load />
 
+    <!-- The highlights come first: the size of the world, warped to from the Poké Ball. -->
+    <WorldSection />
+
     <!--
-      The page is the nearest layer: it overlaps the end of the title scene's
-      pinned stretch, so its grass edge rises over the Poké Ball the way the
+      The page is the nearest layer: it overlaps the end of the world map's
+      pinned stretch, so its grass edge rises over the map the way the
       opening's layers cover one another.
     -->
-    <div class="relative z-10 -mt-[70vh]">
+    <div class="relative z-20 -mt-[calc(112*var(--scene-px))]">
       <div
         class="scene-strip h-[calc(112*var(--scene-px))] bg-[url(/game/page/edge.png)]"
         aria-hidden="true"
@@ -49,9 +52,6 @@ const volbeats = [
             ))
           }
         </div>
-
-        <!-- The highlights come first: the size of the world. -->
-        <WorldSection />
 
         <!-- Then PROF. OAK asks for your email. -->
         <CtaProfessor />

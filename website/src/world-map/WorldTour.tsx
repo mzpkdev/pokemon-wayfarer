@@ -23,14 +23,7 @@ const flightMs = (from: Camera, to: Camera) =>
 /** The closest zoom he is drawn at; further out he is a speck. */
 const RIDER_MIN_ZOOM = 4
 
-/**
- * The fade in from a warp, as the game plays it on stepping out of a door:
- * the palette blends from the fade color to full color in 8 steps (deltaY 2
- * in palette.c), a little slower here so it reads on a page.
- */
-const FADE_STEPS = 8
-const FADE_MS = 400
-/** A beat between the fade ending and BRENDAN setting off. */
+/** A beat between the tour starting and BRENDAN setting off. */
 const RIDE_DELAY_MS = 250
 
 /**
@@ -79,17 +72,18 @@ const shotsFor = (meta: Meta, width: number, height: number): Camera[] => {
  * opens the map to look around. The page scrolls past it as usual. Fills its
  * section.
  *
- * The map starts hidden under `fade`, the color of the page above it, and
- * fades in the way the game's screen does on stepping out of a door.
+ * The ride starts the first time nearly all of the section is on screen, or,
+ * given `startOn`, when the section receives that event (or already carries
+ * `data-started`), for a page that brings the map in its own way.
  */
 export const WorldTour = ({
   captions,
   base = DATA,
-  fade = "rgb(0 0 0)",
+  startOn,
 }: {
   captions: Caption[]
   base?: string
-  fade?: string
+  startOn?: string
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const captionRef = useRef<HTMLDivElement>(null)
@@ -129,7 +123,7 @@ export const WorldTour = ({
     // 101), the flight under way if any, and when the ride began.
     let current = 0
     let flight: { from: Camera; to: number; start: number; duration: number } | null = null
-    let fadeStart: number | null = null
+    let started: number | null = null
 
     const rider = new Image()
     rider.src = RIDER_SRC
@@ -156,7 +150,7 @@ export const WorldTour = ({
         raf = 0
         const { width, height } = area()
         const shots = shotsFor(world.meta, width, height)
-        const rideStart = fadeStart === null ? null : fadeStart + FADE_MS + RIDE_DELAY_MS
+        const rideStart = started === null ? null : started + RIDE_DELAY_MS
         const ride = reducedMotion
           ? 1
           : rideStart === null
@@ -189,19 +183,6 @@ export const WorldTour = ({
           sprites:
             rider.complete && rider.naturalWidth && camera.zoom >= RIDER_MIN_ZOOM ? [brendan] : [],
         })
-        // The fade, in the game's whole steps.
-        const hidden = reducedMotion
-          ? 0
-          : fadeStart === null
-            ? 1
-            : Math.ceil(Math.max(0, 1 - (now - fadeStart) / FADE_MS) * FADE_STEPS) / FADE_STEPS
-        if (hidden > 0) {
-          context.setTransform(1, 0, 0, 1, 0, 0)
-          context.globalAlpha = hidden
-          context.fillStyle = fade
-          context.fillRect(0, 0, canvas.width, canvas.height)
-          context.globalAlpha = 1
-        }
         const riding = rideStart !== null && ride < 1
         if (pending || flight || riding) schedule()
       }
@@ -221,22 +202,25 @@ export const WorldTour = ({
         schedule()
       }
 
-      // The fade, then the ride, start the first time nearly all of the
-      // section is on screen.
+      const start = () => {
+        if (started !== null) return
+        started = performance.now()
+        schedule()
+      }
       const watcher = new IntersectionObserver(
         ([entry]) => {
-          if (!entry?.isIntersecting || fadeStart !== null) return
-          fadeStart = performance.now()
-          watcher.disconnect()
-          schedule()
+          if (entry?.isIntersecting) start()
         },
         { threshold: 0.7 },
       )
-      watcher.observe(section)
+      if (!startOn) watcher.observe(section)
+      else if (section.dataset.started) start()
+      else section.addEventListener(startOn, start, { once: true })
       const resizer = new ResizeObserver(schedule)
       resizer.observe(canvas)
       cleanup = () => {
         watcher.disconnect()
+        if (startOn) section.removeEventListener(startOn, start)
         resizer.disconnect()
       }
       void document.fonts.ready.then(schedule)
@@ -249,7 +233,7 @@ export const WorldTour = ({
       window.clearTimeout(popupTimer)
       cleanup()
     }
-  }, [base, reducedMotion, fade])
+  }, [base, reducedMotion, startOn])
 
   const go = (next: number) => {
     setStop(next)

@@ -1,9 +1,9 @@
 ---
 /**
- * The size of the world, the first highlight under the title scene: a tour of
- * the overworld in the game's own tiles, LITTLEROOT TOWN to Hoenn to the whole
- * world, a button press per stop, then open to look around. The map itself
- * lives in `~/world-map`.
+ * The size of the world, the first highlight, reached from the title scene's
+ * Poké Ball by the game's warp: a tour of the overworld in the game's own
+ * tiles, LITTLEROOT TOWN to Hoenn to the whole world, a button press per stop,
+ * then open to look around. The map itself lives in `~/world-map`.
  */
 import { type Caption, WorldTour } from "~/world-map"
 
@@ -34,11 +34,43 @@ const captions: Caption[] = [
 ]
 ---
 
-<section aria-labelledby="world" class="relative h-svh min-h-[600px] overflow-hidden">
-  <h2 id="world" class="sr-only">The world of Pokémon Wayfarer</h2>
-  <WorldTour
-    client:visible={{ rootMargin: "200%" }}
-    captions={captions}
-    fade="rgb(8 41 0)"
-  />
-</section>
+<!--
+  The warp from the title scene. The stage overlaps the title scene's last
+  screen, hidden, so its top reaches the screen's top as the title scene lets
+  go of the Poké Ball. On the way there the screen steps to black with the
+  scroll; at black the map takes the title scene's place and the game's
+  warp fade-in plays, the way the screen comes back on stepping out of a door.
+  Then BRENDAN sets off. The page after it rises over the map as it leaves.
+-->
+<div class="world-stage relative z-10 -mt-[100vh]" data-hidden>
+  <section aria-labelledby="world" class="sticky top-0 h-screen min-h-[600px] overflow-hidden">
+    <h2 id="world" class="sr-only">The world of Pokémon Wayfarer</h2>
+    <WorldTour
+      client:visible={{ rootMargin: "200%" }}
+      captions={captions}
+      startOn="world-tour:start"
+    />
+  </section>
+</div>
+<div class="warp pointer-events-none fixed inset-0 z-50 bg-black" aria-hidden="true"></div>
+
+<style>
+  .world-stage {
+    /* A screen for the map, a little more to stay on it, then the page's grass edge rising over it. */
+    height: calc(130vh + 112 * var(--scene-px));
+  }
+
+  .world-stage[data-hidden] {
+    visibility: hidden;
+  }
+
+  .warp {
+    opacity: 0;
+  }
+</style>
+
+<script>
+  import { warp } from "~/lib/warp"
+
+  warp(document.querySelector<HTMLElement>(".world-stage")!, document.querySelector<HTMLElement>(".warp")!)
+</script>

@@ -1,0 +1,57 @@
+// The warp between the title scene and the world map, as the game plays a
+// door: the screen fades to black, the scene changes, and it fades back in.
+// Fading out follows the scroll, so the visitor walks into it; fading in
+// plays on its own, so nobody is left on a black screen.
+
+/** The game fades in 8 steps (deltaY 2 in palette.c). */
+const STEPS = 8
+/** How long the fade-in takes: the game's 8 frames, slowed a little to read on a page. */
+const FADE_IN_MS = 400
+/** Screens before the map's arrival where the fade to black begins, and where it is black. */
+const FADE_OUT_FROM = 0.6
+const BLACK_FROM = 0.05
+
+/** Rounds a fade level (0 clear, 1 black) to the game's whole steps, toward black. */
+const stepped = (level: number) => Math.ceil(Math.min(1, Math.max(0, level)) * STEPS) / STEPS
+
+/**
+ * Drives `overlay`'s opacity from where `stage` is: hidden until its top
+ * reaches the top of the screen, at black, and shown from then on. Fires
+ * `world-tour:start` on the stage's section the first time the fade-in ends.
+ */
+export const warp = (stage: HTMLElement, overlay: HTMLElement) => {
+  const section = stage.querySelector("section")!
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)")
+  let arrivedAt: number | null = null
+  let raf = 0
+
+  const update = (now: number) => {
+    raf = 0
+    // Screens left until the stage reaches the top; 0 or below once it has.
+    const ahead = stage.getBoundingClientRect().top / window.innerHeight
+    let level: number
+    if (ahead > 0) {
+      arrivedAt = null
+      stage.toggleAttribute("data-hidden", true)
+      level = stepped((FADE_OUT_FROM - ahead) / (FADE_OUT_FROM - BLACK_FROM))
+    } else {
+      stage.toggleAttribute("data-hidden", false)
+      arrivedAt ??= now
+      const t = reduced.matches ? 1 : (now - arrivedAt) / FADE_IN_MS
+      level = t >= 1 ? 0 : stepped(1 - t)
+      if (t < 1) raf = requestAnimationFrame(update)
+      else if (!section.dataset.started) {
+        section.dataset.started = "true"
+        section.dispatchEvent(new Event("world-tour:start"))
+      }
+    }
+    overlay.style.opacity = String(level)
+  }
+
+  const schedule = () => {
+    if (!raf) raf = requestAnimationFrame(update)
+  }
+  window.addEventListener("scroll", schedule, { passive: true })
+  window.addEventListener("resize", schedule)
+  schedule()
+}

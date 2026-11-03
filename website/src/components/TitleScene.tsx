@@ -50,17 +50,17 @@ const COUNTDOWN_HEIGHT = 70
 const DIALOG_HEIGHT = 48
 
 /**
- * Extra viewport heights the stage stays pinned at the Poké Ball. The page
- * after it overlaps all but the first 0.3 of this (see index.astro), so it
- * rises over the pinned scene like a nearer layer.
+ * Extra viewport heights the stage stays pinned at the Poké Ball. The world
+ * map overlaps the last of it and the screen steps to black over its last
+ * 0.6 (see WorldSection.astro and lib/warp.ts), warping to the map.
  */
-const HOLD_VH = 1
+const HOLD_VH = 1.2
 
 /**
- * Viewport heights past the Poké Ball at which the page's grass reaches the
- * countdown and dialog, so they fade.
+ * Viewport heights past the Poké Ball at which the countdown and dialog go:
+ * once the screen has gone black for the warp.
  */
-const PAGE_RISES_AT = 0.35
+const PAGE_RISES_AT = HOLD_VH
 
 type Viewport = { scale: number; width: number; height: number; originX: number; originY: number }
 
