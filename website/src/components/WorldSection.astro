@@ -3,8 +3,8 @@
  * The size of the world, the first highlight, reached from the title scene's
  * Poké Ball by the game's warp: a tour of the overworld in the game's own
  * tiles. Pick a start (LITTLEROOT TOWN, NEW BARK TOWN or PALLET TOWN), then a
- * button press per stop: the region, the 24 badges and the league circuit,
- * and the world, then open to look around. The map itself lives in
+ * button press per stop: that start's region, the whole world, then the 24
+ * badges and the league circuit, then open to look around. The map itself lives in
  * `~/world-map`; its cards are one per stop, with what changes by start.
  */
 import { type Caption, WorldTour } from "~/world-map"
@@ -37,15 +37,27 @@ const captions: Caption[] = [
     body: "16 towns and cities and 34 routes, over land and sea. All of it is yours to roam.",
     variants: {
       johto: {
-        place: "JOHTO AND KANTO",
-        title: "Then two regions open up.",
-        body: "20 towns and cities and 48 routes, over land and sea. All of it is yours to roam.",
+        place: "JOHTO",
+        body: "10 towns and cities and 23 routes, over land and sea. All of it is yours to roam.",
       },
       kanto: {
-        place: "JOHTO AND KANTO",
-        title: "Then two regions open up.",
-        body: "20 towns and cities and 48 routes, over land and sea. All of it is yours to roam.",
+        place: "KANTO",
+        body: "10 towns and cities and 25 routes, over land and sea. All of it is yours to roam.",
       },
+    },
+  },
+  {
+    place: "THE WORLD",
+    title: "And Hoenn is only one of them.",
+    body: "Johto, Kanto, Hoenn and Sinnoh, the Sevii Islands, Sinjoh past MT. SILVER, and Alola, all on one save. Wherever you start, you can go anywhere. Three ships sail between them.",
+    stats: [
+      { value: "62", label: "towns and cities" },
+      { value: "114", label: "routes" },
+      { value: "7", label: "ports" },
+    ],
+    variants: {
+      johto: { title: "And Johto is only one of them." },
+      kanto: { title: "And Kanto is only one of them." },
     },
   },
   {
@@ -57,20 +69,6 @@ const captions: Caption[] = [
       { value: "3", label: "regions" },
       { value: "3", label: "leagues" },
     ],
-  },
-  {
-    place: "THE WORLD",
-    title: "And Hoenn is only one of them.",
-    body: "Johto, Kanto, Hoenn and Sinnoh, the Sevii Islands, Sinjoh past MT. SILVER, and Alola, all on one save. Three ships sail between them.",
-    stats: [
-      { value: "62", label: "towns and cities" },
-      { value: "114", label: "routes" },
-      { value: "7", label: "ports" },
-    ],
-    variants: {
-      johto: { title: "And that is only part of it." },
-      kanto: { title: "And that is only part of it." },
-    },
   },
 ]
 ---

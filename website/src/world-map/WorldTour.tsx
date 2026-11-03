@@ -41,7 +41,7 @@ const placeExtra = (place: PlaceInfo) => <PlaceExtra place={place} />
 
 /** The tour's stops, in the order its cards come. */
 export type StopName = "town" | "region" | "badges" | "world"
-const STOPS: StopName[] = ["town", "region", "badges", "world"]
+const STOPS: StopName[] = ["town", "region", "world", "badges"]
 const BADGES_STOP = STOPS.indexOf("badges")
 
 export type Caption = {
@@ -137,8 +137,8 @@ const shotsFor = (
     { ...fit(openingIn(meta, start), width, height, 1) },
     { ...focusIn(meta, start), zoom: close },
     fit(region, width, height, 0.95),
-    fit(gyms, width, height, 0.95),
     fit(boundsOf(meta.maps), width, height, 0.92),
+    fit(gyms, width, height, 0.95),
   ]
 }
 
@@ -233,8 +233,8 @@ const GymCard = ({
  * given `startOn`, when the section receives that event (or already carries
  * `data-started`), for a page that brings the map in its own way.
  *
- * `captions` are one card per stop, in order: the town, the region, the
- * badges, the world. `stopOverlays` draw over the map at a stop.
+ * `captions` are one card per stop, in order: the town, the start's region,
+ * the world, the badges. `stopOverlays` draw over the map at a stop.
  */
 export const WorldTour = ({
   captions,

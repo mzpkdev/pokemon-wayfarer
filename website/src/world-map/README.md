@@ -16,8 +16,8 @@ The rest of the site uses it only through `index.ts`:
   (`startOn`; the landing page sends one when its warp from the title scene
   fades in, see `src/lib/warp.ts`). After that the map holds still beside a
   card, and NEXT and BACK fly the camera between four stops: the town, its
-  region (Hoenn, or Johto and Kanto), the 24 Gym Badges with the league
-  circuit, and the whole world. From the second stop on the
+  one region (Hoenn, Johto or Kanto), the whole world (wherever you start,
+  you can go anywhere), and the 24 Gym Badges with the league circuit. From the second stop on the
   map can be panned in place, the way an embedded map shares a page: a mouse
   drags, and on touch two fingers move it while one still scrolls the page (a
   hint says so). The zoom stays each stop's. At the badge stop the pins answer the

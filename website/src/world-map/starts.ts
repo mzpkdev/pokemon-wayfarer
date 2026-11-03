@@ -73,7 +73,7 @@ export const STARTS: Start[] = [
     ],
     road: { map: "Route29_hns", label: "ROUTE 29" },
     opening: { map: "Route29_hns", left: 48, top: 8, right: 72, bottom: 28 },
-    regions: ["JOHTO", "KANTO"],
+    regions: ["JOHTO"],
   },
   {
     id: "kanto",
@@ -91,7 +91,7 @@ export const STARTS: Start[] = [
       { map: "PalletTown_hns", x: 6.5, y: 8.5 },
     ],
     opening: { map: "PalletTown_hns", left: 0, top: -4, right: 24, bottom: 18 },
-    regions: ["JOHTO", "KANTO"],
+    regions: ["KANTO"],
   },
 ]
 
