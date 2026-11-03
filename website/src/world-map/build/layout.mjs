@@ -1,5 +1,5 @@
 // Where every map goes in the world: pieces of connected maps are laid out
-// along a spanning tree of their connections and relaxed round loops, loose
+// along a spanning tree of their connections and settled round loops, loose
 // pieces are placed by their Town Map cells, overlaps are separated, and the
 // regions are arranged on one sea.
 import { connections, readTownMapCells, targetOf } from "./game.mjs"
@@ -79,98 +79,237 @@ const layOut = (game, root) => {
   }
   placed = walk(game, root, forbidden)
   if (forbidden.size > 0) console.log(`  ${maps[root].name}: left out ${[...forbidden].join(", ")}`)
-  return relax([...placed.values()])
+  return settle([...placed.values()], forbidden)
 }
 
-// The links left out of the tree still say where their maps belong, and
-// their whole mismatch sits on that one link. Spread it round the loop: move
-// every map a little toward where all its links want it, then push apart any
-// maps that touch, until it settles. A loop's error then shows as a few short
-// gaps the fill turns into land, not one long one.
-const linkErrors = (list) => {
+// The links left out of the tree still say where their maps belong. Settle
+// every link at once, one axis at a time. Along an edge a link is exact: the
+// maps it joins share that coordinate, so a road crossing the edge lines up.
+// Across the edge it may give: a loop's leftover error becomes gaps between
+// maps (which `land.mjs` bridges by stretching both edges toward each other),
+// spread over the loop's links, and overlaps only where gaps can't take it.
+// Links given up on (see `settle`), by `edgeKey`.
+const dropped = new Set()
+const linkList = (list, withDropped = false) => {
   const at = new Map(list.map((p) => [p.m.id, p]))
   const links = []
   for (const a of list)
     for (const c of connections(a.m)) {
       const b = at.get(targetOf(a.m, c))
       if (!b || a.m.id > b.m.id) continue
+      if (!withDropped && dropped.has(edgeKey(a.m.id, b.m.id))) continue
       const o = c.offset
-      const [dx, dy] = {
+      const want = {
         up: [o, -b.l.height],
         down: [o, a.l.height],
         left: [-b.l.width, o],
         right: [a.l.width, o],
-      }[c.direction] ?? [null, null]
-      if (dx === null) continue
-      links.push({ a, b, dx, dy })
+      }[c.direction]
+      if (!want) continue
+      const vertical = c.direction === "up" || c.direction === "down"
+      links.push({ a, b, want, vertical })
     }
   return links
 }
-const relax = (list) => {
-  const links = linkErrors(list)
-  if (links.length < list.length) return list
-  // The worst link is what shows: one long gap or skewed road.
-  const error = () =>
-    Math.max(
-      ...links.map(({ a, b, dx, dy }) => Math.abs(b.x - a.x - dx) + Math.abs(b.y - a.y - dy)),
-    )
-  const before = error()
-  if (before === 0) return list
-  const start = list.map((p) => [p.x, p.y])
-  const root = list[0]
-  for (let round = 0; round < 400; round++) {
-    const pull = new Map(list.map((p) => [p, { x: 0, y: 0, n: 0 }]))
-    for (const { a, b, dx, dy } of links) {
-      const pa = pull.get(a),
-        pb = pull.get(b)
-      pb.x += a.x + dx - b.x
-      pb.y += a.y + dy - b.y
-      pb.n++
-      pa.x += b.x - dx - a.x
-      pa.y += b.y - dy - a.y
-      pa.n++
-    }
-    for (const p of list) {
-      if (p === root) continue
-      const { x, y, n } = pull.get(p)
-      if (n === 0) continue
-      p.x += Math.round((x / n) * 0.5)
-      p.y += Math.round((y / n) * 0.5)
-    }
-    // Push touching maps apart along their shallower overlap.
-    for (let i = 0; i < list.length; i++)
-      for (let j = i + 1; j < list.length; j++) {
-        const a = list[i],
-          b = list[j]
-        const w = Math.min(a.x + a.l.width, b.x + b.l.width) - Math.max(a.x, b.x)
-        const h = Math.min(a.y + a.l.height, b.y + b.l.height) - Math.max(a.y, b.y)
-        if (w <= 0 || h <= 0) continue
-        const [mover, still] = b === root ? [a, b] : [b, a]
-        if (w < h) mover.x += mover.x + mover.l.width / 2 >= still.x + still.l.width / 2 ? w : -w
-        else mover.y += mover.y + mover.l.height / 2 >= still.y + still.l.height / 2 ? h : -h
-      }
+const placementErrors = (list) =>
+  linkList(list)
+    .map(({ a, b, want }) => ({ a, b, dx: b.x - a.x - want[0], dy: b.y - a.y - want[1] }))
+    .filter(({ dx, dy }) => dx || dy)
+
+const settleAxis = (list, links, axis, apart = []) => {
+  const key = axis === 0 ? "x" : "y"
+  // Links exact on this axis: vertical ones fix x, horizontal ones fix y.
+  const exact = links.filter((link) => link.vertical === (axis === 0))
+  const loose = links.filter((link) => link.vertical !== (axis === 0))
+  // Groups held together by exact links, each map's place within its group.
+  const group = new Map(),
+    within = new Map()
+  const neighbors = new Map(list.map((p) => [p, []]))
+  for (const { a, b, want } of exact) {
+    neighbors.get(a).push([b, want[axis]])
+    neighbors.get(b).push([a, -want[axis]])
   }
-  const after = error()
-  const clash = overlap(list)
-  if (clash > 0 || after >= before) {
+  let groups = 0
+  for (const start of list) {
+    if (group.has(start)) continue
+    group.set(start, groups)
+    within.set(start, 0)
+    const queue = [start]
+    while (queue.length > 0) {
+      const p = queue.shift()
+      for (const [q, d] of neighbors.get(p))
+        if (!group.has(q)) {
+          group.set(q, groups)
+          within.set(q, within.get(p) + d)
+          queue.push(q)
+        }
+    }
+    groups++
+  }
+  // A loop of exact links that doesn't add up can't be exact all round; its
+  // maps keep the tree's places relative to each other and it is reported.
+  const broken = exact.filter(({ a, b, want }) => within.get(b) - within.get(a) !== want[axis])
+  if (broken.length)
+    console.log(
+      `  ${key}: ${broken.length} exact links off (${broken.map(({ a, b }) => `${a.m.name} ~ ${b.m.name}`).join(", ")})`,
+    )
+  // Each group's offset by weighted least squares over the loose links, a gap
+  // weighing far less than an overlap, reweighted until the overlaps settle.
+  const offset = new Float64Array(groups)
+  const root = group.get(list[0])
+  for (const p of list) offset[group.get(p)] = p[key] - within.get(p)
+  const between = loose
+    .map(({ a, b, want }) => ({
+      ga: group.get(a),
+      gb: group.get(b),
+      d: want[axis] - within.get(b) + within.get(a),
+      // Which way is apart: b lies past a on this axis by `want`.
+      sign: Math.sign(want[axis]) || 1,
+      weight: 1,
+    }))
+    .filter(({ ga, gb }) => ga !== gb)
+  // Maps that aren't linked but would overlap: kept at least `d` apart, a
+  // pull that only acts while they overlap.
+  for (const { p, q, d } of apart) {
+    const ga = group.get(p),
+      gb = group.get(q)
+    if (ga === gb) continue
+    between.push({
+      ga,
+      gb,
+      d: d - within.get(q) + within.get(p),
+      sign: Math.sign(d) || 1,
+      weight: 0,
+      apart: true,
+    })
+  }
+  for (let round = 0; round < 30; round++) {
+    for (let sweep = 0; sweep < 1500; sweep++)
+      for (let g = 0; g < groups; g++) {
+        if (g === root) continue
+        let sum = 0,
+          weight = 0
+        for (const e of between) {
+          if (e.gb === g) {
+            sum += e.weight * (offset[e.ga] + e.d)
+            weight += e.weight
+          } else if (e.ga === g) {
+            sum += e.weight * (offset[e.gb] - e.d)
+            weight += e.weight
+          }
+        }
+        if (weight > 0) offset[g] = sum / weight
+      }
+    for (const e of between) {
+      const gap = (offset[e.gb] - offset[e.ga] - e.d) * e.sign
+      if (e.apart) e.weight = gap < -0.5 ? Math.max(30, e.weight * 3) : 0
+      else e.weight = gap < -0.5 ? Math.min(e.weight * 3, 1e4) : 1
+    }
+  }
+  for (const p of list) p[key] = Math.round(offset[group.get(p)]) + within.get(p)
+}
+
+// Maps covering each other more than a few edge rows, in cells.
+const deepOverlap = (list) => {
+  let area = 0
+  for (let i = 0; i < list.length; i++)
+    for (let j = i + 1; j < list.length; j++) {
+      const p = list[i],
+        q = list[j]
+      if (p.m.name === "SootopolisCity" || q.m.name === "SootopolisCity") continue
+      const w = Math.min(p.x + p.l.width, q.x + q.l.width) - Math.max(p.x, q.x)
+      const h = Math.min(p.y + p.l.height, q.y + q.l.height) - Math.max(p.y, q.y)
+      if (Math.min(w, h) >= 4) area += w * h
+    }
+  return area
+}
+
+// Settles a piece with every link; where that lays maps deep over each other
+// (a connection the ported maps get wrong), gives up the tree's left-out
+// links one at a time, whichever helps most, and settles again.
+const settle = (list, leftOut) => {
+  if (list.length < 2) return list
+  const start = list.map((p) => [p.x, p.y])
+  const trial = () => {
     list.forEach((p, k) => {
       p.x = start[k][0]
       p.y = start[k][1]
     })
-    console.log(
-      `  ${root.m.name}: kept the tree (worst link ${after} vs ${before}, overlap ${clash})`,
-    )
-  } else {
-    const worst = links.toSorted(
-      (p, q) =>
-        Math.abs(q.b.x - q.a.x - q.dx) +
-        Math.abs(q.b.y - q.a.y - q.dy) -
-        (Math.abs(p.b.x - p.a.x - p.dx) + Math.abs(p.b.y - p.a.y - p.dy)),
-    )[0]
-    console.log(
-      `  ${root.m.name}: worst link ${before} -> ${after} metatiles (${worst.a.m.name} ~ ${worst.b.m.name})`,
-    )
+    settleWith(list)
+    return deepOverlap(list)
   }
+  let best = trial()
+  const candidates = new Set(leftOut)
+  while (best > 0 && candidates.size > 0) {
+    let pick = null
+    for (const link of candidates) {
+      dropped.add(link)
+      const area = trial()
+      dropped.delete(link)
+      if (area < best && (!pick || area < pick.area)) pick = { link, area }
+    }
+    if (!pick) break
+    dropped.add(pick.link)
+    candidates.delete(pick.link)
+    best = pick.area
+    console.log(`  gave up ${pick.link}`)
+  }
+  trial()
+  report(list)
+  return list
+}
+
+const settleWith = (list) => {
+  const links = linkList(list)
+  const root = list[0]
+  const origin = { x: root.x, y: root.y }
+  settleAxis(list, links, 0)
+  settleAxis(list, links, 1)
+  // Then push apart maps that overlap without a link between them, along
+  // whichever axis they overlap less, and settle that axis again.
+  const linked = new Set(links.map(({ a, b }) => `${a.m.id}|${b.m.id}`))
+  const apart = [[], []]
+  for (let round = 0; round < 6; round++) {
+    let added = 0
+    for (let i = 0; i < list.length; i++)
+      for (let j = i + 1; j < list.length; j++) {
+        const p = list[i],
+          q = list[j]
+        if (linked.has(`${p.m.id}|${q.m.id}`) || linked.has(`${q.m.id}|${p.m.id}`)) continue
+        const w = Math.min(p.x + p.l.width, q.x + q.l.width) - Math.max(p.x, q.x)
+        const h = Math.min(p.y + p.l.height, q.y + q.l.height) - Math.max(p.y, q.y)
+        if (w <= 0 || h <= 0) continue
+        const axis = w <= h ? 0 : 1
+        const key = axis === 0 ? "x" : "y",
+          size = axis === 0 ? "width" : "height"
+        const after = q[key] + q.l[size] / 2 >= p[key] + p.l[size] / 2
+        apart[axis].push({ p, q, d: after ? p.l[size] + 1 : -(q.l[size] + 1) })
+        added++
+      }
+    if (added === 0) break
+    settleAxis(list, links, 0, apart[0])
+    settleAxis(list, links, 1, apart[1])
+  }
+  // Keep the root where it was.
+  const dx = origin.x - root.x,
+    dy = origin.y - root.y
+  for (const p of list) {
+    p.x += dx
+    p.y += dy
+  }
+}
+
+const report = (list) => {
+  const links = linkList(list)
+  const root = list[0]
+  const errors = placementErrors(list)
+  const along = errors.filter(({ a, b, dx: ex, dy: ey }) => {
+    const link = links.find((l) => l.a === a && l.b === b)
+    return link.vertical ? ex !== 0 : ey !== 0
+  })
+  console.log(
+    `  ${root.m.name}: ${errors.length} links apart (${along.length} along an edge), overlap ${overlap(list)}, deep ${deepOverlap(list)}`,
+  )
   return list
 }
 
@@ -346,7 +485,8 @@ const separate = (pieces) => {
 /**
  * Places every map of the world. Returns the placed maps (`all`, each with its
  * map `m`, layout `l`, position `x`, `y` and `region`), and the world's size
- * `W` x `H` with the top left `minX`, `minY`, in metatiles, sea margin included.
+ * `W` x `H` with the top left `minX`, `minY`, in metatiles, sea margin included,
+ * and the `links` between placed maps (given-up ones too).
  */
 export const placeWorld = (game) => {
   const { maps } = game
@@ -500,5 +640,5 @@ export const placeWorld = (game) => {
   const W = Math.max(...all.map((p) => p.x + p.l.width)) - minX + MARGIN,
     H = Math.max(...all.map((p) => p.y + p.l.height)) - minY + MARGIN
   console.log("world", all.length, "maps,", W, "x", H, "metatiles")
-  return { all, minX, minY, W, H }
+  return { all, minX, minY, W, H, links: linkList(all, true) }
 }

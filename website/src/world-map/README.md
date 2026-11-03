@@ -128,12 +128,17 @@ Plain Node scripts. Each stage gets a module:
 - `index.mjs`: the entry point, which writes the outputs.
 - `game.mjs`: reads the game's maps, layouts, tilesets and Town Map cells, and
   draws metatiles.
-- `layout.mjs`: places the maps. Maps are joined along their connections. Where
-  a loop of connections doesn't add up, the error is spread around the loop.
+- `layout.mjs`: places the maps. Maps are joined along their connections.
+  Where a loop of connections doesn't add up, its error goes across the edges
+  (a gap, or a few rows of overlap), never along them, so roads crossing an
+  edge line up; a connection that would lay maps deep over each other is given
+  up.
   Pieces no connection reaches are placed by their Town Map cells, overlaps are
   pushed apart, and the regions are arranged on the sea, wide straits apart.
   Sinnoh sits well north of Kanto; Sinjoh, under it, is bridged to it by land.
 - `land.mjs`: fills in land between the maps, so no map's rectangle shows.
+  A gap between two connected maps is bridged by stretching both edges across
+  it (sliding by any misalignment, so the road jogs instead of stopping).
   Coasts are grown with noise, and a few cells of fill always lie in front of
   a map's land edge. Water at a map's edge (rivers, bays, sea routes) spills
   on past it a wandering way in the map's own water, kept off other maps'

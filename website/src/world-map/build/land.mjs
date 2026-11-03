@@ -151,6 +151,50 @@ const paintMaps = (game, world, atlas) => {
   return { grid, owner }
 }
 
+// Where two linked maps ended up apart (a loop of connections that doesn't add
+// up), bridge the gap: each map's edge row is stretched halfway across, so a
+// road or a river runs on into the next map. Where the maps are also off
+// along the edge, the stretch slides across the gap by the same amount, so
+// the road jogs a tile at a time instead of stopping. Bridged cells count as
+// the map's own.
+const bridgeLinks = (world, grid, owner) => {
+  const { all, links, minX, minY, W } = world
+  const index = new Map(all.map((p, m) => [p, m]))
+  let bridged = 0
+  for (const { a, b, want, vertical } of links) {
+    const ahead = (vertical ? want[1] : want[0]) > 0
+    const [first, second] = ahead ? [a, b] : [b, a]
+    const [along, across, size, span, k] = vertical
+      ? ["x", "y", "height", "width", 0]
+      : ["y", "x", "width", "height", 1]
+    const from = first[across] + first.l[size],
+      to = second[across]
+    if (to <= from) continue
+    // How far `second` sits along the edge past where the link puts it.
+    const off = b[along] - a[along] - want[k]
+    const shift = ahead ? off : -off
+    const cell = (u, v) => (vertical ? (v - minY) * W + (u - minX) : (u - minY) * W + (v - minX))
+    const lo = Math.min(first[along], second[along]),
+      hi = Math.max(first[along] + first.l[span], second[along] + second.l[span])
+    for (let c = from; c < to; c++) {
+      const f = (c - from + 0.5) / (to - from)
+      const near = f < 0.5 ? first : second
+      const edge = near === first ? from - 1 : to
+      for (let t = lo; t < hi; t++) {
+        // The point on the near map's edge this cell continues.
+        const u = Math.round(near === first ? t - shift * f : t + shift * (1 - f))
+        if (u < near[along] || u >= near[along] + near.l[span]) continue
+        const i = cell(t, c)
+        if (owner[i] >= 0) continue
+        grid[i] = grid[cell(u, edge)]
+        owner[i] = index.get(near)
+        bridged++
+      }
+    }
+  }
+  return bridged
+}
+
 // Each placed map's border blocks, and what kind of ground they are.
 const readBorders = (game, world, atlas, grid, { isWater, isDark, tileColor }) => {
   const { all } = world
@@ -589,6 +633,7 @@ const createTinter = (atlas, tileColor) => {
 // Builds the whole filled world grid. Returns everything the far view needs.
 export const buildLand = (game, world, atlas) => {
   const { grid, owner } = paintMaps(game, world, atlas)
+  console.log("bridged", bridgeLinks(world, grid, owner), "cells between linked maps")
   const classify = createClassifier(atlas)
   const borders = readBorders(game, world, atlas, grid, classify)
   const { land, toLand, spill } = growLand(world, grid, owner, classify)
