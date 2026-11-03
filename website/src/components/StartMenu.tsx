@@ -118,7 +118,15 @@ export const StartMenu = () => {
       // (see lib/warp.ts); a couple of pixels past it, so a scroll that
       // settles a fraction short doesn't stop on the warp's black.
       window.scrollTo({ top: element.getBoundingClientRect().top + window.scrollY + 2, behavior })
-    else element.scrollIntoView({ behavior, block: "start" })
+    else {
+      const aim = () => element.scrollIntoView({ behavior, block: "start" })
+      aim()
+      // The RIGHT NOW board loads as the scroll passes it and grows, moving
+      // everything after it, so the aim is corrected while the page settles.
+      const observer = new ResizeObserver(aim)
+      observer.observe(document.body)
+      window.setTimeout(() => observer.disconnect(), 2500)
+    }
   }
 
   const hint = ENTRIES[cursor]!.hint
@@ -195,9 +203,10 @@ export const StartMenu = () => {
             )
           })}
         </ul>
+        {/* Two lines tall whatever the hint, so the list above it never shifts under a finger. */}
         <p
           aria-live="polite"
-          className="gba-window gba-text w-[min(calc(100vw-0.75rem),calc(232*var(--px)))] text-ink"
+          className="gba-window gba-text min-h-[calc(2lh+20*var(--px))] w-[min(calc(100vw-0.75rem),calc(232*var(--px)))] text-ink"
         >
           {hint}
         </p>
