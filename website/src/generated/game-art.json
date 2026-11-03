@@ -137,6 +137,12 @@
     "x": 0,
     "y": 0
   },
+  "sprites/magnet-train.png": {
+    "width": 128,
+    "height": 32,
+    "x": 0,
+    "y": 32
+  },
   "sprites/notables.png": {
     "width": 144,
     "height": 1024,

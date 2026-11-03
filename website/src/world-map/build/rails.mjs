@@ -8,6 +8,9 @@
 const TRACK = { map: "Route32_hns", top: 49, rows: 5, pillar: 15, unit: 12 }
 const ENDS = { west: "GoldenrodCity_hns", east: "SaffronCity_hns" }
 
+// The middle of a run's deck: a level run's third row, an upright run's third column.
+const middle = ({ x, y, d }) => (d === 0 ? [x + 0.5, y + 2.5] : [x + 2.5, y + 0.5])
+
 export const layRails = (game, world, land, atlas) => {
   const { all, minX, minY, W, H } = world
   const grid = land.grid.slice()
@@ -15,7 +18,7 @@ export const layRails = (game, world, land, atlas) => {
   const route = placed(TRACK.map),
     west = placed(ENDS.west),
     east = placed(ENDS.east)
-  if (!route || !west || !east) return grid
+  if (!route || !west || !east) return { grid, line: null }
   const gx = (p) => p.x - minX,
     gy = (p) => p.y - minY
   const top = gy(route) + TRACK.top
@@ -168,6 +171,7 @@ export const layRails = (game, world, land, atlas) => {
     if (!Number.isFinite(dist[goal])) return null
     const cells = []
     for (let s = goal; s >= 0; s = back[s]) cells.push(at(s))
+    cells.reverse()
     // Upright runs first, so the level runs pass over the corners.
     for (const { x, y, d } of cells)
       if (d === 1)
@@ -177,6 +181,7 @@ export const layRails = (game, world, land, atlas) => {
         }
     for (const { x, y, d } of cells) if (d === 0) across(x, x + 1, y)
     return {
+      cells,
       turns: cells.filter((c, k) => k > 0 && c.d !== cells[k - 1].d).length,
       cost: dist[goal],
     }
@@ -194,6 +199,25 @@ export const layRails = (game, world, land, atlas) => {
   const eastLevel = gy(east) + (eastDoor ? eastDoor.y - TRACK.rows + 1 : 6)
   const toEast = lay(gx(route) + route.l.width, top, gx(east), eastLevel)
   if (toEast && eastDoor) across(gx(east), gx(east) + eastDoor.x - 3, eastLevel)
+  // The line the train runs, along the middle of the deck: from beside
+  // Goldenrod's station, along the city's track, the way west back to Route 32,
+  // across it, the way east, and into Saffron to its station.
+  let line = null
+  if (toWest && toEast && westDoor && eastDoor) {
+    const points = [
+      [gx(west) + westDoor.x + 3.5, westLevel + 2.5],
+      ...toWest.cells.toReversed().map(middle),
+      [gx(route) + route.l.width - 0.5, top + 2.5],
+      ...toEast.cells.map(middle),
+      [gx(east) + eastDoor.x - 3.5, eastLevel + 2.5],
+    ]
+    // Only the corners.
+    line = points.filter((p, k) => {
+      if (k === 0 || k === points.length - 1) return true
+      const [a, b] = [points[k - 1], points[k + 1]]
+      return (p[0] - a[0]) * (b[1] - p[1]) !== (p[1] - a[1]) * (b[0] - p[0])
+    })
+  }
   for (const [name, way] of [
     ["west", toWest],
     ["east", toEast],
@@ -203,5 +227,5 @@ export const layRails = (game, world, land, atlas) => {
         ? `magnet train ${name}: ${way.turns} turns, cost ${Math.round(way.cost)}`
         : `magnet train ${name}: no way found`,
     )
-  return grid
+  return { grid, line }
 }

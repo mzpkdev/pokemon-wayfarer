@@ -327,6 +327,22 @@ for (const [name, file, palette] of [
     ),
   )
 
+// The Magnet Train, its two ends side by side (west nose, east nose) as one
+// two-car train, for the world map's living overlay.
+{
+  const palette = readJascPalette(source("object_events/palettes/train_hns.pal"))
+  save(
+    "sprites/magnet-train.png",
+    trim(
+      sideBySide(
+        ["train_west_hns", "train_east_hns"].map((file) =>
+          renderIndexed(source(`object_events/pics/misc/${file}.png`), palette),
+        ),
+      ),
+    ),
+  )
+}
+
 // The 25 simulated Gym Leaders and Elite Four as the overworld draws them, for
 // the world map's walkers: one row per trainer in routines.json order, nine
 // 16x32 frames each (stand south, north, west; walk south, north, west, two

@@ -145,7 +145,7 @@ export const createHeap = () => {
   }
 }
 
-export const writeLiving = ({ grid, isWater, width: W, height: H, maps }, outDir) => {
+export const writeLiving = ({ railLine, grid, isWater, width: W, height: H, maps }, outDir) => {
   const ferries = readFerries()
   const N = W * H
   const land = new Uint8Array(N)
@@ -363,6 +363,17 @@ export const writeLiving = ({ grid, isWater, width: W, height: H, maps }, outDir
     ),
     ferry: { portMinutes: ferries.portMinutes, seaMinutes: ferries.seaMinutes, ships },
     lanes,
+    // The Magnet Train, back and forth between its two stations. The game has
+    // no schedule for it (a ride is a cutscene), so these are ours: it waits a
+    // half hour at each end and rides four hours between, from Goldenrod at 8:00.
+    train: railLine && {
+      name: "MAGNET TRAIN",
+      stations: ["Goldenrod", "Saffron"],
+      line: railLine,
+      stationMinutes: 30,
+      rideMinutes: 240,
+      start: 8 * 60,
+    },
     // Hours the periods begin and end, and the tint multiplier (/256) at hours
     // the game blends between: evening 0:00, night 1:00 to 4:00, morning 6:00,
     // day 8:00 to 20:00, evening again by 24:00.

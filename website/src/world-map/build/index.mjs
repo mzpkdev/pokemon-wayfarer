@@ -30,7 +30,7 @@ const { all, minX, minY, W, H } = world
 const land = buildLand(game, world, metatiles)
 // What's drawn: the land with the Magnet Train's line laid over it. The
 // ferries and walkers keep to `land.grid`, under the viaduct.
-const grid = layRails(game, world, land, metatiles)
+const { grid, line: railLine } = layRails(game, world, land, metatiles)
 const atlasTiles = metatiles.tiles
 
 // The atlas: 64 metatiles a row.
@@ -143,6 +143,7 @@ for (const pic of pics) {
 // The ferries, their sea lanes and the times of day.
 writeLiving(
   {
+    railLine,
     grid: land.grid,
     isWater: land.isWater,
     width: W,

@@ -214,10 +214,16 @@ the way `tools/mapjson` does.
   game's schedule table has it at its first port (Aqua and Tidal 8:00, Anne
   20:00). In the game a voyage starts at boarding, so on the map this is an
   illustration of the loop, not a live position.
+- The Magnet Train runs its line (`rails.mjs`) back and forth: half an hour at
+  each station, four hours between, from Goldenrod at 8:00. That timing is
+  ours; in the game a ride is a cutscene. Its sprite is the game's two train
+  ends side by side (`public/game/sprites/magnet-train.png`, `pnpm assets`),
+  drawn twice the game's size so it fills the viaduct's deck, each car turned
+  the way the line runs under it.
 - `loadLiving(base)`, `gameClock(rate, start)` (`LIVING_RATE.game` is the game's
   day per 2 hours, `.page` a day per 2 minutes), `livingOverlay(living, minutes)`
   for `View.overlays` (lanes, ships, then the tint as a multiply), `periodAt`,
-  `shipsAt`, and `pickShip` with `shipReach(zoom)` for hover labels.
+  `shipsAt`, `trainAt`, and `pickShip` with `shipReach(zoom)` for hover labels.
 
 ## The notables
 
