@@ -414,6 +414,7 @@ export const notablesOverlay =
       only,
       minHeight: least,
       marker,
+      standing,
     }: {
       /** Draws only the notables this keeps, e.g. the one a card is about. */
       only?: (slug: string) => boolean
@@ -421,6 +422,8 @@ export const notablesOverlay =
       minHeight?: number
       /** A bouncing arrow over their heads, to pick them out. */
       marker?: boolean
+      /** Everyone stands still: no walking frames, hops or bobbing. */
+      standing?: boolean
     } = {},
   ): Overlay =>
   (context, { scale, ratio, toScreen }) => {
@@ -442,9 +445,10 @@ export const notablesOverlay =
       const [stand, one, two] = FRAMES[face]
       const phase = (tick + notable.row) % 4
       const still = world.still[notable.row]
-      const frame = !notable.moving || still ? stand : phase === 1 ? one : phase === 3 ? two : stand
+      const frame =
+        standing || !notable.moving || still ? stand : phase === 1 ? one : phase === 3 ? two : stand
       // A sheet with no walking frames hops a little instead.
-      const hop = notable.moving && still ? (phase % 2) * 0.04 * h : 0
+      const hop = !standing && notable.moving && still ? (phase % 2) * 0.04 * h : 0
       // A soft shadow, or a wake in the water.
       context.fillStyle = notable.sea ? "rgb(255 255 255 / 0.55)" : "rgb(0 0 0 / 0.3)"
       context.beginPath()
@@ -465,7 +469,7 @@ export const notablesOverlay =
       if (marker) {
         // The game's down arrow, in its yellow, bobbing two steps.
         const size = Math.round(6 * ratio)
-        const bob = Math.floor(performance.now() / 300) % 2 ? size * 0.5 : 0
+        const bob = !standing && Math.floor(performance.now() / 300) % 2 ? size * 0.5 : 0
         const head = p.y - h * (1 - (world.tops[notable.row] ?? 0)) - hop
         const top = head - size * 2 + bob
         context.fillStyle = "rgb(255 214 0)"

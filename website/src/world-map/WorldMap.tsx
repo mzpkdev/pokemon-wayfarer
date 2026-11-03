@@ -1,5 +1,7 @@
 import { type ReactNode, useEffect, useRef, useState } from "react"
 
+import { useReducedMotion } from "~/lib/hooks"
+
 import { type Camera, fit } from "./camera"
 import { DATA, type Meta, loadWorld } from "./data"
 import { type Encounters, loadEncounters } from "./encounters"
@@ -79,9 +81,19 @@ export const WorldMap = ({
   // The ships and the time of day, on the page's shared clock.
   const [living, setLiving] = useState<LivingWorld>()
   const [minutes, setMinutes] = useState(pageMinutes)
+  // With reduced motion the ships and walkers hold still, moving on the clock's tick.
+  const reducedMotion = useReducedMotion()
+  const reducedRef = useRef(reducedMotion)
+  useEffect(() => {
+    reducedRef.current = reducedMotion
+    api.current.redraw()
+  }, [reducedMotion])
   useEffect(() => {
     void loadLiving(base).then(setLiving, () => {})
-    const timer = window.setInterval(() => setMinutes(pageMinutes()), 500)
+    const timer = window.setInterval(() => {
+      setMinutes(pageMinutes())
+      if (reducedRef.current) api.current.redraw()
+    }, 500)
     return () => window.clearInterval(timer)
   }, [base])
   const livingRef = useRef<LivingWorld>(undefined)
@@ -178,13 +190,20 @@ export const WorldMap = ({
             labelWidth: canvas.clientWidth,
             labels: true,
             overlays: [
-              ...(notablesRef.current ? [notablesOverlay(notablesRef.current, pageMinutes)] : []),
+              ...(notablesRef.current
+                ? [
+                    notablesOverlay(notablesRef.current, pageMinutes, {
+                      standing: reducedRef.current,
+                    }),
+                  ]
+                : []),
               ...(livingRef.current ? [livingOverlay(livingRef.current, pageMinutes)] : []),
               ...(highlighted ? [highlight(highlighted)] : []),
             ],
           })
           // The ships keep sailing while the map is open.
-          if (pending || livingRef.current || notablesRef.current) schedule()
+          if (pending || (!reducedRef.current && (livingRef.current || notablesRef.current)))
+            schedule()
         }
         const schedule = () => {
           if (!raf) raf = requestAnimationFrame(draw)

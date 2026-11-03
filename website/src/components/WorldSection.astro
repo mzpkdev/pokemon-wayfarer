@@ -2,7 +2,7 @@
 /**
  * The size of the world, the first highlight, reached from the title scene's
  * Poké Ball by the game's warp: a tour of the overworld in the game's own
- * tiles. Pick a start (LITTLEROOT TOWN, NEW BARK TOWN or PALLET TOWN), then a
+ * tiles. Pick a start (PALLET TOWN, NEW BARK TOWN or LITTLEROOT TOWN), then a
  * button press per stop: that start's region, the whole world, the 24 Gyms
  * (tap the badges you'd win) and each league, then open to look around. The map itself lives in
  * `~/world-map`; its cards are one per stop, with what changes by start.
@@ -98,13 +98,13 @@ const captions: Caption[] = [
   go of the Poké Ball. On the way there the screen steps to black with the
   scroll; at black the map takes the title scene's place and the game's
   warp fade-in plays, the way the screen comes back on stepping out of a door.
-  Then BRENDAN sets off. The page after it rises over the map as it leaves.
+  Then the player (RED, by default) sets off. The page after it rises over the map as it leaves.
 -->
 <div class="world-stage relative z-10 -mt-[100vh]" data-hidden>
   <section aria-labelledby="world" class="sticky top-0 h-screen min-h-[600px] overflow-hidden">
     <h2 id="world" class="sr-only">The world of Pokémon Wayfarer</h2>
     <WorldTour
-      client:visible={{ rootMargin: "200%" }}
+      client:visible={{ rootMargin: "100%" }}
       captions={captions}
       startOn="world-tour:start"
     />

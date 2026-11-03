@@ -402,6 +402,9 @@ export const WorldTour = ({
   const callTimer = useRef(0)
   const [call, setCall] = useState<Exclude<LeagueId, "masters"> | null>(null)
   const redrawRef = useRef<() => void>(() => {})
+  const exploringRef = useRef(false)
+  // The button that moves on, which takes the focus when the one pressed goes.
+  const nextRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {
     earnedRef.current = earned
     redrawRef.current()
@@ -416,13 +419,17 @@ export const WorldTour = ({
   const chooseRef = useRef<(id: StartId) => void>(() => {})
   // The world stop shows the living world: the ferries on their loops and
   // the time of day, on the page's shared clock.
+  const [stop, setStop] = useState(0)
   const [living, setLiving] = useState<LivingWorld>()
   const [minutes, setMinutes] = useState(pageMinutes)
   const [notables, setNotables] = useState<Notables>()
+  // These load on the way to the stops that show them, not with the page.
+  const nearWorld = stop >= STOPS.indexOf("world") - 1
   useEffect(() => {
+    if (!nearWorld) return
     void loadLiving(base).then(setLiving, () => {})
     void loadNotables(base).then(setNotables, () => {})
-  }, [base])
+  }, [base, nearWorld])
   const notablesRef = useRef<Notables>(undefined)
   useEffect(() => {
     notablesRef.current = notables
@@ -430,9 +437,14 @@ export const WorldTour = ({
   const reducedMotion = useReducedMotion()
   // The wild stop: the waves of icons, on a clock that restarts on arriving.
   const [wild, setWild] = useState<Wild>()
+  const nearWild = stop >= STOPS.indexOf("world")
   useEffect(() => {
-    void loadWild(base).then(setWild, () => {})
-  }, [base])
+    if (nearWild) void loadWild(base).then(setWild, () => {})
+  }, [base, nearWild])
+  const nearGyms = stop >= GYMS_STOP - 1
+  useEffect(() => {
+    if (nearGyms) preloadPortraits(base, roster)
+  }, [base, roster, nearGyms])
   const wildClock = useRef<WildClock>({ start: 0, still: null })
   const stopOverlaysRef = useRef(stopOverlays)
   useEffect(() => {
@@ -442,13 +454,19 @@ export const WorldTour = ({
         ? [
             {
               stop: "world" as const,
-              overlay: notablesOverlay(notables, pageMinutes),
-              animated: true,
+              overlay: notablesOverlay(notables, pageMinutes, { standing: reducedMotion }),
+              animated: !reducedMotion,
             },
           ]
         : []),
       ...(living
-        ? [{ stop: "world" as const, overlay: livingOverlay(living, pageMinutes), animated: true }]
+        ? [
+            {
+              stop: "world" as const,
+              overlay: livingOverlay(living, pageMinutes),
+              animated: !reducedMotion,
+            },
+          ]
         : []),
       ...(wild
         ? [
@@ -468,14 +486,17 @@ export const WorldTour = ({
     ]
     redrawRef.current()
   }, [stopOverlays, living, notables, wild, reducedMotion])
-  const [stop, setStop] = useState(0)
   const atWorld = STOPS[stop] === "world"
   const ticking = atWorld || gym !== null
   useEffect(() => {
     if (!ticking) return
-    const timer = window.setInterval(() => setMinutes(pageMinutes()), 500)
+    // With reduced motion the map redraws on the clock's tick, not every frame.
+    const timer = window.setInterval(() => {
+      setMinutes(pageMinutes())
+      if (reducedMotion) redrawRef.current()
+    }, 500)
     return () => window.clearInterval(timer)
-  }, [ticking])
+  }, [ticking, reducedMotion])
   const [chosen, setChosen] = useState<StartId>(DEFAULT_START)
   const [warping, setWarping] = useState(false)
   const [exploring, setExploring] = useState<Camera | null>(null)
@@ -492,6 +513,11 @@ export const WorldTour = ({
     let raf = 0
     let disposed = false
     let cleanup = () => {}
+    // Frames are only for a canvas that can be seen: on screen, with its
+    // stage shown, and no explorer over it.
+    const stage = section.parentElement
+    let onScreen = true
+    const shown = () => onScreen && !stage?.hasAttribute("data-hidden") && !exploringRef.current
 
     // The map name popup slides away, then back with the next name, the way
     // the game's does on walking into a new area.
@@ -587,6 +613,7 @@ export const WorldTour = ({
 
       const draw = (now: number) => {
         raf = 0
+        if (!shown()) return
 
         // The warp's fade: 0 clear to 1 black, in the game's whole steps.
         let fade = 0
@@ -688,9 +715,10 @@ export const WorldTour = ({
               only: (s) => s === slug || s === also,
               minHeight: 44,
               marker: true,
+              standing: reducedMotion,
             }),
           )
-          animated = true
+          if (!reducedMotion) animated = true
         }
         for (const entry of stopOverlaysRef.current ?? [])
           if (entry.stop === STOPS[current]) {
@@ -716,10 +744,11 @@ export const WorldTour = ({
           context.fillRect(0, 0, canvas.width, canvas.height)
         }
         const riding = rideStart !== null && progress < 1
-        if (pending || flight || follow || riding || warp || animated) schedule()
+        if (pending || flight || (follow && !reducedMotion) || riding || warp || animated)
+          schedule()
       }
       const schedule = () => {
-        if (!raf) raf = requestAnimationFrame(draw)
+        if (!raf && shown()) raf = requestAnimationFrame(draw)
       }
       redrawRef.current = schedule
 
@@ -921,7 +950,6 @@ export const WorldTour = ({
       setGymPins(landmarks.badges)
       setLeagues(landmarks.circuit)
       setRoster(landmarks.roster)
-      preloadPortraits(base, landmarks.roster)
 
       // The Gym card's button: pan onto the leader and keep them in view as
       // they walk, or onto the Gym when its leader doesn't walk the map.
@@ -947,11 +975,20 @@ export const WorldTour = ({
       if (!startOn) watcher.observe(section)
       else if (section.dataset.started) go()
       else section.addEventListener(startOn, go, { once: true })
+      const seen = new IntersectionObserver(([entry]) => {
+        onScreen = entry?.isIntersecting ?? true
+        schedule()
+      })
+      seen.observe(section)
+      const unhidden = new MutationObserver(schedule)
+      if (stage) unhidden.observe(stage, { attributes: true, attributeFilter: ["data-hidden"] })
       const resizer = new ResizeObserver(schedule)
       resizer.observe(canvas)
       cleanup = () => {
         listening.abort()
         watcher.disconnect()
+        seen.disconnect()
+        unhidden.disconnect()
         if (startOn) section.removeEventListener(startOn, go)
         resizer.disconnect()
       }
@@ -1007,7 +1044,11 @@ export const WorldTour = ({
   const answered = (accepted: boolean) => {
     const league = call
     setCall(null)
-    if (accepted && league) go(STOPS.indexOf(league))
+    if (accepted && league) {
+      go(STOPS.indexOf(league))
+      // The dialog gives the focus back to a pin that is about to leave.
+      requestAnimationFrame(() => nextRef.current?.focus())
+    }
   }
 
   const choose = (id: StartId) => {
@@ -1019,7 +1060,9 @@ export const WorldTour = ({
 
   // The explorer opens as a modal over the page, starting where the tour is.
   useEffect(() => {
+    exploringRef.current = exploring !== null
     if (exploring) dialogRef.current?.showModal()
+    else redrawRef.current()
   }, [exploring])
 
   return (
@@ -1133,7 +1176,13 @@ export const WorldTour = ({
           ref={captionRef}
           className="pixel-corners pixel-panel pointer-events-auto relative w-full p-4 sm:p-8 lg:w-[400px]"
         >
-          <div className="grid" aria-live="polite">
+          <p className="sr-only" aria-live="polite">
+            {(() => {
+              const text = { ...captions[stop], ...captions[stop]?.variants?.[chosen] }
+              return `${text.place}. ${text.title}`
+            })()}
+          </p>
+          <div className="grid">
             {captions.map((caption, i) => {
               const shown = stop === i
               const text = { ...caption, ...caption.variants?.[chosen] }
@@ -1237,7 +1286,10 @@ export const WorldTour = ({
               <button
                 type="button"
                 disabled={warping}
-                onClick={() => go(stop - 1)}
+                onClick={() => {
+                  go(stop - 1)
+                  if (stop === 1) nextRef.current?.focus()
+                }}
                 className="pixel-label px-2 pt-2 pb-3 text-paper/70 hover:text-paper focus-visible:text-paper focus-visible:underline focus-visible:outline-none"
               >
                 BACK
@@ -1248,6 +1300,7 @@ export const WorldTour = ({
             {stop < captions.length - 1 ? (
               <button
                 type="button"
+                ref={nextRef}
                 disabled={warping}
                 onClick={() => go(stop + 1)}
                 className={BUTTON}
@@ -1257,6 +1310,7 @@ export const WorldTour = ({
             ) : (
               <button
                 type="button"
+                ref={nextRef}
                 onClick={() => setExploring(cameraRef.current ?? { x: 0, y: 0, zoom: 0 })}
                 className={BUTTON}
               >

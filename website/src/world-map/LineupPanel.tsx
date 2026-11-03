@@ -107,7 +107,7 @@ export const LineupPanel = ({
         <span className="text-logo-yellow">THE FIVE</span>
         <span className="text-paper/70">{done ? `EVENT ${event + 1}` : "PICKING…"}</span>
       </p>
-      <p className="sr-only" aria-live="polite">
+      <p className="sr-only">
         {done
           ? `Event ${event + 1}, in battle order: ${lineup.map(({ trainer }) => trainer.name).join(", ")}.`
           : ""}

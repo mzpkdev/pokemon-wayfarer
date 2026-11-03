@@ -8,9 +8,9 @@ The rest of the site uses it only through `index.ts`:
 
 - `WorldTour` is the landing page's world section, one screen tall. When it
   starts, the player rides in on their bike to their front door, with the
-  game's map name popups. The first card picks where: LITTLEROOT TOWN (BRENDAN,
-  down ROUTE 101; the default), NEW BARK TOWN (GOLD, out of ROUTE 29's grass)
-  or PALLET TOWN (RED). Choosing another plays the game's warp on the map: an
+  game's map name popups. The first card picks where: PALLET TOWN (RED; the
+  default), NEW BARK TOWN (GOLD, out of ROUTE 29's grass) or LITTLEROOT TOWN
+  (BRENDAN, down ROUTE 101). Choosing another plays the game's warp on the map: an
   8-step fade to black, a cut, and an 8-step fade in, then the new ride. It
   starts when its section is mostly on screen, or on an event the page sends
   (`startOn`; the landing page sends one when its warp from the title scene
