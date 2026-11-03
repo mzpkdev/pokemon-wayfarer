@@ -243,7 +243,7 @@ const drawTrain = (
 ) => {
   const image = living.sprites.train
   const rails = living.rails
-  if (!image || !rails) return
+  if (!image || !rails) return null
   const carW = Math.max((TRAIN_TILES / 2) * scale, MIN_CAR_CSS * ratio)
   const carH = (carW * image.naturalHeight) / (image.naturalWidth / 2)
   // Cars as long as they're drawn, so they meet however far out.
@@ -273,6 +273,25 @@ const drawTrain = (
     )
     context.restore()
   }
+  // Its name goes over the middle of the train, clear of the cars however
+  // they turn (under it, at Saffron, the KANTO plate would cover it).
+  const middle = pointAlong(rails, Math.min(rails.length, Math.max(0, train.along)))
+  const p = toScreen(middle.x, middle.y)
+  return { x: p.x, y: p.y - carW / 2 - 20 * ratio }
+}
+
+/** The names under the ships and the train, so a visitor who played the games knows them. */
+const drawName = (
+  context: CanvasRenderingContext2D,
+  name: string,
+  x: number,
+  y: number,
+  ratio: number,
+) => {
+  context.fillStyle = "rgb(0 0 0 / 0.7)"
+  context.fillText(name, x + ratio * 1.5, y + ratio * 1.5)
+  context.fillStyle = "rgb(248 232 128)"
+  context.fillText(name, x, y)
 }
 
 /** Where every ship is at a game minute. */
@@ -385,6 +404,7 @@ export const livingOverlay =
     context.setLineDash([])
 
     context.imageSmoothingEnabled = false
+    const names: { name: string; x: number; y: number }[] = []
     for (const ship of shipsAt(living, now)) {
       const image = living.sprites[ship.id]!
       const p = toScreen(ship.x, ship.y)
@@ -404,10 +424,12 @@ export const livingOverlay =
       if (ship.flip) context.scale(-1, 1)
       context.drawImage(image, -w / 2, -h / 2, w, h)
       context.restore()
+      names.push({ name: ship.name, x: p.x, y: p.y + h / 2 + 4 * ratio })
     }
 
     const train = trainAt(living, now)
-    if (train) drawTrain(context, living, train, projection)
+    const trainName = train && drawTrain(context, living, train, projection)
+    if (train && trainName) names.push({ name: living.train!.name, ...trainName })
 
     // The game multiplies each palette color by the period's tint; multiply
     // over the canvas does the same to what's drawn.
@@ -418,4 +440,11 @@ export const livingOverlay =
       context.fillRect(0, 0, width, height)
       context.globalCompositeOperation = "source-over"
     }
+
+    // The names last, untinted, so they read at night too.
+    context.font = `${Math.round(16 * ratio)}px "Wayfarer Text", monospace`
+    context.textAlign = "center"
+    context.textBaseline = "top"
+    for (const { name, x, y } of names) drawName(context, name, x, y, ratio)
+    context.textBaseline = "alphabetic"
   }
