@@ -151,9 +151,11 @@ live game state: the game advances them on map changes (see
   Gym Leader's home and training). Favourites in places the grid doesn't hold
   (the Battle Frontier) are dropped; Trainer Hill's courtyard is put on Route 40.
 - Routes: A* over the world grid's land (placed maps cost less than filler
-  land), simplified. Where no land joins two places, the route crosses water and
-  is marked `sea`; the trainer is drawn with a white wake and the label says
-  "sailing". It's an illustration, like the ferries, not a ferry schedule.
+  land), simplified. Where no land joins two places, the route crosses water;
+  its water segments are marked (`w`), and there the trainer leaves a white
+  wake and the label says "crossing the sea". Everyone walks at one pace, on
+  land and water alike, with no cap on a trip's length, so nobody speeds up
+  mid-trip. It's an illustration, like the ferries, not a ferry schedule.
 - Sprites: `public/game/sprites/notables.png` (`pnpm assets`), one row of nine
   16x32 frames per trainer in `routines.json` order, from each trainer's
   `OBJ_EVENT_GFX_*` info. Will and Karen have stand frames only; they hop.

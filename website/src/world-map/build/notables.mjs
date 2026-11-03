@@ -319,9 +319,31 @@ export const writeNotables = (game, world, land, landmarks, outDir) => {
     const [a, b] = key.split(">").map(Number)
     const cells = route(stops[a].cell, stops[b].cell)
     const water = cells.filter((i) => !landCell[i]).length
-    const points = simplify(cells.map((i) => [i % W, Math.floor(i / W)]))
-    legs[key] = { pts: points.flat(), ...(water >= SEA_CELLS ? { sea: 1 } : {}) }
-    if (water >= SEA_CELLS) seaLegs++
+    if (water < SEA_CELLS) {
+      legs[key] = { pts: simplify(cells.map((i) => [i % W, Math.floor(i / W)])).flat() }
+      continue
+    }
+    // A leg that crosses water is simplified a run of land or water at a
+    // time, so each segment is all one or the other; `w` marks the water
+    // segments, where the walker leaves a wake.
+    seaLegs++
+    const points = []
+    const w = []
+    let start = 0
+    for (let i = 1; i <= cells.length; i++) {
+      if (i < cells.length && landCell[cells[i]] === landCell[cells[start]]) continue
+      // The run's last cell is shared with the next run's first point.
+      const run = simplify(
+        cells.slice(start, Math.min(i + 1, cells.length)).map((c) => [c % W, Math.floor(c / W)]),
+      )
+      const skip = points.length ? 1 : 0
+      for (let k = skip; k < run.length; k++) {
+        points.push(run[k])
+        if (points.length > 1) w.push(landCell[cells[start]] ? 0 : 1)
+      }
+      start = i
+    }
+    legs[key] = { pts: points.flat(), w }
   }
 
   const data = {

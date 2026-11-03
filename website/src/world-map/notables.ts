@@ -31,11 +31,18 @@ export type NotablesData = {
     cycle: Step[]
   }[]
   /** Routes by "a>b" stop indices (a < b): flat x, y cells; `sea` where it crosses water. */
-  legs: Record<string, { pts: number[]; sea?: 1 }>
+  legs: Record<string, { pts: number[]; w?: (0 | 1)[] }>
 }
 
 /** A route from one stop to another, with the distance along it at each point. */
-type Leg = { points: Point[]; along: number[]; length: number; sea: boolean; minutes: number }
+type Leg = {
+  points: Point[]
+  along: number[]
+  length: number
+  /** Per segment, whether it crosses water (the walker leaves a wake there). */
+  water: boolean[]
+  minutes: number
+}
 
 type Plan = {
   slug: string
@@ -108,11 +115,12 @@ const DWELL: Record<string, number> = {
 }
 const BEAT = 45
 
-/** Game minutes a notable takes per metatile: about the player's pace (3.75 metatiles a second) on the page's clock, and by ship. */
+/**
+ * Game minutes a notable takes per metatile, on land and across water alike,
+ * so nobody changes pace mid-trip: about the player's walking pace (3.75
+ * metatiles a second) on the page's clock.
+ */
 const WALK_MINUTES = 3.2
-const SAIL_MINUTES = 0.8
-/** No trip takes longer than this, so the far ones go briskly. */
-const MAX_TRIP = 600
 
 /** What each activity reads as, "fishing at Nugget Bridge". */
 const VERB: Record<string, string> = {
@@ -154,7 +162,7 @@ const hashOf = (text: string) => {
   return mix(h)
 }
 
-const toLeg = (flat: number[], sea: boolean): Leg => {
+const toLeg = (flat: number[], water: (0 | 1)[] = []): Leg => {
   // Cells' centers.
   const points: Point[] = []
   for (let i = 0; i < flat.length; i += 2) points.push([flat[i]! + 0.5, flat[i + 1]! + 0.5])
@@ -169,8 +177,8 @@ const toLeg = (flat: number[], sea: boolean): Leg => {
     points,
     along,
     length,
-    sea,
-    minutes: Math.min(MAX_TRIP, Math.ceil(length * (sea ? SAIL_MINUTES : WALK_MINUTES))),
+    water: points.slice(1).map((_, i) => water[i] === 1),
+    minutes: Math.ceil(length * WALK_MINUTES),
   }
 }
 
@@ -178,6 +186,7 @@ const reversed = (leg: Leg): Leg => ({
   ...leg,
   points: leg.points.toReversed(),
   along: leg.along.map((d) => leg.length - d).toReversed(),
+  water: leg.water.toReversed(),
 })
 
 const loading = new Map<string, Promise<Notables>>()
@@ -193,9 +202,9 @@ export const loadNotables = (base = DATA, sprites = SPRITES): Promise<Notables> 
         loadImage(sprites),
       ])
       const legs = new Map<string, Leg>()
-      for (const [pair, { pts, sea }] of Object.entries(data.legs)) {
+      for (const [pair, { pts, w }] of Object.entries(data.legs)) {
         const [a, b] = pair.split(">")
-        const leg = toLeg(pts, Boolean(sea))
+        const leg = toLeg(pts, w)
         legs.set(pair, leg)
         legs.set(`${b}>${a}`, reversed(leg))
       }
@@ -244,7 +253,13 @@ const pointAlong = (leg: Leg, distance: number) => {
   const [bx, by] = points[i]!
   const span = along[i]! - along[i - 1]!
   const t = span > 0 ? Math.min(1, Math.max(0, (distance - along[i - 1]!) / span)) : 0
-  return { x: ax + (bx - ax) * t, y: ay + (by - ay) * t, dx: bx - ax, dy: by - ay }
+  return {
+    x: ax + (bx - ax) * t,
+    y: ay + (by - ay) * t,
+    dx: bx - ax,
+    dy: by - ay,
+    water: leg.water[i - 1] ?? false,
+  }
 }
 
 const facingOf = (dx: number, dy: number): Facing =>
@@ -294,11 +309,11 @@ const whereAt = (world: Notables, plan: Plan, minutes: number): Notable => {
         y: p.y,
         facing: facingOf(p.dx, p.dy),
         moving: true,
-        sea: trip.sea,
+        sea: p.water,
         row: plan.row,
         activity: step.a,
         place: stop[2],
-        label: `${plan.name.toUpperCase()} · ${trip.sea ? "sailing" : "on the way"} to ${stop[2]}`,
+        label: `${plan.name.toUpperCase()} · ${p.water ? "crossing the sea" : "on the way"} to ${stop[2]}`,
       }
     }
     at += into
