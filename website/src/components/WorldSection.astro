@@ -1,9 +1,10 @@
 ---
 /**
  * The size of the world, the first highlight under the title scene: the
- * region maps on one ocean, pulled back from LITTLEROOT TOWN as you scroll.
+ * overworld in the game's own tiles, pulled back from LITTLEROOT TOWN as you
+ * scroll, then open to look around. The map itself lives in `~/world-map`.
  */
-import { type Caption, WorldZoom } from "~/components/WorldZoom"
+import { type Caption, WorldTour } from "~/world-map"
 
 // Counted from the outdoor maps the build compiles (see the website-landing
 // task note): towns and cities by map type, numbered routes by number.
@@ -35,7 +36,7 @@ const captions: Caption[] = [
 <section aria-labelledby="world" class="world relative">
   <h2 id="world" class="sr-only">The world of Pokémon Wayfarer</h2>
   <div class="sticky top-0 h-svh overflow-hidden">
-    <WorldZoom client:visible captions={captions} />
+    <WorldTour client:visible={{ rootMargin: "200%" }} captions={captions} />
   </div>
 </section>
 

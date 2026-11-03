@@ -14,14 +14,15 @@ The public site for Pokémon Wayfarer, built with Astro and React islands.
 
 Run these from `website/`, or from the repository root with `pnpm --filter @wayfarer/website run <script>`.
 
-| Script         | What it does                             |
-| -------------- | ---------------------------------------- |
-| `pnpm dev`     | Start the dev server                     |
-| `pnpm build`   | Build the static site into `dist/`       |
-| `pnpm preview` | Serve the built site                     |
-| `pnpm assets`  | Re-render the game art in `public/game/` |
-| `pnpm check`   | Type check, lint, and check formatting   |
-| `pnpm format`  | Format files with oxfmt                  |
+| Script           | What it does                                        |
+| ---------------- | --------------------------------------------------- |
+| `pnpm dev`       | Start the dev server                                |
+| `pnpm build`     | Build the static site into `dist/`                  |
+| `pnpm preview`   | Serve the built site                                |
+| `pnpm assets`    | Re-render the game art in `public/game/`            |
+| `pnpm world-map` | Rebuild the world map's data in `public/world-map/` |
+| `pnpm check`     | Type check, lint, and check formatting              |
+| `pnpm format`    | Format files with oxfmt                             |
 
 ## Game art
 
@@ -35,12 +36,6 @@ Everything on the page is drawn with the game's own graphics, rendered from
 - `Wayfarer Text`, a web font traced from the game's normal Latin font, with
   glyph widths from `game/src/fonts.c` and characters from `game/charmap.txt`
 - PROF. OAK, his oval and the POKéMON he sends out, from the new game intro
-- the region maps for the world section. The game has no Town Map art for
-  Sinnoh, so that one comes from the project its maps were ported from
-  (`scripts/source/sinnoh`). Alola and Sinjoh have none anywhere: Alola's
-  islands are traced from their overworld maps, and Sinjoh sits on a northern
-  coast that closes the Johto map's cut-off top. Both are painted in colors
-  sampled from the region maps.
 
 The output is committed, so building the site does not need the game tree.
 Run `pnpm assets` after the source art changes. It also writes
@@ -49,6 +44,12 @@ title sprites where the game draws them. The scene's timings and positions in
 `src/lib/scene.ts` come from `game/src/intro.c` and `game/src/title_screen.c`.
 
 The release date lives in `src/lib/release.ts`.
+
+## World map
+
+The world section and its full-screen explorer draw the whole overworld from
+the game's own metatiles. It is a module of its own in `src/world-map/`, data
+builder included; see its README.
 
 ## Type checking
 
