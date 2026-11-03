@@ -254,6 +254,9 @@ const pattern = (b, i, W) => {
   return b.ids[(y % b.bh) * b.bw + (x % b.bw)]
 }
 
+/** Regions of small islands on open sea: land grown round their maps is only a shore. */
+const ISLANDS = new Set(["Sevii Islands"])
+
 // The land between the maps. Map tiles say where the world is land and where
 // it is water; land grows out from the maps' land to a coastline that wanders
 // with fractal noise, sea stays sea, and stretches of water that no open sea
@@ -296,16 +299,27 @@ const growLand = (world, grid, owner, { isWater, tileColor }) => {
     }
   const toLand = distanceFrom(mapLand, W, H)
   const toSeaRoute = distanceFrom(mapSea, W, H)
+  const landOwner = new Int32Array(N).fill(-1)
+  for (let i = 0; i < N; i++) if (mapLand[i]) landOwner[i] = owner[i]
+  const nearestLand = nearestOf(landOwner, W, H)
   // How far land reaches past the maps: about 18 metatiles, give or take 24.
+  // Round an island region's maps it is only a shore, so the islands stay
+  // apart and their towns' harbours open on the sea, as in their own game.
   const REACH = 18,
     WANDER = 24
+  const SHORE = 6,
+    SHORE_WANDER = 6
   let land = new Uint8Array(N)
   for (let i = 0; i < N; i++) {
     if (owner[i] >= 0) land[i] = owner[i] >= 0 && !isWater(grid[i]) ? 1 : 0
     else {
       const x = i % W,
         y = (i - x) / W
-      land[i] = toLand[i] < REACH + WANDER * coastNoise(x, y) && toLand[i] < toSeaRoute[i] ? 1 : 0
+      const island = nearestLand[i] >= 0 && ISLANDS.has(all[owner[nearestLand[i]]].region)
+      const reach = island
+        ? SHORE + SHORE_WANDER * fractal(x + 5200, y - 3100, 1 / 16)
+        : REACH + WANDER * coastNoise(x, y)
+      land[i] = toLand[i] < reach && toLand[i] < toSeaRoute[i] ? 1 : 0
     }
   }
   // Water at a map's edge (a river, a lake's shore, a bay) runs on past it a
@@ -315,9 +329,6 @@ const growLand = (world, grid, owner, { isWater, tileColor }) => {
   // It keeps clear of other maps' land, so it doesn't run up against the
   // straight edge of the next map instead.
   const nearestCell = nearestOf(owner, W, H)
-  const landOwner = new Int32Array(N).fill(-1)
-  for (let i = 0; i < N; i++) if (mapLand[i]) landOwner[i] = owner[i]
-  const nearestLand = nearestOf(landOwner, W, H)
   const spill = new Int32Array(N).fill(-1)
   for (let i = 0; i < N; i++) {
     if (owner[i] >= 0) continue
@@ -609,13 +620,16 @@ const fillBorders = (world, { grid, owner, land, spill, borders, isWater, tileCo
   // The water each map lends the sea beside it: its border if that is water,
   // else the water tile it draws most, else none. The sea near the coasts takes
   // the nearest such map's, so a sea route's water runs on in its own tiles.
+  // A map with only a pond corner of water (Three Island) lends none, so the
+  // sea by it isn't that one odd tile.
+  const MIN_WATER = 16
   const waterOf = borders.map((b, m) => {
     if (b.kind === "water") return b
     const counts = new Map()
     for (let i = 0; i < N; i++)
       if (owner[i] === m && isWater(grid[i])) counts.set(grid[i], (counts.get(grid[i]) ?? 0) + 1)
     const [top] = [...counts].toSorted((p, q) => q[1] - p[1])
-    return top ? { bw: 1, bh: 1, ids: [top[0]] } : null
+    return top && top[1] >= MIN_WATER ? { bw: 1, bh: 1, ids: [top[0]] } : null
   })
   const waterOwner = new Int32Array(N).fill(-1)
   for (let i = 0; i < N; i++)

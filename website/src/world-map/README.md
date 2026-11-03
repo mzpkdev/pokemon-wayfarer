@@ -182,12 +182,15 @@ Plain Node scripts. Each stage gets a module:
   A gap between two connected maps is bridged by stretching both edges across
   it (sliding by any misalignment, so the road jogs instead of stopping).
   Coasts are grown with noise, and a few cells of fill always lie in front of
-  a map's land edge. Water at a map's edge (rivers, bays, sea routes) spills
+  a map's land edge. Round the Sevii Islands' maps the land grown is only a
+  shore of a few cells, so the islands stay apart and their harbours open on
+  the sea, as in their own game. Water at a map's edge (rivers, bays, sea routes) spills
   on past it a wandering way in the map's own water, kept off other maps'
   land. The insides of loops are filled, straits keep regions apart, and each
   filled cell takes the border blocks of the nearest land-bordered map (an
   island town far from any takes its own edge's ground). The sea takes the
-  nearest map's water by the coasts, then deepens in four noisy steps, each a
+  nearest map's water by the coasts (a map drawing only a pond corner of
+  water lends none), then deepens in four noisy steps, each a
   tinted copy of that water a quarter nearer one deep ocean, so every game's
   water meets out at sea in one color and tile (`DEEP_SEA`). The tints are new
   metatiles in the atlas, so the tiles and the far-out view agree.
