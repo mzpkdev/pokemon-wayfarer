@@ -35,6 +35,9 @@ const ENTRIES: Entry[] = [
   { label: "EXIT", hint: "Close this menu." },
 ]
 
+/** The visitor taking the scroll back into their own hands. */
+const INPUTS = ["wheel", "touchstart", "keydown", "pointerdown"] as const
+
 /** Screens scrolled before the button appears: once the title screen is left behind. */
 const SHOW_AFTER = 0.75
 
@@ -122,10 +125,16 @@ export const StartMenu = () => {
       const aim = () => element.scrollIntoView({ behavior, block: "start" })
       aim()
       // The RIGHT NOW board loads as the scroll passes it and grows, moving
-      // everything after it, so the aim is corrected while the page settles.
+      // everything after it, so the aim is corrected while the page settles,
+      // until the visitor scrolls on their own.
       const observer = new ResizeObserver(aim)
       observer.observe(document.body)
-      window.setTimeout(() => observer.disconnect(), 2500)
+      const settled = () => {
+        observer.disconnect()
+        for (const type of INPUTS) window.removeEventListener(type, settled)
+      }
+      for (const type of INPUTS) window.addEventListener(type, settled, { passive: true })
+      window.setTimeout(settled, 2500)
     }
   }
 
