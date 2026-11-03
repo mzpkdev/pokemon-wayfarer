@@ -7,12 +7,19 @@ import { cellLookup, measureCell } from "./layout.mjs"
 
 /** The three regions' badges, in the order the badge art sheet holds them. */
 export const BADGE_REGIONS = ["Johto", "Kanto", "Hoenn"]
-/** The league circuit in the order it is climbed (include/constants/league_circuit.h). */
+/** The leagues in the game's id order (include/constants/league_circuit.h): not a climbing order, Indigo and Hoenn can be won either way round. */
 const LEAGUES = [
   // A town map, the door in it, and the map that door leads to.
-  // INDIGO PLATEAU's maps are not part of the world map, so it sits where its
-  // Town Map cell puts it, off ROUTE 22's.
-  { id: "indigo", name: "INDIGO PLATEAU", map: "MAP_INDIGO_PLATEAU_HNS", near: "MAP_ROUTE22_HNS" },
+  // INDIGO PLATEAU's maps are not part of the world map. The way to it runs
+  // north through ROUTE 22's League Reception Gate, so it sits on the high
+  // ground that many metatiles north of that door.
+  {
+    id: "indigo",
+    name: "INDIGO PLATEAU",
+    map: "MAP_ROUTE22_HNS",
+    to: "MAP_RECEPTION_GATE_HNS",
+    north: 22,
+  },
   {
     id: "masters",
     name: "SEVII MASTERS",
@@ -26,6 +33,30 @@ const LEAGUES = [
     to: "MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F",
   },
 ]
+
+/**
+ * Each league's halls from `src/league_halls.c` (`sLeagueHalls`): four named
+ * halls with a battle condition each, then the neutral Champion's Room.
+ * Returns the halls by league id.
+ */
+const readHalls = (root) => {
+  const source = fs.readFileSync(`${root}/src/league_halls.c`, "utf8")
+  const ids = { INDIGO: "indigo", MASTERS: "masters", HOENN: "hoenn" }
+  const halls = {}
+  for (const [, key, body] of source.matchAll(/\[LEAGUE_ID_(\w+) - 1\] = \{([\s\S]*?)\n    \},/g)) {
+    const id = ids[key]
+    if (!id) continue
+    halls[id] = [
+      ...body.matchAll(
+        /\{MAP_\w+, (?:COMPOUND_STRING\("([^"]+)"\)|NULL), \w+, \w+, \w+, COMPOUND_STRING\("([^"]+)"\)\}/g,
+      ),
+    ].map(([, name, condition]) => ({ name: name ?? "Champion's Room", condition }))
+    if (halls[id].length !== 5 || halls[id][4].name !== "Champion's Room")
+      throw new Error(`expected four halls and a Champion's Room for ${id}`)
+  }
+  if (Object.keys(halls).length !== 3) throw new Error("expected halls for three leagues")
+  return halls
+}
 
 /** "VIOLET CITY" from "VioletCity_hns", "MAHOGANY TOWN" from "Mahoganytown_hns". */
 export const townName = (name) =>
@@ -203,12 +234,13 @@ export const buildLandmarks = (game, world, regionOf) => {
   if (badges.length !== 24 || badges.some((gym, i) => gym.badge !== i))
     throw new Error(`expected 24 gyms, one per badge: ${badges.map((g) => g.badge).join(",")}`)
 
+  const halls = readHalls(root)
   const cellOf = cellLookup(readTownMapCells(game))
   const cell = measureCell(
     all.filter((p) => p.region === "Hoenn"),
     cellOf,
   )
-  const circuit = LEAGUES.map(({ id, name, map, to, near }) => {
+  const circuit = LEAGUES.map(({ id, name, map, to, near, north = 0 }) => {
     if (near) {
       const from = placed.get(near)
       const there = cellOf(every[map])
@@ -216,6 +248,7 @@ export const buildLandmarks = (game, world, regionOf) => {
       return {
         id,
         name,
+        halls: halls[id],
         x: from.x - minX + from.l.width / 2 + (there.x - here.x) * cell,
         y: from.y - minY + from.l.height / 2 + (there.y - here.y) * cell,
       }
@@ -223,7 +256,13 @@ export const buildLandmarks = (game, world, regionOf) => {
     const p = placed.get(map)
     const warp = every[map].warp_events.find((w) => (w.wayfarer_dest_map ?? w.dest_map) === to)
     if (!p || !warp) throw new Error(`no door from ${map} to ${to}`)
-    return { id, name, x: p.x - minX + warp.x + 0.5, y: p.y - minY + warp.y + 0.5 }
+    return {
+      id,
+      name,
+      halls: halls[id],
+      x: p.x - minX + warp.x + 0.5,
+      y: p.y - minY + warp.y + 0.5 - north,
+    }
   })
   return {
     badges: badges.map(({ badge, region, town, name, x, y, leader }) => ({

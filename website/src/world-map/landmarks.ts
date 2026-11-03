@@ -1,7 +1,8 @@
-// The tour's badge stop: a pin with its badge on every Gym town, and the
-// league circuit drawn as a dotted trail from INDIGO PLATEAU to the Sevii
-// Masters to the Hoenn League. The places come from `landmarks.json`, which
-// the builder reads from the game; the badge art from the trainer card.
+// The tour's Gym and league stops: a pin with its badge on every Gym town,
+// and the league circuit: a plate for each league and a dotted trail from
+// INDIGO PLATEAU and from the Hoenn League to the Sevii Masters. The places
+// come from `landmarks.json`, which the builder reads from the game; the badge
+// art from the trainer card.
 import type { Bounds } from "./data"
 import { DATA } from "./data"
 import type { Overlay } from "./render"
@@ -28,7 +29,16 @@ export type Gym = {
   }
 }
 
-export type League = { id: string; name: string; x: number; y: number }
+export type LeagueId = "indigo" | "masters" | "hoenn"
+
+export type League = {
+  id: LeagueId
+  name: string
+  x: number
+  y: number
+  /** Its four halls and the Champion's Room, with each one's battle condition (`league_halls.c`). */
+  halls?: { name: string; condition: string }[]
+}
 
 export type Landmarks = { badges: Gym[]; circuit: League[] }
 
@@ -61,6 +71,23 @@ export const landmarkBounds = ({ badges, circuit }: Landmarks, room: number): Bo
   }
 }
 
+/**
+ * Which leagues know a player holding `earned` badges (`league_circuit.c`):
+ * the Trainer Rating counts badges from every region together, 80 of it
+ * (any 8 badges) qualifies, and each league also wants a badge of its own
+ * side. The Sevii Masters needs wins, which the page has none of.
+ */
+export const callingFor = (earned: ReadonlySet<number>): Record<LeagueId, boolean> => {
+  const rating = earned.size <= 8 ? 10 * earned.size : 80 + 5 * (earned.size - 8)
+  const held = [...earned]
+  return {
+    indigo: rating >= QUALIFYING_RATING && held.some((badge) => badge < 16),
+    hoenn: rating >= QUALIFYING_RATING && held.some((badge) => badge >= 16),
+    masters: false,
+  }
+}
+const QUALIFYING_RATING = 80
+
 /** What the tour tells the overlays about the stop. */
 export type StopClock = {
   /** How much of the stop is shown, 0 to 1: fades in on arriving and out on leaving. */
@@ -73,6 +100,14 @@ export type StopClock = {
   hover?: number | null
   pressed?: number | null
   selected?: number | null
+  /** How much of the league circuit is up, 0 (the Gym stop: just pins) to 1. */
+  circuit?: number
+  /** The badges the visitor holds, which the circuit stop lights; the rest of the pins step back. */
+  earned?: ReadonlySet<number>
+  /** Which leagues are calling. */
+  calling?: Partial<Record<LeagueId, boolean>>
+  /** The league whose stop it is, to highlight: its plate and its leg of the trail. */
+  league?: LeagueId | null
 }
 
 /** Sampled points along an arc from `a` to `b`, bowed to one side by `bow` of their distance. */
@@ -92,108 +127,158 @@ const arc = (a: League, b: League, bow: number, steps: number) => {
 
 const easeOut = (t: number) => 1 - (1 - Math.min(1, Math.max(0, t))) ** 3
 
-/** Pins pop in one after the other from here, in milliseconds, and the trail starts drawing after them. */
+/** Pins pop in one after the other from here, in milliseconds. */
 const PIN_DELAY_MS = 150
 const PIN_STAGGER_MS = 40
-const TRAIL_DELAY_MS = 1100
-const TRAIL_MS = 2600
+/** How long a leg takes to draw in once its league is calling. */
+const LEG_MS = 1400
 /** Dots on the trail, in CSS pixels: the gap between them and how fast they march. */
 const DOT_GAP = 12
 const DOT_SPEED = 28
+/** How faint a badge not yet held is on the circuit stop. */
+const FAINT_PIN = 0.35
 
 /**
- * The overlays for the stop, in drawing order: the trail, then the pins. They
- * read `clock` as they draw, so the tour updates it on every frame.
+ * The overlays for the stops, in drawing order: the trail, then the pins,
+ * then the league plates. They read `clock` as they draw, so the tour updates
+ * it on every frame.
  */
 export const badgeOverlays = (
   { badges, circuit }: Landmarks,
   sheet: CanvasImageSource,
   clock: StopClock,
 ): Overlay[] => {
-  // Each leg bows the same way round, so the circuit reads as one sweep.
-  const legs = circuit.slice(1).map((to, i) => arc(circuit[i]!, to, -0.14, 64))
-  const trail = legs.flat()
-  const lengths = trail.map((point, i) =>
-    i ? Math.hypot(point.x - trail[i - 1]!.x, point.y - trail[i - 1]!.y) : 0,
-  )
-  const total = lengths.reduce((sum, length) => sum + length, 0)
-  // How far along the trail each league is, 0 to 1.
-  const reach = circuit.map((league) => {
-    let best = 0
-    let bestDistance = Infinity
-    let run = 0
-    trail.forEach((point, i) => {
-      run += lengths[i]!
-      const distance = Math.hypot(point.x - league.x, point.y - league.y)
-      if (distance < bestDistance) {
-        bestDistance = distance
-        best = run
-      }
-    })
-    return total ? best / total : 0
-  })
-  const revealed = () => (clock.animate ? easeOut((clock.elapsed - TRAIL_DELAY_MS) / TRAIL_MS) : 1)
+  // Two legs that converge on the Sevii Masters, each from the league that
+  // opens it. Each runs outward-in, so it draws toward Seven Island.
+  const masters = circuit.find((league) => league.id === "masters")
+  const legs = masters
+    ? circuit
+        .filter((league) => league.id !== "masters")
+        .map((from) => {
+          const points = arc(from, masters, -0.1, 64)
+          const lengths = points.map((point, i) =>
+            i ? Math.hypot(point.x - points[i - 1]!.x, point.y - points[i - 1]!.y) : 0,
+          )
+          return { id: from.id, points, lengths, total: lengths.reduce((sum, n) => sum + n, 0) }
+        })
+    : []
+  // When each leg's league began calling, to draw it in from there.
+  const litSince = new Map<LeagueId, number>()
 
   const drawTrail: Overlay = (context, { toScreen, ratio }) => {
-    if (!trail.length || clock.alpha <= 0) return
-    const upTo = revealed() * total
-    const path = new Path2D()
-    let run = 0
-    for (const [i, point] of trail.entries()) {
-      run += lengths[i]!
-      if (run > upTo) break
-      const { x, y } = toScreen(point.x, point.y)
-      if (i) path.lineTo(x, y)
-      else path.moveTo(x, y)
-    }
-    context.globalAlpha = clock.alpha
+    const mix = clock.circuit ?? 0
+    if (clock.alpha <= 0 || mix <= 0) return
+    const now = performance.now()
     context.lineCap = "round"
     context.lineJoin = "round"
     context.setLineDash([0, DOT_GAP * ratio])
-    context.lineDashOffset = clock.animate ? -((clock.elapsed / 1000) * DOT_SPEED * ratio) : 0
-    // A dark dot under each bright one, offset like the game's text shadow.
-    context.translate(ratio, ratio)
-    context.lineWidth = 5 * ratio
-    context.strokeStyle = "rgb(0 0 0 / 0.55)"
-    context.stroke(path)
-    context.translate(-ratio, -ratio)
-    context.lineWidth = 4 * ratio
-    context.strokeStyle = "rgb(255 232 120)"
-    context.stroke(path)
+    for (const leg of legs) {
+      const calling = Boolean(clock.calling?.[leg.id])
+      if (calling && !litSince.has(leg.id)) litSince.set(leg.id, now)
+      else if (!calling) litSince.delete(leg.id)
+      // At a league's stop its leg is the one that shows; the Masters' has both.
+      const focused = !clock.league || clock.league === "masters" || clock.league === leg.id
+      const emphasis = clock.league ? (clock.league === leg.id ? 1.5 : focused ? 1.15 : 0.8) : 1
+      const trace = (upTo: number) => {
+        const path = new Path2D()
+        let run = 0
+        for (const [i, point] of leg.points.entries()) {
+          run += leg.lengths[i]!
+          const { x, y } = toScreen(point.x, point.y)
+          if (run > upTo) {
+            const before = leg.points[i - 1]!
+            const t = (upTo - (run - leg.lengths[i]!)) / leg.lengths[i]!
+            const edge = toScreen(
+              before.x + (point.x - before.x) * t,
+              before.y + (point.y - before.y) * t,
+            )
+            path.lineTo(edge.x, edge.y)
+            break
+          }
+          if (i) path.lineTo(x, y)
+          else path.moveTo(x, y)
+        }
+        return path
+      }
+      // Waiting for its league: the whole leg, dim and still.
+      context.lineDashOffset = 0
+      context.globalAlpha = clock.alpha * mix * (calling ? 0.4 : focused ? 0.55 : 0.3)
+      context.lineWidth = 3 * ratio * emphasis
+      context.strokeStyle = "rgb(255 255 255)"
+      context.stroke(trace(leg.total))
+      if (!calling) continue
+      const drawn = clock.animate ? easeOut((now - litSince.get(leg.id)!) / LEG_MS) : 1
+      const path = trace(leg.total * drawn)
+      context.globalAlpha = clock.alpha * mix * (focused ? 1 : 0.6)
+      context.lineDashOffset = clock.animate ? -((clock.elapsed / 1000) * DOT_SPEED * ratio) : 0
+      // A dark dot under each bright one, offset like the game's text shadow.
+      context.translate(ratio, ratio)
+      context.lineWidth = 5 * ratio * emphasis
+      context.strokeStyle = "rgb(0 0 0 / 0.55)"
+      context.stroke(path)
+      context.translate(-ratio, -ratio)
+      context.lineWidth = 4 * ratio * emphasis
+      context.strokeStyle = "rgb(255 232 120)"
+      context.stroke(path)
+    }
   }
 
+  // Each league on a plate like the region names: dark, rimmed in gold, and
+  // glowing while it calls; grey while it doesn't. The one the tour is at
+  // takes a white rim and a wider glow.
   const drawLeagues: Overlay = (context, { toScreen, ratio }) => {
-    if (clock.alpha <= 0) return
+    const mix = clock.circuit ?? 0
+    if (clock.alpha <= 0 || mix <= 0) return
     context.setLineDash([])
     context.textAlign = "center"
     context.textBaseline = "middle"
-    const progress = revealed()
-    for (const [i, league] of circuit.entries()) {
-      // A league lights as the trail reaches it.
-      if (progress < reach[i]! - 0.001) continue
+    const wide = context.canvas.width / ratio > 700
+    const size = Math.round((wide ? 20 : 16) * ratio)
+    context.font = `${size}px "Wayfarer Text", monospace`
+    for (const league of circuit) {
+      const calling = Boolean(clock.calling?.[league.id])
+      const here = clock.league === league.id
       const { x, y } = toScreen(league.x, league.y)
-      const radius = 10 * ratio
-      context.globalAlpha = clock.alpha
+      const padX = Math.round(size * 0.45)
+      const padY = Math.round(size * 0.3)
+      const boxW = Math.round(context.measureText(league.name).width + padX * 2)
+      const boxH = Math.round(size + padY * 2)
+      // Above its spot.
+      const bx = Math.round(x - boxW / 2)
+      const by = Math.round(y - 10 * ratio - boxH)
+      const rim = Math.max(2, Math.round(2 * ratio))
+      const accent = here ? "rgb(255 255 255)" : calling ? "rgb(255 214 0)" : "rgb(150 156 170)"
+      context.globalAlpha = clock.alpha * mix * (calling || here ? 1 : 0.8)
+      // The spot the trail reaches.
       context.fillStyle = "rgb(24 32 56)"
       context.beginPath()
-      context.arc(x, y, radius + 2 * ratio, 0, Math.PI * 2)
+      context.arc(x, y, 5 * ratio, 0, Math.PI * 2)
       context.fill()
-      context.fillStyle = "rgb(255 214 0)"
+      context.fillStyle = calling ? "rgb(255 214 0)" : "rgb(150 156 170)"
       context.beginPath()
-      context.arc(x, y, radius, 0, Math.PI * 2)
+      context.arc(x, y, 3 * ratio, 0, Math.PI * 2)
       context.fill()
-      context.font = `${Math.round(14 * ratio)}px "Wayfarer Text", monospace`
-      context.fillStyle = "rgb(24 32 56)"
-      context.fillText(String(i + 1), x, y + ratio)
-      // The name sits below, or above the last stop, which has room there.
-      context.font = `${Math.round(16 * ratio)}px "Wayfarer Text", monospace`
-      const below = i < circuit.length - 1
-      const labelY = y + (below ? 1 : -1) * (radius + 12 * ratio)
-      context.fillStyle = "rgb(0 0 0 / 0.75)"
-      context.fillText(league.name, x + ratio * 1.5, labelY + ratio * 1.5)
-      context.fillStyle = "rgb(248 248 248)"
-      context.fillText(league.name, x, labelY)
+      context.save()
+      if (calling || here) {
+        const pulse = calling && clock.animate ? 0.75 + 0.25 * Math.sin(performance.now() / 260) : 1
+        context.shadowColor = here ? "rgb(255 255 255 / 0.9)" : "rgb(255 214 0 / 0.95)"
+        context.shadowBlur = (here ? 22 : 16) * ratio * pulse
+      }
+      context.fillStyle = "rgb(0 0 0 / 0.35)"
+      context.fillRect(bx + rim, by + rim, boxW, boxH)
+      context.fillStyle = accent
+      context.fillRect(bx, by, boxW, boxH)
+      context.restore()
+      context.fillStyle = "rgb(8 41 0 / 0.92)"
+      context.fillRect(bx + rim, by + rim, boxW - rim * 2, boxH - rim * 2)
+      const cx = bx + boxW / 2
+      const cy = by + boxH / 2
+      context.fillStyle = "rgb(0 0 0 / 0.8)"
+      context.fillText(league.name, cx + ratio, cy + ratio * 1.5)
+      context.fillStyle = calling || here ? accent : "rgb(190 194 204)"
+      context.fillText(league.name, cx, cy + ratio * 0.5)
     }
+    context.textBaseline = "alphabetic"
     context.globalAlpha = 1
   }
 
@@ -202,6 +287,7 @@ export const badgeOverlays = (
     const wide = context.canvas.width / ratio > 700
     // Whole multiples of the 16 pixel badge, so it stays crisp.
     const icon = Math.round(16 * ratio * (wide ? 2 : 1))
+    const mix = clock.circuit ?? 0
     context.imageSmoothingEnabled = false
     for (const gym of badges) {
       const pop = clock.animate
@@ -212,25 +298,31 @@ export const badgeOverlays = (
       // Just the badge, crisp, over a soft shadow that keeps it readable on
       // the map. Under the pointer it lifts and glows white; held, it
       // settles and darkens; with its card open it glows gold and bobs,
-      // while the rest step back.
+      // while the rest step back. On the circuit stop the badges not held
+      // step back too.
       const hovered = clock.hover === gym.badge
       const pressed = clock.pressed === gym.badge
       const selected = clock.selected === gym.badge
       const others = clock.selected != null && !selected
+      const held = !clock.earned || clock.earned.has(gym.badge)
+      const faint = held ? 1 : 1 - mix * (1 - FAINT_PIN)
       const size = Math.round(icon * (0.5 + 0.5 * pop))
       const step = Math.round(2 * ratio)
       const bob = selected && clock.animate ? (Math.floor(performance.now() / 320) % 2) * step : 0
       const lift = pressed ? 0 : hovered ? step * 2 : selected ? step + bob : 0
       const left = Math.round(x - size / 2)
       const top = Math.round(y - size / 2 - lift + (pressed ? step / 2 : 0))
-      context.globalAlpha = clock.alpha * pop * (others && !hovered ? 0.45 : 1)
+      context.globalAlpha = clock.alpha * pop * faint * (others && !hovered ? 0.45 : 1)
       context.save()
       context.shadowColor = selected
         ? "rgb(255 214 0 / 0.95)"
         : hovered
           ? "rgb(255 255 255 / 0.9)"
-          : "rgb(0 0 0 / 0.75)"
-      context.shadowBlur = (selected || hovered ? 10 : 4) * ratio
+          : mix > 0 && held && clock.earned
+            ? "rgb(255 214 0 / 0.9)"
+            : "rgb(0 0 0 / 0.75)"
+      context.shadowBlur =
+        (selected || hovered ? 10 : mix > 0 && held && clock.earned ? 8 : 4) * ratio
       context.shadowOffsetY = selected || hovered ? 0 : ratio
       // Darker while held.
       if (pressed) context.filter = "brightness(0.75)"

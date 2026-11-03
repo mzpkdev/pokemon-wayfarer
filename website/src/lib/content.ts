@@ -37,7 +37,7 @@ export const FEATURES: Feature[] = [
   },
   {
     title: "A league circuit",
-    body: "Climb from Indigo to the Sevii Masters to the Hoenn League. Once you qualify, the leagues phone you with invitations.",
+    body: "Any 8 badges qualify you, with one from the league's own side. Indigo and Hoenn phone with invitations and can be won in either order; the Sevii Masters opens once you've won both.",
     icon: "master-ball",
   },
   {

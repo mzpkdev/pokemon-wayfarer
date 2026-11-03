@@ -15,27 +15,45 @@ The rest of the site uses it only through `index.ts`:
   starts when its section is mostly on screen, or on an event the page sends
   (`startOn`; the landing page sends one when its warp from the title scene
   fades in, see `src/lib/warp.ts`). After that the map holds still beside a
-  card, and NEXT and BACK fly the camera between four stops: the town, its
+  card, and NEXT and BACK fly the camera between eight stops: the town, its
   one region (Hoenn, Johto or Kanto), the whole world (wherever you start,
-  you can go anywhere), and the 24 Gym Badges with the league circuit. From the second stop on the
-  map can be panned in place, the way an embedded map shares a page: a mouse
-  drags, and on touch two fingers move it while one still scrolls the page (a
-  hint says so). The zoom stays each stop's. At the badge stop the pins answer the
-  pointer: each is just its badge over a soft shadow; a hover lifts it with a
-  white glow and names its town, a press settles and darkens it, and an open
-  card makes it glow gold and bob while the rest dim (hidden buttons do the
-  same for a keyboard), and a
-  pin opens its
-  Gym's card: the badge, the leader's battle portrait (`leaders/`, from the
-  pic of their leader battle in the party files) and what they are
-  up to on the page clock, and FIND, which pans onto them and keeps them in
-  view as they walk (GO TO the Gym for a leader who doesn't walk the map).
-  NEXT and BACK fly on from wherever the map was moved to. It never takes over
-  the page's scrolling. The
-  last card's EXPLORE THE MAP opens the explorer full screen. Captions are one
-  per stop, with per-start `variants`; `stopOverlays` lets the page draw over
-  the map at any stop (the hook for a living-world overlay on the world stop).
-- `WorldMap` is the explorer. Drag, pinch, wheel, double-click, the arrow keys
+  you can go anywhere), the 24 Gyms, the league circuit, and each league in
+  turn (Indigo Plateau, the Hoenn League, the Sevii Masters). From the second
+  stop on the map can be panned in place, the way an embedded map shares a
+  page: a mouse drags, and on touch two fingers move it while one still
+  scrolls the page (a hint says so). The zoom stays each stop's. At the Gym
+  stop the pins answer the pointer: each is just its badge over a soft shadow;
+  a hover lifts it with a white glow and names its town, a press settles and
+  darkens it, and an open card makes it glow gold and bob while the rest dim
+  (hidden buttons do the same for a keyboard), and a pin opens its Gym's card:
+  the badge, the leader's battle portrait (`leaders/`, from the pic of their
+  leader battle in the party files) and what they are up to on the page
+  clock, and FIND, which pans onto them and keeps them in view as they walk
+  (GO TO the Gym for a leader who doesn't walk the map). NEXT and BACK fly on
+  from wherever the map was moved to. It never takes over the page's
+  scrolling.
+- The circuit stop's card holds a badge picker: all 24 badges as toggle
+  buttons (`aria-pressed`) in rows KANTO, JOHTO, HOENN, with the count and
+  which leagues would call. The rules are the game's (`league_circuit.c`):
+  badges from every region count together, Trainer Rating is `10 * badges` up
+  to 8 and `80 + 5 * (badges - 8)` after, and 80 (any 8 badges) qualifies. The
+  Indigo Plateau also needs one Kanto or Johto badge, the Hoenn League one
+  Hoenn badge (`callingFor` in `landmarks.ts`). Indigo and Hoenn can be won in
+  either order; the Sevii Masters opens after both, and since the page has no
+  wins it only shows that requirement. On the map the held badges' pins are
+  bright and the rest faint; each league is a plate in the region labels'
+  style, glowing while it calls; the trail has two legs (Indigo and Hoenn to
+  Seven Island) that draw in, dotted and marching, once their league calls.
+  The picker's choice is kept across the league stops, and across a change of
+  start. Each league stop flies to its league at a medium zoom, highlights
+  its plate and its leg, and its card lists the halls (name and battle
+  condition, then the Champion's Room) that the builder reads from
+  `game/src/league_halls.c` into `landmarks.json` (`circuit[].halls`). The
+  last card's EXPLORE THE MAP opens the explorer full screen. Captions are
+  one per stop, with per-start `variants`; `stopOverlays` lets the page draw
+  over the map at any stop (the hook for a living-world overlay on the world
+  stop).
+  `WorldMap` is the explorer. Drag, pinch, wheel, double-click, the arrow keys
   and +/- all pan and zoom it.
   Tapping a map (or Enter on the one at the center) frames it and opens a place
   card: its name and wild Pokémon by method and time of day, as icon, name and
@@ -116,7 +134,7 @@ the way `tools/mapjson` does.
 - `starts.ts`: the three starts: town, player sprite, ride path (in each map's own tiles, so it follows the maps if the layout moves), opening shot and popup names.
 - `rider.ts`: draws the player on their bike along a ride.
 - `fade.ts`: the game's 8-step fade, shared with `src/lib/warp.ts`.
-- `landmarks.ts`: loads `landmarks.json`; draws the badge pins and the animated dotted league trail as overlays. Badge art is `public/game/badges.png` (from the trainer card, `pnpm assets`).
+- `landmarks.ts`: loads `landmarks.json`; draws the badge pins, the league plates and the two-leg dotted trail as overlays, and says which leagues a set of badges calls. Badge art is `public/game/badges.png` (from the trainer card, `pnpm assets`).
 - `clock.ts`: one game clock for the page (a day every two minutes from 8:00), so the tour's world stop and the explorer show the same time of day and the same ships at sea.
 - `PlaceExtra.tsx`: what the explorer's place cards add for a town: its Gym and badge, its stop on the league circuit, and the ferries that call there.
 - `WorldTour.tsx` and `WorldMap.tsx`: the two components.

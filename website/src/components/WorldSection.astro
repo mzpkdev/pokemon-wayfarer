@@ -3,8 +3,8 @@
  * The size of the world, the first highlight, reached from the title scene's
  * Poké Ball by the game's warp: a tour of the overworld in the game's own
  * tiles. Pick a start (LITTLEROOT TOWN, NEW BARK TOWN or PALLET TOWN), then a
- * button press per stop: that start's region, the whole world, then the 24
- * badges and the league circuit, then open to look around. The map itself lives in
+ * button press per stop: that start's region, the whole world, the 24 Gyms, the
+ * league circuit and each league, then open to look around. The map itself lives in
  * `~/world-map`; its cards are one per stop, with what changes by start.
  */
 import { type Caption, WorldTour } from "~/world-map"
@@ -12,8 +12,8 @@ import { type Caption, WorldTour } from "~/world-map"
 // Counted from the outdoor maps the build compiles (see the website-landing
 // task note): towns and cities by map type, numbered routes by number.
 // Sinnoh counts too; it opens up by launch. Johto has 10 towns and cities and
-// 23 routes, Kanto 10 and 25, Hoenn 16 and 34. The badges and the league
-// circuit (Indigo, the Sevii Masters, then the Hoenn League) are the game's.
+// 23 routes, Kanto 10 and 25, Hoenn 16 and 34. The badges and the three
+// leagues (Indigo, Hoenn and the Sevii Masters) are the game's.
 const FROM_HERE = "From here everywhere else is a walk, a surf or a ferry ride away."
 const captions: Caption[] = [
   {
@@ -61,14 +61,33 @@ const captions: Caption[] = [
     },
   },
   {
-    place: "GYMS AND LEAGUES",
-    title: "Every Gym Badge, one circuit.",
-    body: "Win all 24 Gym Badges across Kanto, Johto and Hoenn. Then climb the league circuit: Indigo Plateau, the Sevii Masters, and the Hoenn League at Ever Grande.",
+    place: "THE GYMS",
+    title: "Every Gym, in any order.",
+    body: "Kanto, Johto and Hoenn have eight Gyms each. Take the badges in whatever order you like. Tap a pin to meet its Leader.",
     stats: [
       { value: "24", label: "Gym Badges" },
       { value: "3", label: "regions" },
-      { value: "3", label: "leagues" },
     ],
+  },
+  {
+    place: "THE LEAGUE CIRCUIT",
+    title: "Eight badges, and a league calls.",
+    body: "Any 8 badges are enough, as long as one comes from the league's own side. Tap the badges you hold and see who phones.",
+  },
+  {
+    place: "INDIGO PLATEAU",
+    title: "One way in: Indigo.",
+    body: "It phones with an invitation once it knows you. Its five are drawn from the Gym Leaders and Elite Four of every region, strongest last.",
+  },
+  {
+    place: "HOENN LEAGUE",
+    title: "The other way in: Ever Grande.",
+    body: "It phones too, once it knows you. Win it before or after Indigo. Its five are drawn from the Gym Leaders and Elite Four of every region, strongest last.",
+  },
+  {
+    place: "SEVII MASTERS",
+    title: "Win both, then the Masters.",
+    body: "No phone call this time: walk into the lobby on Seven Island, once Indigo and Hoenn are both won.",
   },
 ]
 ---
