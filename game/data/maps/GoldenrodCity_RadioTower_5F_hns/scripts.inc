@@ -184,7 +184,14 @@ GoldenrodCity_RadioTower_5F_EventScript_Ben::
 	end
 
 GoldenrodRaidoTower4_EventScript_ARIANA::
-	trainerbattle_single TRAINER_ARIANA_2_HNS GoldenrodCity_RadioTower_5F_Text_ExecutiveF1Seen, GoldenrodCity_RadioTower_5F_Text_ExecutiveF1Beaten
+	@ She remembers the hideout only if the player has fought her there (Mahogany state 13 follows that fight).
+	goto_if_lt VAR_MAHOGANY_TOWN_STATE, 13, GoldenrodRaidoTower4_EventScript_ARIANAFirstMeeting
+	trainerbattle_single TRAINER_ARIANA_2_HNS, GoldenrodCity_RadioTower_5F_Text_ExecutiveF1Seen, GoldenrodCity_RadioTower_5F_Text_ExecutiveF1Beaten
+	msgbox GoldenrodCity_RadioTower_5F_Text_ExecutiveF1After, MSGBOX_AUTOCLOSE
+	end
+
+GoldenrodRaidoTower4_EventScript_ARIANAFirstMeeting::
+	trainerbattle_single TRAINER_ARIANA_2_HNS, GoldenrodCity_RadioTower_5F_Text_ExecutiveF1SeenFirst, GoldenrodCity_RadioTower_5F_Text_ExecutiveF1Beaten
 	msgbox GoldenrodCity_RadioTower_5F_Text_ExecutiveF1After, MSGBOX_AUTOCLOSE
 	end
 
@@ -193,7 +200,16 @@ GoldenrodCity_RadioTower_5F_EventScript_Archer::
 	faceplayer
 	msgbox GoldenrodCity_RadioTower_5F_Text_RocketBossSeen, MSGBOX_DEFAULT
 	trainerbattle_no_intro TRAINER_ARCHER_HNS, GoldenrodCity_RadioTower_5F_Text_RocketBossBeaten
+	@ Disbanding is the ending only if the Well and the hideout are over too.
+	goto_if_lt VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 3, GoldenrodCity_RadioTower_5F_EventScript_ArcherWithdraw
+	goto_if_lt VAR_MAHOGANY_TOWN_STATE, 14, GoldenrodCity_RadioTower_5F_EventScript_ArcherWithdraw
 	msgbox GoldenrodCity_RadioTower_5F_Text_RocketBossAfter, MSGBOX_DEFAULT
+	goto GoldenrodCity_RadioTower_5F_EventScript_ArcherLeaves
+
+GoldenrodCity_RadioTower_5F_EventScript_ArcherWithdraw::
+	msgbox GoldenrodCity_RadioTower_5F_Text_RocketBossAfterWithdraw, MSGBOX_DEFAULT
+
+GoldenrodCity_RadioTower_5F_EventScript_ArcherLeaves::
 	delay 55
 	closemessage
 	fadescreen FADE_TO_BLACK
@@ -365,6 +381,13 @@ GoldenrodCity_RadioTower_5F_Text_ExecutiveF1Seen:
 	.string "My boss scolded me but I'm stronger.\p"
 	.string "I lost then, but I won't this time.$"
 
+GoldenrodCity_RadioTower_5F_Text_ExecutiveF1SeenFirst:
+	.string "I am ARIANA, a TEAM ROCKET\n"
+	.string "EXECUTIVE.\p"
+	.string "My boss will scold me if I let a\n"
+	.string "brat like you get any farther.\p"
+	.string "I won't lose to you!$"
+
 GoldenrodCity_RadioTower_5F_Text_ExecutiveF1Beaten:
 	.string "This can't be happening!\p"
 	.string "I fought hard, but I still lost…\p"
@@ -398,6 +421,14 @@ GoldenrodCity_RadioTower_5F_Text_RocketBossAfter:
 	.string "I wasn't up to the task after all.\p"
 	.string "Like GIOVANNI did before me, I will\n"
 	.string "disband TEAM ROCKET here today.\p"
+	.string "Farewell.$"
+
+GoldenrodCity_RadioTower_5F_Text_RocketBossAfterWithdraw:
+	.string "How could this be?\p"
+	.string "Our dreams have come to naught.\p"
+	.string "I wasn't up to the task after all.\p"
+	.string "This operation is over. Withdraw,\n"
+	.string "all of you!\p"
 	.string "Farewell.$"
 
 GoldenrodCity_RadioTower_5F_Text_DirectorThanks:

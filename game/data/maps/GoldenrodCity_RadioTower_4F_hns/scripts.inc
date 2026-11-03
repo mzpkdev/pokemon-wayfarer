@@ -26,7 +26,14 @@ GoldenrodRaidoTower4_EventScript_Grunt9::
 	end
 
 GoldenrodRaidoTower4_EventScript_Proton::
+	@ He recalls the Well only if the player beat him there.
+	goto_if_lt VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 3, GoldenrodRaidoTower4_EventScript_ProtonFirstMeeting
 	trainerbattle_single TRAINER_PROTON_2_HNS, GoldenrodCity_RadioTower_4F4_Text_Proton_Seen, GoldenrodCity_RadioTower_4F4_Text_Proton_Beaten
+	msgbox GoldenrodCity_RadioTower_4F4_Text_Proton_After, MSGBOX_AUTOCLOSE
+	end
+
+GoldenrodRaidoTower4_EventScript_ProtonFirstMeeting::
+	trainerbattle_single TRAINER_PROTON_2_HNS, GoldenrodCity_RadioTower_4F4_Text_Proton_SeenFirst, GoldenrodCity_RadioTower_4F4_Text_Proton_Beaten
 	msgbox GoldenrodCity_RadioTower_4F4_Text_Proton_After, MSGBOX_AUTOCLOSE
 	end
 
@@ -91,6 +98,17 @@ GoldenrodCity_RadioTower_4F4_Text_Proton_Seen:
 	.string "PROTON: Now wait just one second!\p"
 	.string "Aren't you the one who got in our\n"
 	.string "way at SLOWPOKE WELL?\p"
+	.string "I see... You're doing all this\n"
+	.string "because you want to make me angry.\l"
+	.string "Be careful!\p"
+	.string "But since you seem to wish it, I'll\n"
+	.string "show you the full extent of a TEAM\l"
+	.string "ROCKET EXECUTIVE's wrath!$"
+
+GoldenrodCity_RadioTower_4F4_Text_Proton_SeenFirst:
+	.string "PROTON: Now wait just one second!\p"
+	.string "So you're the brat who has been\n"
+	.string "barging through our operation?\p"
 	.string "I see... You're doing all this\n"
 	.string "because you want to make me angry.\l"
 	.string "Be careful!\p"

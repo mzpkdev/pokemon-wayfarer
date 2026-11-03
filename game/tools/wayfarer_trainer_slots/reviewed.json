@@ -7,18 +7,6 @@
   },
   "not_daily_maps": [
     {
-      "prefix": "SSAnne",
-      "reason": "S.S. Anne trainers are one-time ship content (S.S. Anne spec)"
-    },
-    {
-      "prefix": "SSAqua",
-      "reason": "S.S. Aqua trainers are one-time ferry content"
-    },
-    {
-      "prefix": "SSTidal",
-      "reason": "S.S. Tidal trainers are one-time ferry content"
-    },
-    {
       "prefix": "PokemonTower",
       "reason": "Pokemon Tower is a story place: its Channelers and Rockets guard the way up"
     },
@@ -390,11 +378,11 @@
     },
     {
       "trainer": "TRAINER_DEZ_AND_LUKE",
-      "range": "class",
+      "range": "home",
       "was": [
         "LUKE: Well, we lost but that's okay! I'm right here by your side."
       ],
-      "reason": "Post-battle line: \"I'm right here by your side\" now reads \"I'm here by your side\" (data/maps/MtPyre_2F/scripts.inc)."
+      "reason": "The lines are about Mt. Pyre (\"I came here on a dare\"), so the trainer stays at home. Post-battle \"I'm here by your side\" was reworded earlier."
     },
     {
       "trainer": "TRAINER_DIANA_1",
@@ -1338,6 +1326,128 @@
       "trainer": "TRAINER_CHIP",
       "range": "home",
       "reason": "'That giant rock… ancient ruins. But I see no entrance': the rock beside this stretch of ROUTE 120."
+    },
+    {
+      "trainer": "TRAINER_CLYDE_HNS",
+      "range": "home",
+      "reason": "names GOLDENROD. The line is about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_COLTON",
+      "range": "home",
+      "reason": "names LILYCOVE CITY. The line is about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_DEBRA_HNS",
+      "range": "home",
+      "reason": "names SAFFRON. The line is about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_GARRETT_HNS",
+      "range": "home",
+      "reason": "names the sailors' work deck and VERMILION CITY. The lines are about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_JONAH_HNS",
+      "range": "home",
+      "reason": "names VERMILION. The line is about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_LEONARD",
+      "range": "place:liner",
+      "phrases": [
+        "the ship"
+      ],
+      "reason": "The lines need a liner (\"the ship\"); each region's liner group is a single ship, so it keeps the trainer on its own ship."
+    },
+    {
+      "trainer": "TRAINER_NATE_HNS",
+      "range": "home",
+      "reason": "names the RUINS OF ALPH. The line is about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_PHILLIP",
+      "range": "place:liner",
+      "phrases": [
+        "this huge place"
+      ],
+      "reason": "The lines need a liner (\"this huge place\"); each region's liner group is a single ship, so it keeps the trainer on its own ship."
+    },
+    {
+      "trainer": "TRAINER_RICKY_HNS",
+      "range": "home",
+      "reason": "names the RUINS OF ALPH. The line is about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_SHIRLEY_HNS",
+      "range": "home",
+      "reason": "names VIOLET. The line is about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_WAI_HNS",
+      "range": "place:liner",
+      "phrases": [
+        "the ship"
+      ],
+      "reason": "The lines need a liner (\"the ship\"); each region's liner group is a single ship, so it keeps the trainer on its own ship."
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_SS_ANNE_FISHERMAN_DALE",
+      "range": "place:liner",
+      "phrases": [
+        "The cruise ship"
+      ],
+      "reason": "The lines need a liner (\"The cruise ship\"); each region's liner group is a single ship, so it keeps the trainer on its own ship."
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_SS_ANNE_LASS_ANN",
+      "range": "home",
+      "reason": "names a POKéMON CENTER. The line is about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_SS_ANNE_SAILOR_DUNCAN",
+      "range": "home",
+      "reason": "names VERMILION CITY. The line is about the place the trainer was written for, so it stays at home."
+    },
+    {
+      "trainer": "TRAINER_FRITZ_HNS",
+      "range": "home",
+      "reason": "Lines are about the ship (\"I'm seasick!\"), so the trainer stays on its own ship."
+    },
+    {
+      "trainer": "TRAINER_THOMAS",
+      "range": "home",
+      "reason": "Lines are about the ship (\"Did you knock on the door?\"), so the trainer stays on its own ship."
+    },
+    {
+      "trainer": "TRAINER_NAOMI",
+      "range": "home",
+      "reason": "Lines are about the ship (\"A world cruise on a luxury liner\"), so the trainer stays on its own ship."
+    },
+    {
+      "trainer": "TRAINER_WAYFARER_SS_ANNE_LASS_DAWN",
+      "range": "home",
+      "reason": "Lines are about the ship (\"the party\"), so the trainer stays on its own ship."
+    },
+    {
+      "trainer": "TRAINER_LYLE_HNS",
+      "range": "home",
+      "reason": "Lines are about the ship (\"fire is weak on the sea\"), so the trainer stays on its own ship."
+    },
+    {
+      "trainer": "TRAINER_CASSIE_HNS",
+      "range": "home",
+      "reason": "Lines are about the ship (\"FAST SHIP trip\"), so the trainer stays on its own ship."
+    },
+    {
+      "trainer": "TRAINER_JASON_HNS",
+      "range": "home",
+      "reason": "Lines are about the open land or a haunt (\"shorts in the grass\"), so the trainer stays at home."
+    },
+    {
+      "trainer": "TRAINER_BENJAMIN_HNS",
+      "range": "home",
+      "reason": "Lines are about the open land or a haunt (\"the big sky\"), so the trainer stays at home."
     }
   ]
 }

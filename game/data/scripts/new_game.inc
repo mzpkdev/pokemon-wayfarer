@@ -348,6 +348,13 @@ EventScript_ResetAllMapFlagsHnS::
 	setflag FLAG_HIDE_ILEX_FOREST_FARFETCHD_4
 	setflag FLAG_HIDE_CELEBI
 	setflag FLAG_HIDE_ILEX_FOREST_KURT
+	@ Her scene follows the Farfetch'd errand, which reveals her.
+	setflag FLAG_HIDE_ILEX_FOREST_KIMONO
+	@ The legendary witnesses start hidden; the Route 39 scene and the Kimono ceremony reveal them.
+	setflag FLAG_HIDE_ROUTE39_SHADOW
+	setflag FLAG_HIDE_ECRUTEAK_CITY_THEATER_KIMONOS
+	setflag FLAG_HIDE_WHIRL_ISLANDS_KIMONO_GIRLS
+	setflag FLAG_HIDE_TIN_TOWER_KIMONO_GIRLS
 	setflag FLAG_HIDE_BATTLE_TOWER_OPPONENT
 	setflag FLAG_HIDE_DEOXYS @???
 	setflag FLAG_HIDE_CONTEST_POKE_BALL @???

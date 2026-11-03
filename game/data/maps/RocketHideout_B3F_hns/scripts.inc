@@ -249,7 +249,15 @@ RocketHideout_B3F_EventScript_IncrementPasswordGruntF::
 	end
 
 RocketHideout_B3F_EventScript_Eto::
+	@ He recognizes the player from the Well only if they were there.
+	goto_if_lt VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 3, RocketHideout_B3F_EventScript_EtoFirstMeeting
 	trainerbattle_single TRAINER_ETO_2_HNS, RocketHideout_B3F_Text_GruntM28Seen, RocketHideout_B3F_Text_GruntM28Beaten
+	msgbox RocketHideout_B3F_Text_GruntM28After, MSGBOX_NPC
+	goto_if_unset FLAG_GOT_PASSWORD_FROM_ETO, RocketHideout_B3F_EventScript_IncrementPasswordEto
+	end
+
+RocketHideout_B3F_EventScript_EtoFirstMeeting::
+	trainerbattle_single TRAINER_ETO_2_HNS, RocketHideout_B3F_Text_GruntM28SeenFirst, RocketHideout_B3F_Text_GruntM28Beaten
 	msgbox RocketHideout_B3F_Text_GruntM28After, MSGBOX_NPC
 	goto_if_unset FLAG_GOT_PASSWORD_FROM_ETO, RocketHideout_B3F_EventScript_IncrementPasswordEto
 	end
@@ -685,6 +693,15 @@ RocketHideout_B3F_Text_GruntF5After:
     .string "is SLOWPOKETAIL.\p"
     .string "But it's useless unless you have\n"
     .string "two passwords.$"
+
+RocketHideout_B3F_Text_GruntM28SeenFirst:
+    .string "Hyuck-hyuck-hyuck!\p"
+    .string "You're challenging me?\p"
+    .string "Hah! You're nuts, but you have\n"
+    .string "guts!\p"
+    .string "If you can beat me, I'll tell\l"
+    .string "you a password to the boss'\n"
+    .string "room!$"
 
 RocketHideout_B3F_Text_GruntM28Seen:
     .string "Hyuck-hyuck-hyuck!\p"

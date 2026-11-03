@@ -784,6 +784,75 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_AKALA_CAVE_HIKER_HNS | Akala_Cave_hns | intro | You must be tough if you made it all the way here! |  |
 | TRAINER_AKALA_CAVE_HIKER_HNS | Akala_Cave_hns | defeat | Tougher than me! |  |
 | TRAINER_AKALA_CAVE_HIKER_HNS | Akala_Cave_hns | say | I had to stop climbing because it was getting far too hot. It's like someone's got a fire going up on the peak… |  |
+| TRAINER_JEFF_HNS | SSAqua_1F_hns | intro | Nothing beats a battle when I'm on my break. |  |
+| TRAINER_JEFF_HNS | SSAqua_1F_hns | defeat | Win or lose, my break's over! |  |
+| TRAINER_JEFF_HNS | SSAqua_1F_hns | say | I guess I can't win if I don't get serious. |  |
+| TRAINER_WAI_HNS | SSAqua_B1F_hns | intro | I'm building up my legs by bracing against the ship's rocking! | landmark: the ship |
+| TRAINER_WAI_HNS | SSAqua_B1F_hns | defeat | Rocked and rolled over! |  |
+| TRAINER_WAI_HNS | SSAqua_B1F_hns | say | I couldn't find the KARATE KING in JOHTO. He's supposed to be training in a cave somewhere. |  |
+| TRAINER_NATE_HNS | SSAqua_B1F_hns | intro | Do you know the RUINS OF ALPH? | landmark: the RUINS |
+| TRAINER_NATE_HNS | SSAqua_B1F_hns | defeat | Yaargh! |  |
+| TRAINER_NATE_HNS | SSAqua_B1F_hns | say | Radios pick up strange signals inside the RUINS. | landmark: inside the RUINS |
+| TRAINER_SHIRLEY_HNS | SSAqua_B1F_hns | intro | Don't lay a finger on my students! |  |
+| TRAINER_SHIRLEY_HNS | SSAqua_B1F_hns | defeat | Aaack! |  |
+| TRAINER_SHIRLEY_HNS | SSAqua_B1F_hns | say | We're on a field trip to the RUINS outside VIOLET. | landmark: the RUINS |
+| TRAINER_RICKY_HNS | SSAqua_B1F_hns | intro | There are some odd stone panels in the RUINS OF ALPH. | landmark: in the RUINS |
+| TRAINER_RICKY_HNS | SSAqua_B1F_hns | defeat | I was done in! |  |
+| TRAINER_RICKY_HNS | SSAqua_B1F_hns | say | I read that there are four of those stone panels. |  |
+| TRAINER_DEBRA_HNS | SSAqua_B1F_hns | intro | I'm so bored. Want to battle? |  |
+| TRAINER_DEBRA_HNS | SSAqua_B1F_hns | defeat | Yow! You're too strong! |  |
+| TRAINER_DEBRA_HNS | SSAqua_B1F_hns | say | SAFFRON, CELADON… I hear there are many big cities in KANTO. | map name: CELADON |
+| TRAINER_KENNETH_HNS | SSAqua_B1F_hns | intro | I'm a sailor man! But I'm training POKéMON, so I can become the CHAMP! |  |
+| TRAINER_KENNETH_HNS | SSAqua_B1F_hns | defeat | My lack of training is obvious… |  |
+| TRAINER_KENNETH_HNS | SSAqua_B1F_hns | say | Eight BADGES! They must prove that you've beaten GYM LEADERS. No wonder you're so good! |  |
+| TRAINER_JONAH_HNS | SSAqua_B1F_hns | intro | Even though we're out on the sea, I can't fish! This is boring! Let's battle! |  |
+| TRAINER_JONAH_HNS | SSAqua_B1F_hns | defeat | I… I'm not bored anymore… |  |
+| TRAINER_JONAH_HNS | SSAqua_B1F_hns | say | I plan to fish off VERMILION's pier. | map name: VERMILION |
+| TRAINER_FRITZ_HNS | SSAqua_B1F_hns | intro | Urrf… I'm seasick! |  |
+| TRAINER_FRITZ_HNS | SSAqua_B1F_hns | defeat | I can't move anymore… |  |
+| TRAINER_FRITZ_HNS | SSAqua_B1F_hns | say | No more ships for me. Next time, I'm taking the MAGNET TRAIN. |  |
+| TRAINER_GARRETT_HNS | SSAqua_B1F_hns | intro | This is where we sailors work! | spot phrase: This is where |
+| TRAINER_GARRETT_HNS | SSAqua_B1F_hns | defeat | I lost on my home field… |  |
+| TRAINER_GARRETT_HNS | SSAqua_B1F_hns | say | We get different passengers from VERMILION CITY to OLIVINE CITY. | map name: OLIVINE CITY |
+| TRAINER_EDWARD_HNS | SSAqua_RoomNW_hns | intro | Oh, no. I've lost something that's very important. |  |
+| TRAINER_EDWARD_HNS | SSAqua_RoomNW_hns | defeat | I… I can't find it… |  |
+| TRAINER_EDWARD_HNS | SSAqua_RoomNW_hns | say | I give up. You don't have to look. Just forget about it! |  |
+| TRAINER_COREY_HNS | SSAqua_RoomNW_hns | intro | Yeehaw! Lucky! |  |
+| TRAINER_COREY_HNS | SSAqua_RoomNW_hns | defeat | How unlucky! I lost! |  |
+| TRAINER_COREY_HNS | SSAqua_RoomNW_hns | say | I found a pretty coin here. Someone must have lost it… |  |
+| TRAINER_NOLAND_HNS | SSAqua_RoomNE_hns | intro | Are you alone? Then let's battle! |  |
+| TRAINER_NOLAND_HNS | SSAqua_RoomNE_hns | defeat | That's too much to handle! |  |
+| TRAINER_NOLAND_HNS | SSAqua_RoomNE_hns | say | I wonder if there are any mountains worth climbing in KANTO? |  |
+| TRAINER_ETHAN_HNS | SSAqua_RoomNE_hns | intro | Do you know LILY? She's a hot DJ in KANTO. |  |
+| TRAINER_ETHAN_HNS | SSAqua_RoomNE_hns | defeat | Gyaaaah! |  |
+| TRAINER_ETHAN_HNS | SSAqua_RoomNE_hns | say | LILY's nice, but MARY's the best! I want to check out JOHTO's radio programs! |  |
+| TRAINER_CAROL_HNS | SSAqua_RoomNNE_hns | intro | I'm training to become the CHAMP! |  |
+| TRAINER_CAROL_HNS | SSAqua_RoomNNE_hns | defeat | What's so different between us? |  |
+| TRAINER_CAROL_HNS | SSAqua_RoomNNE_hns | say | I'm going to beat you someday! |  |
+| TRAINER_SEAN_HNS | SSAqua_RoomNNE_hns | intro | I'm going to KANTO to test my skills. |  |
+| TRAINER_SEAN_HNS | SSAqua_RoomNNE_hns | defeat | I wanted to win! |  |
+| TRAINER_SEAN_HNS | SSAqua_RoomNNE_hns | say | Trainers from JOHTO can battle with KANTO GYM LEADERS. |  |
+| TRAINER_LYLE_HNS | SSAqua_RoomSSW_hns | intro | I'm going to KANTO to put on fire-breathing shows! |  |
+| TRAINER_LYLE_HNS | SSAqua_RoomSSW_hns | defeat | Fizzle… The flame's tiny… |  |
+| TRAINER_LYLE_HNS | SSAqua_RoomSSW_hns | say | I guess fire is weak on the sea. It doesn't matter? Really? |  |
+| TRAINER_KEN_HNS | SSAqua_RoomSSW_hns | intro | I'm visiting my grandma to catch me some bugs! |  |
+| TRAINER_KEN_HNS | SSAqua_RoomSSW_hns | defeat | Ooh, wow. You're tough! |  |
+| TRAINER_KEN_HNS | SSAqua_RoomSSW_hns | say | You can find lots of POKéMON in the trees of JOHTO! |  |
+| TRAINER_MEG_AND_PEG_HNS | SSAqua_RoomSE_hns | intro | I'm not a baby! That's not nice to say to a lady! |  |
+| TRAINER_MEG_AND_PEG_HNS | SSAqua_RoomSE_hns | defeat | Oh! We lost! |  |
+| TRAINER_MEG_AND_PEG_HNS | SSAqua_RoomSE_hns | say | Sometimes, kids are smarter than grown-ups! |  |
+| TRAINER_MEG_AND_PEG_HNS | SSAqua_RoomSE_hns | intro | You think I'm a baby? That's not fair! |  |
+| TRAINER_MEG_AND_PEG_HNS | SSAqua_RoomSE_hns | defeat | Oh! We lost! |  |
+| TRAINER_MEG_AND_PEG_HNS | SSAqua_RoomSE_hns | say | Baby is a rude name to call us girls! |  |
+| TRAINER_COLIN_HNS | SSAqua_RoomSE_hns | intro | Hey, kid! Want to battle with me? |  |
+| TRAINER_COLIN_HNS | SSAqua_RoomSE_hns | defeat | You're strong! |  |
+| TRAINER_COLIN_HNS | SSAqua_RoomSE_hns | say | You're traveling all alone? Isn't your mom worried? |  |
+| TRAINER_CASSIE_HNS | SSAqua_RoomSW_hns | intro | I'm trying to forget my woes. Let's battle! |  |
+| TRAINER_CASSIE_HNS | SSAqua_RoomSW_hns | defeat | My heart weeps… |  |
+| TRAINER_CASSIE_HNS | SSAqua_RoomSW_hns | say | A voyage is best for getting over a broken heart. But a FAST SHIP trip is too short for grieving. |  |
+| TRAINER_CLYDE_HNS | SSAqua_RoomSW_hns | intro | I'm going to audition my songs at GOLDENROD's RADIO STATION. | map name: GOLDENROD |
+| TRAINER_CLYDE_HNS | SSAqua_RoomSW_hns | defeat | Yowza! Total distortion! |  |
+| TRAINER_CLYDE_HNS | SSAqua_RoomSW_hns | say | Speaking of the RADIO STATION, what's this week's lucky number? |  |
 | TRAINER_CALVIN_1 | Route102 | intro | If you have POKéMON with you, then you're an official POKéMON TRAINER! You can't say no to my challenge! |  |
 | TRAINER_CALVIN_1 | Route102 | defeat | Arrgh, I lost… I should have trained mine more… |  |
 | TRAINER_CALVIN_1 | Route102 | say | Listen, you. If you're strong, you should have told me before! |  |
@@ -2004,6 +2073,81 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_JANI | AbandonedShip_Rooms2_1F | intro | I'm not good at swimming, but I am good at battles! |  |
 | TRAINER_JANI | AbandonedShip_Rooms2_1F | defeat | Oops. That didn't go very well. |  |
 | TRAINER_JANI | AbandonedShip_Rooms2_1F | say | Walking around barefoot in this ship is kind of gross. | landmark: this ship |
+| TRAINER_PHILLIP | SSTidalLowerDeck | intro | Arrrgh! I'm fed up and dog-tired of cleaning this huge place! Let's have a quick battle! | terrain: this huge place |
+| TRAINER_PHILLIP | SSTidalLowerDeck | defeat | Little bro, I lost! |  |
+| TRAINER_PHILLIP | SSTidalLowerDeck | say | We're the CLEANUP BROTHERS! The old one dumps the detergent, and the young one does the scrubbing! |  |
+| TRAINER_LEONARD | SSTidalLowerDeck | intro | This is the bottom of the ship's hull. There's plenty of room. It'll be alright for a POKéMON battle. | landmark: the ship |
+| TRAINER_LEONARD | SSTidalLowerDeck | defeat | Big bro, I lost! |  |
+| TRAINER_LEONARD | SSTidalLowerDeck | say | We're the CLEANUP BROTHERS! The old one dumps the detergent, and the young one does the scrubbing! |  |
+| TRAINER_COLTON | SSTidalRooms | intro | I often sail to LILYCOVE CITY. I enjoy attending CONTESTS, you see. | map name: LILYCOVE CITY |
+| TRAINER_COLTON | SSTidalRooms | defeat | That was an enjoyable match! |  |
+| TRAINER_COLTON | SSTidalRooms | say | I get so excited imagining what kinds of POKéMON I'll get to see in the next CONTEST. The anticipation of it thrills! | local event: CONTEST |
+| TRAINER_MICAH | SSTidalRooms | intro | Are your friends strong? |  |
+| TRAINER_MICAH | SSTidalRooms | defeat | Your friends are, indeed, strong. |  |
+| TRAINER_MICAH | SSTidalRooms | say | Friends need not be human. For me, POKéMON are treasured friends! |  |
+| TRAINER_THOMAS | SSTidalRooms | intro | Child… Did you knock on the door? |  |
+| TRAINER_THOMAS | SSTidalRooms | defeat | A loss is to be accepted without haste or panic. |  |
+| TRAINER_THOMAS | SSTidalRooms | say | To be never ruffled in any situation is the GENTLEMAN's code of conduct. |  |
+| TRAINER_LEA_AND_JED | SSTidalRooms | intro | JED: I feel a little shy about this, but… We'll show you our lovey-dovey power! |  |
+| TRAINER_LEA_AND_JED | SSTidalRooms | defeat | JED: Sigh… |  |
+| TRAINER_LEA_AND_JED | SSTidalRooms | say | JED: It's the first time that our lovey- dovey power couldn't prevail! You must be an awesome TRAINER! |  |
+| TRAINER_LEA_AND_JED | SSTidalRooms | intro | LEA: I feel a little silly, but… We'll show you our lovey-dovey power! |  |
+| TRAINER_LEA_AND_JED | SSTidalRooms | defeat | LEA: Oh, boo! |  |
+| TRAINER_LEA_AND_JED | SSTidalRooms | say | LEA: I can't believe it! Our lovey-dovey power failed… You must be an awesome TRAINER! |  |
+| TRAINER_GARRET | SSTidalRooms | intro | Ah, you've come just in time. I'm bored, you see. You may entertain me. |  |
+| TRAINER_GARRET | SSTidalRooms | defeat | …That will do. |  |
+| TRAINER_GARRET | SSTidalRooms | say | Perhaps I shall get Father to acquire a yacht for me. A yacht for me and POKéMON! |  |
+| TRAINER_NAOMI | SSTidalRooms | intro | Oh, you're such an adorable TRAINER. Would you like to have tea? Or would you rather battle? |  |
+| TRAINER_NAOMI | SSTidalRooms | defeat | I see. You're the active sort. |  |
+| TRAINER_NAOMI | SSTidalRooms | say | A world cruise on a luxury liner has its charms, I must say… But, I will admit there is an appealing side to touring HOENN by ferry. |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_TREVOR | SSAnne_Deck_Frlg | intro | Ahoy, there! Are you seasick? |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_TREVOR | SSAnne_Deck_Frlg | defeat | I was just careless! |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_TREVOR | SSAnne_Deck_Frlg | say | My pa said there are 100 kinds of POKéMON. I think there are more. |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_EDMOND | SSAnne_Deck_Frlg | intro | Hey, matey! Let's do a little jig! |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_EDMOND | SSAnne_Deck_Frlg | defeat | You're impressive! |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_EDMOND | SSAnne_Deck_Frlg | say | How many kinds of POKéMON do you think there are in this big world? |  |
+| TRAINER_WAYFARER_SS_ANNE_LASS_ANN | SSAnne_1F_Room2_Frlg | intro | I collected these POKéMON from all around the world! |  |
+| TRAINER_WAYFARER_SS_ANNE_LASS_ANN | SSAnne_1F_Room2_Frlg | defeat | Oh, no! I went around the world for these! |  |
+| TRAINER_WAYFARER_SS_ANNE_LASS_ANN | SSAnne_1F_Room2_Frlg | say | You hurt my poor POKéMON! I demand that you heal them at a POKéMON CENTER! | local event: POKéMON CENTER |
+| TRAINER_WAYFARER_SS_ANNE_YOUNGSTER_TYLER | SSAnne_1F_Room2_Frlg | intro | I love POKéMON! Do you? |  |
+| TRAINER_WAYFARER_SS_ANNE_YOUNGSTER_TYLER | SSAnne_1F_Room2_Frlg | defeat | Wow! You're great! |  |
+| TRAINER_WAYFARER_SS_ANNE_YOUNGSTER_TYLER | SSAnne_1F_Room2_Frlg | say | Listen, listen! Let me be your friend, okay? Then we can trade POKéMON and do stuff. |  |
+| TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_ARTHUR | SSAnne_1F_Room5_Frlg | intro | You insolent pup! How dare you barge in! |  |
+| TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_ARTHUR | SSAnne_1F_Room5_Frlg | defeat | Humph! You rude child! You have no sense of courtesy! |  |
+| TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_ARTHUR | SSAnne_1F_Room5_Frlg | say | I wish to be left alone! Get out! |  |
+| TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_THOMAS | SSAnne_1F_Room7_Frlg | intro | I am but a solitary traveler… My sole companions and friends are POKéMON I caught on my journeys… |  |
+| TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_THOMAS | SSAnne_1F_Room7_Frlg | defeat | My, my friends… |  |
+| TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_THOMAS | SSAnne_1F_Room7_Frlg | say | You should be nice to friends! |  |
+| TRAINER_WAYFARER_SS_ANNE_FISHERMAN_DALE | SSAnne_2F_Room2_Frlg | intro | Check out what I fished up! |  |
+| TRAINER_WAYFARER_SS_ANNE_FISHERMAN_DALE | SSAnne_2F_Room2_Frlg | defeat | I'm all out! |  |
+| TRAINER_WAYFARER_SS_ANNE_FISHERMAN_DALE | SSAnne_2F_Room2_Frlg | say | Party? The cruise ship's party should be over by now. | landmark: The cruise ship |
+| TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_BROOKS | SSAnne_2F_Room2_Frlg | intro | Competing against the young keeps me youthful. |  |
+| TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_BROOKS | SSAnne_2F_Room2_Frlg | defeat | Good match! Ah, I feel young again! |  |
+| TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_BROOKS | SSAnne_2F_Room2_Frlg | say | Fifteen years ago, I would have won! |  |
+| TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_LAMAR | SSAnne_2F_Room4_Frlg | intro | Which do you find more worthy, a strong or a rare POKéMON? |  |
+| TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_LAMAR | SSAnne_2F_Room4_Frlg | defeat | I must salute you! |  |
+| TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_LAMAR | SSAnne_2F_Room4_Frlg | say | Personally, I prefer strong and rare POKéMON. |  |
+| TRAINER_WAYFARER_SS_ANNE_LASS_DAWN | SSAnne_2F_Room4_Frlg | intro | I don't believe I saw you at the party? |  |
+| TRAINER_WAYFARER_SS_ANNE_LASS_DAWN | SSAnne_2F_Room4_Frlg | defeat | Take it easy! |  |
+| TRAINER_WAYFARER_SS_ANNE_LASS_DAWN | SSAnne_2F_Room4_Frlg | say | Oh, I adore your strong POKéMON! Oh, how I envy you for them! |  |
+| TRAINER_WAYFARER_SS_ANNE_FISHERMAN_BARNY | SSAnne_B1F_Room1_Frlg | intro | Hello, stranger! I can't tell if you're from the seas or mountains, but stop and chat. All my POKéMON are from the sea. |  |
+| TRAINER_WAYFARER_SS_ANNE_FISHERMAN_BARNY | SSAnne_B1F_Room1_Frlg | defeat | Darn! I let that one get away! |  |
+| TRAINER_WAYFARER_SS_ANNE_FISHERMAN_BARNY | SSAnne_B1F_Room1_Frlg | say | I was going to make you my assistant, too! |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_PHILLIP | SSAnne_B1F_Room1_Frlg | intro | Matey, you're walking the plank if you lose! |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_PHILLIP | SSAnne_B1F_Room1_Frlg | defeat | Argh! Beaten by a kid! |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_PHILLIP | SSAnne_B1F_Room1_Frlg | say | When we're out at sea, jellyfish POKéMON sometimes drift by. |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_HUEY | SSAnne_B1F_Room2_Frlg | intro | Even us sailors have POKéMON, too! |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_HUEY | SSAnne_B1F_Room2_Frlg | defeat | Okay, you're not bad. |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_HUEY | SSAnne_B1F_Room2_Frlg | say | We caught all our POKéMON while we were out at sea. |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_DYLAN | SSAnne_B1F_Room3_Frlg | intro | I like feisty kids like you! |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_DYLAN | SSAnne_B1F_Room3_Frlg | defeat | Argh! Lost it! |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_DYLAN | SSAnne_B1F_Room3_Frlg | say | Sea POKéMON live in deep water. You'll need a ROD to fish them up! |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_DUNCAN | SSAnne_B1F_Room4_Frlg | intro | Come on, then! My sailor's pride is at stake! |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_DUNCAN | SSAnne_B1F_Room4_Frlg | defeat | Your spirit sank me! |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_DUNCAN | SSAnne_B1F_Room4_Frlg | say | Did you see the FISHING GURU in VERMILION CITY? | map name: VERMILION CITY |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_LEONARD | SSAnne_B1F_Room4_Frlg | intro | You know what they say about sailors and battling! |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_LEONARD | SSAnne_B1F_Room4_Frlg | defeat | Right! Good battle, mate! |  |
+| TRAINER_WAYFARER_SS_ANNE_SAILOR_LEONARD | SSAnne_B1F_Room4_Frlg | say | Hahaha! Want to be a sailor, mate? |  |
 | TRAINER_WAYFARER_COAST_SCIENTIST_TED | PokemonMansion_1F_Frlg | intro | Who are you? There shouldn't be anyone here. |  |
 | TRAINER_WAYFARER_COAST_SCIENTIST_TED | PokemonMansion_1F_Frlg | defeat | Ouch! |  |
 | TRAINER_WAYFARER_COAST_SCIENTIST_TED | PokemonMansion_1F_Frlg | say | A key? I don't know what you're talking about. |  |

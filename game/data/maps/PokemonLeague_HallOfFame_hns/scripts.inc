@@ -84,10 +84,8 @@ PokemonLeague_HallOfFame_EventScript_SetFirstGameClearFlags::
 	clearflag FLAG_HIDE_UNION_CAVE_LAPRAS
 	clearflag FLAG_HIDE_SUDOWOODO
 	clearflag FLAG_ITEM_GS_BALL
-	setvar VAR_COMPLETED_LUGIA, 4
-	clearflag FLAG_HIDE_LUGIA
-	setvar VAR_COMPLETED_HO_OH, 4
-	clearflag FLAG_HIDE_HO_OH
+	@ Lugia's and Ho-Oh's progress belongs to the Kimono ceremony and Pewter's Wing only; a
+	@ clear here would skip the ceremony's encounter and Pewter's check.
 	call PokemonLeague_HallOfFame_EventScript_SpawnJohtoRoamers
 	call_if_ge VAR_SUICUNE_ENCOUNTERS, 8, PokemonLeague_HallOfFame_EventScript_SpawnSuicune
 	call_if_set FLAG_CAUGHT_CELEBI, PokemonLeague_HallOfFame_EventScript_SpawnSecondCelebi

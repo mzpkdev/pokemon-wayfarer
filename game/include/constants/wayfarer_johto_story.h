@@ -16,6 +16,22 @@
 #define SILVER_CHAPTER_MT_MOON         11 // battle
 #define SILVER_CHAPTER_INDIGO          12 // battle, daily
 
+// VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, forward only. Zuki's offer is derived from the Wing,
+// the Radio Tower and TR, so nothing is stored before the trial starts.
+#define KIMONO_CEREMONY_STARTED  1 // the trial began: the Kimono Girls are on stage
+#define KIMONO_CEREMONY_DONE     2 // the five battles are won and the Bell is given
+#define KIMONO_CEREMONY_RESOLVED 3 // the level 50 encounter is resolved
+
+// WayfarerJohtoKimonoMissing() bits: what still stands between the player and the trial.
+#define KIMONO_MISSING_WING 1 // the branch's Wing, held by the Radio Tower's Director
+#define KIMONO_MISSING_TR   2 // trainer rating below WAYFARER_LEGENDARY_TR
+#define KIMONO_MISSING_BOTH 3
+
+// WayfarerJohtoPewterWingMissing() bits.
+#define PEWTER_MISSING_ENCOUNTER 1 // the main legendary's encounter is unresolved
+#define PEWTER_MISSING_TR        2
+#define PEWTER_MISSING_BOTH      3
+
 // WayfarerGetOriginStarterSlot() result when the origin's starter is not chosen yet.
 #define ORIGIN_STARTER_SLOT_NONE 3
 

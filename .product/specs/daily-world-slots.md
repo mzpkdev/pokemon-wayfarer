@@ -98,14 +98,15 @@ Script analysis marks a trainer not daily when its object is hidden by a flag,
 is a buried trainer, has non-static graphics, or its script (followed through
 gotos, calls and fall-through) does anything beyond battling, rematching,
 registering a phone number, handing over a gift and speaking. The reviewed
-lists add the S.S. Anne, S.S. Aqua and S.S. Tidal trainers (one-time ship
-content, until the [S.S. ferries](ss-ferries.md#passengers) put them in the
-rotation), Pokemon Tower, the Trick House puzzle rooms, Silph Co., the Rocket
+lists add Pokemon Tower, the Trick House puzzle rooms, Silph Co., the Rocket
 Hideouts, the Game Corner hideout entrance, the villain grunt classes, and the
-two Route 26 trainers authored on two maps. Of 901 `ORDINARY` trainer slots
-(1,051 trainer objects in all, pairs counting once per trainer), 659 are daily
-(632 singles and 27 pairs, 686 objects): 539 with a class range, 22 with a
-place range and 98 with a home range, 7 of the slots at 0% absence; the report lists why each of the others
+two Route 26 trainers authored on two maps. The S.S. Anne, S.S. Aqua and
+S.S. Tidal trainers are no longer excluded: the [S.S. ferries](ss-ferries.md#passengers)
+put them in the rotation like route trainers, and their first battles still run
+where they are authored. Of 901 `ORDINARY` trainer slots
+(1,051 trainer objects in all, pairs counting once per trainer), 705 are daily
+(676 singles and 29 pairs, 734 objects): 562 with a class range, 26 with a
+place range and 117 with a home range, 7 of the slots at 0% absence; the report lists why each of the others
 is not daily.
 
 **Place ranges.** A trainer whose lines need a kind of place ("this cave", "in
@@ -116,8 +117,10 @@ checks every slot against the type's rule in `place_types.json` (an underground
 map, a map-name prefix such as the Abandoned Ship or the Pokemon Mansion, or a
 metatile behaviour near the slot's object: deep sand for a desert, surfable
 water within three tiles for a coast) and fails on a slot that is not that
-kind of place. The types are cave, tower, mountain, ship, mansion, desert and
-coast. A trainer has exactly one range. A place group of one slot only keeps
+kind of place. The types are cave, tower, mountain, ship, liner, mansion,
+desert and coast. `ship` is the Abandoned Ship; `liner` is the decks and rooms of
+the S.S. Anne, S.S. Aqua and S.S. Tidal (map-name prefixes). The ferries' cabin
+hosts are not trainer slots and never join a group. A trainer has exactly one range. A place group of one slot only keeps
 the trainer's own spot in the daily bookkeeping.
 
 **Home ranges.** A trainer whose dialogue is bound to its own place (it names a
@@ -198,26 +201,26 @@ day is placed and calls from the next day. Battle text uses only
 either set is placed. The phone reads the stamped day, never the clock, so a
 call before the next map load uses the previous day's arrangement.
 
-Budget (659 trainer slots and 838 item spots, Sevii included; the generated
+Budget (705 trainer slots and 838 item spots, Sevii included; the generated
 counts are in `include/constants/world_trainer_slots.h` and `world_item_spots.h`):
 
 | Part | Bytes |
 | --- | ---: |
 | `stampDay` | 2 |
-| `clearedToday` (1,497 bits) | 188 |
-| `homeBeatenToday` (659 bits) | 83 |
+| `clearedToday` (1,543 bits) | 193 |
+| `homeBeatenToday` (705 bits) | 89 |
 | `readyAtDayStart`, `giftAtDayStart` (160 bits each) | 40 |
-| Total in `PokemonStorage` (a word-aligned struct) | 316 |
+| Total in `PokemonStorage` (a word-aligned struct) | 324 |
 
 | Block | Free before | Added | Left after |
 | --- | ---: | --- | ---: |
-| `PokemonStorage` (13 boxes, PR #139 merged, after the 2,104 bytes other specs plan) | 416 | 316 | 100 |
+| `PokemonStorage` (13 boxes, PR #139 merged, after the 2,104 bytes other specs plan) | 416 | 324 | 92 |
 | SaveBlock1 | 112 | 18 (`trainerRematches` 100 to 118) | 94 |
 
 The `PokemonStorage` figure is Notable world simulation's: of its 2,520
 bytes, the world state, the haunts' traded slots and the Masters growth plan
 2,008 (about 416 left with the 96 bytes of face-only trainers), and the daily
-state takes 316 of that margin (the budget assert allows 330). Capacity figures come from the built ELF and
+state takes 324 of that margin (the budget assert allows 330). Capacity figures come from the built ELF and
 the limits in `src/save.c`: nine storage sectors hold 35,712 bytes, and four
 SaveBlock1 sectors of 3,968 bytes hold 15,872 against 15,760 used (`gSaveblock1`
 is 0x3E10, less the 128-byte `SAVEBLOCK_MOVE_RANGE` pad in `load_save.h`).

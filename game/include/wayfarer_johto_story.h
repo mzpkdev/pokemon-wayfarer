@@ -5,6 +5,9 @@
 
 #if IS_WAYFARER
 u16 WayfarerJohtoSilverAvailable(void);
+u16 WayfarerJohtoKimonoMissing(void);
+u16 WayfarerJohtoKimonoTrialAvailable(void);
+u16 WayfarerJohtoPewterWingMissing(void);
 #endif
 
 #endif
