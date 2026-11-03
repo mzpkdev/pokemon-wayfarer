@@ -245,9 +245,10 @@ const readSectionNames = (game) => {
 
 /**
  * Builds encounters.json and icons.png in `outDir` for the placed `maps`
- * (names of map.json folders). Returns what it wrote, for the log.
+ * (names of map.json folders), with each map's encounter cells from
+ * `spawns`. Returns what it wrote, for the log.
  */
-export const writeEncounters = (game, maps, outDir) => {
+export const writeEncounters = (game, maps, outDir, spawns = {}) => {
   const speciesOf = readSpecies(game)
   const weights = readWeights(game)
   const sections = readSectionNames(game)
@@ -297,6 +298,10 @@ export const writeEncounters = (game, maps, outDir) => {
     if (Object.keys(methods).length) {
       entry.e = methods
       withEncounters++
+      // Where its land and water Pokémon turn up, for the explorer's sprites.
+      const spots = spawns[name]
+      if (spots?.l && (methods.land || methods.rock)) entry.l = spots.l
+      if (spots?.w && (methods.surf || methods.old)) entry.w = spots.w
     }
     out[name] = entry
   }

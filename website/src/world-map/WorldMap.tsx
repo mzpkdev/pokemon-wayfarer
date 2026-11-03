@@ -9,8 +9,10 @@ import { pageMinutes } from "./clock"
 import { LivingClock } from "./LivingClock"
 import { type LivingWorld, livingOverlay, loadLiving } from "./living"
 import { type Notable, type Notables, loadNotables, notablesOverlay, pickNotable } from "./notables"
+import { DebugMenu, useDebug } from "./DebugMenu"
 import { PlaceCard, type PlaceInfo } from "./PlaceCard"
 import { OPEN_SEA, type Overlay, rendererFor } from "./render"
+import { sightingsOverlay } from "./sightings"
 
 export type { PlaceInfo } from "./PlaceCard"
 
@@ -54,8 +56,10 @@ type Api = {
 
 /**
  * The whole world to pan and zoom: drag to pan, pinch, wheel or double-click
- * to zoom, or the buttons. Tap a map (or press Enter on the one at the center)
- * for a card with its name and wild Pokémon. Fills its parent.
+ * to zoom, or the buttons. Close in, wild Pokémon pop out of the routes' grass
+ * and water. Tap a map (or press Enter on the one at the center) for a card
+ * with its name; its exact encounter rates are in the debug menu (`?debug`, or
+ * the backquote key). Fills its parent.
  *
  * `extra` renders into the card under the name, for what else is at the place.
  */
@@ -119,9 +123,9 @@ export const WorldMap = ({
   }, [spotted])
   const refocus = useRef(false)
 
-  // Encounters load the first time a place is picked.
+  // Encounters load with the map: the sightings need them, and so do the place cards.
   useEffect(() => {
-    if (!picked || encounters) return
+    if (encounters) return
     void loadEncounters(base).then(
       (loaded) => {
         setEncounters(loaded)
@@ -129,7 +133,33 @@ export const WorldMap = ({
       },
       () => setEncountersFailed(true),
     )
-  }, [picked, encounters, base])
+  }, [encounters, base])
+  // The wild Pokémon that pop out close in, once their icons are in.
+  const sightingsRef = useRef<Overlay>(undefined)
+  useEffect(() => {
+    if (!encounters) return
+    const icons = new Image()
+    icons.src = `${base}/icons.png`
+    let live = true
+    void icons
+      .decode()
+      .catch(() => {})
+      .then(() => {
+        if (!live) return
+        sightingsRef.current = sightingsOverlay(
+          encounters,
+          icons,
+          pageMinutes,
+          !reducedMotion,
+          performance.now.bind(performance),
+        )
+        api.current.redraw()
+      })
+    return () => {
+      live = false
+    }
+  }, [encounters, base, reducedMotion])
+  const debug = useDebug()
 
   // Redraw with the frame on the picked map, and bring the map out from under the card.
   useEffect(() => {
@@ -190,6 +220,7 @@ export const WorldMap = ({
             labelWidth: canvas.clientWidth,
             labels: true,
             overlays: [
+              ...(sightingsRef.current ? [sightingsRef.current] : []),
               ...(notablesRef.current
                 ? [
                     notablesOverlay(notablesRef.current, pageMinutes, {
@@ -201,8 +232,12 @@ export const WorldMap = ({
               ...(highlighted ? [highlight(highlighted)] : []),
             ],
           })
-          // The ships keep sailing while the map is open.
-          if (pending || (!reducedRef.current && (livingRef.current || notablesRef.current)))
+          // The ships keep sailing and the wild Pokémon popping while the map is open.
+          if (
+            pending ||
+            (!reducedRef.current &&
+              (livingRef.current || notablesRef.current || sightingsRef.current))
+          )
             schedule()
         }
         const schedule = () => {
@@ -436,7 +471,7 @@ export const WorldMap = ({
         ref={canvasRef}
         tabIndex={0}
         aria-roledescription="map"
-        aria-label="Map of the whole world. Drag or use the arrow keys to look around; pinch, scroll or use the plus and minus keys to zoom. Tap a place, or press Enter on the one in the middle, to see its wild Pokémon."
+        aria-label="Map of the whole world. Drag or use the arrow keys to look around; pinch, scroll or use the plus and minus keys to zoom. Tap a place, or press Enter on the one in the middle, to see what is there."
         className="block size-full cursor-grab touch-none focus-visible:outline-4 focus-visible:-outline-offset-4 focus-visible:outline-logo-yellow active:cursor-grabbing"
       />
       {failed && (
@@ -453,10 +488,12 @@ export const WorldMap = ({
           encounters={encounters}
           base={base}
           failed={encountersFailed}
+          rates={debug.rates}
           extra={extra}
           onClose={() => close(true)}
         />
       )}
+      <DebugMenu debug={debug} />
       {spotted && (
         <output className="pixel-panel gba-text gba-text-light pointer-events-none absolute top-4 left-1/2 max-w-[calc(100%-2rem)] -translate-x-1/2 px-4 py-3 text-center">
           {spotted.label}

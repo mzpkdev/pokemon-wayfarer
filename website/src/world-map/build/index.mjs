@@ -11,6 +11,7 @@ import { gzipSync } from "node:zlib"
 import { renderIndexed } from "../../../scripts/lib/gba.mjs"
 import { writePng } from "../../../scripts/lib/png.mjs"
 import { writeEncounters } from "./encounters.mjs"
+import { readSpawns } from "./spawns.mjs"
 import { createAtlas, openGame } from "./game.mjs"
 import { buildLand } from "./land.mjs"
 import { buildLandmarks } from "./landmarks.mjs"
@@ -176,6 +177,7 @@ const places = writeEncounters(
   game,
   all.map((p) => p.m.name),
   outDir,
+  readSpawns(game, world),
 )
 console.log(
   "encounters",

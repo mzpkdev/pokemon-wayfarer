@@ -88,7 +88,16 @@ export const openGame = (root = gameRoot) => {
       return fs.existsSync(jasc) ? readJascPalette(jasc) : null
     })
     const metatiles = fs.readFileSync(`${root}/${incbin(field(name, "metatiles"))}`)
-    const t = { png, palettes, metatiles, count: metatiles.length / 16, tilesPerRow: png.width / 8 }
+    const attributesFile = incbin(field(name, "metatileAttributes"))
+    const t = {
+      png,
+      palettes,
+      metatiles,
+      /** Each metatile's attributes, u16 (Emerald, HNS) or u32 (FRLG) apiece; the behavior is in the low bits. */
+      attributes: attributesFile ? fs.readFileSync(`${root}/${attributesFile}`) : undefined,
+      count: metatiles.length / 16,
+      tilesPerRow: png.width / 8,
+    }
     tilesetCache.set(name, t)
     return t
   }

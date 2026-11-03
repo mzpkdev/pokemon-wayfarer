@@ -17,6 +17,10 @@ export type Place = {
   n: string
   /** Its wild Pokémon, by method; missing where it has none. */
   e?: Partial<Record<Method, Table>>
+  /** A sample of its land encounter cells (tall grass and the like), as flat x, y grid pairs. */
+  l?: number[]
+  /** A sample of its water encounter cells, as flat x, y grid pairs. */
+  w?: number[]
 }
 
 export type Encounters = {

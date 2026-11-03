@@ -105,9 +105,22 @@ The rest of the site uses it only through `index.ts`:
   the world stop).
   `WorldMap` is the explorer. Drag, pinch, wheel, double-click, the arrow keys
   and +/- all pan and zoom it.
+  Close in (from 7 CSS pixels a metatile), wild Pokémon pop out of the
+  routes (`sightings.ts`): each of a map's sampled encounter cells (tall grass
+  and the like on land, the water for surfing and fishing) now and then has
+  one of the route's own Pokémon out for a few seconds, picked by its rate in
+  the table for the time of day on the page clock (morning and day use the day
+  table, evening and night the night one). A land one stands on its cell over
+  a shadow; a water one is half under, in a ripple. Most cells are quiet at any
+  moment, so a route shows a few, not all. Nothing is stored: a sighting is a
+  hash of the map, the cell and the stretch of time.
   Tapping a map (or Enter on the one at the center) frames it and opens a place
-  card: its name and wild Pokémon by method and time of day, as icon, name and
-  percent. The card is a bottom sheet on a phone and a left panel from `sm` up.
+  card: its name, and a line saying wild Pokémon live there if they do. The
+  exact encounter rates are behind the debug menu (`DebugMenu.tsx`), which
+  opens with `?debug` in the address or the backquote key: with "Encounter
+  rates on place cards" on (kept in this browser), the card lists the wild
+  Pokémon by method and time of day, as icon, name and percent. The card is a
+  bottom sheet on a phone and a left panel from `sm` up.
   `WorldMap`'s `extra` render prop puts more (a town's Gym, ports) under the
   card's name.
 
@@ -123,15 +136,15 @@ PNG/palette helpers in `scripts/lib/`.
 the site doesn't need the game tree. Rebuild it after maps, tilesets or the
 builder change.
 
-| File              | What it holds                                                                                                                                                                                      |
-| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `atlas.png`       | Every metatile the world uses, 16×16 each, 64 to a row                                                                                                                                             |
-| `grid.bin.gz`     | The world as gzipped little-endian u16 atlas indices, row by row; `0xffff` is open sea                                                                                                             |
-| `overview.png`    | The far-out view: the tiles averaged, one pixel per metatile, and coarser levels for further out, packed side by side                                                                              |
-| `encounters.json` | Per placed map, its name and wild Pokémon (species slot and percent) by method and time of day; `gens`, each slot's roster `entry`, the roster by `homes`, and the Safari Zones' Kalos by `safari` |
-| `icons.png`       | One 32×32 icon per species used, 16 to a row, indexed by the slot in `encounters.json`                                                                                                             |
-| `notables.json`   | The notables' stops, cycles and routes (see below)                                                                                                                                                 |
-| `meta.json`       | Grid size, atlas columns, the overview's levels, the open ocean's tiles and color, towns, region labels with bounds, and placed maps                                                               |
+| File              | What it holds                                                                                                                                                                                                                                              |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `atlas.png`       | Every metatile the world uses, 16×16 each, 64 to a row                                                                                                                                                                                                     |
+| `grid.bin.gz`     | The world as gzipped little-endian u16 atlas indices, row by row; `0xffff` is open sea                                                                                                                                                                     |
+| `overview.png`    | The far-out view: the tiles averaged, one pixel per metatile, and coarser levels for further out, packed side by side                                                                                                                                      |
+| `encounters.json` | Per placed map, its name and wild Pokémon (species slot and percent) by method and time of day; its sampled land (`l`) and water (`w`) encounter cells; `gens`, each slot's roster `entry`, the roster by `homes`, and the Safari Zones' Kalos by `safari` |
+| `icons.png`       | One 32×32 icon per species used, 16 to a row, indexed by the slot in `encounters.json`                                                                                                                                                                     |
+| `notables.json`   | The notables' stops, cycles and routes (see below)                                                                                                                                                                                                         |
+| `meta.json`       | Grid size, atlas columns, the overview's levels, the open ocean's tiles and color, towns, region labels with bounds, and placed maps                                                                                                                       |
 
 ## Builder (`build/`)
 
