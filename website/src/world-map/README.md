@@ -34,13 +34,15 @@ The rest of the site uses it only through `index.ts`:
   scrolling.
 - At the wild stop (`wild.ts`, `WildTally.tsx`) the camera stays on the whole
   world and icons from `icons.png` pop out of routes in waves, Gen I to VIII,
-  the regional forms, then a mix (about 14 s, looping): each wave picks the
-  routes whose tables hold that generation, spread by farthest-point
-  sampling, none overlapping on screen, at a whole multiple of the atlas.
-  The card tallies species per generation, ticking up as each wave plays and
-  ending on the total; a chip replays its wave. Generations come from each
-  species' `.natDexNum` (regional forms, by species id, are counted apart; Gen
-  VI has none in the wild; anything past Gen VIII is marked 9 and left out).
+  the regional forms, then a mix (about 14 s, looping). The page states the
+  full roster, as all of it will be in the final game: every species of Gen I
+  to VIII by national dex number (905) and the Alolan, Galarian and Hisuian
+  forms (53), from the game's species data (`.natDexNum`; macro-built entries
+  expanded with their arguments). A wave pops that generation's species over
+  routes spread by farthest-point sampling, an illustration, not who lives
+  on each route (the explorer's place cards say that). The card tallies each
+  generation as its wave plays, ending on the total; tapping a chip holds its
+  wave on the map, and tapping it again plays on. Gen IX stays off the page.
   Reduced motion shows the full tally and a still scatter; a chip picks whose.
 - At the Gym stop a tap on a pin (or its hidden button, `aria-pressed`)
   toggles the badge earned: earned pins are bright with a gold glow and a

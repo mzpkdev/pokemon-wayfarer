@@ -26,8 +26,10 @@ export type Encounters = {
   species: string[]
   /** Each species' generation by atlas slot: 1 to 9, or 0 for a regional form. */
   gens: number[]
-  /** Species met in the wild per generation, I to VIII, then regional forms. */
+  /** The page's roster per generation, I to VIII, then the regional forms. */
   counts: number[]
+  /** The page's roster, atlas slots per generation (I to VIII), then the regional forms. */
+  roster: number[][]
   /** By the map's folder name, as in `Meta.maps`. */
   maps: Record<string, Place>
 }

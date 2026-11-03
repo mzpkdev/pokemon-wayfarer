@@ -9,7 +9,6 @@ import type { Overlay } from "./render"
 /** The waves: Gen I to VIII, the regional forms, then a mix of all of them. */
 export const WAVES = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "FORMS", "ALL"] as const
 /** The wave's generation as `encounters.json` gives it: 1 to 8, 0 for regional forms, none for the mix. */
-const GEN_OF_WAVE = [1, 2, 3, 4, 5, 6, 7, 8, 0]
 /** A wave with something to show, one without, and the mix at the end, in ms. */
 const WAVE_MS = 1400
 const EMPTY_WAVE_MS = 800
@@ -81,65 +80,45 @@ export const loadWild = async (base = DATA): Promise<Wild> => {
     loadWorld(base),
     icons.decode().catch(() => {}),
   ])
-  const { gens, counts } = encounters
+  const { roster, counts } = encounters
   const rects = new Map(world.meta.maps.map((map) => [map.name, map]))
-  // Each route's species by generation, those met on foot or on rocks first:
-  // the icon sits on the route's land.
+  // Every route with its own wild Pokémon is a place for an icon to pop up;
+  // the icons are the whole roster of the wave's generation, an illustration
+  // of what the world holds, not who lives on that route (the explorer's
+  // place cards say that).
   const routes = Object.entries(encounters.maps).flatMap(([name, place]) => {
     const rect = rects.get(name)
     if (!rect || !place.e) return []
-    const land = new Set<number>()
-    const water = new Set<number>()
-    for (const [method, table] of Object.entries(place.e)) {
-      const slots = "a" in table ? table.a : [...table.d, ...table.n]
-      for (const [slot] of slots) (method === "land" || method === "rock" ? land : water).add(slot)
-    }
-    return [
-      {
-        x: rect.x + rect.width / 2,
-        y: rect.y + rect.height / 2,
-        land: [...land].toSorted((a, b) => a - b),
-        water: [...water].toSorted((a, b) => a - b),
-      },
-    ]
+    const onLand = "land" in place.e || "rock" in place.e
+    return [{ x: rect.x + rect.width / 2, y: rect.y + rect.height / 2, onLand }]
   })
+  const landed = routes.filter((route) => route.onLand)
   const waves = WAVES.map((_, wave) => {
-    const wanted = (slot: number) =>
-      wave < GEN_OF_WAVE.length ? gens[slot] === GEN_OF_WAVE[wave] : gens[slot]! <= 8
-    // Species of the generation on each route; routes with only fishing and surfing last.
-    const candidates = routes
-      .map((route) => {
-        const land = route.land.filter(wanted)
-        return {
-          ...route,
-          slots: land.length ? land : route.water.filter(wanted),
-          onLand: land.length > 0,
-        }
-      })
-      .filter((route) => route.slots.length)
-    const landed = candidates.filter((route) => route.onLand)
-    const pool = landed.length >= CAP ? landed : candidates
+    const pool = wave < roster.length ? roster[wave]! : roster.flat()
     if (!pool.length) return []
+    const places = landed.length >= CAP ? landed : routes
     // Farthest-point sampling spreads the icons over the world; the start varies per wave.
-    const picked = [pool[hash(wave + 1) % pool.length]!]
-    const nearest = pool.map((route) => Math.hypot(route.x - picked[0]!.x, route.y - picked[0]!.y))
-    while (picked.length < Math.min(CAP, pool.length)) {
+    const picked = [places[hash(wave + 1) % places.length]!]
+    const nearest = places.map((route) =>
+      Math.hypot(route.x - picked[0]!.x, route.y - picked[0]!.y),
+    )
+    while (picked.length < Math.min(CAP, places.length)) {
       let best = 0
       nearest.forEach((d, i) => {
         if (d > nearest[best]!) best = i
       })
-      const route = pool[best]!
+      const route = places[best]!
       picked.push(route)
-      pool.forEach((other, i) => {
+      places.forEach((other, i) => {
         nearest[i] = Math.min(nearest[i]!, Math.hypot(other.x - route.x, other.y - route.y))
       })
     }
-    // A species once per wave while there are others to choose.
+    // A different species for each place, drawn from the wave's roster.
     const used = new Set<number>()
     return picked.map((route, i) => {
-      const fresh = route.slots.filter((slot) => !used.has(slot))
-      const options = fresh.length ? fresh : route.slots
-      const slot = options[hash(wave * 131 + i) % options.length]!
+      let slot = pool[hash(wave * 131 + i) % pool.length]!
+      for (let step = 1; used.has(slot) && step < pool.length; step++)
+        slot = pool[(hash(wave * 131 + i) + step) % pool.length]!
       used.add(slot)
       return { x: route.x, y: route.y, slot }
     })

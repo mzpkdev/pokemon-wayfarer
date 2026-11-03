@@ -5,7 +5,7 @@ import { TICK_MS, type Wild, type WildClock, WAVES, waveAt, startOf } from "./wi
 const NONE = Array.from({ length: 9 }, () => 0)
 
 /**
- * The wild stop's tally: the species met in the wild per generation, one chip
+ * The wild stop's tally: the roster per generation, one chip
  * each (I to VIII, the regional forms) and the total. Each ticks up as its
  * wave pops on the map, the playing wave's lit; a chip taps to play its wave
  * again. With reduced motion everything is in at once and a chip picks which
