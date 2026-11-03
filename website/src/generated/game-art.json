@@ -107,6 +107,12 @@
     "x": 0,
     "y": 0
   },
+  "popups/wood.png": {
+    "width": 96,
+    "height": 40,
+    "x": 0,
+    "y": 0
+  },
   "people/oak.png": {
     "width": 64,
     "height": 96,

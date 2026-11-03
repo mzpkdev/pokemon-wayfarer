@@ -36,14 +36,18 @@ const captions: Caption[] = [
 <section aria-labelledby="world" class="world relative">
   <h2 id="world" class="sr-only">The world of Pokémon Wayfarer</h2>
   <div class="sticky top-0 h-svh overflow-hidden">
-    <WorldTour client:visible={{ rootMargin: "200%" }} captions={captions} />
+    <WorldTour
+      client:visible={{ rootMargin: "200%" }}
+      captions={captions}
+      seam={{ color: "rgb(8 41 0)", pixel: "--scene-px" }}
+    />
   </div>
 </section>
 
 <style>
   /* The scroll the camera's pull-back plays over; one screen when it can't move. */
   .world {
-    height: 420svh;
+    height: 480svh;
   }
 
   @media (prefers-reduced-motion: reduce) {
