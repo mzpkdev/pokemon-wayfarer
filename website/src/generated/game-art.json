@@ -95,6 +95,12 @@
     "x": 0,
     "y": 0
   },
+  "sprites/brendan-mach-bike.png": {
+    "width": 288,
+    "height": 32,
+    "x": 0,
+    "y": 0
+  },
   "text/down-arrow.png": {
     "width": 8,
     "height": 48,

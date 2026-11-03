@@ -6,9 +6,10 @@ that turns the game's maps into data and a client that draws that data.
 
 The rest of the site uses it only through `index.ts`:
 
-- `WorldTour` is the landing page's world section. As its section scrolls by,
-  the camera pulls back from LITTLEROOT TOWN to all of Hoenn and then the whole
-  world, with captions beside the map. Its EXPLORE THE MAP button opens the
+- `WorldTour` is the landing page's world section. It opens in ROUTE 101's
+  tall grass, dithered into the page above, as BRENDAN rides down to his door
+  in LITTLEROOT TOWN with the game's map name popups. Then it pulls back to
+  all of Hoenn and the whole world, with captions beside the map. Its EXPLORE THE MAP button opens the
   explorer full screen.
 - `WorldMap` is the explorer. Drag, pinch, wheel, double-click, the arrow keys
   and +/- all pan and zoom it.
@@ -66,4 +67,5 @@ the way `tools/mapjson` does.
   32×32-metatile chunks, cross-fading between the two. Chunks are drawn a few
   per frame, and the overview shows through until they're done. It also draws
   the region and town names.
+- `rider.ts`: BRENDAN on his MACH BIKE riding ROUTE 101 into LITTLEROOT TOWN as the tour scrolls. His path is set in each map's own tiles, so it follows the maps if the layout moves.
 - `WorldTour.tsx` and `WorldMap.tsx`: the two components.

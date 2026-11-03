@@ -5,6 +5,7 @@ import { useReducedMotion } from "~/lib/hooks"
 import { type Camera, fit, fly } from "./camera"
 import { type Bounds, DATA, type Meta, loadWorld } from "./data"
 import { OPEN_SEA, rendererFor } from "./render"
+import { RIDER_SRC, riderAt, routeIn } from "./rider"
 import { WorldMap } from "./WorldMap"
 
 export type Caption = {
@@ -29,6 +30,12 @@ const BEATS = [
   { from: 0.62, to: 0.88, shot: 2, next: 3 },
   { from: 0.88, to: 1, shot: 3 },
 ] as const
+
+/** Scroll progress where BRENDAN rides in from the grass, and where he reaches his door. */
+const RIDE_FROM = -0.03
+const RIDE_TO = 0.18
+/** The closest zoom he is drawn at; further out he is a speck. */
+const RIDER_MIN_ZOOM = 4
 
 /** Which caption each shot shows: the walk into town keeps the first. */
 const SHOT_CAPTION = [0, 0, 1, 2]
@@ -175,9 +182,12 @@ export const WorldTour = ({
       return travel > 0 ? -top / travel : 1
     }
 
-    void loadWorld(base).then((world) => {
+    const rider = new Image()
+    rider.src = RIDER_SRC
+    void Promise.all([loadWorld(base), rider.decode().catch(() => {})]).then(([world]) => {
       if (disposed) return
       const renderer = rendererFor(world)
+      const route = routeIn(world.meta)
       const draw = () => {
         raf = 0
         // The map gets the screen beside the caption on wide screens, above
@@ -202,6 +212,10 @@ export const WorldTour = ({
           labelWidth: area.width,
           // The popup names the close-ups; names on the map come in as it pulls back.
           labels: camera.zoom < shots[1]!.zoom * 0.7,
+          sprites:
+            rider.complete && rider.naturalWidth && camera.zoom >= RIDER_MIN_ZOOM
+              ? [riderAt(route, (scrolled - RIDE_FROM) / (RIDE_TO - RIDE_FROM), rider)]
+              : [],
         })
         if (seamColor && seamPixel) {
           const pixel = parseFloat(getComputedStyle(canvas).getPropertyValue(seamPixel)) || 4

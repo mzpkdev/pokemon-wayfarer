@@ -16,6 +16,18 @@ const CHUNK_BUDGET_MS = 8
 /** Lands labeled smaller and in white, beside the four main regions in gold. */
 const MINOR_REGIONS = new Set(["SINJOH", "SEVII ISLANDS", "ALOLA"])
 
+/** A sprite on the map: a cut of `image`, placed and sized in metatiles. */
+export type Sprite = {
+  image: CanvasImageSource
+  source: { x: number; y: number; width: number; height: number }
+  x: number
+  y: number
+  width: number
+  height: number
+  /** Mirrored left to right. */
+  flip?: boolean
+}
+
 export type View = {
   camera: Camera
   /** Where on the canvas the camera's point sits, in CSS pixels. */
@@ -24,6 +36,8 @@ export type View = {
   labelWidth: number
   /** Whether to name regions and towns at all. */
   labels: boolean
+  /** Drawn over the map, under the names. */
+  sprites?: Sprite[]
 }
 
 /** "NewBarkTown_hns" to "NEW BARK TOWN". */
@@ -147,6 +161,30 @@ const createRenderer = ({ meta, atlas, grid, overview }: World) => {
         if (chunk) context.drawImage(chunk, x, y, cw, ch)
       context.globalAlpha = 1
     }
+    context.imageSmoothingEnabled = false
+    for (const sprite of view.sprites ?? []) {
+      const x = Math.round((sprite.x - left) * scale)
+      const y = Math.round((sprite.y - top) * scale)
+      const spriteWidth = Math.round(sprite.width * scale)
+      const spriteHeight = Math.round(sprite.height * scale)
+      const { source } = sprite
+      context.save()
+      context.translate(sprite.flip ? x + spriteWidth : x, y)
+      if (sprite.flip) context.scale(-1, 1)
+      context.drawImage(
+        sprite.image,
+        source.x,
+        source.y,
+        source.width,
+        source.height,
+        0,
+        0,
+        spriteWidth,
+        spriteHeight,
+      )
+      context.restore()
+    }
+
     if (!view.labels) return pending
 
     // Region names far out, fading as the town names take over.

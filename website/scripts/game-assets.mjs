@@ -221,6 +221,16 @@ for (const name of ["volbeat", "torchic", "manectric"])
 save("sprites/brendan.png", renderIndexed(source("intro/scene_2/brendan.png"), playerPalette))
 save("sprites/bicycle.png", renderIndexed(source("intro/scene_2/bicycle.png"), playerPalette))
 
+// BRENDAN on his MACH BIKE in the overworld, for the world map: nine 32x32
+// frames, standing south, north and west, then two pedaling frames each way.
+save(
+  "sprites/brendan-mach-bike.png",
+  renderIndexed(
+    source("object_events/pics/people/brendan/mach_bike.png"),
+    readJascPalette(source("object_events/palettes/brendan.pal")),
+  ),
+)
+
 save("text/down-arrow.png", renderIndexed(source("fonts/down_arrow.png")))
 
 // Text window frame 1, the game's default.
