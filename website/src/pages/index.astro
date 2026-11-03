@@ -4,13 +4,6 @@ import WorldSection from "~/components/WorldSection.astro"
 import { TitleScene } from "~/components/TitleScene"
 import Layout from "~/layouts/Layout.astro"
 import { FEATURES, ORIGINS, REPOSITORY_URL, STATS } from "~/lib/content"
-
-/** Volbeats drifting through the dark grass behind the page: start height, duration, delay, direction. */
-const volbeats = [
-  { top: "18%", duration: "38s", delay: "-6s", rightward: true },
-  { top: "47%", duration: "46s", delay: "-30s", rightward: false },
-  { top: "78%", duration: "41s", delay: "-17s", rightward: true },
-]
 ---
 
 <Layout title="Pokémon Wayfarer">
@@ -37,25 +30,6 @@ const volbeats = [
       <div
         class="pointer-events-auto relative -mt-[calc(12*var(--scene-px))] overflow-x-clip bg-ground"
       >
-        <div class="pointer-events-none absolute inset-0 hidden md:block" aria-hidden="true">
-          {
-            volbeats.map(({ top, duration, delay, rightward }) => (
-              <div
-                class="volbeat-path absolute left-0"
-                style={`top: ${top}; --duration: ${duration}; animation-delay: ${delay}; animation-direction: ${rightward ? "normal" : "reverse"}`}
-              >
-                <div class="volbeat-bob" style={`animation-delay: ${delay}`}>
-                  <div
-                    class="sprite bg-[url(/game/sprites/volbeat.png)]"
-                    style={`--size: 32; --frames: 2; --duration: 0.13s; ${rightward ? "scale: -1 1" : ""}`}
-                  >
-                  </div>
-                </div>
-              </div>
-            ))
-          }
-        </div>
-
         <!-- Then PROF. OAK asks for your email. -->
         <CtaProfessor />
 
@@ -185,29 +159,12 @@ const volbeats = [
 </Layout>
 
 <style>
-  .volbeat-path {
-    animation: drift var(--duration) linear infinite;
-  }
-
-  .volbeat-bob {
-    animation: bob 2.4s ease-in-out infinite alternate;
-  }
-
   @keyframes drift {
     from {
       translate: -120px 0;
     }
     to {
       translate: calc(100vw + 120px) 0;
-    }
-  }
-
-  @keyframes bob {
-    from {
-      translate: 0 -18px;
-    }
-    to {
-      translate: 0 18px;
     }
   }
 
@@ -237,14 +194,11 @@ const volbeats = [
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .volbeat-path,
-    .volbeat-bob,
     .torchic-path,
     .torchic {
       animation: none;
     }
 
-    .volbeat-path,
     .torchic-path {
       display: none;
     }
