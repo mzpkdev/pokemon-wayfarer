@@ -23,9 +23,10 @@ const volbeats = [
     <!--
       The page is the nearest layer: it overlaps the end of the world map's
       pinned stretch, so its grass edge rises over the map the way the
-      opening's layers cover one another.
+      opening's layers cover one another. The edge lets clicks through to the
+      map under it; the page's content takes them again.
     -->
-    <div class="relative z-20 -mt-[calc(112*var(--scene-px))]">
+    <div class="pointer-events-none relative z-20 -mt-[calc(112*var(--scene-px))]">
       <div
         class="scene-strip h-[calc(112*var(--scene-px))] bg-[url(/game/page/edge.png)]"
         aria-hidden="true"
@@ -33,7 +34,9 @@ const volbeats = [
       </div>
 
       <!-- Content starts over the edge's solid ground, so it follows the plants closely. -->
-      <div class="relative -mt-[calc(12*var(--scene-px))] overflow-x-clip bg-ground">
+      <div
+        class="pointer-events-auto relative -mt-[calc(12*var(--scene-px))] overflow-x-clip bg-ground"
+      >
         <div class="pointer-events-none absolute inset-0 hidden md:block" aria-hidden="true">
           {
             volbeats.map(({ top, duration, delay, rightward }) => (

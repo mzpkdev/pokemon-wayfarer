@@ -187,6 +187,38 @@ const readRoster = (speciesOf) => {
   }
 }
 
+/** Galar's last national dex number: 899 to 905 (Wyrdeer to Enamorus) are Hisui's. */
+const GALAR_LAST = 898
+
+/**
+ * Where each generation lives, from the natives table of the wild encounters
+ * v2 PRD (.product/prds/wild-encounters-v2.md), in the tour's order: the
+ * roster's species by generation (and dex range), and the regional forms by
+ * their region. Every roster entry has exactly one home.
+ */
+const HOMES = [
+  { id: "kanto", gens: [1] },
+  { id: "johto", gens: [2] },
+  { id: "hoenn", gens: [3, 5] },
+  { id: "safari", gens: [6] },
+  { id: "sevii", gens: [8], dex: (dex) => dex <= GALAR_LAST, form: "GALAR" },
+  { id: "alola", gens: [7], form: "ALOLA" },
+  { id: "sinjoh", gens: [8], dex: (dex) => dex > GALAR_LAST, form: "HISUI" },
+  { id: "sinnoh", gens: [4] },
+]
+
+/**
+ * The three Safari Zones, which hold Kalos (Gen VI): their areas by v2 table
+ * key, and the placed map nearest each one's gate, where the tour shows them
+ * (the Safari Zones aren't on the overworld).
+ */
+const SAFARI = [
+  { zone: "KANTO", near: "FuchsiaCity_hns", key: /^MAP_FUCHSIA_CITY_SAFARI_ZONE_/ },
+  // Through Routes 47 and 48, which the overworld doesn't place.
+  { zone: "JOHTO", near: "CianwoodCity_hns", key: /^MAP_SAFARI_ZONE_\w+_HNS$/ },
+  { zone: "HOENN", near: "Route121", key: /^MAP_SAFARI_ZONE_[A-Z]+$/ },
+]
+
 /** The weight of each slot, per method; `rod` for each rod. */
 const readWeights = (game) => {
   const fields = json(game, "src/data/wild_encounters.json").wild_encounter_groups.find(
@@ -214,9 +246,10 @@ const readSectionNames = (game) => {
 
 /**
  * Builds encounters.json and icons.png in `outDir` for the placed `maps`
- * (names of map.json folders). Returns what it wrote, for the log.
+ * (names of map.json folders), with each map's encounter cells from
+ * `spawns`. Returns what it wrote, for the log.
  */
-export const writeEncounters = (game, maps, outDir) => {
+export const writeEncounters = (game, maps, outDir, spawns = {}) => {
   const speciesOf = readSpecies(game)
   const weights = readWeights(game)
   const sections = readSectionNames(game)
@@ -266,22 +299,73 @@ export const writeEncounters = (game, maps, outDir) => {
     if (Object.keys(methods).length) {
       entry.e = methods
       withEncounters++
+      // Where its land and water Pokémon turn up, for the explorer's sprites.
+      const spots = spawns[name]
+      if (spots?.l && (methods.land || methods.rock)) entry.l = spots.l
+      if (spots?.w && (methods.surf || methods.old)) entry.w = spots.w
     }
     out[name] = entry
   }
 
   // The full roster joins the atlas after the wild species, for the tour's
-  // Pokédex waves: every species of Gen I to VIII and their regional forms.
+  // waves: every species of Gen I to VIII and their regional forms, by home.
   const roster = readRoster(speciesOf)
-  const rosterSlots = {
-    gens: Array.from({ length: 8 }, (_, i) =>
-      roster.species.filter((id) => genOf(speciesOf(id).dex) === i + 1).map(slotOf),
-    ),
-    forms: roster.forms.map(slotOf),
+  const homes = HOMES.map(({ id, gens, dex = () => true, form }) => ({
+    id,
+    slots: [
+      ...roster.species.filter((species) => {
+        const info = speciesOf(species)
+        return gens.includes(genOf(info.dex)) && dex(info.dex)
+      }),
+      ...roster.forms.filter((species) => form && species.includes(`_${form}`)),
+    ].map(slotOf),
+  }))
+  const homed = homes.reduce((sum, home) => sum + home.slots.length, 0)
+  if (homed !== roster.species.length + roster.forms.length)
+    throw new Error(
+      `homes hold ${homed} of the roster's ${roster.species.length + roster.forms.length}`,
+    )
+
+  // Each species' roster entry: a regional form's own, or the plain species
+  // of its dex number for anything else (LYCANROC_MIDNIGHT is LYCANROC), so a
+  // route's wild species tell which home they belong to.
+  const plain = new Map(roster.species.map((species) => [speciesOf(species).dex, species]))
+  const entryOf = (species) => {
+    const info = speciesOf(species)
+    if (!info) return undefined
+    const region = species.match(/_(ALOLA|GALAR|HISUI)(_|$)/)?.[1]
+    if (info.form && region)
+      return roster.forms.find(
+        (form) => form.includes(`_${region}`) && speciesOf(form).dex === info.dex,
+      )
+    return plain.get(info.dex)
   }
+
+  // The Safari Zones' Kalos species, per zone.
+  const kalos = new Set(homes.find((home) => home.id === "safari").slots)
+  const safari = SAFARI.map(({ zone, near, key }) => {
+    const species = new Set()
+    for (const [area, table] of Object.entries(tables)) {
+      if (!key.test(area)) continue
+      for (const method of Object.values(table).filter((value) => typeof value === "object"))
+        for (const list of Object.values(method))
+          if (Array.isArray(list))
+            for (const id of list) {
+              const entry = entryOf(id)
+              if (entry && kalos.has(slotOf(entry))) species.add(slotOf(entry))
+            }
+    }
+    if (!species.size) throw new Error(`no Kalos species in the ${zone} Safari Zone`)
+    if (!maps.includes(near)) throw new Error(`${near} (the ${zone} Safari Zone) isn't placed`)
+    return { zone, near, slots: [...species] }
+  })
 
   // The icon atlas, in slot order.
   const ids = [...slots.keys()]
+  const entry = ids.map((id) => {
+    const species = entryOf(id)
+    return species ? slotOf(species) : -1
+  })
   const rows = Math.ceil(ids.length / COLUMNS)
   const width = COLUMNS * ICON
   const rgba = new Uint8Array(width * rows * ICON * 4)
@@ -319,19 +403,22 @@ export const writeEncounters = (game, maps, outDir) => {
 
   fs.mkdirSync(outDir, { recursive: true })
   writePng(`${outDir}/icons.png`, width, rows * ICON, rgba)
-  // The roster per generation, I to VIII, then the regional forms: the page's
-  // Pokédex counts, and which icons its waves draw from.
-  const counts = [...rosterSlots.gens.map((list) => list.length), rosterSlots.forms.length]
   fs.writeFileSync(
     `${outDir}/encounters.json`,
     JSON.stringify({
       columns: COLUMNS,
       species: names,
       gens,
-      counts,
-      roster: [...rosterSlots.gens, rosterSlots.forms],
+      entry,
+      homes,
+      safari,
       maps: out,
     }),
   )
-  return { counts, maps: Object.keys(out).length, withEncounters, species: ids.length }
+  return {
+    homes: homes.map((home) => `${home.id} ${home.slots.length}`),
+    maps: Object.keys(out).length,
+    withEncounters,
+    species: ids.length,
+  }
 }

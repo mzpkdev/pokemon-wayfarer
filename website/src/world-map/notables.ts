@@ -172,10 +172,31 @@ const hashOf = (text: string) => {
   return mix(h)
 }
 
-const toLeg = (flat: number[], water: (0 | 1)[] = []): Leg => {
-  // Cells' centers.
-  const points: Point[] = []
-  for (let i = 0; i < flat.length; i += 2) points.push([flat[i]! + 0.5, flat[i + 1]! + 0.5])
+const toLeg = (flat: number[], runs: (0 | 1)[] = []): Leg => {
+  // The route walks the grid the way the overworld does: one metatile at a
+  // time, across or down, never on a slant. A slanting run of the builder's
+  // route becomes a staircase, its steps across and down spread evenly
+  // along it. The points are the cells' centers.
+  const points: Point[] = [[flat[0]! + 0.5, flat[1]! + 0.5]]
+  const water: (0 | 1)[] = []
+  for (let i = 2; i < flat.length; i += 2) {
+    const [ax, ay, bx, by] = [flat[i - 2]!, flat[i - 1]!, flat[i]!, flat[i + 1]!]
+    const across = Math.abs(bx - ax)
+    const down = Math.abs(by - ay)
+    let x = ax
+    let y = ay
+    for (let done = 0; done < across + down; done++) {
+      // Step across while it is behind its share of the run, down otherwise.
+      if (
+        down === 0 ||
+        (across > 0 && (Math.abs(x - ax) + 0.5) * down <= (Math.abs(y - ay) + 0.5) * across)
+      )
+        x += Math.sign(bx - ax)
+      else y += Math.sign(by - ay)
+      points.push([x + 0.5, y + 0.5])
+      water.push(runs[i / 2 - 1] ?? 0)
+    }
+  }
   const along = [0]
   for (let i = 1; i < points.length; i++)
     along.push(

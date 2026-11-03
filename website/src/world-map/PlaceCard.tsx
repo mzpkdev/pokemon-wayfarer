@@ -48,8 +48,9 @@ const Row = ({ slot, encounters, base }: { slot: Slot; encounters: Encounters; b
 
 /**
  * A place's card: its name, a slot for `extra` (a town's Gym, ports and so on)
- * and its wild Pokémon by method and time of day. A bottom sheet on a phone, a
- * panel on the left from `sm` up.
+ * and, with the debug menu's `rates`, its wild Pokémon by method and time of
+ * day with their exact rates. Without them the map shows its Pokémon close
+ * in. A bottom sheet on a phone, a panel on the left from `sm` up.
  */
 export const PlaceCard = ({
   ref,
@@ -58,6 +59,7 @@ export const PlaceCard = ({
   encounters,
   base,
   failed,
+  rates,
   extra,
   onClose,
 }: {
@@ -67,6 +69,8 @@ export const PlaceCard = ({
   encounters: Encounters | undefined
   base: string
   failed: boolean
+  /** Show the exact encounter tables (the debug menu's option). */
+  rates: boolean
   extra?: (place: PlaceInfo) => ReactNode
   onClose: () => void
 }) => {
@@ -98,13 +102,18 @@ export const PlaceCard = ({
       </div>
       {slot}
       <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto overscroll-contain">
-        {failed && (
+        {failed && rates && (
           <p className="gba-text gba-text-light [--px:1px]">Couldn't load this place's Pokémon.</p>
         )}
-        {encounters && tables.length === 0 && (
+        {encounters && !rates && tables.length > 0 && (
+          <p className="gba-text gba-text-light [--px:1px]">
+            Wild Pokémon live here. Zoom in to spot them in the grass and water.
+          </p>
+        )}
+        {encounters && rates && tables.length === 0 && (
           <p className="gba-text gba-text-light [--px:1px]">No wild Pokémon here.</p>
         )}
-        {timed && (
+        {rates && timed && (
           <fieldset className="flex gap-2">
             <legend className="sr-only">Time of day</legend>
             {(
@@ -127,6 +136,7 @@ export const PlaceCard = ({
           </fieldset>
         )}
         {encounters &&
+          rates &&
           tables.map(({ method, label, table }) => (
             <div key={method}>
               <h3 className="gba-text mb-1 [--ink:var(--color-logo-yellow)] [--px:1px] [--shadow:rgb(0_16_0)]">

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { type ReactNode, useEffect, useMemo, useRef, useState } from "react"
 
 import { useReducedMotion } from "~/lib/hooks"
 
@@ -27,6 +27,7 @@ import { OPEN_SEA, type Overlay, rendererFor } from "./render"
 import { riderAt } from "./rider"
 import {
   DEFAULT_START,
+  dailyFocusIn,
   focusIn,
   openingIn,
   placeAt,
@@ -43,6 +44,8 @@ import { type LivingWorld, livingOverlay, loadLiving } from "./living"
 import { type Notables, loadNotables, notableAt, notablesOverlay } from "./notables"
 import { PlaceExtra } from "./PlaceExtra"
 import type { PlaceInfo } from "./PlaceCard"
+import { DAILY_SEED, type Daily, dailyOn, loadDaily } from "./daily"
+import { type DailyScene, dailyOverlay } from "./dailyView"
 import { BUTTON } from "./ui"
 import { loadWild, type Wild, type WildClock, wildOverlay } from "./wild"
 import { WildTally } from "./WildTally"
@@ -51,25 +54,31 @@ import { WorldMap } from "./WorldMap"
 /** The explorer's place cards also name a town's Gym, league stop and ferries. */
 const placeExtra = (place: PlaceInfo) => <PlaceExtra place={place} />
 
-/** The tour's stops, in the order its cards come. */
-export type StopName =
-  | "town"
-  | "region"
-  | "world"
-  | "wild"
-  | "gyms"
-  | "indigo"
-  | "hoenn"
-  | "masters"
-const STOPS: StopName[] = ["town", "region", "world", "wild", "gyms", "indigo", "hoenn", "masters"]
+/**
+ * The tour's stops, in the order its cards come: one journey that only pulls
+ * out. Home, a busy route of its region changing from day to day, the
+ * start's region and its Gyms,
+ * the whole world and who lives where, the league circuit, then the map to
+ * explore.
+ */
+export type StopName = "town" | "daily" | "region" | "world" | "circuit" | "explore"
+const STOPS: StopName[] = ["town", "daily", "region", "world", "circuit", "explore"]
+const stopIndex = (name: StopName) => STOPS.indexOf(name)
 /** The regions in the order the page names them. */
 const REGION_ORDER = ["Kanto", "Johto", "Hoenn"]
-/** From the Gym stop on, the pins are up; from the first league's stop on, so are the leagues. */
-const GYMS_STOP = STOPS.indexOf("gyms")
-const LEAGUES_STOP = STOPS.indexOf("indigo")
-/** The stops that fly to one league, which are named for it. */
-const leagueOf = (stop: StopName | undefined): LeagueId | null =>
-  stop === "indigo" || stop === "hoenn" || stop === "masters" ? stop : null
+/** The stops the Gym pins are up at: the start's region, and the whole circuit. */
+const pinsAt = (stop: number) => STOPS[stop] === "region" || STOPS[stop] === "circuit"
+/** The leagues, in the order the circuit stop lists them. */
+const LEAGUE_ORDER: LeagueId[] = ["indigo", "hoenn", "masters"]
+/** Each stop's mark in the journey strip: an item from the game, or the start's own. */
+const MARKS: Record<StopName, string> = {
+  town: "Home",
+  daily: "Routes change daily",
+  region: "Your region",
+  world: "The world",
+  circuit: "The league circuit",
+  explore: "Explore the map",
+}
 /** What it takes for a league to call, as the league stops say it. */
 const REASONS: Record<LeagueId, string> = {
   indigo: "8 badges and one from Kanto or Johto",
@@ -98,6 +107,9 @@ const flightMs = (from: Camera, to: Camera) =>
 /** The closest zoom the rider is drawn at; further out he is a speck. */
 const RIDER_MIN_ZOOM = 4
 
+/** How long the daily stop shows each day before stepping on by itself. */
+const DAY_MS = 3200
+
 /** A beat between the tour starting and the rider setting off. */
 const RIDE_DELAY_MS = 250
 /** How long the camera takes to pan onto a Gym's leader, in ms. */
@@ -123,6 +135,8 @@ const OPTION =
 /** Metatiles across and down in the close-up shots, and in a league's: its region around it. */
 const CLOSE_UP = { width: 44, height: 30 }
 const LEAGUE_VIEW = { width: 180, height: 122 }
+/** Metatiles across and down at the daily stop: a stretch of its route. */
+const DAILY_VIEW = { width: 32, height: 22 }
 
 const boundsOf = (maps: Meta["maps"]): Bounds => ({
   left: Math.min(...maps.map(({ x }) => x)),
@@ -145,10 +159,14 @@ const regionBounds = (meta: Meta, name: string): Bounds =>
     meta.maps.filter(({ region }) => region === (name === "HOENN" ? "Hoenn" : "Johto and Kanto")),
   )
 
+/** Where a league's shot is in `shotsFor`'s list: after the opening and every stop's. */
+const leagueShot = (id: LeagueId) => STOPS.length + 1 + LEAGUE_ORDER.indexOf(id)
+
 /**
  * The shots for a map area `width` by `height` CSS pixels, for a start: the
- * opening on the road, then the stops: the town, its region (or regions), the
- * whole world, every Gym and each league in turn.
+ * opening on the road, then the stops: the town, its daily route, its region
+ * (or regions), the whole world, the circuit and the world again to explore;
+ * then each league's, which the circuit stop flies to.
  */
 const shotsFor = (
   meta: Meta,
@@ -164,23 +182,25 @@ const shotsFor = (
   // Without a league's place, the whole circuit, with room for the plates above and below.
   const all = landmarkBounds(landmarks, 36)
   const circuit = all ? { ...all, top: all.top - 24, bottom: all.bottom + 36 } : gyms
-  const leagueShot = (id: LeagueId): Camera => {
+  const leagueCamera = (id: LeagueId): Camera => {
     const league = landmarks.circuit.find((entry) => entry.id === id)
     if (!league) return fit(circuit, width, height, 0.95)
     const zoom = Math.min(width / LEAGUE_VIEW.width, height / LEAGUE_VIEW.height)
     // On a wide screen the lineup lies over the map's lower part, so the league sits higher.
     return { x: league.x, y: league.y + (width > 700 ? (height * 0.14) / zoom : 0), zoom }
   }
+  // The daily route's busiest stretch, close enough to follow who comes and goes.
+  const daily = Math.min(width / DAILY_VIEW.width, height / DAILY_VIEW.height)
+  const world = fit(boundsOf(meta.maps), width, height, 0.92)
   return [
     { ...fit(openingIn(meta, start), width, height, 1) },
     { ...focusIn(meta, start), zoom: close },
+    { ...dailyFocusIn(meta, start), zoom: daily },
     fit(region, width, height, 0.95),
-    fit(boundsOf(meta.maps), width, height, 0.92),
-    fit(boundsOf(meta.maps), width, height, 0.92),
-    fit(gyms, width, height, 0.95),
-    leagueShot("indigo"),
-    leagueShot("hoenn"),
-    leagueShot("masters"),
+    world,
+    fit(circuit, width, height, 0.95),
+    world,
+    ...LEAGUE_ORDER.map(leagueCamera),
   ]
 }
 
@@ -286,7 +306,7 @@ const LeagueState = ({
   calling: boolean
   reason?: boolean
 }) => (
-  <li className="flex flex-col gap-0.5">
+  <div className="flex flex-col gap-0.5">
     <p className="pixel-label flex items-baseline justify-between gap-3 text-[16px] leading-none">
       <span className={calling ? "text-logo-yellow" : "text-paper/70"}>{league.name}</span>
       <span className={calling ? "text-logo-yellow" : "text-paper/50"}>
@@ -294,7 +314,7 @@ const LeagueState = ({
       </span>
     </p>
     {reason && <p className="text-[13px] text-paper/60 sm:text-sm">{REASONS[league.id]}</p>}
-  </li>
+  </div>
 )
 
 /**
@@ -318,10 +338,8 @@ const LeagueHalls = ({
   base: string
   reducedMotion: boolean
 }) => (
-  <div className="mt-4">
-    <ul>
-      <LeagueState league={league} calling={calling} />
-    </ul>
+  <div className="mt-3">
+    <LeagueState league={league} calling={calling} />
     {league.id !== "masters" && league.halls && roster && (
       <LineupPanel
         roster={roster}
@@ -354,20 +372,225 @@ const LeagueHalls = ({
 )
 
 /**
+ * The circuit stop's leagues: each one's state, a tap flying the map on to
+ * it; at a league, its five (or the Masters' halls) and the way back out.
+ */
+const CircuitLeagues = ({
+  leagues,
+  earned,
+  focused,
+  onFocus,
+  roster,
+  progress,
+  base,
+  reducedMotion,
+}: {
+  leagues: League[]
+  earned: ReadonlySet<number>
+  focused: LeagueId | null
+  onFocus: (league: LeagueId | null) => void
+  roster: Roster | undefined
+  progress: number
+  base: string
+  reducedMotion: boolean
+}) => {
+  const calling = callingFor(earned)
+  const league = focused && leagues.find((entry) => entry.id === focused)
+  if (league)
+    return (
+      <div className="mt-4">
+        <button
+          type="button"
+          onClick={() => onFocus(null)}
+          className="pixel-label text-[16px] leading-none text-paper/70 hover:text-paper focus-visible:text-paper focus-visible:underline focus-visible:outline-none"
+        >
+          ◀ ALL 24 GYMS
+        </button>
+        <LeagueHalls
+          league={league}
+          calling={calling[league.id]}
+          roster={roster}
+          progress={progress}
+          base={base}
+          reducedMotion={reducedMotion}
+        />
+      </div>
+    )
+  return (
+    <ul className="mt-4 grid gap-2">
+      {LEAGUE_ORDER.flatMap((id) => leagues.filter((entry) => entry.id === id)).map((entry) => (
+        <li key={entry.id}>
+          <button
+            type="button"
+            onClick={() => onFocus(entry.id)}
+            className="pixel-corners w-full bg-black/30 px-4 pt-2 pb-3 text-left hover:bg-black/50 focus-visible:shadow-[inset_0_0_0_4px_rgb(48_80_200)] focus-visible:outline-none"
+          >
+            <LeagueState league={entry} calling={calling[entry.id]} />
+          </button>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+/**
+ * The daily stop's card body: the day shown, with buttons to step it, and
+ * who and what is out on the route that day. Stepping by hand stops it
+ * stepping by itself.
+ */
+const DailyCard = ({
+  scene,
+  day,
+  onDay,
+}: {
+  scene: ReturnType<typeof dailyOn> | null
+  day: number
+  onDay: (day: number) => void
+}) => {
+  if (!scene) return null
+  const step =
+    "pixel-label px-3 pt-1 pb-2 text-paper/70 hover:text-paper disabled:opacity-30 focus-visible:text-paper focus-visible:underline focus-visible:outline-none"
+  return (
+    <div className="mt-4">
+      <div className="pixel-corners flex items-center justify-between bg-black/30 px-2">
+        <button
+          type="button"
+          className={step}
+          disabled={day <= 1}
+          onClick={() => onDay(day - 1)}
+          aria-label="The day before"
+        >
+          ◀
+        </button>
+        <p className="pixel-label text-logo-yellow">DAY {day}</p>
+        <button
+          type="button"
+          className={step}
+          onClick={() => onDay(day + 1)}
+          aria-label="The next day"
+        >
+          ▶
+        </button>
+      </div>
+      <dl className="mt-3 grid gap-2 text-[13px] leading-snug sm:text-sm">
+        <div>
+          <dt className="pixel-label text-[16px] leading-none text-paper/60">
+            TRAINERS {scene.trainers.length}
+            {scene.empty.length ? ` · ${scene.empty.length} SPOTS EMPTY` : ""}
+          </dt>
+          <dd className="mt-1 text-paper/85">
+            {scene.trainers.map((trainer) => trainer.name).join(", ") || "Nobody about today."}
+          </dd>
+        </div>
+        <div>
+          <dt className="pixel-label text-[16px] leading-none text-paper/60">
+            ITEMS {scene.items.length}
+          </dt>
+          <dd className="mt-1 text-paper/85">
+            {scene.items
+              .map((item) => (item.hidden ? `${item.item} (hidden)` : item.item))
+              .join(", ") || "Nothing lying around today."}
+          </dd>
+        </div>
+      </dl>
+    </div>
+  )
+}
+
+/** An item's icon from the game, for a journey mark. */
+const item = (name: string) => (
+  <img src={`/game/items/${name}.png`} alt="" width={24} height={24} className="pixelated size-6" />
+)
+
+/** The journey so far: a mark per stop, the current one lit; a tap goes there. */
+const JourneyStrip = ({
+  stop,
+  start,
+  badge,
+  disabled,
+  onGo,
+}: {
+  stop: number
+  start: Start
+  /** The first badge of the start's region, for its region's mark. */
+  badge: number
+  disabled: boolean
+  onGo: (stop: number) => void
+}) => {
+  const marks: Record<StopName, ReactNode> = {
+    town: (
+      <span
+        className="pixelated block size-8"
+        style={{ backgroundImage: `url(${start.rider})`, backgroundSize: "288px 32px" }}
+      />
+    ),
+    daily: (
+      <img
+        src="/game/intro/pokeball.png"
+        alt=""
+        width={32}
+        height={32}
+        className="pixelated size-8"
+      />
+    ),
+    region: (
+      <span
+        className="pixelated block size-6"
+        style={{
+          backgroundImage: `url(${BADGES_SRC})`,
+          backgroundSize: `${24 * 24}px 24px`,
+          backgroundPosition: `${-badge * 24}px 0`,
+        }}
+      />
+    ),
+    world: item("ss-ticket"),
+    circuit: item("vs-seeker"),
+    explore: item("town-map"),
+  }
+  return (
+    <ol className="mb-3 flex gap-1.5 sm:mb-4" aria-label="The tour">
+      {STOPS.map((name, i) => (
+        <li key={name}>
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={() => onGo(i)}
+            aria-label={`${MARKS[name]}, stop ${i + 1} of ${STOPS.length}`}
+            aria-current={i === stop ? "step" : undefined}
+            className={`pixel-corners grid size-9 place-items-center sm:size-10 ${
+              i === stop
+                ? "bg-[rgb(232_208_64)]"
+                : `bg-black/30 hover:bg-black/50 ${i < stop ? "" : "opacity-50 hover:opacity-100"}`
+            } focus-visible:shadow-[inset_0_0_0_3px_rgb(48_80_200)] focus-visible:outline-none`}
+          >
+            {marks[name]}
+          </button>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+/**
  * The world in the game's own tiles, held still at one stop at a time with a
  * card beside it. It opens with the player riding in on their bike to their
- * front door, in the town the first card picks (LITTLEROOT TOWN, NEW BARK TOWN
- * or PALLET TOWN; another start plays a warp: the screen fades to black and
- * back in). The card's button then flies the camera on: the region, the whole
- * world, every Gym (tap the badges you'd win; at eight, a league phones) and
- * each league. The last one opens the map to look around. The page scrolls past it as usual. Fills its section.
+ * front door, in the town the first card picks (PALLET TOWN, NEW BARK TOWN or
+ * LITTLEROOT TOWN; another start plays a warp: the screen fades to black and
+ * back in). The card's button then flies the camera on, one journey that only
+ * pulls out: the first route, its wild Pokémon in the grass; the region and
+ * its Gyms (tap the badges you'd win); the whole world and who lives where;
+ * the league circuit (at eight badges a league phones, and a league's plate
+ * flies on to it); and the whole map, which the last button opens to look
+ * around. A journey strip on the card marks the stops. The page scrolls past
+ * it as usual. Fills its section.
  *
  * The ride starts the first time nearly all of the section is on screen, or,
  * given `startOn`, when the section receives that event (or already carries
  * `data-started`), for a page that brings the map in its own way.
  *
- * `captions` are one card per stop, in order: the town, the start's region,
- * the world, the Gyms and the three leagues. `stopOverlays` draw over the map at a stop.
+ * `captions` are one card per stop, in order: the town, its first route, its
+ * region, the world, the circuit and the whole map. `stopOverlays` draw over
+ * the map at a stop.
  */
 export const WorldTour = ({
   captions,
@@ -382,9 +605,11 @@ export const WorldTour = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const captionRef = useRef<HTMLDivElement>(null)
+  const captionsRef = useRef<HTMLDivElement>(null)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const cameraRef = useRef<Camera | null>(null)
   const goRef = useRef<(stop: number) => void>(() => {})
+  const focusRef = useRef<(league: LeagueId | null) => void>(() => {})
   const findRef = useRef<(gym: Gym) => void>(() => {})
   const hoverRef = useRef<(badge: number | null) => void>(() => {})
   const toggleRef = useRef<(gym: Gym) => void>(() => {})
@@ -429,7 +654,7 @@ export const WorldTour = ({
   const [minutes, setMinutes] = useState(pageMinutes)
   const [notables, setNotables] = useState<Notables>()
   // These load on the way to the stops that show them, not with the page.
-  const nearWorld = stop >= STOPS.indexOf("world") - 1
+  const nearWorld = stop >= stopIndex("world") - 1
   useEffect(() => {
     if (!nearWorld) return
     void loadLiving(base).then(setLiving, () => {})
@@ -440,13 +665,33 @@ export const WorldTour = ({
     notablesRef.current = notables
   }, [notables])
   const reducedMotion = useReducedMotion()
-  // The wild stop: the waves of icons, on a clock that restarts on arriving.
+  // The world stop's waves of icons, on a clock that restarts on arriving.
   const [wild, setWild] = useState<Wild>()
-  const nearWild = stop >= STOPS.indexOf("world")
+  const nearWild = stop >= stopIndex("world") - 1
   useEffect(() => {
     if (nearWild) void loadWild(base).then(setWild, () => {})
   }, [base, nearWild])
-  const nearGyms = stop >= GYMS_STOP - 1
+  // The daily route: its trainers and items, one day after another.
+  const [daily, setDaily] = useState<Daily>()
+  const [trainerSheet, setTrainerSheet] = useState<HTMLImageElement>()
+  const sceneRef = useRef<{ scene: DailyScene; since: number } | null>(null)
+  useEffect(() => {
+    let live = true
+    const image = new Image()
+    image.src = `${base}/trainers.png`
+    void Promise.all([loadDaily(base), image.decode()]).then(
+      ([loaded]) => {
+        if (!live) return
+        setDaily(loaded)
+        setTrainerSheet(image)
+      },
+      () => {},
+    )
+    return () => {
+      live = false
+    }
+  }, [base])
+  const nearGyms = stop >= stopIndex("region") - 1
   useEffect(() => {
     if (nearGyms) preloadPortraits(base, roster)
   }, [base, roster, nearGyms])
@@ -455,28 +700,40 @@ export const WorldTour = ({
   useEffect(() => {
     // The Gym Leaders and Elite Four go under the time of day's tint.
     stopOverlaysRef.current = [
+      ...(daily && trainerSheet
+        ? [
+            {
+              stop: "daily" as const,
+              overlay: dailyOverlay(
+                { image: trainerSheet, ...daily.sheet },
+                () => sceneRef.current,
+                !reducedMotion,
+                performance.now.bind(performance),
+              ),
+              animated: !reducedMotion,
+            },
+          ]
+        : []),
       ...(notables
         ? [
             {
-              stop: "world" as const,
+              stop: "explore" as const,
               overlay: notablesOverlay(notables, pageMinutes, { standing: reducedMotion }),
               animated: !reducedMotion,
             },
           ]
         : []),
       ...(living
-        ? [
-            {
-              stop: "world" as const,
-              overlay: livingOverlay(living, pageMinutes),
-              animated: !reducedMotion,
-            },
-          ]
+        ? (["world", "explore"] as const).map((at) => ({
+            stop: at,
+            overlay: livingOverlay(living, pageMinutes),
+            animated: !reducedMotion,
+          }))
         : []),
       ...(wild
         ? [
             {
-              stop: "wild" as const,
+              stop: "world" as const,
               overlay: wildOverlay(
                 wild,
                 wildClock.current,
@@ -490,8 +747,8 @@ export const WorldTour = ({
       ...(stopOverlays ?? []),
     ]
     redrawRef.current()
-  }, [stopOverlays, living, notables, wild, reducedMotion])
-  const atWorld = STOPS[stop] === "world"
+  }, [stopOverlays, living, notables, wild, daily, trainerSheet, reducedMotion])
+  const atWorld = STOPS[stop] === "world" || STOPS[stop] === "explore"
   const ticking = atWorld || gym !== null
   useEffect(() => {
     if (!ticking) return
@@ -503,6 +760,25 @@ export const WorldTour = ({
     return () => window.clearInterval(timer)
   }, [ticking, reducedMotion])
   const [chosen, setChosen] = useState<StartId>(DEFAULT_START)
+  // The day the daily stop shows. It steps on by itself while the stop is up,
+  // until a visitor steps it by hand.
+  const [day, setDay] = useState(1)
+  const [stepping, setStepping] = useState(true)
+  const atDaily = STOPS[stop] === "daily"
+  useEffect(() => {
+    if (!atDaily || reducedMotion || !stepping) return
+    const timer = window.setInterval(() => setDay((was) => was + 1), DAY_MS)
+    return () => window.clearInterval(timer)
+  }, [atDaily, reducedMotion, stepping])
+  const dailyMap = startOf(chosen).dailyRoute.map
+  const scene = useMemo(
+    () => (daily ? dailyOn(daily, [dailyMap], day, DAILY_SEED) : null),
+    [daily, dailyMap, day],
+  )
+  useEffect(() => {
+    sceneRef.current = scene ? { scene, since: performance.now() } : null
+    redrawRef.current()
+  }, [scene])
   const [warping, setWarping] = useState(false)
   const [exploring, setExploring] = useState<Camera | null>(null)
   const [popup, setPopup] = useState<{ label: string | null; shown: boolean }>({
@@ -539,6 +815,11 @@ export const WorldTour = ({
     // Where the tour is: the stop shown (its shot is one past it, after the
     // opening), the flight under way if any, and when the ride began.
     let current = 0
+    // At the circuit stop, the league the camera has flown on to, if any.
+    let leagueFocus: LeagueId | null = null
+    // Where the camera rests: the stop's shot, or its league's.
+    const aim = () => (leagueFocus ? leagueShot(leagueFocus) : current + 1)
+    // A flight's `to` is a shot's index in `shotsFor`'s list.
     let flight: { from: Camera; to: number; start: number; duration: number } | null = null
     // Where the visitor has moved the map to, from the second stop on; the
     // next NEXT or BACK flies on from there.
@@ -607,6 +888,7 @@ export const WorldTour = ({
         route = routeIn(world.meta, start)
         ride = rideMs(route)
         current = 0
+        leagueFocus = null
         flight = null
         manual = null
         follow = null
@@ -651,7 +933,7 @@ export const WorldTour = ({
         let camera: Camera
         if (flight) {
           const t = (now - flight.start) / flight.duration
-          camera = fly(flight.from, shots[flight.to + 1]!, t)
+          camera = fly(flight.from, shots[flight.to]!, t)
           if (t >= 1) flight = null
         } else if (follow) {
           const { gym: target, from } = follow
@@ -670,7 +952,7 @@ export const WorldTour = ({
           manual = camera
         } else if (manual) camera = manual
         else if (current === 0) camera = fly(shots[0]!, shots[1]!, progress)
-        else camera = shots[current + 1]!
+        else camera = shots[aim()]!
         cameraRef.current = camera
 
         const sheet = sheets.get(start.id)!
@@ -685,7 +967,7 @@ export const WorldTour = ({
         // The badge stop's pins and trail show while the tour is there, and
         // fade as it leaves.
         let badgesUp = false
-        if (current >= GYMS_STOP && badgesSince !== null) {
+        if (pinsAt(current) && badgesSince !== null) {
           stopClock.elapsed = now - badgesSince
           stopClock.alpha = reducedMotion
             ? 1
@@ -697,7 +979,7 @@ export const WorldTour = ({
         } else stopClock.alpha = 0
         const overlays = badgesUp ? [...pins] : []
         stopClock.selected = gymRef.current?.badge ?? null
-        const target = current >= LEAGUES_STOP ? 1 : 0
+        const target = STOPS[current] === "circuit" ? 1 : 0
         const step = Math.min(100, now - lastFrame) / CIRCUIT_MS
         lastFrame = now
         circuitMix = reducedMotion
@@ -709,7 +991,7 @@ export const WorldTour = ({
         stopClock.earned = earnedRef.current
         stopClock.earnedAt = earnedAtRef.current
         stopClock.calling = callingFor(earnedRef.current)
-        stopClock.league = leagueOf(STOPS[current])
+        stopClock.league = leagueFocus
         let animated = badgesUp && !reducedMotion
         if (circuitMix !== target) animated = true
         // The leader whose Gym card is open walks the badge stop's map.
@@ -763,19 +1045,42 @@ export const WorldTour = ({
         const { width, height } = area()
         const now = performance.now()
         const shots = shotsFor(world.meta, landmarks, start, width, height)
-        const from = cameraRef.current ?? shots[current + 1]!
+        const from = cameraRef.current ?? shots[aim()]!
         const to = shots[next + 1]!
         manual = null
         follow = null
+        leagueFocus = null
         stopClock.hover = null
         stopClock.pressed = null
         canvas.style.cursor = ""
-        flight = reducedMotion ? null : { from, to: next, start: now, duration: flightMs(from, to) }
-        if (next >= GYMS_STOP && current < GYMS_STOP) {
+        flight = reducedMotion
+          ? null
+          : { from, to: next + 1, start: now, duration: flightMs(from, to) }
+        // The pins come in at the region and the circuit, and go between them.
+        if (pinsAt(next) && !pinsAt(current)) {
           badgesSince = now
           badgesLeft = null
-        } else if (next < GYMS_STOP && current >= GYMS_STOP) badgesLeft = now
+        } else if (!pinsAt(next) && pinsAt(current)) {
+          badgesSince = null
+          badgesLeft = now
+        }
         current = next
+        schedule()
+      }
+
+      // At the circuit stop, fly on to a league, or back out to the whole circuit.
+      focusRef.current = (league) => {
+        if (STOPS[current] !== "circuit" || league === leagueFocus || warp) return
+        const { width, height } = area()
+        const shots = shotsFor(world.meta, landmarks, start, width, height)
+        const from = manual ?? cameraRef.current ?? shots[aim()]!
+        leagueFocus = league
+        manual = null
+        follow = null
+        const to = shots[aim()]!
+        flight = reducedMotion
+          ? null
+          : { from, to: aim(), start: performance.now(), duration: flightMs(from, to) }
         schedule()
       }
 
@@ -892,7 +1197,7 @@ export const WorldTour = ({
 
       // The pin (if any) under a point on the canvas, at the badge stop.
       const pinAt = (at: { x: number; y: number }): Gym | null => {
-        if (current !== GYMS_STOP || stopClock.alpha <= 0 || !cameraRef.current) return null
+        if (!pinsAt(current) || stopClock.alpha <= 0 || !cameraRef.current) return null
         const camera = cameraRef.current
         const { width, height } = area()
         let best: Gym | null = null
@@ -1015,11 +1320,21 @@ export const WorldTour = ({
     }
   }, [base, reducedMotion, startOn])
 
+  // At the circuit stop, the league the map has flown on to.
+  const [focused, setFocused] = useState<LeagueId | null>(null)
   const go = (next: number) => {
+    // Each card starts at its top on a phone, where the cards scroll.
+    captionsRef.current?.scrollTo({ top: 0 })
     setGym(null)
+    setFocused(null)
     setStop(next)
     stopRef.current = next
     goRef.current(next)
+  }
+  const focus = (league: LeagueId | null) => {
+    setGym(null)
+    setFocused(league)
+    focusRef.current(league)
   }
 
   // A tap on a pin (or its hidden button) earns the badge and opens its
@@ -1056,7 +1371,8 @@ export const WorldTour = ({
     const league = call
     setCall(null)
     if (accepted && league) {
-      go(STOPS.indexOf(league))
+      if (STOPS[stop] !== "circuit") go(stopIndex("circuit"))
+      focus(league)
       // The dialog gives the focus back to a pin that is about to leave.
       requestAnimationFrame(() => nextRef.current?.focus())
     }
@@ -1093,11 +1409,16 @@ export const WorldTour = ({
           LOADING THE WORLD...
         </p>
       )}
-      {STOPS[stop] === "gyms" && (
+      {pinsAt(stop) && (
         // The pins for a keyboard: each Gym a button, lighting its pin while focused.
-        // Fixed to the screen, so focusing one never scrolls the page.
+        // Fixed to the screen, so focusing one never scrolls the page. At the
+        // region stop, only its own.
         <ul className="sr-only" style={{ position: "fixed", top: 0, left: 0 }}>
           {gymPins
+            .filter(
+              (pin) =>
+                STOPS[stop] !== "region" || pin.region.toUpperCase() === startOf(chosen).region,
+            )
             .toSorted((a, b) => REGION_ORDER.indexOf(a.region) - REGION_ORDER.indexOf(b.region))
             .map((pin) => (
               <li key={pin.badge}>
@@ -1114,7 +1435,7 @@ export const WorldTour = ({
             ))}
         </ul>
       )}
-      {STOPS[stop] === "gyms" && (
+      {pinsAt(stop) && (
         // How many are earned, and how many more it takes for a league to phone.
         <p
           aria-live="polite"
@@ -1137,7 +1458,7 @@ export const WorldTour = ({
           )}
         </p>
       )}
-      {gym && STOPS[stop] === "gyms" && (
+      {gym && pinsAt(stop) && (
         <GymCard
           gym={gym}
           base={base}
@@ -1150,7 +1471,13 @@ export const WorldTour = ({
       )}
       {roster &&
         leagues
-          .filter((league) => league.id !== "masters" && league.halls && league.id === STOPS[stop])
+          .filter(
+            (league) =>
+              STOPS[stop] === "circuit" &&
+              league.id !== "masters" &&
+              league.halls &&
+              league.id === focused,
+          )
           .map((league) => (
             // On a wide screen the five lie over the map, beside the card.
             <LineupPanel
@@ -1196,13 +1523,30 @@ export const WorldTour = ({
           ref={captionRef}
           className="pixel-corners pixel-panel pointer-events-auto relative w-full p-4 sm:p-8 lg:w-[400px]"
         >
+          <JourneyStrip
+            stop={stop}
+            start={startOf(chosen)}
+            badge={Math.min(
+              ...gymPins
+                .filter((pin) => pin.region.toUpperCase() === startOf(chosen).region)
+                .map((pin) => pin.badge),
+            )}
+            disabled={warping}
+            onGo={(next) => {
+              if (next !== stop) go(next)
+            }}
+          />
           <p className="sr-only" aria-live="polite">
             {(() => {
               const text = { ...captions[stop], ...captions[stop]?.variants?.[chosen] }
               return `${text.place}. ${text.title}`
             })()}
           </p>
-          <div className="grid">
+          {/* Below lg the map sits above the card, so the card keeps to a third of the screen and scrolls. */}
+          <div
+            ref={captionsRef}
+            className="grid max-lg:max-h-[34svh] max-lg:overflow-y-auto max-lg:overscroll-contain"
+          >
             {captions.map((caption, i) => {
               const shown = stop === i
               const text = { ...caption, ...caption.variants?.[chosen] }
@@ -1214,15 +1558,7 @@ export const WorldTour = ({
                   className="col-start-1 row-start-1 transition-opacity duration-300"
                   style={{ opacity: shown ? 1 : 0, pointerEvents: shown ? undefined : "none" }}
                 >
-                  <p className="pixel-label flex justify-between gap-4 text-logo-yellow">
-                    <span>{text.place}</span>
-                    <span
-                      className="text-paper/60"
-                      aria-label={`Stop ${i + 1} of ${captions.length}`}
-                    >
-                      {i + 1}/{captions.length}
-                    </span>
-                  </p>
+                  <p className="pixel-label text-logo-yellow">{text.place}</p>
                   <p className="pixel-heading mt-2 sm:mt-3">{text.title}</p>
                   <p className="mt-2 text-base leading-snug text-paper/80 sm:mt-4 sm:text-lg sm:leading-relaxed">
                     {text.body}
@@ -1261,27 +1597,36 @@ export const WorldTour = ({
                       })}
                     </fieldset>
                   )}
-                  {leagueOf(STOPS[i]) &&
-                    leagues
-                      .filter((league) => league.id === STOPS[i])
-                      .map((league) => (
-                        <LeagueHalls
-                          key={league.id}
-                          league={league}
-                          calling={callingFor(earned)[league.id]}
-                          roster={shown ? roster : undefined}
-                          progress={rating}
-                          base={base}
-                          reducedMotion={reducedMotion}
-                        />
-                      ))}
-                  {STOPS[i] === "wild" && (
+                  {STOPS[i] === "daily" && (
+                    <DailyCard
+                      scene={scene}
+                      day={day}
+                      onDay={(next) => {
+                        setStepping(false)
+                        setDay(Math.max(1, next))
+                      }}
+                    />
+                  )}
+                  {STOPS[i] === "world" && (
                     <WildTally
                       wild={wild}
                       shared={wildClock}
                       shown={shown}
+                      first={["kanto", "johto", "hoenn"].indexOf(chosen)}
                       reducedMotion={reducedMotion}
                       onChange={() => redrawRef.current()}
+                    />
+                  )}
+                  {STOPS[i] === "circuit" && (
+                    <CircuitLeagues
+                      leagues={leagues}
+                      earned={earned}
+                      focused={shown ? focused : null}
+                      onFocus={focus}
+                      roster={shown ? roster : undefined}
+                      progress={rating}
+                      base={base}
+                      reducedMotion={reducedMotion}
                     />
                   )}
                   {text.stats && (

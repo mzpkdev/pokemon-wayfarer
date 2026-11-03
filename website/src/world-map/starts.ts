@@ -31,6 +31,14 @@ export type Start = {
   opening: { map: string } & Bounds
   /** Region names (`meta.regions`) the "region" stop fits. */
   regions: string[]
+  /**
+   * A busy route of its region, where the "daily" stop shows its trainers and
+   * items moving from day to day: the one with the most daily trainer slots
+   * near the start's side of the region. `focus` is the point in its tiles the
+   * stop centers on: the middle of the stretch holding most of its trainer and
+   * item spots, so they show big enough to follow.
+   */
+  dailyRoute: { map: string; label: string; focus: { x: number; y: number } }
 }
 
 export const STARTS: Start[] = [
@@ -51,6 +59,7 @@ export const STARTS: Start[] = [
     ],
     opening: { map: "PalletTown_hns", left: 0, top: -4, right: 24, bottom: 18 },
     regions: ["KANTO"],
+    dailyRoute: { map: "Route15_hns", label: "ROUTE 15", focus: { x: 41, y: 10 } },
   },
   {
     id: "johto",
@@ -72,6 +81,7 @@ export const STARTS: Start[] = [
     road: { map: "Route29_hns", label: "ROUTE 29" },
     opening: { map: "Route29_hns", left: 48, top: 8, right: 72, bottom: 28 },
     regions: ["JOHTO"],
+    dailyRoute: { map: "Route32_hns", label: "ROUTE 32", focus: { x: 20, y: 59 } },
   },
   {
     id: "hoenn",
@@ -92,6 +102,7 @@ export const STARTS: Start[] = [
     // All of ROUTE 101, grass and all.
     opening: { map: "Route101", left: -2, top: -1, right: 22, bottom: 21 },
     regions: ["HOENN"],
+    dailyRoute: { map: "Route103", label: "ROUTE 103", focus: { x: 62, y: 10 } },
   },
 ]
 
@@ -119,6 +130,12 @@ export const openingIn = (meta: Meta, start: Start): Bounds => {
     right: placed.x + right,
     bottom: placed.y + bottom,
   }
+}
+
+/** The daily route's focus on the world grid. */
+export const dailyFocusIn = (meta: Meta, start: Start) => {
+  const placed = mapIn(meta, start.dailyRoute.map)
+  return { x: placed.x + start.dailyRoute.focus.x, y: placed.y + start.dailyRoute.focus.y }
 }
 
 /** The close-up's center on the world grid. */

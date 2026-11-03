@@ -485,6 +485,83 @@ const cutStraits = (world, owner, land) => {
   }
 }
 
+/** The ferry ports' maps (`PORTS` in living.mjs): their water must reach the open sea. */
+const HARBOURS = [
+  "OlivineCity_PortOutside_hns",
+  "VermilionCity_PortOutside_hns",
+  "SlateportCity",
+  "LilycoveCity",
+  "OneIsland_Frlg",
+  "SevenIsland_Frlg",
+  "MelemeleIsle_hns",
+]
+/** How wide a channel cut through to a harbour is, either side of its middle, in metatiles. */
+const CHANNEL = 3
+
+// Keeps every ferry port on the open sea. Land grown around an island can
+// close the bay its harbour sits in; then the shortest way from the
+// harbour's water to the open ocean, through the land grown between maps
+// (never a map's own cells), is cut back to sea.
+const openHarbours = (world, owner, land, grid, isWater) => {
+  const { all, W, H } = world
+  const N = W * H
+  // The open ocean: sea outside the maps, joined to the world's corner.
+  const ocean = new Uint8Array(N)
+  const queue = [0]
+  ocean[0] = 1
+  for (let head = 0; head < queue.length; head++) {
+    const i = queue[head]
+    const x = i % W
+    for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, i - W, i + W])
+      if (j >= 0 && j < N && !ocean[j] && owner[j] < 0 && !land[j]) {
+        ocean[j] = 1
+        queue.push(j)
+      }
+  }
+  let cut = 0
+  for (const name of HARBOURS) {
+    const m = all.findIndex((p) => p.m.name === name)
+    if (m < 0) continue
+    // A search out of the harbour's water, through anything outside the maps.
+    const parent = new Int32Array(N).fill(-2)
+    const search = []
+    for (let i = 0; i < N; i++)
+      if (owner[i] === m && isWater(grid[i])) {
+        parent[i] = -1
+        search.push(i)
+      }
+    let reached = -1
+    for (let head = 0; head < search.length && reached < 0; head++) {
+      const i = search[head]
+      const x = i % W
+      for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, i - W, i + W]) {
+        if (j < 0 || j >= N || parent[j] !== -2 || owner[j] >= 0) continue
+        parent[j] = i
+        if (ocean[j]) {
+          reached = j
+          break
+        }
+        search.push(j)
+      }
+    }
+    // Cut the land along the way, a channel wide.
+    for (let i = reached; i >= 0; i = parent[i]) {
+      const x = i % W
+      const y = (i - x) / W
+      for (let dy = -CHANNEL; dy <= CHANNEL; dy++)
+        for (let dx = -CHANNEL; dx <= CHANNEL; dx++) {
+          const j = (y + dy) * W + (x + dx)
+          if (x + dx < 0 || x + dx >= W || y + dy < 0 || y + dy >= H) continue
+          if (owner[j] < 0 && land[j] && dx * dx + dy * dy <= CHANNEL * CHANNEL) {
+            land[j] = 0
+            cut++
+          }
+        }
+    }
+  }
+  return cut
+}
+
 // Fills every cell outside the maps: land takes the nearest map's border
 // blocks, sea the nearest water border or the open ocean's. Returns
 // `fillBorder`, the map each land cell's border came from (-1: not filled).
@@ -639,6 +716,7 @@ export const buildLand = (game, world, atlas) => {
   const { land, toLand, spill } = growLand(world, grid, owner, classify)
   bridgeSinjoh(world, owner, land)
   cutStraits(world, owner, land)
+  console.log("harbours opened", openHarbours(world, owner, land, grid, classify.isWater), "cells")
   const tint = createTinter(atlas, classify.tileColor)
   const { fillBorder, ocean } = fillBorders(world, {
     grid,

@@ -15,14 +15,24 @@ The rest of the site uses it only through `index.ts`:
   starts when its section is mostly on screen, or on an event the page sends
   (`startOn`; the landing page sends one when its warp from the title scene
   fades in, see `src/lib/warp.ts`). After that the map holds still beside a
-  card, and NEXT and BACK fly the camera between eight stops: the town, its
-  one region (Hoenn, Johto or Kanto), the whole world (wherever you start,
-  you can go anywhere), who lives on its routes, the 24 Gyms, and each league in turn (Indigo
-  Plateau, the Hoenn League, the Sevii Masters). From the second
+  card, and NEXT and BACK fly the camera between six stops, one journey that
+  only pulls out: home; a busy route of the start's region (ROUTE 15, 32 or
+  103, `dailyRoute` in `starts.ts`, close in on the stretch holding most of
+  its trainer and item spots) changing from day to day (`daily.ts`,
+  `dailyView.ts`): the game's own daily draw for a save that has beaten
+  everyone there, so its trainers stand in new spots or stay away and its
+  item spots roll new items, while the card steps the days (by itself every
+  few seconds until a visitor steps it with ◀ and ▶) and lists who and what
+  is out; the start's region with its eight Gyms; the
+  whole world with its ferries and who lives where; the league circuit (all
+  24 Gyms and the three leagues); and the whole map again to explore. A
+  journey strip on the card marks each stop with an item or sprite from the
+  game (the start's rider, a Poké Ball for the daily route, the region's first badge, the S.S.
+  Ticket, the VS Seeker, the Town Map); a tap on a mark goes there. From the second
   stop on the map can be panned in place, the way an embedded map shares a
   page: a mouse drags, and on touch two fingers move it while one still
-  scrolls the page (a hint says so). The zoom stays each stop's. At the Gym
-  stop the pins answer the pointer: each is just its badge over a soft shadow;
+  scrolls the page (a hint says so). The zoom stays each stop's. At the region
+  and circuit stops the Gym pins answer the pointer: each is just its badge over a soft shadow;
   a hover lifts it with a white glow and names its town, a press settles and
   darkens it, and an open card makes it glow gold and bob while the rest dim
   (hidden buttons do the same for a keyboard), and a pin opens its Gym's card:
@@ -32,24 +42,40 @@ The rest of the site uses it only through `index.ts`:
   (GO TO the Gym for a leader who doesn't walk the map). NEXT and BACK fly on
   from wherever the map was moved to. It never takes over the page's
   scrolling.
-- At the wild stop (`wild.ts`, `WildTally.tsx`) the camera stays on the whole
-  world and icons from `icons.png` pop out of routes in waves, Gen I to VIII,
-  the regional forms, then a mix (about 14 s, looping). The page states the
-  full roster, as all of it will be in the final game: every species of Gen I
-  to VIII by national dex number (905) and the Alolan, Galarian and Hisuian
-  forms (53), from the game's species data (`.natDexNum`; macro-built entries
-  expanded with their arguments). A wave pops that generation's species over
-  routes spread by farthest-point sampling, an illustration, not who lives
-  on each route (the explorer's place cards say that). The card tallies each
-  generation as its wave plays, ending on the total; tapping a chip holds its
-  wave on the map, and tapping it again plays on. Gen IX stays off the page.
-  Reduced motion shows the full tally and a still scatter; a chip picks whose.
-- At the Gym stop a tap on a pin (or its hidden button, `aria-pressed`)
+- At the world stop (`wild.ts`, `WildTally.tsx`) icons from `icons.png` pop
+  out of the whole world in waves, one per home region (about 4 s each, looping,
+  beginning with the start's own region), over the ferries and the time of
+  day. Each generation has a home, from the natives table of
+  the wild encounters v2 PRD: Gen I from Kanto and II from Johto (one piece of
+  land, which they share), III and V in
+  Hoenn, Kalos (VI) in the three Safari Zones, Galar (VIII) in the Sevii
+  Islands, VII in Alola, Hisui (Wyrdeer to Enamorus) in Sinjoh, and the
+  regional forms with their region. A wave pops its home's species only where
+  they really live, by the encounter tables (a species picked by how often it
+  comes up there, so Hoenn's Gen V share grows to the east), crowding the home
+  region's routes where they make up at least 35% of what turns up (Gen
+  I crowds Johto too, Gen II keeps mostly to Johto); a small home (Alola, Sinjoh) and
+  each Safari Zone, by the town nearest its gate since the Safari Zones aren't
+  on the overworld, huddle a few icons together so they still read as a crowd
+  at world zoom. Up to three icons per wave are real strays: its species where
+  they live away from home. Gen IV waits for Sinnoh, which has no wild
+  Pokémon yet: its wave stands black silhouettes with a "?" over Sinnoh, keeping its count so
+  the total adds up. The page states the full
+  roster, as all of it will be in the final game: every species of Gen I to
+  VIII by national dex number (905) and the Alolan, Galarian and Hisuian forms
+  (53), from the game's species data (`.natDexNum`; macro-built entries
+  expanded with their arguments). The card tallies each home as its wave
+  plays and names whose home it is; tapping a chip holds
+  its wave on the map, and tapping it again plays on. Gen IX stays off the
+  page. Reduced motion shows the full tally and the first wave still; a chip picks
+  whose.
+- At the region and circuit stops a tap on a pin (or its hidden button,
+  `aria-pressed`; at the region stop only its own eight)
   toggles the badge earned: earned pins are bright with a gold glow and a
   sparkle (a burst when earned), the rest fainter, and earning opens that
   Gym's card ("BOULDER BADGE EARNED", the leader, FIND); giving it back closes
   it. A chip shows BADGES n/24. The earned set is the tour's state: it
-  persists across the league stops and a change of start. The rules are the
+  persists across the stops and a change of start. The rules are the
   game's (`league_circuit.c`): badges from every region count together,
   Trainer Rating is `10 * badges` up to 8 and `80 + 5 * (badges - 8)` after,
   and 80 (any 8 badges) qualifies; Indigo also needs one Kanto or Johto badge,
@@ -60,16 +86,18 @@ The rest of the site uses it only through `index.ts`:
   (`LeaguePhone_Text_*` in `data/scripts/league_phone.inc`, the league and
   place as `league_phone.c` buffers them, the lineup as the first event's five),
   YES/NO with the game's decline confirmation, and the accept or decline
-  follow-up. Accepting flies the tour to that league. It is a modal `<dialog>`
+  follow-up. Accepting flies the tour to the circuit stop and on to that league. It is a modal `<dialog>`
   (Esc or HANG UP closes it, with no answer); reduced motion skips the typing.
   Which league rings when both could is `ChooseCallingLeague`'s order: the one
   that called least recently (none has), then the most badges of its side
   (Indigo counts Kanto and Johto, Hoenn counts Hoenn), then Indigo (`callerFor`).
-  A second league rings on a later toggle, once each per visit. At the league
-  stops each league is a plate in the region labels' style, glowing while it
+  A second league rings on a later toggle, once each per visit. At the circuit
+  stop each league is a plate in the region labels' style, glowing while it
   calls; the trail has two legs (Indigo and Hoenn to Seven Island) that draw
-  in, dotted and marching, once their league calls. Each league stop flies to
-  its league at a medium zoom and highlights its plate and leg. For Indigo and
+  in, dotted and marching, once their league calls. The card lists the three
+  leagues with whether each is calling; a tap on one flies the map on to it at
+  a medium zoom and highlights its plate and leg, and ALL 24 GYMS flies back
+  out. For Indigo and
   Hoenn the five that fight there are the hero (`LineupPanel.tsx`): five seats
   in battle order, one per hall (name and battle condition from
   `game/src/league_halls.c`, `circuit[].halls`), the Champion's Room last. The
@@ -86,16 +114,28 @@ The rest of the site uses it only through `index.ts`:
   ones, so the page alternates between two fives for a given rating. The
   pool is every enabled registry trainer: Gym Leaders, Elite Four and
   Champions (Tate and Liza are doubles-only and out). The Sevii Masters'
-  lineup format isn't shipped, so its stop shows only its halls and how it
-  opens. The last card's EXPLORE THE MAP opens the explorer full screen.
+  lineup format isn't shipped, so it shows only its halls and how it opens.
+  The last card's EXPLORE THE MAP opens the explorer full screen.
   Captions are one per stop, with per-start `variants`; `stopOverlays` lets the
-  page draw over the map at any stop (the hook for a living-world overlay on
-  the world stop).
+  page draw over the map at any stop.
   `WorldMap` is the explorer. Drag, pinch, wheel, double-click, the arrow keys
   and +/- all pan and zoom it.
+  Close in (from 6 CSS pixels a metatile), wild Pokémon pop out of the
+  routes (`sightings.ts`): each of a map's sampled encounter cells (tall grass
+  and the like on land, the water for surfing and fishing) now and then has
+  one of the route's own Pokémon out for a few seconds, picked by its rate in
+  the table for the time of day on the page clock (morning and day use the day
+  table, evening and night the night one). A land one stands on its cell over
+  a shadow; a water one is half under, in a ripple. Most cells are quiet at any
+  moment, so a route shows a few, not all. Nothing is stored: a sighting is a
+  hash of the map, the cell and the stretch of time.
   Tapping a map (or Enter on the one at the center) frames it and opens a place
-  card: its name and wild Pokémon by method and time of day, as icon, name and
-  percent. The card is a bottom sheet on a phone and a left panel from `sm` up.
+  card: its name, and a line saying wild Pokémon live there if they do. The
+  exact encounter rates are behind the debug menu (`DebugMenu.tsx`), which
+  opens with `?debug` in the address or the backquote key: with "Encounter
+  rates on place cards" on (kept in this browser), the card lists the wild
+  Pokémon by method and time of day, as icon, name and percent. The card is a
+  bottom sheet on a phone and a left panel from `sm` up.
   `WorldMap`'s `extra` render prop puts more (a town's Gym, ports) under the
   card's name.
 
@@ -111,15 +151,17 @@ PNG/palette helpers in `scripts/lib/`.
 the site doesn't need the game tree. Rebuild it after maps, tilesets or the
 builder change.
 
-| File              | What it holds                                                                                                                                  |
-| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `atlas.png`       | Every metatile the world uses, 16×16 each, 64 to a row                                                                                         |
-| `grid.bin.gz`     | The world as gzipped little-endian u16 atlas indices, row by row; `0xffff` is open sea                                                         |
-| `overview.png`    | The far-out view: the tiles averaged, one pixel per metatile, and coarser levels for further out, packed side by side                          |
-| `encounters.json` | Per placed map, its name and wild Pokémon (species slot and percent) by method and time of day; `gens` (each species' generation) and `counts` |
-| `icons.png`       | One 32×32 icon per species used, 16 to a row, indexed by the slot in `encounters.json`                                                         |
-| `notables.json`   | The notables' stops, cycles and routes (see below)                                                                                             |
-| `meta.json`       | Grid size, atlas columns, the overview's levels, the open ocean's tiles and color, towns, region labels with bounds, and placed maps           |
+| File              | What it holds                                                                                                                                                                                                                                                                            |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `atlas.png`       | Every metatile the world uses, 16×16 each, 64 to a row                                                                                                                                                                                                                                   |
+| `grid.bin.gz`     | The world as gzipped little-endian u16 atlas indices, row by row; `0xffff` is open sea                                                                                                                                                                                                   |
+| `overview.png`    | The far-out view: the tiles averaged, one pixel per metatile, and coarser levels for further out, packed side by side                                                                                                                                                                    |
+| `encounters.json` | Per placed map, its name and wild Pokémon (species slot and percent) by method and time of day; its sampled land (`l`) and water (`w`) encounter cells; `gens`, each slot's roster `entry`, the roster by `homes`, and the Safari Zones' Kalos by `safari`                               |
+| `icons.png`       | One 32×32 icon per species used, 16 to a row, indexed by the slot in `encounters.json`                                                                                                                                                                                                   |
+| `daily.json`      | The game's daily trainer slots (home trainer name, sprite cells, absence chance, group, placed objects' grid cells), the groups in the game's order, the placed item spots with their reach tier and region, and the item pools; `dailyOn` in `daily.ts` replays a day's draws from them |
+| `trainers.png`    | One 32×32 cell per trainer sprite used (first standing frame, facing down, bottom-centred) and the item ball, 16 to a row, indexed by `daily.json`                                                                                                                                       |
+| `notables.json`   | The notables' stops, cycles and routes (see below)                                                                                                                                                                                                                                       |
+| `meta.json`       | Grid size, atlas columns, the overview's levels, the open ocean's tiles and color, towns, region labels with bounds, and placed maps                                                                                                                                                     |
 
 ## Builder (`build/`)
 
@@ -163,6 +205,10 @@ Plain Node scripts. Each stage gets a module:
   city's own track there, and east into SAFFRON CITY up to its station, the cheapest way by a search that counts the map cells
   covered (towns most) and the turns. It is laid on a copy of the grid that
   is only drawn; the ferries and walkers keep to the ground under it.
+- `daily.mjs`: the daily trainer slots and item spots for the tour's daily
+  route. It reads the generated slot and item tables
+  (`src/data/trainer_slots/slots.h`, `src/data/item_slots/`) and names from
+  the party files, `battle_main.c`, `items.h` and `moves_info.h`.
 - `overview.mjs`: the far-out view, each pixel the average of the metatile
   under it in the GBA's 5-bit colors, and four coarser levels. A coarser pixel
   is land or sea by the majority under it and averages only those, so coasts
@@ -254,7 +300,9 @@ live game state: the game advances them on map changes (see
 - Routes: A* over the world grid's land (placed maps cost less than filler
   land), simplified. Where no land joins two places, the route crosses water;
   its water segments are marked (`w`), and there the trainer leaves a white
-  wake and the label says "crossing the sea". Everyone walks at one pace, on
+  wake and the label says "crossing the sea". The client walks a route on the
+  grid, as the overworld does: a metatile at a time, across or down, a slanted
+  run becoming a staircase of steps (`toLeg` in `notables.ts`). Everyone walks at one pace, on
   land and water alike, with no cap on a trip's length, so nobody speeds up
   mid-trip. It's an illustration, like the ferries, not a ferry schedule.
 - Sprites: `public/game/sprites/notables.png` (`pnpm assets`), one row of nine

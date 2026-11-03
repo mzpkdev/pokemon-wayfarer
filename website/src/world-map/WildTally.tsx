@@ -1,20 +1,21 @@
 import { type RefObject, useEffect, useState } from "react"
 
-import { TICK_MS, type Wild, type WildClock, WAVES, waveAt, startOf } from "./wild"
+import { HOMES, TICK_MS, type Wild, type WildClock, startOf, waveAt } from "./wild"
 
-const NONE = Array.from({ length: 9 }, () => 0)
+const NONE = HOMES.map(() => 0)
 
 /**
- * The wild stop's tally: the roster per generation, one chip
- * each (I to VIII, the regional forms) and the total. Each ticks up as its
- * wave pops on the map, the playing wave's lit; a chip taps to play its wave
- * again. With reduced motion everything is in at once and a chip picks which
- * icons the map holds still.
+ * The wild stop's tally: the roster per home region, one chip each, with a
+ * line saying whose home is playing. Each ticks up as its wave
+ * pops on the map, the playing wave's lit; a chip taps to hold its wave. With
+ * reduced motion everything is in at once and a chip picks which icons the
+ * map holds still.
  */
 export const WildTally = ({
   wild,
   shared,
   shown,
+  first,
   reducedMotion,
   onChange,
 }: {
@@ -22,6 +23,8 @@ export const WildTally = ({
   /** The clock the map's icons read; the tally owns it. */
   shared: RefObject<WildClock>
   shown: boolean
+  /** The wave to begin on: the start's own region's. */
+  first: number
   reducedMotion: boolean
   onChange: () => void
 }) => {
@@ -35,9 +38,12 @@ export const WildTally = ({
     setNow(performance.now())
     onChange()
   }
-  // Each arrival starts the cycle over.
+  // Each arrival starts the cycle over, on the start's own region; with
+  // reduced motion that region just stands.
   useEffect(() => {
-    if (shown) apply({ start: performance.now(), still: null })
+    if (!shown) return
+    const at = performance.now()
+    apply(reducedMotion ? { start: at, still: first } : { start: startOf(first, at), still: null })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shown])
   useEffect(() => {
@@ -49,31 +55,34 @@ export const WildTally = ({
   // chip again lets the loop play on from there.
   const pick = (wave: number) =>
     clock.still === wave && !reducedMotion
-      ? apply({ start: startOf(counts, wave, performance.now()), still: null })
+      ? apply({ start: startOf(wave, performance.now()), still: null })
       : apply({ start: performance.now(), still: wave })
 
   const playing =
     reducedMotion || clock.still !== null
-      ? { wave: clock.still ?? WAVES.length - 1, into: Infinity }
-      : waveAt(counts, now - clock.start)
+      ? { wave: clock.still ?? first, into: Infinity }
+      : waveAt(now - clock.start)
   const held = clock.still !== null
   const lit = playing.wave
+  // The waves already played this cycle, counted from the one it began on.
+  const order = (wave: number) => (wave - first + HOMES.length) % HOMES.length
   const shownCounts = counts.map((count, i) =>
-    i < playing.wave || reducedMotion || held || playing.wave === WAVES.length - 1
+    order(i) < order(playing.wave) || reducedMotion || held
       ? count
       : i === playing.wave
         ? Math.round(count * Math.min(1, playing.into / TICK_MS))
         : 0,
   )
-  const total = shownCounts.reduce((a, b) => a + b, 0)
-  const cells = [
-    ...WAVES.slice(0, 9).map((label, i) => ({ label, value: shownCounts[i]!, wave: i })),
-    { label: "ALL", value: total, wave: WAVES.length - 1 },
-  ]
+  const cells = HOMES.map((home, i) => ({
+    label: home.chip,
+    value: shownCounts[i]!,
+    wave: i,
+    name: `${home.line} ${counts[i]} species`,
+  }))
   return (
     <>
-      <ul className="mt-3 grid grid-cols-5 gap-1.5 sm:mt-4 sm:gap-2">
-        {cells.map(({ label, value, wave }) => {
+      <ul className="mt-3 grid grid-cols-4 gap-1.5 sm:mt-4 sm:gap-2">
+        {cells.map(({ label, value, wave, name }) => {
           const on = lit === wave
           return (
             <li key={label} className="contents">
@@ -81,19 +90,17 @@ export const WildTally = ({
                 type="button"
                 disabled={!shown}
                 aria-pressed={on}
-                aria-label={
-                  wave === WAVES.length - 1
-                    ? `All: ${counts.reduce((a, b) => a + b, 0)} species`
-                    : `${label === "FORMS" ? "Regional forms" : `Generation ${label}`}: ${counts[wave]} species`
-                }
+                aria-label={name}
                 onClick={() => pick(wave)}
-                className={`pixel-corners flex flex-col items-center gap-0.5 px-1 pt-1.5 pb-2 font-[family-name:var(--font-gba)] leading-none ${
+                className={`pixel-corners flex flex-col items-center justify-between gap-1 px-1 pt-1.5 pb-2 font-[family-name:var(--font-gba)] leading-none ${
                   on
                     ? "bg-[rgb(232_208_64)] text-[rgb(56_56_56)]"
                     : "bg-black/30 text-paper/80 hover:bg-black/50 hover:text-paper"
                 }`}
               >
-                <span className={`text-[12px] sm:text-[14px] ${on ? "" : "text-paper/60"}`}>
+                <span
+                  className={`text-center text-[12px] leading-[14px] sm:text-[14px] sm:leading-[16px] ${on ? "" : "text-paper/60"}`}
+                >
                   {label}
                 </span>
                 <span className="text-[16px] sm:text-[20px]">{value}</span>
@@ -102,10 +109,11 @@ export const WildTally = ({
           )
         })}
       </ul>
-      <p className="mt-2 text-xs text-paper/60" aria-live="polite">
+      <p className="mt-3 min-h-[2lh] text-sm leading-snug text-paper/85">{HOMES[lit]!.line}</p>
+      <p className="mt-1 text-xs text-paper/60">
         {held && !reducedMotion
           ? "Held. Tap it again to play them all."
-          : "Tap a generation to hold it."}
+          : "Tap a region to hold it."}
       </p>
     </>
   )
