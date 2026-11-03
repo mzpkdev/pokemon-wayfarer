@@ -24,7 +24,8 @@ The rest of the site uses it only through `index.ts`:
   pointer (a hover lights one and names its town, a press dips it, an open card
   gilds it and dims the rest; hidden buttons do the same for a keyboard), and a
   pin opens its
-  Gym's card: the badge, the leader in their walking sprite and what they are
+  Gym's card: the badge, the leader's battle portrait (`leaders/`, from the
+  pic of their leader battle in the party files) and what they are
   up to on the page clock, and FIND, which pans onto them and keeps them in
   view as they walk (GO TO the Gym for a leader who doesn't walk the map).
   NEXT and BACK fly on from wherever the map was moved to. It never takes over

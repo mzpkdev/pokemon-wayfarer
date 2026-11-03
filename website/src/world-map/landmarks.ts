@@ -21,6 +21,8 @@ export type Gym = {
     also?: string
     /** Whether they walk the map, or stand at their Gym. */
     simulated: boolean
+    /** Their battle portrait, `leaders/<pic>.png` beside the data. */
+    pic?: string
   }
 }
 

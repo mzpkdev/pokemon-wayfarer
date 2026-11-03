@@ -111,11 +111,40 @@ export const buildLandmarks = (game, world, regionOf) => {
   const catalog = JSON.parse(
     fs.readFileSync(`${root}/tools/notable_trainers/catalog.json`, "utf8"),
   ).trainers
+  // Every trainer's class and battle picture, from the party files, so a Gym's
+  // leader battle gives the portrait the game shows ("Leader Brock Hns" is
+  // graphics/trainers/front_pics/leader_brock_hns.png).
+  const parties = new Map()
+  for (const file of fs.readdirSync(`${root}/src/data`).filter((f) => f.endsWith(".party")))
+    for (const block of fs
+      .readFileSync(`${root}/src/data/${file}`, "utf8")
+      .split(/^=== /m)
+      .slice(1)) {
+      const id = block.slice(0, block.indexOf(" ==="))
+      const field = (name) => new RegExp(`^${name}: (.+)$`, "m").exec(block)?.[1].trim()
+      parties.set(id, { name: field("Name"), class: field("Class") ?? "", pic: field("Pic") })
+    }
+  const picOf = (script) => {
+    for (const [, id] of script.matchAll(/trainerbattle_\w+ (TRAINER_\w+)/g)) {
+      const party = parties.get(id)
+      if (party?.class.startsWith("Leader") && party.pic)
+        return party.pic.toLowerCase().replaceAll(" ", "_")
+    }
+    return undefined
+  }
   const leaderOf = (map, region, order, script) => {
     const t =
       routines.find((r) => r.gym === map.name) ??
       routines.find((r) => r.badge.region === region && r.badge.index === order)
-    if (t) return { name: t.name, slug: t.slug, simulated: Boolean(t.simulated) }
+    // Where the badge's map holds no battle with them (Clair gives hers after
+    // the Dragon's Den), their own leader battle by name.
+    const pic =
+      picOf(script) ??
+      [...parties.values()]
+        .find((p) => p.class.startsWith("Leader") && p.pic && p.name === t?.name.toUpperCase())
+        ?.pic?.toLowerCase()
+        .replaceAll(" ", "_")
+    if (t) return { name: t.name, slug: t.slug, simulated: Boolean(t.simulated), pic }
     const battle = /trainerbattle_\w+ TRAINER_([A-Z_]+?)_1\b/.exec(script)?.[1]
     const slug = battle?.toLowerCase().replaceAll("_and_", "_").replaceAll("_", "-")
     const entry = catalog.find((c) => c.slug === slug)
@@ -124,8 +153,8 @@ export const buildLandmarks = (game, world, regionOf) => {
     // "tate-liza" as TATE beside LIZA.
     const [first, second] = entry.slug.split("-")
     return entry.role.endsWith("duo")
-      ? { name: entry.name, slug: first, also: second, simulated: false }
-      : { name: entry.name, slug: entry.slug, simulated: false }
+      ? { name: entry.name, slug: first, also: second, simulated: false, pic }
+      : { name: entry.name, slug: entry.slug, simulated: false, pic }
   }
   const gyms = []
   for (const map of Object.values(every)) {

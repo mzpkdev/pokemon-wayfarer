@@ -31,7 +31,7 @@ import {
 import { pageMinutes } from "./clock"
 import { LivingClock } from "./LivingClock"
 import { type LivingWorld, livingOverlay, loadLiving } from "./living"
-import { NOTABLES_SRC, type Notables, loadNotables, notableAt, notablesOverlay } from "./notables"
+import { type Notables, loadNotables, notableAt, notablesOverlay } from "./notables"
 import { PlaceExtra } from "./PlaceExtra"
 import type { PlaceInfo } from "./PlaceCard"
 import { WorldMap } from "./WorldMap"
@@ -143,20 +143,22 @@ const shotsFor = (
 }
 
 /**
- * A Gym's card at the badge stop: its badge and town, its leader in their
- * walking sprite with what they are up to on the page's clock, and a button
+ * A Gym's card at the badge stop: its badge and town, its leader as their
+ * battle shows them with what they are up to on the page's clock, and a button
  * that pans the map onto them (or onto the Gym, for a leader who stays put).
  * Beside the map on wide screens; over the caption on narrow ones, so the
  * little map above stays clear.
  */
 const GymCard = ({
   gym,
+  base,
   notables,
   minutes,
   onFind,
   onClose,
 }: {
   gym: Gym
+  base: string
   notables: Notables | undefined
   minutes: number
   onFind: () => void
@@ -164,13 +166,6 @@ const GymCard = ({
 }) => {
   const { leader } = gym
   const walking = leader && notables ? notableAt(notables, leader.slug, minutes) : undefined
-  // Their sprites from the notables' sheet: one, or a duo side by side.
-  const rows = walking
-    ? [leader!.slug, leader!.also]
-        .filter((slug) => slug !== undefined)
-        .map((slug) => notables!.plans.findIndex((plan) => plan.slug === slug))
-        .filter((row) => row >= 0)
-    : []
   return (
     <section
       aria-label={`${gym.town} Gym`}
@@ -190,21 +185,15 @@ const GymCard = ({
         </button>
       </div>
       <div className="mt-4 flex items-center gap-4">
-        {rows.length ? (
-          <span className="flex shrink-0">
-            {rows.map((row) => (
-              <span
-                key={row}
-                aria-hidden
-                className="h-24 w-12 [image-rendering:pixelated]"
-                style={{
-                  backgroundImage: `url(${NOTABLES_SRC})`,
-                  backgroundSize: `${9 * 48}px auto`,
-                  backgroundPosition: `0 ${-row * 96}px`,
-                }}
-              />
-            ))}
-          </span>
+        {leader?.pic ? (
+          // The leader as the battle shows them.
+          <img
+            src={`${base}/leaders/${leader.pic}.png`}
+            alt=""
+            width={64}
+            height={64}
+            className="size-24 shrink-0 [image-rendering:pixelated]"
+          />
         ) : (
           <span
             aria-hidden
@@ -832,6 +821,7 @@ export const WorldTour = ({
       {gym && STOPS[stop] === "badges" && (
         <GymCard
           gym={gym}
+          base={base}
           notables={notables}
           minutes={minutes}
           onFind={() => findRef.current(gym)}

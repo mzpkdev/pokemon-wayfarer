@@ -9,6 +9,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { gzipSync } from "node:zlib"
+import { renderIndexed } from "../../../scripts/lib/gba.mjs"
 import { writePng } from "../../../scripts/lib/png.mjs"
 import { writeEncounters } from "./encounters.mjs"
 import { createAtlas, openGame } from "./game.mjs"
@@ -134,6 +135,14 @@ fs.writeFileSync(
 // The tour's gym pins and league circuit.
 const landmarks = buildLandmarks(game, world, labelFor)
 fs.writeFileSync(`${outDir}/landmarks.json`, JSON.stringify(landmarks))
+// Each Gym Leader's battle portrait for their Gym's card, 64x64 in the palette
+// its PNG carries, as the battle shows it.
+fs.rmSync(`${outDir}/leaders`, { recursive: true, force: true })
+fs.mkdirSync(`${outDir}/leaders`)
+for (const pic of new Set(landmarks.badges.map((gym) => gym.leader?.pic).filter(Boolean))) {
+  const image = renderIndexed(path.join(game.root, `graphics/trainers/front_pics/${pic}.png`))
+  writePng(`${outDir}/leaders/${pic}.png`, image.width, image.height, image.rgba)
+}
 // The ferries, their sea lanes and the times of day.
 writeLiving(
   {
