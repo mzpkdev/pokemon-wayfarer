@@ -4,7 +4,11 @@ The whole overworld in the game's own metatiles: Johto, Kanto, Hoenn, Sinnoh,
 Sinjoh, the Sevii Islands and Alola on one sea. It has two parts, a builder
 that turns the game's maps into data and a client that draws that data.
 
-The rest of the site uses it only through `index.ts`:
+The rest of the site uses it only through `index.ts`. The landing page's
+RIGHT NOW board (`src/components/RightNow.tsx`) reads the same clock and
+simulation from it (`pageMinutes`, `shipsAt`, `trainAt`, `notablesAt` and
+the notables' sprite sheet), so it shows the ships, the train and the Gym
+Leaders where the map has them. The two parts a visitor meets:
 
 - `WorldTour` is the landing page's world section, one screen tall. When it
   starts, the player rides in on their bike to their front door, with the

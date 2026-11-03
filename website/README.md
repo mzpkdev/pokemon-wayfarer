@@ -21,6 +21,7 @@ Run these from `website/`, or from the repository root with `pnpm --filter @wayf
 | `pnpm preview`   | Serve the built site                                |
 | `pnpm assets`    | Re-render the game art in `public/game/`            |
 | `pnpm world-map` | Rebuild the world map's data in `public/world-map/` |
+| `pnpm og`        | Re-render the link preview image, `public/og.png`   |
 | `pnpm check`     | Type check, lint, and check formatting              |
 | `pnpm format`    | Format files with oxfmt                             |
 
@@ -44,6 +45,33 @@ title sprites where the game draws them. The scene's timings and positions in
 `src/lib/scene.ts` come from `game/src/intro.c` and `game/src/title_screen.c`.
 
 The release date lives in `src/lib/release.ts`.
+
+## The page
+
+Below the title scene and the world map, the page is Astro markup around a
+few React islands:
+
+- `StartMenu` is the page's navigation, drawn as the game's START menu: a
+  MENU button once the title screen is behind (top right; a pill in the
+  bottom corner on a phone, out of the way while the map is pinned), a text
+  window of entries with the ▶ cursor and a window describing the one the
+  cursor is on. Arrows, Enter and Esc or B work as on the GBA.
+- `RightNow` is the living world off the map: the time of day, the ships and
+  the Magnet Train on their legs, and every Gym Leader, Elite Four and
+  Champion at what they are doing, read from the world map's own simulation
+  on the page's clock (see `src/world-map/README.md`), so the board and the
+  map always agree.
+- `OakStage`, `StoryShuffle` and `DialogBox` draw the sign-up and the
+  open-world section's figures.
+
+## Link previews
+
+`public/og.png` is the title screen at 1200x630, the size link previews ask
+for. `pnpm og` re-renders it from the built site (run `pnpm build` first);
+without Playwright's own Chromium, point `CHROME` at a Chrome or Chromium
+executable. Previews need absolute addresses, so `Layout.astro` only emits
+the image, `og:url` and the canonical link once `site` is set in
+`astro.config.ts`.
 
 ## World map
 

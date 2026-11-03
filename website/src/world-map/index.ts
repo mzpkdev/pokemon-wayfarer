@@ -2,6 +2,7 @@
 export { type PlaceInfo, WorldMap } from "./WorldMap"
 export { type Caption, type StopName, type StopOverlay, WorldTour } from "./WorldTour"
 export { LivingClock } from "./LivingClock"
+export { pageMinutes } from "./clock"
 export {
   clockText,
   gameClock,
@@ -19,7 +20,9 @@ export {
   type Train,
 } from "./living"
 export {
+  FRAMES as WALK_FRAMES,
   loadNotables,
+  NOTABLES_SRC,
   notablesAt,
   notablesOn,
   notablesOverlay,
