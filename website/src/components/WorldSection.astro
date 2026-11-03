@@ -1,8 +1,9 @@
 ---
 /**
- * The size of the world, the first highlight under the title scene: the
- * overworld in the game's own tiles, pulled back from LITTLEROOT TOWN as you
- * scroll, then open to look around. The map itself lives in `~/world-map`.
+ * The size of the world, the first highlight under the title scene: a tour of
+ * the overworld in the game's own tiles, LITTLEROOT TOWN to Hoenn to the whole
+ * world, a button press per stop, then open to look around. The map itself
+ * lives in `~/world-map`.
  */
 import { type Caption, WorldTour } from "~/world-map"
 
@@ -33,26 +34,11 @@ const captions: Caption[] = [
 ]
 ---
 
-<section aria-labelledby="world" class="world relative">
+<section aria-labelledby="world" class="relative h-svh min-h-[600px] overflow-hidden">
   <h2 id="world" class="sr-only">The world of Pokémon Wayfarer</h2>
-  <div class="sticky top-0 h-svh overflow-hidden">
-    <WorldTour
-      client:visible={{ rootMargin: "200%" }}
-      captions={captions}
-      seam={{ color: "rgb(8 41 0)", pixel: "--scene-px" }}
-    />
-  </div>
+  <WorldTour
+    client:visible={{ rootMargin: "200%" }}
+    captions={captions}
+    seam={{ color: "rgb(8 41 0)", pixel: "--scene-px" }}
+  />
 </section>
-
-<style>
-  /* The scroll the camera's pull-back plays over; one screen when it can't move. */
-  .world {
-    height: 480svh;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .world {
-      height: 100svh;
-    }
-  }
-</style>

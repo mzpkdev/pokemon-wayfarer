@@ -15,32 +15,13 @@ export type Caption = {
   stats?: { value: string; label: string }[]
 }
 
-/**
- * Scroll progress (0 to 1) to the camera: a hold on each shot and eased moves
- * between them. The tour opens in ROUTE 101's tall grass, where the title
- * scene's grass leaves off, walks down into LITTLEROOT TOWN, then pulls back
- * to all of Hoenn and the whole world.
- */
-const BEATS = [
-  { from: 0, to: 0.06, shot: 0 },
-  { from: 0.06, to: 0.2, shot: 0, next: 1 },
-  { from: 0.2, to: 0.28, shot: 1 },
-  { from: 0.28, to: 0.54, shot: 1, next: 2 },
-  { from: 0.54, to: 0.62, shot: 2 },
-  { from: 0.62, to: 0.88, shot: 2, next: 3 },
-  { from: 0.88, to: 1, shot: 3 },
-] as const
-
-/** Scroll progress where BRENDAN rides in from the grass, and where he reaches his door. */
-const RIDE_FROM = -0.03
-const RIDE_TO = 0.18
+/** How long BRENDAN's ride from the grass to his door takes, in milliseconds. */
+const RIDE_MS = 3200
+/** How long a flight between stops takes: longer the more the zoom changes. */
+const flightMs = (from: Camera, to: Camera) =>
+  Math.min(2400, 900 + 450 * Math.abs(Math.log2(to.zoom / from.zoom)))
 /** The closest zoom he is drawn at; further out he is a speck. */
 const RIDER_MIN_ZOOM = 4
-
-/** Which caption each shot shows: the walk into town keeps the first. */
-const SHOT_CAPTION = [0, 0, 1, 2]
-/** The map name popup the game shows on each close-up shot. */
-const SHOT_POPUP = ["ROUTE 101", "LITTLEROOT TOWN", null, null]
 
 /** Rows of the dither that dissolves the page's ground into the map, in scene pixels. */
 const SEAM_ROWS = 20
@@ -85,15 +66,6 @@ const shotsFor = (meta: Meta, width: number, height: number): Camera[] => {
   ]
 }
 
-const cameraAt = (shots: Camera[], progress: number) => {
-  const p = Math.min(1, Math.max(0, progress))
-  const beat = BEATS.find(({ to }) => p <= to) ?? BEATS.at(-1)!
-  const from = shots[beat.shot]!
-  if (!("next" in beat)) return { camera: from, shot: beat.shot }
-  const t = (p - beat.from) / (beat.to - beat.from)
-  return { camera: fly(from, shots[beat.next]!, t), shot: t < 0.5 ? beat.shot : beat.next }
-}
-
 /**
  * Dissolves a band of `color` at the top of the section into the map, in
  * whole `pixel`-sized dots, so the page above runs into the map without a
@@ -122,11 +94,12 @@ const drawSeam = (context: CanvasRenderingContext2D, top: number, pixel: number,
 }
 
 /**
- * The world in the game's own tiles, with a camera that starts in ROUTE
- * 101's tall grass, walks into LITTLEROOT TOWN and pulls back to all of
- * Hoenn, then to the whole world, as its section scrolls by, and a button to
- * open the map and look around. Fills its sticky parent; the section around
- * it sets how long the tour lasts.
+ * The world in the game's own tiles, held still at one stop at a time with a
+ * card beside it. When the section comes into view, BRENDAN rides out of the
+ * grass down ROUTE 101 to his door in LITTLEROOT TOWN; the card's button then
+ * flies the camera on to all of Hoenn and the whole world, and the last one
+ * opens the map to look around. The page scrolls past it as usual. Fills its
+ * section.
  *
  * `seam` names the color of the page right above the section and the CSS
  * variable holding its pixel size, for the dither that joins the two.
@@ -144,8 +117,9 @@ export const WorldTour = ({
   const captionRef = useRef<HTMLDivElement>(null)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const cameraRef = useRef<Camera | null>(null)
+  const goRef = useRef<(stop: number) => void>(() => {})
   const reducedMotion = useReducedMotion()
-  const [beat, setBeat] = useState(0)
+  const [stop, setStop] = useState(0)
   const [exploring, setExploring] = useState<Camera | null>(null)
   const [popup, setPopup] = useState<{ label: string | null; shown: boolean }>({
     label: null,
@@ -175,12 +149,11 @@ export const WorldTour = ({
       if (next) popupTimer = window.setTimeout(() => setPopup({ label: next, shown: true }), 340)
     }
 
-    const progress = () => {
-      if (reducedMotion) return 1
-      const { top, height } = section.getBoundingClientRect()
-      const travel = height - window.innerHeight
-      return travel > 0 ? -top / travel : 1
-    }
+    // Where the tour is: the stop shown (its shot is one past it, after ROUTE
+    // 101), the flight under way if any, and when the ride began.
+    let current = 0
+    let flight: { from: Camera; to: number; start: number; duration: number } | null = null
+    let rideStart: number | null = null
 
     const rider = new Image()
     rider.src = RIDER_SRC
@@ -188,49 +161,91 @@ export const WorldTour = ({
       if (disposed) return
       const renderer = rendererFor(world)
       const route = routeIn(world.meta)
-      const draw = () => {
-        raf = 0
+      const littlerootTop = world.meta.maps.find(({ name }) => name === "LittlerootTown")!.y
+
+      const area = () => {
         // The map gets the screen beside the caption on wide screens, above
         // it on narrow ones.
         const box = canvas.getBoundingClientRect()
-        const area = { width: box.width, height: box.height }
+        const size = { width: box.width, height: box.height }
         const caption = captionRef.current?.getBoundingClientRect()
         if (caption) {
-          if (caption.left - box.left > box.width * 0.4) area.width = caption.left - box.left - 24
-          else area.height = caption.top - box.top - 16
+          if (caption.left - box.left > box.width * 0.4) size.width = caption.left - box.left - 24
+          else size.height = caption.top - box.top - 16
         }
-        const shots = shotsFor(world.meta, area.width, area.height)
-        const scrolled = progress()
-        const { camera, shot } = cameraAt(shots, scrolled)
+        return size
+      }
+
+      const draw = (now: number) => {
+        raf = 0
+        const { width, height } = area()
+        const shots = shotsFor(world.meta, width, height)
+        const ride = reducedMotion ? 1 : rideStart === null ? 0 : (now - rideStart) / RIDE_MS
+        let camera: Camera
+        if (flight) {
+          const t = (now - flight.start) / flight.duration
+          camera = fly(flight.from, shots[flight.to + 1]!, t)
+          if (t >= 1) flight = null
+        } else if (current === 0) camera = fly(shots[0]!, shots[1]!, ride)
+        else camera = shots[current + 1]!
         cameraRef.current = camera
-        setBeat(SHOT_CAPTION[shot]!)
-        // The popup names the close-ups once the map has the whole screen.
-        showPlace(scrolled >= 0 ? SHOT_POPUP[shot]! : null)
+
+        const brendan = riderAt(route, ride, rider)
+        // The popup names where BRENDAN is while the camera is with him.
+        showPlace(
+          current > 0 || rideStart === null
+            ? null
+            : brendan.y + 2 < littlerootTop
+              ? "ROUTE 101"
+              : "LITTLEROOT TOWN",
+        )
         const pending = renderer.draw(context, {
           camera,
-          focus: { x: area.width / 2, y: area.height / 2 },
-          labelWidth: area.width,
+          focus: { x: width / 2, y: height / 2 },
+          labelWidth: width,
           // The popup names the close-ups; names on the map come in as it pulls back.
           labels: camera.zoom < shots[1]!.zoom * 0.7,
           sprites:
-            rider.complete && rider.naturalWidth && camera.zoom >= RIDER_MIN_ZOOM
-              ? [riderAt(route, (scrolled - RIDE_FROM) / (RIDE_TO - RIDE_FROM), rider)]
-              : [],
+            rider.complete && rider.naturalWidth && camera.zoom >= RIDER_MIN_ZOOM ? [brendan] : [],
         })
         if (seamColor && seamPixel) {
           const pixel = parseFloat(getComputedStyle(canvas).getPropertyValue(seamPixel)) || 4
-          drawSeam(context, section.getBoundingClientRect().top - box.top, pixel, seamColor)
+          drawSeam(context, 0, pixel, seamColor)
         }
-        if (pending) schedule()
+        const riding = rideStart !== null && ride < 1
+        if (pending || flight || riding) schedule()
       }
       const schedule = () => {
         if (!raf) raf = requestAnimationFrame(draw)
       }
-      window.addEventListener("scroll", schedule, { passive: true })
+
+      goRef.current = (next) => {
+        if (next === current) return
+        const { width, height } = area()
+        const from = cameraRef.current ?? shotsFor(world.meta, width, height)[current + 1]!
+        const to = shotsFor(world.meta, width, height)[next + 1]!
+        flight = reducedMotion
+          ? null
+          : { from, to: next, start: performance.now(), duration: flightMs(from, to) }
+        current = next
+        schedule()
+      }
+
+      // The ride starts the first time nearly all of the section is on screen.
+      const watcher = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry?.isIntersecting || rideStart !== null) return
+          rideStart = performance.now()
+          watcher.disconnect()
+          schedule()
+        },
+        { threshold: 0.7 },
+      )
+      watcher.observe(section)
       const resizer = new ResizeObserver(schedule)
       resizer.observe(canvas)
       cleanup = () => {
-        window.removeEventListener("scroll", schedule)
+        watcher.disconnect()
         resizer.disconnect()
       }
       void document.fonts.ready.then(schedule)
@@ -244,6 +259,11 @@ export const WorldTour = ({
       cleanup()
     }
   }, [base, reducedMotion, seamColor, seamPixel])
+
+  const go = (next: number) => {
+    setStop(next)
+    goRef.current(next)
+  }
 
   // The explorer opens as a modal over the page, starting where the tour is.
   useEffect(() => {
@@ -273,9 +293,9 @@ export const WorldTour = ({
           ref={captionRef}
           className="pixel-corners pixel-panel pointer-events-auto relative w-full p-6 sm:p-8 lg:w-[400px]"
         >
-          <div className="grid">
+          <div className="grid" aria-live="polite">
             {captions.map((caption, i) => {
-              const shown = (reducedMotion ? captions.length - 1 : beat) === i
+              const shown = stop === i
               return (
                 <div
                   key={caption.place}
@@ -283,7 +303,15 @@ export const WorldTour = ({
                   className="col-start-1 row-start-1 transition-opacity duration-300"
                   style={{ opacity: shown ? 1 : 0 }}
                 >
-                  <p className="pixel-label text-logo-yellow">{caption.place}</p>
+                  <p className="pixel-label flex justify-between gap-4 text-logo-yellow">
+                    <span>{caption.place}</span>
+                    <span
+                      className="text-paper/60"
+                      aria-label={`Stop ${i + 1} of ${captions.length}`}
+                    >
+                      {i + 1}/{captions.length}
+                    </span>
+                  </p>
                   <p className="pixel-heading mt-3">{caption.title}</p>
                   <p className="mt-4 text-lg leading-relaxed text-paper/80">{caption.body}</p>
                   {caption.stats && (
@@ -303,13 +331,32 @@ export const WorldTour = ({
               )
             })}
           </div>
-          <button
-            type="button"
-            onClick={() => setExploring(cameraRef.current ?? { x: 0, y: 0, zoom: 0 })}
-            className={`${BUTTON} mt-6`}
-          >
-            EXPLORE THE MAP
-          </button>
+          <div className="mt-6 flex items-center justify-between gap-4">
+            {stop > 0 ? (
+              <button
+                type="button"
+                onClick={() => go(stop - 1)}
+                className="pixel-label px-2 pt-2 pb-3 text-paper/70 hover:text-paper focus-visible:text-paper focus-visible:underline focus-visible:outline-none"
+              >
+                BACK
+              </button>
+            ) : (
+              <span />
+            )}
+            {stop < captions.length - 1 ? (
+              <button type="button" onClick={() => go(stop + 1)} className={BUTTON}>
+                NEXT ▶
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setExploring(cameraRef.current ?? { x: 0, y: 0, zoom: 0 })}
+                className={BUTTON}
+              >
+                EXPLORE THE MAP
+              </button>
+            )}
+          </div>
         </div>
       </div>
       <dialog
