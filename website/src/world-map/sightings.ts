@@ -10,8 +10,8 @@ import { ICON, type Encounters, type Slot, type Table } from "./encounters"
 import type { Overlay } from "./render"
 
 /** CSS pixels per metatile where sightings start to fade in, and are fully in. */
-export const SIGHTING_ZOOM = 7
-const FULL_ZOOM = 10
+export const SIGHTING_ZOOM = 6
+const FULL_ZOOM = 8
 /** How long a cell's stretch is, and how much of it the sighting is out for, in ms. */
 const STRETCH_MS = 6500
 const OUT_MS = 3800
@@ -34,7 +34,7 @@ const roll = (...parts: number[]) =>
   parts.reduce((h, part) => hash(h ^ Math.imul(part + 1, 0x27d4eb2d)), 0x2545f491) / 0x100000000
 
 /** Evening and night use a table's night slots, morning and day its day slots (the in-game clock spec). */
-const isNight = (minutes: number) => {
+export const isNight = (minutes: number) => {
   const hour = (((minutes / 60) % 24) + 24) % 24
   return hour >= 20 || hour < 4
 }

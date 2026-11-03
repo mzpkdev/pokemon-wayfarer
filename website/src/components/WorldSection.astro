@@ -2,10 +2,11 @@
 /**
  * The size of the world, the first highlight, reached from the title scene's
  * Poké Ball by the game's warp: a tour of the overworld in the game's own
- * tiles. Pick a start (PALLET TOWN, NEW BARK TOWN or LITTLEROOT TOWN), then a
- * button press per stop: that start's region, the whole world, the 24 Gyms
- * (tap the badges you'd win) and each league, then open to look around. The map itself lives in
- * `~/world-map`; its cards are one per stop, with what changes by start.
+ * tiles, one journey that only pulls out. Pick a start (PALLET TOWN, NEW BARK
+ * TOWN or LITTLEROOT TOWN), then a button press per stop: its first route,
+ * its region and Gyms, the whole world, the league circuit, then the map to
+ * look around. The map itself lives in `~/world-map`; its cards are one per
+ * stop, with what changes by start.
  */
 import { type Caption, WorldTour } from "~/world-map"
 
@@ -14,80 +15,69 @@ import { type Caption, WorldTour } from "~/world-map"
 // Sinnoh counts too; it opens up by launch. Johto has 10 towns and cities and
 // 23 routes, Kanto 10 and 25, Hoenn 16 and 34. The badges and the three
 // leagues (Indigo, Hoenn and the Sevii Masters) are the game's.
-const FROM_HERE = "From here everywhere else is a walk, a surf or a ferry ride away."
 const captions: Caption[] = [
   {
-    place: "LITTLEROOT TOWN",
+    place: "PALLET TOWN",
     title: "It starts in one small town.",
-    body: `Choose Treecko, Torchic or Mudkip. ${FROM_HERE}`,
+    body: "Set out with a first partner from Professor Oak, and out the door.",
     variants: {
       johto: {
         place: "NEW BARK TOWN",
-        body: `Wake up next door to Professor Elm's lab. ${FROM_HERE}`,
+        body: "Wake up next door to Professor Elm's lab, and out the door.",
       },
-      kanto: {
-        place: "PALLET TOWN",
-        body: `Set out with a first partner from Professor Oak. ${FROM_HERE}`,
+      hoenn: {
+        place: "LITTLEROOT TOWN",
+        body: "Choose Treecko, Torchic or Mudkip, and out the door.",
       },
     },
   },
   {
-    place: "HOENN",
+    place: "ROUTE 1",
+    title: "Into the tall grass.",
+    body: "Every route has its own Pokémon, and some only come out at night. Here's who is about right now.",
+    variants: {
+      johto: { place: "ROUTE 29" },
+      hoenn: { place: "ROUTE 101" },
+    },
+  },
+  {
+    place: "KANTO",
     title: "Then a whole region opens up.",
-    body: "16 towns and cities and 34 routes, over land and sea. All of it is yours to roam.",
+    body: "10 towns and cities, 25 routes and eight Gyms. Tap the badges you'd win.",
     variants: {
       johto: {
         place: "JOHTO",
-        body: "10 towns and cities and 23 routes, over land and sea. All of it is yours to roam.",
+        body: "10 towns and cities, 23 routes and eight Gyms. Tap the badges you'd win.",
       },
-      kanto: {
-        place: "KANTO",
-        body: "10 towns and cities and 25 routes, over land and sea. All of it is yours to roam.",
+      hoenn: {
+        place: "HOENN",
+        body: "16 towns and cities, 34 routes and eight Gyms. Tap the badges you'd win.",
       },
     },
   },
   {
     place: "THE WORLD",
-    title: "And Hoenn is only one of them.",
-    body: "Kanto, Johto, Hoenn and Sinnoh, the Sevii Islands, Sinjoh past MT. SILVER, and Alola, all on one save. Wherever you start, you can go anywhere. Three ships sail between them.",
+    title: "And Kanto is only one of them.",
+    body: "Seven lands on one save, joined by three ferries, and each keeps its own Pokémon.",
+    variants: {
+      johto: { title: "And Johto is only one of them." },
+      hoenn: { title: "And Hoenn is only one of them." },
+    },
+  },
+  {
+    place: "THE LEAGUE CIRCUIT",
+    title: "Every Gym counts, in any order.",
+    body: "24 Gyms in three regions. Earn any 8 and a league phones. Win Indigo and the Hoenn League, in either order, and the Masters opens on Seven Island.",
+  },
+  {
+    place: "THE WHOLE MAP",
+    title: "Go see for yourself.",
+    body: "Every town and route, the ferries on their loops, the Gym Leaders on their rounds and wild Pokémon in the grass.",
     stats: [
       { value: "62", label: "towns and cities" },
       { value: "114", label: "routes" },
       { value: "7", label: "ports" },
     ],
-    variants: {
-      johto: { title: "And Johto is only one of them." },
-      kanto: { title: "And Kanto is only one of them." },
-    },
-  },
-  {
-    place: "WHO LIVES HERE",
-    title: "Every region, its own Pokémon.",
-    body: "All 905 from Gen I to VIII, plus the regional forms. Each generation has a home region, and a few wander further.",
-  },
-  {
-    place: "THE GYMS",
-    title: "Every Gym, in any order.",
-    body: "Kanto, Johto and Hoenn have eight Gyms each. Tap the badges you'd win, in any order, and meet each Leader. At eight, a league phones.",
-    stats: [
-      { value: "24", label: "Gym Badges" },
-      { value: "3", label: "regions" },
-    ],
-  },
-  {
-    place: "INDIGO PLATEAU",
-    title: "One way in: Indigo.",
-    body: "It phones once it knows you: any 8 badges, one from Kanto or Johto. Each event picks five from the Gym Leaders, Elite Four and Champions of every region. Nearby ones come more willingly, whoever fought last far less, and the strongest fights last.",
-  },
-  {
-    place: "HOENN LEAGUE",
-    title: "The other way in: Ever Grande.",
-    body: "It phones too: any 8 badges, one from Hoenn. Win it before or after Indigo. Its five are picked the same way, from every region, with Hoenn's own the most willing.",
-  },
-  {
-    place: "SEVII MASTERS",
-    title: "Win both, then the Masters.",
-    body: "No phone call this time: walk into the lobby on Seven Island, once Indigo and Hoenn are both won.",
   },
 ]
 ---

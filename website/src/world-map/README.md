@@ -15,14 +15,20 @@ The rest of the site uses it only through `index.ts`:
   starts when its section is mostly on screen, or on an event the page sends
   (`startOn`; the landing page sends one when its warp from the title scene
   fades in, see `src/lib/warp.ts`). After that the map holds still beside a
-  card, and NEXT and BACK fly the camera between eight stops: the town, its
-  one region (Hoenn, Johto or Kanto), the whole world (wherever you start,
-  you can go anywhere), who lives on its routes, the 24 Gyms, and each league in turn (Indigo
-  Plateau, the Hoenn League, the Sevii Masters). From the second
+  card, and NEXT and BACK fly the camera between six stops, one journey that
+  only pulls out: home; the first route out of town (ROUTE 1, 29 or 101,
+  `firstRoute` in `starts.ts`), close enough for its wild Pokémon to pop out
+  of the grass (`sightings.ts`, as in the explorer) while the card shows who
+  is out at this time of day; the start's region with its eight Gyms; the
+  whole world with its ferries and who lives where; the league circuit (all
+  24 Gyms and the three leagues); and the whole map again to explore. A
+  journey strip on the card marks each stop with an item or sprite from the
+  game (the start's rider, a Poké Ball, the region's first badge, the S.S.
+  Ticket, the VS Seeker, the Town Map); a tap on a mark goes there. From the second
   stop on the map can be panned in place, the way an embedded map shares a
   page: a mouse drags, and on touch two fingers move it while one still
-  scrolls the page (a hint says so). The zoom stays each stop's. At the Gym
-  stop the pins answer the pointer: each is just its badge over a soft shadow;
+  scrolls the page (a hint says so). The zoom stays each stop's. At the region
+  and circuit stops the Gym pins answer the pointer: each is just its badge over a soft shadow;
   a hover lifts it with a white glow and names its town, a press settles and
   darkens it, and an open card makes it glow gold and bob while the rest dim
   (hidden buttons do the same for a keyboard), and a pin opens its Gym's card:
@@ -32,9 +38,10 @@ The rest of the site uses it only through `index.ts`:
   (GO TO the Gym for a leader who doesn't walk the map). NEXT and BACK fly on
   from wherever the map was moved to. It never takes over the page's
   scrolling.
-- At the wild stop (`wild.ts`, `WildTally.tsx`) the camera stays on the whole
-  world and icons from `icons.png` pop out of it in waves, one per home region
-  (about 15 s, looping). Each generation has a home, from the natives table of
+- At the world stop (`wild.ts`, `WildTally.tsx`) icons from `icons.png` pop
+  out of the whole world in waves, one per home region (about 15 s, looping,
+  beginning with the start's own region), over the ferries and the time of
+  day. Each generation has a home, from the natives table of
   the wild encounters v2 PRD: Gen I from Kanto and II from Johto (one piece of
   land, which they share), III and V in
   Hoenn, Kalos (VI) in the three Safari Zones, Galar (VIII) in the Sevii
@@ -58,12 +65,13 @@ The rest of the site uses it only through `index.ts`:
   its wave on the map, and tapping it again plays on. Gen IX stays off the
   page. Reduced motion shows the full tally and the first wave still; a chip picks
   whose.
-- At the Gym stop a tap on a pin (or its hidden button, `aria-pressed`)
+- At the region and circuit stops a tap on a pin (or its hidden button,
+  `aria-pressed`; at the region stop only its own eight)
   toggles the badge earned: earned pins are bright with a gold glow and a
   sparkle (a burst when earned), the rest fainter, and earning opens that
   Gym's card ("BOULDER BADGE EARNED", the leader, FIND); giving it back closes
   it. A chip shows BADGES n/24. The earned set is the tour's state: it
-  persists across the league stops and a change of start. The rules are the
+  persists across the stops and a change of start. The rules are the
   game's (`league_circuit.c`): badges from every region count together,
   Trainer Rating is `10 * badges` up to 8 and `80 + 5 * (badges - 8)` after,
   and 80 (any 8 badges) qualifies; Indigo also needs one Kanto or Johto badge,
@@ -74,16 +82,18 @@ The rest of the site uses it only through `index.ts`:
   (`LeaguePhone_Text_*` in `data/scripts/league_phone.inc`, the league and
   place as `league_phone.c` buffers them, the lineup as the first event's five),
   YES/NO with the game's decline confirmation, and the accept or decline
-  follow-up. Accepting flies the tour to that league. It is a modal `<dialog>`
+  follow-up. Accepting flies the tour to the circuit stop and on to that league. It is a modal `<dialog>`
   (Esc or HANG UP closes it, with no answer); reduced motion skips the typing.
   Which league rings when both could is `ChooseCallingLeague`'s order: the one
   that called least recently (none has), then the most badges of its side
   (Indigo counts Kanto and Johto, Hoenn counts Hoenn), then Indigo (`callerFor`).
-  A second league rings on a later toggle, once each per visit. At the league
-  stops each league is a plate in the region labels' style, glowing while it
+  A second league rings on a later toggle, once each per visit. At the circuit
+  stop each league is a plate in the region labels' style, glowing while it
   calls; the trail has two legs (Indigo and Hoenn to Seven Island) that draw
-  in, dotted and marching, once their league calls. Each league stop flies to
-  its league at a medium zoom and highlights its plate and leg. For Indigo and
+  in, dotted and marching, once their league calls. The card lists the three
+  leagues with whether each is calling; a tap on one flies the map on to it at
+  a medium zoom and highlights its plate and leg, and ALL 24 GYMS flies back
+  out. For Indigo and
   Hoenn the five that fight there are the hero (`LineupPanel.tsx`): five seats
   in battle order, one per hall (name and battle condition from
   `game/src/league_halls.c`, `circuit[].halls`), the Champion's Room last. The
@@ -100,14 +110,13 @@ The rest of the site uses it only through `index.ts`:
   ones, so the page alternates between two fives for a given rating. The
   pool is every enabled registry trainer: Gym Leaders, Elite Four and
   Champions (Tate and Liza are doubles-only and out). The Sevii Masters'
-  lineup format isn't shipped, so its stop shows only its halls and how it
-  opens. The last card's EXPLORE THE MAP opens the explorer full screen.
+  lineup format isn't shipped, so it shows only its halls and how it opens.
+  The last card's EXPLORE THE MAP opens the explorer full screen.
   Captions are one per stop, with per-start `variants`; `stopOverlays` lets the
-  page draw over the map at any stop (the hook for a living-world overlay on
-  the world stop).
+  page draw over the map at any stop.
   `WorldMap` is the explorer. Drag, pinch, wheel, double-click, the arrow keys
   and +/- all pan and zoom it.
-  Close in (from 7 CSS pixels a metatile), wild Pokémon pop out of the
+  Close in (from 6 CSS pixels a metatile), wild Pokémon pop out of the
   routes (`sightings.ts`): each of a map's sampled encounter cells (tall grass
   and the like on land, the water for surfing and fishing) now and then has
   one of the route's own Pokémon out for a few seconds, picked by its rate in

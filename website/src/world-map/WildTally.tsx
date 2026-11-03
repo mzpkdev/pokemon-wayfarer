@@ -15,6 +15,7 @@ export const WildTally = ({
   wild,
   shared,
   shown,
+  first,
   reducedMotion,
   onChange,
 }: {
@@ -22,6 +23,8 @@ export const WildTally = ({
   /** The clock the map's icons read; the tally owns it. */
   shared: RefObject<WildClock>
   shown: boolean
+  /** The wave to begin on: the start's own region's. */
+  first: number
   reducedMotion: boolean
   onChange: () => void
 }) => {
@@ -35,9 +38,12 @@ export const WildTally = ({
     setNow(performance.now())
     onChange()
   }
-  // Each arrival starts the cycle over.
+  // Each arrival starts the cycle over, on the start's own region; with
+  // reduced motion that region just stands.
   useEffect(() => {
-    if (shown) apply({ start: performance.now(), still: null })
+    if (!shown) return
+    const at = performance.now()
+    apply(reducedMotion ? { start: at, still: first } : { start: startOf(first, at), still: null })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shown])
   useEffect(() => {
@@ -54,12 +60,14 @@ export const WildTally = ({
 
   const playing =
     reducedMotion || clock.still !== null
-      ? { wave: clock.still ?? 0, into: Infinity }
+      ? { wave: clock.still ?? first, into: Infinity }
       : waveAt(now - clock.start)
   const held = clock.still !== null
   const lit = playing.wave
+  // The waves already played this cycle, counted from the one it began on.
+  const order = (wave: number) => (wave - first + HOMES.length) % HOMES.length
   const shownCounts = counts.map((count, i) =>
-    i < playing.wave || reducedMotion || held
+    order(i) < order(playing.wave) || reducedMotion || held
       ? count
       : i === playing.wave
         ? Math.round(count * Math.min(1, playing.into / TICK_MS))
