@@ -81,15 +81,13 @@ const labelFor = (p) => {
 }
 // The weather a map has, where the game gives it one worth drawing: rain and
 // storms along Johto's west coast, snow on Mt. Silver and in Sinnoh's north,
-// a sandstorm on Route 228, fog on Mt. Pyre, ash on Mt. Chimney, the shade of
-// the forests and the leaves on Bellchime Trail (`weather` in map.json).
+// a sandstorm on Route 228, the shade of the forests and the leaves on
+// Bellchime Trail (`weather` in map.json; the fog and ash maps aren't placed).
 const WEATHER = {
   WEATHER_RAIN: "rain",
   WEATHER_RAIN_THUNDERSTORM: "storm",
   WEATHER_SNOW: "snow",
   WEATHER_SANDSTORM: "sand",
-  WEATHER_FOG_HORIZONTAL: "fog",
-  WEATHER_VOLCANIC_ASH: "ash",
   WEATHER_SHADE: "shade",
   WEATHER_LEAVES: "leaves",
 }

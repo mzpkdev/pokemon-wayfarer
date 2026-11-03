@@ -3,7 +3,9 @@
 // and at the Lake of Rage, snow on Mt. Silver's routes and in Sinnoh's north,
 // Route 228's sandstorm, the shade under the forests and the leaves on
 // Bellchime Trail. Each is drawn within its map's rectangle, in game pixels,
-// from a hash of the map, the drop and the time, so nothing is stored.
+// from a hash of the map, the drop and the time, so nothing is stored. The
+// haze fades in from the map's edges, except where the next map has weather
+// too, so a rainy coast reads as one.
 import type { Meta, Weather } from "./data"
 import { roll, ramp } from "./noise"
 import type { Overlay } from "./render"
@@ -17,8 +19,6 @@ const DENSITY: Record<Weather, number> = {
   storm: 1.5,
   snow: 0.7,
   sand: 0.9,
-  fog: 0.12,
-  ash: 0.5,
   shade: 0,
   leaves: 0.25,
 }
@@ -27,29 +27,64 @@ const MOST = 700
 /** The haze each weather lays over its map: a color and how strong, there from far out. */
 const HAZE: Record<Weather, [string, number]> = {
   rain: ["rgb(24 40 96)", 0.22],
-  storm: ["rgb(16 24 72)", 0.3],
+  storm: ["rgb(16 24 72)", 0.24],
   snow: ["rgb(232 240 255)", 0.12],
   sand: ["rgb(214 178 96)", 0.3],
-  fog: ["rgb(236 240 248)", 0.32],
-  ash: ["rgb(96 96 104)", 0.26],
   shade: ["rgb(0 8 40)", 0.24],
   leaves: ["rgb(0 0 0)", 0],
 }
 /** How far in from a map's edge its haze fades, in metatiles, at most: a quarter of its narrower side. */
-const FEATHER = 10
+const FEATHER = 14
 /** How often a storm flashes, in ms, and how long a flash lasts. */
 const FLASH_EVERY_MS = 5200
 const FLASH_MS = 90
 
-type Spot = { x: number; y: number; w: number; h: number; weather: Weather; seed: number }
+type Spot = {
+  x: number
+  y: number
+  w: number
+  h: number
+  weather: Weather
+  seed: number
+  /** Which edges fade in: not the ones another map with weather lies along. */
+  fade: { left: boolean; top: boolean; right: boolean; bottom: boolean }
+}
+
+/** Whether two spots lie along each other's edge: `b` across `a`'s `side`, overlapping it. */
+const along = (a: Spot, b: Spot, side: "left" | "top" | "right" | "bottom") => {
+  const across =
+    side === "left" || side === "right"
+      ? b.y < a.y + a.h && b.y + b.h > a.y
+      : b.x < a.x + a.w && b.x + b.w > a.x
+  if (!across) return false
+  if (side === "left") return b.x + b.w === a.x
+  if (side === "right") return b.x === a.x + a.w
+  if (side === "top") return b.y + b.h === a.y
+  return b.y === a.y + a.h
+}
 
 /** The weather overlay, on a clock (`now`, in ms); still at one moment without `animate`. */
 export const weatherOverlay = (meta: Meta, animate: boolean, now: () => number): Overlay => {
   const spots: Spot[] = meta.maps.flatMap((map, seed) =>
     map.weather
-      ? [{ x: map.x, y: map.y, w: map.width, h: map.height, weather: map.weather, seed }]
+      ? [
+          {
+            x: map.x,
+            y: map.y,
+            w: map.width,
+            h: map.height,
+            weather: map.weather,
+            seed,
+            fade: { left: true, top: true, right: true, bottom: true },
+          },
+        ]
       : [],
   )
+  for (const spot of spots)
+    for (const other of spots)
+      if (other !== spot)
+        for (const side of ["left", "top", "right", "bottom"] as const)
+          if (along(spot, other, side)) spot.fade[side] = false
   const frozen = now()
   return (context, projection) => {
     if (!spots.length) return
@@ -77,60 +112,56 @@ export const weatherOverlay = (meta: Meta, animate: boolean, now: () => number):
       const [haze, strength] = HAZE[weather]
       if (strength > 0) {
         // The haze fades in from the map's edges, so it doesn't lie on the
-        // world as a hard-edged box where the map runs over open sea.
-        const feather = Math.round(Math.min(FEATHER * scale, Math.min(w, h) / 4))
+        // world as a hard-edged box where the map runs over open sea; an
+        // edge another map's weather lies along stays full, so the two read
+        // as one.
+        const most = Math.round(Math.min(FEATHER * scale, Math.min(w, h) / 4))
+        const f = {
+          left: spot.fade.left ? most : 0,
+          top: spot.fade.top ? most : 0,
+          right: spot.fade.right ? most : 0,
+          bottom: spot.fade.bottom ? most : 0,
+        }
         const clear = haze.replace(")", " / 0)")
         context.globalAlpha = strength
         context.fillStyle = haze
-        context.fillRect(x + feather, y + feather, w - feather * 2, h - feather * 2)
-        for (const [x0, y0, x1, y1, rx, ry, rw, rh] of [
-          [x, y + feather, x + feather, y + feather, x, y + feather, feather, h - feather * 2],
-          [
-            x + w,
-            y + feather,
-            x + w - feather,
-            y + feather,
-            x + w - feather,
-            y + feather,
-            feather,
-            h - feather * 2,
-          ],
-          [x + feather, y, x + feather, y + feather, x + feather, y, w - feather * 2, feather],
-          [
-            x + feather,
-            y + h,
-            x + feather,
-            y + h - feather,
-            x + feather,
-            y + h - feather,
-            w - feather * 2,
-            feather,
-          ],
+        context.fillRect(x + f.left, y + f.top, w - f.left - f.right, h - f.top - f.bottom)
+        // The four edges, each a strip fading out, and the corners between them.
+        const innerX = x + f.left
+        const innerY = y + f.top
+        const innerW = w - f.left - f.right
+        const innerH = h - f.top - f.bottom
+        for (const [size, x0, y0, x1, y1, rx, ry, rw, rh] of [
+          [f.left, x, 0, x + f.left, 0, x, innerY, f.left, innerH],
+          [f.right, x + w, 0, x + w - f.right, 0, x + w - f.right, innerY, f.right, innerH],
+          [f.top, 0, y, 0, y + f.top, innerX, y, innerW, f.top],
+          [f.bottom, 0, y + h, 0, y + h - f.bottom, innerX, y + h - f.bottom, innerW, f.bottom],
         ] as const) {
+          if (!size) continue
           const edge = context.createLinearGradient(x0, y0, x1, y1)
           edge.addColorStop(0, clear)
           edge.addColorStop(1, haze)
           context.fillStyle = edge
           context.fillRect(rx, ry, rw, rh)
         }
-        // The corners, lit from the inside corner out.
-        for (const [cx, cy, rx, ry] of [
-          [x + feather, y + feather, x, y],
-          [x + w - feather, y + feather, x + w - feather, y],
-          [x + feather, y + h - feather, x, y + h - feather],
-          [x + w - feather, y + h - feather, x + w - feather, y + h - feather],
+        for (const [fx, fy, cx, cy, rx, ry] of [
+          [f.left, f.top, innerX, innerY, x, y],
+          [f.right, f.top, innerX + innerW, innerY, innerX + innerW, y],
+          [f.left, f.bottom, innerX, innerY + innerH, x, innerY + innerH],
+          [f.right, f.bottom, innerX + innerW, innerY + innerH, innerX + innerW, innerY + innerH],
         ] as const) {
-          const corner = context.createRadialGradient(cx, cy, 0, cx, cy, feather)
+          if (!fx || !fy) continue
+          const corner = context.createRadialGradient(cx, cy, 0, cx, cy, fx)
           corner.addColorStop(0, haze)
           corner.addColorStop(1, clear)
           context.fillStyle = corner
-          context.fillRect(rx, ry, feather, feather)
+          context.fillRect(rx, ry, fx, fy)
         }
       }
       if (weather === "storm") {
         // A flash now and then, the map lit white for a moment.
         const since = (t + seed * 1733) % FLASH_EVERY_MS
-        if (since < FLASH_MS && animate) {
+        if (animate && t > 0 && since < FLASH_MS) {
           context.globalAlpha = 0.45 * (1 - since / FLASH_MS)
           context.fillStyle = "rgb(255 255 255)"
           context.fillRect(x, y, w, h)
@@ -176,22 +207,6 @@ export const weatherOverlay = (meta: Meta, animate: boolean, now: () => number):
             // Grit, dark and light by turns, so it shows on the sand and the rock alike.
             context.fillStyle = roll(seed, k, 4) > 0.5 ? "rgb(255 244 208)" : "rgb(112 72 32)"
             context.fillRect(dx, dy, dot * 7, dot)
-          } else if (weather === "fog") {
-            // Banks of mist, long and slow, drifting east.
-            const drift = (t / 14000 + phase) % 1
-            const dx = x + Math.round(((ox + drift) % 1) * w)
-            const dy = y + Math.round(oy * h)
-            context.fillStyle = "rgb(255 255 255)"
-            context.globalAlpha = drops * 0.16
-            context.fillRect(dx - dot * 14, dy, dot * 28, dot * 3)
-            context.globalAlpha = drops
-          } else if (weather === "ash") {
-            const fall = (t / 7000 + phase) % 1
-            const sway = Math.sin((t / 2200 + phase) * Math.PI * 2) * 2 * px
-            const dx = x + Math.round(ox * w + sway)
-            const dy = y + Math.round(((oy + fall) % 1) * h)
-            context.fillStyle = "rgb(190 190 190)"
-            context.fillRect(dx, dy, dot, dot)
           } else if (weather === "leaves") {
             // Tumbling down and east, turning, in the trail's golds and greens.
             const fall = (t / 4200 + phase) % 1

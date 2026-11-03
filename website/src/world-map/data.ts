@@ -33,7 +33,7 @@ export type Meta = {
 }
 
 /** The kinds of weather build/index.mjs keeps: the game's `WEATHER_*` worth drawing on a map. */
-export type Weather = "rain" | "storm" | "snow" | "sand" | "fog" | "ash" | "shade" | "leaves"
+export type Weather = "rain" | "storm" | "snow" | "sand" | "shade" | "leaves"
 
 export type World = {
   meta: Meta

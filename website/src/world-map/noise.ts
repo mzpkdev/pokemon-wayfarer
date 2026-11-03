@@ -9,9 +9,11 @@ export const hash = (n: number) => {
   return (h ^ (h >>> 16)) >>> 0
 }
 
-/** A hash of several whole numbers, as a fraction in [0, 1). */
-export const roll = (...parts: number[]) =>
-  parts.reduce((h, part) => hash(h ^ Math.imul(part + 1, 0x27d4eb2d)), 0x2545f491) / 0x100000000
+const mix = (h: number, part: number) => hash(h ^ Math.imul(part + 1, 0x27d4eb2d))
+
+/** A hash of up to four whole numbers, as a fraction in [0, 1). Fixed arity: it runs per cell. */
+export const roll = (a: number, b: number, c = 0, d = 0) =>
+  mix(mix(mix(mix(0x2545f491, a), b), c), d) / 0x100000000
 
 /** 0 to 1 over `t` in [0, 1], easing in and out. */
 export const smooth = (t: number) => {

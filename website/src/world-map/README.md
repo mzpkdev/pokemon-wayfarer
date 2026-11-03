@@ -166,7 +166,7 @@ builder change.
 | `trainers.png`    | One 32×32 cell per trainer sprite used (first standing frame, facing down, bottom-centred) and the item ball, 16 to a row, indexed by `daily.json`                                                                                                                                       |
 | `notables.json`   | The notables' stops, cycles and routes (see below)                                                                                                                                                                                                                                       |
 | `water.bin.gz`    | Which cells are water, a bit each, row by row with the high bit first; the open sea past every map is water, the Magnet Train's viaduct is not. The living sea keeps its glints and ripples to them                                                                                      |
-| `meta.json`       | Grid size, atlas columns, the overview's levels, the open ocean's tiles and color, towns, region labels with bounds, and placed maps, each with the game's `weather` where it has one worth drawing (`rain`, `storm`, `snow`, `sand`, `fog`, `ash`, `shade` or `leaves`, from map.json)  |
+| `meta.json`       | Grid size, atlas columns, the overview's levels, the open ocean's tiles and color, towns, region labels with bounds, and placed maps, each with the game's `weather` where it has one worth drawing (`rain`, `storm`, `snow`, `sand`, `shade` or `leaves`, from map.json)                |
 
 ## Builder (`build/`)
 
@@ -319,10 +319,11 @@ so each holds at one moment.
   pixels a metatile (all there at 4), its drops: rain and a thunderstorm's
   slanting to the south-west with the storm's flashes now and then, snow
   swaying down (two or three game pixels over a shadow, so it shows on
-  snow), a sandstorm's grit blowing west, mist drifting east, ash falling
-  slowly, the shade under a forest, and leaves tumbling down Bellchime
-  Trail. All of it is clipped to the map's rectangle, and the count follows
-  the map's area on screen (at most 700 a map).
+  snow), a sandstorm's grit blowing west, the shade under a forest, and
+  leaves tumbling down Bellchime Trail. All of it is clipped to the map's
+  rectangle, and the count follows the map's area on screen (at most 700 a
+  map). The haze fades in from the map's edges, except along an edge
+  another map's weather lies on, so Olivine and Route 40 rain as one.
 - The night (`lights.ts`, over the tint). As the time of day's tint darkens
   (a quarter in the evening and morning, about half at night), each town
   glows warm with a brighter core, each ship shows a lamp, and the Olivine

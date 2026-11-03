@@ -75,8 +75,11 @@ export const seaOverlay = (water: Water, animate: boolean, now: () => number): O
 
     const ripples = ramp(zoom, RIPPLES_FROM, RIPPLES_FULL)
     if (ripples > 0) {
-      // A game pixel, in device pixels: ripples are drawn on the tiles' own grid.
+      // A game pixel, in device pixels: ripples are drawn on the tiles' own
+      // grid. Below 16 device pixels a tile the pattern is coarser than the
+      // tile, so a stroke is cut where the tile ends.
       const px = Math.max(1, Math.round(scale / 16))
+      const tile = Math.round(scale)
       const share = Math.min(RIPPLE_SHARE, (zoom / 32) * RIPPLE_SHARE + 0.12)
       const firstX = Math.floor(left)
       const firstY = Math.floor(top)
@@ -111,8 +114,17 @@ export const seaOverlay = (water: Water, animate: boolean, now: () => number): O
           // round again; a shorter one trails it eight rows under.
           const row = Math.floor(drift)
           context.globalAlpha = ripples * 0.26
-          context.fillRect(sx + ox * px, sy + row * px, 6 * px, px)
-          context.fillRect(sx + (ox + 2) * px, sy + ((row + 8) % 16) * px, 3 * px, px)
+          const stroke = (col: number, line: number, length: number) => {
+            if (line * px >= tile || col * px >= tile) return
+            context.fillRect(
+              sx + col * px,
+              sy + line * px,
+              Math.min(length * px, tile - col * px),
+              px,
+            )
+          }
+          stroke(ox, row, 6)
+          stroke(ox + 2, (row + 8) % 16, 3)
         }
       context.globalAlpha = 1
     }

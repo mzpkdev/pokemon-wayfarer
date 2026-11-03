@@ -74,8 +74,9 @@ export const cloudsOverlay = (animate: boolean, now: () => number): Overlay => {
     const size = span * scale
     const firstX = Math.floor((left + offsetX) / span) - 1
     const firstY = Math.floor((top + offsetY) / span) - 1
-    const lastX = Math.floor((left + width / scale + offsetX) / span)
-    const lastY = Math.floor((top + height / scale + offsetY) / span)
+    // One tile more at the far side, for the body layer drawn shifted up and left.
+    const lastX = Math.floor((left + width / scale + offsetX) / span) + 1
+    const lastY = Math.floor((top + height / scale + offsetY) / span) + 1
     context.imageSmoothingEnabled = false
     context.globalAlpha = alpha
     const lift = BODY_OFFSET * TEXEL * scale

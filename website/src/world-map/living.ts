@@ -426,6 +426,8 @@ const drawWake = (
   context.lineCap = "round"
   context.lineJoin = "round"
   for (let i = 0; i < segments; i++) {
+    // Just out of port the trail is shorter than its full length.
+    if (along - (length * i) / segments <= 0) break
     const from = pointAlong(lane, Math.max(0, along - (length * i) / segments))
     const to = pointAlong(lane, Math.max(0, along - (length * (i + 1)) / segments))
     const a = toScreen(from.x, from.y)
