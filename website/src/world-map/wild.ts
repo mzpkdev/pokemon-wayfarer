@@ -76,15 +76,17 @@ export const HOMES: Home[] = [
 ]
 
 /** A home's wave, in ms. */
-const WAVE_MS = 1900
+const WAVE_MS = 4200
 /** How long an icon takes to pop, how long it lives, and when within a wave the last starts, in ms. */
-const POP_MS = 260
+const POP_MS = 320
 /** The idle hop: a pixel up and back, like a party icon's two frames, this often. */
-const HOP_MS = 260
-const LIFE_MS = 1650
-const SPREAD_MS = 600
+const HOP_MS = 420
+const LIFE_MS = 2900
+const SPREAD_MS = 1200
+/** How long an icon takes to fade at the end of its wave. */
+const FADE_MS = 500
 /** How long a chip's count takes to tick up, in ms. */
-export const TICK_MS = 700
+export const TICK_MS = 1200
 /** The most icons up per wave, on a wide screen and on a narrow one. */
 const CAP = 24
 const CAP_NARROW = 12
@@ -451,7 +453,7 @@ export const wildOverlay = (
       if (age < 0 || age > LIFE_MS) return
       const t = Math.min(1, age / POP_MS)
       // It bounces as it lands and rises a little as it goes.
-      const fade = Math.min(1, (LIFE_MS - age) / 300)
+      const fade = Math.min(1, (LIFE_MS - age) / FADE_MS)
       const bounce = age < POP_MS ? (1 - t) * 10 : 0
       draw(icon, Math.max(0, fade), Math.max(0.05, pop(t)), bounce + (age / LIFE_MS) * 6)
     })

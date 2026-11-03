@@ -43,7 +43,7 @@ The rest of the site uses it only through `index.ts`:
   from wherever the map was moved to. It never takes over the page's
   scrolling.
 - At the world stop (`wild.ts`, `WildTally.tsx`) icons from `icons.png` pop
-  out of the whole world in waves, one per home region (about 15 s, looping,
+  out of the whole world in waves, one per home region (about 4 s each, looping,
   beginning with the start's own region), over the ferries and the time of
   day. Each generation has a home, from the natives table of
   the wild encounters v2 PRD: Gen I from Kanto and II from Johto (one piece of
