@@ -1,12 +1,14 @@
 ---
 import CtaLinks from "~/components/cta/CtaLinks.astro"
 import CtaProfessor from "~/components/cta/CtaProfessor.astro"
+import { DialogBox } from "~/components/DialogBox"
 import Faq from "~/components/Faq.astro"
 import SignupForm from "~/components/SignupForm.astro"
+import { StoryShuffle } from "~/components/StoryShuffle"
 import WorldSection from "~/components/WorldSection.astro"
 import { TitleScene } from "~/components/TitleScene"
 import Layout from "~/layouts/Layout.astro"
-import { CONCERNS, HIGHLIGHTS, REPOSITORY_URL } from "~/lib/content"
+import { HIGHLIGHTS, REPOSITORY_URL } from "~/lib/content"
 import { RELEASE_LABEL } from "~/lib/release"
 ---
 
@@ -38,25 +40,68 @@ import { RELEASE_LABEL } from "~/lib/release"
         <CtaProfessor />
 
         <!--
-          What the map can't show: the worries an open world raises, asked in
-          the game's text window and answered underneath.
+          What the map can't show: how an open world stays fair, then the two
+          things that set Wayfarer apart, each drawn the way the game draws it.
         -->
         <section aria-labelledby="open-world" class="relative mx-auto max-w-5xl px-6 py-16">
           <p class="pixel-label text-logo-yellow">Open world</p>
           <h2 id="open-world" class="pixel-heading mt-4">Go anywhere. There's always a way.</h2>
           <p class="mt-6 max-w-2xl text-lg leading-relaxed text-paper/80">
-            Every region is open from the start, in any order. Here's how Wayfarer keeps that fair.
+            Every region is open from the first step, in any order. Wayfarer doesn't take every obstacle
+            away: a road can still be blocked, a sea too wide or a door shut. But a blocked road is never the
+            only one. There's always another way around.
           </p>
-          <ul class="mt-10 grid gap-4 md:grid-cols-2">
-            {
-              CONCERNS.map((concern) => (
-                <li class="pixel-corners pixel-panel flex flex-col p-5 sm:p-6">
-                  <h3 class="gba-window gba-text font-normal [--px:2px]">{concern.question}</h3>
-                  <p class="mt-5 px-1 leading-relaxed text-paper/80">{concern.answer}</p>
-                </li>
-              ))
-            }
-          </ul>
+
+          <div class="mt-16 grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[1fr_auto] lg:gap-16">
+            <div>
+              <p class="pixel-label text-logo-yellow">Story</p>
+              <h3 class="pixel-heading mt-3">Every story, in your order.</h3>
+              <p class="mt-5 text-lg leading-relaxed text-paper/80">
+                Open worlds usually make you pick between a story and your freedom. Wayfarer keeps both. The
+                original games' stories, from Mt. Moon to the Radio Tower, are split into standalone beats,
+                and each one makes sense whenever you reach it.
+              </p>
+              <p class="mt-4 leading-relaxed text-paper/70">
+                Walk into Slowpoke Well first or last: it still opens at its start and ends with the Rockets
+                gone.
+              </p>
+            </div>
+            <div class="pixel-corners pixel-panel grid place-items-center px-10 py-8 sm:px-14 sm:py-10">
+              <StoryShuffle client:visible />
+            </div>
+          </div>
+
+          <div class="mt-16 grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[auto_1fr] lg:gap-16">
+            <div class="lg:order-2">
+              <p class="pixel-label text-logo-yellow">Field moves</p>
+              <h3 class="pixel-heading mt-3">Surf the moment you catch it.</h3>
+              <p class="mt-5 text-lg leading-relaxed text-paper/80">
+                Wild Pokémon can already know field moves when you catch them. Find one that knows Surf and
+                the sea is open, with no HM and no badge.
+              </p>
+              <p class="mt-4 leading-relaxed text-paper/70">
+                Find the HM later and you won't even need to teach it: it works whenever someone in your
+                party could learn the move.
+              </p>
+            </div>
+            <!-- The game's own prompt at the water's edge, with its YES/NO menu. -->
+            <div
+              class="pixel-corners pixel-panel grid place-items-center px-4 py-8 sm:px-10 sm:py-10 lg:order-1"
+              aria-hidden="true"
+            >
+              <div class="flex w-full flex-col sm:w-[calc(232*var(--px))] items-end gap-[calc(2*var(--px))] [--px:2px]">
+                <div class="gba-window gba-text">
+                  <span class="block">▶YES</span>
+                  <span class="block pl-[calc(8*var(--px))]">NO</span>
+                </div>
+                <DialogBox
+                  client:visible
+                  lines={["The water is dyed a deep blue…", "Would you like to SURF?"]}
+                  className="w-full"
+                />
+              </div>
+            </div>
+          </div>
         </section>
 
         <!-- The tour in short, for anyone who scrolled past it. -->
