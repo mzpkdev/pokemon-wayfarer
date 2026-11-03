@@ -35,7 +35,8 @@ The rest of the site uses it only through `index.ts`:
 - At the wild stop (`wild.ts`, `WildTally.tsx`) the camera stays on the whole
   world and icons from `icons.png` pop out of it in waves, one per home region
   (about 15 s, looping). Each generation has a home, from the natives table of
-  the wild encounters v2 PRD: Gen I and II in Kanto and Johto, III and V in
+  the wild encounters v2 PRD: Gen I in Kanto, II in Johto (one piece of land,
+  split by which label a map is nearer), III and V in
   Hoenn, Kalos (VI) in the three Safari Zones, Galar (VIII) in the Sevii
   Islands, VII in Alola, Hisui (Wyrdeer to Enamorus) in Sinjoh, and the
   regional forms with their region. A wave pops its home's species only where
@@ -47,14 +48,14 @@ The rest of the site uses it only through `index.ts`:
   at world zoom. Up to three icons per wave are real strays: its species where
   they live away from home. Gen IV waits for Sinnoh, which has no wild
   Pokémon yet: its wave stands black silhouettes with a "?" over Sinnoh, keeping its count so
-  the total adds up. Then a mix of every home. The page states the full
+  the total adds up. The page states the full
   roster, as all of it will be in the final game: every species of Gen I to
   VIII by national dex number (905) and the Alolan, Galarian and Hisuian forms
   (53), from the game's species data (`.natDexNum`; macro-built entries
   expanded with their arguments). The card tallies each home as its wave
-  plays and names whose home it is, ending on the total; tapping a chip holds
+  plays and names whose home it is; tapping a chip holds
   its wave on the map, and tapping it again plays on. Gen IX stays off the
-  page. Reduced motion shows the full tally and a still mix; a chip picks
+  page. Reduced motion shows the full tally and the first wave still; a chip picks
   whose.
 - At the Gym stop a tap on a pin (or its hidden button, `aria-pressed`)
   toggles the badge earned: earned pins are bright with a gold glow and a

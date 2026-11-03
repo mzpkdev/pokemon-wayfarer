@@ -1,12 +1,12 @@
 import { type RefObject, useEffect, useState } from "react"
 
-import { ALL, ALL_LINE, HOMES, TICK_MS, type Wild, type WildClock, startOf, waveAt } from "./wild"
+import { HOMES, TICK_MS, type Wild, type WildClock, startOf, waveAt } from "./wild"
 
 const NONE = HOMES.map(() => 0)
 
 /**
- * The wild stop's tally: the roster per home region, one chip each and the
- * total, with a line saying whose home is playing. Each ticks up as its wave
+ * The wild stop's tally: the roster per home region, one chip each, with a
+ * line saying whose home is playing. Each ticks up as its wave
  * pops on the map, the playing wave's lit; a chip taps to hold its wave. With
  * reduced motion everything is in at once and a chip picks which icons the
  * map holds still.
@@ -54,32 +54,23 @@ export const WildTally = ({
 
   const playing =
     reducedMotion || clock.still !== null
-      ? { wave: clock.still ?? ALL, into: Infinity }
+      ? { wave: clock.still ?? 0, into: Infinity }
       : waveAt(now - clock.start)
   const held = clock.still !== null
   const lit = playing.wave
   const shownCounts = counts.map((count, i) =>
-    i < playing.wave || reducedMotion || held || playing.wave === ALL
+    i < playing.wave || reducedMotion || held
       ? count
       : i === playing.wave
         ? Math.round(count * Math.min(1, playing.into / TICK_MS))
         : 0,
   )
-  const total = counts.reduce((a, b) => a + b, 0)
-  const cells = [
-    ...HOMES.map((home, i) => ({
-      label: home.chip,
-      value: shownCounts[i]!,
-      wave: i,
-      name: `${home.line} ${counts[i]} species`,
-    })),
-    {
-      label: "ALL",
-      value: shownCounts.reduce((a, b) => a + b, 0),
-      wave: ALL,
-      name: `All: ${total} species`,
-    },
-  ]
+  const cells = HOMES.map((home, i) => ({
+    label: home.chip,
+    value: shownCounts[i]!,
+    wave: i,
+    name: `${home.line} ${counts[i]} species`,
+  }))
   return (
     <>
       <ul className="mt-3 grid grid-cols-4 gap-1.5 sm:mt-4 sm:gap-2">
@@ -111,7 +102,7 @@ export const WildTally = ({
         })}
       </ul>
       <p className="mt-3 min-h-[2lh] text-sm leading-snug text-paper/85" aria-live="polite">
-        {lit === ALL ? ALL_LINE : HOMES[lit]!.line}
+        {HOMES[lit]!.line}
       </p>
       <p className="mt-1 text-xs text-paper/60">
         {held && !reducedMotion

@@ -197,7 +197,8 @@ const GALAR_LAST = 898
  * their region. Every roster entry has exactly one home.
  */
 const HOMES = [
-  { id: "kanto-johto", gens: [1, 2] },
+  { id: "kanto", gens: [1] },
+  { id: "johto", gens: [2] },
   { id: "hoenn", gens: [3, 5] },
   { id: "safari", gens: [6] },
   { id: "sevii", gens: [8], dex: (dex) => dex <= GALAR_LAST, form: "GALAR" },

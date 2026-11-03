@@ -1,11 +1,11 @@
 // The wild stop: who lives where, one home region after another. Each
 // generation has a home (the wild encounters v2 PRD's natives table): Gen I
-// and II in Kanto and Johto, III and V in Hoenn, Kalos in the Safari Zones,
+// in Kanto, II in Johto, III and V in Hoenn, Kalos in the Safari Zones,
 // Galar in the Sevii Islands, VII in Alola, Hisui in Sinjoh, and Gen IV
 // waits for Sinnoh. A wave pops its home's species where they really live,
-// crowding the home region, with a few of the real strays elsewhere. Then a
-// mix of everyone, looping, while a tally per home counts up beside them. The
-// data is what `build/encounters.mjs` writes.
+// crowding the home region, with a few of the real strays elsewhere, looping,
+// while a tally per home counts up beside them. The data is what
+// `build/encounters.mjs` writes.
 import { DATA, loadWorld } from "./data"
 import { ICON, loadEncounters } from "./encounters"
 import type { Overlay } from "./render"
@@ -19,16 +19,26 @@ export type Home = {
   line: string
   /** The `region` of its placed maps in `meta.json`; the Safari Zones use their gates instead. */
   regions: string[]
+  /** Of a region shared with another home, its own side: the maps nearer this name's label in `meta.regions`. */
+  side?: string
   /** Not in the wild yet: drawn as silhouettes. */
   later?: boolean
 }
 
 export const HOMES: Home[] = [
   {
-    id: "kanto-johto",
-    chip: "KANTO JOHTO",
-    line: "Gen I and II, at home in Kanto and Johto.",
+    id: "kanto",
+    chip: "KANTO",
+    line: "Gen I, at home in Kanto.",
     regions: ["Johto and Kanto"],
+    side: "KANTO",
+  },
+  {
+    id: "johto",
+    chip: "JOHTO",
+    line: "Gen II, at home in Johto.",
+    regions: ["Johto and Kanto"],
+    side: "JOHTO",
   },
   {
     id: "hoenn",
@@ -69,13 +79,8 @@ export const HOMES: Home[] = [
   },
 ]
 
-/** The last wave: everyone at once. */
-export const ALL = HOMES.length
-export const ALL_LINE = "Every one of them, on one save."
-
-/** A home's wave and the mix at the end, in ms. */
+/** A home's wave, in ms. */
 const WAVE_MS = 1900
-const FINALE_MS = 2200
 /** How long an icon takes to pop, how long it lives, and when within a wave the last starts, in ms. */
 const POP_MS = 260
 /** The idle hop: a pixel up and back, like a party icon's two frames, this often. */
@@ -145,7 +150,7 @@ const hash = (n: number) => {
 
 /** The wave starts and the whole cycle's length, in ms. */
 export const timeline = () => {
-  const durations = [...HOMES.map(() => WAVE_MS), FINALE_MS]
+  const durations = HOMES.map(() => WAVE_MS)
   const starts = durations.map((_, i) => durations.slice(0, i).reduce((a, b) => a + b, 0))
   return { durations, starts, cycle: durations.reduce((a, b) => a + b, 0) }
 }
@@ -252,7 +257,21 @@ export const loadWild = async (base = DATA): Promise<Wild> => {
     y: map.y + map.height / 2,
   })
   const waves: Icon[][] = []
+  // Kanto and Johto share one piece of land: a map is on the side whose label is nearer.
+  const label = new Map(world.meta.regions.map((region) => [region.name, region]))
+  const sides = HOMES.flatMap((home) => (home.side ? [home.side] : []))
+  const isHome = (home: Home) => (map: (typeof world.meta.maps)[number]) => {
+    if (!home.regions.includes(map.region ?? "")) return false
+    if (!home.side) return true
+    const { x, y } = centre(map)
+    const distance = (name: string) => {
+      const at = label.get(name)
+      return at ? Math.hypot(at.x - x, at.y - y) : Infinity
+    }
+    return sides.every((side) => distance(home.side!) <= distance(side))
+  }
   HOMES.forEach((home, wave) => {
+    const inHome = isHome(home)
     const slots = homes.get(home.id) ?? new Set<number>()
     const used = new Set<number>()
     const seed = (wave + 1) * 1009
@@ -272,7 +291,7 @@ export const loadWild = async (base = DATA): Promise<Wild> => {
       })
     } else if (home.later) {
       // Nobody lives there yet: some of the roster over its maps, in silhouette.
-      const maps = world.meta.maps.filter((map) => home.regions.includes(map.region ?? ""))
+      const maps = world.meta.maps.filter(inHome)
       const choices = [...slots].map((slot) => [slot, 1] as [number, number])
       crowd = spreadOut(maps.map(centre), LATER, seed).map((point, i) => {
         const slot = choose(choices, used, seed + i)
@@ -280,9 +299,7 @@ export const loadWild = async (base = DATA): Promise<Wild> => {
         return { ...point, slot, later: true }
       })
     } else {
-      const homeRoutes = routes.filter(
-        ({ map, weights }) => home.regions.includes(map.region ?? "") && at(weights).length,
-      )
+      const homeRoutes = routes.filter(({ map, weights }) => inHome(map) && at(weights).length)
       const points = homeRoutes.map(({ map, weights }) => ({ ...centre(map), weights }))
       crowd =
         homeRoutes.length >= SMALL
@@ -297,9 +314,7 @@ export const loadWild = async (base = DATA): Promise<Wild> => {
             )
     }
     // The real strays: this home's species where they live away from it.
-    const awayRoutes = routes.filter(
-      ({ map, weights }) => !home.regions.includes(map.region ?? "") && at(weights).length,
-    )
+    const awayRoutes = routes.filter(({ map, weights }) => !inHome(map) && at(weights).length)
     const away = spreadOut(
       awayRoutes.map(({ map, weights }) => ({
         x: map.x + map.width / 2,
@@ -317,14 +332,6 @@ export const loadWild = async (base = DATA): Promise<Wild> => {
     away.forEach((icon, i) => ordered.splice(Math.min(AWAY_AT[i]!, ordered.length), 0, icon))
     waves.push(ordered)
   })
-  // The mix: a few from every home, taking turns.
-  const mix: Icon[] = []
-  for (let i = 0; mix.length < CAP && i < CAP; i++)
-    for (const wave of waves) {
-      const own = wave.filter((icon) => !icon.away)[i]
-      if (own && mix.length < CAP) mix.push(own)
-    }
-  waves.push(mix)
 
   return {
     counts: HOMES.map((home) => homes.get(home.id)?.size ?? 0),
@@ -427,9 +434,9 @@ export const wildOverlay = (
       }
     }
     // A held wave stays up (popping in once when it's picked); with reduced
-    // motion the mix, or the picked wave, just stands.
+    // motion the first wave, or the picked one, just stands.
     if (!animate || clock.still !== null) {
-      const wave = clock.still ?? ALL
+      const wave = clock.still ?? 0
       const age = animate ? now() - clock.start : Infinity
       const icons = spread(wild.waves[wave]!)
       icons.forEach(({ icon, order }) => {
