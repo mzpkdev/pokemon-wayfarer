@@ -15,6 +15,8 @@ const EMPTY_WAVE_MS = 800
 const FINALE_MS = 1800
 /** How long an icon takes to pop, how long it lives, and when within a wave the last starts, in ms. */
 const POP_MS = 260
+/** The idle hop: a pixel up and back, like a party icon's two frames, this often. */
+const HOP_MS = 260
 const LIFE_MS = 1200
 const SPREAD_MS = 500
 /** How long a chip's count takes to tick up, in ms. */
@@ -171,7 +173,9 @@ export const wildOverlay =
       const at = projection.toScreen(icon.x, icon.y)
       const w = Math.max(k, Math.round(size * scale))
       const x = Math.round(at.x - w / 2)
-      const y = Math.round(at.y - w - lift * projection.ratio)
+      // Each hops a pixel on its own beat, so the crowd never moves as one.
+      const hop = animate && Math.floor((now() + icon.slot * 97) / HOP_MS) % 2 ? k : 0
+      const y = Math.round(at.y - w - lift * projection.ratio) - hop
       // A flat shadow in whole pixels, the way the overworld draws one: three
       // rows, the middle widest.
       context.globalAlpha = alpha * 0.35
