@@ -300,7 +300,9 @@ live game state: the game advances them on map changes (see
 - Routes: A* over the world grid's land (placed maps cost less than filler
   land), simplified. Where no land joins two places, the route crosses water;
   its water segments are marked (`w`), and there the trainer leaves a white
-  wake and the label says "crossing the sea". Everyone walks at one pace, on
+  wake and the label says "crossing the sea". The client walks a route on the
+  grid, as the overworld does: a metatile at a time, across or down, a slanted
+  run becoming a staircase of steps (`toLeg` in `notables.ts`). Everyone walks at one pace, on
   land and water alike, with no cap on a trip's length, so nobody speeds up
   mid-trip. It's an illustration, like the ferries, not a ferry schedule.
 - Sprites: `public/game/sprites/notables.png` (`pnpm assets`), one row of nine
