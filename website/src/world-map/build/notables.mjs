@@ -68,7 +68,14 @@ export const writeNotables = (game, world, land, landmarks, outDir) => {
   const { all, minX, minY, W, H } = world
   const { grid, owner, isWater } = land
   const { every, doorTo } = createDoors(game, world)
-  const trainers = readJson("wayfarer_world/routines.json").trainers.filter((t) => t.simulated)
+  const routines = readJson("wayfarer_world/routines.json").trainers
+  // The simulated walkers, then the Gym Leaders whose sprite only stands,
+  // who wait at their Gym (source/stationary-leaders.json; same order as the
+  // sprite sheet).
+  const stationary = JSON.parse(
+    fs.readFileSync(new URL("./source/stationary-leaders.json", import.meta.url), "utf8"),
+  ).leaders.map((s) => ({ ...routines.find((r) => r.slug === s.slug), ...s, stationary: true }))
+  const trainers = [...routines.filter((t) => t.simulated), ...stationary]
   const spots = readJson("wayfarer_world/named_spots.json").spots
   const catalog = Object.fromEntries(
     readJson("notable_trainers/catalog.json").trainers.map((t) => [t.slug, t]),
@@ -223,9 +230,9 @@ export const writeNotables = (game, world, land, landmarks, outDir) => {
     const gymStop = t.gym ? homeStop : undefined
     const townStop = home.town ? homeStop : stopAt(home.town_cell, home.town_label, "in")
     const info = catalog[t.slug]
-    const cycle = t.cycle.map((activity) => {
+    const cycle = (t.stationary ? ["wait"] : t.cycle).map((activity) => {
       let options = []
-      for (const fav of t.favourites) {
+      for (const fav of t.favourites ?? []) {
         if (fav.serves !== activity || fav.disabled) continue
         const spot =
           fav.kind === "named"
@@ -239,7 +246,8 @@ export const writeNotables = (game, world, land, landmarks, outDir) => {
         // No favourite for the step: it is chosen near the home base, the
         // Gym for a Gym Leader's training and rest at home, the town otherwise.
         options = [
-          gymStop !== undefined && (activity === "train" || activity === "home")
+          gymStop !== undefined &&
+          (activity === "train" || activity === "home" || activity === "wait")
             ? gymStop
             : townStop,
         ]
@@ -259,6 +267,7 @@ export const writeNotables = (game, world, land, landmarks, outDir) => {
       home: homeStop,
       homeMap: home.noCard ? undefined : home.map,
       cycle,
+      ...(t.offset ? { offset: t.offset } : {}),
     })
   }
 

@@ -141,7 +141,9 @@ the way `tools/mapjson` does.
 
 `build/notables.mjs` writes `notables.json`; `notables.ts` loads it and draws the
 25 simulated Gym Leaders and Elite Four walking the map on the page clock
-(`pageMinutes()`). The tour's world stop and the explorer draw them (under the
+(`pageMinutes()`), and the Gym Leaders whose overworld sprite only stands
+(Roxanne, Brawly, Wattson, Flannery, Winona, and Tate beside Liza) waiting at
+their Gym (`build/source/stationary-leaders.json`). The tour's world stop and the explorer draw them (under the
 time-of-day tint at the world stop); tapping one in the explorer shows a
 toast like "MISTY · fishing at Nugget Bridge", and a town's place card lists who
 lives there ("HOME OF BROCK") and who is there now.

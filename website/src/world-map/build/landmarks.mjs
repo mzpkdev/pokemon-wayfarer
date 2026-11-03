@@ -105,11 +105,27 @@ export const buildLandmarks = (game, world, regionOf) => {
   const routines = JSON.parse(
     fs.readFileSync(`${root}/tools/wayfarer_world/routines.json`, "utf8"),
   ).trainers.filter((t) => t.badge)
-  const leaderOf = (map, region, order) => {
+  // A leader the routines leave out (Tate & Liza) comes from the notable
+  // trainers' catalog, by the Gym's first leader battle: TRAINER_TATE_AND_LIZA_1
+  // is "tate-liza".
+  const catalog = JSON.parse(
+    fs.readFileSync(`${root}/tools/notable_trainers/catalog.json`, "utf8"),
+  ).trainers
+  const leaderOf = (map, region, order, script) => {
     const t =
       routines.find((r) => r.gym === map.name) ??
       routines.find((r) => r.badge.region === region && r.badge.index === order)
-    return t && { name: t.name, slug: t.slug, simulated: Boolean(t.simulated) }
+    if (t) return { name: t.name, slug: t.slug, simulated: Boolean(t.simulated) }
+    const battle = /trainerbattle_\w+ TRAINER_([A-Z_]+?)_1\b/.exec(script)?.[1]
+    const slug = battle?.toLowerCase().replaceAll("_and_", "_").replaceAll("_", "-")
+    const entry = catalog.find((c) => c.slug === slug)
+    if (!entry) return undefined
+    // A duo stands on the map as its two halves (stationary-leaders.json):
+    // "tate-liza" as TATE beside LIZA.
+    const [first, second] = entry.slug.split("-")
+    return entry.role.endsWith("duo")
+      ? { name: entry.name, slug: first, also: second, simulated: false }
+      : { name: entry.name, slug: entry.slug, simulated: false }
   }
   const gyms = []
   for (const map of Object.values(every)) {
@@ -131,7 +147,12 @@ export const buildLandmarks = (game, world, regionOf) => {
       town: townName(door.p.m.name),
       x: door.x,
       y: door.y,
-      leader: leaderOf(map, region[0] + region.slice(1).toLowerCase(), order),
+      leader: leaderOf(
+        map,
+        region[0] + region.slice(1).toLowerCase(),
+        order,
+        fs.readFileSync(file, "utf8"),
+      ),
     })
   }
   const badges = gyms

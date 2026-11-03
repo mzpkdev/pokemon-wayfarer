@@ -283,9 +283,19 @@ for (const [name, file, palette] of [
   const pictures = objectEvents("object_event_graphics.h")
   const pointers = objectEvents("object_event_graphics_info_pointers.h")
   const movement = fs.readFileSync(path.join(game, "src/event_object_movement.c"), "utf8")
-  const trainers = JSON.parse(
-    fs.readFileSync(path.join(game, "tools/wayfarer_world/routines.json"), "utf8"),
-  ).trainers.filter((trainer) => trainer.simulated)
+  // Then the Gym Leaders whose sprite only stands (three frames, the rest of
+  // the row left empty), who stand at their Gym on the map.
+  const trainers = [
+    ...JSON.parse(
+      fs.readFileSync(path.join(game, "tools/wayfarer_world/routines.json"), "utf8"),
+    ).trainers.filter((trainer) => trainer.simulated),
+    ...JSON.parse(
+      fs.readFileSync(
+        path.join(here, "../src/world-map/build/source/stationary-leaders.json"),
+        "utf8",
+      ),
+    ).leaders,
+  ]
   const incbin = (symbol) =>
     pictures.match(new RegExp(`${symbol}\\[\\]\\s*=\\s*INCBIN_U\\d+\\("([^"]+)"`))?.[1]
   const sheet = {
@@ -314,11 +324,15 @@ for (const [name, file, palette] of [
       path.join(game, pictureFile.replace(/\.4bpp$/, ".png")),
       readJascPalette(path.join(game, paletteFile.replace(/\.gbapal$/, ".pal"))),
     )
-    if (frames.width !== 144 || frames.height !== 32)
+    if ((frames.width !== 144 && frames.width !== 48) || frames.height !== 32)
       throw new Error(
-        `${trainer.graphics}: ${frames.width}x${frames.height}, not 9 frames of 16x32`,
+        `${trainer.graphics}: ${frames.width}x${frames.height}, not 9 or 3 frames of 16x32`,
       )
-    sheet.rgba.set(frames.rgba, row * 144 * 32 * 4)
+    for (let y = 0; y < 32; y++)
+      sheet.rgba.set(
+        frames.rgba.subarray(y * frames.width * 4, (y + 1) * frames.width * 4),
+        (row * 32 + y) * 144 * 4,
+      )
   })
   save("sprites/notables.png", sheet)
 }

@@ -163,9 +163,14 @@ const GymCard = ({
   onClose: () => void
 }) => {
   const { leader } = gym
-  const walking =
-    leader?.simulated && notables ? notableAt(notables, leader.slug, minutes) : undefined
-  const row = walking ? notables!.plans.findIndex((plan) => plan.slug === leader!.slug) : -1
+  const walking = leader && notables ? notableAt(notables, leader.slug, minutes) : undefined
+  // Their sprites from the notables' sheet: one, or a duo side by side.
+  const rows = walking
+    ? [leader!.slug, leader!.also]
+        .filter((slug) => slug !== undefined)
+        .map((slug) => notables!.plans.findIndex((plan) => plan.slug === slug))
+        .filter((row) => row >= 0)
+    : []
   return (
     <section
       aria-label={`${gym.town} Gym`}
@@ -185,16 +190,21 @@ const GymCard = ({
         </button>
       </div>
       <div className="mt-4 flex items-center gap-4">
-        {row >= 0 ? (
-          <span
-            aria-hidden
-            className="h-24 w-12 shrink-0 [image-rendering:pixelated]"
-            style={{
-              backgroundImage: `url(${NOTABLES_SRC})`,
-              backgroundSize: `${9 * 48}px auto`,
-              backgroundPosition: `0 ${-row * 96}px`,
-            }}
-          />
+        {rows.length ? (
+          <span className="flex shrink-0">
+            {rows.map((row) => (
+              <span
+                key={row}
+                aria-hidden
+                className="h-24 w-12 [image-rendering:pixelated]"
+                style={{
+                  backgroundImage: `url(${NOTABLES_SRC})`,
+                  backgroundSize: `${9 * 48}px auto`,
+                  backgroundPosition: `0 ${-row * 96}px`,
+                }}
+              />
+            ))}
+          </span>
         ) : (
           <span
             aria-hidden
@@ -211,7 +221,7 @@ const GymCard = ({
             {leader ? leader.name.toUpperCase() : gym.town}
           </p>
           <p className="mt-1 text-sm text-paper/70">{gym.town}</p>
-          {walking && <p className="mt-2 text-sm text-paper/90">{walking.label.split(" · ")[1]}</p>}
+          <p className="mt-2 text-sm text-paper/90">{walking?.label.split(" · ")[1]}</p>
         </div>
       </div>
       <button type="button" onClick={onFind} className={`${BUTTON} mt-5 w-full`}>
@@ -448,7 +458,7 @@ export const WorldTour = ({
         } else if (follow) {
           const { gym: target, from } = follow
           const leader =
-            target.leader?.simulated && notablesRef.current
+            target.leader && notablesRef.current
               ? notableAt(notablesRef.current, target.leader.slug, pageMinutes())
               : undefined
           const to = leader ?? target
@@ -492,11 +502,11 @@ export const WorldTour = ({
         let animated = badgesUp && !reducedMotion
         // The leader whose Gym card is open walks the badge stop's map.
         const card = gymRef.current
-        if (badgesUp && card?.leader?.simulated && notablesRef.current) {
-          const slug = card.leader.slug
+        if (badgesUp && card?.leader && notablesRef.current) {
+          const { slug, also } = card.leader
           overlays.push(
             notablesOverlay(notablesRef.current, pageMinutes, {
-              only: (s) => s === slug,
+              only: (s) => s === slug || s === also,
               minHeight: 44,
               marker: true,
             }),

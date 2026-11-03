@@ -29,6 +29,8 @@ export type NotablesData = {
     /** The placed map their home is on, when it has a card. */
     homeMap?: string
     cycle: Step[]
+    /** Sprite widths to stand aside by, for two who share a stop (TATE and LIZA). */
+    offset?: number
   }[]
   /** Routes by "a>b" stop indices (a < b): flat x, y cells; `sea` where it crosses water. */
   legs: Record<string, { pts: number[]; w?: (0 | 1)[] }>
@@ -52,6 +54,7 @@ type Plan = {
   home: number
   homeMap?: string
   cycle: Step[]
+  offset?: number
   /** Game minutes of a round: every step's dwell and the longest trip between each pair of steps. */
   round: number
   /** Game minutes offset so the trainers don't all start a round together. */
@@ -68,6 +71,8 @@ export type Notables = {
   image: HTMLImageElement
   /** Which rows of the sheet have no walking frames (their trainers hop instead). */
   still: boolean[]
+  /** Per row, where the standing frame's art begins, as a fraction of its 32 pixels. */
+  tops: number[]
 }
 
 export type Facing = "down" | "up" | "left" | "right"
@@ -92,6 +97,8 @@ export type Notable = {
   place: string
   /** "MISTY · fishing at Nugget Bridge", "BROCK · on the way to Oak's Lab". */
   label: string
+  /** Sprite widths to stand aside by, for two who share a spot (TATE and LIZA). */
+  offset?: number
 }
 
 const SPRITES = "/game/sprites/notables.png"
@@ -137,6 +144,7 @@ const VERB: Record<string, string> = {
   study: "studying",
   home: "resting",
   "lie low": "lying low",
+  wait: "waiting",
 }
 
 const loadImage = (src: string) =>
@@ -224,7 +232,14 @@ export const loadNotables = (base = DATA, sprites = SPRITES): Promise<Notables> 
         const hash = hashOf(trainer.slug)
         return { ...trainer, round, phase: hash % round, hash, row }
       })
-      return { stops: data.stops, plans, legs, image, still: stillRows(image, plans.length) }
+      return {
+        stops: data.stops,
+        plans,
+        legs,
+        image,
+        still: stillRows(image, plans.length),
+        tops: artTops(image, plans.length),
+      }
     })()
     loaded.catch(() => loading.delete(key))
     loading.set(key, loaded)
@@ -244,6 +259,21 @@ const stillRows = (image: HTMLImageElement, rows: number) => {
     const frame = context.getImageData(3 * 16, row * 32, 16, 32).data
     for (let i = 3; i < frame.length; i += 4) if (frame[i]) return false
     return true
+  })
+}
+
+/** Each row's first painted line in its standing frame, over 32: where a head begins. */
+const artTops = (image: HTMLImageElement, rows: number) => {
+  const canvas = document.createElement("canvas")
+  canvas.width = image.naturalWidth
+  canvas.height = image.naturalHeight
+  const context = canvas.getContext("2d", { willReadFrequently: true })
+  if (!context) return Array.from({ length: rows }, () => 0)
+  context.drawImage(image, 0, 0)
+  return Array.from({ length: rows }, (_, row) => {
+    const frame = context.getImageData(0, row * 32, 16, 32).data
+    for (let i = 3; i < frame.length; i += 4) if (frame[i]) return Math.floor(i / 64) / 32
+    return 0
   })
 }
 
@@ -326,6 +356,7 @@ const whereAt = (world: Notables, plan: Plan, minutes: number): Notable => {
         name: plan.name,
         role: plan.role,
         x: stop[0] + 0.5,
+        offset: plan.offset,
         y: stop[1] + 0.5,
         facing: "down",
         moving: false,
@@ -404,7 +435,8 @@ export const notablesOverlay =
     context.imageSmoothingEnabled = false
     for (const notable of notablesAt(world, now)) {
       if (only && !only(notable.slug)) continue
-      const p = toScreen(notable.x, notable.y + FOOT)
+      const at = toScreen(notable.x, notable.y + FOOT)
+      const p = { x: at.x + (notable.offset ?? 0) * w, y: at.y }
       if (p.x < -w || p.y < -h || p.x > width + w || p.y > height + 2 * h) continue
       const face = notable.facing === "right" ? "left" : notable.facing
       const [stand, one, two] = FRAMES[face]
@@ -423,7 +455,7 @@ export const notablesOverlay =
         context.shadowColor = "rgb(0 0 0 / 0.9)"
         context.shadowBlur = 2 * ratio
       }
-      context.translate(p.x, p.y - h - hop)
+      context.translate(p.x - w / 2, p.y - h - hop)
       if (notable.facing === "right") {
         context.translate(w, 0)
         context.scale(-1, 1)
@@ -434,7 +466,8 @@ export const notablesOverlay =
         // The game's down arrow, in its yellow, bobbing two steps.
         const size = Math.round(6 * ratio)
         const bob = Math.floor(performance.now() / 300) % 2 ? size * 0.5 : 0
-        const top = p.y - h - hop - size * 2.2 + bob
+        const head = p.y - h * (1 - (world.tops[notable.row] ?? 0)) - hop
+        const top = head - size * 2 + bob
         context.fillStyle = "rgb(255 214 0)"
         context.strokeStyle = "rgb(0 0 0 / 0.8)"
         context.lineWidth = Math.max(1, ratio)
@@ -466,7 +499,7 @@ export const pickNotable = (
   return notablesAt(world, minutes)
     .map((notable) => ({
       notable,
-      dx: Math.abs(notable.x - x),
+      dx: Math.abs(notable.x + ((notable.offset ?? 0) * h) / 2 - x),
       dy: Math.abs(notable.y + FOOT - h / 2 - y),
     }))
     .filter(({ dx, dy }) => dx <= h / 4 + slack && dy <= h / 2 + slack)

@@ -14,7 +14,14 @@ export type Gym = {
   x: number
   y: number
   /** Who leads it, from the game's notable routines; `simulated` ones walk the map. */
-  leader?: { name: string; slug: string; simulated: boolean }
+  leader?: {
+    name: string
+    /** Their notable on the map; a duo's first half, with the second in `also`. */
+    slug: string
+    also?: string
+    /** Whether they walk the map, or stand at their Gym. */
+    simulated: boolean
+  }
 }
 
 export type League = { id: string; name: string; x: number; y: number }
