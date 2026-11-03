@@ -5,6 +5,21 @@ export const REPOSITORY_URL = "https://github.com/mzpkdev/pokemon-wayfarer"
 /** The patcher the FAQ points to for applying the .ups patch in a browser. */
 export const PATCHER_URL = "https://www.marcrobledo.com/RomPatcher.js/"
 
+/**
+ * Your level cap and wild levels by badges earned, from the wild level
+ * scaling spec's v0 table (.product/specs/wild-level-scaling.md). Rows are
+ * Wayfarer's reaches by the names players read them by: Outlands, Wilds, Road.
+ */
+export const LEVELS = {
+  badges: [0, 4, 8, 16, 24],
+  rows: [
+    { label: "LEVEL CAP", levels: [15, 28, 50, 75, 100] },
+    { label: "FAR FROM HOME", levels: [13, 28, 50, 74, 98] },
+    { label: "OFF THE ROAD", levels: [9, 25, 44, 65, 85] },
+    { label: "ON THE ROAD", levels: [5, 20, 38, 56, 74] },
+  ],
+}
+
 export type Highlight = {
   title: string
   body: string
