@@ -44,7 +44,7 @@ import { type LivingWorld, livingOverlay, loadLiving } from "./living"
 import { type Notables, loadNotables, notableAt, notablesOverlay } from "./notables"
 import { PlaceExtra } from "./PlaceExtra"
 import type { PlaceInfo } from "./PlaceCard"
-import { DAILY_SEED, type Daily, dailyOn, loadDaily } from "./daily"
+import { DAILY_SEED, type Daily, type DailyDay, dailyOn, loadDaily } from "./daily"
 import { type DailyScene, dailyOverlay } from "./dailyView"
 import { BUTTON } from "./ui"
 import { loadWild, type Wild, type WildClock, wildOverlay } from "./wild"
@@ -395,30 +395,10 @@ const CircuitLeagues = ({
   reducedMotion: boolean
 }) => {
   const calling = callingFor(earned)
-  const league = focused && leagues.find((entry) => entry.id === focused)
-  if (league)
-    return (
-      <div className="mt-4">
-        <button
-          type="button"
-          onClick={() => onFocus(null)}
-          className="pixel-label text-[16px] leading-none text-paper/70 hover:text-paper focus-visible:text-paper focus-visible:underline focus-visible:outline-none"
-        >
-          ◀ ALL 24 GYMS
-        </button>
-        <LeagueHalls
-          league={league}
-          calling={calling[league.id]}
-          roster={roster}
-          progress={progress}
-          base={base}
-          reducedMotion={reducedMotion}
-        />
-      </div>
-    )
-  return (
+  const ordered = LEAGUE_ORDER.flatMap((id) => leagues.filter((entry) => entry.id === id))
+  const list = (
     <ul className="mt-4 grid gap-2">
-      {LEAGUE_ORDER.flatMap((id) => leagues.filter((entry) => entry.id === id)).map((entry) => (
+      {ordered.map((entry) => (
         <li key={entry.id}>
           <button
             type="button"
@@ -431,7 +411,71 @@ const CircuitLeagues = ({
       ))}
     </ul>
   )
+  const at = (entry: League) => (
+    <div className="mt-4">
+      <button
+        type="button"
+        onClick={() => onFocus(null)}
+        className="pixel-label text-[16px] leading-none text-paper/70 hover:text-paper focus-visible:text-paper focus-visible:underline focus-visible:outline-none"
+      >
+        ◀ ALL 24 GYMS
+      </button>
+      <LeagueHalls
+        league={entry}
+        calling={calling[entry.id]}
+        roster={roster}
+        progress={progress}
+        base={base}
+        // A view not shown keeps its five still: it only holds their room.
+        reducedMotion={reducedMotion || entry.id !== focused}
+      />
+    </div>
+  )
+  // Every view sits in one cell, the ones not shown invisible (and, below
+  // lg, where the card scrolls, left out), so the card keeps the height of
+  // its tallest and doesn't jump as a league is picked.
+  const views: [LeagueId | null, ReactNode][] = [
+    [null, list],
+    ...ordered.map((entry): [LeagueId, ReactNode] => [entry.id, at(entry)]),
+  ]
+  return (
+    <div className="grid">
+      {views.map(([id, view]) => {
+        const shown = id === (focused ?? null)
+        return (
+          <div
+            key={id ?? "all"}
+            aria-hidden={!shown}
+            inert={!shown}
+            className={`col-start-1 row-start-1 ${shown ? "" : "invisible max-lg:hidden"}`}
+          >
+            {view}
+          </div>
+        )
+      })}
+    </div>
+  )
 }
+
+/** Who is out on a day, as the daily card lists them. */
+const trainersOn = (scene: DailyDay) =>
+  scene.trainers.map((trainer) => trainer.name).join(", ") || "Nobody about today."
+/** What is lying around on a day, as the daily card lists it. */
+const itemsOn = (scene: DailyDay) =>
+  scene.items.map((item) => (item.hidden ? `${item.item} (hidden)` : item.item)).join(", ") ||
+  "Nothing lying around today."
+// A daily list over an invisible copy of its longest day's, so stepping the
+// days never grows or shrinks the card.
+const held = (text: string, room: string) => (
+  <dd className="mt-1 grid text-paper/85">
+    <span className="col-start-1 row-start-1">{text}</span>
+    <span aria-hidden className="invisible col-start-1 row-start-1">
+      {room}
+    </span>
+  </dd>
+)
+/** How many days ahead the daily card holds room for. */
+const HELD_DAYS = 60
 
 /**
  * The daily stop's card body: the day shown, with buttons to step it, and
@@ -440,10 +484,13 @@ const CircuitLeagues = ({
  */
 const DailyCard = ({
   scene,
+  longest,
   day,
   onDay,
 }: {
   scene: ReturnType<typeof dailyOn> | null
+  /** The longest lists the route has over its first days, to hold the card's height. */
+  longest: { trainers: string; items: string }
   day: number
   onDay: (day: number) => void
 }) => {
@@ -478,19 +525,13 @@ const DailyCard = ({
             TRAINERS {scene.trainers.length}
             {scene.empty.length ? ` · ${scene.empty.length} SPOTS EMPTY` : ""}
           </dt>
-          <dd className="mt-1 text-paper/85">
-            {scene.trainers.map((trainer) => trainer.name).join(", ") || "Nobody about today."}
-          </dd>
+          {held(trainersOn(scene), longest.trainers)}
         </div>
         <div>
           <dt className="pixel-label text-[16px] leading-none text-paper/60">
             ITEMS {scene.items.length}
           </dt>
-          <dd className="mt-1 text-paper/85">
-            {scene.items
-              .map((item) => (item.hidden ? `${item.item} (hidden)` : item.item))
-              .join(", ") || "Nothing lying around today."}
-          </dd>
+          {held(itemsOn(scene), longest.items)}
         </div>
       </dl>
     </div>
@@ -775,6 +816,18 @@ export const WorldTour = ({
     () => (daily ? dailyOn(daily, [dailyMap], day, DAILY_SEED) : null),
     [daily, dailyMap, day],
   )
+  const longest = useMemo(() => {
+    const most = { trainers: "", items: "" }
+    if (!daily) return most
+    for (let d = 1; d <= HELD_DAYS; d++) {
+      const on = dailyOn(daily, [dailyMap], d, DAILY_SEED)
+      const trainers = trainersOn(on),
+        items = itemsOn(on)
+      if (trainers.length > most.trainers.length) most.trainers = trainers
+      if (items.length > most.items.length) most.items = items
+    }
+    return most
+  }, [daily, dailyMap])
   useEffect(() => {
     sceneRef.current = scene ? { scene, since: performance.now() } : null
     redrawRef.current()
@@ -1542,10 +1595,10 @@ export const WorldTour = ({
               return `${text.place}. ${text.title}`
             })()}
           </p>
-          {/* Below lg the map sits above the card, so the card keeps to a third of the screen and scrolls. */}
+          {/* Below lg the map sits above the card, so the card keeps to a third of the screen and scrolls; from lg it keeps within the screen. */}
           <div
             ref={captionsRef}
-            className="grid max-lg:max-h-[34svh] max-lg:overflow-y-auto max-lg:overscroll-contain"
+            className="grid max-lg:max-h-[34svh] max-lg:overflow-y-auto max-lg:overscroll-contain lg:max-h-[calc(100svh-18rem)] lg:overflow-y-auto lg:overscroll-contain"
           >
             {captions.map((caption, i) => {
               const shown = stop === i
@@ -1600,6 +1653,7 @@ export const WorldTour = ({
                   {STOPS[i] === "daily" && (
                     <DailyCard
                       scene={scene}
+                      longest={longest}
                       day={day}
                       onDay={(next) => {
                         setStepping(false)
@@ -1623,7 +1677,7 @@ export const WorldTour = ({
                       earned={earned}
                       focused={shown ? focused : null}
                       onFocus={focus}
-                      roster={shown ? roster : undefined}
+                      roster={roster}
                       progress={rating}
                       base={base}
                       reducedMotion={reducedMotion}

@@ -334,7 +334,25 @@ export const WorldMap = ({
           "pointermove",
           (event) => {
             const last = pointers.get(event.pointerId)
-            if (!last) return
+            if (!last) {
+              // Hovering: a pointer over what a tap answers (a walker, a map),
+              // the open hand over the sea.
+              if (event.pointerType === "touch") return
+              const tappable =
+                (notablesRef.current &&
+                  pickNotable(
+                    notablesRef.current,
+                    pageMinutes(),
+                    camera.x + (event.offsetX - canvas.clientWidth / 2) / camera.zoom,
+                    camera.y + (event.offsetY - canvas.clientHeight / 2) / camera.zoom,
+                    camera.zoom,
+                    canvas.clientWidth,
+                  )) ||
+                placeAt(event.offsetX, event.offsetY)
+              canvas.style.cursor = tappable ? "pointer" : ""
+              return
+            }
+            canvas.style.cursor = ""
             const now = { x: event.offsetX, y: event.offsetY }
             pointers.set(event.pointerId, now)
             if (press && Math.hypot(now.x - press.x, now.y - press.y) > TAP_SLOP) press = null

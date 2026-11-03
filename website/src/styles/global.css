@@ -62,6 +62,19 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Everything that answers a click says so on hover (Tailwind v4 leaves buttons on the default cursor). */
+  :where(
+    a[href],
+    button:not(:disabled),
+    [role="button"],
+    label:has(input:is([type="checkbox"], [type="radio"]):not(:disabled)),
+    summary,
+    select:not(:disabled),
+    input:is([type="checkbox"], [type="radio"], [type="submit"], [type="button"]):not(:disabled)
+  ) {
+    cursor: pointer;
+  }
+
   ::selection {
     background: var(--color-ink-blue);
     color: var(--color-paper);
