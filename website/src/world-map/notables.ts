@@ -95,6 +95,8 @@ export type Notable = {
 }
 
 const SPRITES = "/game/sprites/notables.png"
+/** The sprite sheet, for showing a notable outside the map: 16x32 frames, nine to a row. */
+export const NOTABLES_SRC = SPRITES
 
 /**
  * How many beats each activity dwells, as the game's `sDwell`
@@ -339,6 +341,12 @@ const whereAt = (world: Notables, plan: Plan, minutes: number): Notable => {
   throw new Error("unreachable")
 }
 
+/** Where one notable is at a game minute, by their slug ("misty"). */
+export const notableAt = (world: Notables, slug: string, minutes: number): Notable | undefined => {
+  const plan = world.plans.find((p) => p.slug === slug)
+  return plan && whereAt(world, plan, minutes)
+}
+
 /** Where every notable is at a game minute. */
 export const notablesAt = (world: Notables, minutes: number): Notable[] =>
   world.plans.map((plan) => whereAt(world, plan, minutes))
@@ -368,17 +376,34 @@ const STEP_MS = 140
  * minute, or a function returning one.
  */
 export const notablesOverlay =
-  (world: Notables, minutes: number | (() => number)): Overlay =>
+  (
+    world: Notables,
+    minutes: number | (() => number),
+    {
+      only,
+      minHeight: least,
+      marker,
+    }: {
+      /** Draws only the notables this keeps, e.g. the one a card is about. */
+      only?: (slug: string) => boolean
+      /** The least height on screen, in CSS pixels, in place of the default. */
+      minHeight?: number
+      /** A bouncing arrow over their heads, to pick them out. */
+      marker?: boolean
+    } = {},
+  ): Overlay =>
   (context, { scale, ratio, toScreen }) => {
     const now = typeof minutes === "function" ? minutes() : minutes
     const { width, height } = context.canvas
     const zoom = scale / ratio
-    const h = heightTiles(zoom, context.canvas.width / ratio) * scale
+    const h =
+      (least ? Math.max(2, least / zoom) : heightTiles(zoom, context.canvas.width / ratio)) * scale
     const w = h / 2
     const far = h > 2 * scale * 1.01
     const tick = Math.floor(performance.now() / STEP_MS)
     context.imageSmoothingEnabled = false
     for (const notable of notablesAt(world, now)) {
+      if (only && !only(notable.slug)) continue
       const p = toScreen(notable.x, notable.y + FOOT)
       if (p.x < -w || p.y < -h || p.x > width + w || p.y > height + 2 * h) continue
       const face = notable.facing === "right" ? "left" : notable.facing
@@ -405,6 +430,22 @@ export const notablesOverlay =
       }
       context.drawImage(world.image, frame * 16, notable.row * 32, 16, 32, 0, 0, w, h)
       context.restore()
+      if (marker) {
+        // The game's down arrow, in its yellow, bobbing two steps.
+        const size = Math.round(6 * ratio)
+        const bob = Math.floor(performance.now() / 300) % 2 ? size * 0.5 : 0
+        const top = p.y - h - hop - size * 2.2 + bob
+        context.fillStyle = "rgb(255 214 0)"
+        context.strokeStyle = "rgb(0 0 0 / 0.8)"
+        context.lineWidth = Math.max(1, ratio)
+        context.beginPath()
+        context.moveTo(p.x - size, top)
+        context.lineTo(p.x + size, top)
+        context.lineTo(p.x, top + size * 1.2)
+        context.closePath()
+        context.fill()
+        context.stroke()
+      }
     }
   }
 

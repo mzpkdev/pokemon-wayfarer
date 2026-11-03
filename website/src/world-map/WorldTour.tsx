@@ -8,6 +8,7 @@ import { stepped } from "./fade"
 import {
   BADGES_SRC,
   badgeOverlays,
+  type Gym,
   landmarkBounds,
   type Landmarks,
   loadLandmarks,
@@ -30,7 +31,7 @@ import {
 import { pageMinutes } from "./clock"
 import { LivingClock } from "./LivingClock"
 import { type LivingWorld, livingOverlay, loadLiving } from "./living"
-import { type Notables, loadNotables, notablesOverlay } from "./notables"
+import { NOTABLES_SRC, type Notables, loadNotables, notableAt, notablesOverlay } from "./notables"
 import { PlaceExtra } from "./PlaceExtra"
 import type { PlaceInfo } from "./PlaceCard"
 import { WorldMap } from "./WorldMap"
@@ -67,8 +68,8 @@ const RIDER_MIN_ZOOM = 4
 
 /** A beat between the tour starting and the rider setting off. */
 const RIDE_DELAY_MS = 250
-/** The closest the visitor can zoom in, in CSS pixels per metatile. */
-const MAX_ZOOM = 48
+/** How long the camera takes to pan onto a Gym's leader, in ms. */
+const FIND_MS = 900
 /** How long a gesture hint stays up. */
 const HINT_MS = 1600
 
@@ -142,6 +143,85 @@ const shotsFor = (
 }
 
 /**
+ * A Gym's card at the badge stop: its badge and town, its leader in their
+ * walking sprite with what they are up to on the page's clock, and a button
+ * that pans the map onto them (or onto the Gym, for a leader who stays put).
+ * Beside the map on wide screens; over the caption on narrow ones, so the
+ * little map above stays clear.
+ */
+const GymCard = ({
+  gym,
+  notables,
+  minutes,
+  onFind,
+  onClose,
+}: {
+  gym: Gym
+  notables: Notables | undefined
+  minutes: number
+  onFind: () => void
+  onClose: () => void
+}) => {
+  const { leader } = gym
+  const walking =
+    leader?.simulated && notables ? notableAt(notables, leader.slug, minutes) : undefined
+  const row = walking ? notables!.plans.findIndex((plan) => plan.slug === leader!.slug) : -1
+  return (
+    <section
+      aria-label={`${gym.town} Gym`}
+      className="pixel-corners pixel-panel absolute top-4 left-4 z-20 w-[min(340px,calc(100%-2rem))] p-5 text-paper max-lg:top-auto max-lg:right-4 max-lg:bottom-4 max-lg:w-auto sm:max-lg:bottom-8 sm:max-lg:inset-x-8"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <p className="pixel-label text-[16px] leading-none text-logo-yellow">
+          {gym.region.toUpperCase()} GYM · BADGE {(gym.badge % 8) + 1}
+        </p>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          className="pixel-label -mt-2 -mr-1 px-2 text-[16px] text-paper/70 hover:text-paper"
+        >
+          ✕
+        </button>
+      </div>
+      <div className="mt-4 flex items-center gap-4">
+        {row >= 0 ? (
+          <span
+            aria-hidden
+            className="h-24 w-12 shrink-0 [image-rendering:pixelated]"
+            style={{
+              backgroundImage: `url(${NOTABLES_SRC})`,
+              backgroundSize: `${9 * 48}px auto`,
+              backgroundPosition: `0 ${-row * 96}px`,
+            }}
+          />
+        ) : (
+          <span
+            aria-hidden
+            className="size-12 shrink-0 [image-rendering:pixelated]"
+            style={{
+              backgroundImage: `url(${BADGES_SRC})`,
+              backgroundSize: `${24 * 48}px 48px`,
+              backgroundPosition: `${-gym.badge * 48}px 0`,
+            }}
+          />
+        )}
+        <div className="min-w-0">
+          <p className="pixel-heading text-[24px]">
+            {leader ? leader.name.toUpperCase() : gym.town}
+          </p>
+          <p className="mt-1 text-sm text-paper/70">{gym.town}</p>
+          {walking && <p className="mt-2 text-sm text-paper/90">{walking.label.split(" · ")[1]}</p>}
+        </div>
+      </div>
+      <button type="button" onClick={onFind} className={`${BUTTON} mt-5 w-full`}>
+        {walking ? `FIND ${leader!.name.toUpperCase()}` : `GO TO ${gym.town}`}
+      </button>
+    </section>
+  )
+}
+
+/**
  * The world in the game's own tiles, held still at one stop at a time with a
  * card beside it. It opens with the player riding in on their bike to their
  * front door, in the town the first card picks (LITTLEROOT TOWN, NEW BARK TOWN
@@ -173,8 +253,14 @@ export const WorldTour = ({
   const dialogRef = useRef<HTMLDialogElement>(null)
   const cameraRef = useRef<Camera | null>(null)
   const goRef = useRef<(stop: number) => void>(() => {})
-  const zoomRef = useRef<(factor: number) => void>(() => {})
-  const [hint, setHint] = useState<"wheel" | "touch" | null>(null)
+  const findRef = useRef<(gym: Gym) => void>(() => {})
+  const [hint, setHint] = useState(false)
+  // The Gym whose card is open, at the badge stop.
+  const [gym, setGym] = useState<Gym | null>(null)
+  const gymRef = useRef<Gym | null>(null)
+  useEffect(() => {
+    gymRef.current = gym
+  }, [gym])
   const chooseRef = useRef<(id: StartId) => void>(() => {})
   // The world stop shows the living world: the ferries on their loops and
   // the time of day, on the page's shared clock.
@@ -185,6 +271,10 @@ export const WorldTour = ({
     void loadLiving(base).then(setLiving, () => {})
     void loadNotables(base).then(setNotables, () => {})
   }, [base])
+  const notablesRef = useRef<Notables>(undefined)
+  useEffect(() => {
+    notablesRef.current = notables
+  }, [notables])
   const stopOverlaysRef = useRef(stopOverlays)
   useEffect(() => {
     // The Gym Leaders and Elite Four go under the time of day's tint.
@@ -207,11 +297,12 @@ export const WorldTour = ({
   const reducedMotion = useReducedMotion()
   const [stop, setStop] = useState(0)
   const atWorld = STOPS[stop] === "world"
+  const ticking = atWorld || gym !== null
   useEffect(() => {
-    if (!atWorld) return
+    if (!ticking) return
     const timer = window.setInterval(() => setMinutes(pageMinutes()), 500)
     return () => window.clearInterval(timer)
-  }, [atWorld])
+  }, [ticking])
   const [chosen, setChosen] = useState<StartId>(DEFAULT_START)
   const [warping, setWarping] = useState(false)
   const [exploring, setExploring] = useState<Camera | null>(null)
@@ -249,11 +340,13 @@ export const WorldTour = ({
     // next NEXT or BACK flies on from there.
     let manual: Camera | null = null
     let hintTimer = 0
-    const showHint = (kind: "wheel" | "touch") => {
-      setHint(kind)
+    const showHint = () => {
+      setHint(true)
       window.clearTimeout(hintTimer)
-      hintTimer = window.setTimeout(() => setHint(null), HINT_MS)
+      hintTimer = window.setTimeout(() => setHint(false), HINT_MS)
     }
+    // The camera panning onto a Gym's leader (or Gym), then keeping them in view.
+    let follow: { gym: Gym; from: Camera; start: number } | null = null
     let started: number | null = null
     // The warp to another start, if one is playing: when it began and, once
     // the screen is black, when the cut happened.
@@ -308,6 +401,7 @@ export const WorldTour = ({
         current = 0
         flight = null
         manual = null
+        follow = null
         badgesSince = null
         badgesLeft = null
         // The ride begins once the screen has faded back in.
@@ -349,6 +443,21 @@ export const WorldTour = ({
           const t = (now - flight.start) / flight.duration
           camera = fly(flight.from, shots[flight.to + 1]!, t)
           if (t >= 1) flight = null
+        } else if (follow) {
+          const { gym: target, from } = follow
+          const leader =
+            target.leader?.simulated && notablesRef.current
+              ? notableAt(notablesRef.current, target.leader.slug, pageMinutes())
+              : undefined
+          const to = leader ?? target
+          const t = reducedMotion ? 1 : Math.min(1, (now - follow.start) / FIND_MS)
+          const eased = t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2
+          camera = {
+            x: from.x + (to.x - from.x) * eased,
+            y: from.y + (to.y - from.y) * eased,
+            zoom: from.zoom,
+          }
+          manual = camera
         } else if (manual) camera = manual
         else if (current === 0) camera = fly(shots[0]!, shots[1]!, progress)
         else camera = shots[current + 1]!
@@ -378,6 +487,19 @@ export const WorldTour = ({
         } else stopClock.alpha = 0
         const overlays = badgesUp ? [...pins] : []
         let animated = badgesUp && !reducedMotion
+        // The leader whose Gym card is open walks the badge stop's map.
+        const card = gymRef.current
+        if (badgesUp && card?.leader?.simulated && notablesRef.current) {
+          const slug = card.leader.slug
+          overlays.push(
+            notablesOverlay(notablesRef.current, pageMinutes, {
+              only: (s) => s === slug,
+              minHeight: 44,
+              marker: true,
+            }),
+          )
+          animated = true
+        }
         for (const entry of stopOverlaysRef.current ?? [])
           if (entry.stop === STOPS[current]) {
             overlays.push(entry.overlay)
@@ -402,7 +524,7 @@ export const WorldTour = ({
           context.fillRect(0, 0, canvas.width, canvas.height)
         }
         const riding = rideStart !== null && progress < 1
-        if (pending || flight || riding || warp || animated) schedule()
+        if (pending || flight || follow || riding || warp || animated) schedule()
       }
       const schedule = () => {
         if (!raf) raf = requestAnimationFrame(draw)
@@ -416,6 +538,7 @@ export const WorldTour = ({
         const from = cameraRef.current ?? shots[current + 1]!
         const to = shots[next + 1]!
         manual = null
+        follow = null
         flight = reducedMotion ? null : { from, to: next, start: now, duration: flightMs(from, to) }
         if (next === BADGES_STOP) {
           badgesSince = now
@@ -438,44 +561,20 @@ export const WorldTour = ({
         schedule()
       }
 
-      // Pan and zoom, from the second stop on, without taking the page's
-      // scroll: a mouse drags and Ctrl (or ⌘) + wheel zooms, while a plain
-      // wheel scrolls the page; on touch two fingers move the map and one
-      // still scrolls the page. A hint says so when a gesture goes to the page.
-      const focus = () => {
-        const { width, height } = area()
-        return { x: width / 2, y: height / 2 }
-      }
-      const limits = () => {
-        const { width, height } = area()
-        const whole = shotsFor(world.meta, landmarks, start, width, height)[STOPS.length]!
-        return { min: whole.zoom * 0.8, max: MAX_ZOOM }
-      }
-      const move = (change: (camera: Camera) => Camera) => {
+      // Pan, from the second stop on, without taking the page's scroll: a
+      // mouse drags the map, and on touch two fingers move it while one still
+      // scrolls the page (a hint says so). The zoom stays the stop's.
+      const move = (dx: number, dy: number) => {
         const from = manual ?? cameraRef.current
         if (!from) return
         flight = null
-        const next = change({ ...from })
-        const { min, max } = limits()
-        next.zoom = Math.min(max, Math.max(min, next.zoom))
-        next.x = Math.min(world.meta.width, Math.max(0, next.x))
-        next.y = Math.min(world.meta.height, Math.max(0, next.y))
-        manual = next
+        follow = null
+        manual = {
+          zoom: from.zoom,
+          x: Math.min(world.meta.width, Math.max(0, from.x - dx / from.zoom)),
+          y: Math.min(world.meta.height, Math.max(0, from.y - dy / from.zoom)),
+        }
         schedule()
-      }
-      const zoomAt = (factor: number, x: number, y: number) =>
-        move((camera) => {
-          const f = focus()
-          // Keep the world point under (x, y) in place.
-          const wx = camera.x + (x - f.x) / camera.zoom
-          const wy = camera.y + (y - f.y) / camera.zoom
-          const { min, max } = limits()
-          const zoom = Math.min(max, Math.max(min, camera.zoom * factor))
-          return { x: wx - (x - f.x) / zoom, y: wy - (y - f.y) / zoom, zoom }
-        })
-      zoomRef.current = (factor) => {
-        const f = focus()
-        zoomAt(factor, f.x, f.y)
       }
       const local = (event: { clientX: number; clientY: number }) => {
         const box = canvas.getBoundingClientRect()
@@ -484,9 +583,12 @@ export const WorldTour = ({
       const listening = new AbortController()
       const { signal } = listening
       let drag: { x: number; y: number } | null = null
+      // How far the last press moved, so a drag doesn't also count as a tap.
+      let travelled = 0
       canvas.addEventListener(
         "pointerdown",
         (event) => {
+          travelled = 0
           if (event.pointerType === "touch" || event.button !== 0 || !free()) return
           canvas.setPointerCapture(event.pointerId)
           drag = local(event)
@@ -498,14 +600,9 @@ export const WorldTour = ({
         (event) => {
           if (!drag) return
           const now = local(event)
-          const dx = now.x - drag.x
-          const dy = now.y - drag.y
+          travelled += Math.hypot(now.x - drag.x, now.y - drag.y)
+          move(now.x - drag.x, now.y - drag.y)
           drag = now
-          move((camera) => ({
-            ...camera,
-            x: camera.x - dx / camera.zoom,
-            y: camera.y - dy / camera.zoom,
-          }))
         },
         { signal },
       )
@@ -514,47 +611,21 @@ export const WorldTour = ({
       }
       canvas.addEventListener("pointerup", release, { signal })
       canvas.addEventListener("pointercancel", release, { signal })
-      canvas.addEventListener(
-        "wheel",
-        (event) => {
-          if (!free()) return
-          if (!event.ctrlKey && !event.metaKey) {
-            showHint("wheel")
-            return
-          }
-          event.preventDefault()
-          const at = local(event)
-          zoomAt(Math.exp(-event.deltaY * 0.0025), at.x, at.y)
-        },
-        { passive: false, signal },
-      )
-      canvas.addEventListener(
-        "dblclick",
-        (event) => {
-          if (!free()) return
-          const at = local(event)
-          zoomAt(2, at.x, at.y)
-        },
-        { signal },
-      )
-      let pinch: { x: number; y: number; distance: number } | null = null
-      const twoFingers = (touches: TouchList) => {
+      let pair: { x: number; y: number } | null = null
+      const middle = (touches: TouchList) => {
         const [a, b] = [touches[0]!, touches[1]!]
         const box = canvas.getBoundingClientRect()
         return {
           x: (a.clientX + b.clientX) / 2 - box.left,
           y: (a.clientY + b.clientY) / 2 - box.top,
-          distance: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY),
         }
       }
       canvas.addEventListener(
         "touchstart",
         (event) => {
-          if (!free()) return
-          if (event.touches.length >= 2) {
-            event.preventDefault()
-            pinch = twoFingers(event.touches)
-          }
+          if (!free() || event.touches.length < 2) return
+          event.preventDefault()
+          pair = middle(event.touches)
         },
         { passive: false, signal },
       )
@@ -564,30 +635,60 @@ export const WorldTour = ({
           if (!free()) return
           // One finger scrolls the page; say how to move the map instead.
           if (event.touches.length < 2) {
-            if (!pinch) showHint("touch")
+            if (!pair) showHint()
             return
           }
-          if (!pinch) return
+          if (!pair) return
           event.preventDefault()
-          const now = twoFingers(event.touches)
-          const before = pinch
-          pinch = now
-          move((camera) => ({
-            ...camera,
-            x: camera.x - (now.x - before.x) / camera.zoom,
-            y: camera.y - (now.y - before.y) / camera.zoom,
-          }))
-          if (before.distance > 0) zoomAt(now.distance / before.distance, now.x, now.y)
+          const now = middle(event.touches)
+          travelled += Math.hypot(now.x - pair.x, now.y - pair.y)
+          move(now.x - pair.x, now.y - pair.y)
+          pair = now
         },
         { passive: false, signal },
       )
       canvas.addEventListener(
         "touchend",
         (event) => {
-          if (event.touches.length < 2) pinch = null
+          if (event.touches.length < 2) pair = null
         },
         { signal },
       )
+
+      // At the badge stop, a tap on a pin opens its Gym's card.
+      canvas.addEventListener(
+        "click",
+        (event) => {
+          if (current !== BADGES_STOP || travelled > 6 || !cameraRef.current) return
+          const camera = cameraRef.current
+          const { width, height } = area()
+          const at = local(event)
+          const reach = Math.max(18, canvas.clientWidth > 700 ? 25 : 13)
+          let best: Gym | null = null
+          let bestDistance = reach
+          for (const pin of landmarks.badges) {
+            const x = (pin.x - camera.x) * camera.zoom + width / 2
+            const y = (pin.y - camera.y) * camera.zoom + height / 2
+            const distance = Math.hypot(at.x - x, at.y - y)
+            if (distance < bestDistance) {
+              best = pin
+              bestDistance = distance
+            }
+          }
+          if (best) setGym(best)
+        },
+        { signal },
+      )
+
+      // The Gym card's button: pan onto the leader and keep them in view as
+      // they walk, or onto the Gym when its leader doesn't walk the map.
+      findRef.current = (target) => {
+        const from = manual ?? cameraRef.current
+        if (!from) return
+        flight = null
+        follow = { gym: target, from, start: performance.now() }
+        schedule()
+      }
 
       const go = () => {
         if (started !== null) return
@@ -625,6 +726,7 @@ export const WorldTour = ({
   }, [base, reducedMotion, startOn])
 
   const go = (next: number) => {
+    setGym(null)
     setStop(next)
     goRef.current(next)
   }
@@ -649,25 +751,14 @@ export const WorldTour = ({
         className={`absolute inset-0 size-full touch-pan-x touch-pan-y ${stop >= 1 && !warping ? "cursor-grab active:cursor-grabbing" : ""}`}
         style={{ background: OPEN_SEA }}
       />
-      {stop >= 1 && !warping && (
-        <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
-          {(
-            [
-              ["+", 1.6, "Zoom in"],
-              ["−", 1 / 1.6, "Zoom out"],
-            ] as const
-          ).map(([label, factor, name]) => (
-            <button
-              key={label}
-              type="button"
-              onClick={() => zoomRef.current(factor)}
-              className="pixel-corners pixel-panel size-12 text-2xl text-paper"
-              aria-label={name}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+      {gym && STOPS[stop] === "badges" && (
+        <GymCard
+          gym={gym}
+          notables={notables}
+          minutes={minutes}
+          onFind={() => findRef.current(gym)}
+          onClose={() => setGym(null)}
+        />
       )}
       <div
         aria-live="polite"
@@ -675,11 +766,7 @@ export const WorldTour = ({
       >
         {hint && (
           <p className="pixel-panel gba-text gba-text-light px-4 py-3 text-center">
-            {hint === "touch"
-              ? "USE TWO FINGERS TO MOVE THE MAP"
-              : /Mac|iPhone|iPad/.test(navigator.platform)
-                ? "HOLD CMD AND SCROLL TO ZOOM"
-                : "HOLD CTRL AND SCROLL TO ZOOM"}
+            USE TWO FINGERS TO MOVE THE MAP
           </p>
         )}
       </div>

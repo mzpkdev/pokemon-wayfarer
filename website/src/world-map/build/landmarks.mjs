@@ -98,6 +98,19 @@ export const buildLandmarks = (game, world, regionOf) => {
   // region numbers its eight badges in the order they are earned, and the
   // Kanto and Hoenn maps number them from 1 or 9 on, so the place in a
   // region's order is the flag's number less one, modulo eight.
+  // Each Gym's leader, from the notable routines: by the Gym map they keep,
+  // or else by their badge (a Gym of several floors gives it on another).
+  // `simulated` leaders walk the map (see notables.mjs); the rest have no
+  // walking sprite and stay put.
+  const routines = JSON.parse(
+    fs.readFileSync(`${root}/tools/wayfarer_world/routines.json`, "utf8"),
+  ).trainers.filter((t) => t.badge)
+  const leaderOf = (map, region, order) => {
+    const t =
+      routines.find((r) => r.gym === map.name) ??
+      routines.find((r) => r.badge.region === region && r.badge.index === order)
+    return t && { name: t.name, slug: t.slug, simulated: Boolean(t.simulated) }
+  }
   const gyms = []
   for (const map of Object.values(every)) {
     const file = `${root}/data/maps/${map.dir}/scripts.inc`
@@ -118,6 +131,7 @@ export const buildLandmarks = (game, world, regionOf) => {
       town: townName(door.p.m.name),
       x: door.x,
       y: door.y,
+      leader: leaderOf(map, region[0] + region.slice(1).toLowerCase(), order),
     })
   }
   const badges = gyms
@@ -149,7 +163,14 @@ export const buildLandmarks = (game, world, regionOf) => {
     return { id, name, x: p.x - minX + warp.x + 0.5, y: p.y - minY + warp.y + 0.5 }
   })
   return {
-    badges: badges.map(({ badge, region, town, x, y }) => ({ badge, region, town, x, y })),
+    badges: badges.map(({ badge, region, town, x, y, leader }) => ({
+      badge,
+      region,
+      town,
+      x,
+      y,
+      ...(leader ? { leader } : {}),
+    })),
     circuit,
   }
 }

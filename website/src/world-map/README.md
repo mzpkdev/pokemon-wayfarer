@@ -18,11 +18,14 @@ The rest of the site uses it only through `index.ts`:
   card, and NEXT and BACK fly the camera between four stops: the town, its
   region (Hoenn, or Johto and Kanto), the 24 Gym Badges with the league
   circuit, and the whole world. From the second stop on the
-  map can be moved in place, the way an embedded map shares a page: a mouse
-  drags, Ctrl (or Cmd) + wheel zooms, and on touch two fingers pan and pinch,
-  while a plain wheel and one finger still scroll the page (a hint says so).
-  NEXT and BACK fly on from wherever it was moved to. It never takes over the
-  page's scrolling. The
+  map can be panned in place, the way an embedded map shares a page: a mouse
+  drags, and on touch two fingers move it while one still scrolls the page (a
+  hint says so). The zoom stays each stop's. At the badge stop a pin opens its
+  Gym's card: the badge, the leader in their walking sprite and what they are
+  up to on the page clock, and FIND, which pans onto them and keeps them in
+  view as they walk (GO TO the Gym for a leader who doesn't walk the map).
+  NEXT and BACK fly on from wherever the map was moved to. It never takes over
+  the page's scrolling. The
   last card's EXPLORE THE MAP opens the explorer full screen. Captions are one
   per stop, with per-start `variants`; `stopOverlays` lets the page draw over
   the map at any stop (the hook for a living-world overlay on the world stop).

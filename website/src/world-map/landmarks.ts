@@ -13,6 +13,8 @@ export type Gym = {
   town: string
   x: number
   y: number
+  /** Who leads it, from the game's notable routines; `simulated` ones walk the map. */
+  leader?: { name: string; slug: string; simulated: boolean }
 }
 
 export type League = { id: string; name: string; x: number; y: number }
