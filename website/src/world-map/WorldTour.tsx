@@ -420,6 +420,11 @@ export const WorldTour = ({
   // The world stop shows the living world: the ferries on their loops and
   // the time of day, on the page's shared clock.
   const [stop, setStop] = useState(0)
+  // The stop as of the latest NEXT/BACK, for the map to catch up to if they
+  // were pressed before it loaded.
+  const stopRef = useRef(0)
+  // Whether the map's data is in; until then a line says it's coming.
+  const [ready, setReady] = useState(false)
   const [living, setLiving] = useState<LivingWorld>()
   const [minutes, setMinutes] = useState(pageMinutes)
   const [notables, setNotables] = useState<Notables>()
@@ -575,6 +580,7 @@ export const WorldTour = ({
       ...images.map((image) => image.decode().catch(() => {})),
     ]).then(([world, landmarks]) => {
       if (disposed) return
+      setReady(true)
       const renderer = rendererFor(world)
       let start = startOf(DEFAULT_START)
       let route = routeIn(world.meta, start)
@@ -785,6 +791,10 @@ export const WorldTour = ({
         }
         schedule()
       }
+
+      // NEXT pressed while the map was still loading moved only the card:
+      // fly the map on to where the card is.
+      if (stopRef.current !== current) goRef.current(stopRef.current)
 
       // Pan, from the second stop on, without taking the page's scroll: a
       // mouse drags the map, and on touch two fingers move it while one still
@@ -1008,6 +1018,7 @@ export const WorldTour = ({
   const go = (next: number) => {
     setGym(null)
     setStop(next)
+    stopRef.current = next
     goRef.current(next)
   }
 
@@ -1073,6 +1084,15 @@ export const WorldTour = ({
         className={`absolute inset-0 size-full touch-pan-x touch-pan-y ${stop >= 1 && !warping ? "cursor-grab active:cursor-grabbing" : ""}`}
         style={{ background: OPEN_SEA }}
       />
+      {!ready && (
+        // On a slow connection the map can still be on its way after the warp.
+        <p
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-1/3 text-center gba-text gba-text-light animate-pulse motion-reduce:animate-none"
+        >
+          LOADING THE WORLD...
+        </p>
+      )}
       {STOPS[stop] === "gyms" && (
         // The pins for a keyboard: each Gym a button, lighting its pin while focused.
         // Fixed to the screen, so focusing one never scrolls the page.

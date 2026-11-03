@@ -129,6 +129,21 @@ const captions: Caption[] = [
 
 <script>
   import { warp } from "~/lib/warp"
+  import { loadWorld } from "~/world-map/data"
+  import { loadLandmarks } from "~/world-map/landmarks"
+
+  // The map's data starts loading the first time the visitor scrolls, the
+  // first sign they're heading down, so the map is there when the warp fades
+  // in even on a slow connection; a visitor who never scrolls loads none of it.
+  // It shares the tour's cache, so the tour picks up what's already on its way.
+  addEventListener(
+    "scroll",
+    () => {
+      void loadWorld().catch(() => {})
+      void loadLandmarks()
+    },
+    { once: true, passive: true },
+  )
 
   warp(document.querySelector<HTMLElement>(".world-stage")!, document.querySelector<HTMLElement>(".warp")!)
 </script>
