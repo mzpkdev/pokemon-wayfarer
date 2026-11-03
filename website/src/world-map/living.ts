@@ -60,6 +60,11 @@ export type LivingWorld = Living & {
 export type Train = {
   /** How far along its line the middle of the train is, in metatiles. */
   along: number
+  /** How far along its ride it is, from the station it left (0) to the one ahead (1). */
+  progress: number
+  /** The station it left or waits at, and the one ahead (the same while at a station). */
+  from: string
+  to: string
   at: "station" | "line"
   /** "MAGNET TRAIN · Goldenrod → Saffron", or "MAGNET TRAIN · in Goldenrod". */
   label: string
@@ -79,6 +84,10 @@ export type Ship = {
   /** The port it is in or left, and the one it is bound for (the same while in port). */
   from: string
   to: string
+  /** The port it sails for next: `to` at sea, the one after `from` in port. */
+  next: string
+  /** How far along its leg it is, from the port it left (0) to the next (1); 0 in port. */
+  progress: number
   /** "S.S. AQUA · Olivine → Vermilion", or "S.S. AQUA · in Olivine" in port. */
   label: string
 }
@@ -215,16 +224,32 @@ export const trainAt = (living: LivingWorld, minutes: number): Train | undefined
   const first = TRAIN_TILES / 2,
     last = rails.length - TRAIN_TILES / 2
   const [a, b] = stations
-  if (t < wait) return { along: first, at: "station", label: `${name} · in ${a}` }
+  if (t < wait)
+    return { along: first, progress: 0, from: a, to: a, at: "station", label: `${name} · in ${a}` }
   if (t < wait + ride) {
     const p = (t - wait) / ride
     const eased = p * p * (3 - 2 * p)
-    return { along: first + (last - first) * eased, at: "line", label: `${name} · ${a} → ${b}` }
+    return {
+      along: first + (last - first) * eased,
+      progress: eased,
+      from: a,
+      to: b,
+      at: "line",
+      label: `${name} · ${a} → ${b}`,
+    }
   }
-  if (t < wait * 2 + ride) return { along: last, at: "station", label: `${name} · in ${b}` }
+  if (t < wait * 2 + ride)
+    return { along: last, progress: 0, from: b, to: b, at: "station", label: `${name} · in ${b}` }
   const p = (t - wait * 2 - ride) / ride
   const eased = p * p * (3 - 2 * p)
-  return { along: last - (last - first) * eased, at: "line", label: `${name} · ${b} → ${a}` }
+  return {
+    along: last - (last - first) * eased,
+    progress: eased,
+    from: b,
+    to: a,
+    at: "line",
+    label: `${name} · ${b} → ${a}`,
+  }
 }
 
 /** The size, in CSS pixels, a car of the train is never drawn smaller than. */
@@ -321,6 +346,8 @@ export const shipsAt = (living: LivingWorld, minutes: number): Ship[] => {
         at: "port",
         from: here,
         to: here,
+        next,
+        progress: 0,
         label: `${ship.name} · in ${portName(here)}`,
       }
     }
@@ -338,6 +365,8 @@ export const shipsAt = (living: LivingWorld, minutes: number): Ship[] => {
       at: "sea",
       from: here,
       to: next,
+      next,
+      progress: eased,
       label: `${ship.name} · ${portName(here)} → ${portName(next)}`,
     }
   })

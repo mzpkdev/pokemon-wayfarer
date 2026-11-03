@@ -412,8 +412,8 @@ const FOOT = 0.4
 /** The sprite's height in metatiles: the game's 2, or as many as keep it `MIN_HEIGHT_CSS` tall on screen. */
 const heightTiles = (zoom: number, viewWidth: number) => Math.max(2, minHeight(viewWidth) / zoom)
 
-/** Walk cycle frames: [stand, walk 1, walk 2] for each facing, in the sheet's nine. */
-const FRAMES: Record<"down" | "up" | "left", [number, number, number]> = {
+/** Walk cycle frames: [stand, walk 1, walk 2] for each facing, in the sheet's nine (right is left mirrored). */
+export const FRAMES: Record<"down" | "up" | "left", [number, number, number]> = {
   down: [0, 3, 4],
   up: [1, 5, 6],
   left: [2, 7, 8],

@@ -3,7 +3,9 @@ import CtaLinks from "~/components/cta/CtaLinks.astro"
 import CtaProfessor from "~/components/cta/CtaProfessor.astro"
 import { DialogBox } from "~/components/DialogBox"
 import Faq from "~/components/Faq.astro"
+import { RightNow } from "~/components/RightNow"
 import SignupForm from "~/components/SignupForm.astro"
+import { StartMenu } from "~/components/StartMenu"
 import { StoryShuffle } from "~/components/StoryShuffle"
 import WorldSection from "~/components/WorldSection.astro"
 import { TitleScene } from "~/components/TitleScene"
@@ -15,6 +17,9 @@ import { RELEASE_LABEL } from "~/lib/release"
 <Layout title="Pokémon Wayfarer">
   <main>
     <TitleScene client:load />
+
+    <!-- The START menu, in the corner once the title screen is behind. -->
+    <StartMenu client:idle />
 
     <!-- The highlights come first: the size of the world, warped to from the Poké Ball. -->
     <WorldSection />
@@ -38,6 +43,23 @@ import { RELEASE_LABEL } from "~/lib/release"
       >
         <!-- Then PROF. OAK asks for your email. -->
         <CtaProfessor />
+
+        <!--
+          The world as it is this moment, on the clock the map runs on: proof
+          the map's ships, train and Gym Leaders weren't a loop for the tour.
+        -->
+        <section aria-labelledby="right-now" class="relative mx-auto max-w-5xl px-6 py-16">
+          <p class="pixel-label text-logo-yellow">Right now</p>
+          <h2 id="right-now" class="pixel-heading mt-4">The world doesn't wait for you.</h2>
+          <p class="mt-6 max-w-2xl text-lg leading-relaxed text-paper/80">
+            The ships sail their loops, the Magnet Train runs its line and every Gym Leader keeps
+            to their own day, whether you're there to see it or not. This is where everyone is on
+            this page's clock, the same one the map above runs on.
+          </p>
+          <div class="mt-10">
+            <RightNow client:visible />
+          </div>
+        </section>
 
         <!--
           What the map can't show: how an open world stays fair, then the two

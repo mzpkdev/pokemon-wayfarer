@@ -166,6 +166,9 @@ importers:
       oxlint:
         specifier: ^1.90.0
         version: 1.90.0
+      playwright:
+        specifier: 1.58.2
+        version: 1.58.2
       tailwindcss:
         specifier: ^4.3.3
         version: 4.3.3
