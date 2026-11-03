@@ -45,18 +45,21 @@ export const WildTally = ({
     const timer = window.setInterval(() => setNow(performance.now()), 80)
     return () => window.clearInterval(timer)
   }, [shown, reducedMotion])
+  // A tap holds that wave on the map and stops the loop; tapping the held
+  // chip again lets the loop play on from there.
   const pick = (wave: number) =>
-    apply({
-      start: startOf(counts, wave, performance.now()),
-      still: reducedMotion ? wave : null,
-    })
+    clock.still === wave && !reducedMotion
+      ? apply({ start: startOf(counts, wave, performance.now()), still: null })
+      : apply({ start: performance.now(), still: wave })
 
-  const playing = reducedMotion
-    ? { wave: clock.still ?? WAVES.length - 1, into: Infinity }
-    : waveAt(counts, now - clock.start)
+  const playing =
+    reducedMotion || clock.still !== null
+      ? { wave: clock.still ?? WAVES.length - 1, into: Infinity }
+      : waveAt(counts, now - clock.start)
+  const held = clock.still !== null
   const lit = playing.wave
   const shownCounts = counts.map((count, i) =>
-    i < playing.wave || reducedMotion || playing.wave === WAVES.length - 1
+    i < playing.wave || reducedMotion || held || playing.wave === WAVES.length - 1
       ? count
       : i === playing.wave
         ? Math.round(count * Math.min(1, playing.into / TICK_MS))
@@ -68,35 +71,42 @@ export const WildTally = ({
     { label: "ALL", value: total, wave: WAVES.length - 1 },
   ]
   return (
-    <ul className="mt-3 grid grid-cols-5 gap-1.5 sm:mt-4 sm:gap-2">
-      {cells.map(({ label, value, wave }) => {
-        const on = lit === wave
-        return (
-          <li key={label} className="contents">
-            <button
-              type="button"
-              disabled={!shown}
-              aria-pressed={on}
-              aria-label={
-                wave === WAVES.length - 1
-                  ? `All: ${counts.reduce((a, b) => a + b, 0)} species`
-                  : `${label === "FORMS" ? "Regional forms" : `Generation ${label}`}: ${counts[wave]} species`
-              }
-              onClick={() => pick(wave)}
-              className={`pixel-corners flex flex-col items-center gap-0.5 px-1 pt-1.5 pb-2 font-[family-name:var(--font-gba)] leading-none ${
-                on
-                  ? "bg-[rgb(232_208_64)] text-[rgb(56_56_56)]"
-                  : "bg-black/30 text-paper/80 hover:bg-black/50 hover:text-paper"
-              }`}
-            >
-              <span className={`text-[12px] sm:text-[14px] ${on ? "" : "text-paper/60"}`}>
-                {label}
-              </span>
-              <span className="text-[16px] sm:text-[20px]">{value}</span>
-            </button>
-          </li>
-        )
-      })}
-    </ul>
+    <>
+      <ul className="mt-3 grid grid-cols-5 gap-1.5 sm:mt-4 sm:gap-2">
+        {cells.map(({ label, value, wave }) => {
+          const on = lit === wave
+          return (
+            <li key={label} className="contents">
+              <button
+                type="button"
+                disabled={!shown}
+                aria-pressed={on}
+                aria-label={
+                  wave === WAVES.length - 1
+                    ? `All: ${counts.reduce((a, b) => a + b, 0)} species`
+                    : `${label === "FORMS" ? "Regional forms" : `Generation ${label}`}: ${counts[wave]} species`
+                }
+                onClick={() => pick(wave)}
+                className={`pixel-corners flex flex-col items-center gap-0.5 px-1 pt-1.5 pb-2 font-[family-name:var(--font-gba)] leading-none ${
+                  on
+                    ? "bg-[rgb(232_208_64)] text-[rgb(56_56_56)]"
+                    : "bg-black/30 text-paper/80 hover:bg-black/50 hover:text-paper"
+                }`}
+              >
+                <span className={`text-[12px] sm:text-[14px] ${on ? "" : "text-paper/60"}`}>
+                  {label}
+                </span>
+                <span className="text-[16px] sm:text-[20px]">{value}</span>
+              </button>
+            </li>
+          )
+        })}
+      </ul>
+      <p className="mt-2 text-xs text-paper/60" aria-live="polite">
+        {held && !reducedMotion
+          ? "Held. Tap it again to play them all."
+          : "Tap a generation to hold it."}
+      </p>
+    </>
   )
 }

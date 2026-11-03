@@ -40,7 +40,7 @@ export type Wild = {
 
 /**
  * Where the tour is in the cycle: when it began, and, with reduced motion or
- * after a tap in it, the wave held still instead (the mix when null).
+ * after a tap in it, the wave held still instead (the loop plays when null).
  */
 export type WildClock = { start: number; still: number | null }
 
@@ -193,16 +193,22 @@ export const wildOverlay =
       const w = Math.max(k, Math.round(size * scale))
       const x = Math.round(at.x - w / 2)
       const y = Math.round(at.y - w - lift * projection.ratio)
+      // A flat shadow in whole pixels, the way the overworld draws one: three
+      // rows, the middle widest.
       context.globalAlpha = alpha * 0.35
       context.fillStyle = "#000"
-      context.beginPath()
-      context.ellipse(at.x, at.y - 2 * k, w * 0.3, w * 0.09, 0, 0, Math.PI * 2)
-      context.fill()
+      const row = k
+      const cx = Math.round(at.x)
+      const cy = Math.round(at.y - 3 * k)
+      for (const [dy, width] of [
+        [0, 0.36],
+        [1, 0.56],
+        [2, 0.36],
+      ] as const) {
+        const half = Math.round((w * width) / 2 / k) * k
+        context.fillRect(cx - half, cy + dy * row, half * 2, row)
+      }
       context.globalAlpha = alpha
-      // A white halo lifts each one off the map.
-      context.save()
-      context.shadowColor = "rgb(255 255 255 / 0.85)"
-      context.shadowBlur = 6 * projection.ratio
       context.drawImage(
         wild.icons,
         (icon.slot % wild.columns) * ICON,
@@ -214,12 +220,20 @@ export const wildOverlay =
         w,
         w,
       )
-      context.restore()
     }
-    if (!animate) {
+    // A held wave stays up (popping in once when it's picked); with reduced
+    // motion the mix, or the picked wave, just stands.
+    if (!animate || clock.still !== null) {
       const wave = clock.still ?? WAVES.length - 1
       const icons = spread(wild.waves[wave]!)
-      icons.forEach((icon) => draw(icon, 1, 1, 0))
+      icons.forEach((icon, i) => {
+        const age = animate
+          ? now() - clock.start - (i / Math.max(1, icons.length)) * SPREAD_MS
+          : Infinity
+        if (age < 0) return
+        const t = Math.min(1, age / POP_MS)
+        draw(icon, 1, Math.max(0.05, pop(t)), age < POP_MS ? (1 - t) * 10 : 0)
+      })
       context.globalAlpha = 1
       return
     }
