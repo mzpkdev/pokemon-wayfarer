@@ -1,5 +1,5 @@
 // The living world over the map: the S.S. ferries sailing their loops, the
-// lanes they sail, and the game's time-of-day tint. The data is living.json
+// lanes they sail, the Magnet Train on its line, and the game's time-of-day tint. The data is living.json
 // (see build/living.mjs); `livingOverlay` draws it for a game time.
 import { DATA } from "./data"
 import type { Overlay, Projection } from "./render"
@@ -26,6 +26,20 @@ export type Living = {
   }
   /** Sea lanes by "from>to" port ids: polylines of grid points in metatiles. */
   lanes: Record<string, Point[]>
+  /** The Magnet Train, back and forth along its line. */
+  train?: {
+    /** "MAGNET TRAIN". */
+    name: string
+    /** The stations at the line's two ends, first to last. */
+    stations: [string, string]
+    /** The middle of its deck, station to station, in metatiles. */
+    line: Point[]
+    /** Game minutes it waits at a station, and rides between the two. */
+    stationMinutes: number
+    rideMinutes: number
+    /** The game minute it leaves the first station. */
+    start: number
+  }
   /** Each time of day, by the hours it begins and ends. */
   periods: { name: string; from: number; to: number }[]
   /** [hour, multiplier per channel out of 256] the game blends the overworld by. */
@@ -38,6 +52,17 @@ type Lane = { points: Point[]; along: number[]; length: number }
 export type LivingWorld = Living & {
   shapes: Map<string, Lane>
   sprites: Record<string, HTMLImageElement>
+  /** The train's line, measured. */
+  rails?: Lane
+}
+
+/** Where the train is at a game time. */
+export type Train = {
+  /** How far along its line the middle of the train is, in metatiles. */
+  along: number
+  at: "station" | "line"
+  /** "MAGNET TRAIN · Goldenrod → Saffron", or "MAGNET TRAIN · in Goldenrod". */
+  label: string
 }
 
 /** Where a ship is at a game time. */
@@ -86,22 +111,24 @@ const shapeOf = (points: Point[]): Lane => {
 
 const loading = new Map<string, Promise<LivingWorld>>()
 
-/** Loads living.json and the three ship sprites once per base path. */
+/** Loads living.json, the three ship sprites and the train's once per base path. */
 export const loadLiving = (base = DATA, sprites = "/game/sprites"): Promise<LivingWorld> => {
   const key = `${base}|${sprites}`
   let world = loading.get(key)
   if (!world) {
     world = (async () => {
-      const [living, aqua, anne, tidal] = await Promise.all([
+      const [living, aqua, anne, tidal, train] = await Promise.all([
         fetch(`${base}/living.json`).then((response) => response.json() as Promise<Living>),
         loadImage(`${sprites}/ss-aqua.png`),
         loadImage(`${sprites}/ss-anne.png`),
         loadImage(`${sprites}/ss-tidal.png`),
+        loadImage(`${sprites}/magnet-train.png`),
       ])
       return {
         ...living,
         shapes: new Map(Object.entries(living.lanes).map(([k, points]) => [k, shapeOf(points)])),
-        sprites: { aqua, anne, tidal },
+        sprites: { aqua, anne, tidal, train },
+        rails: living.train && shapeOf(living.train.line),
       }
     })()
     world.catch(() => loading.delete(key))
@@ -168,7 +195,84 @@ const pointAlong = (lane: Lane, distance: number) => {
   const [bx, by] = points[i]!
   const span = along[i]! - along[i - 1]!
   const t = span > 0 ? Math.min(1, Math.max(0, (distance - along[i - 1]!) / span)) : 0
-  return { x: ax + (bx - ax) * t, y: ay + (by - ay) * t, dx: bx - ax }
+  return { x: ax + (bx - ax) * t, y: ay + (by - ay) * t, dx: bx - ax, dy: by - ay }
+}
+
+/**
+ * The train's length in metatiles: its sprite's 128 pixels drawn twice the
+ * game's size, so it fills the viaduct's deck (four metatiles wide) the way
+ * it fills its station's track. Two cars of eight.
+ */
+const TRAIN_TILES = 16
+
+/** Where the train is at a game minute: waiting at a station, or riding between. */
+export const trainAt = (living: LivingWorld, minutes: number): Train | undefined => {
+  const { train, rails } = living
+  if (!train || !rails) return undefined
+  const { stationMinutes: wait, rideMinutes: ride, stations, name } = train
+  const cycle = (wait + ride) * 2
+  const t = (((minutes - train.start + wait) % cycle) + cycle) % cycle
+  const first = TRAIN_TILES / 2,
+    last = rails.length - TRAIN_TILES / 2
+  const [a, b] = stations
+  if (t < wait) return { along: first, at: "station", label: `${name} · in ${a}` }
+  if (t < wait + ride) {
+    const p = (t - wait) / ride
+    const eased = p * p * (3 - 2 * p)
+    return { along: first + (last - first) * eased, at: "line", label: `${name} · ${a} → ${b}` }
+  }
+  if (t < wait * 2 + ride) return { along: last, at: "station", label: `${name} · in ${b}` }
+  const p = (t - wait * 2 - ride) / ride
+  const eased = p * p * (3 - 2 * p)
+  return { along: last - (last - first) * eased, at: "line", label: `${name} · ${b} → ${a}` }
+}
+
+/** The size, in CSS pixels, a car of the train is never drawn smaller than. */
+const MIN_CAR_CSS = 20
+
+/**
+ * Draws the train: its two cars, each where it is along the line and turned
+ * the way the line runs there, so it takes the corners. The western car (the
+ * sprite's left half, nose first) is the one nearer the line's start.
+ */
+const drawTrain = (
+  context: CanvasRenderingContext2D,
+  living: LivingWorld,
+  train: Train,
+  { scale, ratio, toScreen }: Projection,
+) => {
+  const image = living.sprites.train
+  const rails = living.rails
+  if (!image || !rails) return
+  const carW = Math.max((TRAIN_TILES / 2) * scale, MIN_CAR_CSS * ratio)
+  const carH = (carW * image.naturalHeight) / (image.naturalWidth / 2)
+  // Cars as long as they're drawn, so they meet however far out.
+  const half = carW / scale / 2
+  const sourceW = image.naturalWidth / 2
+  for (const [car, offset] of [
+    [0, -half],
+    [1, half],
+  ] as const) {
+    const at = pointAlong(rails, Math.min(rails.length, Math.max(0, train.along + offset)))
+    const p = toScreen(at.x, at.y)
+    const { width, height } = context.canvas
+    if (p.x < -carW || p.y < -carW || p.x > width + carW || p.y > height + carW) continue
+    context.save()
+    context.translate(p.x, p.y)
+    context.rotate(Math.atan2(at.dy, at.dx))
+    context.drawImage(
+      image,
+      car * sourceW,
+      0,
+      sourceW,
+      image.naturalHeight,
+      -carW / 2,
+      -carH / 2,
+      carW,
+      carH,
+    )
+    context.restore()
+  }
 }
 
 /** Where every ship is at a game minute. */
@@ -267,7 +371,8 @@ const drawLane = (
  */
 export const livingOverlay =
   (living: LivingWorld, minutes: number | (() => number)): Overlay =>
-  (context, { scale, ratio, toScreen }) => {
+  (context, projection) => {
+    const { scale, ratio, toScreen } = projection
     const now = typeof minutes === "function" ? minutes() : minutes
     const { width, height } = context.canvas
 
@@ -300,6 +405,9 @@ export const livingOverlay =
       context.drawImage(image, -w / 2, -h / 2, w, h)
       context.restore()
     }
+
+    const train = trainAt(living, now)
+    if (train) drawTrain(context, living, train, projection)
 
     // The game multiplies each palette color by the period's tint; multiply
     // over the canvas does the same to what's drawn.

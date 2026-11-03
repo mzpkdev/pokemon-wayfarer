@@ -72,6 +72,30 @@ export const distanceFrom = (seed, W, H) => {
   return d
 }
 
+// For each cell, the nearest cell that `owner` marks (>= 0), by a breadth-first
+// sweep out from all of them at once (-1 where there are none).
+const nearestOf = (owner, W, H) => {
+  const N = W * H
+  const from = new Int32Array(N).fill(-1)
+  const queue = new Int32Array(N)
+  let tail = 0
+  for (let i = 0; i < N; i++)
+    if (owner[i] >= 0) {
+      from[i] = i
+      queue[tail++] = i
+    }
+  for (let head = 0; head < tail; head++) {
+    const i = queue[head]
+    const x = i % W
+    for (const j of [x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1, i - W, i + W])
+      if (j >= 0 && j < N && from[j] < 0) {
+        from[j] = from[i]
+        queue[tail++] = j
+      }
+  }
+  return from
+}
+
 // Tile classes by average color, over the atlas.
 export const createClassifier = (atlas) => {
   const tileColor = (() => {
@@ -127,8 +151,52 @@ const paintMaps = (game, world, atlas) => {
   return { grid, owner }
 }
 
+// Where two linked maps ended up apart (a loop of connections that doesn't add
+// up), bridge the gap: each map's edge row is stretched halfway across, so a
+// road or a river runs on into the next map. Where the maps are also off
+// along the edge, the stretch slides across the gap by the same amount, so
+// the road jogs a tile at a time instead of stopping. Bridged cells count as
+// the map's own.
+const bridgeLinks = (world, grid, owner) => {
+  const { all, links, minX, minY, W } = world
+  const index = new Map(all.map((p, m) => [p, m]))
+  let bridged = 0
+  for (const { a, b, want, vertical } of links) {
+    const ahead = (vertical ? want[1] : want[0]) > 0
+    const [first, second] = ahead ? [a, b] : [b, a]
+    const [along, across, size, span, k] = vertical
+      ? ["x", "y", "height", "width", 0]
+      : ["y", "x", "width", "height", 1]
+    const from = first[across] + first.l[size],
+      to = second[across]
+    if (to <= from) continue
+    // How far `second` sits along the edge past where the link puts it.
+    const off = b[along] - a[along] - want[k]
+    const shift = ahead ? off : -off
+    const cell = (u, v) => (vertical ? (v - minY) * W + (u - minX) : (u - minY) * W + (v - minX))
+    const lo = Math.min(first[along], second[along]),
+      hi = Math.max(first[along] + first.l[span], second[along] + second.l[span])
+    for (let c = from; c < to; c++) {
+      const f = (c - from + 0.5) / (to - from)
+      const near = f < 0.5 ? first : second
+      const edge = near === first ? from - 1 : to
+      for (let t = lo; t < hi; t++) {
+        // The point on the near map's edge this cell continues.
+        const u = Math.round(near === first ? t - shift * f : t + shift * (1 - f))
+        if (u < near[along] || u >= near[along] + near.l[span]) continue
+        const i = cell(t, c)
+        if (owner[i] >= 0) continue
+        grid[i] = grid[cell(u, edge)]
+        owner[i] = index.get(near)
+        bridged++
+      }
+    }
+  }
+  return bridged
+}
+
 // Each placed map's border blocks, and what kind of ground they are.
-const readBorders = (game, world, atlas, { isWater, isDark }) => {
+const readBorders = (game, world, atlas, grid, { isWater, isDark, tileColor }) => {
   const { all } = world
   const { layouts, byName } = game
   // Sinjoh's maps are bordered by a cave's black void; give them the snow past
@@ -152,6 +220,31 @@ const readBorders = (game, world, atlas, { isWater, isDark }) => {
     const water = ids.filter(isWater).length
     const kind = ids.some(isDark) ? "none" : water * 2 > ids.length ? "water" : "land"
     return { bw, bh, ids, kind }
+  })
+  // The ground each map lends the land around it: its border if that is land.
+  // A map bordered by water (an island town) lends the ground its own edge
+  // shows most, so the land grown round it is its own, not a far map's.
+  const { W } = world
+  borders.forEach((b, m) => {
+    if (b.kind === "land") {
+      b.land = b
+      return
+    }
+    const p = all[m]
+    const counts = new Map()
+    const x0 = p.x - world.minX,
+      y0 = p.y - world.minY
+    for (let y = 0; y < p.l.height; y++)
+      for (let x = 0; x < p.l.width; x++) {
+        if (x > 1 && y > 1 && x < p.l.width - 2 && y < p.l.height - 2) continue
+        const k = grid[(y0 + y) * W + x0 + x]
+        // Ground, not grey docks, roofs or fences.
+        const color = tileColor(k)
+        if (isWater(k) || isDark(k) || Math.max(...color) - Math.min(...color) < 40) continue
+        counts.set(k, (counts.get(k) ?? 0) + 1)
+      }
+    const [top] = [...counts].toSorted((a, c) => c[1] - a[1])
+    b.land = top && b.kind === "water" ? { bw: 1, bh: 1, ids: [top[0]] } : null
   })
   return borders
 }
@@ -215,6 +308,33 @@ const growLand = (world, grid, owner, { isWater, tileColor }) => {
       land[i] = toLand[i] < REACH + WANDER * coastNoise(x, y) && toLand[i] < toSeaRoute[i] ? 1 : 0
     }
   }
+  // Water at a map's edge (a river, a lake's shore, a bay) runs on past it a
+  // little way, a wandering 2 to 16 metatiles or so, so it doesn't stop dead in a
+  // straight line against the fill. Each filled cell looks at the nearest map
+  // cell; `spill` remembers which cells became water this way, and from where.
+  // It keeps clear of other maps' land, so it doesn't run up against the
+  // straight edge of the next map instead.
+  const nearestCell = nearestOf(owner, W, H)
+  const landOwner = new Int32Array(N).fill(-1)
+  for (let i = 0; i < N; i++) if (mapLand[i]) landOwner[i] = owner[i]
+  const nearestLand = nearestOf(landOwner, W, H)
+  const spill = new Int32Array(N).fill(-1)
+  for (let i = 0; i < N; i++) {
+    if (owner[i] >= 0) continue
+    const from = nearestCell[i]
+    if (from < 0 || !isWater(grid[from])) continue
+    const shore = nearestLand[i]
+    if (shore >= 0 && owner[shore] !== owner[from] && toLand[i] < 5) continue
+    const x = i % W,
+      y = (i - x) / W
+    const fx = from % W,
+      fy = (from - fx) / W
+    const reach = 8 + 4 * fractal(x + 3100, y - 1700, 1 / 24) + 5 * fractal(x - 800, y + 60, 1 / 7)
+    if (Math.hypot(x - fx, y - fy) < reach) {
+      land[i] = 0
+      spill[i] = from
+    }
+  }
   // Smooth the filled coast: each filled cell takes the majority of its 5x5
   // neighborhood, twice, which rounds off stray corners and specks.
   for (let pass = 0; pass < 2; pass++) {
@@ -255,9 +375,58 @@ const growLand = (world, grid, owner, { isWater, tileColor }) => {
           stack.push(j)
         }
     }
-    for (let i = 0; i < N; i++) if (!land[i] && !open[i] && owner[i] < 0) land[i] = 1
+    for (let i = 0; i < N; i++)
+      if (!land[i] && !open[i] && owner[i] < 0 && spill[i] < 0) land[i] = 1
   }
-  return { land, toLand }
+  // A map's land never meets the sea at its own edge: a few cells of fill
+  // always lie in front, so the coast is grown, not cut along the rectangle.
+  for (let i = 0; i < N; i++) {
+    if (owner[i] >= 0 || spill[i] >= 0) continue
+    const x = i % W,
+      y = (i - x) / W
+    if (toLand[i] < 3.5 + 1.5 * fractal(x - 700, y + 900, 1 / 10)) land[i] = 1
+  }
+  for (let i = 0; i < N; i++) if (land[i]) spill[i] = -1
+  return { land, toLand, spill }
+}
+
+// Sinjoh is the land that joins Johto to Sinnoh: fill every column under it
+// from its maps up to Sinnoh's, so a wide strait elsewhere doesn't cut it off.
+// The ends of the run narrow with noise, so the land shoulders off.
+const bridgeSinjoh = (world, owner, land) => {
+  const { all, W } = world
+  const sinjoh = all.map((p, m) => (p.region === "Sinjoh" ? m : -1)).filter((m) => m >= 0)
+  if (sinjoh.length === 0) return
+  const regionOf = (i) => (owner[i] >= 0 ? all[owner[i]].region : null)
+  const left = Math.min(...sinjoh.map((m) => all[m].x - world.minX))
+  const right = Math.max(...sinjoh.map((m) => all[m].x - world.minX + all[m].l.width))
+  const top = Math.min(...sinjoh.map((m) => all[m].y - world.minY))
+  // Where Sinnoh's maps end above each column, looking a little to either
+  // side too, so the bridge is as wide as Sinjoh even under a narrow route.
+  const REACH_UP = 120,
+    SIDE = 28
+  const sinnohBottom = new Map()
+  for (let x = left - SIDE; x < right + SIDE; x++)
+    for (let y = top - 1; y > Math.max(0, top - REACH_UP); y--)
+      if (regionOf(y * W + x) === "Sinnoh") {
+        sinnohBottom.set(x, y)
+        break
+      }
+  for (let x = left; x < right; x++) {
+    let y = -1
+    for (let dx = -SIDE; dx <= SIDE; dx++) y = Math.max(y, sinnohBottom.get(x + dx) ?? -1)
+    if (y < 0) continue
+    const edge = Math.min(x - left, right - 1 - x)
+    const shoulder = 10 + 6 * fractal(x * 2, y, 1 / 12)
+    for (let fy = y + 1; fy < top; fy++) {
+      const i = fy * W + x
+      if (owner[i] >= 0) continue
+      // Near the ends, keep only the middle of the run.
+      const fromEnd = Math.min(fy - y, top - fy)
+      if (edge < shoulder && fromEnd < shoulder - edge) continue
+      land[i] = 1
+    }
+  }
 }
 
 const cutStraits = (world, owner, land) => {
@@ -319,15 +488,15 @@ const cutStraits = (world, owner, land) => {
 // Fills every cell outside the maps: land takes the nearest map's border
 // blocks, sea the nearest water border or the open ocean's. Returns
 // `fillBorder`, the map each land cell's border came from (-1: not filled).
-const fillBorders = (world, { grid, owner, land, toLand, borders }) => {
+const fillBorders = (world, { grid, owner, land, spill, borders, isWater, tileColor, tint }) => {
   const { all, W, H } = world
   const N = W * H
   // Which map each cell takes its border from: the nearest map of the right kind.
-  const nearest = (kind) => {
+  const nearest = (lends) => {
     const from = new Int32Array(N).fill(-1)
     const queue = []
     for (let i = 0; i < N; i++)
-      if (owner[i] >= 0 && borders[owner[i]].kind === kind) {
+      if (owner[i] >= 0 && lends(borders[owner[i]])) {
         from[i] = owner[i]
         queue.push(i)
       }
@@ -349,9 +518,53 @@ const fillBorders = (world, { grid, owner, land, toLand, borders }) => {
     }
     return from
   }
-  const landFrom = nearest("land")
-  const waterFrom = nearest("water")
+  // Land takes the nearest land-bordered map's border; only land with none
+  // near (an island town's) takes the ground of the nearest island map.
+  const mainland = nearest((b) => b.kind === "land")
+  const island = nearest((b) => b.land)
+  const landKind = new Uint8Array(N)
+  for (let i = 0; i < N; i++)
+    landKind[i] = owner[i] >= 0 && borders[owner[i]].kind === "land" ? 1 : 0
+  const toMainland = distanceFrom(landKind, W, H)
+  const landFrom = new Int32Array(N)
+  for (let i = 0; i < N; i++) landFrom[i] = toMainland[i] < 70 ? mainland[i] : island[i]
   const ocean = borders[all.findIndex((p) => p.m.name === "Route105")]
+  // The water each map lends the sea beside it: its border if that is water,
+  // else the water tile it draws most, else none. The sea near the coasts takes
+  // the nearest such map's, so a sea route's water runs on in its own tiles.
+  const waterOf = borders.map((b, m) => {
+    if (b.kind === "water") return b
+    const counts = new Map()
+    for (let i = 0; i < N; i++)
+      if (owner[i] === m && isWater(grid[i])) counts.set(grid[i], (counts.get(grid[i]) ?? 0) + 1)
+    const [top] = [...counts].toSorted((p, q) => q[1] - p[1])
+    return top ? { bw: 1, bh: 1, ids: [top[0]] } : null
+  })
+  const waterOwner = new Int32Array(N).fill(-1)
+  for (let i = 0; i < N; i++)
+    if (owner[i] >= 0 && waterOf[owner[i]] && isWater(grid[i])) waterOwner[i] = owner[i]
+  const waterNearest = nearestOf(waterOwner, W, H)
+  const waterFrom = new Int32Array(N).fill(-1)
+  for (let i = 0; i < N; i++) if (waterNearest[i] >= 0) waterFrom[i] = owner[waterNearest[i]]
+  // How deep the sea is: shallow by the coasts and the maps (a sea route's own
+  // water never darkens, so the sea beside it doesn't either), then deeper in
+  // four steps that wander with the noise. Each step tints the nearest map's
+  // water a quarter further toward the one deep sea, so every game's water
+  // meets the others out at sea, in the same color and the open ocean's tile.
+  const shore = new Uint8Array(N)
+  for (let i = 0; i < N; i++) shore[i] = land[i] || owner[i] >= 0 ? 1 : 0
+  const toShore = distanceFrom(shore, W, H)
+  const depthOf = (i) => {
+    const x = i % W,
+      y = (i - x) / W
+    const d = toShore[i] + 5 * fractal(x - 4100, y + 2300, 1 / 36)
+    return d < 10 ? 0 : d < 20 ? 1 : d < 31 ? 2 : d < 44 ? 3 : 4
+  }
+  const waterColor = waterOf.map((b) => {
+    if (!b) return null
+    const colors = b.ids.map(tileColor)
+    return [0, 1, 2].map((n) => colors.reduce((sum, c) => sum + c[n], 0) / colors.length)
+  })
   // Look the nearest map up from a point pushed about by noise, so where one
   // map's fill meets another's the boundary wanders instead of running straight.
   const warped = (from, i) => {
@@ -367,23 +580,75 @@ const fillBorders = (world, { grid, owner, land, toLand, borders }) => {
     if (owner[i] >= 0) continue
     if (land[i]) {
       fillBorder[i] = warped(landFrom, i)
-      grid[i] = pattern(borders[fillBorder[i]], i, W)
-    } else
-      grid[i] =
-        waterFrom[i] >= 0 && toLand[i] < 40
-          ? pattern(borders[waterFrom[i]], i, W)
-          : pattern(ocean, i, W)
+      grid[i] = pattern(borders[fillBorder[i]].land, i, W)
+    } else if (spill[i] >= 0 && waterOf[owner[spill[i]]])
+      grid[i] = pattern(waterOf[owner[spill[i]]], i, W)
+    else {
+      const depth = depthOf(i)
+      // Right by a map, its own water, so the sea doesn't outline its rectangle.
+      const near = waterNearest[i]
+      const close =
+        near >= 0 && Math.hypot((i % W) - (near % W), Math.floor(i / W) - Math.floor(near / W)) < 14
+      const from = close ? waterFrom[i] : warped(waterFrom, i)
+      if (depth === 4 || from < 0) grid[i] = tint(pattern(ocean, i, W), DEEP_SEA)
+      else if (depth === 0) grid[i] = pattern(waterOf[from], i, W)
+      else grid[i] = tint(pattern(waterOf[from], i, W), stepColor(waterColor[from], depth))
+    }
   }
-  return fillBorder
+  return {
+    fillBorder,
+    ocean: { bw: ocean.bw, bh: ocean.bh, ids: ocean.ids.map((k) => tint(k, DEEP_SEA)) },
+  }
+}
+
+/** The open ocean's color, in the GBA's 5-bit steps; the sea past the grid. */
+export const DEEP_SEA = [48, 88, 176]
+/** A water color `depth` quarters of the way to the deep sea, in 5-bit steps. */
+const stepColor = (color, depth) =>
+  color.map((c, n) => Math.round((c + (DEEP_SEA[n] - c) * (depth / 4)) / 8) * 8)
+
+// A water tile tinted to average `color`, as a new metatile in the atlas:
+// every pixel scaled per channel, so its ripples stay, in 5-bit colors.
+const createTinter = (atlas, tileColor) => {
+  const made = new Map()
+  return (k, color) => {
+    const key = `${k}:${color.join(",")}`
+    if (!made.has(key)) {
+      const average = tileColor(k)
+      const factor = average.map((c, n) => color[n] / Math.max(1, c))
+      const source = atlas.tiles[k]
+      const tile = new Uint8Array(source.length)
+      for (let p = 0; p < 256; p++) {
+        for (let n = 0; n < 3; n++)
+          tile[p * 4 + n] = Math.min(248, Math.round((source[p * 4 + n] * factor[n]) / 8) * 8)
+        tile[p * 4 + 3] = 255
+      }
+      made.set(key, atlas.tiles.length)
+      atlas.tiles.push(tile)
+    }
+    return made.get(key)
+  }
 }
 
 // Builds the whole filled world grid. Returns everything the far view needs.
 export const buildLand = (game, world, atlas) => {
   const { grid, owner } = paintMaps(game, world, atlas)
+  console.log("bridged", bridgeLinks(world, grid, owner), "cells between linked maps")
   const classify = createClassifier(atlas)
-  const borders = readBorders(game, world, atlas, classify)
-  const { land, toLand } = growLand(world, grid, owner, classify)
+  const borders = readBorders(game, world, atlas, grid, classify)
+  const { land, toLand, spill } = growLand(world, grid, owner, classify)
+  bridgeSinjoh(world, owner, land)
   cutStraits(world, owner, land)
-  const fillBorder = fillBorders(world, { grid, owner, land, toLand, borders })
-  return { grid, owner, borders, fillBorder, toLand, ...classify }
+  const tint = createTinter(atlas, classify.tileColor)
+  const { fillBorder, ocean } = fillBorders(world, {
+    grid,
+    owner,
+    land,
+    spill,
+    borders,
+    isWater: classify.isWater,
+    tileColor: classify.tileColor,
+    tint,
+  })
+  return { grid, owner, borders, fillBorder, toLand, ocean, ...classify }
 }

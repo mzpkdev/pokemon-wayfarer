@@ -4,7 +4,6 @@
 // the metatile atlas, the grid of atlas indices, the far-out overview and
 // meta.json.
 // usage: pnpm world-map [outDir]
-import { spawnSync } from "node:child_process"
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
@@ -18,7 +17,8 @@ import { buildLandmarks } from "./landmarks.mjs"
 import { placeWorld } from "./layout.mjs"
 import { writeLiving } from "./living.mjs"
 import { writeNotables } from "./notables.mjs"
-import { paintOverview } from "./overview.mjs"
+import { layRails } from "./rails.mjs"
+import { overviewLevels, packLevels } from "./overview.mjs"
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const [outDir = path.resolve(here, "../../../public/world-map")] = process.argv.slice(2)
@@ -28,8 +28,9 @@ const metatiles = createAtlas(game)
 const world = placeWorld(game)
 const { all, minX, minY, W, H } = world
 const land = buildLand(game, world, metatiles)
-const overview = paintOverview(world, land)
-const { grid } = land
+// What's drawn: the land with the Magnet Train's line laid over it. The
+// ferries and walkers keep to `land.grid`, under the viaduct.
+const { grid, line: railLine } = layRails(game, world, land, metatiles)
 const atlasTiles = metatiles.tiles
 
 // The atlas: 64 metatiles a row.
@@ -46,27 +47,13 @@ fs.mkdirSync(outDir, { recursive: true })
 writePng(`${outDir}/atlas.png`, COLUMNS * 16, rows * 16, atlas)
 fs.writeFileSync(`${outDir}/grid.bin.gz`, gzipSync(Buffer.from(grid.buffer), { level: 9 }))
 fs.rmSync(`${outDir}/grid.bin`, { force: true })
-// The far-out view is the first thing to load; a JPEG of it is a third the size
-// and looks the same. Made when ffmpeg is around; without it the PNG stays.
-{
-  const png = `${outDir}/overview.png`,
-    jpg = `${outDir}/overview.jpg`
-  fs.rmSync(jpg, { force: true })
-  writePng(png, W, H, overview)
-  const available = spawnSync("ffmpeg", ["-version"], { stdio: "ignore" }).status === 0
-  const made =
-    available &&
-    spawnSync("ffmpeg", ["-loglevel", "error", "-y", "-i", png, "-q:v", "2", jpg], {
-      stdio: "inherit",
-    }).status === 0
-  if (made) {
-    fs.rmSync(png)
-    console.log("overview.jpg (ffmpeg)")
-  } else {
-    fs.rmSync(jpg, { force: true })
-    console.log("overview.png (no ffmpeg, kept the PNG)")
-  }
-}
+// The far-out view, a pixel a metatile and coarser, packed in one PNG. The
+// open sea past the grid is the darkest ocean, in metatiles and in color.
+const overview = packLevels(
+  overviewLevels({ grid, W, H, tiles: atlasTiles, isWater: land.isWater }),
+)
+writePng(`${outDir}/overview.png`, overview.width, overview.height, overview.rgba)
+fs.rmSync(`${outDir}/overview.jpg`, { force: true })
 const towns = all
   .filter((p) => ["MAP_TYPE_TOWN", "MAP_TYPE_CITY"].includes(p.m.map_type))
   .map((p) => ({ name: p.m.name, x: p.x - minX + p.l.width / 2, y: p.y - minY + p.l.height / 2 }))
@@ -120,6 +107,9 @@ fs.writeFileSync(
     height: H,
     columns: COLUMNS,
     count: atlasTiles.length,
+    overview: overview.places,
+    ocean: land.ocean,
+    sea: [...overview.rgba.subarray(0, 3)],
     towns,
     regions,
     maps: all.map((p) => ({
@@ -153,7 +143,8 @@ for (const pic of pics) {
 // The ferries, their sea lanes and the times of day.
 writeLiving(
   {
-    grid,
+    railLine,
+    grid: land.grid,
     isWater: land.isWater,
     width: W,
     height: H,

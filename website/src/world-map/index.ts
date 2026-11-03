@@ -12,9 +12,11 @@ export {
   pickShip,
   shipReach,
   shipsAt,
+  trainAt,
   type Living,
   type LivingWorld,
   type Ship,
+  type Train,
 } from "./living"
 export {
   loadNotables,
