@@ -8,7 +8,6 @@ import {
   LAYERS,
   LOGO,
   LOGO_RISE,
-  PAN_FRAMES,
   PASSERS,
   type Passer,
   POKEBALL,
@@ -30,10 +29,12 @@ import {
 const SKY = "rgb(131 205 238)"
 const GROUND = "rgb(8 41 0)"
 
-/** Intro timeline in frames: fade in on the Poké Ball, wait, then pan up. */
+/**
+ * The page opens on the title screen (frame 0), fading in from black over
+ * these frames; the logo's rise and the passers count from frame 0 too.
+ */
 const FADE_FRAMES = 32
-const PAN_START = FADE_FRAMES + 90
-const INTRO_END = PAN_START + PAN_FRAMES
+const TITLE_START = 0
 
 /** How far, in viewport heights, scrolling takes the camera back down to the Poké Ball. */
 const SCRUB_VH = 1.6
@@ -112,7 +113,6 @@ export const TitleScene = () => {
   const [viewport, setViewport] = useState<Viewport | null>(null)
   const [atBall, setAtBall] = useState(false)
   const [atTitle, setAtTitle] = useState(false)
-  const skipRef = useRef<() => void>(() => {})
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -136,11 +136,13 @@ export const TitleScene = () => {
     resize()
 
     const reducedMotion = prefersReducedMotion()
-    // Start at the title, skipping the intro, when motion is reduced or the page
-    // was reloaded part-way down.
-    let frame = reducedMotion || window.scrollY > 0 ? INTRO_END : 0
-    let revealStart = frame === INTRO_END ? INTRO_END - LOGO_RISE.frames - 10 : INTRO_END
-    let nextPass = INTRO_END + 180
+    // The page opens on the title screen: it fades in from black and the logo
+    // rises, as the game's does. With motion reduced, or the page reloaded
+    // part-way down, it is just there.
+    const settled = reducedMotion || window.scrollY > 0
+    let frame = settled ? TITLE_START + FADE_FRAMES : TITLE_START
+    let revealStart = settled ? TITLE_START - LOGO_RISE.frames - 10 : TITLE_START
+    let nextPass = TITLE_START + 180
     let pass: Pass | null = null
     let visible = true
     let lastTime: number | null = null
@@ -148,14 +150,6 @@ export const TitleScene = () => {
     let raf = 0
     let titleShown: boolean | null = null
     let ballShown: boolean | null = null
-
-    skipRef.current = () => {
-      if (frame < INTRO_END) {
-        frame = INTRO_END
-        revealStart = INTRO_END
-        nextPass = INTRO_END + 180
-      }
-    }
 
     /** Viewport heights scrolled into the section. */
     const scrolledScreens = () => -section.getBoundingClientRect().top / window.innerHeight
@@ -311,13 +305,11 @@ export const TitleScene = () => {
         drawLayer(bg3!, layerOffset(LAYERS[0]!, pan))
 
         const reveal = frame - revealStart
-        if (frame >= INTRO_END) {
-          if (pass) drawPass(pass)
-          drawLogo(reveal)
-          const wordmarkRise = riseOffset(WORDMARK_RISE, reveal)
-          if (wordmarkRise !== null)
-            context.drawImage(wordmark, originX + WORDMARK.x, originY + WORDMARK.y + wordmarkRise)
-        }
+        if (pass) drawPass(pass)
+        drawLogo(reveal)
+        const wordmarkRise = riseOffset(WORDMARK_RISE, reveal)
+        if (wordmarkRise !== null)
+          context.drawImage(wordmark, originX + WORDMARK.x, originY + WORDMARK.y + wordmarkRise)
 
         drawLayer(bg2!, layerOffset(LAYERS[1]!, pan))
         drawLayer(bg1!, layerOffset(LAYERS[2]!, pan))
@@ -334,9 +326,9 @@ export const TitleScene = () => {
         if (pan === 1 && pressStartReady && (reducedMotion || pressStartVisible(reveal)))
           context.drawImage(pressStart, originX + PRESS_START.x, originY + PRESS_START.y)
 
-        if (frame < FADE_FRAMES) {
+        if (frame < TITLE_START + FADE_FRAMES) {
           // Palette fades step through 16 levels.
-          const level = Math.floor((frame / FADE_FRAMES) * 16)
+          const level = Math.floor(((frame - TITLE_START) / FADE_FRAMES) * 16)
           context.fillStyle = `rgb(0 0 0 / ${(16 - level) / 16})`
           context.fillRect(0, 0, width, height)
         }
@@ -357,7 +349,7 @@ export const TitleScene = () => {
         const scrolled = scrollPan()
         for (let step = 0; step < steps; step++) {
           frame++
-          if (frame >= INTRO_END && scrolled === 1 && !reducedMotion) {
+          if (scrolled === 1 && !reducedMotion) {
             if (pass) pass = stepPass(pass)
             else if (frame >= nextPass) {
               pass = startPass()
@@ -365,17 +357,14 @@ export const TitleScene = () => {
             }
           }
         }
-        if (frame === INTRO_END - 1) revealStart = INTRO_END
-
-        const pan =
-          frame < PAN_START ? 0 : frame < INTRO_END ? (frame - PAN_START) / PAN_FRAMES : scrolled
+        const pan = scrolled
         const pageRising = scrolledScreens() >= SCRUB_VH + PAGE_RISES_AT
         draw(pan)
 
-        const title = frame >= INTRO_END && pan === 1
+        const title = pan === 1
         if (title !== titleShown) setAtTitle((titleShown = title))
         // The countdown and dialog leave as the page below starts rising over the scene.
-        const ball = frame >= INTRO_END && pan < 0.06 && !pageRising
+        const ball = pan < 0.06 && !pageRising
         if (ball !== ballShown) setAtBall((ballShown = ball))
       }
       raf = requestAnimationFrame(tick)
@@ -395,29 +384,18 @@ export const TitleScene = () => {
   }, [])
 
   useEffect(() => {
-    // Any input during the intro skips to the title, as in the game.
-    const skip = () => skipRef.current()
+    // Enter on the title screen presses START: down to the Poké Ball.
     const keydown = (event: KeyboardEvent) => {
-      skip()
       if (event.target === document.body && event.key === "Enter" && window.scrollY < 8) {
         event.preventDefault()
         if (sectionRef.current) scrollToBall(sectionRef.current)
       }
     }
     window.addEventListener("keydown", keydown)
-    window.addEventListener("pointerdown", skip)
-    window.addEventListener("wheel", skip, { passive: true })
-    window.addEventListener("touchmove", skip, { passive: true })
-    return () => {
-      window.removeEventListener("keydown", keydown)
-      window.removeEventListener("pointerdown", skip)
-      window.removeEventListener("wheel", skip)
-      window.removeEventListener("touchmove", skip)
-    }
+    return () => window.removeEventListener("keydown", keydown)
   }, [])
 
   const pressStart = () => {
-    skipRef.current()
     if (sectionRef.current) scrollToBall(sectionRef.current)
   }
 
