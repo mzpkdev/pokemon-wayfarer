@@ -184,8 +184,10 @@ Plain Node scripts. Each stage gets a module:
   Coasts are grown with noise, and a few cells of fill always lie in front of
   a map's land edge. Water at a map's edge (rivers, bays, sea routes) spills
   on past it a wandering way in the map's own water, kept off other maps'
-  land. The insides of loops are filled, straits keep regions apart, and each
-  filled cell takes the border blocks of the nearest land-bordered map (an
+  land. The insides of loops are filled, straits keep regions apart, every
+  ferry port and Sevii Island dock (a town warp into a `_HARBOR` map) keeps a
+  way out to the open sea, cut through the grown land as an inlet that widens
+  toward the sea where the land closes its bay, and each filled cell takes the border blocks of the nearest land-bordered map (an
   island town far from any takes its own edge's ground). The sea takes the
   nearest map's water by the coasts, then deepens in four noisy steps, each a
   tinted copy of that water a quarter nearer one deep ocean, so every game's
