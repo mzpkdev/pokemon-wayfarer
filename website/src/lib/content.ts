@@ -51,7 +51,7 @@ export const HIGHLIGHTS: Highlight[] = [
   },
   {
     title: "Free, made in the open",
-    body: "A fan game built on pokeemerald-expansion, with every change on GitHub.",
+    body: "A fan game built on Pokémon Heart & Soul, itself built on pokeemerald-expansion, with every change on GitHub.",
     icon: "rare-candy",
   },
 ]
