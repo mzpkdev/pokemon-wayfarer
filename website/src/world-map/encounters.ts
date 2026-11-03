@@ -26,10 +26,12 @@ export type Encounters = {
   species: string[]
   /** Each species' generation by atlas slot: 1 to 9, or 0 for a regional form. */
   gens: number[]
-  /** The page's roster per generation, I to VIII, then the regional forms. */
-  counts: number[]
-  /** The page's roster, atlas slots per generation (I to VIII), then the regional forms. */
-  roster: number[][]
+  /** Each atlas slot's roster entry: its own slot, the plain species for a form like LYCANROC_MIDNIGHT, or -1 for none. */
+  entry: number[]
+  /** The page's roster by home region, in the tour's order: every species of Gen I to VIII and the regional forms. */
+  homes: { id: string; slots: number[] }[]
+  /** The three Safari Zones' Kalos species, and the placed map nearest each one's gate. */
+  safari: { zone: string; near: string; slots: number[] }[]
   /** By the map's folder name, as in `Meta.maps`. */
   maps: Record<string, Place>
 }

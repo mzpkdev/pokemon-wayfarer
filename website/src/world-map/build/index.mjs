@@ -184,6 +184,6 @@ console.log(
   places.maps,
   "maps,",
   places.species,
-  "species; by generation I-VIII, forms:",
-  places.counts.join(" "),
+  "species; by home:",
+  places.homes.join(", "),
 )
