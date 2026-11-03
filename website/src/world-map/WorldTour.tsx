@@ -23,10 +23,15 @@ const flightMs = (from: Camera, to: Camera) =>
 /** The closest zoom he is drawn at; further out he is a speck. */
 const RIDER_MIN_ZOOM = 4
 
-/** Rows of the dither that dissolves the page's ground into the map, in scene pixels. */
-const SEAM_ROWS = 20
-/** A 4x4 ordered dither, thresholds 0 to 15. */
-const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5]
+/**
+ * The fade in from a warp, as the game plays it on stepping out of a door:
+ * the palette blends from the fade color to full color in 8 steps (deltaY 2
+ * in palette.c), a little slower here so it reads on a page.
+ */
+const FADE_STEPS = 8
+const FADE_MS = 400
+/** A beat between the fade ending and BRENDAN setting off. */
+const RIDE_DELAY_MS = 250
 
 /**
  * The game's yellow OK button from the naming screen; pixel corners clip an
@@ -67,33 +72,6 @@ const shotsFor = (meta: Meta, width: number, height: number): Camera[] => {
 }
 
 /**
- * Dissolves a band of `color` at the top of the section into the map, in
- * whole `pixel`-sized dots, so the page above runs into the map without a
- * hard edge. `top` is where the section's top is on the canvas.
- */
-const drawSeam = (context: CanvasRenderingContext2D, top: number, pixel: number, color: string) => {
-  const ratio = window.devicePixelRatio
-  const dot = pixel * ratio
-  const y0 = top * ratio
-  if (y0 + SEAM_ROWS * dot <= 0) return
-  context.setTransform(1, 0, 0, 1, 0, 0)
-  context.fillStyle = color
-  const columns = Math.ceil(context.canvas.width / dot)
-  for (let row = 0; row < SEAM_ROWS; row++) {
-    const y = Math.round(y0 + row * dot)
-    const next = Math.round(y0 + (row + 1) * dot)
-    if (next <= 0) continue
-    // How much of the row is still ground, from all of it to none.
-    const cover = 16 * (1 - (row + 0.5) / SEAM_ROWS)
-    for (let column = 0; column < columns; column++)
-      if (BAYER[(row % 4) * 4 + (column % 4)]! < cover) {
-        const x = Math.round(column * dot)
-        context.fillRect(x, y, Math.round((column + 1) * dot) - x, next - y)
-      }
-  }
-}
-
-/**
  * The world in the game's own tiles, held still at one stop at a time with a
  * card beside it. When the section comes into view, BRENDAN rides out of the
  * grass down ROUTE 101 to his door in LITTLEROOT TOWN; the card's button then
@@ -101,17 +79,17 @@ const drawSeam = (context: CanvasRenderingContext2D, top: number, pixel: number,
  * opens the map to look around. The page scrolls past it as usual. Fills its
  * section.
  *
- * `seam` names the color of the page right above the section and the CSS
- * variable holding its pixel size, for the dither that joins the two.
+ * The map starts hidden under `fade`, the color of the page above it, and
+ * fades in the way the game's screen does on stepping out of a door.
  */
 export const WorldTour = ({
   captions,
   base = DATA,
-  seam,
+  fade = "rgb(0 0 0)",
 }: {
   captions: Caption[]
   base?: string
-  seam?: { color: string; pixel: string }
+  fade?: string
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const captionRef = useRef<HTMLDivElement>(null)
@@ -125,8 +103,6 @@ export const WorldTour = ({
     label: null,
     shown: false,
   })
-  const seamColor = seam?.color
-  const seamPixel = seam?.pixel
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -153,7 +129,7 @@ export const WorldTour = ({
     // 101), the flight under way if any, and when the ride began.
     let current = 0
     let flight: { from: Camera; to: number; start: number; duration: number } | null = null
-    let rideStart: number | null = null
+    let fadeStart: number | null = null
 
     const rider = new Image()
     rider.src = RIDER_SRC
@@ -180,7 +156,12 @@ export const WorldTour = ({
         raf = 0
         const { width, height } = area()
         const shots = shotsFor(world.meta, width, height)
-        const ride = reducedMotion ? 1 : rideStart === null ? 0 : (now - rideStart) / RIDE_MS
+        const rideStart = fadeStart === null ? null : fadeStart + FADE_MS + RIDE_DELAY_MS
+        const ride = reducedMotion
+          ? 1
+          : rideStart === null
+            ? 0
+            : Math.max(0, (now - rideStart) / RIDE_MS)
         let camera: Camera
         if (flight) {
           const t = (now - flight.start) / flight.duration
@@ -193,7 +174,7 @@ export const WorldTour = ({
         const brendan = riderAt(route, ride, rider)
         // The popup names where BRENDAN is while the camera is with him.
         showPlace(
-          current > 0 || rideStart === null
+          current > 0 || rideStart === null || now < rideStart
             ? null
             : brendan.y + 2 < littlerootTop
               ? "ROUTE 101"
@@ -208,9 +189,18 @@ export const WorldTour = ({
           sprites:
             rider.complete && rider.naturalWidth && camera.zoom >= RIDER_MIN_ZOOM ? [brendan] : [],
         })
-        if (seamColor && seamPixel) {
-          const pixel = parseFloat(getComputedStyle(canvas).getPropertyValue(seamPixel)) || 4
-          drawSeam(context, 0, pixel, seamColor)
+        // The fade, in the game's whole steps.
+        const hidden = reducedMotion
+          ? 0
+          : fadeStart === null
+            ? 1
+            : Math.ceil(Math.max(0, 1 - (now - fadeStart) / FADE_MS) * FADE_STEPS) / FADE_STEPS
+        if (hidden > 0) {
+          context.setTransform(1, 0, 0, 1, 0, 0)
+          context.globalAlpha = hidden
+          context.fillStyle = fade
+          context.fillRect(0, 0, canvas.width, canvas.height)
+          context.globalAlpha = 1
         }
         const riding = rideStart !== null && ride < 1
         if (pending || flight || riding) schedule()
@@ -231,11 +221,12 @@ export const WorldTour = ({
         schedule()
       }
 
-      // The ride starts the first time nearly all of the section is on screen.
+      // The fade, then the ride, start the first time nearly all of the
+      // section is on screen.
       const watcher = new IntersectionObserver(
         ([entry]) => {
-          if (!entry?.isIntersecting || rideStart !== null) return
-          rideStart = performance.now()
+          if (!entry?.isIntersecting || fadeStart !== null) return
+          fadeStart = performance.now()
           watcher.disconnect()
           schedule()
         },
@@ -258,7 +249,7 @@ export const WorldTour = ({
       window.clearTimeout(popupTimer)
       cleanup()
     }
-  }, [base, reducedMotion, seamColor, seamPixel])
+  }, [base, reducedMotion, fade])
 
   const go = (next: number) => {
     setStop(next)

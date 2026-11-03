@@ -7,8 +7,9 @@ that turns the game's maps into data and a client that draws that data.
 The rest of the site uses it only through `index.ts`:
 
 - `WorldTour` is the landing page's world section, one screen tall. It opens
-  in ROUTE 101's tall grass, dithered into the page above. When the section
-  comes into view, BRENDAN rides down to his door in LITTLEROOT TOWN, with the
+  in ROUTE 101's tall grass. When the section comes into view, the map fades
+  in from the page's color in steps, like stepping out of a door in the game,
+  and BRENDAN rides down to his door in LITTLEROOT TOWN, with the
   game's map name popups. After that the map holds still beside a card, and
   its NEXT and BACK buttons fly the camera between the stops: LITTLEROOT, all
   of Hoenn, then the whole world. It never takes over the page's scrolling.
