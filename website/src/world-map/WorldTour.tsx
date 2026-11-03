@@ -423,10 +423,11 @@ const CircuitLeagues = ({
       <LeagueHalls
         league={entry}
         calling={calling[entry.id]}
-        roster={entry.id === focused ? roster : undefined}
+        roster={roster}
         progress={progress}
         base={base}
-        reducedMotion={reducedMotion}
+        // A view not shown keeps its five still: it only holds their room.
+        reducedMotion={reducedMotion || entry.id !== focused}
       />
     </div>
   )
@@ -1676,7 +1677,7 @@ export const WorldTour = ({
                       earned={earned}
                       focused={shown ? focused : null}
                       onFocus={focus}
-                      roster={shown ? roster : undefined}
+                      roster={roster}
                       progress={rating}
                       base={base}
                       reducedMotion={reducedMotion}
