@@ -250,9 +250,66 @@ for (const [name, file, palette] of [
 // The HNS sheet holds Johto's row above Kanto's; Hoenn's has its own sheet.
 const johtoKanto = renderIndexed(source("trainer_card/hns/combined_badges.png"))
 const hoennBadges = renderIndexed(source("trainer_card/badges.png"))
+// The game draws its badges in greys (the Trainer Card's, the only badge art
+// it has); the site tints each in its familiar colour, our art on the game's
+// shapes. Each grey step takes a step of the badge's colour: the highlight,
+// the light, the colour itself and its shadow; the black outline stays.
+// In sheet order: Johto's eight, Kanto's, then Hoenn's.
+const BADGE_COLORS = [
+  // Zephyr, Hive, Plain, Fog, Storm, Mineral, Glacier, Rising
+  [168, 184, 216],
+  [216, 72, 64],
+  [240, 192, 64],
+  [152, 104, 200],
+  [200, 128, 72],
+  [136, 160, 200],
+  [128, 200, 240],
+  [64, 112, 216],
+  // Boulder, Cascade, Thunder, Rainbow, Marsh, Soul, Volcano, Earth
+  [176, 160, 144],
+  [72, 152, 240],
+  [248, 176, 48],
+  [112, 200, 96],
+  [232, 192, 64],
+  [240, 120, 176],
+  [232, 80, 48],
+  [96, 176, 88],
+  // Stone, Knuckle, Dynamo, Heat, Balance, Feather, Mind, Rain
+  [168, 152, 136],
+  [120, 144, 208],
+  [240, 208, 64],
+  [240, 104, 48],
+  [224, 88, 88],
+  [104, 200, 224],
+  [232, 120, 200],
+  [64, 136, 232],
+]
+const mixColor = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t))
+const tintBadges = (sheet) => {
+  for (let i = 0; i < sheet.width * sheet.height; i++) {
+    const at = i * 4
+    if (!sheet.rgba[at + 3]) continue
+    const grey = sheet.rgba[at]
+    if (grey === 0) continue
+    const base = BADGE_COLORS[Math.floor((i % sheet.width) / 16)]
+    const t = grey / 248
+    const color =
+      t >= 0.95
+        ? mixColor(base, [255, 255, 255], 0.7)
+        : t >= 0.8
+          ? mixColor(base, [255, 255, 255], 0.3)
+          : t >= 0.65
+            ? base
+            : mixColor(base, [0, 0, 0], 0.4)
+    sheet.rgba.set(color, at)
+  }
+  return sheet
+}
 save(
   "badges.png",
-  sideBySide([crop(johtoKanto, 0, 0, 128, 16), crop(johtoKanto, 0, 16, 128, 16), hoennBadges]),
+  tintBadges(
+    sideBySide([crop(johtoKanto, 0, 0, 128, 16), crop(johtoKanto, 0, 16, 128, 16), hoennBadges]),
+  ),
 )
 
 // The three ferries as they sit at the game's docks, each with its own palette,

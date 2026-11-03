@@ -96,7 +96,7 @@ export const STARTS: Start[] = [
 ]
 
 /** The start the tour opens on. */
-export const DEFAULT_START: StartId = "hoenn"
+export const DEFAULT_START: StartId = "kanto"
 
 export const startOf = (id: StartId) => STARTS.find((start) => start.id === id)!
 
