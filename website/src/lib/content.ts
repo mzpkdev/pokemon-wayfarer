@@ -2,42 +2,59 @@
 
 export const REPOSITORY_URL = "https://github.com/mzpkdev/pokemon-wayfarer"
 
-export type Feature = {
+/** The patcher the FAQ points to for applying the .ups patch in a browser. */
+export const PATCHER_URL = "https://www.marcrobledo.com/RomPatcher.js/"
+
+/**
+ * Your level cap and wild levels by badges earned, from the wild level
+ * scaling spec's v0 table (.product/specs/wild-level-scaling.md). Rows are
+ * Wayfarer's reaches by the names players read them by: Outlands, Wilds, Road.
+ */
+export const LEVELS = {
+  badges: [0, 4, 8, 16, 24],
+  /** The column phones leave out, so the table fits at whole GBA pixels. */
+  hiddenOnPhones: 1,
+  rows: [
+    { label: "LV. CAP", levels: [15, 28, 50, 75, 100] },
+    { label: "FAR AWAY", levels: [13, 28, 50, 74, 98] },
+    { label: "OFF ROAD", levels: [9, 25, 44, 65, 85] },
+    { label: "ON ROAD", levels: [5, 20, 38, 56, 74] },
+  ],
+}
+
+export type Highlight = {
   title: string
   body: string
   /** A key item icon from public/game/items. */
   icon: string
 }
 
-export const FEATURES: Feature[] = [
+/**
+ * The world's size, as the world tour's last card counts it (see
+ * WorldSection.astro), plus the Gyms.
+ */
+export const NUMBERS: { value: string; label: string }[] = [
+  { value: "62", label: "towns and cities" },
+  { value: "114", label: "routes" },
+  { value: "24", label: "Gyms" },
+  { value: "7", label: "ports" },
+]
+
+/** What the world tour showed, in short, for anyone who scrolled past it. */
+export const HIGHLIGHTS: Highlight[] = [
   {
-    title: "One world, one save",
-    body: "Kanto, Johto and Hoenn share a single world. Your party, Bag and Pokédex go everywhere you do.",
+    title: "Seven lands, one save",
+    body: "Start in Kanto, Johto or Hoenn. Your party, Bag and Pokédex go everywhere you do.",
     icon: "town-map",
   },
   {
-    title: "Ferries that keep a schedule",
-    body: "The S.S. Aqua, Anne and Tidal sail four-port loops and change ships at 8:00 and 20:00. The Anne sails on to Alola.",
-    icon: "ss-ticket",
+    title: "Every land, its own Pokémon",
+    body: "Kanto and Johto are home to Gens I and II, Hoenn to III and V, Alola to VII and Sevii to Galar's VIII. Kalos is split across the three Safari Zones.",
+    icon: "safari-ball",
   },
   {
-    title: "A clock of its own",
-    body: "A day lasts two hours of play, from Morning through Day and Evening to Night. Time only runs while you play.",
-    icon: "sun-stone",
-  },
-  {
-    title: "Routes that change daily",
-    body: "Trainers and items move around from day to day. Beat a trainer and they may give you their number for a rematch.",
-    icon: "vs-seeker",
-  },
-  {
-    title: "Trainer Rating",
-    body: "Every badge, from any region, raises your rating. Wild Pokémon, trainers and Poké Mart shelves grow with it.",
-    icon: "rare-candy",
-  },
-  {
-    title: "A league circuit",
-    body: "Any 8 badges qualify you, with one from the league's own side. Indigo and Hoenn phone with invitations and can be won in either order; the Sevii Masters opens once you've won both.",
+    title: "24 Gyms, any order",
+    body: "Earn any 8 badges and a league phones. Win Indigo and the Hoenn League in either order, and the Masters opens on Seven Island.",
     icon: "master-ball",
   },
   {
@@ -46,42 +63,23 @@ export const FEATURES: Feature[] = [
     icon: "soothe-bell",
   },
   {
-    title: "The Sevii Islands",
-    body: "All seven islands are open to explore, with their own stories, trainers and the Trainer Tower.",
-    icon: "tri-pass",
-  },
-]
-
-export type Origin = {
-  region: string
-  town: string
-  body: string
-}
-
-export const ORIGINS: Origin[] = [
-  {
-    region: "Kanto",
-    town: "Pallet Town",
-    body: "Set out with a first partner from Professor Oak.",
+    title: "Ships you actually ride",
+    body: "The S.S. Aqua, Anne and Tidal sail real loops, and the Anne goes on to Alola. When your port is called, walk down the gangway. Stay aboard and you sail on to the next.",
+    icon: "ss-ticket",
   },
   {
-    region: "Johto",
-    town: "New Bark Town",
-    body: "Wake up next door to Professor Elm's lab.",
+    title: "Routes that change daily",
+    body: "Trainers and items move from day to day, ships' passengers too. Beat a trainer and they may give you their number for a rematch.",
+    icon: "vs-seeker",
   },
   {
-    region: "Hoenn",
-    town: "Littleroot Town",
-    body: "Choose Treecko, Torchic or Mudkip.",
+    title: "A two-hour day",
+    body: "Morning, Day, Evening and Night pass in two hours of play. Time only runs while you play.",
+    icon: "sun-stone",
   },
-]
-
-export type Stat = { value: string; label: string }
-
-export const STATS: Stat[] = [
-  { value: "3", label: "starting regions" },
-  { value: "3", label: "ships at sea" },
-  { value: "7", label: "ports of call" },
-  { value: "24", label: "Gym Badges" },
-  { value: "2 h", label: "in a day" },
+  {
+    title: "Free, made in the open",
+    body: "A fan game built on Pokémon Heart & Soul, itself built on pokeemerald-expansion, with every change on GitHub.",
+    icon: "rare-candy",
+  },
 ]

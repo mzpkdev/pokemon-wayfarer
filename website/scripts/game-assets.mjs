@@ -481,6 +481,7 @@ for (const [item, palette = item] of [
   ["master_ball"],
   ["soothe_bell"],
   ["tri_pass"],
+  ["safari_ball"],
   ["letter", "lava_cookie_and_letter"],
 ]) {
   const colors = readJascPalette(source(`items/icon_palettes/${palette}.pal`))

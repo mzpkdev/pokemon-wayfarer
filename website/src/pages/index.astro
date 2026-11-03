@@ -1,9 +1,15 @@
 ---
+import CtaLinks from "~/components/cta/CtaLinks.astro"
 import CtaProfessor from "~/components/cta/CtaProfessor.astro"
+import { DialogBox } from "~/components/DialogBox"
+import Faq from "~/components/Faq.astro"
+import SignupForm from "~/components/SignupForm.astro"
+import { StoryShuffle } from "~/components/StoryShuffle"
 import WorldSection from "~/components/WorldSection.astro"
 import { TitleScene } from "~/components/TitleScene"
 import Layout from "~/layouts/Layout.astro"
-import { FEATURES, ORIGINS, REPOSITORY_URL, STATS } from "~/lib/content"
+import { HIGHLIGHTS, LEVELS, NUMBERS, REPOSITORY_URL } from "~/lib/content"
+import { RELEASE_LABEL } from "~/lib/release"
 ---
 
 <Layout title="Pokémon Wayfarer">
@@ -33,98 +39,186 @@ import { FEATURES, ORIGINS, REPOSITORY_URL, STATS } from "~/lib/content"
         <!-- Then PROF. OAK asks for your email. -->
         <CtaProfessor />
 
-        <section aria-labelledby="about" class="relative mx-auto max-w-5xl px-6 py-16">
-          <div class="pixel-corners pixel-panel grid gap-8 p-8 sm:p-12 lg:grid-cols-[1fr_auto] lg:items-center">
+        <!--
+          What the map can't show: how an open world stays fair, then the two
+          things that set Wayfarer apart, each drawn the way the game draws it.
+        -->
+        <section aria-labelledby="open-world" class="relative mx-auto max-w-5xl px-6 py-16">
+          <p class="pixel-label text-logo-yellow">Open world</p>
+          <h2 id="open-world" class="pixel-heading mt-4">Go anywhere. There's always a way.</h2>
+          <p class="mt-6 max-w-2xl text-lg leading-relaxed text-paper/80">
+            Every region is open, in any order, with no badge standing in the way. Wayfarer doesn't take every obstacle
+            away: a road can still be blocked, a sea too wide or a door shut. But a blocked road is never the
+            only one. There's always another way around.
+          </p>
+
+          <div class="mt-16 grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[1fr_auto] lg:gap-16">
             <div>
-              <p class="pixel-label text-logo-yellow">About</p>
-              <h2 id="about" class="pixel-heading mt-4">One save. Three home regions. Every road open.</h2>
-              <p class="mt-6 max-w-2xl text-lg leading-relaxed text-paper/80">
-                Pokémon Wayfarer is a free fan-made GBA game built on pokeemerald-expansion. Start your
-                journey in Kanto, Johto or Hoenn, then sail on to the Sevii Islands and Alola, all on the
-                same save.
+              <p class="pixel-label text-logo-yellow">Story</p>
+              <h3 class="pixel-heading mt-3">Every story, in your order.</h3>
+              <p class="mt-5 text-lg leading-relaxed text-paper/80">
+                Open worlds usually make you pick between a story and your freedom. Wayfarer keeps both. The
+                original games' stories, from Mt. Moon to the Radio Tower, are split into standalone beats,
+                and each one makes sense whenever you reach it.
+              </p>
+              <p class="mt-4 leading-relaxed text-paper/70">
+                Walk into Slowpoke Well first or last: it still opens at its start and ends with the Rockets
+                gone.
               </p>
             </div>
-            <img
-              src="/game/intro/pokeball.png"
-              alt=""
-              width="64"
-              height="64"
-              class="pixelated hidden size-48 lg:block"
-            />
+            <div class="pixel-corners pixel-panel grid place-items-center px-10 py-8 sm:px-14 sm:py-10">
+              <StoryShuffle client:visible />
+            </div>
+          </div>
+
+          <div class="mt-16 grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[auto_1fr] lg:gap-16">
+            <div class="lg:order-2">
+              <p class="pixel-label text-logo-yellow">Field moves</p>
+              <h3 class="pixel-heading mt-3">Surf the moment you catch it.</h3>
+              <p class="mt-5 text-lg leading-relaxed text-paper/80">
+                Wild Pokémon can already know field moves when you catch them. Find one that knows Surf and
+                the sea is open, with no HM and no badge.
+              </p>
+              <p class="mt-4 leading-relaxed text-paper/70">
+                Find the HM later and you won't even need to teach it: it works whenever someone in your
+                party could learn the move.
+              </p>
+            </div>
+            <!-- The game's own prompt at the water's edge, with its YES/NO menu. -->
+            <div
+              class="pixel-corners pixel-panel grid place-items-center px-4 py-8 sm:px-10 sm:py-10 lg:order-1"
+              aria-hidden="true"
+            >
+              <div class="flex w-full flex-col sm:w-[calc(232*var(--px))] items-end gap-[calc(2*var(--px))] [--px:2px]">
+                <div class="gba-window gba-text">
+                  <span class="block">▶YES</span>
+                  <span class="block pl-[calc(8*var(--px))]">NO</span>
+                </div>
+                <DialogBox
+                  client:visible
+                  lines={["The water is dyed a deep blue…", "Would you like to SURF?"]}
+                  className="w-full"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-16 grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[1fr_auto] lg:gap-16">
+            <div>
+              <p class="pixel-label text-logo-yellow">Level scaling</p>
+              <h3 class="pixel-heading mt-3">The world keeps pace.</h3>
+              <p class="mt-5 text-lg leading-relaxed text-paper/80">
+                Every badge, from any region, raises your level cap, and the wild Pokémon follow it by where
+                they live. Roads fall further behind you with each badge, the grass off the road sits a step
+                above, and places far from home meet you at your cap all game.
+              </p>
+              <p class="mt-4 leading-relaxed text-paper/70">
+                The cap is soft: past it, Pokémon earn half the experience and may not obey. Trainers, Gym
+                Leaders and the leagues scale too, and an evolved form only appears once it's at the level to
+                evolve.
+              </p>
+            </div>
+            <!-- Whole GBA pixels at 2x. Phones drop the panel and the 4-badge column, and tighten the columns, to fit. -->
+            <figure class="grid justify-items-center gap-4 sm:pixel-corners sm:pixel-panel sm:px-10 sm:py-10">
+              <div class="gba-window [--px:2px]">
+                <table class="gba-text">
+                <caption class="sr-only">Wild Pokémon levels and your level cap by badges earned</caption>
+                <thead>
+                  <tr>
+                    <th scope="col" class="gba-text gba-text-blue pr-[calc(6*var(--px))] sm:pr-[calc(8*var(--px))] text-left font-normal">BADGES</th>
+                    {
+                      LEVELS.badges.map((badges, column) => (
+                        <th
+                          scope="col"
+                          class:list={[
+                            "gba-text gba-text-blue px-[calc(3*var(--px))] sm:px-[calc(4*var(--px))] text-right font-normal",
+                            column === LEVELS.hiddenOnPhones && "hidden sm:table-cell",
+                          ]}
+                        >
+                          {badges}
+                        </th>
+                      ))
+                    }
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    LEVELS.rows.map((row) => (
+                      <tr>
+                        <th scope="row" class="pr-[calc(6*var(--px))] sm:pr-[calc(8*var(--px))] text-left font-normal whitespace-nowrap">
+                          {row.label}
+                        </th>
+                        {row.levels.map((level, column) => (
+                          <td
+                            class:list={[
+                              "px-[calc(3*var(--px))] sm:px-[calc(4*var(--px))] text-right",
+                              column === LEVELS.hiddenOnPhones && "hidden sm:table-cell",
+                            ]}
+                          >
+                            {level}
+                          </td>
+                        ))}
+                      </tr>
+                    ))
+                  }
+                </tbody>
+              </table>
+              </div>
+              <figcaption class="text-center text-sm text-paper/60">
+                Levels today, still being tuned before release.
+              </figcaption>
+            </figure>
           </div>
         </section>
 
-        <section aria-labelledby="features" class="relative mx-auto max-w-5xl px-6 py-16">
-          <p class="pixel-label text-logo-yellow">Features</p>
-          <h2 id="features" class="pixel-heading mt-4">A world that keeps moving</h2>
-          <ul class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <!-- The tour in short, for anyone who scrolled past it. -->
+        <section aria-labelledby="highlights" class="relative mx-auto max-w-5xl px-6 py-16">
+          <p class="pixel-label text-logo-yellow">The short version</p>
+          <h2 id="highlights" class="pixel-heading mt-4">A world that keeps moving</h2>
+          <dl class="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
             {
-              FEATURES.map((feature) => (
-                <li class="pixel-corners pixel-panel p-6">
-                  <div class="pixel-corners grid size-16 place-items-center bg-ground">
+              NUMBERS.map((number) => (
+                <div class="flex flex-col">
+                  <dt class="order-2 mt-3 text-sm text-paper/75">{number.label}</dt>
+                  <dd class="logo-number order-1">{number.value}</dd>
+                </div>
+              ))
+            }
+          </dl>
+          <ul class="mt-14 grid gap-x-8 gap-y-6 sm:grid-cols-2">
+            {
+              HIGHLIGHTS.map((highlight) => (
+                <li class="flex gap-4">
+                  <div class="pixel-corners pixel-panel grid size-16 shrink-0 place-items-center">
                     <img
-                      src={`/game/items/${feature.icon}.png`}
+                      src={`/game/items/${highlight.icon}.png`}
                       alt=""
                       width="48"
                       height="48"
                       class="pixelated size-12"
                     />
                   </div>
-                  <h3 class="mt-5 font-semibold">{feature.title}</h3>
-                  <p class="mt-2 text-sm leading-relaxed text-paper/75">{feature.body}</p>
+                  <div>
+                    <h3 class="font-semibold">{highlight.title}</h3>
+                    <p class="mt-1 text-sm leading-relaxed text-paper/75">{highlight.body}</p>
+                  </div>
                 </li>
               ))
             }
           </ul>
         </section>
 
-        <section aria-labelledby="origins" class="relative mx-auto max-w-5xl px-6 py-16">
-          <div class="grid items-center gap-12 lg:grid-cols-2">
-            <div class="pixel-corners pixel-panel p-2">
-              <img
-                src="/game/title/dawn.png"
-                alt="Pixel art of islands at dawn, joined by dotted sea routes beneath a compass rose."
-                width="240"
-                height="160"
-                loading="lazy"
-                class="pixelated pixel-corners aspect-[3/2] w-full"
-              />
-            </div>
-            <div>
-              <p class="pixel-label text-logo-yellow">Starting regions</p>
-              <h2 id="origins" class="pixel-heading mt-4">Where will your journey begin?</h2>
-              <p class="mt-4 leading-relaxed text-paper/80">
-                Professor Oak asks once you've chosen your name and look. Each region has its own opening,
-                and wherever you start, the other two are a journey away.
-              </p>
-              <dl class="mt-8 grid gap-3">
-                {
-                  ORIGINS.map((origin) => (
-                    <div class="pixel-corners pixel-panel grid gap-1 px-5 py-4 sm:grid-cols-[7rem_1fr] sm:gap-6">
-                      <dt class="pixel-label text-paper">{origin.region}</dt>
-                      <dd>
-                        <span class="block text-sm text-logo-yellow">{origin.town}</span>
-                        <span class="mt-1 block text-paper/80">{origin.body}</span>
-                      </dd>
-                    </div>
-                  ))
-                }
-              </dl>
-            </div>
-          </div>
-        </section>
+        <Faq />
 
-        <section aria-label="Wayfarer in numbers" class="relative mx-auto max-w-5xl px-6 py-16">
-          <dl class="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-5">
-            {
-              STATS.map((stat) => (
-                <div class="flex flex-col">
-                  <dt class="order-2 mt-3 text-sm text-paper/75">{stat.label}</dt>
-                  <dd class="logo-number order-1">{stat.value}</dd>
-                </div>
-              ))
-            }
-          </dl>
+        <!-- One more chance to sign up, for anyone the questions won over. -->
+        <section aria-labelledby="notify-again" class="relative mx-auto max-w-3xl px-6 py-16">
+          <p class="pixel-label text-logo-yellow">{RELEASE_LABEL}</p>
+          <h2 id="notify-again" class="pixel-heading mt-4">Your journey is almost ready.</h2>
+          <p class="mt-6 text-lg leading-relaxed text-paper/80">
+            Leave your email and Professor Oak will write the moment it begins.
+          </p>
+          <SignupForm id="signup-email-again" class="mt-8" />
+          <CtaLinks class="mt-8" />
         </section>
 
         <footer class="relative mx-auto flex max-w-5xl flex-col gap-6 px-6 pt-16 pb-10 text-sm text-paper/70 sm:flex-row sm:justify-between">
