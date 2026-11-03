@@ -28,7 +28,7 @@ const SEA_CELLS = 8
 /** Route points closer than this to a straight line between their neighbours are dropped. */
 const TOLERANCE = 1.5
 
-/** Places the world map doesn't hold, put on the placed map they hang off. The Battle Frontier has none. */
+/** Places the world map doesn't hold, put on the placed map they hang off. */
 const HUNG_OFF = { TrainerHill_Courtyard_hns: "Route40_hns" }
 
 /** "PewterCity_hns" to "Pewter City". */

@@ -42,6 +42,14 @@ const OUTDOOR = new Set([
   "MAP_TYPE_ROUTE",
   "MAP_TYPE_OCEAN_ROUTE",
 ])
+// Outdoor land the game types otherwise: Faraway Island and Navel Rock are
+// indoor maps in Emerald, and Sinnoh's Pokémon League, between Routes 223
+// and 224, has no type.
+const OUTSIDE_BY_ANOTHER_TYPE = new Set([
+  "FarawayIsland_Entrance",
+  "NavelRock_Exterior",
+  "PokmonLeague",
+])
 // How a map's connections lead on: the target map, after the rewiring.
 export const connections = (m) => (Array.isArray(m.connections) ? m.connections : [])
 export const targetOf = (m, c) => REWIRED[`${m.name}|${c.map}`] ?? c.map
@@ -112,6 +120,7 @@ export const openGame = (root = gameRoot) => {
     JSON.parse(read("src/data/wayfarer_sevii_maps.json")).maps.map((entry) => entry.source_map),
   )
   const compiled = (m) => {
+    if (OUTSIDE_BY_ANOTHER_TYPE.has(m.name)) return true
     if (!OUTDOOR.has(m.map_type)) return false
     if (REPLACED.has(m.id) || m.id.endsWith("_POC") || m.name.endsWith("_Port")) return false
     // Another state of a map already drawn (the Lake of Rage at low tide), and
