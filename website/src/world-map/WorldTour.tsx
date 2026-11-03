@@ -67,6 +67,10 @@ const RIDER_MIN_ZOOM = 4
 
 /** A beat between the tour starting and the rider setting off. */
 const RIDE_DELAY_MS = 250
+/** The closest the visitor can zoom in, in CSS pixels per metatile. */
+const MAX_ZOOM = 48
+/** How long a gesture hint stays up. */
+const HINT_MS = 1600
 
 /** A warp between starts: the game's 8-step fade to black, the cut, and the fade back in. */
 const FADE_OUT_MS = 300
@@ -169,6 +173,8 @@ export const WorldTour = ({
   const dialogRef = useRef<HTMLDialogElement>(null)
   const cameraRef = useRef<Camera | null>(null)
   const goRef = useRef<(stop: number) => void>(() => {})
+  const zoomRef = useRef<(factor: number) => void>(() => {})
+  const [hint, setHint] = useState<"wheel" | "touch" | null>(null)
   const chooseRef = useRef<(id: StartId) => void>(() => {})
   // The world stop shows the living world: the ferries on their loops and
   // the time of day, on the page's shared clock.
@@ -239,10 +245,21 @@ export const WorldTour = ({
     // opening), the flight under way if any, and when the ride began.
     let current = 0
     let flight: { from: Camera; to: number; start: number; duration: number } | null = null
+    // Where the visitor has moved the map to, from the second stop on; the
+    // next NEXT or BACK flies on from there.
+    let manual: Camera | null = null
+    let hintTimer = 0
+    const showHint = (kind: "wheel" | "touch") => {
+      setHint(kind)
+      window.clearTimeout(hintTimer)
+      hintTimer = window.setTimeout(() => setHint(null), HINT_MS)
+    }
     let started: number | null = null
     // The warp to another start, if one is playing: when it began and, once
     // the screen is black, when the cut happened.
     let warp: { to: StartId; start: number; cut: number | null } | null = null
+    /** Whether the visitor may pan and zoom: from the second stop on, outside a warp. */
+    const free = () => current >= 1 && !warp
     // The badge stop's clock: when the camera set off for it and when it left.
     let badgesSince: number | null = null
     let badgesLeft: number | null = null
@@ -290,6 +307,7 @@ export const WorldTour = ({
         ride = rideMs(route)
         current = 0
         flight = null
+        manual = null
         badgesSince = null
         badgesLeft = null
         // The ride begins once the screen has faded back in.
@@ -331,7 +349,8 @@ export const WorldTour = ({
           const t = (now - flight.start) / flight.duration
           camera = fly(flight.from, shots[flight.to + 1]!, t)
           if (t >= 1) flight = null
-        } else if (current === 0) camera = fly(shots[0]!, shots[1]!, progress)
+        } else if (manual) camera = manual
+        else if (current === 0) camera = fly(shots[0]!, shots[1]!, progress)
         else camera = shots[current + 1]!
         cameraRef.current = camera
 
@@ -396,6 +415,7 @@ export const WorldTour = ({
         const shots = shotsFor(world.meta, landmarks, start, width, height)
         const from = cameraRef.current ?? shots[current + 1]!
         const to = shots[next + 1]!
+        manual = null
         flight = reducedMotion ? null : { from, to: next, start: now, duration: flightMs(from, to) }
         if (next === BADGES_STOP) {
           badgesSince = now
@@ -418,6 +438,157 @@ export const WorldTour = ({
         schedule()
       }
 
+      // Pan and zoom, from the second stop on, without taking the page's
+      // scroll: a mouse drags and Ctrl (or ⌘) + wheel zooms, while a plain
+      // wheel scrolls the page; on touch two fingers move the map and one
+      // still scrolls the page. A hint says so when a gesture goes to the page.
+      const focus = () => {
+        const { width, height } = area()
+        return { x: width / 2, y: height / 2 }
+      }
+      const limits = () => {
+        const { width, height } = area()
+        const whole = shotsFor(world.meta, landmarks, start, width, height)[STOPS.length]!
+        return { min: whole.zoom * 0.8, max: MAX_ZOOM }
+      }
+      const move = (change: (camera: Camera) => Camera) => {
+        const from = manual ?? cameraRef.current
+        if (!from) return
+        flight = null
+        const next = change({ ...from })
+        const { min, max } = limits()
+        next.zoom = Math.min(max, Math.max(min, next.zoom))
+        next.x = Math.min(world.meta.width, Math.max(0, next.x))
+        next.y = Math.min(world.meta.height, Math.max(0, next.y))
+        manual = next
+        schedule()
+      }
+      const zoomAt = (factor: number, x: number, y: number) =>
+        move((camera) => {
+          const f = focus()
+          // Keep the world point under (x, y) in place.
+          const wx = camera.x + (x - f.x) / camera.zoom
+          const wy = camera.y + (y - f.y) / camera.zoom
+          const { min, max } = limits()
+          const zoom = Math.min(max, Math.max(min, camera.zoom * factor))
+          return { x: wx - (x - f.x) / zoom, y: wy - (y - f.y) / zoom, zoom }
+        })
+      zoomRef.current = (factor) => {
+        const f = focus()
+        zoomAt(factor, f.x, f.y)
+      }
+      const local = (event: { clientX: number; clientY: number }) => {
+        const box = canvas.getBoundingClientRect()
+        return { x: event.clientX - box.left, y: event.clientY - box.top }
+      }
+      const listening = new AbortController()
+      const { signal } = listening
+      let drag: { x: number; y: number } | null = null
+      canvas.addEventListener(
+        "pointerdown",
+        (event) => {
+          if (event.pointerType === "touch" || event.button !== 0 || !free()) return
+          canvas.setPointerCapture(event.pointerId)
+          drag = local(event)
+        },
+        { signal },
+      )
+      canvas.addEventListener(
+        "pointermove",
+        (event) => {
+          if (!drag) return
+          const now = local(event)
+          const dx = now.x - drag.x
+          const dy = now.y - drag.y
+          drag = now
+          move((camera) => ({
+            ...camera,
+            x: camera.x - dx / camera.zoom,
+            y: camera.y - dy / camera.zoom,
+          }))
+        },
+        { signal },
+      )
+      const release = () => {
+        drag = null
+      }
+      canvas.addEventListener("pointerup", release, { signal })
+      canvas.addEventListener("pointercancel", release, { signal })
+      canvas.addEventListener(
+        "wheel",
+        (event) => {
+          if (!free()) return
+          if (!event.ctrlKey && !event.metaKey) {
+            showHint("wheel")
+            return
+          }
+          event.preventDefault()
+          const at = local(event)
+          zoomAt(Math.exp(-event.deltaY * 0.0025), at.x, at.y)
+        },
+        { passive: false, signal },
+      )
+      canvas.addEventListener(
+        "dblclick",
+        (event) => {
+          if (!free()) return
+          const at = local(event)
+          zoomAt(2, at.x, at.y)
+        },
+        { signal },
+      )
+      let pinch: { x: number; y: number; distance: number } | null = null
+      const twoFingers = (touches: TouchList) => {
+        const [a, b] = [touches[0]!, touches[1]!]
+        const box = canvas.getBoundingClientRect()
+        return {
+          x: (a.clientX + b.clientX) / 2 - box.left,
+          y: (a.clientY + b.clientY) / 2 - box.top,
+          distance: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY),
+        }
+      }
+      canvas.addEventListener(
+        "touchstart",
+        (event) => {
+          if (!free()) return
+          if (event.touches.length >= 2) {
+            event.preventDefault()
+            pinch = twoFingers(event.touches)
+          }
+        },
+        { passive: false, signal },
+      )
+      canvas.addEventListener(
+        "touchmove",
+        (event) => {
+          if (!free()) return
+          // One finger scrolls the page; say how to move the map instead.
+          if (event.touches.length < 2) {
+            if (!pinch) showHint("touch")
+            return
+          }
+          if (!pinch) return
+          event.preventDefault()
+          const now = twoFingers(event.touches)
+          const before = pinch
+          pinch = now
+          move((camera) => ({
+            ...camera,
+            x: camera.x - (now.x - before.x) / camera.zoom,
+            y: camera.y - (now.y - before.y) / camera.zoom,
+          }))
+          if (before.distance > 0) zoomAt(now.distance / before.distance, now.x, now.y)
+        },
+        { passive: false, signal },
+      )
+      canvas.addEventListener(
+        "touchend",
+        (event) => {
+          if (event.touches.length < 2) pinch = null
+        },
+        { signal },
+      )
+
       const go = () => {
         if (started !== null) return
         started = performance.now()
@@ -435,6 +606,7 @@ export const WorldTour = ({
       const resizer = new ResizeObserver(schedule)
       resizer.observe(canvas)
       cleanup = () => {
+        listening.abort()
         watcher.disconnect()
         if (startOn) section.removeEventListener(startOn, go)
         resizer.disconnect()
@@ -447,6 +619,7 @@ export const WorldTour = ({
       disposed = true
       cancelAnimationFrame(raf)
       window.clearTimeout(popupTimer)
+      window.clearTimeout(hintTimer)
       cleanup()
     }
   }, [base, reducedMotion, startOn])
@@ -473,9 +646,43 @@ export const WorldTour = ({
       <canvas
         ref={canvasRef}
         aria-hidden="true"
-        className="absolute inset-0 size-full"
+        className={`absolute inset-0 size-full touch-pan-x touch-pan-y ${stop >= 1 && !warping ? "cursor-grab active:cursor-grabbing" : ""}`}
         style={{ background: OPEN_SEA }}
       />
+      {stop >= 1 && !warping && (
+        <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
+          {(
+            [
+              ["+", 1.6, "Zoom in"],
+              ["−", 1 / 1.6, "Zoom out"],
+            ] as const
+          ).map(([label, factor, name]) => (
+            <button
+              key={label}
+              type="button"
+              onClick={() => zoomRef.current(factor)}
+              className="pixel-corners pixel-panel size-12 text-2xl text-paper"
+              aria-label={name}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
+      <div
+        aria-live="polite"
+        className={`pointer-events-none absolute inset-x-0 top-1/3 z-10 flex justify-center px-4 transition-opacity duration-200 ${hint ? "opacity-100" : "opacity-0"}`}
+      >
+        {hint && (
+          <p className="pixel-panel gba-text gba-text-light px-4 py-3 text-center">
+            {hint === "touch"
+              ? "USE TWO FINGERS TO MOVE THE MAP"
+              : /Mac|iPhone|iPad/.test(navigator.platform)
+                ? "HOLD CMD AND SCROLL TO ZOOM"
+                : "HOLD CTRL AND SCROLL TO ZOOM"}
+          </p>
+        )}
+      </div>
       {living && (
         <LivingClock
           living={living}

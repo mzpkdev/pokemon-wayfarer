@@ -17,7 +17,12 @@ The rest of the site uses it only through `index.ts`:
   fades in, see `src/lib/warp.ts`). After that the map holds still beside a
   card, and NEXT and BACK fly the camera between four stops: the town, its
   region (Hoenn, or Johto and Kanto), the 24 Gym Badges with the league
-  circuit, and the whole world. It never takes over the page's scrolling. The
+  circuit, and the whole world. From the second stop on the
+  map can be moved in place, the way an embedded map shares a page: a mouse
+  drags, Ctrl (or Cmd) + wheel zooms, and on touch two fingers pan and pinch,
+  while a plain wheel and one finger still scroll the page (a hint says so).
+  NEXT and BACK fly on from wherever it was moved to. It never takes over the
+  page's scrolling. The
   last card's EXPLORE THE MAP opens the explorer full screen. Captions are one
   per stop, with per-start `variants`; `stopOverlays` lets the page draw over
   the map at any stop (the hook for a living-world overlay on the world stop).
