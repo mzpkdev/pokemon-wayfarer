@@ -8,6 +8,7 @@ import { stepped } from "./fade"
 import {
   BADGES_SRC,
   badgeOverlays,
+  callerFor,
   callingFor,
   type Gym,
   landmarkBounds,
@@ -15,8 +16,13 @@ import {
   type League,
   type LeagueId,
   loadLandmarks,
+  QUALIFYING_RATING,
   type StopClock,
+  trainerRating,
 } from "./landmarks"
+import { LeagueCall } from "./LeagueCall"
+import { LineupPanel, preloadPortraits } from "./LineupPanel"
+import { eventSequence, type Roster } from "./lineup"
 import { OPEN_SEA, type Overlay, rendererFor } from "./render"
 import { riderAt } from "./rider"
 import {
@@ -37,48 +43,29 @@ import { type LivingWorld, livingOverlay, loadLiving } from "./living"
 import { type Notables, loadNotables, notableAt, notablesOverlay } from "./notables"
 import { PlaceExtra } from "./PlaceExtra"
 import type { PlaceInfo } from "./PlaceCard"
+import { BUTTON } from "./ui"
 import { WorldMap } from "./WorldMap"
 
 /** The explorer's place cards also name a town's Gym, league stop and ferries. */
 const placeExtra = (place: PlaceInfo) => <PlaceExtra place={place} />
 
 /** The tour's stops, in the order its cards come. */
-export type StopName =
-  | "town"
-  | "region"
-  | "world"
-  | "gyms"
-  | "circuit"
-  | "indigo"
-  | "hoenn"
-  | "masters"
-const STOPS: StopName[] = [
-  "town",
-  "region",
-  "world",
-  "gyms",
-  "circuit",
-  "indigo",
-  "hoenn",
-  "masters",
-]
+export type StopName = "town" | "region" | "world" | "gyms" | "indigo" | "hoenn" | "masters"
+const STOPS: StopName[] = ["town", "region", "world", "gyms", "indigo", "hoenn", "masters"]
 /** The regions in the order the page names them. */
 const REGION_ORDER = ["Kanto", "Johto", "Hoenn"]
-/** From the Gym stop on, the pins are up; from the circuit stop on, so are the leagues. */
+/** From the Gym stop on, the pins are up; from the first league's stop on, so are the leagues. */
 const GYMS_STOP = STOPS.indexOf("gyms")
-const CIRCUIT_STOP = STOPS.indexOf("circuit")
+const LEAGUES_STOP = STOPS.indexOf("indigo")
 /** The stops that fly to one league, which are named for it. */
 const leagueOf = (stop: StopName | undefined): LeagueId | null =>
   stop === "indigo" || stop === "hoenn" || stop === "masters" ? stop : null
-/** What it takes for a league to call, as the circuit stop and the league stops say it. */
+/** What it takes for a league to call, as the league stops say it. */
 const REASONS: Record<LeagueId, string> = {
   indigo: "8 badges and one from Kanto or Johto",
   hoenn: "8 badges and one from Hoenn",
   masters: "after winning Indigo and Hoenn",
 }
-/** The badge picker's rows, and the sheet's order for each. */
-const PICKER_ROWS = ["Kanto", "Johto", "Hoenn"] as const
-
 export type Caption = {
   place: string
   title: string
@@ -116,15 +103,8 @@ const FADE_IN_MS = 400
 const BADGES_IN_DELAY_MS = 450
 const BADGES_IN_MS = 400
 const BADGES_OUT_MS = 250
-/** How long the trail and plates take to come in or go out between the Gym and circuit stops. */
+/** How long the trail and plates take to come in or go out between the Gym stop and the league stops. */
 const CIRCUIT_MS = 300
-
-/**
- * The game's yellow OK button from the naming screen; pixel corners clip an
- * outline, so focus shows as a blue rim inside instead.
- */
-const BUTTON =
-  "pixel-corners pixel-label bg-[rgb(232_208_64)] px-7 pt-2 pb-3 text-[rgb(56_56_56)] shadow-[inset_0_0_0_4px_rgb(56_56_56),inset_0_-8px_0_rgb(184_160_32),inset_0_8px_0_rgb(248_240_152)] hover:bg-[rgb(248_224_96)] focus-visible:shadow-[inset_0_0_0_4px_rgb(48_80_200),inset_0_-8px_0_rgb(184_160_32),inset_0_8px_0_rgb(248_240_152)] focus-visible:outline-none active:translate-y-0.5 disabled:opacity-50"
 
 /** A choice of start: the same yellow when picked, a dark plate otherwise. */
 const OPTION =
@@ -158,7 +138,7 @@ const regionBounds = (meta: Meta, name: string): Bounds =>
 /**
  * The shots for a map area `width` by `height` CSS pixels, for a start: the
  * opening on the road, then the stops: the town, its region (or regions), the
- * whole world, every Gym, the league circuit and each league in turn.
+ * whole world, every Gym and each league in turn.
  */
 const shotsFor = (
   meta: Meta,
@@ -171,18 +151,15 @@ const shotsFor = (
   const region = unionOf(start.regions.map((name) => regionBounds(meta, name)))
   const regions = ["JOHTO", "KANTO", "HOENN"].map((name) => regionBounds(meta, name))
   const gyms = landmarkBounds({ ...landmarks, circuit: [] }, 36) ?? unionOf(regions)
-  // The leagues' plates and the badge bar below want room above and below.
+  // Without a league's place, the whole circuit, with room for the plates above and below.
   const all = landmarkBounds(landmarks, 36)
   const circuit = all ? { ...all, top: all.top - 24, bottom: all.bottom + 36 } : gyms
   const leagueShot = (id: LeagueId): Camera => {
     const league = landmarks.circuit.find((entry) => entry.id === id)
-    return league
-      ? {
-          x: league.x,
-          y: league.y,
-          zoom: Math.min(width / LEAGUE_VIEW.width, height / LEAGUE_VIEW.height),
-        }
-      : fit(circuit, width, height, 0.95)
+    if (!league) return fit(circuit, width, height, 0.95)
+    const zoom = Math.min(width / LEAGUE_VIEW.width, height / LEAGUE_VIEW.height)
+    // On a wide screen the lineup lies over the map's lower part, so the league sits higher.
+    return { x: league.x, y: league.y + (width > 700 ? (height * 0.14) / zoom : 0), zoom }
   }
   return [
     { ...fit(openingIn(meta, start), width, height, 1) },
@@ -190,7 +167,6 @@ const shotsFor = (
     fit(region, width, height, 0.95),
     fit(boundsOf(meta.maps), width, height, 0.92),
     fit(gyms, width, height, 0.95),
-    fit(circuit, width, height, 0.95),
     leagueShot("indigo"),
     leagueShot("hoenn"),
     leagueShot("masters"),
@@ -198,17 +174,18 @@ const shotsFor = (
 }
 
 /**
- * A Gym's card at the badge stop: its badge and town, its leader as their
- * battle shows them with what they are up to on the page's clock, and a button
- * that pans the map onto them (or onto the Gym, for a leader who stays put).
- * Beside the map on wide screens; over the caption on narrow ones, so the
- * little map above stays clear.
+ * A Gym's card at the badge stop: its badge, earned, and town, its leader as
+ * their battle shows them with what they are up to on the page's clock, and a
+ * button that pans the map onto them (or onto the Gym, for a leader who stays
+ * put). Beside the map on wide screens; over the caption on narrow ones, so
+ * the little map above stays clear.
  */
 const GymCard = ({
   gym,
   base,
   notables,
   minutes,
+  count,
   onFind,
   onClose,
 }: {
@@ -216,6 +193,7 @@ const GymCard = ({
   base: string
   notables: Notables | undefined
   minutes: number
+  count: number
   onFind: () => void
   onClose: () => void
 }) => {
@@ -224,11 +202,20 @@ const GymCard = ({
   return (
     <section
       aria-label={`${gym.town} Gym`}
-      className="pixel-corners pixel-panel absolute top-4 left-4 z-20 w-[min(340px,calc(100%-2rem))] p-5 text-paper max-lg:top-auto max-lg:right-4 max-lg:bottom-4 max-lg:w-auto sm:max-lg:bottom-8 sm:max-lg:inset-x-8"
+      className="pixel-corners pixel-panel absolute top-[4.75rem] left-4 z-20 w-[min(340px,calc(100%-2rem))] p-5 text-paper max-lg:top-auto max-lg:right-4 max-lg:bottom-4 max-lg:w-auto sm:max-lg:bottom-8 sm:max-lg:inset-x-8"
     >
       <div className="flex items-start justify-between gap-3">
-        <p className="pixel-label text-[16px] leading-none text-logo-yellow">
-          {gym.region.toUpperCase()} GYM{gym.name ? ` · ${gym.name}` : ""}
+        <p className="pixel-label flex items-center gap-2 text-[16px] leading-none text-logo-yellow">
+          <span
+            aria-hidden
+            className="size-6 shrink-0 [image-rendering:pixelated]"
+            style={{
+              backgroundImage: `url(${BADGES_SRC})`,
+              backgroundSize: `${24 * 24}px 24px`,
+              backgroundPosition: `${-gym.badge * 24}px 0`,
+            }}
+          />
+          {gym.name ? `${gym.name} EARNED` : "BADGE EARNED"}
         </p>
         <button
           type="button"
@@ -239,6 +226,9 @@ const GymCard = ({
           ✕
         </button>
       </div>
+      <p className="pixel-label mt-1 text-[16px] leading-none text-paper/60">
+        {gym.region.toUpperCase()} GYM · BADGES {count}/24
+      </p>
       <div className="mt-4 flex items-center gap-4">
         {leader?.pic ? (
           // The leader as the battle shows them.
@@ -297,85 +287,42 @@ const LeagueState = ({
 )
 
 /**
- * The circuit stop's card: all 24 badges as toggles, in rows by region, then
- * the count and which leagues it would call. The choice is the tour's, so the
- * league stops show it too.
+ * A league stop's card: whether it is calling and what it takes, then the
+ * five that fight there, drawn by the game's rule and shown seat by seat for
+ * Indigo and Hoenn; the Sevii Masters' lineup format isn't in the game yet,
+ * so it shows its halls and how it opens.
  */
-const BadgePicker = ({
-  gyms,
-  leagues,
-  earned,
-  onToggle,
+const LeagueHalls = ({
+  league,
+  calling,
+  roster,
+  progress,
+  base,
+  reducedMotion,
 }: {
-  gyms: Gym[]
-  leagues: League[]
-  earned: ReadonlySet<number>
-  onToggle: (badge: number) => void
-}) => {
-  const calling = callingFor(earned)
-  return (
-    <div className="mt-4">
-      <fieldset className="grid gap-1.5">
-        <legend className="sr-only">Badges you hold</legend>
-        {PICKER_ROWS.map((region) => (
-          <fieldset key={region} className="flex items-center gap-2">
-            <legend className="sr-only">{region}</legend>
-            <span
-              aria-hidden="true"
-              className="pixel-label w-[4.5rem] shrink-0 text-[16px] leading-none text-paper/70 sm:w-20"
-            >
-              {region.toUpperCase()}
-            </span>
-            <div className="flex gap-0.5">
-              {gyms
-                .filter((gym) => gym.region === region)
-                .toSorted((a, b) => a.badge - b.badge)
-                .map((gym) => {
-                  const on = earned.has(gym.badge)
-                  const label = gym.name ?? `${gym.town} badge`
-                  return (
-                    <button
-                      key={gym.badge}
-                      type="button"
-                      aria-pressed={on}
-                      aria-label={label}
-                      title={label}
-                      onClick={() => onToggle(gym.badge)}
-                      className={`size-6 shrink-0 bg-[length:auto_100%] bg-no-repeat [image-rendering:pixelated] focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[rgb(96_160_255)] sm:size-8 ${
-                        on
-                          ? "shadow-[0_0_0_2px_rgb(255_214_0)]"
-                          : "opacity-35 grayscale hover:opacity-70"
-                      }`}
-                      style={{
-                        backgroundImage: `url(${BADGES_SRC})`,
-                        backgroundPosition: `${(gym.badge / 23) * 100}% 0`,
-                      }}
-                    />
-                  )
-                })}
-            </div>
-          </fieldset>
-        ))}
-      </fieldset>
-      <p className="pixel-label mt-3 text-[16px] leading-none text-paper" aria-live="polite">
-        {earned.size} / 24 BADGES
-      </p>
-      <ul className="mt-3 grid gap-2">
-        {leagues.map((league) => (
-          <LeagueState key={league.id} league={league} calling={calling[league.id]} />
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-/** A league stop's card: whether it is calling, and its halls with their battle conditions. */
-const LeagueHalls = ({ league, calling }: { league: League; calling: boolean }) => (
+  league: League
+  calling: boolean
+  roster: Roster | undefined
+  progress: number
+  base: string
+  reducedMotion: boolean
+}) => (
   <div className="mt-4">
     <ul>
       <LeagueState league={league} calling={calling} />
     </ul>
-    {league.halls && (
+    {league.id !== "masters" && league.halls && roster && (
+      <LineupPanel
+        roster={roster}
+        league={league.id}
+        halls={league.halls}
+        progress={progress}
+        base={base}
+        reducedMotion={reducedMotion}
+        variant="card"
+      />
+    )}
+    {league.id === "masters" && league.halls && (
       <>
         <p className="pixel-label mt-3 text-[16px] leading-none text-paper/70 sm:mt-4">HALLS</p>
         <ol className="mt-2 grid gap-0.5 text-[13px] sm:gap-1 sm:text-sm">
@@ -386,6 +333,10 @@ const LeagueHalls = ({ league, calling }: { league: League; calling: boolean }) 
             </li>
           ))}
         </ol>
+        <p className="mt-3 text-[13px] text-paper/60 sm:text-sm">
+          The Masters' lineup is its own format, and it isn't in the game yet, so there is no draft
+          to show here.
+        </p>
       </>
     )}
   </div>
@@ -397,16 +348,15 @@ const LeagueHalls = ({ league, calling }: { league: League; calling: boolean }) 
  * front door, in the town the first card picks (LITTLEROOT TOWN, NEW BARK TOWN
  * or PALLET TOWN; another start plays a warp: the screen fades to black and
  * back in). The card's button then flies the camera on: the region, the whole
- * world, every Gym Badge, the league circuit (with a badge picker that says
- * which leagues would call) and each league. The last one opens the map to
- * look around. The page scrolls past it as usual. Fills its section.
+ * world, every Gym (tap the badges you'd win; at eight, a league phones) and
+ * each league. The last one opens the map to look around. The page scrolls past it as usual. Fills its section.
  *
  * The ride starts the first time nearly all of the section is on screen, or,
  * given `startOn`, when the section receives that event (or already carries
  * `data-started`), for a page that brings the map in its own way.
  *
  * `captions` are one card per stop, in order: the town, the start's region,
- * the world, the Gyms, the circuit and its three leagues. `stopOverlays` draw over the map at a stop.
+ * the world, the Gyms and the three leagues. `stopOverlays` draw over the map at a stop.
  */
 export const WorldTour = ({
   captions,
@@ -426,13 +376,20 @@ export const WorldTour = ({
   const goRef = useRef<(stop: number) => void>(() => {})
   const findRef = useRef<(gym: Gym) => void>(() => {})
   const hoverRef = useRef<(badge: number | null) => void>(() => {})
+  const toggleRef = useRef<(gym: Gym) => void>(() => {})
   const [gymPins, setGymPins] = useState<Gym[]>([])
   const [leagues, setLeagues] = useState<League[]>([])
-  // The badges the visitor has picked at the circuit stop. They persist
-  // through the league stops and across a change of start: the picker is
-  // about the player, not where they begin.
+  const [roster, setRoster] = useState<Roster>()
+  // The badges the visitor has earned at the Gym stop, by tapping their
+  // pins. They persist through the league stops and across a change of
+  // start: they are about the player, not where they begin.
   const [earned, setEarned] = useState<ReadonlySet<number>>(new Set())
   const earnedRef = useRef(earned)
+  // When each was earned, for its sparkle; and which leagues have phoned.
+  const earnedAtRef = useRef(new Map<number, number>())
+  const calledRef = useRef(new Set<LeagueId>())
+  const callTimer = useRef(0)
+  const [call, setCall] = useState<Exclude<LeagueId, "masters"> | null>(null)
   const redrawRef = useRef<() => void>(() => {})
   useEffect(() => {
     earnedRef.current = earned
@@ -675,7 +632,7 @@ export const WorldTour = ({
         } else stopClock.alpha = 0
         const overlays = badgesUp ? [...pins] : []
         stopClock.selected = gymRef.current?.badge ?? null
-        const target = current >= CIRCUIT_STOP ? 1 : 0
+        const target = current >= LEAGUES_STOP ? 1 : 0
         const step = Math.min(100, now - lastFrame) / CIRCUIT_MS
         lastFrame = now
         circuitMix = reducedMotion
@@ -685,6 +642,7 @@ export const WorldTour = ({
             : Math.max(target, circuitMix - step)
         stopClock.circuit = circuitMix
         stopClock.earned = earnedRef.current
+        stopClock.earnedAt = earnedAtRef.current
         stopClock.calling = callingFor(earnedRef.current)
         stopClock.league = leagueOf(STOPS[current])
         let animated = badgesUp && !reducedMotion
@@ -924,12 +882,14 @@ export const WorldTour = ({
         (event) => {
           if (travelled > 6) return
           const pin = pinAt(local(event))
-          if (pin) setGym(pin)
+          if (pin) toggleRef.current(pin)
         },
         { signal },
       )
       setGymPins(landmarks.badges)
       setLeagues(landmarks.circuit)
+      setRoster(landmarks.roster)
+      preloadPortraits(base, landmarks.roster)
 
       // The Gym card's button: pan onto the leader and keep them in view as
       // they walk, or onto the Gym when its leader doesn't walk the map.
@@ -982,6 +942,42 @@ export const WorldTour = ({
     goRef.current(next)
   }
 
+  // A tap on a pin (or its hidden button) earns the badge and opens its
+  // Gym's card, or gives it back and closes the card. The first time the set
+  // qualifies a league that hasn't phoned yet, its call rings a moment later.
+  const toggle = (pin: Gym) => {
+    const next = new Set(earnedRef.current)
+    if (next.delete(pin.badge)) {
+      if (gymRef.current?.badge === pin.badge) setGym(null)
+    } else {
+      next.add(pin.badge)
+      earnedAtRef.current.set(pin.badge, performance.now())
+      setGym(pin)
+      const caller = callerFor(next, calledRef.current)
+      if (caller) {
+        calledRef.current.add(caller)
+        window.clearTimeout(callTimer.current)
+        callTimer.current = window.setTimeout(() => setCall(caller), reducedMotion ? 0 : 900)
+      }
+    }
+    earnedRef.current = next
+    setEarned(next)
+    redrawRef.current()
+  }
+  useEffect(() => {
+    toggleRef.current = toggle
+  })
+  useEffect(() => () => window.clearTimeout(callTimer.current), [])
+
+  // The call: the league's five at the player's rating, and where it leads.
+  const rating = Math.max(QUALIFYING_RATING, trainerRating(earned.size))
+  const callLineup = call && roster ? eventSequence(roster, call, rating, 1)[0]! : null
+  const answered = (accepted: boolean) => {
+    const league = call
+    setCall(null)
+    if (accepted && league) go(STOPS.indexOf(league))
+  }
+
   const choose = (id: StartId) => {
     if (id === chosen || warping) return
     setChosen(id)
@@ -1012,15 +1008,39 @@ export const WorldTour = ({
               <li key={pin.badge}>
                 <button
                   type="button"
+                  aria-pressed={earned.has(pin.badge)}
                   onFocus={() => hoverRef.current(pin.badge)}
                   onBlur={() => hoverRef.current(null)}
-                  onClick={() => setGym(pin)}
+                  onClick={() => toggleRef.current(pin)}
                 >
-                  {pin.town} Gym{pin.leader ? `, ${pin.leader.name}` : ""}
+                  {pin.name ?? "Badge"}, {pin.town} Gym{pin.leader ? `, ${pin.leader.name}` : ""}
                 </button>
               </li>
             ))}
         </ul>
+      )}
+      {STOPS[stop] === "gyms" && (
+        // How many are earned, and how many more it takes for a league to phone.
+        <p
+          aria-live="polite"
+          className="pixel-corners pixel-panel absolute top-4 left-4 z-20 flex items-center gap-3 px-4 py-3 text-paper"
+        >
+          <span
+            aria-hidden
+            className="size-6 shrink-0 [image-rendering:pixelated]"
+            style={{
+              backgroundImage: `url(${BADGES_SRC})`,
+              backgroundSize: `${24 * 24}px 24px`,
+              backgroundPosition: `${-(earned.size ? [...earned].at(-1)! : 8) * 24}px 0`,
+            }}
+          />
+          <span className="pixel-label text-[16px] leading-none">BADGES {earned.size}/24</span>
+          {earned.size < 8 && (
+            <span className="text-[13px] text-paper/60 max-sm:hidden">
+              {8 - earned.size} more and a league phones
+            </span>
+          )}
+        </p>
       )}
       {gym && STOPS[stop] === "gyms" && (
         <GymCard
@@ -1028,10 +1048,27 @@ export const WorldTour = ({
           base={base}
           notables={notables}
           minutes={minutes}
+          count={earned.size}
           onFind={() => findRef.current(gym)}
           onClose={() => setGym(null)}
         />
       )}
+      {roster &&
+        leagues
+          .filter((league) => league.id !== "masters" && league.halls && league.id === STOPS[stop])
+          .map((league) => (
+            // On a wide screen the five lie over the map, beside the card.
+            <LineupPanel
+              key={league.id}
+              roster={roster}
+              league={league.id as Exclude<LeagueId, "masters">}
+              halls={league.halls!}
+              progress={rating}
+              base={base}
+              reducedMotion={reducedMotion}
+              variant="map"
+            />
+          ))}
       <div
         aria-live="polite"
         className={`pointer-events-none absolute inset-x-0 top-1/3 z-10 flex justify-center px-4 transition-opacity duration-200 ${hint ? "opacity-100" : "opacity-0"}`}
@@ -1123,20 +1160,6 @@ export const WorldTour = ({
                       })}
                     </fieldset>
                   )}
-                  {STOPS[i] === "circuit" && (
-                    <BadgePicker
-                      gyms={gymPins}
-                      leagues={leagues}
-                      earned={earned}
-                      onToggle={(badge) =>
-                        setEarned((held) => {
-                          const next = new Set(held)
-                          if (!next.delete(badge)) next.add(badge)
-                          return next
-                        })
-                      }
-                    />
-                  )}
                   {leagueOf(STOPS[i]) &&
                     leagues
                       .filter((league) => league.id === STOPS[i])
@@ -1145,6 +1168,10 @@ export const WorldTour = ({
                           key={league.id}
                           league={league}
                           calling={callingFor(earned)[league.id]}
+                          roster={shown ? roster : undefined}
+                          progress={rating}
+                          base={base}
+                          reducedMotion={reducedMotion}
                         />
                       ))}
                   {text.stats && (
@@ -1198,6 +1225,15 @@ export const WorldTour = ({
           </div>
         </div>
       </div>
+      {call && callLineup && (
+        <LeagueCall
+          league={call}
+          player={startOf(chosen).player}
+          lineup={callLineup}
+          reducedMotion={reducedMotion}
+          onClose={answered}
+        />
+      )}
       <dialog
         ref={dialogRef}
         aria-label="World map"

@@ -5,6 +5,7 @@
 // art from the trainer card.
 import type { Bounds } from "./data"
 import { DATA } from "./data"
+import type { Roster } from "./lineup"
 import type { Overlay } from "./render"
 
 export type Gym = {
@@ -40,7 +41,12 @@ export type League = {
   halls?: { name: string; condition: string }[]
 }
 
-export type Landmarks = { badges: Gym[]; circuit: League[] }
+export type Landmarks = {
+  badges: Gym[]
+  circuit: League[]
+  /** The trainers a league event's five are drawn from, with what the draw reads. */
+  roster?: Roster
+}
 
 /** The 24 badges, 16x16 each in one row. */
 export const BADGES_SRC = "/game/badges.png"
@@ -71,6 +77,15 @@ export const landmarkBounds = ({ badges, circuit }: Landmarks, room: number): Bo
   }
 }
 
+/** The Trainer Rating a player holding `badges` badges has (`league_circuit.c`): from all regions together. */
+export const trainerRating = (badges: number) => (badges <= 8 ? 10 * badges : 80 + 5 * (badges - 8))
+
+/** A league wants the player at this Trainer Rating or more: any 8 badges. */
+export const QUALIFYING_RATING = 80
+
+/** Whether a badge (by place in the sheet: Johto's eight, Kanto's, then Hoenn's) is from Hoenn. */
+const fromHoenn = (badge: number) => badge >= 16
+
 /**
  * Which leagues know a player holding `earned` badges (`league_circuit.c`):
  * the Trainer Rating counts badges from every region together, 80 of it
@@ -78,15 +93,36 @@ export const landmarkBounds = ({ badges, circuit }: Landmarks, room: number): Bo
  * side. The Sevii Masters needs wins, which the page has none of.
  */
 export const callingFor = (earned: ReadonlySet<number>): Record<LeagueId, boolean> => {
-  const rating = earned.size <= 8 ? 10 * earned.size : 80 + 5 * (earned.size - 8)
+  const qualified = trainerRating(earned.size) >= QUALIFYING_RATING
   const held = [...earned]
   return {
-    indigo: rating >= QUALIFYING_RATING && held.some((badge) => badge < 16),
-    hoenn: rating >= QUALIFYING_RATING && held.some((badge) => badge >= 16),
+    indigo: qualified && held.some((badge) => !fromHoenn(badge)),
+    hoenn: qualified && held.some(fromHoenn),
     masters: false,
   }
 }
-const QUALIFYING_RATING = 80
+
+/**
+ * The league whose call rings next, from those that know the player and
+ * haven't called yet on this page (`ChooseCallingLeague` in
+ * `league_events.c`): the one that called least recently (none has, so none
+ * wins on that), then the one with the most badges of its side (Indigo
+ * counts Kanto's and Johto's, Hoenn Hoenn's), then Indigo.
+ */
+export const callerFor = (
+  earned: ReadonlySet<number>,
+  called: ReadonlySet<LeagueId>,
+): Exclude<LeagueId, "masters"> | null => {
+  const calling = callingFor(earned)
+  const hoennBadges = [...earned].filter(fromHoenn).length
+  const waiting = (["indigo", "hoenn"] as const)
+    .filter((id) => calling[id] && !called.has(id))
+    .toSorted((a, b) => {
+      const badges = (id: typeof a) => (id === "hoenn" ? hoennBadges : earned.size - hoennBadges)
+      return badges(b) - badges(a)
+    })
+  return waiting[0] ?? null
+}
 
 /** What the tour tells the overlays about the stop. */
 export type StopClock = {
@@ -102,8 +138,10 @@ export type StopClock = {
   selected?: number | null
   /** How much of the league circuit is up, 0 (the Gym stop: just pins) to 1. */
   circuit?: number
-  /** The badges the visitor holds, which the circuit stop lights; the rest of the pins step back. */
+  /** The badges the visitor has earned, which the pins light; the rest step back. */
   earned?: ReadonlySet<number>
+  /** When each earned badge was earned (`performance.now()`), for its burst of sparkles. */
+  earnedAt?: ReadonlyMap<number, number>
   /** Which leagues are calling. */
   calling?: Partial<Record<LeagueId, boolean>>
   /** The league whose stop it is, to highlight: its plate and its leg of the trail. */
@@ -135,8 +173,51 @@ const LEG_MS = 1400
 /** Dots on the trail, in CSS pixels: the gap between them and how fast they march. */
 const DOT_GAP = 12
 const DOT_SPEED = 28
-/** How faint a badge not yet held is on the circuit stop. */
-const FAINT_PIN = 0.35
+/** How faint a badge not yet earned is: a little at the Gym stop, more once the leagues are up. */
+const FAINT_PIN = 0.6
+const FAINTER_PIN = 0.35
+/** How long a badge's burst of sparkles lasts when it is earned. */
+const BURST_MS = 650
+
+/**
+ * A gold four-point sparkle centered on a point, in pixels of `unit`, that
+ * twinkles by `phase`; a `burst` (0 to 1) also throws four small ones outward.
+ */
+const sparkle = (
+  context: CanvasRenderingContext2D,
+  cx: number,
+  cy: number,
+  unit: number,
+  { alpha, phase, burst }: { alpha: number; phase: number; burst?: number },
+) => {
+  const u = Math.max(1, Math.round(unit))
+  const plus = (x: number, y: number, arm: number, color: string) => {
+    context.fillStyle = color
+    context.fillRect(Math.round(x - u / 2), Math.round(y - u / 2 - arm * u), u, (arm * 2 + 1) * u)
+    context.fillRect(Math.round(x - u / 2 - arm * u), Math.round(y - u / 2), (arm * 2 + 1) * u, u)
+  }
+  context.save()
+  context.shadowBlur = 0
+  context.shadowOffsetY = 0
+  context.globalAlpha = alpha
+  // The twinkle: arms of 2, 1 and 3 pixels in turn.
+  const arm = [2, 1, 3, 1][Math.floor(((phase % 4) + 4) % 4)]!
+  plus(cx, cy, arm, "rgb(255 226 96)")
+  context.fillStyle = "rgb(255 255 255)"
+  context.fillRect(Math.round(cx - u / 2), Math.round(cy - u / 2), u, u)
+  if (burst !== undefined && burst >= 0 && burst < 1) {
+    context.globalAlpha = alpha * (1 - burst)
+    const reach = (4 + 22 * burst) * unit
+    for (const [dx, dy] of [
+      [1, -1],
+      [1, 1],
+      [-1, 1],
+      [-1, -1],
+    ] as const)
+      plus(cx + (dx * reach) / 1.4, cy + (dy * reach) / 1.4, burst < 0.5 ? 1 : 0, "rgb(255 214 0)")
+  }
+  context.restore()
+}
 
 /**
  * The overlays for the stops, in drawing order: the trail, then the pins,
@@ -298,36 +379,48 @@ export const badgeOverlays = (
       // Just the badge, crisp, over a soft shadow that keeps it readable on
       // the map. Under the pointer it lifts and glows white; held, it
       // settles and darkens; with its card open it glows gold and bobs,
-      // while the rest step back. On the circuit stop the badges not held
-      // step back too.
+      // while the other earned ones dim. An earned badge is bright with a gold glow
+      // and a sparkle; the rest are fainter, more so at the leagues.
       const hovered = clock.hover === gym.badge
       const pressed = clock.pressed === gym.badge
       const selected = clock.selected === gym.badge
-      const others = clock.selected != null && !selected
       const held = !clock.earned || clock.earned.has(gym.badge)
-      const faint = held ? 1 : 1 - mix * (1 - FAINT_PIN)
+      const earned = Boolean(clock.earned?.has(gym.badge))
+      // While a card is open, the other earned pins step back a little.
+      const others = clock.selected != null && !selected && earned
+      const faint = held ? 1 : FAINT_PIN - mix * (FAINT_PIN - FAINTER_PIN)
       const size = Math.round(icon * (0.5 + 0.5 * pop))
       const step = Math.round(2 * ratio)
       const bob = selected && clock.animate ? (Math.floor(performance.now() / 320) % 2) * step : 0
       const lift = pressed ? 0 : hovered ? step * 2 : selected ? step + bob : 0
       const left = Math.round(x - size / 2)
       const top = Math.round(y - size / 2 - lift + (pressed ? step / 2 : 0))
-      context.globalAlpha = clock.alpha * pop * faint * (others && !hovered ? 0.45 : 1)
+      context.globalAlpha = clock.alpha * pop * faint * (others && !hovered ? 0.8 : 1)
       context.save()
       context.shadowColor = selected
         ? "rgb(255 214 0 / 0.95)"
         : hovered
           ? "rgb(255 255 255 / 0.9)"
-          : mix > 0 && held && clock.earned
+          : earned
             ? "rgb(255 214 0 / 0.9)"
             : "rgb(0 0 0 / 0.75)"
-      context.shadowBlur =
-        (selected || hovered ? 10 : mix > 0 && held && clock.earned ? 8 : 4) * ratio
+      context.shadowBlur = (selected || hovered ? 10 : earned ? 8 : 4) * ratio
       context.shadowOffsetY = selected || hovered ? 0 : ratio
       // Darker while held.
       if (pressed) context.filter = "brightness(0.75)"
       context.drawImage(sheet, gym.badge * 16, 0, 16, 16, left, top, size, size)
       context.restore()
+      if (earned && pop >= 1) {
+        const since = clock.earnedAt?.get(gym.badge)
+        sparkle(context, left + size * 0.86, top + size * 0.14, ratio * (wide ? 2 : 1), {
+          alpha: clock.alpha * (others && !hovered ? 0.8 : 1),
+          phase: clock.animate ? performance.now() / 280 + gym.badge * 0.9 : 0,
+          burst:
+            clock.animate && since !== undefined
+              ? (performance.now() - since) / BURST_MS
+              : undefined,
+        })
+      }
     }
     // The hovered pin's town, over it.
     const named = badges.find((gym) => gym.badge === clock.hover)

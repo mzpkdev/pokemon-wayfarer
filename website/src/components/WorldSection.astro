@@ -3,8 +3,8 @@
  * The size of the world, the first highlight, reached from the title scene's
  * Poké Ball by the game's warp: a tour of the overworld in the game's own
  * tiles. Pick a start (LITTLEROOT TOWN, NEW BARK TOWN or PALLET TOWN), then a
- * button press per stop: that start's region, the whole world, the 24 Gyms, the
- * league circuit and each league, then open to look around. The map itself lives in
+ * button press per stop: that start's region, the whole world, the 24 Gyms
+ * (tap the badges you'd win) and each league, then open to look around. The map itself lives in
  * `~/world-map`; its cards are one per stop, with what changes by start.
  */
 import { type Caption, WorldTour } from "~/world-map"
@@ -63,26 +63,21 @@ const captions: Caption[] = [
   {
     place: "THE GYMS",
     title: "Every Gym, in any order.",
-    body: "Kanto, Johto and Hoenn have eight Gyms each. Take the badges in whatever order you like. Tap a pin to meet its Leader.",
+    body: "Kanto, Johto and Hoenn have eight Gyms each. Tap the badges you'd win, in any order, and meet each Leader. At eight, a league phones.",
     stats: [
       { value: "24", label: "Gym Badges" },
       { value: "3", label: "regions" },
     ],
   },
   {
-    place: "THE LEAGUE CIRCUIT",
-    title: "Eight badges, and a league calls.",
-    body: "Any 8 badges are enough, as long as one comes from the league's own side. Tap the badges you hold and see who phones.",
-  },
-  {
     place: "INDIGO PLATEAU",
     title: "One way in: Indigo.",
-    body: "It phones with an invitation once it knows you. Its five are drawn from the Gym Leaders and Elite Four of every region, strongest last.",
+    body: "It phones once it knows you: any 8 badges, one from Kanto or Johto. Each event picks five from the Gym Leaders, Elite Four and Champions of every region. Nearby ones come more willingly, whoever fought last far less, and the strongest fights last.",
   },
   {
     place: "HOENN LEAGUE",
     title: "The other way in: Ever Grande.",
-    body: "It phones too, once it knows you. Win it before or after Indigo. Its five are drawn from the Gym Leaders and Elite Four of every region, strongest last.",
+    body: "It phones too: any 8 badges, one from Hoenn. Win it before or after Indigo. Its five are picked the same way, from every region, with Hoenn's own the most willing.",
   },
   {
     place: "SEVII MASTERS",

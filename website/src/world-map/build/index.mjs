@@ -135,11 +135,14 @@ fs.writeFileSync(
 // The tour's gym pins and league circuit.
 const landmarks = buildLandmarks(game, world, labelFor)
 fs.writeFileSync(`${outDir}/landmarks.json`, JSON.stringify(landmarks))
-// Each Gym Leader's battle portrait for their Gym's card, 64x64 in the palette
-// its PNG carries, as the battle shows it.
+// Each Gym Leader's and each league trainer's battle portrait, 64x64 in the
+// palette its PNG carries, as the battle shows it.
 // Stale portraits go file by file, keeping the folder, so a running dev
 // server's watch on it holds.
-const pics = new Set(landmarks.badges.map((gym) => gym.leader?.pic).filter(Boolean))
+const pics = new Set([
+  ...landmarks.badges.map((gym) => gym.leader?.pic).filter(Boolean),
+  ...landmarks.roster.trainers.map((trainer) => trainer.pic),
+])
 fs.mkdirSync(`${outDir}/leaders`, { recursive: true })
 for (const file of fs.readdirSync(`${outDir}/leaders`))
   if (!pics.has(file.replace(/\.png$/, ""))) fs.rmSync(`${outDir}/leaders/${file}`)

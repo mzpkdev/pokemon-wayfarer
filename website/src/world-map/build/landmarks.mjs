@@ -58,6 +58,105 @@ const readHalls = (root) => {
   return halls
 }
 
+/**
+ * Every trainer's class and battle picture, from the party files, so a
+ * trainer's battle gives the portrait the game shows ("Leader Brock Hns" is
+ * graphics/trainers/front_pics/leader_brock_hns.png).
+ */
+const readParties = (root) => {
+  const parties = new Map()
+  for (const file of fs.readdirSync(`${root}/src/data`).filter((f) => f.endsWith(".party")))
+    for (const block of fs
+      .readFileSync(`${root}/src/data/${file}`, "utf8")
+      .split(/^=== /m)
+      .slice(1)) {
+      const id = block.slice(0, block.indexOf(" ==="))
+      const field = (name) => new RegExp(`^${name}: (.+)$`, "m").exec(block)?.[1].trim()
+      parties.set(id, { name: field("Name"), class: field("Class") ?? "", pic: field("Pic") })
+    }
+  return parties
+}
+
+/**
+ * The portrait file of a trainer the party files leave out, which the .h
+ * trainer tables define (the Indigo Plateau's): its `.trainerPic` constant,
+ * through `data/graphics/trainers.h`, to the front pic's file name.
+ */
+const headerPic = (root, id) => {
+  const dir = `${root}/src/data`
+  for (const file of fs.readdirSync(dir).filter((f) => /^trainers_.*\.h$/.test(f))) {
+    const text = fs.readFileSync(`${dir}/${file}`, "utf8")
+    const at = text.indexOf(`[${id}] =`)
+    if (at < 0) continue
+    const constant = /\.trainerPic = (\w+)/.exec(text.slice(at))?.[1]
+    const graphics = fs.readFileSync(`${dir}/graphics/trainers.h`, "utf8")
+    const symbol = new RegExp(`TRAINER_SPRITE\\(${constant}, (\\w+),`).exec(graphics)?.[1]
+    const front = new RegExp(
+      `${symbol}\\[\\] = INCBIN_U32\\("graphics/trainers/front_pics/(\\w+)\\.`,
+    ).exec(graphics)
+    return front?.[1]
+  }
+  return undefined
+}
+
+/** The picture file's name for a party file's `Pic`. */
+const picName = (pic) => pic.toLowerCase().replaceAll(" ", "_")
+
+/**
+ * The league's pool of trainers (`catalog.json`'s `league` entries, which
+ * `league_registry.h` is generated from): every enabled one, with what the
+ * lineup rule reads (home region, traveller, aloof, and the growth of their
+ * Trainer Rating with the player's) and their battle portrait. Growth curves
+ * and the team level curve are read from `notable_trainers.c`.
+ */
+const readRoster = (root, parties) => {
+  const catalog = JSON.parse(
+    fs.readFileSync(`${root}/tools/notable_trainers/catalog.json`, "utf8"),
+  ).trainers
+  const source = fs.readFileSync(`${root}/src/notable_trainers.c`, "utf8")
+  const curve = (name) => {
+    const match = new RegExp(
+      `static const struct TrainerScalerAnchor ${name}\\[\\] = \\{(.*)\\};`,
+    ).exec(source)
+    if (!match) throw new Error(`no scaler ${name} in notable_trainers.c`)
+    return [...match[1].matchAll(/\{(\d+), (\d+)\}/g)].map(([, tr, value]) => [+tr, +value])
+  }
+  // Each archetype's curve, and whether it rises in steps instead (`step`).
+  const growth = Object.fromEntries(
+    [
+      ...source.matchAll(
+        /NOTABLE_ARCHETYPE_(\w+): return EvaluateTrainerScaler\((\w+), ARRAY_COUNT\(\w+\), worldProgress, (TRUE|FALSE)/g,
+      ),
+    ].map(([, archetype, name, step]) => [
+      archetype.toLowerCase(),
+      { anchors: curve(name), step: step === "TRUE" },
+    ]),
+  )
+  const trainers = catalog
+    .filter((t) => t.league?.enabled)
+    .toSorted((a, b) => a.characterId - b.characterId)
+    .map((t) => {
+      const id = t.league.sourceTrainerId
+      const pic = parties.get(id)?.pic ? picName(parties.get(id).pic) : headerPic(root, id)
+      if (!pic) throw new Error(`no portrait for ${t.slug} (${id})`)
+      if (!growth[t.archetype]) throw new Error(`no growth curve for ${t.archetype}`)
+      return {
+        id: t.characterId,
+        slug: t.slug,
+        name: t.name,
+        role: t.role,
+        home: t.homeRegion,
+        traveller: t.traveller,
+        aloof: t.aloof,
+        startTR: t.startTR,
+        peakTR: t.peakTR,
+        archetype: t.archetype,
+        pic,
+      }
+    })
+  return { trainers, growth, teamLevel: curve("sTeamLevel") }
+}
+
 /** "VIOLET CITY" from "VioletCity_hns", "MAHOGANY TOWN" from "Mahoganytown_hns". */
 export const townName = (name) =>
   name
@@ -142,19 +241,7 @@ export const buildLandmarks = (game, world, regionOf) => {
   const catalog = JSON.parse(
     fs.readFileSync(`${root}/tools/notable_trainers/catalog.json`, "utf8"),
   ).trainers
-  // Every trainer's class and battle picture, from the party files, so a Gym's
-  // leader battle gives the portrait the game shows ("Leader Brock Hns" is
-  // graphics/trainers/front_pics/leader_brock_hns.png).
-  const parties = new Map()
-  for (const file of fs.readdirSync(`${root}/src/data`).filter((f) => f.endsWith(".party")))
-    for (const block of fs
-      .readFileSync(`${root}/src/data/${file}`, "utf8")
-      .split(/^=== /m)
-      .slice(1)) {
-      const id = block.slice(0, block.indexOf(" ==="))
-      const field = (name) => new RegExp(`^${name}: (.+)$`, "m").exec(block)?.[1].trim()
-      parties.set(id, { name: field("Name"), class: field("Class") ?? "", pic: field("Pic") })
-    }
+  const parties = readParties(root)
   const picOf = (script) => {
     for (const [, id] of script.matchAll(/trainerbattle_\w+ (TRAINER_\w+)/g)) {
       const party = parties.get(id)
@@ -275,5 +362,6 @@ export const buildLandmarks = (game, world, regionOf) => {
       ...(leader ? { leader } : {}),
     })),
     circuit,
+    roster: readRoster(root, parties),
   }
 }

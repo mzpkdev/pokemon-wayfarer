@@ -17,8 +17,8 @@ The rest of the site uses it only through `index.ts`:
   fades in, see `src/lib/warp.ts`). After that the map holds still beside a
   card, and NEXT and BACK fly the camera between eight stops: the town, its
   one region (Hoenn, Johto or Kanto), the whole world (wherever you start,
-  you can go anywhere), the 24 Gyms, the league circuit, and each league in
-  turn (Indigo Plateau, the Hoenn League, the Sevii Masters). From the second
+  you can go anywhere), the 24 Gyms, and each league in turn (Indigo
+  Plateau, the Hoenn League, the Sevii Masters). From the second
   stop on the map can be panned in place, the way an embedded map shares a
   page: a mouse drags, and on touch two fingers move it while one still
   scrolls the page (a hint says so). The zoom stays each stop's. At the Gym
@@ -32,27 +32,53 @@ The rest of the site uses it only through `index.ts`:
   (GO TO the Gym for a leader who doesn't walk the map). NEXT and BACK fly on
   from wherever the map was moved to. It never takes over the page's
   scrolling.
-- The circuit stop's card holds a badge picker: all 24 badges as toggle
-  buttons (`aria-pressed`) in rows KANTO, JOHTO, HOENN, with the count and
-  which leagues would call. The rules are the game's (`league_circuit.c`):
-  badges from every region count together, Trainer Rating is `10 * badges` up
-  to 8 and `80 + 5 * (badges - 8)` after, and 80 (any 8 badges) qualifies. The
-  Indigo Plateau also needs one Kanto or Johto badge, the Hoenn League one
-  Hoenn badge (`callingFor` in `landmarks.ts`). Indigo and Hoenn can be won in
-  either order; the Sevii Masters opens after both, and since the page has no
-  wins it only shows that requirement. On the map the held badges' pins are
-  bright and the rest faint; each league is a plate in the region labels'
-  style, glowing while it calls; the trail has two legs (Indigo and Hoenn to
-  Seven Island) that draw in, dotted and marching, once their league calls.
-  The picker's choice is kept across the league stops, and across a change of
-  start. Each league stop flies to its league at a medium zoom, highlights
-  its plate and its leg, and its card lists the halls (name and battle
-  condition, then the Champion's Room) that the builder reads from
-  `game/src/league_halls.c` into `landmarks.json` (`circuit[].halls`). The
-  last card's EXPLORE THE MAP opens the explorer full screen. Captions are
-  one per stop, with per-start `variants`; `stopOverlays` lets the page draw
-  over the map at any stop (the hook for a living-world overlay on the world
-  stop).
+- At the Gym stop a tap on a pin (or its hidden button, `aria-pressed`)
+  toggles the badge earned: earned pins are bright with a gold glow and a
+  sparkle (a burst when earned), the rest fainter, and earning opens that
+  Gym's card ("BOULDER BADGE EARNED", the leader, FIND); giving it back closes
+  it. A chip shows BADGES n/24. The earned set is the tour's state: it
+  persists across the league stops and a change of start. The rules are the
+  game's (`league_circuit.c`): badges from every region count together,
+  Trainer Rating is `10 * badges` up to 8 and `80 + 5 * (badges - 8)` after,
+  and 80 (any 8 badges) qualifies; Indigo also needs one Kanto or Johto badge,
+  the Hoenn League one Hoenn badge (`callingFor` in `landmarks.ts`). The first
+  time the set qualifies a league that hasn't phoned yet on the page, its call
+  rings (`LeagueCall.tsx`): a pulsing phone, then a GBA text window with the
+  league's name box (INDIGO LEAGUE, HOENN LEAGUE), the game's lines
+  (`LeaguePhone_Text_*` in `data/scripts/league_phone.inc`, the league and
+  place as `league_phone.c` buffers them, the lineup as the first event's five),
+  YES/NO with the game's decline confirmation, and the accept or decline
+  follow-up. Accepting flies the tour to that league. It is a modal `<dialog>`
+  (Esc or HANG UP closes it, with no answer); reduced motion skips the typing.
+  Which league rings when both could is `ChooseCallingLeague`'s order: the one
+  that called least recently (none has), then the most badges of its side
+  (Indigo counts Kanto and Johto, Hoenn counts Hoenn), then Indigo (`callerFor`).
+  A second league rings on a later toggle, once each per visit. At the league
+  stops each league is a plate in the region labels' style, glowing while it
+  calls; the trail has two legs (Indigo and Hoenn to Seven Island) that draw
+  in, dotted and marching, once their league calls. Each league stop flies to
+  its league at a medium zoom and highlights its plate and leg. For Indigo and
+  Hoenn the five that fight there are the hero (`LineupPanel.tsx`): five seats
+  in battle order, one per hall (name and battle condition from
+  `game/src/league_halls.c`, `circuit[].halls`), the Champion's Room last. The
+  whole roster's portraits shuffle past, then five settle in order, and a few
+  seconds later the next event picks again (reduced motion: just the first
+  five). The picks are not random: `lineup.ts` replays `SelectLeagueLineup`
+  (`league_selection.c`) on the builder's `roster`: score = Trainer Rating at
+  the player's rating x willingness / 100, willingness is 100 less travel
+  (home region vs the league's: 0 at home, 10 for a traveller away, else 80;
+  Indigo is Kanto and Johto, Hoenn is Hoenn) less 50 for whoever fought in the
+  last event (floor 5), the top five are seated, aloof trainers only when
+  within 10 team levels of the best five of the rest, and the battle order is
+  ascending rating. Successive events feed the last five forward as the tired
+  ones, so the page alternates between two fives for a given rating. The
+  pool is every enabled registry trainer: Gym Leaders, Elite Four and
+  Champions (Tate and Liza are doubles-only and out). The Sevii Masters'
+  lineup format isn't shipped, so its stop shows only its halls and how it
+  opens. The last card's EXPLORE THE MAP opens the explorer full screen.
+  Captions are one per stop, with per-start `variants`; `stopOverlays` lets the
+  page draw over the map at any stop (the hook for a living-world overlay on
+  the world stop).
   `WorldMap` is the explorer. Drag, pinch, wheel, double-click, the arrow keys
   and +/- all pan and zoom it.
   Tapping a map (or Enter on the one at the center) frames it and opens a place
@@ -112,7 +138,7 @@ Plain Node scripts. Each stage gets a module:
   coast, and one palette per kind of ground make every game's tiles match.
 - `landmarks.mjs`: finds each gym by the maps whose scripts set a `FLAG_BADGEnn_GET`
   and follows warps out to the town (the badge's place in its region is the flag
-  number less one, modulo 8), and the league doors from `league_circuit.c`.
+  number less one, modulo 8), the league doors from `league_circuit.c`, and the league `roster` (every enabled trainer in `tools/notable_trainers/catalog.json`: home region, traveller, aloof, TR growth curves from `notable_trainers.c`, and battle portrait via the party files, or the `.h` trainer tables for the Indigo Plateau's). Portraits for the roster and the Gym Leaders go to `leaders/`.
   INDIGO PLATEAU isn't a placed map, so its pin sits at its Town Map cell
   relative to ROUTE 22.
 - `source/`: Sinnoh's Town Map cells, borrowed from the project its maps came
@@ -134,7 +160,8 @@ the way `tools/mapjson` does.
 - `starts.ts`: the three starts: town, player sprite, ride path (in each map's own tiles, so it follows the maps if the layout moves), opening shot and popup names.
 - `rider.ts`: draws the player on their bike along a ride.
 - `fade.ts`: the game's 8-step fade, shared with `src/lib/warp.ts`.
-- `landmarks.ts`: loads `landmarks.json`; draws the badge pins, the league plates and the two-leg dotted trail as overlays, and says which leagues a set of badges calls. Badge art is `public/game/badges.png` (from the trainer card, `pnpm assets`).
+- `landmarks.ts`: loads `landmarks.json`; draws the badge pins, the league plates and the two-leg dotted trail as overlays, and says which leagues a set of badges calls and which rings first.
+- `lineup.ts`, `LineupPanel.tsx`, `LeagueCall.tsx`, `ui.ts`: the league lineup rule, its draft panel, the phone call, and the shared yellow button. Badge art is `public/game/badges.png` (from the trainer card, `pnpm assets`).
 - `clock.ts`: one game clock for the page (a day every two minutes from 8:00), so the tour's world stop and the explorer show the same time of day and the same ships at sea.
 - `PlaceExtra.tsx`: what the explorer's place cards add for a town: its Gym and badge, its stop on the league circuit, and the ferries that call there.
 - `WorldTour.tsx` and `WorldMap.tsx`: the two components.
