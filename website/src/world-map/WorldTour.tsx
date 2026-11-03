@@ -27,7 +27,7 @@ import { OPEN_SEA, type Overlay, rendererFor } from "./render"
 import { riderAt } from "./rider"
 import {
   DEFAULT_START,
-  dailyRouteIn,
+  dailyFocusIn,
   focusIn,
   openingIn,
   placeAt,
@@ -135,6 +135,8 @@ const OPTION =
 /** Metatiles across and down in the close-up shots, and in a league's: its region around it. */
 const CLOSE_UP = { width: 44, height: 30 }
 const LEAGUE_VIEW = { width: 180, height: 122 }
+/** Metatiles across and down at the daily stop: a stretch of its route. */
+const DAILY_VIEW = { width: 32, height: 22 }
 
 const boundsOf = (maps: Meta["maps"]): Bounds => ({
   left: Math.min(...maps.map(({ x }) => x)),
@@ -187,13 +189,13 @@ const shotsFor = (
     // On a wide screen the lineup lies over the map's lower part, so the league sits higher.
     return { x: league.x, y: league.y + (width > 700 ? (height * 0.14) / zoom : 0), zoom }
   }
-  // The daily route, all of it, never closer than the town.
-  const route = fit(dailyRouteIn(meta, start), width, height, 0.92)
+  // The daily route's busiest stretch, close enough to follow who comes and goes.
+  const daily = Math.min(width / DAILY_VIEW.width, height / DAILY_VIEW.height)
   const world = fit(boundsOf(meta.maps), width, height, 0.92)
   return [
     { ...fit(openingIn(meta, start), width, height, 1) },
     { ...focusIn(meta, start), zoom: close },
-    { ...route, zoom: Math.min(route.zoom, close) },
+    { ...dailyFocusIn(meta, start), zoom: daily },
     fit(region, width, height, 0.95),
     world,
     fit(circuit, width, height, 0.95),

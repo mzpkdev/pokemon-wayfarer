@@ -17,7 +17,8 @@ The rest of the site uses it only through `index.ts`:
   fades in, see `src/lib/warp.ts`). After that the map holds still beside a
   card, and NEXT and BACK fly the camera between six stops, one journey that
   only pulls out: home; a busy route of the start's region (ROUTE 15, 32 or
-  103, `dailyRoute` in `starts.ts`) changing from day to day (`daily.ts`,
+  103, `dailyRoute` in `starts.ts`, close in on the stretch holding most of
+  its trainer and item spots) changing from day to day (`daily.ts`,
   `dailyView.ts`): the game's own daily draw for a save that has beaten
   everyone there, so its trainers stand in new spots or stay away and its
   item spots roll new items, while the card steps the days (by itself every
