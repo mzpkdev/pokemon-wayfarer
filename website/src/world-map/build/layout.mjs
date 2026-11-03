@@ -191,7 +191,7 @@ const REGIONS = [
   {
     name: "Hoenn",
     roots: ["MAP_LITTLEROOT_TOWN", "MAP_SOOTOPOLIS_CITY"],
-    at: [-160, 600],
+    at: [-280, 740],
   },
   { name: "Sinjoh", roots: ["MAP_ROUTE49_HNS"], at: [0, 0], beside: "Sinjoh" },
   {
@@ -220,9 +220,9 @@ const REGIONS = [
       "MAP_SIX_ISLAND_PATTERN_BUSH",
       "MAP_SEVEN_ISLAND",
     ],
-    at: [720, 560],
+    at: [780, 700],
   },
-  { name: "Alola", roots: ["MAP_MELEMELE_ISLE_HNS"], at: [1220, 700] },
+  { name: "Alola", roots: ["MAP_MELEMELE_ISLE_HNS"], at: [1400, 880] },
 ]
 // Each Sevii Town Map is its own cell space; set them out like the islands lie.
 const SEVII_MAPS = [
@@ -478,7 +478,7 @@ export const placeWorld = (game) => {
     void sinnohBelow
     // Away from Sinjoh, keep a strait between Sinnoh and Johto and Kanto wide
     // enough that their coasts don't meet, so the land runs only through Sinjoh.
-    const STRAIT = 20
+    const STRAIT = 44
     let lift = sinjohNow.top - 6 - sinnohBottom
     for (const s of all.filter((p) => p.region === "Sinnoh")) {
       const left = s.x + dx,

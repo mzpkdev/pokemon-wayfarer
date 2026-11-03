@@ -4,13 +4,19 @@
 import type { Camera } from "./camera"
 import { EMPTY, type World } from "./data"
 
-/** The open sea past the edges, the color the far-out view deepens to. */
-export const OPEN_SEA = "rgb(52 92 178)"
+/** The open sea past the edges before the world loads; the world's own `meta.sea` once it has. */
+export const OPEN_SEA = "rgb(48 88 176)"
 /** Metatiles a chunk is wide and tall. */
 const CHUNK = 32
 /** Device pixels per metatile where the tiles start fading in over the far-out view, and finish. */
-const FADE_FROM = 5
-const FADE_TO = 10
+const FADE_FROM = 4
+const FADE_TO = 7
+/**
+ * The far-out view's pixels are at least this many CSS pixels across: further
+ * out it draws a coarser level, never shrinks one, so it stays as blocky as
+ * the GBA's own screen at any zoom.
+ */
+const OVERVIEW_PIXEL = 1.5
 /** How long a frame may spend drawing new chunks; the rest wait for the next frames. */
 const CHUNK_BUDGET_MS = 8
 /** Lands labeled smaller and in white, beside the four main regions in gold. */
@@ -67,7 +73,15 @@ const townName = (name: string) =>
     .toUpperCase()
 
 const createRenderer = ({ meta, atlas, grid, overview }: World) => {
-  const { width, height, columns } = meta
+  const { width, height, columns, ocean } = meta
+  const sea = `rgb(${meta.sea.join(" ")})`
+  /** The atlas index at a grid cell; past the grid's edges, the open ocean. */
+  const cell = (gx: number, gy: number) => {
+    if (gx >= 0 && gy >= 0 && gx < width && gy < height) return grid[gy * width + gx]!
+    const px = ((gx % ocean.bw) + ocean.bw) % ocean.bw
+    const py = ((gy % ocean.bh) + ocean.bh) % ocean.bh
+    return ocean.ids[py * ocean.bw + px]!
+  }
 
   // Chunks of metatiles, drawn on demand at 4 or 16 pixels a metatile and
   // kept until too many pile up.
@@ -81,10 +95,7 @@ const createRenderer = ({ meta, atlas, grid, overview }: World) => {
     cc.imageSmoothingQuality = "high"
     for (let y = 0; y < CHUNK; y++)
       for (let x = 0; x < CHUNK; x++) {
-        const gx = cx * CHUNK + x
-        const gy = cy * CHUNK + y
-        if (gx >= width || gy >= height) continue
-        const k = grid[gy * width + gx]!
+        const k = cell(cx * CHUNK + x, cy * CHUNK + y)
         if (k === EMPTY) continue
         cc.drawImage(
           atlas,
@@ -126,7 +137,7 @@ const createRenderer = ({ meta, atlas, grid, overview }: World) => {
     const left = camera.x - (view.focus.x * ratio) / scale
     const top = camera.y - (view.focus.y * ratio) / scale
     context.setTransform(1, 0, 0, 1, 0, 0)
-    context.fillStyle = OPEN_SEA
+    context.fillStyle = sea
     context.fillRect(0, 0, w, h)
 
     // The tiles close in, over the far-out view while they fade in or while
@@ -143,10 +154,10 @@ const createRenderer = ({ meta, atlas, grid, overview }: World) => {
     if (tiles > 0) {
       const size = scale < 10 ? 4 : 16
       const started = performance.now()
-      const firstX = Math.max(0, Math.floor(left / CHUNK))
-      const firstY = Math.max(0, Math.floor(top / CHUNK))
-      const lastX = Math.min(Math.ceil(width / CHUNK) - 1, Math.floor((left + w / scale) / CHUNK))
-      const lastY = Math.min(Math.ceil(height / CHUNK) - 1, Math.floor((top + h / scale) / CHUNK))
+      const firstX = Math.floor(left / CHUNK)
+      const firstY = Math.floor(top / CHUNK)
+      const lastX = Math.floor((left + w / scale) / CHUNK)
+      const lastY = Math.floor((top + h / scale) / CHUNK)
       for (let cy = firstY; cy <= lastY; cy++)
         for (let cx = firstX; cx <= lastX; cx++) {
           const key = `${size}:${cx}:${cy}`
@@ -169,9 +180,25 @@ const createRenderer = ({ meta, atlas, grid, overview }: World) => {
         }
     }
     if (tiles < 1 || pending) {
-      context.imageSmoothingEnabled = scale < 2
-      context.imageSmoothingQuality = "high"
-      context.drawImage(overview, -left * scale, -top * scale, width * scale, height * scale)
+      // The coarsest level whose pixels are still OVERVIEW_PIXEL or more,
+      // blown up without smoothing, like the GBA's mosaic.
+      const levels = meta.overview
+      let level = 0
+      while (level < levels.length - 1 && camera.zoom * 2 ** level < OVERVIEW_PIXEL) level++
+      const source = levels[level]!
+      const size = 2 ** level * scale
+      context.imageSmoothingEnabled = false
+      context.drawImage(
+        overview,
+        source.x,
+        source.y,
+        source.width,
+        source.height,
+        Math.round(-left * scale),
+        Math.round(-top * scale),
+        Math.round(source.width * size),
+        Math.round(source.height * size),
+      )
     }
     if (tiles > 0) {
       context.globalAlpha = tiles

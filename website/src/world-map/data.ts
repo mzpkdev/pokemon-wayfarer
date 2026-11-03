@@ -1,6 +1,6 @@
 // The world's data, as `build/` writes it: a sheet of every metatile used
 // (`atlas.png`), a grid of indices into it (`grid.bin.gz`), the far-out view
-// drawn one pixel a metatile (`overview.jpg`), and `meta.json` with the
+// one pixel a metatile and coarser (`overview.png`), and `meta.json` with the
 // grid's size and where its towns, regions and maps are.
 
 /** A box on the grid, in metatiles. */
@@ -12,6 +12,12 @@ export type Meta = {
   /** Metatiles per row of the atlas. */
   columns: number
   count: number
+  /** Where each level of the far-out view sits in `overview.png`; level k has a pixel per 2^k metatiles. */
+  overview: { x: number; y: number; width: number; height: number }[]
+  /** The open sea past the grid: a pattern of atlas indices, tiled on the grid's cells. */
+  ocean: { bw: number; bh: number; ids: number[] }
+  /** The open sea's color, as far out as the tiles' average. */
+  sea: [number, number, number]
   towns: { name: string; x: number; y: number }[]
   regions: { name: string; x: number; y: number; bounds?: Bounds }[]
   maps: { name: string; region?: string; x: number; y: number; width: number; height: number }[]
@@ -61,7 +67,7 @@ export const loadWorld = (base = DATA): Promise<World> => {
         fetch(`${base}/meta.json`).then((response) => response.json() as Promise<Meta>),
         loadImage(`${base}/atlas.png`),
         loadGrid(`${base}/grid.bin.gz`),
-        loadImage(`${base}/overview.jpg`).catch(() => loadImage(`${base}/overview.png`)),
+        loadImage(`${base}/overview.png`),
       ])
       return { meta, atlas, grid, overview }
     })()
