@@ -159,8 +159,8 @@ Plain Node scripts. Each stage gets a module:
   (`.iconPalIndex`, `graphics/pokemon/icon_palettes`) come from the species info.
 - `rails.mjs`: the Magnet Train's line. Only Route 32 holds its track, so it
   is carried on, in metatiles drawn from Route 32's (turned on their side for
-  runs north and south), west into GOLDENROD CITY and east into SAFFRON CITY
-  up to its station, the cheapest way by a search that counts the map cells
+  runs north and south), west to GOLDENROD CITY's edge, deck level with the
+  city's own track there, and east into SAFFRON CITY up to its station, the cheapest way by a search that counts the map cells
   covered (towns most) and the turns. It is laid on a copy of the grid that
   is only drawn; the ferries and walkers keep to the ground under it.
 - `overview.mjs`: the far-out view, each pixel the average of the metatile

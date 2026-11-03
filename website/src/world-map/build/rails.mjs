@@ -76,12 +76,9 @@ export const layRails = (game, world, land, atlas) => {
         grid[i] = trackCell(r, phase(x), land.grid[i], false)
       }
   }
-  // West, from Goldenrod's east edge to Route 32's west edge.
-  across(gx(west) + west.l.width, gx(route), top)
-  // East: the cheapest way from Route 32's east edge to Saffron's west edge,
-  // level with its station: a line of east and north-or-south runs, each cell
-  // costing the map cells the viaduct would cover there (a town's many times
-  // a route's), and each turn as much as a long run over a route.
+  // Each way from Route 32 is the cheapest line of level runs and runs north
+  // or south: each cell costs the map cells the viaduct covers there (a
+  // town's many times a route's), and each turn as much as a long run.
   const TOWN = 8,
     TURN = 600
   const weight = new Float32Array(all.length).map((_, m) =>
@@ -91,109 +88,120 @@ export const layRails = (game, world, land, atlas) => {
     const m = land.owner[y * W + x]
     return m >= 0 ? weight[m] : 0
   }
-  const door = game.maps[east.m.id].warp_events?.find((w) => /TRAIN_STATION/.test(w.dest_map))
-  const level = gy(east) + (door ? door.y - TRACK.rows + 1 : 6)
-  const x0 = gx(route) + route.l.width,
-    x1 = gx(east)
-  const yLo = Math.max(0, Math.min(top, level) - 120),
-    yHi = Math.min(H - TRACK.rows, Math.max(top, level) + 120)
-  const span = yHi - yLo + 1
-  const id = (x, y, d) => ((x - x0) * span + (y - yLo)) * 2 + d
-  const states = (x1 - x0 + 1) * span * 2
-  const dist = new Float64Array(states).fill(Infinity)
-  const back = new Int32Array(states).fill(-1)
-  // A run's cost at a cell: the five cells across it.
   const runCost = (x, y, d) => {
     let c = 0
     for (let r = 0; r < TRACK.rows; r++) c += d === 0 ? cost(x, y + r) : cost(x + r, y)
     return c
   }
-  // Dijkstra over a binary heap.
-  const heap = []
-  const push = (s, v) => {
-    heap.push([v, s])
-    let i = heap.length - 1
-    while (i > 0) {
-      const j = (i - 1) >> 1
-      if (heap[j][0] <= heap[i][0]) break
-      ;[heap[i], heap[j]] = [heap[j], heap[i]]
-      i = j
+  const lay = (xStart, yStart, xGoal, yGoal) => {
+    const step = Math.sign(xGoal - xStart) || 1
+    const length = Math.abs(xGoal - xStart) + 1
+    const yLo = Math.max(0, Math.min(yStart, yGoal) - 120),
+      yHi = Math.min(H - TRACK.rows, Math.max(yStart, yGoal) + 120)
+    const span = yHi - yLo + 1
+    const id = (x, y, d) => (Math.abs(x - xStart) * span + (y - yLo)) * 2 + d
+    const at = (s) => {
+      const d = s % 2,
+        cell = (s - d) / 2
+      return { x: xStart + step * Math.floor(cell / span), y: yLo + (cell % span), d }
+    }
+    const dist = new Float64Array(length * span * 2).fill(Infinity)
+    const back = new Int32Array(length * span * 2).fill(-1)
+    // Dijkstra over a binary heap.
+    const heap = []
+    const push = (s, v) => {
+      heap.push([v, s])
+      let i = heap.length - 1
+      while (i > 0) {
+        const j = (i - 1) >> 1
+        if (heap[j][0] <= heap[i][0]) break
+        ;[heap[i], heap[j]] = [heap[j], heap[i]]
+        i = j
+      }
+    }
+    const pop = () => {
+      const first = heap[0],
+        last = heap.pop()
+      if (heap.length > 0) {
+        heap[0] = last
+        let i = 0
+        for (;;) {
+          const l = i * 2 + 1,
+            r = l + 1
+          let m = i
+          if (l < heap.length && heap[l][0] < heap[m][0]) m = l
+          if (r < heap.length && heap[r][0] < heap[m][0]) m = r
+          if (m === i) break
+          ;[heap[i], heap[m]] = [heap[m], heap[i]]
+          i = m
+        }
+      }
+      return first
+    }
+    const start = id(xStart, yStart, 0),
+      goal = id(xGoal, yGoal, 0)
+    dist[start] = runCost(xStart, yStart, 0)
+    push(start, dist[start])
+    while (heap.length > 0) {
+      const [v, s] = pop()
+      if (v > dist[s]) continue
+      if (s === goal) break
+      const { x, y, d } = at(s)
+      const next = []
+      if (d === 0 && x !== xGoal) next.push([x + step, y, 0, 0])
+      if (d === 1) {
+        if (y > yLo) next.push([x, y - 1, 1, 0])
+        if (y < yHi) next.push([x, y + 1, 1, 0])
+      }
+      // Turn in place: the corner is shared.
+      next.push([x, y, 1 - d, TURN])
+      for (const [nx, ny, nd, extra] of next) {
+        const t = id(nx, ny, nd)
+        const value = v + extra + runCost(nx, ny, nd) + 0.01
+        if (value < dist[t]) {
+          dist[t] = value
+          back[t] = s
+          push(t, value)
+        }
+      }
+    }
+    if (!Number.isFinite(dist[goal])) return null
+    const cells = []
+    for (let s = goal; s >= 0; s = back[s]) cells.push(at(s))
+    // Upright runs first, so the level runs pass over the corners.
+    for (const { x, y, d } of cells)
+      if (d === 1)
+        for (let r = 0; r < TRACK.rows; r++) {
+          const i = y * W + x + r
+          grid[i] = trackCell(r, phase(y), land.grid[i], true)
+        }
+    for (const { x, y, d } of cells) if (d === 0) across(x, x + 1, y)
+    return {
+      turns: cells.filter((c, k) => k > 0 && c.d !== cells[k - 1].d).length,
+      cost: dist[goal],
     }
   }
-  const pop = () => {
-    const top0 = heap[0],
-      last = heap.pop()
-    if (heap.length > 0) {
-      heap[0] = last
-      let i = 0
-      for (;;) {
-        const l = i * 2 + 1,
-          r = l + 1
-        let m = i
-        if (l < heap.length && heap[l][0] < heap[m][0]) m = l
-        if (r < heap.length && heap[r][0] < heap[m][0]) m = r
-        if (m === i) break
-        ;[heap[i], heap[m]] = [heap[m], heap[i]]
-        i = m
-      }
-    }
-    return top0
-  }
-  const start = id(x0, top, 0)
-  dist[start] = 0
-  push(start, 0)
-  const goal = id(x1, level, 0)
-  while (heap.length > 0) {
-    const [v, s] = pop()
-    if (v > dist[s]) continue
-    if (s === goal) break
-    const d = s % 2,
-      cell = (s - d) / 2
-    const x = x0 + Math.floor(cell / span),
-      y = yLo + (cell % span)
-    const next = []
-    if (d === 0 && x < x1) next.push([x + 1, y, 0, 0])
-    if (d === 1) {
-      if (y > yLo) next.push([x, y - 1, 1, 0])
-      if (y < yHi) next.push([x, y + 1, 1, 0])
-    }
-    // Turn in place: the corner is shared.
-    next.push([x, y, 1 - d, TURN])
-    for (const [nx, ny, nd, extra] of next) {
-      const t = id(nx, ny, nd)
-      const value = v + extra + runCost(nx, ny, nd) + 0.01
-      if (value < dist[t]) {
-        dist[t] = value
-        back[t] = s
-        push(t, value)
-      }
-    }
-  }
-  if (!Number.isFinite(dist[goal])) return grid
-  const path = []
-  for (let s = goal; s >= 0; s = back[s]) path.push(s)
-  path.reverse()
-  // Upright runs first, so the level runs pass over the corners.
-  const cells = path.map((s) => {
-    const d = s % 2,
-      cell = (s - d) / 2
-    return { x: x0 + Math.floor(cell / span), y: yLo + (cell % span), d }
-  })
-  for (const { x, y, d } of cells)
-    if (d === 1)
-      for (let r = 0; r < TRACK.rows; r++) {
-        const i = y * W + x + r
-        grid[i] = trackCell(r, phase(y), land.grid[i], true)
-      }
-  for (const { x, y, d } of cells)
-    if (d === 0)
-      for (let r = 0; r < TRACK.rows; r++) {
-        const i = (y + r) * W + x
-        grid[i] = trackCell(r, phase(x), land.grid[i], false)
-      }
-  // On into Saffron, up to the station's side.
-  if (door) across(x1, gx(east) + door.x - 3, level)
-  const turns = cells.filter((c, k) => k > 0 && c.d !== cells[k - 1].d).length
-  console.log(`magnet train: ${turns} turns, cost ${Math.round(dist[goal])}`)
+  const stationDoor = (p) =>
+    game.maps[p.m.id].warp_events?.find((w) => /TRAIN_STATION/.test(w.dest_map))
+  // West: to Goldenrod's east edge, where the city's own track (three rows,
+  // just above the station door) runs out; the viaduct's deck meets it there.
+  const westDoor = stationDoor(west)
+  const westLevel = gy(west) + (westDoor ? westDoor.y - 4 : 6)
+  const toWest = lay(gx(route) - 1, top, gx(west) + west.l.width, westLevel)
+  // East: to Saffron's west edge, level with its station, then on into the
+  // city up to the station's side.
+  const eastDoor = stationDoor(east)
+  const eastLevel = gy(east) + (eastDoor ? eastDoor.y - TRACK.rows + 1 : 6)
+  const toEast = lay(gx(route) + route.l.width, top, gx(east), eastLevel)
+  if (toEast && eastDoor) across(gx(east), gx(east) + eastDoor.x - 3, eastLevel)
+  for (const [name, way] of [
+    ["west", toWest],
+    ["east", toEast],
+  ])
+    console.log(
+      way
+        ? `magnet train ${name}: ${way.turns} turns, cost ${Math.round(way.cost)}`
+        : `magnet train ${name}: no way found`,
+    )
   return grid
 }
