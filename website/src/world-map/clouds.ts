@@ -71,7 +71,10 @@ export const cloudsOverlay = (animate: boolean, now: () => number): Overlay => {
     const span = TEXELS * TEXEL
     const offsetX = ((t * DRIFT.x) % span) + span
     const offsetY = ((t * DRIFT.y) % span) + span
-    const size = span * scale
+    // Each tile runs from its own rounded edge to the next tile's, so the
+    // seams never gap or double up when a tile's size isn't whole.
+    const edgeX = (i: number, dx: number) => Math.round((i * span - offsetX - left) * scale + dx)
+    const edgeY = (j: number, dy: number) => Math.round((j * span - offsetY - top) * scale + dy)
     const firstX = Math.floor((left + offsetX) / span) - 1
     const firstY = Math.floor((top + offsetY) / span) - 1
     // One tile more at the far side, for the body layer drawn shifted up and left.
@@ -86,10 +89,12 @@ export const cloudsOverlay = (animate: boolean, now: () => number): Overlay => {
     ] as const)
       for (let j = firstY; j <= lastY; j++)
         for (let i = firstX; i <= lastX; i++) {
-          const x = Math.round((i * span - offsetX - left) * scale + dx)
-          const y = Math.round((j * span - offsetY - top) * scale + dy)
-          if (x > width || y > height || x + size < 0 || y + size < 0) continue
-          context.drawImage(image, x, y, Math.round(size), Math.round(size))
+          const x = edgeX(i, dx)
+          const y = edgeY(j, dy)
+          const w = edgeX(i + 1, dx) - x
+          const h = edgeY(j + 1, dy) - y
+          if (x > width || y > height || x + w < 0 || y + h < 0) continue
+          context.drawImage(image, x, y, w, h)
         }
     context.globalAlpha = 1
   }

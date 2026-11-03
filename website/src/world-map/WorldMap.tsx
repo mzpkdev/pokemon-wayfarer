@@ -246,6 +246,8 @@ export const WorldMap = ({
             labels: true,
             overlays: [
               ...(sea ? [sea] : []),
+              weather,
+              clouds,
               ...(sightingsRef.current ? [sightingsRef.current] : []),
               ...(notablesRef.current
                 ? [
@@ -254,8 +256,6 @@ export const WorldMap = ({
                     }),
                   ]
                 : []),
-              weather,
-              clouds,
               ...(livingRef.current
                 ? [
                     livingOverlay(livingRef.current, pageMinutes, { still: reducedRef.current }),

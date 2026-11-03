@@ -59,9 +59,31 @@ fs.rmSync(`${outDir}/overview.jpg`, { force: true })
 // Which cells are water, a bit each (row by row, high bit first), for the
 // living sea: its glints far out and its ripples close in keep to the water.
 // The open sea past every map (EMPTY) is water too; the viaduct's deck is not.
+// Water is told by colour, which blue roofs and glass pass too, so a patch
+// too small to be a pond is left out (a puddle loses its ripples, a
+// department store keeps its roof dry).
+const SMALLEST_WATER = 17
+const wet = new Uint8Array(W * H)
+for (let i = 0; i < W * H; i++) wet[i] = grid[i] === 0xffff || land.isWater(grid[i]) ? 1 : 0
+const seen = new Uint8Array(W * H)
 const water = new Uint8Array(Math.ceil((W * H) / 8))
-for (let i = 0; i < W * H; i++)
-  if (grid[i] === 0xffff || land.isWater(grid[i])) water[i >> 3] |= 0x80 >> (i & 7)
+const patch = []
+for (let start = 0; start < W * H; start++) {
+  if (!wet[start] || seen[start]) continue
+  patch.length = 0
+  patch.push(start)
+  seen[start] = 1
+  for (let p = 0; p < patch.length; p++) {
+    const i = patch[p]
+    const x = i % W
+    for (const j of [i - W, i + W, x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1])
+      if (j >= 0 && j < W * H && wet[j] && !seen[j]) {
+        seen[j] = 1
+        patch.push(j)
+      }
+  }
+  if (patch.length >= SMALLEST_WATER) for (const i of patch) water[i >> 3] |= 0x80 >> (i & 7)
+}
 fs.writeFileSync(`${outDir}/water.bin.gz`, gzipSync(Buffer.from(water.buffer), { level: 9 }))
 const towns = all
   .filter((p) => ["MAP_TYPE_TOWN", "MAP_TYPE_CITY"].includes(p.m.map_type))

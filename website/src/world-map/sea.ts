@@ -16,7 +16,7 @@ const RIPPLES_FULL = 10
 /** How long a glint lives, in ms, and how many of the lattice's cells are quiet at a time. */
 const GLINT_MS = 2600
 const GLINT_QUIET = 0.72
-/** CSS pixels the glints' lattice is at least apart; the lattice doubles in metatiles to keep it. */
+/** CSS pixels the glints' lattice is at least apart (and at most twice that): the lattice doubles in metatiles to keep it. */
 const GLINT_SPACING = 36
 /** How long a ripple takes to drift down its tile, in ms. */
 const RIPPLE_MS = 2400
@@ -41,7 +41,6 @@ export const seaOverlay = (water: Water, animate: boolean, now: () => number): O
       // A lattice in metatiles, doubling so its cells stay at least GLINT_SPACING across.
       let cell = 4
       while (cell * zoom < GLINT_SPACING) cell *= 2
-      const period = Math.floor(t / GLINT_MS)
       const dot = Math.max(1, Math.round(ratio))
       context.fillStyle = "rgb(255 255 255)"
       const firstX = Math.floor(left / cell)
@@ -69,7 +68,6 @@ export const seaOverlay = (water: Water, animate: boolean, now: () => number): O
             dot,
           )
         }
-      void period
       context.globalAlpha = 1
     }
 

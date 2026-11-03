@@ -165,7 +165,7 @@ builder change.
 | `daily.json`      | The game's daily trainer slots (home trainer name, sprite cells, absence chance, group, placed objects' grid cells), the groups in the game's order, the placed item spots with their reach tier and region, and the item pools; `dailyOn` in `daily.ts` replays a day's draws from them |
 | `trainers.png`    | One 32×32 cell per trainer sprite used (first standing frame, facing down, bottom-centred) and the item ball, 16 to a row, indexed by `daily.json`                                                                                                                                       |
 | `notables.json`   | The notables' stops, cycles and routes (see below)                                                                                                                                                                                                                                       |
-| `water.bin.gz`    | Which cells are water, a bit each, row by row with the high bit first; the open sea past every map is water, the Magnet Train's viaduct is not. The living sea keeps its glints and ripples to them                                                                                      |
+| `water.bin.gz`    | Which cells are water, a bit each, row by row with the high bit first; the open sea past every map is water, the Magnet Train's viaduct is not, nor is a patch under 17 cells (blue roofs and glass pass the colour test). The living sea keeps its glints and ripples to them           |
 | `meta.json`       | Grid size, atlas columns, the overview's levels, the open ocean's tiles and color, towns, region labels with bounds, and placed maps, each with the game's `weather` where it has one worth drawing (`rain`, `storm`, `snow`, `sand`, `shade` or `leaves`, from map.json)                |
 
 ## Builder (`build/`)
@@ -302,7 +302,7 @@ so each holds at one moment.
 
 - The sea (`sea.ts`, on `water.bin.gz` through `water.ts`). Far out, glints of
   light come and go across the open water on a lattice that doubles in
-  metatiles so it stays about 36 CSS pixels apart; each cell's glint has its
+  metatiles so it stays 36 to 72 CSS pixels apart; each cell's glint has its
   own lag and sits out most periods, so they don't blink together. From 6 CSS
   pixels a metatile, where the game's own water tiles show, a ripple drifts
   down some of the water tiles, a light stroke of a few game pixels and a
@@ -321,9 +321,11 @@ so each holds at one moment.
   swaying down (two or three game pixels over a shadow, so it shows on
   snow), a sandstorm's grit blowing west, the shade under a forest, and
   leaves tumbling down Bellchime Trail. All of it is clipped to the map's
-  rectangle, and the count follows the map's area on screen (at most 700 a
-  map). The haze fades in from the map's edges, except along an edge
-  another map's weather lies on, so Olivine and Route 40 rain as one.
+  rectangle, and the drops hang on a lattice of 8-metatile cells over it,
+  so only the cells on screen are drawn and there are as many close in as
+  far out. The haze (and a storm's flash) fades in from the map's edges,
+  except along the stretch of an edge another map's weather lies on, so
+  Olivine and Route 40 rain as one.
 - The night (`lights.ts`, over the tint). As the time of day's tint darkens
   (a quarter in the evening and morning, about half at night), each town
   glows warm with a brighter core, each ship shows a lamp, and the Olivine
