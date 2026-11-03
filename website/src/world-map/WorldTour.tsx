@@ -254,6 +254,8 @@ export const WorldTour = ({
   const cameraRef = useRef<Camera | null>(null)
   const goRef = useRef<(stop: number) => void>(() => {})
   const findRef = useRef<(gym: Gym) => void>(() => {})
+  const hoverRef = useRef<(badge: number | null) => void>(() => {})
+  const [gymPins, setGymPins] = useState<Gym[]>([])
   const [hint, setHint] = useState(false)
   // The Gym whose card is open, at the badge stop.
   const [gym, setGym] = useState<Gym | null>(null)
@@ -486,6 +488,7 @@ export const WorldTour = ({
           badgesUp = stopClock.alpha > 0
         } else stopClock.alpha = 0
         const overlays = badgesUp ? [...pins] : []
+        stopClock.selected = gymRef.current?.badge ?? null
         let animated = badgesUp && !reducedMotion
         // The leader whose Gym card is open walks the badge stop's map.
         const card = gymRef.current
@@ -539,6 +542,9 @@ export const WorldTour = ({
         const to = shots[next + 1]!
         manual = null
         follow = null
+        stopClock.hover = null
+        stopClock.pressed = null
+        canvas.style.cursor = ""
         flight = reducedMotion ? null : { from, to: next, start: now, duration: flightMs(from, to) }
         if (next === BADGES_STOP) {
           badgesSince = now
@@ -655,30 +661,74 @@ export const WorldTour = ({
         { signal },
       )
 
-      // At the badge stop, a tap on a pin opens its Gym's card.
-      canvas.addEventListener(
-        "click",
-        (event) => {
-          if (current !== BADGES_STOP || travelled > 6 || !cameraRef.current) return
-          const camera = cameraRef.current
-          const { width, height } = area()
-          const at = local(event)
-          const reach = Math.max(18, canvas.clientWidth > 700 ? 25 : 13)
-          let best: Gym | null = null
-          let bestDistance = reach
-          for (const pin of landmarks.badges) {
-            const x = (pin.x - camera.x) * camera.zoom + width / 2
-            const y = (pin.y - camera.y) * camera.zoom + height / 2
-            const distance = Math.hypot(at.x - x, at.y - y)
-            if (distance < bestDistance) {
-              best = pin
-              bestDistance = distance
-            }
+      // The pin (if any) under a point on the canvas, at the badge stop.
+      const pinAt = (at: { x: number; y: number }): Gym | null => {
+        if (current !== BADGES_STOP || stopClock.alpha <= 0 || !cameraRef.current) return null
+        const camera = cameraRef.current
+        const { width, height } = area()
+        let best: Gym | null = null
+        let bestDistance = Math.max(18, canvas.clientWidth > 700 ? 25 : 13)
+        for (const pin of landmarks.badges) {
+          const x = (pin.x - camera.x) * camera.zoom + width / 2
+          const y = (pin.y - camera.y) * camera.zoom + height / 2
+          const distance = Math.hypot(at.x - x, at.y - y)
+          if (distance < bestDistance) {
+            best = pin
+            bestDistance = distance
           }
-          if (best) setGym(best)
+        }
+        return best
+      }
+      // Pins answer the pointer: a hover lights one up and names its town,
+      // a press dips it, and a tap opens its Gym's card.
+      const hoverPin = (badge: number | null) => {
+        if (stopClock.hover === badge) return
+        stopClock.hover = badge
+        canvas.style.cursor = badge === null ? "" : "pointer"
+        schedule()
+      }
+      hoverRef.current = hoverPin
+      canvas.addEventListener(
+        "pointermove",
+        (event) => {
+          if (event.pointerType === "touch") return
+          if (drag && travelled > 6) {
+            stopClock.pressed = null
+            hoverPin(null)
+            return
+          }
+          hoverPin(pinAt(local(event))?.badge ?? null)
         },
         { signal },
       )
+      canvas.addEventListener("pointerleave", () => hoverPin(null), { signal })
+      canvas.addEventListener(
+        "pointerdown",
+        (event) => {
+          const pin = pinAt(local(event))
+          if (!pin) return
+          stopClock.pressed = pin.badge
+          schedule()
+        },
+        { signal },
+      )
+      const unpress = () => {
+        if (stopClock.pressed == null) return
+        stopClock.pressed = null
+        schedule()
+      }
+      canvas.addEventListener("pointerup", unpress, { signal })
+      canvas.addEventListener("pointercancel", unpress, { signal })
+      canvas.addEventListener(
+        "click",
+        (event) => {
+          if (travelled > 6) return
+          const pin = pinAt(local(event))
+          if (pin) setGym(pin)
+        },
+        { signal },
+      )
+      setGymPins(landmarks.badges)
 
       // The Gym card's button: pan onto the leader and keep them in view as
       // they walk, or onto the Gym when its leader doesn't walk the map.
@@ -751,6 +801,24 @@ export const WorldTour = ({
         className={`absolute inset-0 size-full touch-pan-x touch-pan-y ${stop >= 1 && !warping ? "cursor-grab active:cursor-grabbing" : ""}`}
         style={{ background: OPEN_SEA }}
       />
+      {STOPS[stop] === "badges" && (
+        // The pins for a keyboard: each Gym a button, lighting its pin while focused.
+        // Fixed to the screen, so focusing one never scrolls the page.
+        <ul className="sr-only" style={{ position: "fixed", top: 0, left: 0 }}>
+          {gymPins.map((pin) => (
+            <li key={pin.badge}>
+              <button
+                type="button"
+                onFocus={() => hoverRef.current(pin.badge)}
+                onBlur={() => hoverRef.current(null)}
+                onClick={() => setGym(pin)}
+              >
+                {pin.town} Gym{pin.leader ? `, ${pin.leader.name}` : ""}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
       {gym && STOPS[stop] === "badges" && (
         <GymCard
           gym={gym}

@@ -65,6 +65,10 @@ export type StopClock = {
   elapsed: number
   /** Whether the pins pop in and the dots march, or everything just stands. */
   animate: boolean
+  /** The pin (by badge) under the pointer or keyboard focus, held down, and whose card is open. */
+  hover?: number | null
+  pressed?: number | null
+  selected?: number | null
 }
 
 /** Sampled points along an arc from `a` to `b`, bowed to one side by `bow` of their distance. */
@@ -201,17 +205,53 @@ export const badgeOverlays = (
         : 1
       if (pop <= 0) continue
       const { x, y } = toScreen(gym.x, gym.y)
-      const size = icon * (0.5 + 0.5 * pop)
-      const radius = icon * 0.78
-      context.globalAlpha = clock.alpha * pop
-      context.fillStyle = "rgb(24 32 56 / 0.92)"
-      context.strokeStyle = RINGS[gym.region]
-      context.lineWidth = Math.max(2, Math.round(2 * ratio))
+      // A pin grows under the pointer, dips while held, and wears gold while
+      // its card is open; the rest step back then.
+      const hovered = clock.hover === gym.badge
+      const pressed = clock.pressed === gym.badge
+      const selected = clock.selected === gym.badge
+      const others = clock.selected != null && !selected
+      const grow = pressed ? 0.92 : hovered || selected ? 1.18 : 1
+      const size = icon * (0.5 + 0.5 * pop) * (pressed ? 0.92 : 1)
+      const radius = icon * 0.78 * grow
+      context.globalAlpha = clock.alpha * pop * (others && !hovered ? 0.55 : 1)
+      if (hovered || selected) {
+        context.save()
+        context.shadowColor = selected ? "rgb(255 214 0 / 0.9)" : "rgb(255 255 255 / 0.7)"
+        context.shadowBlur = 10 * ratio
+      }
+      context.fillStyle = pressed
+        ? "rgb(12 16 32 / 0.95)"
+        : hovered || selected
+          ? "rgb(48 64 112 / 0.95)"
+          : "rgb(24 32 56 / 0.92)"
+      context.strokeStyle = selected
+        ? "rgb(255 214 0)"
+        : hovered
+          ? "rgb(248 248 248)"
+          : RINGS[gym.region]
+      context.lineWidth = Math.max(2, Math.round((hovered || selected ? 3 : 2) * ratio))
       context.beginPath()
       context.arc(x, y, radius * (0.5 + 0.5 * pop), 0, Math.PI * 2)
       context.fill()
       context.stroke()
+      if (hovered || selected) context.restore()
       context.drawImage(sheet, gym.badge * 16, 0, 16, 16, x - size / 2, y - size / 2, size, size)
+    }
+    // The hovered pin's town, over it.
+    const named = badges.find((gym) => gym.badge === clock.hover)
+    if (named) {
+      const { x, y } = toScreen(named.x, named.y)
+      context.globalAlpha = clock.alpha
+      context.font = `${Math.round(16 * ratio)}px "Wayfarer Text", monospace`
+      context.textAlign = "center"
+      context.textBaseline = "bottom"
+      const above = y - icon * 0.78 * 1.18 - 6 * ratio
+      context.fillStyle = "rgb(0 0 0 / 0.8)"
+      context.fillText(named.town, x + ratio * 1.5, above + ratio * 1.5)
+      context.fillStyle = "rgb(248 248 248)"
+      context.fillText(named.town, x, above)
+      context.textBaseline = "alphabetic"
     }
     context.globalAlpha = 1
   }

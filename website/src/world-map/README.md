@@ -20,7 +20,10 @@ The rest of the site uses it only through `index.ts`:
   circuit, and the whole world. From the second stop on the
   map can be panned in place, the way an embedded map shares a page: a mouse
   drags, and on touch two fingers move it while one still scrolls the page (a
-  hint says so). The zoom stays each stop's. At the badge stop a pin opens its
+  hint says so). The zoom stays each stop's. At the badge stop the pins answer the
+  pointer (a hover lights one and names its town, a press dips it, an open card
+  gilds it and dims the rest; hidden buttons do the same for a keyboard), and a
+  pin opens its
   Gym's card: the badge, the leader in their walking sprite and what they are
   up to on the page clock, and FIND, which pans onto them and keeps them in
   view as they walk (GO TO the Gym for a leader who doesn't walk the map).
