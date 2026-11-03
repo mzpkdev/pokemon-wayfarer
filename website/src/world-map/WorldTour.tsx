@@ -27,7 +27,15 @@ import {
   STARTS,
   startOf,
 } from "./starts"
+import { pageMinutes } from "./clock"
+import { LivingClock } from "./LivingClock"
+import { type LivingWorld, livingOverlay, loadLiving } from "./living"
+import { PlaceExtra } from "./PlaceExtra"
+import type { PlaceInfo } from "./PlaceCard"
 import { WorldMap } from "./WorldMap"
+
+/** The explorer's place cards also name a town's Gym, league stop and ferries. */
+const placeExtra = (place: PlaceInfo) => <PlaceExtra place={place} />
 
 /** The tour's stops, in the order its cards come. */
 export type StopName = "town" | "region" | "badges" | "world"
@@ -161,12 +169,30 @@ export const WorldTour = ({
   const cameraRef = useRef<Camera | null>(null)
   const goRef = useRef<(stop: number) => void>(() => {})
   const chooseRef = useRef<(id: StartId) => void>(() => {})
+  // The world stop shows the living world: the ferries on their loops and
+  // the time of day, on the page's shared clock.
+  const [living, setLiving] = useState<LivingWorld>()
+  const [minutes, setMinutes] = useState(pageMinutes)
+  useEffect(() => {
+    void loadLiving(base).then(setLiving, () => {})
+  }, [base])
   const stopOverlaysRef = useRef(stopOverlays)
   useEffect(() => {
-    stopOverlaysRef.current = stopOverlays
-  }, [stopOverlays])
+    stopOverlaysRef.current = [
+      ...(living
+        ? [{ stop: "world" as const, overlay: livingOverlay(living, pageMinutes), animated: true }]
+        : []),
+      ...(stopOverlays ?? []),
+    ]
+  }, [stopOverlays, living])
   const reducedMotion = useReducedMotion()
   const [stop, setStop] = useState(0)
+  const atWorld = STOPS[stop] === "world"
+  useEffect(() => {
+    if (!atWorld) return
+    const timer = window.setInterval(() => setMinutes(pageMinutes()), 500)
+    return () => window.clearInterval(timer)
+  }, [atWorld])
   const [chosen, setChosen] = useState<StartId>(DEFAULT_START)
   const [warping, setWarping] = useState(false)
   const [exploring, setExploring] = useState<Camera | null>(null)
@@ -437,6 +463,13 @@ export const WorldTour = ({
         className="absolute inset-0 size-full"
         style={{ background: OPEN_SEA }}
       />
+      {living && (
+        <LivingClock
+          living={living}
+          minutes={minutes}
+          className={`absolute top-4 left-4 transition-opacity duration-300 ${atWorld ? "opacity-100" : "pointer-events-none opacity-0"}`}
+        />
+      )}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute top-0 left-0 grid h-[calc(40*var(--px))] w-[calc(96*var(--px))] place-items-center bg-[url(/game/popups/wood.png)] bg-size-[100%_100%] [image-rendering:pixelated] transition-[translate,opacity] duration-[330ms] ease-[steps(20)] motion-reduce:transition-none"
@@ -568,7 +601,11 @@ export const WorldTour = ({
       >
         {exploring && (
           <>
-            <WorldMap base={base} start={exploring.zoom > 0 ? exploring : undefined} />
+            <WorldMap
+              base={base}
+              start={exploring.zoom > 0 ? exploring : undefined}
+              extra={placeExtra}
+            />
             <button
               type="button"
               onClick={() => dialogRef.current?.close()}

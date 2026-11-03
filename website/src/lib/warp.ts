@@ -3,13 +3,18 @@
 // Fading out follows the scroll, so the visitor walks into it; fading in
 // plays on its own, so nobody is left on a black screen. The fade's 8 steps
 // are the world map's too, for the tour's own warps.
-import { stepped } from "~/world-map/fade"
+import { FADE_STEPS, stepped } from "~/world-map/fade"
 
 /** How long the fade-in takes: the game's 8 frames, slowed a little to read on a page. */
 const FADE_IN_MS = 400
-/** Screens before the map's arrival where the fade to black begins, and where it is black. */
+/** Screens before the map's arrival where the fade to black begins. */
 const FADE_OUT_FROM = 0.6
-const BLACK_FROM = 0.05
+/**
+ * The darkest the scroll takes it: a step short of black, so stopping just
+ * before the map never leaves a black screen. The last step comes with the
+ * cut to the map.
+ */
+const DARKEST = (FADE_STEPS - 1) / FADE_STEPS
 
 /**
  * Drives `overlay`'s opacity from where `stage` is: hidden until its top
@@ -30,7 +35,7 @@ export const warp = (stage: HTMLElement, overlay: HTMLElement) => {
     if (ahead > 0) {
       arrivedAt = null
       stage.toggleAttribute("data-hidden", true)
-      level = stepped((FADE_OUT_FROM - ahead) / (FADE_OUT_FROM - BLACK_FROM))
+      level = Math.min(DARKEST, stepped((FADE_OUT_FROM - ahead) / FADE_OUT_FROM))
     } else {
       stage.toggleAttribute("data-hidden", false)
       arrivedAt ??= now

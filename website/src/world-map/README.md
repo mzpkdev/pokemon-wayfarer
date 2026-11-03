@@ -102,6 +102,8 @@ the way `tools/mapjson` does.
 - `rider.ts`: draws the player on their bike along a ride.
 - `fade.ts`: the game's 8-step fade, shared with `src/lib/warp.ts`.
 - `landmarks.ts`: loads `landmarks.json`; draws the badge pins and the animated dotted league trail as overlays. Badge art is `public/game/badges.png` (from the trainer card, `pnpm assets`).
+- `clock.ts`: one game clock for the page (a day every two minutes from 8:00), so the tour's world stop and the explorer show the same time of day and the same ships at sea.
+- `PlaceExtra.tsx`: what the explorer's place cards add for a town: its Gym and badge, its stop on the league circuit, and the ferries that call there.
 - `WorldTour.tsx` and `WorldMap.tsx`: the two components.
 
 ## The living world

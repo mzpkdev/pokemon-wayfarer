@@ -3,6 +3,9 @@ import { type ReactNode, useEffect, useRef, useState } from "react"
 import { type Camera, fit } from "./camera"
 import { DATA, type Meta, loadWorld } from "./data"
 import { type Encounters, loadEncounters } from "./encounters"
+import { pageMinutes } from "./clock"
+import { LivingClock } from "./LivingClock"
+import { type LivingWorld, livingOverlay, loadLiving } from "./living"
 import { PlaceCard, type PlaceInfo } from "./PlaceCard"
 import { OPEN_SEA, type Overlay, rendererFor } from "./render"
 
@@ -72,6 +75,19 @@ export const WorldMap = ({
   const pickedRef = useRef<string | null>(null)
   const [encounters, setEncounters] = useState<Encounters>()
   const [encountersFailed, setEncountersFailed] = useState(false)
+  // The ships and the time of day, on the page's shared clock.
+  const [living, setLiving] = useState<LivingWorld>()
+  const [minutes, setMinutes] = useState(pageMinutes)
+  useEffect(() => {
+    void loadLiving(base).then(setLiving, () => {})
+    const timer = window.setInterval(() => setMinutes(pageMinutes()), 500)
+    return () => window.clearInterval(timer)
+  }, [base])
+  const livingRef = useRef<LivingWorld>(undefined)
+  useEffect(() => {
+    livingRef.current = living
+    api.current.redraw()
+  }, [living])
   const refocus = useRef(false)
 
   // Encounters load the first time a place is picked.
@@ -144,9 +160,13 @@ export const WorldMap = ({
             focus: { x: canvas.clientWidth / 2, y: canvas.clientHeight / 2 },
             labelWidth: canvas.clientWidth,
             labels: true,
-            overlays: highlighted ? [highlight(highlighted)] : [],
+            overlays: [
+              ...(livingRef.current ? [livingOverlay(livingRef.current, pageMinutes)] : []),
+              ...(highlighted ? [highlight(highlighted)] : []),
+            ],
           })
-          if (pending) schedule()
+          // The ships keep sailing while the map is open.
+          if (pending || livingRef.current) schedule()
         }
         const schedule = () => {
           if (!raf) raf = requestAnimationFrame(draw)
@@ -382,6 +402,13 @@ export const WorldMap = ({
           failed={encountersFailed}
           extra={extra}
           onClose={() => close(true)}
+        />
+      )}
+      {living && (
+        <LivingClock
+          living={living}
+          minutes={minutes}
+          className={`absolute bottom-4 left-4 ${picked ? "max-sm:hidden sm:left-auto sm:right-20" : ""}`}
         />
       )}
       <div
