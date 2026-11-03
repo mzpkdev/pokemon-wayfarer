@@ -1,6 +1,6 @@
 // The wild stop: who lives where, one home region after another. Each
 // generation has a home (the wild encounters v2 PRD's natives table): Gen I
-// in Kanto, II in Johto, III and V in Hoenn, Kalos in the Safari Zones,
+// from Kanto and II from Johto, sharing their land, III and V in Hoenn, Kalos in the Safari Zones,
 // Galar in the Sevii Islands, VII in Alola, Hisui in Sinjoh, and Gen IV
 // waits for Sinnoh. A wave pops its home's species where they really live,
 // crowding the home region, with a few of the real strays elsewhere, looping,
@@ -19,8 +19,6 @@ export type Home = {
   line: string
   /** The `region` of its placed maps in `meta.json`; the Safari Zones use their gates instead. */
   regions: string[]
-  /** Of a region shared with another home, its own side: the maps nearer this name's label in `meta.regions`. */
-  side?: string
   /** Not in the wild yet: drawn as silhouettes. */
   later?: boolean
 }
@@ -29,16 +27,14 @@ export const HOMES: Home[] = [
   {
     id: "kanto",
     chip: "KANTO",
-    line: "Gen I, at home in Kanto.",
+    line: "Gen I, Kanto's own, all over Kanto and Johto.",
     regions: ["Johto and Kanto"],
-    side: "KANTO",
   },
   {
     id: "johto",
     chip: "JOHTO",
-    line: "Gen II, at home in Johto.",
+    line: "Gen II, Johto's own, with fewer in Kanto.",
     regions: ["Johto and Kanto"],
-    side: "JOHTO",
   },
   {
     id: "hoenn",
@@ -98,6 +94,8 @@ const AWAY = 3
 const AWAY_AT = [3, 8, 14]
 /** Icons crowd at home, overlapping a little, but keep their distance away. */
 const CROWD = 0.7
+/** Of a route's encounters, the least share a home's species need for the route to join its crowd. */
+const MIN_SHARE = 0.35
 /** A home with fewer routes than this huddles instead of spreading out. */
 const SMALL = 8
 /** A huddle's places around its point, in icon sizes (down is nearer). */
@@ -257,21 +255,9 @@ export const loadWild = async (base = DATA): Promise<Wild> => {
     y: map.y + map.height / 2,
   })
   const waves: Icon[][] = []
-  // Kanto and Johto share one piece of land: a map is on the side whose label is nearer.
-  const label = new Map(world.meta.regions.map((region) => [region.name, region]))
-  const sides = HOMES.flatMap((home) => (home.side ? [home.side] : []))
-  const isHome = (home: Home) => (map: (typeof world.meta.maps)[number]) => {
-    if (!home.regions.includes(map.region ?? "")) return false
-    if (!home.side) return true
-    const { x, y } = centre(map)
-    const distance = (name: string) => {
-      const at = label.get(name)
-      return at ? Math.hypot(at.x - x, at.y - y) : Infinity
-    }
-    return sides.every((side) => distance(home.side!) <= distance(side))
-  }
   HOMES.forEach((home, wave) => {
-    const inHome = isHome(home)
+    const inHome = (map: (typeof world.meta.maps)[number]) =>
+      home.regions.includes(map.region ?? "")
     const slots = homes.get(home.id) ?? new Set<number>()
     const used = new Set<number>()
     const seed = (wave + 1) * 1009
@@ -299,7 +285,17 @@ export const loadWild = async (base = DATA): Promise<Wild> => {
         return { ...point, slot, later: true }
       })
     } else {
-      const homeRoutes = routes.filter(({ map, weights }) => inHome(map) && at(weights).length)
+      // The routes where they make up a real share of what turns up, so Gen I
+      // crowds Johto as well as Kanto while Gen II keeps mostly to Johto.
+      const share = (weights: Map<number, number>) =>
+        at(weights).reduce((sum, [, weight]) => sum + weight, 0) /
+        Math.max(
+          1,
+          [...weights.values()].reduce((sum, weight) => sum + weight, 0),
+        )
+      const living = routes.filter(({ map, weights }) => inHome(map) && at(weights).length)
+      const strong = living.filter(({ weights }) => share(weights) >= MIN_SHARE)
+      const homeRoutes = strong.length >= 3 ? strong : living
       const points = homeRoutes.map(({ map, weights }) => ({ ...centre(map), weights }))
       crowd =
         homeRoutes.length >= SMALL

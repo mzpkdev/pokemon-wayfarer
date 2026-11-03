@@ -35,14 +35,15 @@ The rest of the site uses it only through `index.ts`:
 - At the wild stop (`wild.ts`, `WildTally.tsx`) the camera stays on the whole
   world and icons from `icons.png` pop out of it in waves, one per home region
   (about 15 s, looping). Each generation has a home, from the natives table of
-  the wild encounters v2 PRD: Gen I in Kanto, II in Johto (one piece of land,
-  split by which label a map is nearer), III and V in
+  the wild encounters v2 PRD: Gen I from Kanto and II from Johto (one piece of
+  land, which they share), III and V in
   Hoenn, Kalos (VI) in the three Safari Zones, Galar (VIII) in the Sevii
   Islands, VII in Alola, Hisui (Wyrdeer to Enamorus) in Sinjoh, and the
   regional forms with their region. A wave pops its home's species only where
   they really live, by the encounter tables (a species picked by how often it
   comes up there, so Hoenn's Gen V share grows to the east), crowding the home
-  region; a small home (Alola, Sinjoh) and
+  region's routes where they make up at least 35% of what turns up (Gen
+  I crowds Johto too, Gen II keeps mostly to Johto); a small home (Alola, Sinjoh) and
   each Safari Zone, by the town nearest its gate since the Safari Zones aren't
   on the overworld, huddle a few icons together so they still read as a crowd
   at world zoom. Up to three icons per wave are real strays: its species where
