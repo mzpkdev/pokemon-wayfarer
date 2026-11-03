@@ -28,6 +28,23 @@ export type Sprite = {
   flip?: boolean
 }
 
+/**
+ * Where the map is on the canvas, for drawing over it: device pixels per
+ * metatile, and the grid point at the canvas's top-left corner.
+ */
+export type Projection = {
+  scale: number
+  left: number
+  top: number
+  /** Device pixels per CSS pixel. */
+  ratio: number
+  /** A grid point (in metatiles) to device pixels on the canvas. */
+  toScreen: (x: number, y: number) => { x: number; y: number }
+}
+
+/** Something drawn over the map in device pixels, e.g. ships, pins or a tint. */
+export type Overlay = (context: CanvasRenderingContext2D, projection: Projection) => void
+
 export type View = {
   camera: Camera
   /** Where on the canvas the camera's point sits, in CSS pixels. */
@@ -38,6 +55,8 @@ export type View = {
   labels: boolean
   /** Drawn over the map, under the names. */
   sprites?: Sprite[]
+  /** Drawn in order over the map and sprites, under the names. */
+  overlays?: Overlay[]
 }
 
 /** "NewBarkTown_hns" to "NEW BARK TOWN". */
@@ -183,6 +202,22 @@ const createRenderer = ({ meta, atlas, grid, overview }: World) => {
         spriteHeight,
       )
       context.restore()
+    }
+
+    if (view.overlays?.length) {
+      const projection: Projection = {
+        scale,
+        left,
+        top,
+        ratio,
+        toScreen: (x, y) => ({ x: (x - left) * scale, y: (y - top) * scale }),
+      }
+      for (const overlay of view.overlays) {
+        context.save()
+        context.setTransform(1, 0, 0, 1, 0, 0)
+        overlay(context, projection)
+        context.restore()
+      }
     }
 
     if (!view.labels) return pending
