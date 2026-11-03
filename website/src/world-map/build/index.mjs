@@ -56,6 +56,13 @@ const overview = packLevels(
 )
 writePng(`${outDir}/overview.png`, overview.width, overview.height, overview.rgba)
 fs.rmSync(`${outDir}/overview.jpg`, { force: true })
+// Which cells are water, a bit each (row by row, high bit first), for the
+// living sea: its glints far out and its ripples close in keep to the water.
+// The open sea past every map (EMPTY) is water too; the viaduct's deck is not.
+const water = new Uint8Array(Math.ceil((W * H) / 8))
+for (let i = 0; i < W * H; i++)
+  if (grid[i] === 0xffff || land.isWater(grid[i])) water[i >> 3] |= 0x80 >> (i & 7)
+fs.writeFileSync(`${outDir}/water.bin.gz`, gzipSync(Buffer.from(water.buffer), { level: 9 }))
 const towns = all
   .filter((p) => ["MAP_TYPE_TOWN", "MAP_TYPE_CITY"].includes(p.m.map_type))
   .map((p) => ({ name: p.m.name, x: p.x - minX + p.l.width / 2, y: p.y - minY + p.l.height / 2 }))
@@ -71,6 +78,20 @@ const labelFor = (p) => {
   if (JOHTO.test(p.m.name)) return "JOHTO"
   if (KANTO.test(p.m.name)) return "KANTO"
   return null
+}
+// The weather a map has, where the game gives it one worth drawing: rain and
+// storms along Johto's west coast, snow on Mt. Silver and in Sinnoh's north,
+// a sandstorm on Route 228, fog on Mt. Pyre, ash on Mt. Chimney, the shade of
+// the forests and the leaves on Bellchime Trail (`weather` in map.json).
+const WEATHER = {
+  WEATHER_RAIN: "rain",
+  WEATHER_RAIN_THUNDERSTORM: "storm",
+  WEATHER_SNOW: "snow",
+  WEATHER_SANDSTORM: "sand",
+  WEATHER_FOG_HORIZONTAL: "fog",
+  WEATHER_VOLCANIC_ASH: "ash",
+  WEATHER_SHADE: "shade",
+  WEATHER_LEAVES: "leaves",
 }
 const regionLabels = new Map()
 for (const p of all) {
@@ -121,6 +142,7 @@ fs.writeFileSync(
       width: p.l.width,
       height: p.l.height,
       region: p.region,
+      ...(WEATHER[p.m.weather] ? { weather: WEATHER[p.m.weather] } : {}),
     })),
   }),
 )

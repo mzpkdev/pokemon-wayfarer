@@ -47,7 +47,7 @@ export type Living = {
 }
 
 /** A lane with the distance along it at each point, so a ship can be put at a fraction. */
-type Lane = { points: Point[]; along: number[]; length: number }
+export type Lane = { points: Point[]; along: number[]; length: number }
 
 export type LivingWorld = Living & {
   shapes: Map<string, Lane>
@@ -90,6 +90,9 @@ export type Ship = {
   progress: number
   /** "S.S. AQUA · Olivine → Vermilion", or "S.S. AQUA · in Olivine" in port. */
   label: string
+  /** At sea, the lane it sails and how far along it is, in metatiles, for its wake. */
+  lane?: Lane
+  along?: number
 }
 
 /** Game minutes per second of play: the game's own clock, and a quick one for the page (a day in 2 minutes). */
@@ -368,6 +371,8 @@ export const shipsAt = (living: LivingWorld, minutes: number): Ship[] => {
       next,
       progress: eased,
       label: `${ship.name} · ${portName(here)} → ${portName(next)}`,
+      lane,
+      along: lane.length * eased,
     }
   })
 }
@@ -398,6 +403,60 @@ export const pickShip = (
     .filter(({ d }) => d <= reach)
     .toSorted((a, b) => a.d - b.d)[0]?.ship
 
+/** How long a ship's wake is, in ship widths, and how long its foam takes to fade, in ms. */
+const WAKE_WIDTHS = 1.8
+const FOAM_MS = 1400
+
+/**
+ * The wake behind a ship at sea: a pale, tapering trail along the lane it
+ * came by, and flecks of foam that drift back and fade.
+ */
+const drawWake = (
+  context: CanvasRenderingContext2D,
+  ship: Ship,
+  width: number,
+  height: number,
+  { toScreen, ratio, scale }: Projection,
+  now: number,
+) => {
+  const { lane, along } = ship
+  if (!lane || along === undefined) return
+  const length = (width / scale) * WAKE_WIDTHS
+  const segments = 6
+  context.lineCap = "round"
+  context.lineJoin = "round"
+  for (let i = 0; i < segments; i++) {
+    const from = pointAlong(lane, Math.max(0, along - (length * i) / segments))
+    const to = pointAlong(lane, Math.max(0, along - (length * (i + 1)) / segments))
+    const a = toScreen(from.x, from.y)
+    const b = toScreen(to.x, to.y)
+    const fade = 1 - i / segments
+    context.strokeStyle = `rgb(255 255 255 / ${0.42 * fade})`
+    context.lineWidth = Math.max(1.5 * ratio, height * 0.34 * fade)
+    context.beginPath()
+    context.moveTo(a.x, a.y + height * 0.2)
+    context.lineTo(b.x, b.y + height * 0.2)
+    context.stroke()
+  }
+  // Foam: a few flecks born at the stern, carried back along the trail.
+  const fleck = Math.max(1, Math.round(ratio))
+  context.fillStyle = "rgb(255 255 255)"
+  for (let k = 0; k < 5; k++) {
+    const phase = (now / FOAM_MS + k / 5) % 1
+    const back = pointAlong(lane, Math.max(0, along - length * phase * 0.9))
+    const p = toScreen(back.x, back.y)
+    const side = (k % 2 ? 1 : -1) * height * 0.12 * phase
+    context.globalAlpha = (1 - phase) * 0.7
+    context.fillRect(
+      Math.round(p.x - fleck / 2),
+      Math.round(p.y + height * 0.2 + side),
+      fleck * 2,
+      fleck,
+    )
+  }
+  context.globalAlpha = 1
+}
+
 const drawLane = (
   context: CanvasRenderingContext2D,
   { points }: Lane,
@@ -418,11 +477,16 @@ const drawLane = (
  * a game minute, or a function returning one (so one overlay can run on a clock).
  */
 export const livingOverlay =
-  (living: LivingWorld, minutes: number | (() => number)): Overlay =>
+  (
+    living: LivingWorld,
+    minutes: number | (() => number),
+    { still = false }: { still?: boolean } = {},
+  ): Overlay =>
   (context, projection) => {
     const { scale, ratio, toScreen } = projection
     const now = typeof minutes === "function" ? minutes() : minutes
     const { width, height } = context.canvas
+    const clock = still ? 0 : performance.now()
 
     context.lineJoin = "round"
     context.lineCap = "round"
@@ -442,14 +506,20 @@ export const livingOverlay =
         MIN_SHIP_CSS * ratio * (image.naturalWidth / 96),
       )
       const h = (w * image.naturalHeight) / image.naturalWidth
-      if (p.x < -w || p.y < -h || p.x > width + w || p.y > height + h) continue
-      // A soft shadow on the water under the hull.
+      if (p.x < -w * 3 || p.y < -h * 3 || p.x > width + w * 3 || p.y > height + h * 3) continue
+      if (ship.at === "sea") drawWake(context, ship, w, h, projection, clock)
+      // A soft shadow on the water under the hull, and a gentle lift and fall
+      // on the swell, a game pixel at a time.
+      const bob = still
+        ? 0
+        : Math.round(Math.sin(clock / 900 + ship.id.length) * 0.75) *
+          Math.max(1, Math.round(scale / 16))
       context.fillStyle = "rgb(0 24 64 / 0.28)"
       context.beginPath()
       context.ellipse(p.x, p.y + h * 0.28, w * 0.5, h * 0.2, 0, 0, Math.PI * 2)
       context.fill()
       context.save()
-      context.translate(p.x, p.y)
+      context.translate(p.x, p.y + bob)
       if (ship.flip) context.scale(-1, 1)
       context.drawImage(image, -w / 2, -h / 2, w, h)
       context.restore()

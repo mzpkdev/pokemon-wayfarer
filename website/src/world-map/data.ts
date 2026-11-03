@@ -20,8 +20,20 @@ export type Meta = {
   sea: [number, number, number]
   towns: { name: string; x: number; y: number }[]
   regions: { name: string; x: number; y: number; bounds?: Bounds }[]
-  maps: { name: string; region?: string; x: number; y: number; width: number; height: number }[]
+  maps: {
+    name: string
+    region?: string
+    x: number
+    y: number
+    width: number
+    height: number
+    /** The weather the game gives the map, where it has one worth drawing (see `weather.ts`). */
+    weather?: Weather
+  }[]
 }
+
+/** The kinds of weather build/index.mjs keeps: the game's `WEATHER_*` worth drawing on a map. */
+export type Weather = "rain" | "storm" | "snow" | "sand" | "fog" | "ash" | "shade" | "leaves"
 
 export type World = {
   meta: Meta
@@ -46,14 +58,21 @@ const loadImage = (src: string) =>
   })
 
 /**
- * The grid, unzipped here: a server may or may not have unzipped it on the
- * way already, so look for gzip's magic bytes rather than trust the name.
+ * A gzipped file's bytes, unzipped here: a server may or may not have
+ * unzipped it on the way already, so look for gzip's magic bytes rather than
+ * trust the name.
  */
-const loadGrid = async (src: string) => {
+export const loadBytes = async (src: string) => {
   const bytes = new Uint8Array(await (await fetch(src)).arrayBuffer())
-  if (bytes[0] !== 0x1f || bytes[1] !== 0x8b) return new Uint16Array(bytes.buffer)
+  if (bytes[0] !== 0x1f || bytes[1] !== 0x8b) return bytes
   const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"))
-  return new Uint16Array(await new Response(stream).arrayBuffer())
+  return new Uint8Array(await new Response(stream).arrayBuffer())
+}
+
+/** The grid: little-endian atlas indices. */
+const loadGrid = async (src: string) => {
+  const bytes = await loadBytes(src)
+  return new Uint16Array(bytes.buffer, bytes.byteOffset, bytes.byteLength / 2)
 }
 
 const loading = new Map<string, Promise<World>>()

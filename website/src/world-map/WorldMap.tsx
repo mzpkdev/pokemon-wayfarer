@@ -1,9 +1,11 @@
-import { type ReactNode, useEffect, useRef, useState } from "react"
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react"
 
 import { useReducedMotion } from "~/lib/hooks"
 
 import { type Camera, fit } from "./camera"
+import { cloudsOverlay } from "./clouds"
 import { DATA, type Meta, loadWorld } from "./data"
+import { lightsOverlay } from "./lights"
 import { type Encounters, loadEncounters } from "./encounters"
 import { pageMinutes } from "./clock"
 import { LivingClock } from "./LivingClock"
@@ -12,7 +14,10 @@ import { type Notable, type Notables, loadNotables, notablesOverlay, pickNotable
 import { DebugMenu, useDebug } from "./DebugMenu"
 import { PlaceCard, type PlaceInfo } from "./PlaceCard"
 import { OPEN_SEA, type Overlay, rendererFor } from "./render"
+import { seaOverlay } from "./sea"
 import { sightingsOverlay } from "./sightings"
+import { loadWater } from "./water"
+import { weatherOverlay } from "./weather"
 
 export type { PlaceInfo } from "./PlaceCard"
 
@@ -160,6 +165,8 @@ export const WorldMap = ({
     }
   }, [encounters, base, reducedMotion])
   const debug = useDebug()
+  // The sea, the weather and the clouds hold still with reduced motion: their clock stops.
+  const clock = useCallback(() => (reducedRef.current ? 0 : performance.now()), [])
 
   // Redraw with the frame on the picked map, and bring the map out from under the card.
   useEffect(() => {
@@ -200,6 +207,24 @@ export const WorldMap = ({
         if (signal.aborted) return
         const { width, height } = world.meta
         const renderer = rendererFor(world)
+        let sea: Overlay | undefined
+        void loadWater(world.meta, base).then(
+          (water) => {
+            if (signal.aborted) return
+            sea = seaOverlay(water, true, clock)
+            schedule()
+          },
+          () => {},
+        )
+        const weather = weatherOverlay(world.meta, true, clock)
+        const clouds = cloudsOverlay(true, clock)
+        // The night lights, made once per loaded living world.
+        let lights: { of: LivingWorld; overlay: Overlay } | undefined
+        const lightsFor = (of: LivingWorld) => {
+          if (lights?.of !== of)
+            lights = { of, overlay: lightsOverlay(world.meta, of, pageMinutes, true, clock) }
+          return lights.overlay
+        }
         const all = { left: 0, top: 0, right: width, bottom: height }
         const fitZoom = () => fit(all, canvas.clientWidth, canvas.clientHeight).zoom
         const camera = start ? { ...start } : fit(all, canvas.clientWidth, canvas.clientHeight)
@@ -220,6 +245,7 @@ export const WorldMap = ({
             labelWidth: canvas.clientWidth,
             labels: true,
             overlays: [
+              ...(sea ? [sea] : []),
               ...(sightingsRef.current ? [sightingsRef.current] : []),
               ...(notablesRef.current
                 ? [
@@ -228,17 +254,20 @@ export const WorldMap = ({
                     }),
                   ]
                 : []),
-              ...(livingRef.current ? [livingOverlay(livingRef.current, pageMinutes)] : []),
+              weather,
+              clouds,
+              ...(livingRef.current
+                ? [
+                    livingOverlay(livingRef.current, pageMinutes, { still: reducedRef.current }),
+                    lightsFor(livingRef.current),
+                  ]
+                : []),
               ...(highlighted ? [highlight(highlighted)] : []),
             ],
           })
-          // The ships keep sailing and the wild Pokémon popping while the map is open.
-          if (
-            pending ||
-            (!reducedRef.current &&
-              (livingRef.current || notablesRef.current || sightingsRef.current))
-          )
-            schedule()
+          // The sea glints, the clouds drift, the ships sail and the wild
+          // Pokémon pop while the map is open.
+          if (pending || !reducedRef.current) schedule()
         }
         const schedule = () => {
           if (!raf) raf = requestAnimationFrame(draw)
@@ -465,7 +494,7 @@ export const WorldMap = ({
       listening.abort()
       cancelAnimationFrame(raf)
     }
-  }, [base, start])
+  }, [base, start, clock])
 
   const close = (focusMap: boolean) => {
     setPicked(null)
