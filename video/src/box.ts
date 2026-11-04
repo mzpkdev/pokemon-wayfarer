@@ -46,9 +46,13 @@ export const wrap = (text: string, width: number, measure: (line: string) => num
 /**
  * The text in pages of two lines, turning the page where a sentence ends, as
  * the game's own scripts do: sentences share a page while they fit, and a
- * sentence too long for one page runs on over the next.
+ * sentence too long for one page runs on over the next. A line break in the
+ * script turns the page wherever it falls.
  */
-export const paginate = (text: string, measure: (line: string) => number) => {
+export const paginate = (text: string, measure: (line: string) => number): string[][] => {
+  // A line break in the script always turns the page.
+  const paragraphs = text.split(/\s*\n\s*/)
+  if (paragraphs.length > 1) return paragraphs.flatMap((paragraph) => paginate(paragraph, measure))
   // A sentence ends at . ? or ! before a space, but not after a lone capital, as in S.S.
   const sentences = text.split(/(?<=(?<!\b[A-Z])[.?!]+)\s+/)
   const pages: string[][] = []

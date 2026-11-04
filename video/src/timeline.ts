@@ -100,29 +100,32 @@ export const DIRECTIONS: Record<string, Direction> = {
     rides: [{ start: "hoenn", from: 0, to: 0.8 }],
     fade: { in: CUT, out: CUT },
   },
-  // The Anne at Vermilion's pier in the evening; she casts off at half past eight and the camera goes with her.
+  // The Anne at Vermilion's pier in the evening; she casts off at half past eight and
+  // the camera rides out of the bay with her, drawing back only a little.
   anne: {
     shots: [
       { at: 0, to: { kind: "ship", id: "anne", zoom: 24 } },
-      { at: 0.4, to: { kind: "ship", id: "anne", zoom: 24 } },
-      { at: 1, to: { kind: "ship", id: "anne", zoom: 6 } },
+      { at: 0.3, to: { kind: "ship", id: "anne", zoom: 24 } },
+      { at: 1, to: { kind: "ship", id: "anne", zoom: 16 }, ease: "in" },
     ],
     clock: { from: h(20, 18), to: h(21, 5) },
     fade: { in: CUT },
   },
-  // One pull-out from the Anne in the evening light: Kanto and Johto with their Pokémon
-  // popping out once they fill the frame, then every land with theirs.
+  // Still with the Anne while the box answers where she was going; then, on "And
+  // Kanto was never the whole map", one pull-out in the evening light: Kanto and
+  // Johto with their Pokémon popping out once they fill the frame, then every land.
   lands: {
-    // One move: it starts gently from the ship, slows through Kanto and Johto without
+    // One move: the camera keeps riding with her, slows through Kanto and Johto without
     // stopping while their Pokémon pop, then goes on at speed and settles on every land.
     shots: [
-      { at: 0, to: { kind: "ship", id: "anne", zoom: 6 } },
-      { at: 0.4, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.8 }, ease: "in" },
-      { at: 0.78, to: LANDS, ease: "out" },
+      { at: 0, to: { kind: "ship", id: "anne", zoom: 16 } },
+      { at: 0.24, to: { kind: "ship", id: "anne", zoom: 12 }, ease: "none" },
+      { at: 0.5, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.8 }, ease: "in" },
+      { at: 0.82, to: LANDS, ease: "out" },
       { at: 1, to: LANDS },
     ],
     clock: { from: h(21, 5), to: h(23, 30) },
-    wild: { from: 0.3 },
+    wild: { from: 0.42 },
   },
   // Early afternoon: Falkner training at Sprout Tower, Erika on her way to the department store.
   leaders: {

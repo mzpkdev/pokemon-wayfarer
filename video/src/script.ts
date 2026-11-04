@@ -11,7 +11,10 @@
 
 export type Scene = {
   id: string
-  /** What the voice says and the text box prints. Empty for a scene with music only. */
+  /**
+   * What the voice says and the text box prints. Empty for a scene with music
+   * only. A line break (\n) turns the box's page there; the voice reads on.
+   */
   narration: string
   /** The least the scene lasts, in seconds; it runs longer when the words need it. */
   seconds: number
@@ -67,7 +70,7 @@ export const SCENES: Scene[] = [
   {
     id: "lands",
     narration:
-      "Alola. She still makes the run, every evening. And Kanto was never the whole map. Seven lands, one journey, and you can walk to every one. Each keeps its own Pokémon. Galar's, even. Try the Sevii Islands.",
+      "Alola. And now you can sail with her.\nAnd Kanto was never the whole map. Seven lands, one journey, and you can walk to every one. Each keeps its own Pokémon. Galar's, even. Try the Sevii Islands.",
     seconds: 13,
   },
   {
