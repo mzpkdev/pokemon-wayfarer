@@ -4,6 +4,8 @@ import { useReducedMotion } from "~/lib/hooks"
 
 import { type Camera, fit } from "./camera"
 import { cloudsOverlay } from "./clouds"
+import { DAILY_SEED, calendarDay, dailyOn, loadDaily, placedMaps } from "./daily"
+import { type DailyScene, dailyOverlay } from "./dailyView"
 import { DATA, type Meta, loadWorld } from "./data"
 import { lightsOverlay } from "./lights"
 import { type Encounters, loadEncounters } from "./encounters"
@@ -164,6 +166,39 @@ export const WorldMap = ({
       live = false
     }
   }, [encounters, base, reducedMotion])
+  // Today's trainers and items on every road, close in, once their sheet is in.
+  const dailyRef = useRef<Overlay>(undefined)
+  useEffect(() => {
+    const sheet = new Image()
+    sheet.src = `${base}/trainers.png`
+    let live = true
+    void Promise.all([loadDaily(base), sheet.decode()]).then(
+      ([daily]) => {
+        if (!live) return
+        const maps = placedMaps(daily)
+        // The day's draw, made once and again after midnight.
+        let today: { day: number; scene: DailyScene } | undefined
+        const scene = () => {
+          const day = calendarDay()
+          if (today?.day !== day) today = { day, scene: dailyOn(daily, maps, day, DAILY_SEED) }
+          // Long since: everybody stands already, nobody pops in.
+          return { scene: today.scene, since: -Infinity }
+        }
+        dailyRef.current = dailyOverlay(
+          { image: sheet, ...daily.sheet },
+          scene,
+          !reducedMotion,
+          performance.now.bind(performance),
+          { fade: true, rings: false },
+        )
+        api.current.redraw()
+      },
+      () => {},
+    )
+    return () => {
+      live = false
+    }
+  }, [base, reducedMotion])
   const debug = useDebug()
   // The sea, the weather and the clouds hold still with reduced motion: their clock stops.
   const clock = useCallback(() => (reducedRef.current ? 0 : performance.now()), [])
@@ -249,6 +284,7 @@ export const WorldMap = ({
               weather,
               clouds,
               ...(sightingsRef.current ? [sightingsRef.current] : []),
+              ...(dailyRef.current ? [dailyRef.current] : []),
               ...(notablesRef.current
                 ? [
                     notablesOverlay(notablesRef.current, pageMinutes, {

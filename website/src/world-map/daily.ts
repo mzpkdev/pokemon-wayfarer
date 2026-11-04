@@ -80,6 +80,18 @@ export type DailyDay = {
 /** The seed the showcase uses: any trainer ID will do, this one is only fixed. */
 export const DAILY_SEED = 0x5a17_c0de
 
+/** Today as a day number in the visitor's own time (days since 1970), so the explorer's roads change at midnight. */
+export const calendarDay = (at = new Date()) =>
+  Math.floor((at.getTime() - at.getTimezoneOffset() * 60_000) / 86_400_000)
+
+/** Every map the world places a slot or spot on. */
+export const placedMaps = (daily: Daily) => [
+  ...new Set([
+    ...daily.slots.flatMap((slot) => (slot.m ? [slot.m] : [])),
+    ...daily.spots.map((spot) => spot.m),
+  ]),
+]
+
 const loading = new Map<string, Promise<Daily>>()
 
 /** Loads the daily slots once per base path, the first time the tour needs them. */
