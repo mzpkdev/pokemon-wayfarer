@@ -2,16 +2,16 @@ import { useEffect, useRef, useState } from "react"
 
 import { clockText } from "~/world-map/living"
 
-import { directionFor, drawFrame, loadStage, type Stage } from "./director"
+import { directionFor, drawFrame, loadStage, riderPlace, type Stage } from "./director"
 import { type Cues, loadCues, type Slot, schedule, slotAt, totalSeconds } from "./schedule"
-import { DIRECTIONS, type Span } from "./timeline"
+import { Studio } from "./Studio"
+import type { Span } from "./timeline"
+import { PixelImage, Popup, useStagePx } from "./ui"
 
 /** Letters the caption prints a second: the game's MID text speed, a letter every two frames. */
 const LETTERS_PER_SECOND = 30
 /** Seconds a card or clip takes to fade in or out, and the video to fade from and to black. */
 const FADE_SECONDS = 0.5
-/** GBA pixels across the frame: the video is 480 of them wide, so 4 CSS pixels each at 1080p. */
-const GBA_COLUMNS = 480
 
 /** How much of a span is showing at `seconds` into the scene, fading at both ends. */
 const alphaIn = (span: Span, seconds: number, length: number) => {
@@ -42,75 +42,56 @@ declare global {
   var wayfarerVideo: Controls | undefined
 }
 
-/** Game art at `--px` CSS pixels per pixel, once its size is known. */
-const PixelImage = ({ src, alt }: { src: string; alt: string }) => {
-  const [pixels, setPixels] = useState(0)
-  return (
-    <img
-      src={src}
-      alt={alt}
-      onLoad={(event) => setPixels(event.currentTarget.naturalWidth)}
-      style={{
-        width: pixels ? `calc(${pixels} * var(--px))` : undefined,
-        imageRendering: "pixelated",
-      }}
-    />
-  )
-}
-
 type Shown = {
   slot: Slot
   fraction: number
   seconds: number
   minute: number
+  popup: string | null
 }
 
+const params = new URLSearchParams(location.search)
 /** Whether `scripts/frames.mjs` is driving the page: nothing but the picture then. */
-const capture = new URLSearchParams(location.search).has("capture")
+const capture = params.has("capture")
 
-export const App = () => {
+/** The timeline playing: the frame, the caption, the title card, the clip, the fades and the keyboard. */
+const Player = ({
+  stage,
+  cues,
+  onStudio,
+}: {
+  stage: Stage
+  cues: Cues | null
+  onStudio: () => void
+}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
-  const [stage, setStage] = useState<Stage>()
-  const [cues, setCues] = useState<Cues | null | undefined>()
-  const [failed, setFailed] = useState<string>()
+  const px = useStagePx(stageRef)
   const [shown, setShown] = useState<Shown>()
-  const [px, setPx] = useState(4)
   const [clips, setClips] = useState<Record<string, Clip | null>>({})
 
   useEffect(() => {
-    loadStage().then(setStage, (error: unknown) => setFailed(String(error)))
-    void loadCues().then(setCues)
     // The gameplay clips' manifests, for the scenes that show one; a missing clip shows a placeholder.
-    for (const name of new Set(
-      Object.values(DIRECTIONS).flatMap((d) => (d.insert ? [d.insert.clip] : [])),
-    ))
+    const names = new Set<string>()
+    for (const slot of schedule(cues)) {
+      const { insert } = directionFor(slot)
+      if (insert) names.add(insert.clip)
+    }
+    for (const name of names)
       fetch(`/clips/${name}/manifest.json`)
         .then((response) => (response.ok ? (response.json() as Promise<Clip>) : null))
         .then(
           (loaded) => setClips((known) => ({ ...known, [name]: loaded })),
           () => {},
         )
-  }, [])
-
-  // The stage keeps 16:9 inside the window; one GBA pixel is a 480th of it.
-  useEffect(() => {
-    const element = stageRef.current
-    if (!element) return
-    const measure = () => setPx(Math.max(1, Math.round(element.clientWidth / GBA_COLUMNS)))
-    measure()
-    const observer = new ResizeObserver(measure)
-    observer.observe(element)
-    return () => observer.disconnect()
-  }, [])
+  }, [cues])
 
   useEffect(() => {
     const canvas = canvasRef.current
     const context = canvas?.getContext("2d")
-    if (!stage || cues === undefined || !canvas || !context) return
+    if (!canvas || !context) return
     const slots = schedule(cues)
     const duration = totalSeconds(slots)
-    const params = new URLSearchParams(location.search)
     let playing = !params.has("paused")
     let at = Math.min(duration, Math.max(0, Number(params.get("t")) || 0))
     let anchor = performance.now()
@@ -137,7 +118,7 @@ export const App = () => {
       anchor = performance.now()
       playing = true
     }
-    const controls: Controls = {
+    globalThis.wayfarerVideo = {
       ready: true,
       duration,
       slots,
@@ -148,7 +129,6 @@ export const App = () => {
       playing: () => playing,
       pending: () => pending,
     }
-    globalThis.wayfarerVideo = controls
 
     let raf = 0
     const draw = () => {
@@ -157,8 +137,15 @@ export const App = () => {
       const found = slotAt(slots, seconds)
       if (!found) return
       const { slot, fraction } = found
-      pending = drawFrame(stage, context, slot, fraction)
-      setShown({ slot, fraction, seconds, minute: stage.clock.minute })
+      const drawn = drawFrame(stage, context, slot, fraction)
+      pending = drawn.pending
+      setShown({
+        slot,
+        fraction,
+        seconds,
+        minute: stage.clock.minute,
+        popup: riderPlace(stage, drawn.shot.rider),
+      })
       // In the browser the voice plays along, from each scene's cue.
       if (playing && slot.voiceAt !== null && seconds >= slot.voiceAt && !spoken.has(slot.id)) {
         spoken.add(slot.id)
@@ -194,7 +181,7 @@ export const App = () => {
 
   const direction = shown && directionFor(shown.slot)
   const local = shown ? shown.fraction * shown.slot.length : 0
-  const duration = shown ? totalSeconds(schedule(cues ?? null)) : 0
+  const duration = totalSeconds(schedule(cues))
   const black = shown
     ? Math.max(0, 1 - Math.min(shown.seconds, duration - shown.seconds) / (FADE_SECONDS * 1.6))
     : 1
@@ -220,13 +207,15 @@ export const App = () => {
       : undefined
 
   return (
-    <div className="flex h-dvh w-dvw items-center justify-center bg-black">
+    <>
       <div
         ref={stageRef}
         className="stage relative overflow-hidden"
         style={{ "--px": `${px}px` } as React.CSSProperties}
       >
         <canvas ref={canvasRef} className="block h-full w-full" aria-hidden="true" />
+
+        <Popup label={shown?.popup ?? null} />
 
         {insert && (
           <div
@@ -301,22 +290,49 @@ export const App = () => {
         )}
 
         <div className="pointer-events-none absolute inset-0 bg-black" style={{ opacity: black }} />
-
-        {failed && (
-          <p className="absolute inset-x-0 top-1/2 text-center font-sans text-paper">{failed}</p>
-        )}
       </div>
 
       {/* The dashboard, outside the frame: where we are, for the keyboard (space, arrows, Home). */}
       {shown && !capture && (
-        <div
-          className="pointer-events-none fixed right-3 bottom-2 font-mono text-xs text-white/60"
-          data-dashboard
-        >
-          {shown.slot.id} · {shown.seconds.toFixed(1)}s / {duration.toFixed(1)}s ·{" "}
-          {clockText(shown.minute)}
+        <div className="pointer-events-none fixed right-3 bottom-2 flex items-center gap-3 font-mono text-xs text-white/60">
+          <span>
+            {shown.slot.id} · {shown.seconds.toFixed(1)}s / {duration.toFixed(1)}s ·{" "}
+            {clockText(shown.minute)}
+          </span>
+          <button
+            type="button"
+            className="pointer-events-auto rounded bg-white/10 px-2 py-0.5 text-white/80 hover:bg-white/20"
+            onClick={onStudio}
+          >
+            Studio
+          </button>
         </div>
       )}
+    </>
+  )
+}
+
+export const App = () => {
+  const [stage, setStage] = useState<Stage>()
+  const [cues, setCues] = useState<Cues | null>()
+  const [failed, setFailed] = useState<string>()
+  const [studio, setStudio] = useState(params.has("studio") && !capture)
+
+  useEffect(() => {
+    loadStage().then(setStage, (error: unknown) => setFailed(String(error)))
+    void loadCues().then(setCues)
+  }, [])
+
+  return (
+    <div
+      className="flex h-dvh w-dvw items-center justify-center bg-black"
+      style={{ "--aside": studio ? "20rem" : "0px" } as React.CSSProperties}
+    >
+      {failed && <p className="font-sans text-paper">{failed}</p>}
+      {stage && cues !== undefined && !studio && (
+        <Player stage={stage} cues={cues} onStudio={() => setStudio(true)} />
+      )}
+      {stage && studio && <Studio stage={stage} onPlay={() => setStudio(false)} />}
     </div>
   )
 }

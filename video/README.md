@@ -35,6 +35,22 @@ and plays, ← and → step between scenes, Home starts over, `?t=30` opens at a
 time and `?paused` opens paused. The readout at the bottom right names the
 scene, the time and the game clock.
 
+### The studio
+
+`pnpm dev` and open `/?studio` (or press **Studio** at the bottom right of
+the player). The map is free: drag to pan, wheel to zoom, or fly to a region,
+the whole world or the league circuit. A panel beside it has every knob the
+video can turn: the game clock as a slider or running at the game's pace, the
+site's pace or a time-lapse; each layer (sea, weather, clouds, ships and
+tint, night lights, Gym Leaders with markers, wild Pokémon close in); the
+badge pins, all bright or earned one by one so they glow and sparkle and a
+league's trail lights at eight; the daily roads with the day stepping; the
+wild waves popping out of each home region; the ride in on the bike from any
+start, with the game's warp before it; and a fade to black. **Copy camera**
+gives a `{ kind: "point", x, y, zoom }` target to paste into `timeline.ts`.
+Everything the studio shows, a scene can show: the same `Shot` is drawn
+either way (`src/shot.ts`).
+
 ### Rendering it
 
 ```sh
@@ -77,16 +93,21 @@ by default.
   caption and the least it lasts. It imports nothing, so `scripts/voice.mjs`
   reads it under Node.
 - `src/timeline.ts` is the storyboard's pictures, keyed by scene: camera
-  keyframes (`world`, `regions`, a `map` point, the league `circuit`, or a
-  `notable` wherever their routine has them), the game clock (held, or run
-  across the scene for a time-lapse), the badge pins, the walkers, a title
-  card and a gameplay `insert`.
+  keyframes (`world`, `regions`, a `map` point, a grid `point` from the
+  studio, the league `circuit`, or a `notable` wherever their routine has
+  them), the game clock (held, or run across the scene for a time-lapse),
+  layers, the badge pins, the walkers, the daily roads, the wild waves, a
+  ride in, a title card and a gameplay `insert`.
 - `src/schedule.ts` turns the script into start times: a scene lasts its
   `seconds`, or its voice clip plus a lead-in and a tail when that is longer,
   so the picture always waits for the words.
-- `src/director.ts` draws a frame: loads the website's world, resolves the
-  scene's camera, sets the game minute the overlays read, and calls the
-  website's renderer with the overlays the scene asks for.
+- `src/shot.ts` is one picture of the world: camera, game minute, layers,
+  pins, daily day, wild waves, the rider and a fade. The timeline makes one
+  per frame, the studio makes one from its panel.
+- `src/director.ts` loads the website's world and everything drawn over it,
+  turns a scene into a shot (camera keyframes, clock, ride) and draws a shot
+  with the website's renderer and overlays.
+- `src/Studio.tsx` is the studio: the free camera, the panel and its set pieces.
 - `src/App.tsx` is the page: the canvas, the caption printing a letter every
   two frames, the title card, the clip frame, the fades, the keyboard, and
   `window.wayfarerVideo`, which `scripts/frames.mjs` drives.
