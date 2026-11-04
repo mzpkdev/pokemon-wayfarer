@@ -1629,10 +1629,15 @@ export const WorldTour = ({
               return `${text.place}. ${text.title}`
             })()}
           </p>
-          {/* Below lg the map sits above the card, so the card keeps to a third of the screen and scrolls; from lg it keeps within the screen. */}
+          {/*
+            The card is one height at every stop, a share of the screen: below
+            lg the map sits above it, so it keeps to a third of the screen; from
+            lg it keeps within the screen. A stop with more to say scrolls
+            inside it, so the card never jumps as content changes or loads.
+          */}
           <div
             ref={captionsRef}
-            className="grid max-lg:max-h-[34svh] max-lg:overflow-y-auto max-lg:overscroll-contain lg:max-h-[calc(100svh-18rem)] lg:overflow-y-auto lg:overscroll-contain"
+            className="grid max-lg:h-[34svh] max-lg:overflow-y-auto max-lg:overscroll-contain lg:h-[calc(100svh-20rem)] lg:overflow-y-auto lg:overscroll-contain"
           >
             {captions.map((caption, i) => {
               const shown = stop === i
