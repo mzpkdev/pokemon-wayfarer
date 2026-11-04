@@ -9,6 +9,7 @@
 import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
+import { maskOf } from "./bridges.mjs"
 import { distanceFrom } from "./land.mjs"
 
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -145,11 +146,20 @@ export const createHeap = () => {
   }
 }
 
-export const writeLiving = ({ railLine, grid, isWater, width: W, height: H, maps }, outDir) => {
+export const writeLiving = (
+  { railLine, grid, isWater, width: W, height: H, maps, bridges = [] },
+  outDir,
+) => {
   const ferries = readFerries()
   const N = W * H
+  // Water, and the stretches of bridge the ships pass under.
+  const under = maskOf(
+    bridges.map((b) => b.pass),
+    W,
+    H,
+  )
   const land = new Uint8Array(N)
-  for (let i = 0; i < N; i++) land[i] = isWater(grid[i]) ? 0 : 1
+  for (let i = 0; i < N; i++) land[i] = isWater(grid[i]) || under[i] ? 0 : 1
   const toLand = distanceFrom(land, W, H)
   // Only water the open sea reaches counts: not a pond or a lake inside a map.
   const open = new Uint8Array(N)

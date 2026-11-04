@@ -10,6 +10,7 @@ import { fileURLToPath } from "node:url"
 import { gzipSync } from "node:zlib"
 import { renderIndexed } from "../../../scripts/lib/gba.mjs"
 import { writePng } from "../../../scripts/lib/png.mjs"
+import { rectsOf } from "./bridges.mjs"
 import { writeDaily } from "./daily.mjs"
 import { writeEncounters } from "./encounters.mjs"
 import { readBehavior, readBehaviorFlags, readSpawns, TILE_FLAG_SURFABLE } from "./spawns.mjs"
@@ -33,6 +34,12 @@ const land = buildLand(game, world, metatiles)
 // What's drawn: the land with the Magnet Train's line laid over it. The
 // ferries and walkers keep to `land.grid`, under the viaduct.
 const { grid, line: railLine } = layRails(game, world, land, metatiles)
+// Where the viaduct runs over water, it is a deck the ships pass under, like
+// a bridge's (see build/bridges.mjs): drawn again over them.
+const viaduct = new Uint8Array(W * H)
+for (let i = 0; i < W * H; i++)
+  if (grid[i] !== land.grid[i] && land.isWater(land.grid[i])) viaduct[i] = 1
+const overpasses = [...land.bridges.map((b) => b.deck), ...rectsOf(viaduct, W, H)]
 const atlasTiles = metatiles.tiles
 
 // The atlas: 64 metatiles a row.
@@ -163,6 +170,8 @@ fs.writeFileSync(
     sea: [...overview.rgba.subarray(0, 3)],
     towns,
     regions,
+    // Bridge decks the ships pass under, drawn again over them.
+    overpasses,
     maps: all.map((p) => ({
       name: p.m.name,
       x: p.x - minX,
@@ -200,6 +209,7 @@ writeLiving(
     isWater: land.isWater,
     width: W,
     height: H,
+    bridges: land.bridges,
     maps: all.map((p) => ({
       name: p.m.name,
       x: p.x - minX,

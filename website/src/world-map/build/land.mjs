@@ -1,6 +1,7 @@
 // The land between the maps: fills the world grid with the placed maps'
 // metatiles, then grows land out from them with noise, keeps regions apart
 // with straits of sea, and fills the rest from the maps' border blocks.
+import { maskOf, placeBridges } from "./bridges.mjs"
 
 // Fractal value noise, fixed seed, in [-1, 1].
 const hash = (x, y) => {
@@ -506,13 +507,19 @@ const OPEN_SEA = 6
 
 // Keeps every harbour on the open sea. Land grown around an island can close
 // the bay its dock sits in; then the cheapest way from the dock's water to the
-// open ocean, through the land grown between maps (never a map's own cells),
-// is cut back to sea. Water on the way costs little, so the channel takes the
-// narrowest land; it widens toward the sea and its banks wander, like a
-// natural inlet.
-const openHarbours = (world, owner, land, grid, isWater) => {
+// open ocean, through the land grown between maps (never a map's own cells,
+// except under a bridge, which the way may pass beneath), is cut back to
+// sea. Water on the way costs little, so the channel takes the narrowest
+// land, and it keeps its own width clear of the maps, so it never squeezes
+// through a slit between two; it widens toward the sea and its banks wander,
+// like a natural inlet.
+const openHarbours = (world, owner, land, grid, isWater, under) => {
   const { all, W, H } = world
   const N = W * H
+  // How far each cell is from a map, for the room a channel needs.
+  const mapped = new Uint8Array(N)
+  for (let i = 0; i < N; i++) mapped[i] = owner[i] >= 0 ? 1 : 0
+  const toMap = distanceFrom(mapped, W, H)
   // The open ocean: sea outside the maps, joined to the world's corner.
   const ocean = new Uint8Array(N)
   const queue = [0]
@@ -554,6 +561,9 @@ const openHarbours = (world, owner, land, grid, isWater) => {
     return out
   }
   let cut = 0
+  // The cells dug, which take the nearest map's water plainly: a channel is
+  // too narrow for the fill's wandering boundaries, which would blot it.
+  const dug = new Uint8Array(N)
   for (const { m, door } of harbours) {
     // The dock's water: the map's water joined to the cells by its harbour
     // door (all the map's water for a port with no door on the map).
@@ -593,8 +603,13 @@ const openHarbours = (world, owner, land, grid, isWater) => {
         break
       }
       for (const [j, step] of neighbours(i)) {
-        if (owner[j] >= 0 && !start.includes(j)) continue
-        const next = c + step * (land[j] ? 1 : 0.15)
+        // A map's cells are never dug, but its water (a sea route's) and the
+        // water under a bridge are sailed through.
+        const afloat = !land[j] || under[j]
+        if (owner[j] >= 0 && !afloat && !start.includes(j)) continue
+        // Land to dig needs the channel's width free of the maps.
+        if (!afloat && toMap[j] <= CHANNEL) continue
+        const next = c + step * (afloat ? 0.15 : 1)
         if (next < cost[j]) {
           cost[j] = next
           parent[j] = i
@@ -613,10 +628,9 @@ const openHarbours = (world, owner, land, grid, isWater) => {
     path.forEach((i, t) => {
       const x = i % W,
         y = (i - x) / W
-      const r = Math.min(
-        CHANNEL_MAX,
-        CHANNEL + CHANNEL_GROWTH * t + 1.5 * fractal(x + 9100, y - 4700, 1 / 9),
-      )
+      const r =
+        Math.min(CHANNEL_MAX, CHANNEL + CHANNEL_GROWTH * t) +
+        2.5 * fractal(x + 9100, y - 4700, 1 / 14)
       const R = Math.ceil(r)
       for (let dy = -R; dy <= R; dy++)
         for (let dx = -R; dx <= R; dx++) {
@@ -629,6 +643,7 @@ const openHarbours = (world, owner, land, grid, isWater) => {
     for (const [j, d] of channel)
       if (d <= 0 && land[j]) {
         land[j] = 0
+        dug[j] = 1
         cut++
       }
     // Round its banks off: each cell near the channel takes the majority of
@@ -645,7 +660,7 @@ const openHarbours = (world, owner, land, grid, isWater) => {
       for (const [j, v] of next) land[j] = v
     }
   }
-  return cut
+  return { cut, dug }
 }
 
 // A binary min-heap of [item, priority].
@@ -688,7 +703,10 @@ class MinHeap {
 // Fills every cell outside the maps: land takes the nearest map's border
 // blocks, sea the nearest water border or the open ocean's. Returns
 // `fillBorder`, the map each land cell's border came from (-1: not filled).
-const fillBorders = (world, { grid, owner, land, spill, borders, isWater, tileColor, tint }) => {
+const fillBorders = (
+  world,
+  { grid, owner, land, spill, dug, borders, isWater, tileColor, tint },
+) => {
   const { all, W, H } = world
   const N = W * H
   // Which map each cell takes its border from: the nearest map of the right kind.
@@ -789,7 +807,7 @@ const fillBorders = (world, { grid, owner, land, spill, borders, isWater, tileCo
       const near = waterNearest[i]
       const close =
         near >= 0 && Math.hypot((i % W) - (near % W), Math.floor(i / W) - Math.floor(near / W)) < 14
-      const from = close ? waterFrom[i] : warped(waterFrom, i)
+      const from = close || dug[i] ? waterFrom[i] : warped(waterFrom, i)
       if (depth === 4 || from < 0) grid[i] = tint(pattern(ocean, i, W), DEEP_SEA)
       else if (depth === 0) grid[i] = pattern(waterOf[from], i, W)
       else grid[i] = tint(pattern(waterOf[from], i, W), stepColor(waterColor[from], depth))
@@ -833,23 +851,40 @@ const createTinter = (atlas, tileColor) => {
 // Builds the whole filled world grid. Returns everything the far view needs.
 export const buildLand = (game, world, atlas) => {
   const { grid, owner } = paintMaps(game, world, atlas)
+  const { all, minX, minY, W, H } = world
+  const bridges = placeBridges(
+    all.map((p) => ({
+      name: p.m.name,
+      x: p.x - minX,
+      y: p.y - minY,
+      width: p.l.width,
+      height: p.l.height,
+    })),
+  )
+  const under = maskOf(
+    bridges.map((b) => b.pass),
+    W,
+    H,
+  )
   console.log("bridged", bridgeLinks(world, grid, owner), "cells between linked maps")
   const classify = createClassifier(atlas)
   const borders = readBorders(game, world, atlas, grid, classify)
   const { land, toLand, spill } = growLand(world, grid, owner, classify)
   bridgeSinjoh(world, owner, land)
   cutStraits(world, owner, land)
-  console.log("harbours opened", openHarbours(world, owner, land, grid, classify.isWater), "cells")
+  const harbours = openHarbours(world, owner, land, grid, classify.isWater, under)
+  console.log("harbours opened", harbours.cut, "cells")
   const tint = createTinter(atlas, classify.tileColor)
   const { fillBorder, ocean } = fillBorders(world, {
     grid,
     owner,
     land,
     spill,
+    dug: harbours.dug,
     borders,
     isWater: classify.isWater,
     tileColor: classify.tileColor,
     tint,
   })
-  return { grid, owner, borders, fillBorder, toLand, ocean, ...classify }
+  return { grid, owner, borders, fillBorder, toLand, ocean, bridges, ...classify }
 }

@@ -1,6 +1,7 @@
 // The living world over the map: the S.S. ferries sailing their loops, the
 // lanes they sail, the Magnet Train on its line, and the game's time-of-day tint. The data is living.json
 // (see build/living.mjs); `livingOverlay` draws it for a game time.
+import type { Bounds } from "./data"
 import { DATA } from "./data"
 import type { Overlay, Projection } from "./render"
 
@@ -483,7 +484,14 @@ export const livingOverlay =
   (
     living: LivingWorld,
     minutes: number | (() => number),
-    { still = false }: { still?: boolean } = {},
+    {
+      still = false,
+      decks = [],
+    }: {
+      still?: boolean
+      /** Bridge decks the ships pass under (`overpasses` in meta.json): no ship is drawn over them. */
+      decks?: Bounds[]
+    } = {},
   ): Overlay =>
   (context, projection) => {
     const { scale, ratio, toScreen } = projection
@@ -501,6 +509,18 @@ export const livingOverlay =
 
     context.imageSmoothingEnabled = false
     const names: { name: string; x: number; y: number }[] = []
+    // The ships keep off the decks: the canvas less the decks is the clip.
+    context.save()
+    if (decks.length) {
+      context.beginPath()
+      context.rect(0, 0, width, height)
+      for (const deck of decks) {
+        const a = toScreen(deck.left, deck.top)
+        const b = toScreen(deck.right, deck.bottom)
+        context.rect(a.x, a.y, b.x - a.x, b.y - a.y)
+      }
+      context.clip("evenodd")
+    }
     for (const ship of shipsAt(living, now)) {
       const image = living.sprites[ship.id]!
       const p = toScreen(ship.x, ship.y)
@@ -528,6 +548,7 @@ export const livingOverlay =
       context.restore()
       names.push({ name: ship.name, x: p.x, y: p.y + h / 2 + 4 * ratio })
     }
+    context.restore()
 
     const train = trainAt(living, now)
     const trainName = train && drawTrain(context, living, train, projection)
