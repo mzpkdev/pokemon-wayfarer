@@ -1,8 +1,8 @@
 ---
 /**
  * A place on the route: its map name popup, as Heart & Soul shows one on
- * arrival (sliding down as it comes into view), then its heading outlined
- * over the grass, then whatever the place holds.
+ * arrival, then its heading outlined over the grass, then whatever the
+ * place holds.
  */
 type Props = {
   id: string
@@ -69,28 +69,6 @@ const { id, popup, name, title, grass, class: className } = Astro.props
       --outline-dot: 3px;
       font-size: 48px;
       line-height: 54px;
-    }
-  }
-
-  /* The popup slides down into place as its section comes on screen, in whole pixel steps. */
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .place-popup {
-        animation: popup-in steps(10) both;
-        animation-timeline: view();
-        animation-range: entry 10% entry 60%;
-      }
-    }
-  }
-
-  @keyframes popup-in {
-    from {
-      translate: 0 calc(-24 * var(--px));
-      opacity: 0;
-    }
-    to {
-      translate: 0 0;
-      opacity: 1;
     }
   }
 </style>
