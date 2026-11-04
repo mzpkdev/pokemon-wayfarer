@@ -10,6 +10,7 @@ import { loadEncounters } from "~/world-map/encounters"
 import {
   BADGES_SRC,
   badgeOverlays,
+  callingFor,
   type Landmarks,
   landmarkBounds,
   loadLandmarks,
@@ -332,6 +333,7 @@ export const shotFor = (
       alpha: 1,
       elapsed: local * 1000,
       circuit: mix(direction.badges.circuit, fraction),
+      ...earnedBy(direction.badges.earn, local, slot.length),
     },
     daily: direction.daily && {
       day: 1 + Math.min(direction.daily.days - 1, Math.floor(fraction * direction.daily.days)),
@@ -341,6 +343,30 @@ export const shotFor = (
     rider,
     fade,
   }
+}
+
+/**
+ * The badges earned `local` seconds into a scene, one after another across
+ * the span, each with the real-clock moment it landed (so its sparkle plays
+ * the same however the time was reached), and the leagues that calls up.
+ */
+const earnedBy = (
+  earn: NonNullable<Direction["badges"]>["earn"],
+  local: number,
+  length: number,
+): Pick<Shot, "pins">["pins"] extends infer P ? Partial<NonNullable<P>> : never => {
+  if (!earn) return {}
+  const from = earn.from * length
+  const each = ((earn.to - earn.from) * length) / earn.badges.length
+  const earned = new Set<number>()
+  const earnedAt = new Map<number, number>()
+  earn.badges.forEach((badge, i) => {
+    const at = from + each * (i + 1)
+    if (local < at) return
+    earned.add(badge)
+    earnedAt.set(badge, now() - (local - at) * 1000)
+  })
+  return { earned, earnedAt, calling: callingFor(earned) }
 }
 
 const EMPTY = new Set<number>()

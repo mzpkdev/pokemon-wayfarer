@@ -1,6 +1,12 @@
 // The storyboard's words: what the narrator says in each scene and what the
 // game's text box prints under the map. This file imports nothing, so
 // `scripts/voice.mjs` can read it under Node to make the voice-over.
+//
+// The voice speaks to the player, in the present tense, through one
+// trainer's first week on the road: leave home, see the world, catch a ship,
+// a day passes, meet a Gym Leader out and about, come back to a changed
+// route, the League calls. The text box is the world's own voice, the kind
+// of thing people say in a Pokémon Center.
 
 export type Scene = {
   id: string
@@ -15,62 +21,60 @@ export type Scene = {
 export const SCENES: Scene[] = [
   {
     id: "hook",
-    narration: "Pokémon Wayfarer is one Pokémon world, and you cross it however you like.",
-    seconds: 6,
-  },
-  {
-    id: "lands",
     narration:
-      "Kanto, Johto and Hoenn, with Sinnoh, Sinjoh, the Sevii Islands and Alola. Seven lands on one sea, in one save.",
-    caption: ["Seven lands, one sea,", "one save."],
+      "Remember the first time you walked out of town with one Pokémon in your pocket, and the whole world was out there? This time, it really is.",
     seconds: 9,
   },
   {
     id: "start",
     narration:
-      "Begin in Pallet Town, New Bark Town or Littleroot. Your party, your Bag and your Pokédex go everywhere you do.",
-    caption: ["Start in KANTO, JOHTO", "or HOENN."],
+      "Begin in Kanto, Johto or Hoenn. Walk to the edge of town, and keep going. Nobody steps in your way.",
+    caption: ["The road's open, y'know.", "Always was, if you ask me."],
     seconds: 12,
   },
   {
-    id: "gyms",
+    id: "lands",
     narration:
-      "Twenty-four Gyms, in any order. Earn any eight badges, and a League phones you. Win Indigo and the Hoenn League, and the Masters opens on Seven Island.",
-    caption: ["24 Gyms, any order."],
+      "Seven lands on one sea, and every one keeps its own Pokémon, living where they always have.",
+    caption: ["KALOS Pokémon? Only in the", "SAFARI ZONES, they say."],
+    seconds: 9,
+  },
+  {
+    id: "ships",
+    narration: "Miss the boat, and it sails without you. Stay aboard, and you wake up in Alola.",
+    caption: ["The AQUA's in port till three.", "Then she's off to VERMILION."],
+    seconds: 10,
+  },
+  {
+    id: "day",
+    narration:
+      "Morning turns to evening turns to night while you play. The lights come on in Goldenrod, and somewhere, a Gym Leader heads home.",
+    caption: ["Gets dark around here.", "Watch your step on the routes."],
     seconds: 11,
   },
   {
     id: "leaders",
     narration:
-      "Gym Leaders and the Elite Four keep their own routines around the world. Make friends, and they'll give you their number.",
-    caption: ["Gym Leaders on the road."],
-    seconds: 8,
-  },
-  {
-    id: "day",
-    narration:
-      "A Wayfarer day is two hours of play, morning to night. Time runs only while you play.",
-    caption: ["A two-hour day."],
-    seconds: 9,
-  },
-  {
-    id: "ships",
-    narration:
-      "The S.S. Aqua, Anne and Tidal sail real loops, and the Anne goes on to Alola. When your port is called, walk down the gangway. Stay aboard, and you sail on.",
-    caption: ["Ships you actually ride."],
+      "Because they have lives. Falkner trains at Sprout Tower after lunch. Erika's shopping in Celadon. Catch them on the road, and they might give you their number.",
+    caption: ["FALKNER? Not at the GYM.", "Try SPROUT TOWER after lunch."],
     seconds: 11,
   },
   {
     id: "daily",
     narration:
-      "Routes change from day to day. Trainers and items move, and a trainer you've beaten may call you for a rematch.",
-    caption: ["Routes that change daily."],
-    seconds: 8,
+      "Come back a week later, and it isn't the same route. New faces, new finds, and an old rival on the phone, wanting a rematch.",
+    caption: ["Those trainers weren't on", "ROUTE 15 yesterday, I swear!"],
+    seconds: 10,
+  },
+  {
+    id: "gyms",
+    narration: "Earn eight badges, any eight you like, and the phone rings. The League wants you.",
+    caption: ["A LEAGUE calling you?", "Well, well."],
+    seconds: 10,
   },
   {
     id: "open",
-    narration:
-      "Free, and made in the open on GitHub. Pokémon Wayfarer. January the twentieth, twenty twenty-seven.",
+    narration: "Pokémon Wayfarer. Free, made in the open. The road opens January the twentieth.",
     seconds: 8,
   },
 ]
