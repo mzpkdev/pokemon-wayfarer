@@ -4,6 +4,8 @@
 // decides what it draws when.
 import { type Camera, fit, fly } from "~/world-map/camera"
 import { cloudsOverlay } from "~/world-map/clouds"
+import { DAILY_SEED, dailyOn, loadDaily, placedMaps } from "~/world-map/daily"
+import { type DailyScene, dailyOverlay } from "~/world-map/dailyView"
 import { type Bounds, loadWorld, type World } from "~/world-map/data"
 import {
   BADGES_SRC,
@@ -36,6 +38,9 @@ export type Stage = {
   lights: Overlay
   pins: Overlay[]
   stopClock: StopClock
+  /** The daily roads: the overlay, and the day it shows (`drawFrame` steps it, and the sprites pop in again). */
+  daily: Overlay
+  today: { day: number; scene: DailyScene; since: number } | null
   /** The game minute the overlays read; `drawFrame` sets it for the scene. */
   clock: { minute: number }
 }
@@ -56,12 +61,14 @@ const loadImage = (src: string) =>
 /** Loads the world and everything drawn over it. */
 export const loadStage = async (): Promise<Stage> => {
   const world = await loadWorld()
-  const [water, landmarks, living, notables, badges] = await Promise.all([
+  const [water, landmarks, living, notables, badges, daily, trainers] = await Promise.all([
     loadWater(world.meta),
     loadLandmarks(),
     loadLiving(),
     loadNotables(),
     loadImage(BADGES_SRC),
+    loadDaily(),
+    loadImage("/world-map/trainers.png"),
   ])
   const clock = { minute: DEFAULT_MINUTES }
   const minutes = () => clock.minute
@@ -76,12 +83,14 @@ export const loadStage = async (): Promise<Stage> => {
     league: null,
     selected: null,
   }
-  return {
+  const stage: Stage = {
     world,
     landmarks,
     living,
     notables,
     renderer: rendererFor(world),
+    daily: () => {},
+    today: null,
     ambient: [
       seaOverlay(water, true, now),
       weatherOverlay(world.meta, true, now),
@@ -93,6 +102,19 @@ export const loadStage = async (): Promise<Stage> => {
     stopClock,
     clock,
   }
+  const roads = placedMaps(daily)
+  stage.daily = dailyOverlay({ image: trainers, ...daily.sheet }, () => stage.today, true, now)
+  dailyFor = (day: number) => dailyOn(daily, roads, day, DAILY_SEED)
+  return stage
+}
+
+/** The whole world's daily draw for a day, once the data is in. */
+let dailyFor: ((day: number) => DailyScene) | undefined
+const days = new Map<number, DailyScene>()
+const dayScene = (day: number) => {
+  let scene = days.get(day)
+  if (!scene && dailyFor) days.set(day, (scene = dailyFor(day)))
+  return scene
 }
 
 const union = (boxes: Bounds[]): Bounds => ({
@@ -241,6 +263,12 @@ export const drawFrame = (
       }),
     )
   } else overlays.push(notablesOverlay(stage.notables, () => stage.clock.minute))
+  if (direction.daily) {
+    const day = 1 + Math.min(direction.daily.days - 1, Math.floor(fraction * direction.daily.days))
+    const scene = dayScene(day)
+    if (scene && stage.today?.day !== day) stage.today = { day, scene, since: now() }
+    overlays.push(stage.daily)
+  }
   overlays.push(stage.ships, stage.lights)
 
   return stage.renderer.draw(context, {
