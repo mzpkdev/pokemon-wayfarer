@@ -2,10 +2,15 @@
 // day the world keeps, what is drawn over the map and what is laid over it.
 // The words are in `script.ts`; each direction here is keyed by its scene.
 import { DAY_START } from "~/world-map/living"
+import type { StartId } from "~/world-map/starts"
+
+import type { Layers } from "./shot"
 
 /** Where the camera looks: resolved against the map's data once it has loaded. */
 export type Target =
   | { kind: "world"; room?: number }
+  /** A point on the world grid at a zoom: what the studio's COPY gives. */
+  | { kind: "point"; x: number; y: number; zoom: number }
   /** The named regions (`meta.regions`), all fitted in the view. */
   | { kind: "regions"; names: string[]; room?: number }
   /** A point in a map's own tiles (its center when none), at a zoom in CSS pixels per tile. */
@@ -25,6 +30,12 @@ export type Direction = {
   shots: Keyframe[]
   /** The game clock, in game minutes: held, or run from one time to another across the scene. */
   clock: { at: number } | { from: number; to: number }
+  /** Layers to turn off or on, over the default of everything but the sightings. */
+  layers?: Partial<Layers>
+  /** The wild Pokémon waves, popping out of the whole world from the scene's start. */
+  wild?: boolean
+  /** The player rides in on their bike along a start's route, over this span of the scene; the camera follows. */
+  rider?: Span & { start: StartId }
   /** The badge pins, and how much of the league circuit is drawn (0 pins only, 1 the whole circuit). */
   badges?: { circuit: number | [number, number] }
   /** The daily trainers and items on every road, with the day stepping from 1 to `days` across the scene. */
@@ -57,18 +68,21 @@ export const DIRECTIONS: Record<string, Direction> = {
       { at: 1, to: { kind: "world", room: 1 } },
     ],
     clock: { at: h(10) },
+    wild: true,
   },
   start: {
     shots: [
-      { at: 0, to: { kind: "map", name: "PalletTown_hns", x: 12, y: 10, zoom: 20 } },
-      { at: 0.3, to: { kind: "map", name: "PalletTown_hns", x: 12, y: 10, zoom: 20 } },
+      { at: 0, to: { kind: "map", name: "PalletTown_hns", x: 12, y: 10, zoom: 24 } },
+      { at: 0.3, to: { kind: "map", name: "PalletTown_hns", x: 12, y: 10, zoom: 24 } },
       { at: 0.5, to: { kind: "map", name: "NewBarkTown_hns", x: 14, y: 16, zoom: 20 } },
       { at: 0.65, to: { kind: "map", name: "NewBarkTown_hns", x: 14, y: 16, zoom: 20 } },
       { at: 0.85, to: { kind: "map", name: "LittlerootTown", x: 10, y: 10, zoom: 20 } },
       { at: 1, to: { kind: "map", name: "LittlerootTown", x: 10, y: 10, zoom: 20 } },
     ],
     clock: { at: h(9) },
-    insert: { from: 0.1, to: 0.95, clip: "oak-choice" },
+    // RED rides in to his front door while the first town is on; the camera comes in with him.
+    rider: { start: "kanto", from: 0, to: 0.28 },
+    insert: { from: 0.35, to: 0.95, clip: "oak-choice" },
   },
   gyms: {
     shots: [
