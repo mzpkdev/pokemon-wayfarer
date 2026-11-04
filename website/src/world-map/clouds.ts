@@ -155,8 +155,12 @@ const softOf = (chunk: Chunk) =>
       }
   }))
 
-/** Where the chunks on screen are composed, a texel to a pixel. */
-let sky: HTMLCanvasElement | undefined
+/**
+ * Where the chunks on screen are composed, a texel to a pixel, one canvas a
+ * layer, with what they were composed for: they're composed again only when
+ * the view moves by a texel or a chunk is fading in, not every frame.
+ */
+const skies = new Map<string, { canvas: HTMLCanvasElement; composed: string }>()
 
 /** The clouds and their shadows, on a clock (`now`, in ms); still without `animate`. */
 export const cloudsOverlay = (animate: boolean, now: () => number): Overlay => {
@@ -206,14 +210,20 @@ export const cloudsOverlay = (animate: boolean, now: () => number): Overlay => {
     while (chunks.size > KEPT) chunks.delete(chunks.keys().next().value!)
     if (shown.length === 0) return
 
-    sky ??= document.createElement("canvas")
-    if (sky.width < w || sky.height < h) {
-      sky.width = Math.max(sky.width, w)
-      sky.height = Math.max(sky.height, h)
-    }
-    const composer = sky.getContext("2d")!
-    composer.imageSmoothingEnabled = false
-    const compose = (layer: (chunk: Chunk) => HTMLCanvasElement, tint?: number[]) => {
+    const fading = shown.some(({ alpha }) => alpha < 1)
+    const view = fading ? "" : `${x0},${y0},${w},${h},${shown.length}`
+    const compose = (name: string, layer: (chunk: Chunk) => HTMLCanvasElement, tint?: number[]) => {
+      let sky = skies.get(name)
+      if (!sky) skies.set(name, (sky = { canvas: document.createElement("canvas"), composed: "" }))
+      const { canvas } = sky
+      if (view && sky.composed === view) return canvas
+      sky.composed = view
+      if (canvas.width < w || canvas.height < h) {
+        canvas.width = Math.max(canvas.width, w)
+        canvas.height = Math.max(canvas.height, h)
+      }
+      const composer = canvas.getContext("2d")!
+      composer.imageSmoothingEnabled = false
       composer.clearRect(0, 0, w, h)
       for (const { chunk, x, y, alpha } of shown) {
         composer.globalAlpha = alpha
@@ -226,29 +236,25 @@ export const cloudsOverlay = (animate: boolean, now: () => number): Overlay => {
         composer.fillRect(0, 0, w, h)
         composer.globalCompositeOperation = "source-over"
       }
+      return canvas
     }
     // The composed texels, onto the map: whole blocks once a texel is a
     // couple of pixels, blended below that so the far-out clouds don't
     // shimmer as they drift, and always for the soft shadow.
-    const place = (shift: number, alpha: number, smoothed: boolean) => {
+    const place = (sky: HTMLCanvasElement, shift: number, alpha: number, smoothed: boolean) => {
       context.imageSmoothingEnabled = smoothed
       context.globalAlpha = alpha
       const x = ((x0 + shift) * TEXEL + driftX - left) * scale
       const y = ((y0 + shift) * TEXEL + driftY - top) * scale
-      context.drawImage(sky!, 0, 0, w, h, x, y, w * TEXEL * scale, h * TEXEL * scale)
+      context.drawImage(sky, 0, 0, w, h, x, y, w * TEXEL * scale, h * TEXEL * scale)
     }
     const blocky = TEXEL * scale >= 2
     if (blend < 1) {
-      compose(cloudOf, DARK)
-      place(SHADOW, (shade * (1 - blend) * SHADE) / BODY, !blocky)
+      place(compose("shadow", cloudOf, DARK), SHADOW, (shade * (1 - blend) * SHADE) / BODY, !blocky)
     }
-    if (blend > 0) {
-      compose(softOf)
-      place(SHADOW, shade * blend, true)
-    }
+    if (blend > 0) place(compose("soft", softOf), SHADOW, shade * blend, true)
     if (body > 0) {
-      compose(cloudOf)
-      place(0, body, !blocky)
+      place(compose("cloud", cloudOf), 0, body, !blocky)
     }
     context.globalAlpha = 1
   }
