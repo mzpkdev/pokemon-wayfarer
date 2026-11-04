@@ -37,14 +37,14 @@ export const BOX_CAPS = [
   "Alola",
   "S.S. Anne",
   "Vermilion",
-  "Falkner",
-  "Sprout Tower",
-  "Erika",
-  "Celadon",
   "Goldenrod",
   "League",
   "Gym Leaders",
   "Elite Four",
+  "Brock",
+  "Day-Care",
+  "Graveler",
+  "Golem",
   "Gyms",
 ]
 
@@ -79,7 +79,7 @@ export const SCENES: Scene[] = [
   {
     id: "leaders",
     narration:
-      "See those? Gym Leaders. Elite Four. Out living their lives.\nFalkner's up Sprout Tower this morning.\nErika's off to the pond in Celadon. Get friendly, and they might give you their number.",
+      "Ever wonder what Gym Leaders do when nobody's at the door?\nBrock's walking all the way to the Day-Care in Johto.\nGet to know him. Trade him a Graveler.\nSee what he does with it.",
     seconds: 11,
   },
   {
@@ -96,7 +96,7 @@ export const SCENES: Scene[] = [
   {
     id: "gyms",
     narration:
-      "Twenty-four Gyms. Win any eight, in any order you like. Then the phone rings. It's the League.",
+      "Twenty-four Gyms. Win any eight, in any order you like. Then the phone rings. It's the League.\nAnd who's in the Elite Four this year? Brock. With a Golem.\nWonder where he got that.",
     seconds: 10,
   },
   {

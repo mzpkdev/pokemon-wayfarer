@@ -310,9 +310,19 @@ export const riderPlace = (stage: Stage, rider: Shot["rider"]) => {
 
 const minuteAt = ({ clock }: Direction, fraction: number) => {
   if ("at" in clock) return clock.at
-  const { from, to } = clock.over ?? { from: 0, to: 1 }
-  const t = Math.min(1, Math.max(0, (fraction - from) / (to - from)))
-  return clock.from + (clock.to - clock.from) * t
+  const keys: [number, number][] =
+    "keys" in clock
+      ? clock.keys
+      : [
+          [0, clock.from],
+          [1, clock.to],
+        ]
+  const next = keys.findIndex(([at]) => fraction < at)
+  if (next === 0) return keys[0]![1]
+  if (next === -1) return keys[keys.length - 1]![1]
+  const [a, from] = keys[next - 1]!
+  const [b, to] = keys[next]!
+  return from + ((to - from) * (fraction - a)) / (b - a)
 }
 
 /** The zoom a notable's `minHeight` is given for; further out it shrinks with the zoom. */

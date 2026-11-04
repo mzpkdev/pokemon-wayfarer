@@ -39,10 +39,11 @@ export type Direction = {
   /** A fade from black at the scene's start, and to black at its end, in seconds. */
   fade?: { in?: number; out?: number }
   /**
-   * The game clock, in game minutes: held, or run from one time to another
-   * across the scene, or across `over` of it only, held before and after.
+   * The game clock, in game minutes: held, run from one time to another across
+   * the scene, or through `keys` of [fraction of the scene, minute], running
+   * straight from each to the next and held before the first and after the last.
    */
-  clock: { at: number } | { from: number; to: number; over?: Span }
+  clock: { at: number } | { from: number; to: number } | { keys: [number, number][] }
   /** Layers to turn off or on, over the default of everything but the sightings. */
   layers?: Partial<Layers>
   /** The wild Pokémon waves, popping out of the whole world from the scene's start, or from `from` of the way through it. */
@@ -136,19 +137,23 @@ export const DIRECTIONS: Record<string, Direction> = {
     wild: { from: 0.5 },
   },
   // Straight on from every land at night: every Gym Leader and Elite Four member's marker
-  // lights up, then one dive onto Falkner while the night and the next morning go by;
-  // he trains at Sprout Tower, then Erika walks to the pond in Celadon.
+  // lights up, then one dive onto Brock while the night and the next morning go by; he is
+  // walking south out of Pewter, all the way to the Day-Care on Route 34.
   leaders: {
     shots: [
       { at: 0, to: LANDS },
       { at: 0.12, to: LANDS },
-      { at: 0.4, to: { kind: "notable", slug: "falkner", zoom: 16 } },
-      { at: 0.58, to: { kind: "notable", slug: "falkner", zoom: 16 } },
-      { at: 0.76, to: { kind: "notable", slug: "erika", zoom: 16 } },
-      { at: 1, to: { kind: "notable", slug: "erika", zoom: 16 } },
+      { at: 0.42, to: { kind: "notable", slug: "brock", zoom: 16 } },
+      { at: 1, to: { kind: "notable", slug: "brock", zoom: 16 } },
     ],
-    // Done before the camera is close, so it lands on where Falkner stays.
-    clock: { from: h(23, 30), to: h(35, 30), over: { from: 0.1, to: 0.34 } },
+    // The night goes by before the camera is close; then he walks at about a walk's pace.
+    clock: {
+      keys: [
+        [0.1, h(23, 30)],
+        [0.36, h(34)],
+        [1, h(35, 30)],
+      ],
+    },
     notables: { marker: true, minHeight: 64 },
   },
   // Evening into night over Johto and Kanto, closing on Goldenrod as its lights come on.
@@ -172,18 +177,18 @@ export const DIRECTIONS: Record<string, Direction> = {
     fade: { in: CUT },
   },
   // Eight badges from three regions land one by one over Johto and Kanto; at the eighth the
-  // Indigo League calls and the circuit comes up, its trail to the Masters lighting.
+  // Indigo League calls, and the circuit comes up as the box asks who's in the Elite Four.
   gyms: {
     shots: [
       { at: 0, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.92 } },
-      { at: 0.55, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.92 } },
-      { at: 0.85, to: { kind: "circuit", room: 0.9 } },
+      { at: 0.4, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.92 } },
+      { at: 0.62, to: { kind: "circuit", room: 0.9 } },
       { at: 1, to: { kind: "circuit", room: 0.9 } },
     ],
     clock: { at: h(11) },
     badges: {
       circuit: [0, 1],
-      earn: { from: 0.08, to: 0.6, badges: [0, 8, 2, 9, 1, 11, 3, 10] },
+      earn: { from: 0.06, to: 0.36, badges: [0, 8, 2, 9, 1, 11, 3, 10] },
     },
   },
   open: {
