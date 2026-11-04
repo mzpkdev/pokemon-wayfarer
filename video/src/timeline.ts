@@ -193,19 +193,19 @@ export const DIRECTIONS: Record<string, Direction> = {
     daily: { days: 4 },
     fade: { in: CUT },
   },
-  // Eight badges from three regions land one by one over Johto and Kanto; at the eighth the
-  // Indigo League calls, and the circuit comes up as the box asks who's in the Elite Four.
+  // Eight badges from three regions land one by one over Johto and Kanto while word of you
+  // gets around; at the eighth the Indigo League calls, and the circuit comes up as the box asks who's in the Elite Four.
   gyms: {
     shots: [
       { at: 0, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.92 } },
-      { at: 0.4, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.92 } },
-      { at: 0.62, to: { kind: "circuit", room: 0.9 } },
+      { at: 0.48, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.92 } },
+      { at: 0.64, to: { kind: "circuit", room: 0.9 } },
       { at: 1, to: { kind: "circuit", room: 0.9 } },
     ],
     clock: { at: h(11) },
     badges: {
       circuit: [0, 1],
-      earn: { from: 0.06, to: 0.36, badges: [0, 8, 2, 9, 1, 11, 3, 10] },
+      earn: { from: 0.04, to: 0.44, badges: [0, 8, 2, 9, 1, 11, 3, 10] },
     },
   },
   open: {

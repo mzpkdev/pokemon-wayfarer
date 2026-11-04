@@ -109,7 +109,7 @@ export const SCENES: Scene[] = [
   {
     id: "gyms",
     narration:
-      "Twenty-four Gyms. Win any eight, in any order you like. Then the phone rings. It's the League.\nAnd who's in the Elite Four this year? Brock. With a Golem.\nWonder where he got that.",
+      "Twenty-four Gyms. Any eight, any order.\nWord gets around. Soon the names you grew up with know yours.\nThen the phone rings. It's the League.\nAnd who's in the Elite Four this year? Brock. With a Golem.\nWonder where he got that.",
     seconds: 10,
   },
   {
