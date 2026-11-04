@@ -32,6 +32,8 @@ export const BOX_CAPS = [
   "Hoenn",
   "Sinnoh",
   "Sevii Islands",
+  "Kalos",
+  "Safari Zones",
   "Alola",
   "S.S. Anne",
   "Vermilion",
@@ -71,7 +73,7 @@ export const SCENES: Scene[] = [
   {
     id: "lands",
     narration:
-      "Alola. And now you can sail with her.\nAnd Kanto was never the whole map. Seven lands, one journey, and you can walk to every one. Each keeps its own Pokémon. Galar's, even. Try the Sevii Islands.",
+      "Alola. And now you can sail with her.\nAnd Kanto was never the whole map. Seven lands, one journey, and you can walk to every one. Each keeps its own Pokémon. Galar's on the Sevii Islands. Kalos hides in the Safari Zones.",
     seconds: 13,
   },
   {
