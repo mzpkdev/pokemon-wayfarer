@@ -17,7 +17,7 @@ import {
   type StopClock,
 } from "~/world-map/landmarks"
 import { lightsOverlay } from "~/world-map/lights"
-import { type LivingWorld, livingOverlay, loadLiving } from "~/world-map/living"
+import { type LivingWorld, livingOverlay, loadLiving, shipsAt } from "~/world-map/living"
 import { loadNotables, notableAt, type Notables, notablesOverlay } from "~/world-map/notables"
 import { type Overlay, type Renderer, rendererFor } from "~/world-map/render"
 import { riderAt } from "~/world-map/rider"
@@ -218,6 +218,14 @@ export const resolve = (
       const bounds = landmarkBounds(stage.landmarks, target.room ?? 0.9)
       return fit(bounds ?? whole, width, height, target.room)
     }
+    case "ship": {
+      const ship = shipsAt(stage.living, minute).find((s) => s.id === target.id)
+      if (!ship) {
+        warn(`No ship named ${target.id}; the camera shows the world instead.`)
+        return fit(whole, width, height)
+      }
+      return { x: ship.x, y: ship.y, zoom: target.zoom }
+    }
     case "notable": {
       const who = notableAt(stage.notables, target.slug, minute)
       if (!who) {
@@ -304,7 +312,11 @@ export const shotFor = (
   const local = fraction * slot.length
   let camera = cameraAt(direction, fraction, stage, minute, width, height)
   let rider: Shot["rider"]
+  // The scene's own fades from and to black, then the warps between rides.
   let fade = 0
+  if (direction.fade?.in) fade = Math.max(fade, stepped(1 - local / direction.fade.in))
+  if (direction.fade?.out)
+    fade = Math.max(fade, stepped(1 - (slot.length - local) / direction.fade.out))
   const rides = direction.rides?.toSorted((a, b) => a.from - b.from) ?? []
   if (rides.length) {
     // The ride under way, or the last one done: its rider waits at the door until the next.
@@ -338,8 +350,8 @@ export const shotFor = (
     daily: direction.daily && {
       day: 1 + Math.min(direction.daily.days - 1, Math.floor(fraction * direction.daily.days)),
     },
-    // The waves' cycle began with the scene, so they are the same at a time however it was reached.
-    wild: direction.wild ? { start: now() - local * 1000, still: null } : undefined,
+    // The waves' cycle began at a set point of the scene, so they are the same at a time however it was reached.
+    wild: wildAt(direction.wild, local, slot.length),
     rider,
     fade,
   }
@@ -367,6 +379,13 @@ const earnedBy = (
     earnedAt.set(badge, now() - (local - at) * 1000)
   })
   return { earned, earnedAt, calling: callingFor(earned) }
+}
+
+/** The wild waves' clock `local` seconds into a scene, once they have begun. */
+const wildAt = (wild: Direction["wild"], local: number, length: number): Shot["wild"] => {
+  if (!wild) return undefined
+  const from = typeof wild === "object" ? wild.from * length : 0
+  return local >= from ? { start: now() - (local - from) * 1000, still: null } : undefined
 }
 
 const EMPTY = new Set<number>()

@@ -19,6 +19,8 @@ export type Target =
   | { kind: "circuit"; room?: number }
   /** A Gym Leader or Elite Four member (their slug in `notables.json`), wherever the scene's clock has them. */
   | { kind: "notable"; slug: string; zoom: number }
+  /** A ship (`aqua`, `anne` or `tidal`), wherever the scene's clock has her: at her pier or out on her lane. */
+  | { kind: "ship"; id: string; zoom: number }
 
 /** The camera at `at` of the way through the scene (0 to 1); the camera flies between keyframes. */
 export type Keyframe = { at: number; to: Target }
@@ -28,12 +30,14 @@ export type Span = { from: number; to: number }
 
 export type Direction = {
   shots: Keyframe[]
+  /** A fade from black at the scene's start, and to black at its end, in seconds. */
+  fade?: { in?: number; out?: number }
   /** The game clock, in game minutes: held, or run from one time to another across the scene. */
   clock: { at: number } | { from: number; to: number }
   /** Layers to turn off or on, over the default of everything but the sightings. */
   layers?: Partial<Layers>
-  /** The wild Pokémon waves, popping out of the whole world from the scene's start. */
-  wild?: boolean
+  /** The wild Pokémon waves, popping out of the whole world from the scene's start, or from `from` of the way through it. */
+  wild?: boolean | { from: number }
   /**
    * The player rides in on their bike along a start's route over each span,
    * the camera coming in with them; between rides they wait at the door, and
@@ -59,58 +63,56 @@ export type Direction = {
 
 const h = (hours: number, minutes = 0) => hours * 60 + minutes
 
+/** Half a warp between rides, and the fade a scene cuts with, in seconds. */
+const CUT = 0.35
+/** Every land, fitted, which fills the frame better than the whole grid and its sea. */
+const LANDS: Target = {
+  kind: "regions",
+  names: ["JOHTO", "KANTO", "HOENN", "SINJOH", "SINNOH", "SEVII ISLANDS", "ALOLA"],
+  room: 0.95,
+}
+
 export const DIRECTIONS: Record<string, Direction> = {
-  // The whole world, slowly closer, under the title.
-  hook: {
-    shots: [
-      { at: 0, to: { kind: "world", room: 0.7 } },
-      { at: 1, to: { kind: "world", room: 1.05 } },
-    ],
-    clock: { at: h(10) },
-    wild: true,
-    title: { from: 0, to: 0.45, lines: [], logo: true },
-  },
-  // RED, GOLD and BRENDAN each ride to their front door, a warp between.
-  start: {
+  // Cold open: RED rides in to his front door, the camera coming in with him.
+  pallet: {
     shots: [{ at: 0, to: { kind: "map", name: "PalletTown_hns", x: 12, y: 10, zoom: 24 } }],
     clock: { at: h(9) },
-    rides: [
-      { start: "kanto", from: 0, to: 0.24 },
-      { start: "johto", from: 0.33, to: 0.57 },
-      { start: "hoenn", from: 0.66, to: 0.9 },
-    ],
-    insert: { from: 0.1, to: 0.95, clip: "oak-choice" },
+    rides: [{ start: "kanto", from: 0, to: 0.8 }],
+    fade: { in: 0.6, out: CUT },
   },
-  // Out of Littleroot, where the last ride ended, to the whole world, each land's Pokémon popping out.
+  // GOLD and BRENDAN, quickly, a warp between: start anywhere.
+  starts: {
+    shots: [{ at: 0, to: { kind: "map", name: "NewBarkTown_hns", x: 14, y: 16, zoom: 24 } }],
+    clock: { at: h(9) },
+    rides: [
+      { start: "johto", from: 0, to: 0.42 },
+      { start: "hoenn", from: 0.5, to: 0.92 },
+    ],
+    fade: { in: CUT, out: CUT },
+    insert: { from: 0.08, to: 0.96, clip: "oak-choice" },
+  },
+  // The Anne at Vermilion's pier in the evening; she casts off at half past eight and the camera goes with her.
+  anne: {
+    shots: [
+      { at: 0, to: { kind: "ship", id: "anne", zoom: 12 } },
+      { at: 0.45, to: { kind: "ship", id: "anne", zoom: 12 } },
+      { at: 1, to: { kind: "ship", id: "anne", zoom: 6 } },
+    ],
+    clock: { from: h(20, 18), to: h(21, 5) },
+    fade: { in: CUT },
+  },
+  // One pull-out from the Anne in the evening light: Kanto and Johto with their Pokémon
+  // popping out once they fill the frame, then every land with theirs.
   lands: {
     shots: [
-      { at: 0, to: { kind: "map", name: "LittlerootTown", x: 10, y: 10, zoom: 12 } },
-      { at: 0.45, to: { kind: "regions", names: ["HOENN"], room: 0.9 } },
-      { at: 1, to: { kind: "world", room: 1 } },
+      { at: 0, to: { kind: "ship", id: "anne", zoom: 6 } },
+      { at: 0.35, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.9 } },
+      { at: 0.5, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.9 } },
+      { at: 0.85, to: LANDS },
+      { at: 1, to: LANDS },
     ],
-    clock: { at: h(10) },
-    wild: true,
-  },
-  // The Aqua at Vermilion's pier, then out along the lanes to the Sevii Islands and Alola.
-  ships: {
-    shots: [
-      { at: 0, to: { kind: "map", name: "VermilionCity_PortOutside_hns", zoom: 10 } },
-      { at: 0.3, to: { kind: "map", name: "VermilionCity_PortOutside_hns", zoom: 10 } },
-      { at: 0.65, to: { kind: "regions", names: ["KANTO", "SEVII ISLANDS"], room: 0.9 } },
-      { at: 1, to: { kind: "regions", names: ["HOENN", "SEVII ISLANDS", "ALOLA"], room: 0.95 } },
-    ],
-    clock: { at: h(14) },
-    insert: { from: 0.6, to: 0.95, clip: "gangway" },
-  },
-  // Dawn to the next dawn over Johto and Kanto, closing on Goldenrod as its lights come on.
-  day: {
-    shots: [
-      { at: 0, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 1 } },
-      { at: 0.45, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 1 } },
-      { at: 0.8, to: { kind: "map", name: "GoldenrodCity_hns", zoom: 9 } },
-      { at: 1, to: { kind: "map", name: "GoldenrodCity_hns", zoom: 9 } },
-    ],
-    clock: { from: h(5), to: h(29) },
+    clock: { from: h(21, 5), to: h(23, 30) },
+    wild: { from: 0.3 },
   },
   // Early afternoon: Falkner training at Sprout Tower, Erika on her way to the department store.
   leaders: {
@@ -122,6 +124,17 @@ export const DIRECTIONS: Record<string, Direction> = {
     ],
     clock: { at: h(13, 30) },
     notables: { marker: true, minHeight: 64 },
+    fade: { in: CUT },
+  },
+  // Evening into night over Johto and Kanto, closing on Goldenrod as its lights come on.
+  night: {
+    shots: [
+      { at: 0, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 1 } },
+      { at: 0.4, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 1 } },
+      { at: 0.8, to: { kind: "map", name: "GoldenrodCity_hns", zoom: 9 } },
+      { at: 1, to: { kind: "map", name: "GoldenrodCity_hns", zoom: 9 } },
+    ],
+    clock: { from: h(18), to: h(26) },
   },
   // Route 15 across four days: the trainers and items pop into new spots, or stay away.
   daily: {
@@ -131,6 +144,7 @@ export const DIRECTIONS: Record<string, Direction> = {
     ],
     clock: { at: h(10) },
     daily: { days: 4 },
+    fade: { in: CUT },
   },
   // Eight badges from three regions land one by one over Johto and Kanto; at the eighth the
   // Indigo League calls and the circuit comes up, its trail to the Masters lighting.
@@ -151,7 +165,7 @@ export const DIRECTIONS: Record<string, Direction> = {
   open: {
     shots: [
       { at: 0, to: { kind: "regions", names: ["KANTO"], room: 1 } },
-      { at: 1, to: { kind: "world", room: 1 } },
+      { at: 1, to: LANDS },
     ],
     clock: { at: h(17) },
     title: { from: 0.25, to: 1, lines: ["Free. Made in the open.", "20.01.2027"], logo: true },

@@ -2,11 +2,11 @@
 // game's text box prints under the map. This file imports nothing, so
 // `scripts/voice.mjs` can read it under Node to make the voice-over.
 //
-// The voice speaks to the player, in the present tense, through one
-// trainer's first week on the road: leave home, see the world, catch a ship,
-// a day passes, meet a Gym Leader out and about, come back to a changed
-// route, the League calls. The text box is the world's own voice, the kind
-// of thing people say in a Pokémon Center.
+// The voice speaks to the player, in the present tense, and leads with what
+// they remember: the walk out of Pallet Town, the S.S. Anne that sailed away.
+// Then it widens, land by land, and fills the world with the people and the
+// days that make it live. The text box is the world's own voice, the kind of
+// thing people say in a Pokémon Center.
 
 export type Scene = {
   id: string
@@ -20,44 +20,44 @@ export type Scene = {
 
 export const SCENES: Scene[] = [
   {
-    id: "hook",
+    id: "pallet",
     narration:
-      "Remember the first time you walked out of town with one Pokémon in your pocket, and the whole world was out there? This time, it really is.",
-    seconds: 9,
+      "Remember the first time you walked out of Pallet Town with one Pokémon in your pocket, and the whole world was out there?",
+    seconds: 8,
   },
   {
-    id: "start",
+    id: "starts",
     narration:
-      "Begin in Kanto, Johto or Hoenn. Walk to the edge of town, and keep going. Nobody steps in your way.",
+      "Or New Bark. Or Littleroot. Start wherever your story started. This time, the whole world really is out there.",
     caption: ["The road's open, y'know.", "Always was, if you ask me."],
+    seconds: 8,
+  },
+  {
+    id: "anne",
+    narration:
+      "Remember the S.S. Anne? Ever wonder where she went? She sails every day, on a real loop, and she doesn't wait. Stay aboard long enough, and she'll take you to Alola.",
+    caption: ["The ANNE's in port till half", "past eight. Then she's gone."],
     seconds: 12,
   },
   {
     id: "lands",
     narration:
-      "Seven lands on one sea, and every one keeps its own Pokémon, living where they always have.",
+      "Kanto and Johto, one land. Then Hoenn, Sinnoh, the Sevii Islands, Alola. Seven lands on one sea, and every one keeps its own Pokémon, living where they always have.",
     caption: ["KALOS Pokémon? Only in the", "SAFARI ZONES, they say."],
-    seconds: 9,
-  },
-  {
-    id: "ships",
-    narration: "Miss the boat, and it sails without you. Stay aboard, and you wake up in Alola.",
-    caption: ["The AQUA's in port till three.", "Then she's off to VERMILION."],
-    seconds: 10,
-  },
-  {
-    id: "day",
-    narration:
-      "Morning turns to evening turns to night while you play. The lights come on in Goldenrod, and somewhere, a Gym Leader heads home.",
-    caption: ["Gets dark around here.", "Watch your step on the routes."],
-    seconds: 11,
+    seconds: 13,
   },
   {
     id: "leaders",
     narration:
-      "Because they have lives. Falkner trains at Sprout Tower after lunch. Erika's shopping in Celadon. Catch them on the road, and they might give you their number.",
+      "And the people you remember are out here too. Falkner trains at Sprout Tower after lunch. Erika's shopping in Celadon. Catch them on the road, and they might give you their number.",
     caption: ["FALKNER? Not at the GYM.", "Try SPROUT TOWER after lunch."],
     seconds: 11,
+  },
+  {
+    id: "night",
+    narration: "Then evening comes, the lights go on in Goldenrod, and everybody heads home.",
+    caption: ["Gets dark around here.", "Watch your step on the routes."],
+    seconds: 8,
   },
   {
     id: "daily",

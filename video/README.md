@@ -94,8 +94,8 @@ by default.
   reads it under Node.
 - `src/timeline.ts` is the storyboard's pictures, keyed by scene: camera
   keyframes (`world`, `regions`, a `map` point, a grid `point` from the
-  studio, the league `circuit`, or a `notable` wherever their routine has
-  them), the game clock (held, or run across the scene for a time-lapse),
+  studio, the league `circuit`, a `notable` wherever their routine has them,
+  or a `ship` wherever her loop has her), the game clock (held, or run across the scene for a time-lapse),
   layers, the badge pins, the walkers, the daily roads, the wild waves, the
   rides in, a title card and a gameplay `insert`.
 - `src/schedule.ts` turns the script into start times: a scene lasts its

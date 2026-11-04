@@ -7,7 +7,7 @@ import { type PointerEvent, useEffect, useRef, useState, type WheelEvent } from 
 
 import { type Camera, fit, fly } from "~/world-map/camera"
 import { callingFor } from "~/world-map/landmarks"
-import { clockText } from "~/world-map/living"
+import { clockText, shipsAt } from "~/world-map/living"
 import { notableAt } from "~/world-map/notables"
 import { type StartId, STARTS, startOf } from "~/world-map/starts"
 import { stepped } from "~/world-map/fade"
@@ -216,6 +216,9 @@ export const Studio = ({ stage, onPlay }: { stage: Stage; onPlay: () => void }) 
         const k = (t - l.flight.began) / FLIGHT_MS
         cam = l.camera = fly(l.flight.from, l.flight.to, k)
         if (k >= 1) l.flight = null
+      } else if (p.follow.startsWith("ship:")) {
+        const ship = shipsAt(stage.living, l.minute).find((s) => s.id === p.follow.slice(5))
+        if (ship) cam = l.camera = { x: ship.x, y: ship.y, zoom: l.camera.zoom }
       } else if (p.follow) {
         const who = notableAt(stage.notables, p.follow, l.minute)
         if (who) cam = l.camera = { x: who.x, y: who.y, zoom: l.camera.zoom }
@@ -452,6 +455,11 @@ export const Studio = ({ stage, onPlay }: { stage: Stage; onPlay: () => void }) 
               className="rounded bg-neutral-800 px-1 py-0.5"
             >
               <option value="">Follow nobody</option>
+              {stage.living.ferry.ships.map((ship) => (
+                <option key={ship.id} value={`ship:${ship.id}`}>
+                  {ship.name}
+                </option>
+              ))}
               {leaders.map((who) => (
                 <option key={who.slug} value={who.slug}>
                   {who.name} ({who.town})
