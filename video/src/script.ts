@@ -29,21 +29,21 @@ export const SCENES: Scene[] = [
   {
     id: "starts",
     narration:
-      "Kanto. Johto. Hoenn. Start in any one of them. And from there? Anywhere. No badge to earn first, no guard with a cough blocking the road. Just a world, and you in it.",
-    caption: ["KANTO, JOHTO or HOENN.", "Then anywhere you like."],
+      "Kanto. Johto. Hoenn. Start in whichever one raised you. Then walk to the edge of town, where somebody always used to turn you back. Nobody's there now. Keep walking.",
+    caption: ["KANTO, JOHTO or HOENN.", "Then keep walking."],
     seconds: 10,
   },
   {
     id: "anne",
     narration:
-      "See the Anne? Folks used to say she sailed off and never came back. She comes back. Every evening, half past eight, out of Vermilion for Alola by way of the islands. Be on the pier, or don't be. She won't wait.",
+      "See the Anne? Folks used to say she sailed off and never came back. She comes back. Every evening, half past eight, out of Vermilion. Where to? Somewhere you've never been. Be on the pier, or don't be. She won't wait.",
     caption: ["The ANNE? Half past eight,", "for ALOLA. She won't wait."],
     seconds: 12,
   },
   {
     id: "lands",
     narration:
-      "Kanto and Johto are one land, always were. Past them, Hoenn. Sinnoh. The Sevii Islands. Alola. Seven lands, one sea, and each one keeps its own Pokémon, right where they've always been.",
+      "Kanto and Johto are one land, always were. And past them... Hoenn. Sinnoh. The Sevii Islands. Alola. Seven lands, one sea, and every one of them keeps its own Pokémon, right where they've always been.",
     caption: ["Seven lands, one sea, each", "with its own POKéMON."],
     seconds: 13,
   },
