@@ -42,6 +42,7 @@ export const BOX_CAPS = [
   "Goldenrod",
   "League",
   "Gym Leaders",
+  "Elite Four",
   "Gyms",
 ]
 
@@ -76,7 +77,7 @@ export const SCENES: Scene[] = [
   {
     id: "leaders",
     narration:
-      "The Gym Leaders don't sit around waiting for you, either. Falkner's up Sprout Tower after lunch. Erika's shopping in Celadon. Get friendly, and they might give you their number.",
+      "See those? Gym Leaders. Elite Four. Out living their lives.\nFalkner's up Sprout Tower this morning.\nErika's off to the pond in Celadon. Get friendly, and they might give you their number.",
     seconds: 11,
   },
   {

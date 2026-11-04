@@ -308,10 +308,17 @@ export const riderPlace = (stage: Stage, rider: Shot["rider"]) => {
   return placeAt(stage.world.meta, start, { x: sprite.x + 1, y: sprite.y + 2 })
 }
 
-const minuteAt = (direction: Direction, fraction: number) =>
-  "at" in direction.clock
-    ? direction.clock.at
-    : direction.clock.from + (direction.clock.to - direction.clock.from) * fraction
+const minuteAt = ({ clock }: Direction, fraction: number) => {
+  if ("at" in clock) return clock.at
+  const { from, to } = clock.over ?? { from: 0, to: 1 }
+  const t = Math.min(1, Math.max(0, (fraction - from) / (to - from)))
+  return clock.from + (clock.to - clock.from) * t
+}
+
+/** The zoom a notable's `minHeight` is given for; further out it shrinks with the zoom. */
+const WALKERS_CLOSE_ZOOM = 16
+/** The least height notables are drawn at far out, as the map's own overlay has it. */
+const WALKERS_FAR_HEIGHT = 26
 
 const mix = (value: number | [number, number], fraction: number) =>
   typeof value === "number" ? value : value[0] + (value[1] - value[0]) * fraction
@@ -364,7 +371,15 @@ export const shotFor = (
     minute,
     labels: camera.zoom < 12,
     layers: { ...ALL_LAYERS, ...direction.layers },
-    walkers: direction.notables,
+    walkers: direction.notables && {
+      ...direction.notables,
+      minHeight:
+        direction.notables.minHeight &&
+        Math.max(
+          WALKERS_FAR_HEIGHT,
+          direction.notables.minHeight * Math.min(1, camera.zoom / WALKERS_CLOSE_ZOOM),
+        ),
+    },
     pins: direction.badges && {
       alpha: 1,
       elapsed: local * 1000,

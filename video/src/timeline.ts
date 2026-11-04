@@ -38,8 +38,11 @@ export type Direction = {
   shots: Keyframe[]
   /** A fade from black at the scene's start, and to black at its end, in seconds. */
   fade?: { in?: number; out?: number }
-  /** The game clock, in game minutes: held, or run from one time to another across the scene. */
-  clock: { at: number } | { from: number; to: number }
+  /**
+   * The game clock, in game minutes: held, or run from one time to another
+   * across the scene, or across `over` of it only, held before and after.
+   */
+  clock: { at: number } | { from: number; to: number; over?: Span }
   /** Layers to turn off or on, over the default of everything but the sightings. */
   layers?: Partial<Layers>
   /** The wild Pokémon waves, popping out of the whole world from the scene's start, or from `from` of the way through it. */
@@ -59,7 +62,11 @@ export type Direction = {
   badges?: { circuit: number | [number, number]; earn?: Span & { badges: number[] } }
   /** The daily trainers and items on every road, with the day stepping from 1 to `days` across the scene. */
   daily?: { days: number }
-  /** Gym Leaders and the Elite Four walking their routines: everyone, or the named few picked out. */
+  /**
+   * Gym Leaders and the Elite Four walking their routines: everyone, or the named
+   * few picked out. `minHeight` is their least height close in (zoom 16); further
+   * out it shrinks back to the map's own, so a wide shot isn't crowded with them.
+   */
   notables?: { only?: string[]; marker?: boolean; minHeight?: number }
   /** A card over the map: the logo and lines of text. */
   title?: Span & { lines: string[]; logo?: boolean }
@@ -127,17 +134,21 @@ export const DIRECTIONS: Record<string, Direction> = {
     clock: { from: h(21, 5), to: h(23, 30) },
     wild: { from: 0.42 },
   },
-  // Early afternoon: Falkner training at Sprout Tower, Erika on her way to the department store.
+  // Straight on from every land at night: every Gym Leader and Elite Four member's marker
+  // lights up, then one dive onto Falkner while the night and the next morning go by;
+  // he trains at Sprout Tower, then Erika walks to the pond in Celadon.
   leaders: {
     shots: [
-      { at: 0, to: { kind: "notable", slug: "falkner", zoom: 16 } },
+      { at: 0, to: LANDS },
+      { at: 0.12, to: LANDS },
       { at: 0.4, to: { kind: "notable", slug: "falkner", zoom: 16 } },
-      { at: 0.7, to: { kind: "notable", slug: "erika", zoom: 16 } },
+      { at: 0.58, to: { kind: "notable", slug: "falkner", zoom: 16 } },
+      { at: 0.76, to: { kind: "notable", slug: "erika", zoom: 16 } },
       { at: 1, to: { kind: "notable", slug: "erika", zoom: 16 } },
     ],
-    clock: { at: h(13, 30) },
+    // Done before the camera is close, so it lands on where Falkner stays.
+    clock: { from: h(23, 30), to: h(35, 30), over: { from: 0.1, to: 0.34 } },
     notables: { marker: true, minHeight: 64 },
-    fade: { in: CUT },
   },
   // Evening into night over Johto and Kanto, closing on Goldenrod as its lights come on.
   night: {
