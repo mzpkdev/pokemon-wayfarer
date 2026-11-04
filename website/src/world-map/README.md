@@ -325,7 +325,9 @@ so each holds at one moment.
   so only the cells on screen are drawn and there are as many close in as
   far out. The haze fades in from the map's edges, except along the
   stretch of an edge another map's weather lies on, so Olivine and Route 40
-  rain as one; a storm's flash fades on every edge.
+  rain as one (where a join ends partway along a side, the full edge meets
+  the fade in a step as long as the feather: each map is feathered on its
+  own); a storm's flash fades on every edge.
 - The night (`lights.ts`, over the tint). As the time of day's tint darkens
   (a quarter in the evening and morning, about half at night), each town
   glows warm with a brighter core, each ship shows a lamp, and the Olivine
