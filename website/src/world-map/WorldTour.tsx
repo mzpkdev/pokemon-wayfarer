@@ -138,7 +138,7 @@ const CIRCUIT_MS = 300
 
 /** A choice of start: the same yellow when picked, a dark plate otherwise. */
 const OPTION =
-  "pixel-corners flex w-full items-baseline justify-between gap-3 px-4 pt-2 pb-3 text-left font-[family-name:var(--font-gba)] text-[16px] leading-[16px] sm:text-[24px] sm:leading-[24px] has-focus-visible:shadow-[inset_0_0_0_4px_rgb(48_80_200)]"
+  "pixel-corners flex w-full items-baseline justify-between gap-3 px-4 py-2.5 text-left font-[family-name:var(--font-gba)] text-[16px] leading-[16px] sm:text-[24px] sm:leading-[24px] has-focus-visible:shadow-[inset_0_0_0_4px_rgb(48_80_200)]"
 
 /** Metatiles across and down in the close-up shots, and in a league's: its region around it. */
 const CLOSE_UP = { width: 44, height: 30 }
@@ -244,7 +244,7 @@ const GymCard = ({
       className="pixel-corners pixel-panel absolute top-[4.75rem] left-4 z-20 w-[min(340px,calc(100%-2rem))] p-5 text-paper max-lg:top-auto max-lg:right-4 max-lg:bottom-4 max-lg:w-auto sm:max-lg:bottom-8 sm:max-lg:inset-x-8"
     >
       <div className="flex items-start justify-between gap-3">
-        <p className="pixel-label flex items-center gap-2 text-[16px] leading-none text-logo-yellow">
+        <p className="pixel-label flex items-center gap-2 text-[16px] leading-none text-sign">
           <span
             aria-hidden
             className="size-6 shrink-0 [image-rendering:pixelated]"
@@ -316,8 +316,8 @@ const LeagueState = ({
 }) => (
   <div className="flex flex-col gap-0.5">
     <p className="pixel-label flex items-baseline justify-between gap-3 text-[16px] leading-none">
-      <span className={calling ? "text-logo-yellow" : "text-paper/70"}>{league.name}</span>
-      <span className={calling ? "text-logo-yellow" : "text-paper/50"}>
+      <span className={calling ? "text-sign" : "text-paper/70"}>{league.name}</span>
+      <span className={calling ? "text-sign" : "text-paper/50"}>
         {calling ? "CALLING" : league.id === "masters" ? "LOCKED" : "NOT YET"}
       </span>
     </p>
@@ -411,7 +411,7 @@ const CircuitLeagues = ({
           <button
             type="button"
             onClick={() => onFocus(entry.id)}
-            className="pixel-corners w-full bg-black/30 px-4 pt-2 pb-3 text-left hover:bg-black/50 focus-visible:shadow-[inset_0_0_0_4px_rgb(48_80_200)] focus-visible:outline-none"
+            className="pixel-corners w-full bg-white/8 px-4 py-2.5 text-left hover:bg-white/15 focus-visible:shadow-[inset_0_0_0_4px_rgb(48_80_200)] focus-visible:outline-none"
           >
             <LeagueState league={entry} calling={calling[entry.id]} />
           </button>
@@ -426,7 +426,10 @@ const CircuitLeagues = ({
         onClick={() => onFocus(null)}
         className="pixel-label text-[16px] leading-none text-paper/70 hover:text-paper focus-visible:text-paper focus-visible:underline focus-visible:outline-none"
       >
-        ◀ ALL 24 GYMS
+        <span aria-hidden="true" className="inline-block -scale-x-100">
+          ▶
+        </span>{" "}
+        ALL 24 GYMS
       </button>
       <LeagueHalls
         league={entry}
@@ -507,7 +510,7 @@ const DailyCard = ({
     "pixel-label px-3 pt-1 pb-2 text-paper/70 hover:text-paper disabled:opacity-30 focus-visible:text-paper focus-visible:underline focus-visible:outline-none"
   return (
     <div className="mt-4">
-      <div className="pixel-corners flex items-center justify-between bg-black/30 px-2">
+      <div className="pixel-corners flex items-center justify-between bg-white/8 px-2">
         <button
           type="button"
           className={step}
@@ -515,9 +518,12 @@ const DailyCard = ({
           onClick={() => onDay(day - 1)}
           aria-label="The day before"
         >
-          ◀
+          {/* The game's font has only the ▶ cursor, so the other way is that glyph mirrored. */}
+          <span aria-hidden="true" className="inline-block -scale-x-100">
+            ▶
+          </span>
         </button>
-        <p className="pixel-label text-logo-yellow">DAY {day}</p>
+        <p className="pixel-label text-sign">DAY {day}</p>
         <button
           type="button"
           className={step}
@@ -568,8 +574,9 @@ const JourneyStrip = ({
 }) => {
   const marks: Record<StopName, ReactNode> = {
     town: (
+      // The rider's art fills rows 11 to 31 of its 32px frame, so it is lifted to sit centred.
       <span
-        className="pixelated block size-8"
+        className="pixelated block size-8 -translate-y-[5px]"
         style={{ backgroundImage: `url(${start.rider})`, backgroundSize: "288px 32px" }}
       />
     ),
@@ -608,8 +615,8 @@ const JourneyStrip = ({
             aria-current={i === stop ? "step" : undefined}
             className={`pixel-corners grid size-9 place-items-center sm:size-10 ${
               i === stop
-                ? "bg-[rgb(232_208_64)]"
-                : `bg-black/30 hover:bg-black/50 ${i < stop ? "" : "opacity-50 hover:opacity-100"}`
+                ? "bg-sign"
+                : `bg-white/8 hover:bg-white/15 ${i < stop ? "" : "opacity-50 hover:opacity-100"}`
             } focus-visible:shadow-[inset_0_0_0_3px_rgb(48_80_200)] focus-visible:outline-none`}
           >
             {marks[name]}
@@ -1629,10 +1636,15 @@ export const WorldTour = ({
               return `${text.place}. ${text.title}`
             })()}
           </p>
-          {/* Below lg the map sits above the card, so the card keeps to a third of the screen and scrolls; from lg it keeps within the screen. */}
+          {/*
+            The card is one height at every stop, a share of the screen: below
+            lg the map sits above it, so it keeps to a third of the screen; from
+            lg it keeps within the screen. A stop with more to say scrolls
+            inside it, so the card never jumps as content changes or loads.
+          */}
           <div
             ref={captionsRef}
-            className="grid max-lg:max-h-[34svh] max-lg:overflow-y-auto max-lg:overscroll-contain lg:max-h-[calc(100svh-18rem)] lg:overflow-y-auto lg:overscroll-contain"
+            className="thin-scroll grid max-lg:h-[34svh] max-lg:overflow-y-auto max-lg:overscroll-contain lg:h-[calc(100svh-20rem)] lg:overflow-y-auto lg:overscroll-contain"
           >
             {captions.map((caption, i) => {
               const shown = stop === i
@@ -1645,7 +1657,7 @@ export const WorldTour = ({
                   className="col-start-1 row-start-1 transition-opacity duration-300"
                   style={{ opacity: shown ? 1 : 0, pointerEvents: shown ? undefined : "none" }}
                 >
-                  <p className="pixel-label text-logo-yellow">{text.place}</p>
+                  <p className="pixel-label text-sign">{text.place}</p>
                   <p className="pixel-heading mt-2 sm:mt-3">{text.title}</p>
                   <p className="mt-2 text-base leading-snug text-paper/80 sm:mt-4 sm:text-lg sm:leading-relaxed">
                     {text.body}
@@ -1660,8 +1672,8 @@ export const WorldTour = ({
                             key={option.id}
                             className={`${OPTION} ${
                               picked
-                                ? "bg-[rgb(232_208_64)] text-[rgb(56_56_56)] shadow-[inset_0_0_0_4px_rgb(56_56_56),inset_0_-4px_0_rgb(184_160_32),inset_0_4px_0_rgb(248_240_152)]"
-                                : "cursor-pointer bg-black/30 text-paper/80 shadow-[inset_0_0_0_4px_rgb(0_0_0/0.4)] hover:bg-black/50 hover:text-paper"
+                                ? "bg-sign text-ink shadow-[inset_0_0_0_4px_rgb(90_90_123)]"
+                                : "cursor-pointer bg-white/6 text-paper/80 shadow-[inset_0_0_0_4px_rgb(255_255_255/0.1)] hover:bg-white/12 hover:text-paper"
                             }`}
                           >
                             <input
@@ -1676,7 +1688,7 @@ export const WorldTour = ({
                               {picked ? "▶ " : ""}
                               {option.label}
                             </span>
-                            <span className={picked ? "text-[rgb(56_56_56)]/70" : "text-paper/50"}>
+                            <span className={picked ? "text-ink" : "text-paper/50"}>
                               {option.region}
                             </span>
                           </label>

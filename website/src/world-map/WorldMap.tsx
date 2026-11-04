@@ -519,7 +519,7 @@ export const WorldMap = ({
         tabIndex={0}
         aria-roledescription="map"
         aria-label="Map of the whole world. Drag or use the arrow keys to look around; pinch, scroll or use the plus and minus keys to zoom. Tap a place, or press Enter on the one in the middle, to see what is there."
-        className="block size-full cursor-grab touch-none focus-visible:outline-4 focus-visible:-outline-offset-4 focus-visible:outline-logo-yellow active:cursor-grabbing"
+        className="block size-full cursor-grab touch-none focus-visible:outline-4 focus-visible:-outline-offset-4 focus-visible:outline-sign active:cursor-grabbing"
       />
       {failed && (
         <p className="absolute inset-0 grid place-items-center p-6 text-center text-lg text-paper">

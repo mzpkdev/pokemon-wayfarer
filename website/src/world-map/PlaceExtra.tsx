@@ -71,7 +71,7 @@ export const PlaceExtra = ({ place, base = DATA }: { place: PlaceInfo; base?: st
         </li>
       )}
       {league && (
-        <li className="pixel-label text-[16px] leading-none text-logo-yellow">
+        <li className="pixel-label text-[16px] leading-none text-sign">
           LEAGUE CIRCUIT · {league.name.toUpperCase()}
         </li>
       )}
@@ -86,7 +86,7 @@ export const PlaceExtra = ({ place, base = DATA }: { place: PlaceInfo; base?: st
         </li>
       )}
       {present.map((notable) => (
-        <li key={notable.slug} className="pixel-label text-[16px] leading-none text-logo-yellow">
+        <li key={notable.slug} className="pixel-label text-[16px] leading-none text-sign">
           {notable.label}
         </li>
       ))}

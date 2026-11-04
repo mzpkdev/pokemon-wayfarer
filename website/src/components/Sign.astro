@@ -1,0 +1,19 @@
+---
+/**
+ * A signpost: the game's wood map name popup, the plank the world map raises
+ * for a route, stretched to its words. One plank for every stop on the page.
+ */
+import { cn } from "~/lib/cn"
+
+type Props = {
+  as?: "p" | "span" | "dt" | "h3"
+  class?: string
+  id?: string
+}
+
+const { as: Tag = "p", class: className, id } = Astro.props
+---
+
+<Tag id={id} class={cn("sign", className)}>
+  <slot />
+</Tag>

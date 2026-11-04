@@ -2,35 +2,40 @@
 /**
  * The launch sign-up, the focal point under the title scene, staged like
  * Wayfarer's new game intro: PROF. OAK (as FireRed and LeafGreen draw him)
- * stands on the intro's grey oval and throws out WOOPER (then the opening's
- * cast in turn), and asks for your
- * email on the naming screen the way the intro asks for your name.
+ * stands in a shaft of light in the dark grass and throws out WOOPER (then
+ * the opening's cast in turn), and asks for your email on the naming screen
+ * the way the intro asks for your name.
  */
 import { OakStage } from "~/components/OakStage"
+import Sign from "~/components/Sign.astro"
 import SignupForm from "~/components/SignupForm.astro"
 import { RELEASE_LABEL } from "~/lib/release"
 
 import CtaLinks from "./CtaLinks.astro"
 ---
 
-<section aria-labelledby="notify" class="relative mx-auto flex min-h-[90vh] max-w-6xl items-center px-6 pt-8 pb-24">
-  <!-- On wide screens OAK's oval sits level with the bottom of the form, so he stands beside it. -->
-  <div class="grid w-full grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16">
-    <div class="oak-stage relative mx-auto mb-12 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mb-0 lg:self-end" aria-hidden="true">
-      <div class="spotlight absolute"></div>
-      <OakStage client:visible className="relative" />
-    </div>
+<section aria-labelledby="notify" class="period-day">
+  <div class="mx-auto flex min-h-[90vh] max-w-5xl items-center px-6 pt-8 pb-24">
+    <!-- On wide screens OAK stands level with the bottom of the form, beside it. -->
+    <div class="grid w-full grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-12">
+      <div class="oak-stage relative mx-auto mb-12 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mb-0 lg:self-end" aria-hidden="true">
+        <div class="spotlight absolute"></div>
+        <OakStage client:visible className="relative" oval={false} />
+      </div>
 
-    <div class="lg:col-start-1 lg:row-start-1">
-      <p class="pixel-label text-logo-yellow">PROF. OAK</p>
-      <h2 id="notify" class="pixel-heading pixel-heading-xl mt-3">First, what is your email?</h2>
-      <p class="mt-6 max-w-xl text-lg leading-relaxed text-paper/80">
-        Tell me where to write and I'll let you know the moment your journey can begin, on {RELEASE_LABEL}.
-        You may hear from me now and then before that, too.
-      </p>
+      <div class="lg:col-start-1 lg:row-start-1">
+        <div class="waypoint">
+          <Sign>PROF. OAK</Sign>
+        </div>
+        <h2 id="notify" class="pixel-heading pixel-heading-xl mt-5">First, what is your email?</h2>
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-paper/80">
+          Tell me where to write and I'll let you know the moment your journey can begin, on {RELEASE_LABEL}.
+          You may hear from me now and then before that, too.
+        </p>
+      </div>
+      <SignupForm id="signup-email" class="mt-10 max-w-xl lg:col-start-1 lg:row-start-2" />
+      <CtaLinks class="mt-8 lg:col-start-1 lg:row-start-3" />
     </div>
-    <SignupForm id="signup-email" class="mt-10 max-w-xl lg:col-start-1 lg:row-start-2" />
-    <CtaLinks class="mt-8 lg:col-start-1 lg:row-start-3" />
   </div>
 </section>
 
@@ -55,9 +60,8 @@ import CtaLinks from "./CtaLinks.astro"
     left: 0;
     right: 0;
     top: calc(-40 * var(--s));
-    bottom: calc(16 * var(--s));
-    clip-path: polygon(46% 0, 70% 0, 96% 100%, 22% 100%);
-    background: linear-gradient(to bottom, rgb(248 248 200 / 0), rgb(248 248 200 / 0.14));
+    bottom: calc(10 * var(--s));
+    clip-path: polygon(46% 0, 70% 0, 98% 100%, 20% 100%);
+    background: linear-gradient(to bottom, rgb(255 213 164 / 0), rgb(255 213 164 / 0.16));
   }
-
 </style>

@@ -20,10 +20,11 @@ const loadImage = (src: string) =>
   })
 
 /**
- * PROF. OAK on the intro's grey oval, throwing a Poké Ball that releases
- * WOOPER, then each of the opening's POKéMON in turn, drawn at GBA resolution and scaled by whole pixels through CSS.
+ * PROF. OAK on the intro's grey oval (or, without it, on his own shadow),
+ * throwing a Poké Ball that releases WOOPER, then each of the opening's
+ * POKéMON in turn, drawn at GBA resolution and scaled by whole pixels through CSS.
  */
-export const OakStage = ({ className }: { className?: string }) => {
+export const OakStage = ({ className, oval = true }: { className?: string; oval?: boolean }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -44,6 +45,7 @@ export const OakStage = ({ className }: { className?: string }) => {
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     let raf = 0
+    let disposed = false
     let visible = true
     let frame = 0
     let carry = 0
@@ -57,7 +59,7 @@ export const OakStage = ({ className }: { className?: string }) => {
     const monContext = monCanvas.getContext("2d")!
 
     const run = async () => {
-      const [[oval, oak, ball, particles], mons] = await Promise.all([
+      const [[ovalImage, oak, ball, particles], mons] = await Promise.all([
         Promise.all(
           [
             "/game/people/stage.png",
@@ -68,6 +70,8 @@ export const OakStage = ({ className }: { className?: string }) => {
         ),
         Promise.all(ROSTER.map(({ species }) => loadImage(`/game/people/mons/${species}.png`))),
       ])
+      // Cleaned up while the art was loading: don't start a loop nothing will cancel.
+      if (disposed) return
 
       const draw = ({
         ball: ballState,
@@ -76,7 +80,14 @@ export const OakStage = ({ className }: { className?: string }) => {
       }: ReleaseState) => {
         context.setTransform(pixels, 0, 0, pixels, 0, 0)
         context.clearRect(0, 0, STAGE.width, STAGE.height)
-        context.drawImage(oval!, OVAL.x, OVAL.y)
+        if (oval) context.drawImage(ovalImage!, OVAL.x, OVAL.y)
+        else {
+          // No oval: just the shade he casts on the grass, where the oval would lie.
+          context.fillStyle = "rgb(0 0 0 / 0.32)"
+          context.beginPath()
+          context.ellipse(OVAL.x + 64, OVAL.y + 18, 56, 11, 0, 0, Math.PI * 2)
+          context.fill()
+        }
 
         if (monState) {
           // Tint toward the ball's open color, then draw scaled about its center.
@@ -166,11 +177,12 @@ export const OakStage = ({ className }: { className?: string }) => {
     })
     resizer.observe(canvas)
     return () => {
+      disposed = true
       cancelAnimationFrame(raf)
       observer.disconnect()
       resizer.disconnect()
     }
-  }, [])
+  }, [oval])
 
   return (
     <canvas

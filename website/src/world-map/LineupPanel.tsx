@@ -104,7 +104,7 @@ export const LineupPanel = ({
       }
     >
       <p className="pixel-label flex justify-between gap-3 text-[16px] leading-none">
-        <span className="text-logo-yellow">THE FIVE</span>
+        <span className="text-sign">THE FIVE</span>
         <span className="text-paper/70">{done ? `EVENT ${event + 1}` : "PICKING…"}</span>
       </p>
       <p className="sr-only">
@@ -149,7 +149,7 @@ export const LineupPanel = ({
                 <span
                   aria-hidden="true"
                   className={`pixel-label absolute top-0 left-0 px-1 pt-0.5 pb-1 text-[16px] leading-none ${
-                    champion ? "bg-logo-yellow text-ink" : "bg-black/60 text-paper"
+                    champion ? "bg-sign text-ink" : "bg-black/60 text-paper"
                   }`}
                 >
                   {i + 1}

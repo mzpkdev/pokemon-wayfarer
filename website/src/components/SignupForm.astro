@@ -16,7 +16,13 @@ const { id, class: className } = Astro.props
 const open = SIGNUP_ACTION !== undefined
 ---
 
-<form action={SIGNUP_ACTION} method="post" class={cn("naming-board pixel-corners w-full", className)}>
+<form
+  action={SIGNUP_ACTION}
+  method="post"
+  data-signup
+  data-open={open ? "true" : undefined}
+  class={cn("naming-board pixel-corners w-full", className)}
+>
   <div class="naming-box pixel-corners flex items-center gap-4 sm:gap-5">
     <img
       src="/game/items/letter.png"
@@ -43,10 +49,25 @@ const open = SIGNUP_ACTION !== undefined
     </div>
   </div>
   <div class="mt-4 flex items-center justify-end gap-3">
-    {!open && <span class="text-sm text-ink/70">Sign-ups open soon</span>}
+    {!open && <span class="text-sm text-ink/70" data-signup-note aria-live="polite">Sign-ups open soon</span>}
     <button type="submit" disabled={!open} class="naming-ok pixel-corners pixel-label">OK</button>
   </div>
 </form>
+
+<script>
+  // Without a mailing list to post to, the screen can still be tried: the
+  // script enables it (so without JavaScript it stays disabled and nothing
+  // is posted anywhere), and OK keeps the email on the page and says so.
+  for (const form of document.querySelectorAll<HTMLFormElement>("form[data-signup]:not([data-open])")) {
+    for (const field of form.querySelectorAll<HTMLInputElement | HTMLButtonElement>("input, button"))
+      field.disabled = false
+    form.addEventListener("submit", (event) => {
+      event.preventDefault()
+      const note = form.querySelector("[data-signup-note]")
+      if (note) note.textContent = "Not sent: sign-ups open soon. Thanks for trying the screen!"
+    })
+  }
+</script>
 
 <style>
   /* Colors sampled from the naming screen. */
@@ -98,7 +119,7 @@ const open = SIGNUP_ACTION !== undefined
   }
 
   .naming-ok {
-    padding: 8px 28px 12px;
+    padding: 10px 28px;
     background: rgb(232 208 64);
     color: rgb(56 56 56);
     box-shadow:
