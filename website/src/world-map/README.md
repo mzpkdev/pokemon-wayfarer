@@ -133,6 +133,11 @@ Leaders where the map has them. The two parts a visitor meets:
   a shadow; a water one is half under, in a ripple. Most cells are quiet at any
   moment, so a route shows a few, not all. Nothing is stored: a sighting is a
   hash of the map, the cell and the stretch of time.
+  Closer still (from 11 CSS pixels a metatile, fully by 14), today's daily
+  trainers and items stand on every road (`dailyView.ts` again, with the
+  tour's empty-spot rings off): the same draw the tour replays, for the
+  visitor's calendar day, so the roads change at midnight and a visit the next
+  day finds people elsewhere. Only what is on screen is drawn.
   Tapping a map (or Enter on the one at the center) frames it and opens a place
   card: its name, and a line saying wild Pokémon live there if they do. The
   exact encounter rates are behind the debug menu (`DebugMenu.tsx`), which
