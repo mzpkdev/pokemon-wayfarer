@@ -12,6 +12,7 @@ import { StoryShuffle } from "~/components/StoryShuffle"
 import WorldSection from "~/components/WorldSection.astro"
 import { TitleScene } from "~/components/TitleScene"
 import Layout from "~/layouts/Layout.astro"
+import { MeadowTorchic } from "~/components/MeadowTorchic"
 import { HIGHLIGHTS, LEVELS, NUMBERS, REPOSITORY_URL } from "~/lib/content"
 import { RELEASE_LABEL } from "~/lib/release"
 ---
@@ -324,43 +325,17 @@ import { RELEASE_LABEL } from "~/lib/release"
         </footer>
       </div>
 
-      <!-- Dawn. The sun comes up over the title screen's meadow, and the player rides out. -->
-      <div class="period-sunrise relative overflow-hidden">
+      <!-- Dawn. The sun comes up over the title screen's meadow, and TORCHIC runs through it. -->
+      <div class="period-sunrise pointer-events-auto relative overflow-hidden">
         <div class="h-[calc(72*var(--scene-px))]" aria-hidden="true"></div>
         <div
           class="scene-strip h-[calc(64*var(--scene-px))] bg-[url(/game/page/meadow.png)]"
           aria-hidden="true"
         >
         </div>
-        <div class="biker-path absolute bottom-[calc(10*var(--scene-px))] left-0" aria-hidden="true">
-          <div class="biker"></div>
-        </div>
+        <MeadowTorchic client:idle />
       </div>
     </div>
   </main>
 </Layout>
 
-<style>
-  /* From fully off the left edge (the biker is 32 scene pixels wide) to fully off the right. */
-  @keyframes ride {
-    from {
-      translate: calc(-32 * var(--scene-px)) 0;
-    }
-    to {
-      translate: 100vw 0;
-    }
-  }
-
-  /* The player rides rightward, out of the page. */
-  .biker-path {
-    animation: ride 14s linear infinite;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .biker-path {
-      animation: none;
-      left: auto;
-      right: 12%;
-    }
-  }
-</style>
