@@ -45,8 +45,23 @@ const TYPES: Record<string, string> = {
   ".png": "image/png",
 }
 
+/**
+ * The storyboard is read once when the player starts, so an edit to the
+ * script or the timeline reloads the page rather than hot-swapping a module
+ * the running player would not pick up.
+ */
+const storyboard = (): Plugin => ({
+  name: "wayfarer-video-storyboard",
+  handleHotUpdate({ file, server }) {
+    if (/\/src\/(script|timeline|schedule)\.ts$/.test(file)) {
+      server.ws.send({ type: "full-reload" })
+      return []
+    }
+  },
+})
+
 export default defineConfig({
-  plugins: [react(), tailwindcss(), extras(["audio", "clips"])],
+  plugins: [react(), tailwindcss(), extras(["audio", "clips"]), storyboard()],
   // The map's data and the game's art are the website's; the page reads them at the same paths.
   publicDir: path.join(website, "public"),
   resolve: {
