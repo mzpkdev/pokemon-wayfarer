@@ -40,8 +40,14 @@ if (!fs.existsSync(path.join(dist, "index.html"))) {
   console.error("Build the page first: dist/index.html is missing (pnpm build).")
   process.exit(1)
 }
-fs.rmSync(frames, { recursive: true, force: true })
-fs.mkdirSync(frames, { recursive: true })
+const cues = path.join(root, "audio", "vo", "cues.json")
+if (
+  fs.existsSync(cues) &&
+  fs.statSync(cues).mtimeMs > fs.statSync(path.join(dist, "index.html")).mtimeMs
+)
+  console.warn(
+    "audio/vo/cues.json is newer than the build: run pnpm build first, or the scenes keep their old lengths.",
+  )
 
 const { server, url } = await serve(dist)
 const browser = await chromium.launch(
@@ -58,7 +64,8 @@ try {
     timeout: 60_000,
   })
   await page.evaluate(() => document.fonts.ready)
-  await page.clock.pauseAt(new Date("2027-01-20T10:00:01Z"))
+  // The page's clock ran in real time while it loaded; pause it just past where it got to.
+  await page.clock.pauseAt((await page.evaluate(() => Date.now())) + 100)
 
   const { duration, slots } = await page.evaluate(() => {
     const video = globalThis.wayfarerVideo
@@ -80,18 +87,24 @@ try {
   const first = Math.round(from * fps)
   const last = Math.ceil(to * fps)
   const total = last - first
+  fs.rmSync(frames, { recursive: true, force: true })
+  fs.mkdirSync(frames, { recursive: true })
   console.log(
     `${total} frames at ${fps} fps, ${from.toFixed(2)}s to ${to.toFixed(2)}s of ${duration.toFixed(2)}s`,
   )
 
-  const step = 1000 / fps
   const started = Date.now()
+  // The clock moves in whole milliseconds, so each frame takes it to the
+  // rounded total rather than a rounded step: 33, 34, 33 ms, not 34 every time.
+  let ran = 0
   for (let n = first; n < last; n++) {
     const seconds = n / fps
     await page.evaluate((s) => globalThis.wayfarerVideo.seek(s), seconds)
     // A frame's worth of time passes, so the animation frame fires and the
     // sea, clouds and walkers move on; a frame that left chunks to draw gets another.
-    await page.clock.runFor(step)
+    const target = Math.round(((n - first + 1) * 1000) / fps)
+    await page.clock.runFor(target - ran)
+    ran = target
     for (let settle = 0; settle < 4; settle++) {
       if (!(await page.evaluate(() => globalThis.wayfarerVideo.pending()))) break
       await page.clock.runFor(1)

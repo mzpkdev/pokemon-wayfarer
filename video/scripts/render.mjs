@@ -36,6 +36,10 @@ if (!fs.existsSync(schedulePath) || !fs.existsSync(frames)) {
   process.exit(1)
 }
 const { fps, duration, slots } = JSON.parse(fs.readFileSync(schedulePath, "utf8"))
+const cuesPath = path.join(root, "audio", "vo", "cues.json")
+const cues = fs.existsSync(cuesPath)
+  ? JSON.parse(fs.readFileSync(cuesPath, "utf8"))
+  : { scenes: {} }
 const files = fs
   .readdirSync(frames)
   .filter((f) => f.endsWith(".png"))
@@ -75,7 +79,8 @@ if (voice)
     const clip = path.join(root, "audio", "vo", `${slot.id}.mp3`)
     if (!fs.existsSync(clip)) continue
     const at = slot.voiceAt - start
-    if (at + 30 < 0 || at > length) continue
+    // A clip that ends before the rendered range, or starts after it, stays out.
+    if (at + (cues.scenes[slot.id]?.seconds ?? 0) <= 0 || at > length) continue
     inputs.push("-i", clip)
     // A clip that starts before the rendered range is trimmed, not delayed.
     filters.push(
