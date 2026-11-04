@@ -300,3 +300,45 @@
     animation: none;
   }
 }
+
+/** The Bag beside the highlights, at one GBA pixel per CSS pixel on phones and two above. */
+.bag-drop {
+  --bag-px: 1px;
+}
+
+@media (min-width: 640px) {
+  .bag-drop {
+    --bag-px: 2px;
+  }
+}
+
+.bag-sprite {
+  width: calc(64 * var(--bag-px));
+  height: calc(64 * var(--bag-px));
+  background: url("/game/bag.png") 0 0 / calc(64 * var(--bag-px)) calc(384 * var(--bag-px));
+  transform-origin: 50% 90%;
+}
+
+/** The shake the BAG screen gives the Bag when you go through it. */
+.bag-shake {
+  animation: bag-shake 0.4s steps(1);
+}
+
+@keyframes bag-shake {
+  0%,
+  100% {
+    rotate: 0deg;
+  }
+  17% {
+    rotate: -8deg;
+  }
+  33% {
+    rotate: 8deg;
+  }
+  50% {
+    rotate: -4deg;
+  }
+  67% {
+    rotate: 4deg;
+  }
+}

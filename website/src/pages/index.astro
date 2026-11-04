@@ -1,6 +1,7 @@
 ---
 import CtaLinks from "~/components/cta/CtaLinks.astro"
 import CtaProfessor from "~/components/cta/CtaProfessor.astro"
+import { BagDrop } from "~/components/BagDrop"
 import { DialogBox } from "~/components/DialogBox"
 import Faq from "~/components/Faq.astro"
 import { RightNow } from "~/components/RightNow"
@@ -195,8 +196,14 @@ import { RELEASE_LABEL } from "~/lib/release"
 
         <!-- The tour in short, for anyone who scrolled past it. -->
         <section aria-labelledby="highlights" class="relative mx-auto max-w-5xl px-6 py-16">
-          <p class="pixel-label text-logo-yellow">The short version</p>
-          <h2 id="highlights" class="pixel-heading mt-4">A world that keeps moving</h2>
+          <!-- The Bag beside the heading: the highlights' icons are its key items, and they hop into it. -->
+          <div class="flex items-end justify-between gap-6">
+            <div>
+              <p class="pixel-label text-logo-yellow">The short version</p>
+              <h2 id="highlights" class="pixel-heading mt-4">A world that keeps moving</h2>
+            </div>
+            <BagDrop client:visible />
+          </div>
           <dl class="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
             {
               NUMBERS.map((number) => (
@@ -210,9 +217,10 @@ import { RELEASE_LABEL } from "~/lib/release"
           <ul class="mt-14 grid gap-x-8 gap-y-6 sm:grid-cols-2">
             {
               HIGHLIGHTS.map((highlight) => (
-                <li class="flex gap-4">
+                <li class="flex gap-4" data-bag-row>
                   <div class="pixel-corners pixel-panel grid size-16 shrink-0 place-items-center">
                     <img
+                      data-bag-item
                       src={`/game/items/${highlight.icon}.png`}
                       alt=""
                       width="48"
