@@ -1,9 +1,8 @@
 ---
 /**
- * What players ask before they play, read the way the game has you read
- * signs along a road: each question on its own plank, its answer right under
- * it, nothing folded away. Works without JavaScript and every answer is in
- * the page for search and screen readers.
+ * What players ask before they play: each question a heading, its answer
+ * right under it, nothing folded away. Works without JavaScript and every
+ * answer is in the page for search and screen readers.
  */
 import Sign from "~/components/Sign.astro"
 import { PATCHER_URL, REPOSITORY_URL } from "~/lib/content"
@@ -17,12 +16,12 @@ import { RELEASE_LABEL } from "~/lib/release"
     </div>
     <h2 id="faq" class="pixel-heading mt-5">Before you set out</h2>
     <p class="mt-6 max-w-2xl text-lg leading-relaxed text-paper/80">
-      The signs at the edge of town. Read them once and you're ready to go.
+      The things to know before you go.
     </p>
 
     <dl class="faq mt-12 grid gap-x-12 gap-y-12 md:grid-cols-2">
       <div>
-        <Sign as="dt">How do I play it?</Sign>
+        <dt class="pixel-heading pixel-heading-sm">How do I play it?</dt>
         <dd>
           <p>
             Wayfarer comes as a .ups patch. Apply it to your own Pokémon Emerald (U) ROM, for example
@@ -33,7 +32,7 @@ import { RELEASE_LABEL } from "~/lib/release"
       </div>
 
       <div>
-        <Sign as="dt">Which emulators work?</Sign>
+        <dt class="pixel-heading pixel-heading-sm">Which emulators work?</dt>
         <dd>
           <p>Any up-to-date emulator that runs ROM hacks. These are known to work:</p>
           <ul>
@@ -46,7 +45,7 @@ import { RELEASE_LABEL } from "~/lib/release"
       </div>
 
       <div>
-        <Sign as="dt">How does it battle?</Sign>
+        <dt class="pixel-heading pixel-heading-sm">How does it battle?</dt>
         <dd>
           <p>
             With modern mechanics: the physical and special split, and updated stats, types and moves. TMs
@@ -56,7 +55,7 @@ import { RELEASE_LABEL } from "~/lib/release"
       </div>
 
       <div>
-        <Sign as="dt">Can I trade and battle with friends?</Sign>
+        <dt class="pixel-heading pixel-heading-sm">Can I trade and battle with friends?</dt>
         <dd>
           <p>
             Yes. Trades and battles over the GBA link work, with a link cable or your emulator's link play.
@@ -66,14 +65,14 @@ import { RELEASE_LABEL } from "~/lib/release"
       </div>
 
       <div>
-        <Sign as="dt">Will my save carry over to updates?</Sign>
+        <dt class="pixel-heading pixel-heading-sm">Will my save carry over to updates?</dt>
         <dd>
           <p>From v1.0 on, yes. Updates after that keep your save.</p>
         </dd>
       </div>
 
       <div>
-        <Sign as="dt">Is it free?</Sign>
+        <dt class="pixel-heading pixel-heading-sm">Is it free?</dt>
         <dd>
           <p>
             Yes. Wayfarer is a free fan game, and you can follow every change{" "}
@@ -83,7 +82,7 @@ import { RELEASE_LABEL } from "~/lib/release"
       </div>
 
       <div>
-        <Sign as="dt">When does it come out?</Sign>
+        <dt class="pixel-heading pixel-heading-sm">When does it come out?</dt>
         <dd>
           <p>
             On {RELEASE_LABEL}. <a href="/wayfarer-release.ics" download>Add it to your calendar</a>, or leave your
@@ -96,14 +95,8 @@ import { RELEASE_LABEL } from "~/lib/release"
 </section>
 
 <style>
-  /* A question wraps onto a second line of its plank when it must (the plank is another component's, hence global). */
-  .faq :global(dt) {
-    white-space: normal;
-    text-wrap: balance;
-  }
-
   .faq dd {
-    margin-top: 1rem;
+    margin-top: 0.875rem;
     max-width: 36rem;
     line-height: 1.65;
     color: rgb(248 248 248 / 0.8);
