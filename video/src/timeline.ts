@@ -95,7 +95,6 @@ export const DIRECTIONS: Record<string, Direction> = {
       { start: "hoenn", from: 0.5, to: 0.92 },
     ],
     fade: { in: CUT, out: CUT },
-    insert: { from: 0.08, to: 0.96, clip: "oak-choice" },
   },
   // The Anne at Vermilion's pier in the evening; she casts off at half past eight and the camera goes with her.
   anne: {
@@ -167,7 +166,6 @@ export const DIRECTIONS: Record<string, Direction> = {
       circuit: [0, 1],
       earn: { from: 0.08, to: 0.6, badges: [0, 8, 2, 9, 1, 11, 3, 10] },
     },
-    insert: { from: 0.62, to: 0.95, clip: "league-call" },
   },
   open: {
     shots: [
