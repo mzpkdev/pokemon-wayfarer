@@ -86,6 +86,17 @@ const LANDS: Target = {
   room: 0.95,
 }
 
+/** One Gym Leader where their routine has them at `minute`, picked out and held close. */
+const vignette = (slug: string, minute: number): Direction => ({
+  shots: [
+    { at: 0, to: { kind: "notable", slug, zoom: 14 } },
+    { at: 1, to: { kind: "notable", slug, zoom: 16 } },
+  ],
+  clock: { from: minute, to: minute + 10 },
+  notables: { only: [slug], marker: true, minHeight: 64 },
+  fade: { in: CUT, out: CUT },
+})
+
 export const DIRECTIONS: Record<string, Direction> = {
   // Cold open: RED rides in to his front door, the camera coming in with him.
   pallet: {
@@ -142,20 +153,26 @@ export const DIRECTIONS: Record<string, Direction> = {
   leaders: {
     shots: [
       { at: 0, to: LANDS },
-      { at: 0.12, to: LANDS },
-      { at: 0.42, to: { kind: "notable", slug: "brock", zoom: 16 } },
+      { at: 0.14, to: LANDS },
+      { at: 0.55, to: { kind: "notable", slug: "brock", zoom: 16 } },
       { at: 1, to: { kind: "notable", slug: "brock", zoom: 16 } },
     ],
     // The night goes by before the camera is close; then he walks at about a walk's pace.
     clock: {
       keys: [
-        [0.1, h(23, 30)],
-        [0.36, h(34)],
-        [1, h(35, 30)],
+        [0.12, h(23, 30)],
+        [0.46, h(34)],
+        [1, h(35)],
       ],
     },
     notables: { marker: true, minHeight: 64 },
+    fade: { out: CUT },
   },
+  // Three more lives, a warp between each: Lt. Surge at the Game Corner in the afternoon,
+  // Wallace fishing Route 119 (where Feebas is) at noon, Giovanni at the Burned Tower at night.
+  surge: vignette("lt-surge", h(16)),
+  wallace: vignette("wallace", h(12, 30)),
+  giovanni: vignette("giovanni", h(0, 30)),
   // Evening into night over Johto and Kanto, closing on Goldenrod as its lights come on.
   night: {
     shots: [
@@ -165,6 +182,7 @@ export const DIRECTIONS: Record<string, Direction> = {
       { at: 1, to: { kind: "map", name: "GoldenrodCity_hns", zoom: 9 } },
     ],
     clock: { from: h(18), to: h(26) },
+    fade: { in: CUT },
   },
   // Route 15 across four days: the trainers and items pop into new spots, or stay away.
   daily: {

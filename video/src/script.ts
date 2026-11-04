@@ -42,8 +42,12 @@ export const BOX_CAPS = [
   "Gym Leaders",
   "Elite Four",
   "Brock",
+  "Lt. Surge",
+  "Game Corner",
+  "Wallace",
+  "Route 119",
+  "Giovanni",
   "Day-Care",
-  "Graveler",
   "Golem",
   "Gyms",
 ]
@@ -73,19 +77,34 @@ export const SCENES: Scene[] = [
   {
     id: "lands",
     narration:
-      "Alola. And now you can sail with her.\nKeeps her own hours, mind. She won't wait.\nAnd Kanto was never the whole map. Seven lands, one journey, and you can walk to every one. Each keeps its own Pokémon. Galar's on the Sevii Islands. Kalos hides in the Safari Zones.",
+      "Alola. And now you can sail with her.\nKeeps her own hours, mind. She won't wait.\nAnd Kanto was never the whole map. Seven lands. Walk every one of them. Each keeps its own Pokémon. Galar's on the Sevii Islands. Kalos hides in the Safari Zones.",
     seconds: 13,
   },
   {
     id: "leaders",
     narration:
-      "Ever wonder what Gym Leaders do when nobody's at the door?\nBrock's walking all the way to the Day-Care in Johto.\nGet to know him. Trade him a Graveler.\nSee what he does with it.",
-    seconds: 11,
+      "Ever wonder what Gym Leaders do when nobody's at the door?\nBrock's off to the Day-Care in Johto. Trade with him sometime.",
+    seconds: 8,
+  },
+  {
+    id: "surge",
+    narration: "Lt. Surge? Game Corner. Again.",
+    seconds: 3.5,
+  },
+  {
+    id: "wallace",
+    narration: "Wallace is fishing Route 119.\nWonder what for.",
+    seconds: 5,
+  },
+  {
+    id: "giovanni",
+    narration: "And Giovanni's lying low.\nSomewhere in Johto.",
+    seconds: 5,
   },
   {
     id: "night",
     narration: "Come evening, the lights go on in Goldenrod, and folks head home.",
-    seconds: 8,
+    seconds: 6,
   },
   {
     id: "daily",
