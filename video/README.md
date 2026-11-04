@@ -9,7 +9,9 @@ where the words name something concrete.
 Everything the map needs is the website's own code and data: `~/world-map`
 resolves to `../website/src/world-map`, and `/world-map` and `/game` are served
 from `../website/public`. Nothing is copied; a change to the site's map shows
-up here on the next build.
+up here on the next build. `@wayfarer/website` is a workspace dependency for
+that reason alone: a filtered install (`--filter @wayfarer/video...`) then
+brings the website's own dependencies, which its source needs to compile.
 
 ## Commands
 
