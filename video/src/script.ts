@@ -22,8 +22,8 @@ export const SCENES: Scene[] = [
   {
     id: "pallet",
     narration:
-      "Pallet Town. You know every tile of it. One Pokémon in your pocket, a whole world past the trees... and a road that only ever went one way. Not anymore.",
-    caption: ["Pallet Town. You know every", "tile of it."],
+      "Pallet Town. You know every step of it. One Pokémon in your pocket, a whole world past the trees... and a road that only ever went one way. Not anymore.",
+    caption: ["Pallet Town. You know every", "step of it."],
     seconds: 10,
   },
   {
