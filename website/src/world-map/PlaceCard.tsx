@@ -88,9 +88,7 @@ export const PlaceCard = ({
       className="pixel-corners pixel-panel absolute inset-x-0 bottom-0 flex max-h-[46%] flex-col gap-3 p-5 text-paper sm:inset-x-auto sm:top-4 sm:bottom-auto sm:left-4 sm:max-h-[calc(100%-2rem)] sm:w-80"
     >
       <div className="flex items-start justify-between gap-3">
-        <h2 className="pixel-label min-w-0 text-logo-yellow [overflow-wrap:anywhere]">
-          {info.name}
-        </h2>
+        <h2 className="pixel-label min-w-0 text-sign [overflow-wrap:anywhere]">{info.name}</h2>
         <button
           type="button"
           onClick={onClose}
@@ -128,7 +126,7 @@ export const PlaceCard = ({
                 title={title}
                 aria-pressed={night === isNight}
                 onClick={() => setNight(isNight)}
-                className="gba-text gba-text-light px-3 py-1 [--px:1px] shadow-[inset_0_0_0_2px_rgb(255_255_255/0.25)] aria-pressed:bg-logo-yellow aria-pressed:[--ink:var(--color-ink)] aria-pressed:[--shadow:transparent] aria-pressed:shadow-none focus-visible:outline-2 focus-visible:outline-logo-yellow"
+                className="gba-text gba-text-light px-3 py-1 [--px:1px] shadow-[inset_0_0_0_2px_rgb(255_255_255/0.25)] aria-pressed:bg-sign aria-pressed:[--ink:var(--color-ink)] aria-pressed:[--shadow:transparent] aria-pressed:shadow-none focus-visible:outline-2 focus-visible:outline-sign"
               >
                 {label}
               </button>
@@ -139,7 +137,7 @@ export const PlaceCard = ({
           rates &&
           tables.map(({ method, label, table }) => (
             <div key={method}>
-              <h3 className="gba-text mb-1 [--ink:var(--color-logo-yellow)] [--px:1px] [--shadow:rgb(0_16_0)]">
+              <h3 className="gba-text mb-1 [--ink:var(--color-sign)] [--px:1px] [--shadow:rgb(0_16_0)]">
                 {label}
               </h3>
               <ul className="flex flex-col">

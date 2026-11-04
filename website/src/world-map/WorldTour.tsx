@@ -244,7 +244,7 @@ const GymCard = ({
       className="pixel-corners pixel-panel absolute top-[4.75rem] left-4 z-20 w-[min(340px,calc(100%-2rem))] p-5 text-paper max-lg:top-auto max-lg:right-4 max-lg:bottom-4 max-lg:w-auto sm:max-lg:bottom-8 sm:max-lg:inset-x-8"
     >
       <div className="flex items-start justify-between gap-3">
-        <p className="pixel-label flex items-center gap-2 text-[16px] leading-none text-logo-yellow">
+        <p className="pixel-label flex items-center gap-2 text-[16px] leading-none text-sign">
           <span
             aria-hidden
             className="size-6 shrink-0 [image-rendering:pixelated]"
@@ -316,8 +316,8 @@ const LeagueState = ({
 }) => (
   <div className="flex flex-col gap-0.5">
     <p className="pixel-label flex items-baseline justify-between gap-3 text-[16px] leading-none">
-      <span className={calling ? "text-logo-yellow" : "text-paper/70"}>{league.name}</span>
-      <span className={calling ? "text-logo-yellow" : "text-paper/50"}>
+      <span className={calling ? "text-sign" : "text-paper/70"}>{league.name}</span>
+      <span className={calling ? "text-sign" : "text-paper/50"}>
         {calling ? "CALLING" : league.id === "masters" ? "LOCKED" : "NOT YET"}
       </span>
     </p>
@@ -517,7 +517,7 @@ const DailyCard = ({
         >
           ◀
         </button>
-        <p className="pixel-label text-logo-yellow">DAY {day}</p>
+        <p className="pixel-label text-sign">DAY {day}</p>
         <button
           type="button"
           className={step}
@@ -608,7 +608,7 @@ const JourneyStrip = ({
             aria-current={i === stop ? "step" : undefined}
             className={`pixel-corners grid size-9 place-items-center sm:size-10 ${
               i === stop
-                ? "bg-[rgb(232_208_64)]"
+                ? "bg-sign"
                 : `bg-black/30 hover:bg-black/50 ${i < stop ? "" : "opacity-50 hover:opacity-100"}`
             } focus-visible:shadow-[inset_0_0_0_3px_rgb(48_80_200)] focus-visible:outline-none`}
           >
@@ -1650,7 +1650,7 @@ export const WorldTour = ({
                   className="col-start-1 row-start-1 transition-opacity duration-300"
                   style={{ opacity: shown ? 1 : 0, pointerEvents: shown ? undefined : "none" }}
                 >
-                  <p className="pixel-label text-logo-yellow">{text.place}</p>
+                  <p className="pixel-label text-sign">{text.place}</p>
                   <p className="pixel-heading mt-2 sm:mt-3">{text.title}</p>
                   <p className="mt-2 text-base leading-snug text-paper/80 sm:mt-4 sm:text-lg sm:leading-relaxed">
                     {text.body}
@@ -1665,7 +1665,7 @@ export const WorldTour = ({
                             key={option.id}
                             className={`${OPTION} ${
                               picked
-                                ? "bg-[rgb(232_208_64)] text-[rgb(56_56_56)] shadow-[inset_0_0_0_4px_rgb(56_56_56),inset_0_-4px_0_rgb(184_160_32),inset_0_4px_0_rgb(248_240_152)]"
+                                ? "bg-sign text-ink shadow-[inset_0_0_0_4px_rgb(90_90_123)]"
                                 : "cursor-pointer bg-black/30 text-paper/80 shadow-[inset_0_0_0_4px_rgb(0_0_0/0.4)] hover:bg-black/50 hover:text-paper"
                             }`}
                           >
@@ -1681,7 +1681,7 @@ export const WorldTour = ({
                               {picked ? "▶ " : ""}
                               {option.label}
                             </span>
-                            <span className={picked ? "text-[rgb(56_56_56)]/70" : "text-paper/50"}>
+                            <span className={picked ? "text-ink/70" : "text-paper/50"}>
                               {option.region}
                             </span>
                           </label>

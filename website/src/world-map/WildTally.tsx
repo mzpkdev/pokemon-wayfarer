@@ -94,7 +94,7 @@ export const WildTally = ({
                 onClick={() => pick(wave)}
                 className={`pixel-corners flex flex-col items-center justify-between gap-1 px-1 pt-1.5 pb-2 font-[family-name:var(--font-gba)] leading-none ${
                   on
-                    ? "bg-[rgb(232_208_64)] text-[rgb(56_56_56)]"
+                    ? "bg-sign text-ink"
                     : "bg-black/30 text-paper/80 hover:bg-black/50 hover:text-paper"
                 }`}
               >
