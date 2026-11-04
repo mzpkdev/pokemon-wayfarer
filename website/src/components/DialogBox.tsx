@@ -20,27 +20,38 @@ type DialogBoxProps = {
  * down arrow, like dialogue in the field. The full text is always in the DOM
  * for screen readers and without JavaScript; only its visible part changes.
  */
-export const DialogBox = ({ lines, active = true, speed = 2, className }: DialogBoxProps) => {
-  const text = lines.join("\n")
-  const hydrated = useHydrated()
-  const reducedMotion = useReducedMotion()
-  const printing = hydrated && active && !reducedMotion
-  const [printed, setPrinted] = useState(0)
+/**
+ * How much of `text` the game's text printer has put down so far, a letter
+ * every `speed` frames while `printing`, starting over whenever the text
+ * changes. Without printing it is all of it at once.
+ */
+export const usePrinter = (text: string, printing: boolean, speed = 2) => {
+  // Counted per text, so a new text starts from nothing without resetting in an effect.
+  const [printed, setPrinted] = useState({ text, count: 0 })
 
   useEffect(() => {
     if (!printing) return
     const timer = window.setInterval(
       () =>
-        setPrinted((count) => {
-          if (count + 1 >= text.length) window.clearInterval(timer)
-          return Math.min(text.length, count + 1)
+        setPrinted((last) => {
+          const count = Math.min(text.length, (last.text === text ? last.count : 0) + 1)
+          if (count >= text.length) window.clearInterval(timer)
+          return { text, count }
         }),
       (speed * 1000) / 60,
     )
     return () => window.clearInterval(timer)
   }, [printing, speed, text])
 
-  const shown = printing ? printed : text.length
+  if (!printing) return text.length
+  return printed.text === text ? printed.count : 0
+}
+
+export const DialogBox = ({ lines, active = true, speed = 2, className }: DialogBoxProps) => {
+  const text = lines.join("\n")
+  const hydrated = useHydrated()
+  const reducedMotion = useReducedMotion()
+  const shown = usePrinter(text, hydrated && active && !reducedMotion, speed)
   const done = shown >= text.length
 
   return (

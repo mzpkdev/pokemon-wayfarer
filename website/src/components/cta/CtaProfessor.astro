@@ -6,6 +6,7 @@
  * cast in turn), and asks for your
  * email on the naming screen the way the intro asks for your name.
  */
+import { DialogBox } from "~/components/DialogBox"
 import { OakStage } from "~/components/OakStage"
 import SignupForm from "~/components/SignupForm.astro"
 import { RELEASE_LABEL } from "~/lib/release"
@@ -22,12 +23,20 @@ import CtaLinks from "./CtaLinks.astro"
     </div>
 
     <div class="lg:col-start-1 lg:row-start-1">
-      <p class="pixel-label text-logo-yellow">PROF. OAK</p>
-      <h2 id="notify" class="pixel-heading pixel-heading-xl mt-3">First, what is your email?</h2>
-      <p class="mt-6 max-w-xl text-lg leading-relaxed text-paper/80">
-        Tell me where to write and I'll let you know the moment your journey can begin, on {RELEASE_LABEL}.
-        You may hear from me now and then before that, too.
-      </p>
+      <h2 id="notify" class="pixel-heading pixel-heading-xl">First, what is your email?</h2>
+      <!-- He says the rest the way he talks in the intro: his name over a message box, printing. -->
+      <div class="mt-8 max-w-xl [--px:2px]">
+        <p class="gba-window gba-text relative z-10 -mb-[calc(4*var(--px))] ml-[calc(4*var(--px))] inline-block">
+          <span class="window-title">PROF. OAK</span>
+        </p>
+        <DialogBox
+          client:visible
+          lines={[
+            `Tell me where to write and I'll let you know the moment your journey can begin, on ${RELEASE_LABEL}.`,
+            "You may hear from me now and then before that, too.",
+          ]}
+        />
+      </div>
     </div>
     <SignupForm id="signup-email" class="mt-10 max-w-xl lg:col-start-1 lg:row-start-2" />
     <CtaLinks class="mt-8 lg:col-start-1 lg:row-start-3" />

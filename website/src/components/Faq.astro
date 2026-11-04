@@ -1,19 +1,19 @@
 ---
 /**
  * What players ask before they play: how to get it running, how it battles,
- * trading and saves. Native disclosure widgets, so it works without
- * JavaScript and every answer is in the page for search and screen readers.
+ * trading and saves. A menu window of questions with the ▶ cursor on the one
+ * that's open, its answer printed under it. Native disclosure widgets, so it
+ * works without JavaScript and every answer is in the page for search and
+ * screen readers.
  */
+import Place from "~/components/route/Place.astro"
 import { PATCHER_URL, REPOSITORY_URL } from "~/lib/content"
 import { RELEASE_LABEL } from "~/lib/release"
 ---
 
-<section aria-labelledby="faq" class="relative mx-auto max-w-3xl px-6 py-16">
-  <p class="pixel-label text-logo-yellow">Questions</p>
-  <h2 id="faq" class="pixel-heading mt-4">Before you set out</h2>
-
-  <div class="mt-10 grid gap-3">
-    <details class="faq pixel-corners pixel-panel" name="faq">
+<Place id="faq" popup="fall" name="QUESTIONS" title="Before you set out." grass={[4, 5]}>
+  <div class="faq-menu gba-window gba-text window-links mt-8 grid max-w-3xl gap-[calc(4*var(--px))] [--px:2px]">
+    <details class="faq" name="faq" open>
       <summary>How do I play it?</summary>
       <div class="faq-answer">
         <p>
@@ -24,20 +24,20 @@ import { RELEASE_LABEL } from "~/lib/release"
       </div>
     </details>
 
-    <details class="faq pixel-corners pixel-panel" name="faq">
+    <details class="faq" name="faq">
       <summary>Which emulators work?</summary>
       <div class="faq-answer">
         <p>Any up-to-date emulator that runs ROM hacks. These are known to work:</p>
         <ul>
-          <li><strong>PC and Mac:</strong> mGBA</li>
-          <li><strong>Android:</strong> Pizza Boy, Lemuroid, or RetroArch with the mGBA core</li>
-          <li><strong>iOS:</strong> Delta, Ignited, or RetroArch with the mGBA core</li>
-          <li><strong>Linux handhelds:</strong> RetroArch with the mGBA core</li>
+          <li><span class="faq-term">PC and Mac:</span> mGBA</li>
+          <li><span class="faq-term">Android:</span> Pizza Boy, Lemuroid, or RetroArch with the mGBA core</li>
+          <li><span class="faq-term">iOS:</span> Delta, Ignited, or RetroArch with the mGBA core</li>
+          <li><span class="faq-term">Linux handhelds:</span> RetroArch with the mGBA core</li>
         </ul>
       </div>
     </details>
 
-    <details class="faq pixel-corners pixel-panel" name="faq">
+    <details class="faq" name="faq">
       <summary>How does it battle?</summary>
       <div class="faq-answer">
         <p>
@@ -47,7 +47,7 @@ import { RELEASE_LABEL } from "~/lib/release"
       </div>
     </details>
 
-    <details class="faq pixel-corners pixel-panel" name="faq">
+    <details class="faq" name="faq">
       <summary>Can I trade and battle with friends?</summary>
       <div class="faq-answer">
         <p>
@@ -57,14 +57,14 @@ import { RELEASE_LABEL } from "~/lib/release"
       </div>
     </details>
 
-    <details class="faq pixel-corners pixel-panel" name="faq">
+    <details class="faq" name="faq">
       <summary>Will my save carry over to updates?</summary>
       <div class="faq-answer">
         <p>From v1.0 on, yes. Updates after that keep your save.</p>
       </div>
     </details>
 
-    <details class="faq pixel-corners pixel-panel" name="faq">
+    <details class="faq" name="faq">
       <summary>Is it free?</summary>
       <div class="faq-answer">
         <p>
@@ -74,7 +74,7 @@ import { RELEASE_LABEL } from "~/lib/release"
       </div>
     </details>
 
-    <details class="faq pixel-corners pixel-panel" name="faq">
+    <details class="faq" name="faq">
       <summary>When does it come out?</summary>
       <div class="faq-answer">
         <p>
@@ -84,17 +84,12 @@ import { RELEASE_LABEL } from "~/lib/release"
       </div>
     </details>
   </div>
-</section>
+</Place>
 
 <style>
   .faq summary {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1.25rem 1.5rem;
     cursor: pointer;
-    font-weight: 600;
     list-style: none;
   }
 
@@ -102,51 +97,41 @@ import { RELEASE_LABEL } from "~/lib/release"
     display: none;
   }
 
-  /* The game's menu cursor, pointing at the open answer. */
-  .faq summary::after {
-    content: "▶";
+  /* The menu cursor, on the open question and on the one under the pointer. */
+  .faq summary::before {
+    content: "";
     flex-shrink: 0;
-    color: var(--color-logo-yellow);
-    transition: rotate 0.15s steps(2);
+    width: calc(10 * var(--px));
   }
 
-  .faq[open] summary::after {
-    rotate: 90deg;
+  .faq[open] summary::before,
+  .faq summary:hover::before,
+  .faq summary:focus-visible::before {
+    content: "▶";
   }
 
-  .faq summary:focus-visible {
-    outline: 4px solid var(--color-logo-yellow);
-    outline-offset: -8px;
+  .faq summary:focus-visible,
+  .faq-term {
+    outline: none;
+    color: var(--color-ink-blue);
+    text-shadow:
+      var(--dot) 0 var(--color-ink-blue-shadow),
+      0 var(--dot) var(--color-ink-blue-shadow),
+      var(--dot) var(--dot) var(--color-ink-blue-shadow);
   }
 
+  /* The answer, set in under its question the way the game indents a submenu. */
   .faq-answer {
-    padding: 0 1.5rem 1.5rem;
-    line-height: 1.65;
-    color: rgb(248 248 248 / 0.8);
+    margin: calc(4 * var(--px)) 0 calc(8 * var(--px)) calc(10 * var(--px));
+    padding-left: calc(8 * var(--px));
+    border-left: var(--px) solid var(--color-ink-shadow);
   }
 
   .faq-answer ul {
-    margin-top: 0.75rem;
-    display: grid;
-    gap: 0.375rem;
-    padding-left: 1.25rem;
-    list-style: square;
+    margin-top: calc(4 * var(--px));
   }
 
-  .faq-answer strong {
-    color: var(--color-paper);
-    font-weight: 600;
-  }
-
-  .faq-answer a {
-    color: var(--color-logo-yellow);
-    text-decoration: underline;
-    text-underline-offset: 4px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .faq summary::after {
-      transition: none;
-    }
+  .faq-answer li::before {
+    content: "· ";
   }
 </style>

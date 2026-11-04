@@ -1,15 +1,41 @@
 ---
+/**
+ * The two other ways to wait for release, as a menu window: the ▶ cursor
+ * sits on the one under the pointer or keyboard.
+ */
 import { cn } from "~/lib/cn"
 import { REPOSITORY_URL } from "~/lib/content"
 
 const { class: className } = Astro.props
 ---
 
-<p class={cn("flex flex-wrap gap-x-6 gap-y-2 text-sm text-paper/70", className)}>
-  <a href="/wayfarer-release.ics" download class="underline-offset-4 hover:text-paper hover:underline">
-    Add the release to your calendar
-  </a>
-  <a href={REPOSITORY_URL} class="underline-offset-4 hover:text-paper hover:underline">
-    Follow development on GitHub <span aria-hidden="true">→</span>
-  </a>
-</p>
+<ul class={cn("cta-links gba-window gba-text inline-grid justify-self-start [--px:2px]", className)}>
+  <li>
+    <a href="/wayfarer-release.ics" download>ADD THE RELEASE TO YOUR CALENDAR</a>
+  </li>
+  <li>
+    <a href={REPOSITORY_URL}>FOLLOW DEVELOPMENT ON GITHUB</a>
+  </li>
+</ul>
+
+<style>
+  .cta-links a {
+    display: flex;
+    padding-right: calc(4 * var(--px));
+  }
+
+  .cta-links a::before {
+    content: "";
+    flex-shrink: 0;
+    width: calc(10 * var(--px));
+  }
+
+  .cta-links a:hover::before,
+  .cta-links a:focus-visible::before {
+    content: "▶";
+  }
+
+  .cta-links a:focus-visible {
+    outline: none;
+  }
+</style>

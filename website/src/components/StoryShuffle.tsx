@@ -46,7 +46,7 @@ export const StoryShuffle = () => {
       {BEATS.map((_, place) => (
         <span
           key={place}
-          className="gba-text gba-text-light absolute left-0 grid place-items-center"
+          className="gba-font outline-text absolute left-0 grid place-items-center [--outline-dot:var(--px)]"
           style={{
             top: `calc(${ROW * place} * var(--px))`,
             width: "calc(16 * var(--px))",

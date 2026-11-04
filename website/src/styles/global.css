@@ -27,6 +27,11 @@
   /* The Pokémon logo's yellow and blue. */
   --color-logo-yellow: rgb(255 214 0);
   --color-logo-blue: rgb(40 72 200);
+  /* Route 101's grass and tree shadow, and the default text window's frame. */
+  --color-route: rgb(112 192 160);
+  --color-canopy: rgb(56 80 0);
+  --color-frame: rgb(74 74 106);
+  --color-outline: rgb(41 49 49);
 }
 
 :root {
@@ -297,6 +302,129 @@
 
 @media (prefers-reduced-motion: reduce) {
   .sprite {
+    animation: none;
+  }
+}
+
+/* ---- The route below the world map ---- */
+
+/**
+ * The route the page walks down: Route 101's grass, in metatiles drawn two
+ * CSS pixels per GBA pixel, the same scale as the page's text windows.
+ */
+@utility route-grass {
+  background: var(--color-route) url("/game/route/grass.png") 0 0 / 32px 32px repeat;
+  image-rendering: pixelated;
+}
+
+/** The two staggered columns of trees that wall the route in, tiling down. */
+@utility route-trees {
+  background: url("/game/route/trees.png") 0 0 / 128px 64px repeat;
+  image-rendering: pixelated;
+}
+
+/** A one-way ledge across the route, the way the page drops into each place. */
+@utility route-ledge {
+  height: 32px;
+  background: url("/game/route/ledge.png") 0 0 / 32px 32px repeat-x;
+  image-rendering: pixelated;
+}
+
+/** A patch of tall grass. */
+@utility route-tall-grass {
+  background: url("/game/route/tall-grass.png") 0 0 / 32px 32px repeat;
+  image-rendering: pixelated;
+}
+
+/**
+ * Text outlined the way the game prints names over pictures: ink on every
+ * side, so it reads over grass or a popup's scene. --outline-dot sets the
+ * outline's pixel (2px unless set).
+ */
+@utility outline-text {
+  --o: var(--outline-dot, 2px);
+  --ink: var(--color-outline);
+  color: var(--color-paper);
+  text-shadow:
+    var(--o) 0 var(--ink),
+    calc(-1 * var(--o)) 0 var(--ink),
+    0 var(--o) var(--ink),
+    0 calc(-1 * var(--o)) var(--ink),
+    var(--o) var(--o) var(--ink),
+    calc(-1 * var(--o)) var(--o) var(--ink),
+    var(--o) calc(-1 * var(--o)) var(--ink),
+    calc(-1 * var(--o)) calc(-1 * var(--o)) var(--ink),
+    0 calc(2 * var(--o)) var(--ink),
+    var(--o) calc(2 * var(--o)) var(--ink);
+}
+
+/** The game's font at its own size and no color, for text that brings its own ink. */
+@utility gba-font {
+  font-family: var(--font-gba);
+  font-size: calc(16 * var(--px));
+  line-height: calc(16 * var(--px));
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+}
+
+/** A heading line inside a text window (one that sets --dot), in the game's blue ink. */
+@utility window-title {
+  display: block;
+  color: var(--color-ink-blue);
+  text-shadow:
+    var(--dot) 0 var(--color-ink-blue-shadow),
+    0 var(--dot) var(--color-ink-blue-shadow),
+    var(--dot) var(--dot) var(--color-ink-blue-shadow);
+}
+
+/** Links inside a text window: blue ink, underlined in whole pixels. */
+@utility window-links {
+  & a {
+    color: var(--color-ink-blue);
+    text-shadow:
+      var(--dot) 0 var(--color-ink-blue-shadow),
+      0 var(--dot) var(--color-ink-blue-shadow),
+      var(--dot) var(--dot) var(--color-ink-blue-shadow);
+    text-decoration: underline;
+    text-decoration-thickness: var(--dot);
+    text-underline-offset: calc(3 * var(--dot));
+  }
+
+  & a:hover {
+    color: rgb(224 8 8);
+  }
+}
+
+/** The BAG screen's Bag, shaking the way it does when you go through it. */
+.bag-shake {
+  width: calc(64 * var(--px));
+  height: calc(64 * var(--px));
+  background: url("/game/bag.png") 0 0 / calc(64 * var(--px)) calc(384 * var(--px));
+  transform-origin: 50% 90%;
+  animation: bag-shake 0.4s steps(1);
+}
+
+@keyframes bag-shake {
+  0%,
+  100% {
+    rotate: 0deg;
+  }
+  17% {
+    rotate: -8deg;
+  }
+  33% {
+    rotate: 8deg;
+  }
+  50% {
+    rotate: -4deg;
+  }
+  67% {
+    rotate: 4deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bag-shake {
     animation: none;
   }
 }

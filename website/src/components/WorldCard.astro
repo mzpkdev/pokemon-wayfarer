@@ -1,0 +1,56 @@
+---
+/**
+ * The world's size as a TRAINER CARD lays out a player's: name and number
+ * rows with dotted leaders, then the badge case, all 24 Gym Badges in the
+ * order each region earns them.
+ */
+import { NUMBERS } from "~/lib/content"
+
+const REGIONS = ["JOHTO", "KANTO", "HOENN"]
+---
+
+<div class="gba-window gba-text mt-8 [--px:2px]">
+  <p class="window-title">WAYFARER</p>
+  <dl class="mt-[0.5lh] grid gap-x-[calc(16*var(--px))] sm:grid-cols-2">
+    {
+      NUMBERS.map((number) => (
+        <div class="flex items-baseline gap-[calc(4*var(--px))]">
+          <dt class="shrink-0 uppercase">{number.label}</dt>
+          <span class="leader min-w-[calc(8*var(--px))] flex-1" aria-hidden="true" />
+          <dd class="tabular-nums">{number.value}</dd>
+        </div>
+      ))
+    }
+  </dl>
+  <p class="window-title mt-[1lh]">BADGES</p>
+  <div class="mt-[calc(4*var(--px))] flex flex-wrap gap-x-[calc(12*var(--px))] gap-y-[calc(4*var(--px))]">
+    {
+      REGIONS.map((region, row) => (
+        <div
+          class="badges pixelated"
+          role="img"
+          aria-label={`${region}'s eight Gym Badges`}
+          style={`--row: ${row}`}
+        />
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  /* The dots between a label and its number, one GBA pixel each, as the card prints them. */
+  .leader {
+    height: var(--px);
+    background: linear-gradient(to right, var(--color-ink) 0 25%, transparent 25%) 0 0 /
+      calc(4 * var(--px)) var(--px) repeat-x;
+    translate: 0 calc(-3 * var(--px));
+  }
+
+  /* One region's eight badges, cut from the strip of 24 at 16x16 apiece. */
+  .badges {
+    width: calc(8 * 16 * var(--px));
+    height: calc(16 * var(--px));
+    background: url("/game/badges.png") calc(var(--row) * -8 * 16 * var(--px)) 0 /
+      calc(24 * 16 * var(--px)) 100% no-repeat;
+  }
+</style>

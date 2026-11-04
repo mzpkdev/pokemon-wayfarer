@@ -13,6 +13,7 @@ import { fileURLToPath } from "node:url"
 import { Font, Glyph, Path } from "opentype.js"
 
 import { readJascPalette, readTiles, renderIndexed, renderTilemap } from "./lib/gba.mjs"
+import { openGame } from "../src/world-map/build/game.mjs"
 import { openObjectGraphics } from "./lib/object-graphics.mjs"
 import { readPng, writePng } from "./lib/png.mjs"
 
@@ -412,6 +413,65 @@ for (let side = 0; side < 3; side++) {
   placeTile(popup, popupOutline[13 + side * 2], 88, 8 + side * 8)
 }
 save("popups/wood.png", popup)
+
+// Heart & Soul's illustrated map name popups, one per kind of place, which
+// head the page's sections. Each outline carries its own palette.
+const framePopup = (name) => {
+  const body = renderIndexed(source(`map_popup/${name}_hns.png`))
+  const outline = spriteTiles(renderIndexed(source(`map_popup/${name}_outline_hns.png`)))
+  const image = { width: 96, height: 40, rgba: new Uint8Array(96 * 40 * 4) }
+  for (let y = 0; y < 24; y++)
+    image.rgba.set(body.rgba.subarray(y * 80 * 4, (y + 1) * 80 * 4), ((y + 8) * 96 + 8) * 4)
+  for (let i = 0; i < 12; i++) {
+    placeTile(image, outline[i], i * 8, 0)
+    placeTile(image, outline[18 + i], i * 8, 32)
+  }
+  for (let side = 0; side < 3; side++) {
+    placeTile(image, outline[12 + side * 2], 0, 8 + side * 8)
+    placeTile(image, outline[13 + side * 2], 88, 8 + side * 8)
+  }
+  return image
+}
+for (const name of ["ocean", "kanto", "town", "fall", "johto", "cherry"])
+  save(`popups/${name}.png`, framePopup(name))
+
+// The route the page walks down below the world map, in Route 101's own
+// metatiles: plain grass, tall grass, Route 103's water, a stretch of ledge
+// and the two staggered columns of trees that wall the route in, which tile
+// every 32 pixels down.
+const world = openGame(game)
+const routeTiles = (rows) => {
+  const width = rows[0].length * 16
+  const image = { width, height: rows.length * 16, rgba: new Uint8Array(width * rows.length * 64) }
+  rows.forEach((row, y) =>
+    row.forEach((id, x) => {
+      const tile = world.drawMetatile("gTileset_General", "gTileset_Petalburg", id)
+      for (let line = 0; line < 16; line++)
+        image.rgba.set(
+          tile.subarray(line * 64, line * 64 + 64),
+          ((y * 16 + line) * width + x * 16) * 4,
+        )
+    }),
+  )
+  return image
+}
+save("route/grass.png", routeTiles([[0x001]]))
+save("route/tall-grass.png", routeTiles([[0x00d]]))
+save("route/water.png", routeTiles([[0x170]]))
+save("route/ledge.png", routeTiles([[0x087]]))
+save(
+  "route/trees.png",
+  routeTiles([
+    [0x1d4, 0x1d5, 0x1dc, 0x1dd],
+    [0x1dc, 0x1dd, 0x1d4, 0x1d5],
+  ]),
+)
+
+// The Bag the BAG screen holds up, its six pockets stacked as frames.
+save(
+  "bag.png",
+  renderIndexed(source("bag/hns/bag_male.png"), readJascPalette(source("bag/hns/bag.pal"))),
+)
 
 // PROF. OAK from the FireRed and LeafGreen intro, an 8bpp picture whose
 // palette the game loads at BG palette 6, so pixel n takes color n - 96.

@@ -156,7 +156,7 @@ export const StartMenu = () => {
         aria-controls={id}
         tabIndex={shown ? 0 : -1}
         onClick={() => (open ? close() : setOpen(true))}
-        className="pixel-corners pixel-panel pixel-label px-4 py-1.5 text-[16px] leading-none text-paper hover:text-logo-yellow focus-visible:text-logo-yellow focus-visible:outline-none"
+        className="gba-window gba-text px-[calc(6*var(--px))] [--px:1px] hover:text-ink-blue focus-visible:text-ink-blue focus-visible:outline-none"
       >
         MENU
       </button>

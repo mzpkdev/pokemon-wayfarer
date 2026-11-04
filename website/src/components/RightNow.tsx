@@ -2,7 +2,6 @@ import { type CSSProperties, useEffect, useRef, useState } from "react"
 
 import { useReducedMotion } from "~/lib/hooks"
 import {
-  LivingClock,
   type LivingWorld,
   loadLiving,
   loadNotables,
@@ -37,8 +36,8 @@ const SHIPS: Record<string, { src: string; width: number; height: number }> = {
 }
 const TRAIN = { src: "/game/sprites/magnet-train.png", width: 128, height: 32 }
 
-/** How big a ship or the train is drawn on its track: the sprite's pixels, halved. */
-const TRACK_SCALE = 0.5
+/** How big a ship or the train is drawn on its track: one CSS pixel per GBA pixel. */
+const TRACK_SCALE = 1
 
 /** A walking frame lasts about this long, in ms (the game's 8 ticks). */
 const STEP_MS = 140
@@ -74,9 +73,9 @@ const GROUPS: Group[] = [
 
 /**
  * A leg drawn as a line between two places, with whatever rides it put at
- * `progress` along the way (0 at `from`, 1 at `to`). The line is dashed like
- * the map's sea lanes, and ends `--end` in from the edges, half the widest
- * sprite, so a ship in port stays inside the board.
+ * `progress` along the way (0 at `from`, 1 at `to`). The line is dotted in
+ * ink like the Town Map's sea lanes, and ends `--end` in from the edges, half
+ * the widest sprite, so a ship in port stays inside the window.
  */
 const Track = ({
   from,
@@ -89,23 +88,42 @@ const Track = ({
   progress: number
   children: React.ReactNode
 }) => (
-  <div className="relative pt-9 pb-5 [--end:2rem]">
+  <div className="relative pt-[calc(24*var(--px))] [--end:calc(32*var(--px))]">
     <div
       aria-hidden="true"
-      className="mx-[var(--end)] h-0 border-t-2 border-dashed border-paper/30"
+      className="mx-[var(--end)] h-[var(--px)] bg-[linear-gradient(to_right,var(--color-ink)_50%,transparent_50%)] bg-size-[calc(4*var(--px))_100%]"
     />
     <div
       aria-hidden="true"
-      className="absolute top-9 -translate-x-1/2 -translate-y-[60%] motion-safe:transition-[left] motion-safe:duration-150 motion-safe:ease-linear"
+      className="absolute top-[calc(24*var(--px))] -translate-x-1/2 -translate-y-[70%] motion-safe:transition-[left] motion-safe:duration-150 motion-safe:ease-linear"
       style={{ left: `calc(var(--end) + (100% - 2 * var(--end)) * ${progress})` }}
     >
       {children}
     </div>
-    <div className="mt-2 flex justify-between gap-4 text-xs text-paper/60">
-      <span className="truncate">{from}</span>
-      <span className="truncate text-right">{to}</span>
+    <div className="mt-[calc(4*var(--px))] flex justify-between gap-4" aria-hidden="true">
+      <span className="truncate">{from.toUpperCase()}</span>
+      <span className="truncate text-right">{to.toUpperCase()}</span>
     </div>
   </div>
+)
+
+/** A ride's row: its name in blue and where it is, beside its track. */
+const RideRow = ({
+  name,
+  status,
+  children,
+}: {
+  name: string
+  status: string
+  children: React.ReactNode
+}) => (
+  <li className="grid items-end gap-x-[calc(12*var(--px))] md:grid-cols-[calc(128*var(--px))_1fr]">
+    <div className="md:pb-[calc(20*var(--px))]">
+      <p className="window-title">{name}</p>
+      <p>{status}</p>
+    </div>
+    {children}
+  </li>
 )
 
 const ShipRow = ({ ship, living }: { ship: Ship; living: LivingWorld }) => {
@@ -113,13 +131,10 @@ const ShipRow = ({ ship, living }: { ship: Ship; living: LivingWorld }) => {
   const from = living.ports[ship.from]!.name
   const next = living.ports[ship.next]!.name
   return (
-    <li className="grid items-center gap-x-6 sm:grid-cols-[10rem_1fr]">
-      <div>
-        <p className="pixel-label text-[16px] leading-none text-logo-yellow">{ship.name}</p>
-        <p className="mt-1.5 text-sm leading-snug text-paper/75">
-          {ship.at === "port" ? `In port at ${from}` : `${from} to ${next}`}
-        </p>
-      </div>
+    <RideRow
+      name={ship.name}
+      status={ship.at === "port" ? `In port at ${from}` : `${from} to ${next}`}
+    >
       <Track from={from} to={next} progress={ship.progress}>
         <img
           src={sprite.src}
@@ -130,18 +145,15 @@ const ShipRow = ({ ship, living }: { ship: Ship; living: LivingWorld }) => {
           style={{ width: sprite.width * TRACK_SCALE, height: sprite.height * TRACK_SCALE }}
         />
       </Track>
-    </li>
+    </RideRow>
   )
 }
 
 const TrainRow = ({ train, name }: { train: Train; name: string }) => (
-  <li className="grid items-center gap-x-6 sm:grid-cols-[10rem_1fr]">
-    <div>
-      <p className="pixel-label text-[16px] leading-none text-logo-yellow">{name}</p>
-      <p className="mt-1.5 text-sm leading-snug text-paper/75">
-        {train.at === "station" ? `At ${train.from} Station` : `${train.from} to ${train.to}`}
-      </p>
-    </div>
+  <RideRow
+    name={name}
+    status={train.at === "station" ? `At ${train.from} Station` : `${train.from} to ${train.to}`}
+  >
     <Track from={train.from} to={train.to} progress={train.progress}>
       <img
         src={TRAIN.src}
@@ -152,7 +164,7 @@ const TrainRow = ({ train, name }: { train: Train; name: string }) => (
         style={{ width: TRAIN.width * TRACK_SCALE, height: TRAIN.height * TRACK_SCALE }}
       />
     </Track>
-  </li>
+  </RideRow>
 )
 
 /** A notable as their overworld sprite, facing the way they walk and stepping while they do. */
@@ -185,10 +197,13 @@ const Walker = ({
     translate: hop ? `0 ${-hop * SPRITE_PX}px` : undefined,
   }
   return (
-    <span className="relative block" style={{ width: 16 * SPRITE_PX, height: 32 * SPRITE_PX }}>
+    <span
+      className="relative block shrink-0"
+      style={{ width: 16 * SPRITE_PX, height: 32 * SPRITE_PX }}
+    >
       <span
         aria-hidden="true"
-        className={`absolute bottom-0.5 left-1/2 h-1.5 w-5 -translate-x-1/2 rounded-full ${notable.sea ? "bg-white/50" : "bg-black/35"}`}
+        className={`absolute bottom-0.5 left-1/2 h-1.5 w-5 -translate-x-1/2 rounded-full ${notable.sea ? "bg-[rgb(48_88_176/0.5)]" : "bg-black/35"}`}
       />
       <span aria-hidden="true" className="pixelated absolute inset-0 block" style={style} />
     </span>
@@ -267,72 +282,92 @@ export const RightNow = () => {
   return (
     <div
       ref={rootRef}
-      className="pixel-corners pixel-panel relative px-5 py-6 sm:px-8 sm:py-8"
+      className="grid gap-[calc(4*var(--px))] [--px:2px]"
       aria-busy={!ready && !failed}
     >
       {failed ? (
-        <p className="gba-text gba-text-light [--px:1px]">The world is out of reach right now.</p>
+        <p className="gba-window gba-text">The world is out of reach right now.</p>
       ) : !ready ? (
-        <p className="gba-text gba-text-light min-h-[20rem] [--px:1px]">Loading the world…</p>
+        <p className="gba-window gba-text min-h-[20rem]">Loading the world…</p>
       ) : (
         <>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
-            <LivingClock
-              living={living}
-              minutes={now.minutes}
-              className="pixel-corners [--px:1px]"
-            />
-            <p className="pixel-label text-[16px] text-paper/70">DAY {period!.day}</p>
-            <p className="text-sm text-paper/60">
-              Two minutes to a day here. In the game a day is two hours of play.
+          <div className="gba-window gba-text flex flex-wrap items-center gap-x-[calc(8*var(--px))]">
+            <p
+              role="timer"
+              aria-label={`${period!.name}, ${period!.clock}`}
+              className="flex items-center gap-[calc(4*var(--px))]"
+            >
+              <span
+                aria-hidden
+                className="inline-block size-[calc(8*var(--px))] shrink-0 shadow-[0_0_0_var(--px)_var(--color-ink)]"
+                style={{ background: `rgb(${period!.tint.map(Math.round).join(" ")})` }}
+              />
+              <span className="uppercase">{period!.name}</span>
+              <span className="tabular-nums">{period!.clock}</span>
+            </p>
+            <p className="window-title">DAY {period!.day}</p>
+            <p className="basis-full">
+              A day here is two minutes. In the game it's two hours of play.
             </p>
           </div>
 
-          <h3 className="pixel-label mt-8 text-[16px] text-logo-yellow">AT SEA AND ON THE RAILS</h3>
-          <ul className="mt-4 grid gap-5">
-            {ships.map((ship) => (
-              <ShipRow key={ship.id} ship={ship} living={living} />
-            ))}
-            {train && living.train && <TrainRow train={train} name={living.train.name} />}
-          </ul>
-
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
-            <h3 className="pixel-label text-[16px] text-logo-yellow">ON THEIR ROUNDS</h3>
-            <ul className="flex flex-wrap gap-1.5" aria-label="Who to show">
-              {GROUPS.map((entry) => {
-                const on = entry.id === chosen.id
-                return (
-                  <li key={entry.id}>
-                    <button
-                      type="button"
-                      aria-pressed={on}
-                      onClick={() => setGroup(entry.id)}
-                      className={`pixel-corners px-3 py-1.5 font-[family-name:var(--font-gba)] text-[14px] leading-[16px] ${
-                        on
-                          ? "bg-[rgb(232_208_64)] text-[rgb(56_56_56)]"
-                          : "bg-black/30 text-paper/80 hover:bg-black/50 hover:text-paper"
-                      }`}
-                    >
-                      {entry.label}
-                    </button>
-                  </li>
-                )
-              })}
+          <div className="gba-window gba-text">
+            <h3 className="window-title">AT SEA AND ON THE RAILS</h3>
+            <ul className="mt-[calc(8*var(--px))] grid gap-[calc(12*var(--px))]">
+              {ships.map((ship) => (
+                <ShipRow key={ship.id} ship={ship} living={living} />
+              ))}
+              {train && living.train && <TrainRow train={train} name={living.train.name} />}
             </ul>
           </div>
-          <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-5 sm:grid-cols-3 lg:grid-cols-4">
-            {walking.map((notable) => (
-              <li key={notable.slug} className="flex items-start gap-3">
-                <Walker notable={notable} world={notables} tick={now.tick} still={reducedMotion} />
-                <div className="min-w-0 pt-1">
-                  <p className="pixel-label text-[16px] leading-none">
-                    {notable.name.toUpperCase()}
-                  </p>
-                  <p className="mt-1 text-[13px] leading-snug text-paper/70">{doing(notable)}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
+
+          <div className="gba-window gba-text">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-[calc(12*var(--px))]">
+              <h3 className="window-title">ON THEIR ROUNDS</h3>
+              {/* The regions as a menu across the window, the ▶ cursor on the one shown. */}
+              <ul className="flex flex-wrap gap-x-[calc(8*var(--px))]" aria-label="Who to show">
+                {GROUPS.map((entry) => {
+                  const on = entry.id === chosen.id
+                  return (
+                    <li key={entry.id}>
+                      <button
+                        type="button"
+                        aria-pressed={on}
+                        onClick={() => setGroup(entry.id)}
+                        className="group flex items-center focus-visible:outline-none"
+                      >
+                        <span
+                          aria-hidden="true"
+                          className={`inline-block w-[calc(10*var(--px))] ${on ? "" : "invisible group-hover:visible group-focus-visible:visible"}`}
+                        >
+                          ▶
+                        </span>
+                        {entry.label}
+                      </button>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+            <ul className="mt-[calc(8*var(--px))] grid gap-x-[calc(12*var(--px))] gap-y-[calc(8*var(--px))] md:grid-cols-2">
+              {walking.map((notable) => (
+                <li key={notable.slug} className="flex items-center gap-[calc(6*var(--px))]">
+                  <Walker
+                    notable={notable}
+                    world={notables}
+                    tick={now.tick}
+                    still={reducedMotion}
+                  />
+                  <div className="min-w-0">
+                    <p className="window-title">
+                      {notable.name.toUpperCase().replaceAll("É", "é")}
+                    </p>
+                    <p>{doing(notable)}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </>
       )}
     </div>

@@ -33,7 +33,10 @@ Everything on the page is drawn with the game's own graphics, rendered from
 - the opening's four parallax layers and Poké Ball, which `TitleScene` composes
   on a canvas at GBA resolution and scales by whole pixels
 - the title screen's logo, wordmark, PRESS START and passing sprites
-- the 20 text window frames, map name popups and key item icons
+- the 20 text window frames, map name popups (wood, and Heart & Soul's
+  illustrated ones that head the page's sections) and key item icons
+- the route under the page, in Route 101's metatiles (grass, tall grass, a
+  ledge, its staggered trees) and Route 103's water, and the Bag
 - `Wayfarer Text`, a web font traced from the game's normal Latin font, with
   glyph widths from `game/src/fonts.c` and characters from `game/charmap.txt`
 - PROF. OAK, his oval and the POKéMON he sends out, from the new game intro
@@ -48,8 +51,24 @@ The release date lives in `src/lib/release.ts`.
 
 ## The page
 
-Below the title scene and the world map, the page is Astro markup around a
-few React islands:
+Below the title scene and the world map, PROF. OAK asks for your email in
+the dark grass, and then the page walks down a route (`components/route/`):
+Route 101's grass in a clearing walled in by its trees, fading in and out
+of the dark in the warp's four steps, with a one-way ledge between places.
+Each place opens with a map name popup and an outlined heading, and
+everything it says is in the game's text windows, in the game's font:
+
+- every word of copy sits in a text window (`gba-window gba-text`), with
+  `window-title` lines in the game's blue ink; nothing is set in a web font
+  except form input
+- windows and sprites are drawn at 2 CSS pixels per GBA pixel (`--px: 2px`),
+  the route's tiles too; headings and popups step up to 3 on wider screens
+- each section is one of the game's screens: the RIGHT NOW board,
+  `WorldCard` (the Trainer Card's dotted rows and badge case), `BagScreen`
+  (the BAG's pocket list, its ▶ cursor and the printed description), the
+  FAQ as a menu window, the sign-up as the naming screen
+
+The React islands:
 
 - `StartMenu` is the page's navigation, drawn as the game's START menu: a
   MENU button once the title screen is behind (top right; a pill in the
@@ -61,8 +80,12 @@ few React islands:
   Champion at what they are doing, read from the world map's own simulation
   on the page's clock (see `src/world-map/README.md`), so the board and the
   map always agree.
+- `BagScreen` lists the highlights as the BAG's key items: pointing or the
+  arrow keys move the cursor, the Bag shakes and the item's description
+  prints in the message box.
 - `OakStage`, `StoryShuffle` and `DialogBox` draw the sign-up and the
-  open-world section's figures.
+  open-world section's figures. `DialogBox`'s `usePrinter` is the game's
+  text printer, shared with `BagScreen`.
 
 ## Link previews
 
