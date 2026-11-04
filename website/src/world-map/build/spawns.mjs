@@ -7,10 +7,10 @@
 const SAMPLE = 32
 
 const TILE_FLAG_HAS_ENCOUNTERS = 1
-const TILE_FLAG_SURFABLE = 2
+export const TILE_FLAG_SURFABLE = 2
 
 /** Behavior value -> its tile flags, from the behavior enum and the flags table. */
-const readBehaviorFlags = (game) => {
+export const readBehaviorFlags = (game) => {
   const header = game.read("include/constants/metatile_behaviors.h").toString()
   const values = new Map()
   let next = 0
@@ -46,6 +46,22 @@ const sample = (cells) => {
   return out
 }
 
+/** A metatile id's behavior, for a layout's pair of tilesets. */
+export const readBehavior = (game, primaryName, secondaryName) => {
+  const primary = game.tileset(primaryName)
+  const secondary = game.tileset(secondaryName)
+  return (id) => {
+    const source = id < primary.count ? primary : secondary
+    const local = id < primary.count ? id : id - primary.count
+    const { attributes } = source
+    if (!attributes) return 0
+    // FRLG's are u32 with a 9-bit behavior, Emerald's u16 with 8 bits.
+    return attributes.length / source.count >= 4
+      ? attributes.readUInt32LE(local * 4) & 0x1ff
+      : attributes.readUInt16LE(local * 2) & 0xff
+  }
+}
+
 /**
  * Per placed map (by folder name), its land and water encounter cells in grid
  * coordinates, as flat x, y pairs: `{ l, w }`, each missing when empty.
@@ -54,18 +70,7 @@ export const readSpawns = (game, { all, minX, minY }) => {
   const flagsOf = readBehaviorFlags(game)
   const spawns = {}
   for (const p of all) {
-    const primary = game.tileset(p.l.primary_tileset)
-    const secondary = game.tileset(p.l.secondary_tileset)
-    const behavior = (id) => {
-      const source = id < primary.count ? primary : secondary
-      const local = id < primary.count ? id : id - primary.count
-      const { attributes } = source
-      if (!attributes) return 0
-      // FRLG's are u32 with a 9-bit behavior, Emerald's u16 with 8 bits.
-      return attributes.length / source.count >= 4
-        ? attributes.readUInt32LE(local * 4) & 0x1ff
-        : attributes.readUInt16LE(local * 2) & 0xff
-    }
+    const behavior = readBehavior(game, p.l.primary_tileset, p.l.secondary_tileset)
     const blocks = game.read(p.l.blockdata_filepath)
     const land = []
     const water = []

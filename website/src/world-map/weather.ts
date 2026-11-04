@@ -25,7 +25,7 @@ const DENSITY: Record<Weather, number> = {
 /** Metatiles across the lattice the drops hang on, so their number follows what's on screen. */
 const LATTICE = 8
 /** The most drops one lattice cell holds. */
-const MOST = 160
+const MOST = 240
 /** The haze each weather lays over its map: a color and how strong, there from far out. The storm's is the rain's, so the two join without a step. */
 const HAZE: Record<Weather, [string, number]> = {
   rain: ["rgb(24 40 96)", 0.22],
@@ -80,53 +80,137 @@ type Box = { x: number; y: number; w: number; h: number }
  * Fills `box` with `color`, fading in from its edges over `feather` device
  * pixels, so it doesn't lie on the world as a hard-edged shape where a map
  * runs over open sea. Along `joins` (in device pixels along each side) the
- * edge stays full, so two maps' weather reads as one.
+ * edge stays full, so two maps' weather reads as one; where a join ends
+ * short of a corner the full edge tapers off over the same distance, to
+ * meet the next map's own fade.
  */
 const hazeFill = (
   context: CanvasRenderingContext2D,
   color: string,
   { x, y, w, h }: Box,
   feather: number,
-  joins: { side: Side; from: number; to: number }[],
+  joins: Join[],
 ) => {
   const f = Math.min(feather, Math.floor(Math.min(w, h) / 4))
   const clear = color.replace(")", " / 0)")
   context.fillStyle = color
   context.fillRect(x + f, y + f, w - f * 2, h - f * 2)
-  if (f > 0) {
-    // The four edges, each a strip fading out, and the corners between them.
-    for (const [x0, y0, x1, y1, rx, ry, rw, rh] of [
-      [x, 0, x + f, 0, x, y + f, f, h - f * 2],
-      [x + w, 0, x + w - f, 0, x + w - f, y + f, f, h - f * 2],
-      [0, y, 0, y + f, x + f, y, w - f * 2, f],
-      [0, y + h, 0, y + h - f, x + f, y + h - f, w - f * 2, f],
-    ] as const) {
-      const edge = context.createLinearGradient(x0, y0, x1, y1)
-      edge.addColorStop(0, clear)
-      edge.addColorStop(1, color)
-      context.fillStyle = edge
-      context.fillRect(rx, ry, rw, rh)
+  if (f <= 0) return
+  /** A gradient from `clear` at (x0, y0) to `color` at (x1, y1). */
+  const fade = (x0: number, y0: number, x1: number, y1: number) => {
+    const edge = context.createLinearGradient(x0, y0, x1, y1)
+    edge.addColorStop(0, clear)
+    edge.addColorStop(1, color)
+    return edge
+  }
+  // Each side: its strip between the corners, split along the side into the
+  // open runs, which fade in from the edge, and the joined runs, which stay full.
+  const covered = {
+    left: [false, false],
+    right: [false, false],
+    top: [false, false],
+    bottom: [false, false],
+  }
+  for (const side of ["left", "top", "right", "bottom"] as const) {
+    const vertical = side === "left" || side === "right"
+    const lo = vertical ? y : x
+    const hi = vertical ? y + h : x + w
+    const at = side === "left" ? x : side === "right" ? x + w - f : side === "top" ? y : y + h - f
+    const across = fade(
+      vertical ? (side === "left" ? x : x + w) : 0,
+      vertical ? 0 : side === "top" ? y : y + h,
+      vertical ? (side === "left" ? x + f : x + w - f) : 0,
+      vertical ? 0 : side === "top" ? y + f : y + h - f,
+    )
+    const rect = (from: number, to: number, style: string | CanvasGradient) => {
+      if (to <= from) return
+      context.fillStyle = style
+      if (vertical) context.fillRect(at, from, f, to - from)
+      else context.fillRect(from, at, to - from, f)
     }
-    for (const [cx, cy, rx, ry] of [
-      [x + f, y + f, x, y],
-      [x + w - f, y + f, x + w - f, y],
-      [x + f, y + h - f, x, y + h - f],
-      [x + w - f, y + h - f, x + w - f, y + h - f],
-    ] as const) {
+    const runs = joins
+      .filter((join) => join.side === side)
+      .map(({ from, to }) => ({ from: Math.max(lo, from), to: Math.min(hi, to) }))
+      .filter(({ from, to }) => to > from)
+      .toSorted((a, b) => a.from - b.from)
+    let cursor = lo + f
+    for (const run of runs) {
+      rect(cursor, Math.max(cursor, run.from), across)
+      rect(Math.max(cursor, run.from), Math.min(hi - f, run.to), color)
+      cursor = Math.max(cursor, Math.min(hi - f, run.to))
+      // Where the join covers a corner, that corner is joined on this side;
+      // where it ends short of one, the full edge tapers off.
+      if (run.from <= lo) covered[side][0] = true
+      else
+        rect(
+          run.from - f,
+          run.from,
+          vertical ? fade(0, run.from - f, 0, run.from) : fade(run.from - f, 0, run.from, 0),
+        )
+      if (run.to >= hi) covered[side][1] = true
+      else
+        rect(
+          run.to,
+          run.to + f,
+          vertical ? fade(0, run.to + f, 0, run.to) : fade(run.to + f, 0, run.to, 0),
+        )
+    }
+    rect(cursor, hi - f, across)
+  }
+  // The corners: full where joined on both sides, one side's fade where
+  // joined on the other, and a quarter round where open on both.
+  for (const [cx, cy, rx, ry, joinedV, joinedH, fadeV, fadeH] of [
+    [
+      x + f,
+      y + f,
+      x,
+      y,
+      covered.left[0],
+      covered.top[0],
+      fade(x, 0, x + f, 0),
+      fade(0, y, 0, y + f),
+    ],
+    [
+      x + w - f,
+      y + f,
+      x + w - f,
+      y,
+      covered.right[0],
+      covered.top[1],
+      fade(x + w, 0, x + w - f, 0),
+      fade(0, y, 0, y + f),
+    ],
+    [
+      x + f,
+      y + h - f,
+      x,
+      y + h - f,
+      covered.left[1],
+      covered.bottom[0],
+      fade(x, 0, x + f, 0),
+      fade(0, y + h, 0, y + h - f),
+    ],
+    [
+      x + w - f,
+      y + h - f,
+      x + w - f,
+      y + h - f,
+      covered.right[1],
+      covered.bottom[1],
+      fade(x + w, 0, x + w - f, 0),
+      fade(0, y + h, 0, y + h - f),
+    ],
+  ] as const) {
+    if (joinedV && joinedH) context.fillStyle = color
+    else if (joinedV) context.fillStyle = fadeH
+    else if (joinedH) context.fillStyle = fadeV
+    else {
       const corner = context.createRadialGradient(cx, cy, 0, cx, cy, f)
       corner.addColorStop(0, color)
       corner.addColorStop(1, clear)
       context.fillStyle = corner
-      context.fillRect(rx, ry, f, f)
     }
-  }
-  // The joined stretches, filled back to full strength out to the edge.
-  context.fillStyle = color
-  for (const { side, from, to } of joins) {
-    if (side === "left") context.fillRect(x, from, f, to - from)
-    else if (side === "right") context.fillRect(x + w - f, from, f, to - from)
-    else if (side === "top") context.fillRect(from, y, to - from, f)
-    else context.fillRect(from, y + h - f, to - from, f)
+    context.fillRect(rx, ry, f, f)
   }
 }
 
@@ -183,8 +267,9 @@ export const weatherOverlay = (meta: Meta, animate: boolean, now: () => number):
         // A flash now and then, the map lit white for a moment.
         const since = (t + seed * 1733) % FLASH_EVERY_MS
         if (animate && t > 0 && since < FLASH_MS) {
+          // Fading on every edge: the map next door doesn't flash with it.
           context.globalAlpha = 0.45 * (1 - since / FLASH_MS)
-          hazeFill(context, "rgb(255 255 255)", box, feather, joins)
+          hazeFill(context, "rgb(255 255 255)", box, feather, [])
         }
       }
       if (drops > 0 && DENSITY[weather] > 0) {
@@ -198,12 +283,12 @@ export const weatherOverlay = (meta: Meta, animate: boolean, now: () => number):
         const firstJ = Math.max(0, Math.floor((0 - a.y) / cell))
         const lastI = Math.min(Math.ceil(spot.w / LATTICE), Math.ceil((width - a.x) / cell))
         const lastJ = Math.min(Math.ceil(spot.h / LATTICE), Math.ceil((height - a.y) / cell))
-        context.globalAlpha = drops
+        context.globalAlpha = 1
         for (let j = firstJ; j < lastJ; j++)
           for (let i = firstI; i < lastI; i++) {
             const cx = a.x + i * cell
             const cy = a.y + j * cell
-            const here = Math.floor(roll(seed, i, j) * 0xffff)
+            const here = Math.floor(roll(seed, i, j) * 0x7fffffff)
             // A fraction of a drop is a chance of one.
             const count = Math.min(
               MOST,
