@@ -290,6 +290,13 @@ const Player = ({
         )}
 
         <div className="pointer-events-none absolute inset-0 bg-black" style={{ opacity: black }} />
+
+        {/* The narration, to read along while there is no voice: in the browser only, never in a captured frame. */}
+        {!capture && shown?.slot.narration && (
+          <p className="pointer-events-none absolute inset-x-0 top-[calc(8*var(--px))] mx-auto max-w-[70%] rounded bg-black/60 px-4 py-2 text-center font-sans text-[calc(5*var(--px))] leading-snug text-white/90">
+            {shown.slot.narration}
+          </p>
+        )}
       </div>
 
       {/* The dashboard, outside the frame: where we are, for the keyboard (space, arrows, Home). */}
