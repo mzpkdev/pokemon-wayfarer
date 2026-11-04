@@ -96,8 +96,8 @@ by default.
   keyframes (`world`, `regions`, a `map` point, a grid `point` from the
   studio, the league `circuit`, or a `notable` wherever their routine has
   them), the game clock (held, or run across the scene for a time-lapse),
-  layers, the badge pins, the walkers, the daily roads, the wild waves, a
-  ride in, a title card and a gameplay `insert`.
+  layers, the badge pins, the walkers, the daily roads, the wild waves, the
+  rides in, a title card and a gameplay `insert`.
 - `src/schedule.ts` turns the script into start times: a scene lasts its
   `seconds`, or its voice clip plus a lead-in and a tail when that is longer,
   so the picture always waits for the words.

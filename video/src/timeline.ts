@@ -34,8 +34,12 @@ export type Direction = {
   layers?: Partial<Layers>
   /** The wild Pokémon waves, popping out of the whole world from the scene's start. */
   wild?: boolean
-  /** The player rides in on their bike along a start's route, over this span of the scene; the camera follows. */
-  rider?: Span & { start: StartId }
+  /**
+   * The player rides in on their bike along a start's route over each span,
+   * the camera coming in with them; between rides they wait at the door, and
+   * the game's warp (a fade to black and back) cuts to the next start.
+   */
+  rides?: (Span & { start: StartId })[]
   /** The badge pins, and how much of the league circuit is drawn (0 pins only, 1 the whole circuit). */
   badges?: { circuit: number | [number, number] }
   /** The daily trainers and items on every road, with the day stepping from 1 to `days` across the scene. */
@@ -71,18 +75,16 @@ export const DIRECTIONS: Record<string, Direction> = {
     wild: true,
   },
   start: {
-    shots: [
-      { at: 0, to: { kind: "map", name: "PalletTown_hns", x: 12, y: 10, zoom: 24 } },
-      { at: 0.3, to: { kind: "map", name: "PalletTown_hns", x: 12, y: 10, zoom: 24 } },
-      { at: 0.5, to: { kind: "map", name: "NewBarkTown_hns", x: 14, y: 16, zoom: 20 } },
-      { at: 0.65, to: { kind: "map", name: "NewBarkTown_hns", x: 14, y: 16, zoom: 20 } },
-      { at: 0.85, to: { kind: "map", name: "LittlerootTown", x: 10, y: 10, zoom: 20 } },
-      { at: 1, to: { kind: "map", name: "LittlerootTown", x: 10, y: 10, zoom: 20 } },
-    ],
+    // The rides set the camera; this is only where it would be without them.
+    shots: [{ at: 0, to: { kind: "map", name: "PalletTown_hns", x: 12, y: 10, zoom: 24 } }],
     clock: { at: h(9) },
-    // RED rides in to his front door while the first town is on; the camera comes in with him.
-    rider: { start: "kanto", from: 0, to: 0.28 },
-    insert: { from: 0.35, to: 0.95, clip: "oak-choice" },
+    // RED, GOLD and BRENDAN each ride to their front door, a warp between.
+    rides: [
+      { start: "kanto", from: 0, to: 0.24 },
+      { start: "johto", from: 0.33, to: 0.57 },
+      { start: "hoenn", from: 0.66, to: 0.9 },
+    ],
+    insert: { from: 0.1, to: 0.95, clip: "oak-choice" },
   },
   gyms: {
     shots: [

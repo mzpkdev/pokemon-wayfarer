@@ -30,7 +30,7 @@ export const SCENES: Scene[] = [
     narration:
       "Begin in Pallet Town, New Bark Town or Littleroot. Your party, your Bag and your Pokédex go everywhere you do.",
     caption: ["Start in KANTO, JOHTO", "or HOENN."],
-    seconds: 8,
+    seconds: 12,
   },
   {
     id: "gyms",
