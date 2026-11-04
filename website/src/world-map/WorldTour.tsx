@@ -138,7 +138,7 @@ const CIRCUIT_MS = 300
 
 /** A choice of start: the same yellow when picked, a dark plate otherwise. */
 const OPTION =
-  "pixel-corners flex w-full items-baseline justify-between gap-3 px-4 pt-2 pb-3 text-left font-[family-name:var(--font-gba)] text-[16px] leading-[16px] sm:text-[24px] sm:leading-[24px] has-focus-visible:shadow-[inset_0_0_0_4px_rgb(48_80_200)]"
+  "pixel-corners flex w-full items-baseline justify-between gap-3 px-4 py-2.5 text-left font-[family-name:var(--font-gba)] text-[16px] leading-[16px] sm:text-[24px] sm:leading-[24px] has-focus-visible:shadow-[inset_0_0_0_4px_rgb(48_80_200)]"
 
 /** Metatiles across and down in the close-up shots, and in a league's: its region around it. */
 const CLOSE_UP = { width: 44, height: 30 }
@@ -411,7 +411,7 @@ const CircuitLeagues = ({
           <button
             type="button"
             onClick={() => onFocus(entry.id)}
-            className="pixel-corners w-full bg-black/30 px-4 pt-2 pb-3 text-left hover:bg-black/50 focus-visible:shadow-[inset_0_0_0_4px_rgb(48_80_200)] focus-visible:outline-none"
+            className="pixel-corners w-full bg-white/8 px-4 py-2.5 text-left hover:bg-white/15 focus-visible:shadow-[inset_0_0_0_4px_rgb(48_80_200)] focus-visible:outline-none"
           >
             <LeagueState league={entry} calling={calling[entry.id]} />
           </button>
@@ -426,7 +426,10 @@ const CircuitLeagues = ({
         onClick={() => onFocus(null)}
         className="pixel-label text-[16px] leading-none text-paper/70 hover:text-paper focus-visible:text-paper focus-visible:underline focus-visible:outline-none"
       >
-        ◀ ALL 24 GYMS
+        <span aria-hidden="true" className="inline-block -scale-x-100">
+          ▶
+        </span>{" "}
+        ALL 24 GYMS
       </button>
       <LeagueHalls
         league={entry}
@@ -507,7 +510,7 @@ const DailyCard = ({
     "pixel-label px-3 pt-1 pb-2 text-paper/70 hover:text-paper disabled:opacity-30 focus-visible:text-paper focus-visible:underline focus-visible:outline-none"
   return (
     <div className="mt-4">
-      <div className="pixel-corners flex items-center justify-between bg-black/30 px-2">
+      <div className="pixel-corners flex items-center justify-between bg-white/8 px-2">
         <button
           type="button"
           className={step}
@@ -515,7 +518,10 @@ const DailyCard = ({
           onClick={() => onDay(day - 1)}
           aria-label="The day before"
         >
-          ◀
+          {/* The game's font has only the ▶ cursor, so the other way is that glyph mirrored. */}
+          <span aria-hidden="true" className="inline-block -scale-x-100">
+            ▶
+          </span>
         </button>
         <p className="pixel-label text-sign">DAY {day}</p>
         <button
@@ -568,8 +574,9 @@ const JourneyStrip = ({
 }) => {
   const marks: Record<StopName, ReactNode> = {
     town: (
+      // The rider's art fills rows 11 to 31 of its 32px frame, so it is lifted to sit centred.
       <span
-        className="pixelated block size-8"
+        className="pixelated block size-8 -translate-y-[5px]"
         style={{ backgroundImage: `url(${start.rider})`, backgroundSize: "288px 32px" }}
       />
     ),
@@ -609,7 +616,7 @@ const JourneyStrip = ({
             className={`pixel-corners grid size-9 place-items-center sm:size-10 ${
               i === stop
                 ? "bg-sign"
-                : `bg-black/30 hover:bg-black/50 ${i < stop ? "" : "opacity-50 hover:opacity-100"}`
+                : `bg-white/8 hover:bg-white/15 ${i < stop ? "" : "opacity-50 hover:opacity-100"}`
             } focus-visible:shadow-[inset_0_0_0_3px_rgb(48_80_200)] focus-visible:outline-none`}
           >
             {marks[name]}
@@ -1637,7 +1644,7 @@ export const WorldTour = ({
           */}
           <div
             ref={captionsRef}
-            className="grid max-lg:h-[34svh] max-lg:overflow-y-auto max-lg:overscroll-contain lg:h-[calc(100svh-20rem)] lg:overflow-y-auto lg:overscroll-contain"
+            className="thin-scroll grid max-lg:h-[34svh] max-lg:overflow-y-auto max-lg:overscroll-contain lg:h-[calc(100svh-20rem)] lg:overflow-y-auto lg:overscroll-contain"
           >
             {captions.map((caption, i) => {
               const shown = stop === i
@@ -1666,7 +1673,7 @@ export const WorldTour = ({
                             className={`${OPTION} ${
                               picked
                                 ? "bg-sign text-ink shadow-[inset_0_0_0_4px_rgb(90_90_123)]"
-                                : "cursor-pointer bg-black/30 text-paper/80 shadow-[inset_0_0_0_4px_rgb(0_0_0/0.4)] hover:bg-black/50 hover:text-paper"
+                                : "cursor-pointer bg-white/6 text-paper/80 shadow-[inset_0_0_0_4px_rgb(255_255_255/0.1)] hover:bg-white/12 hover:text-paper"
                             }`}
                           >
                             <input

@@ -214,6 +214,12 @@
   image-rendering: pixelated;
 }
 
+/** A thin scrollbar in the sign's tan, for a panel that scrolls inside the map. */
+@utility thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(230 172 123 / 0.6) rgb(255 255 255 / 0.08);
+}
+
 /** Corners cut in two pixel steps, the way GBA windows round theirs. */
 @utility pixel-corners {
   --step: 4px;
@@ -246,7 +252,7 @@
  * text reads over bright tiles, with the same faint lit edge and no bevel.
  */
 @utility pixel-panel {
-  background: rgb(4 20 4 / 0.92);
+  background: rgb(4 20 4 / 0.85);
   box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.07);
 }
 
