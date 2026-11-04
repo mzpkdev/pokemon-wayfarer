@@ -17,6 +17,8 @@ export const MeadowTorchic = () => {
   const reducedMotion = useReducedMotion()
   const [tripFrame, setTripFrame] = useState<number | null>(null)
   const timers = useRef<number[]>([])
+  // Set the moment a trip starts, so a second press before React re-renders can't start another.
+  const trippingRef = useRef(false)
 
   useEffect(
     () => () => {
@@ -26,7 +28,8 @@ export const MeadowTorchic = () => {
   )
 
   const trip = () => {
-    if (tripFrame !== null) return
+    if (trippingRef.current) return
+    trippingRef.current = true
     let at = 0
     for (const { frame, duration } of TORCHIC_TRIP) {
       timers.current.push(window.setTimeout(() => setTripFrame(frame), at))
@@ -36,6 +39,7 @@ export const MeadowTorchic = () => {
       window.setTimeout(() => {
         setTripFrame(null)
         timers.current = []
+        trippingRef.current = false
       }, at),
     )
   }
@@ -48,10 +52,14 @@ export const MeadowTorchic = () => {
     >
       <button
         type="button"
-        aria-label="Torchic, running by"
+        aria-label={
+          reducedMotion
+            ? "Torchic. Press to trip it up."
+            : "Torchic, running by. Press to trip it up."
+        }
         onClick={trip}
         className={`torchic block focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-sign-light ${
-          tripping || reducedMotion ? "still" : ""
+          tripping ? "tripping still" : reducedMotion ? "still" : ""
         }`}
         style={
           tripping

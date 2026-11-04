@@ -546,6 +546,11 @@
     left: auto;
     right: 12%;
   }
+
+  /* Before the island hydrates too: it stands in the grass. */
+  .torchic:not(.tripping) {
+    animation: none;
+  }
 }
 
 @keyframes torchic-run {

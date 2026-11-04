@@ -1688,7 +1688,7 @@ export const WorldTour = ({
                               {picked ? "▶ " : ""}
                               {option.label}
                             </span>
-                            <span className={picked ? "text-ink/70" : "text-paper/50"}>
+                            <span className={picked ? "text-ink" : "text-paper/50"}>
                               {option.region}
                             </span>
                           </label>
