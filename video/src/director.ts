@@ -1,7 +1,7 @@
 // Draws a shot of the world on the canvas, and makes the timeline's shots.
 // Everything drawn is the website's own code (`~/world-map`); this file only
 // decides what it draws when.
-import { type Camera, fit, fly } from "~/world-map/camera"
+import { type Camera, fit, fly as flyEased } from "~/world-map/camera"
 import { cloudsOverlay } from "~/world-map/clouds"
 import { DAILY_SEED, dailyOn, loadDaily, placedMaps } from "~/world-map/daily"
 import { type DailyScene, dailyOverlay } from "~/world-map/dailyView"
@@ -42,6 +42,30 @@ import { loadWild, type WildClock, wildOverlay } from "~/world-map/wild"
 import type { Slot } from "./schedule"
 import { ALL_LAYERS, type Shot } from "./shot"
 import { DEFAULT_MINUTES, type Direction, DIRECTIONS, type Target } from "./timeline"
+
+/** The website's `ease`, which `fly` applies: gentle at both ends. */
+const easeBoth = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2)
+/** Its inverse, so a flight can be given another shape and still pass through the website's `fly`. */
+const uneaseBoth = (y: number) => {
+  let lo = 0
+  let hi = 1
+  for (let i = 0; i < 40; i++) {
+    const mid = (lo + hi) / 2
+    if (easeBoth(mid) < y) lo = mid
+    else hi = mid
+  }
+  return (lo + hi) / 2
+}
+const SHAPES = {
+  both: (t: number) => t,
+  in: (t: number) => uneaseBoth(t * t),
+  out: (t: number) => uneaseBoth(1 - (1 - t) ** 2),
+  none: (t: number) => uneaseBoth(t),
+}
+
+/** The camera `t` of the way from `from` to `to`, the flight shaped by `ease` (see `Keyframe`). */
+export const fly = (from: Camera, to: Camera, t: number, ease: keyof typeof SHAPES = "both") =>
+  flyEased(from, to, SHAPES[ease](Math.min(1, Math.max(0, t))))
 
 /** The closest zoom the rider is drawn at; further out he would be a speck. */
 export const RIDER_MIN_ZOOM = 6
@@ -256,7 +280,7 @@ export const cameraAt = (
   for (let i = 0; i < shots.length - 1; i++) {
     const a = shots[i]!
     const b = shots[i + 1]!
-    if (fraction <= b.at) return fly(at(a), at(b), (fraction - a.at) / (b.at - a.at))
+    if (fraction <= b.at) return fly(at(a), at(b), (fraction - a.at) / (b.at - a.at), b.ease)
   }
   return at(shots[shots.length - 1]!)
 }

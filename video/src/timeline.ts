@@ -22,8 +22,14 @@ export type Target =
   /** A ship (`aqua`, `anne` or `tidal`), wherever the scene's clock has her: at her pier or out on her lane. */
   | { kind: "ship"; id: string; zoom: number }
 
-/** The camera at `at` of the way through the scene (0 to 1); the camera flies between keyframes. */
-export type Keyframe = { at: number; to: Target }
+/**
+ * The camera at `at` of the way through the scene (0 to 1); the camera flies
+ * between keyframes. `ease` shapes the flight into this keyframe: "both" (the
+ * default) starts and ends gently, "in" only starts gently and arrives at
+ * speed, "out" leaves at speed and settles, "none" keeps one pace, so a long
+ * move can pass through a keyframe without stopping.
+ */
+export type Keyframe = { at: number; to: Target; ease?: "both" | "in" | "out" | "none" }
 
 /** A span of a scene, as fractions of its length. */
 export type Span = { from: number; to: number }
@@ -104,11 +110,12 @@ export const DIRECTIONS: Record<string, Direction> = {
   // One pull-out from the Anne in the evening light: Kanto and Johto with their Pokémon
   // popping out once they fill the frame, then every land with theirs.
   lands: {
+    // One move: it starts gently from the ship, slows through Kanto and Johto without
+    // stopping while their Pokémon pop, then goes on at speed and settles on every land.
     shots: [
       { at: 0, to: { kind: "ship", id: "anne", zoom: 6 } },
-      { at: 0.35, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.9 } },
-      { at: 0.5, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.9 } },
-      { at: 0.85, to: LANDS },
+      { at: 0.4, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.8 }, ease: "in" },
+      { at: 0.78, to: LANDS, ease: "out" },
       { at: 1, to: LANDS },
     ],
     clock: { from: h(21, 5), to: h(23, 30) },

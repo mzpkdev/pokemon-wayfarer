@@ -36,7 +36,7 @@ export const SCENES: Scene[] = [
     id: "anne",
     narration:
       "Remember the S.S. Anne? Ever wonder where she went? She sails every day, on a real loop, and she doesn't wait. Stay aboard long enough, and she'll take you to Alola.",
-    caption: ["The ANNE's in port till half", "past eight. Then she's gone."],
+    caption: ["The ANNE sails at half past", "eight. ALOLA, by the islands."],
     seconds: 12,
   },
   {
