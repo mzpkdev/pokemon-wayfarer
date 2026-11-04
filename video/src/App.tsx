@@ -1,15 +1,23 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 
 import { clockText } from "~/world-map/living"
 
+import { BOX_FONT, boxMeasure, LETTERS_PER_SECOND, pageAt, pagesFor } from "./box"
 import { directionFor, drawFrame, loadStage, riderPlace, type Stage } from "./director"
-import { type Cues, loadCues, type Slot, schedule, slotAt, totalSeconds } from "./schedule"
+import {
+  type Cues,
+  LEAD_SECONDS,
+  loadCues,
+  type Slot,
+  schedule,
+  slotAt,
+  TAIL_SECONDS,
+  totalSeconds,
+} from "./schedule"
 import { Studio } from "./Studio"
 import type { Span } from "./timeline"
 import { PixelImage, Popup, useStagePx } from "./ui"
 
-/** Letters the caption prints a second: the game's MID text speed, a letter every two frames. */
-const LETTERS_PER_SECOND = 30
 /** Seconds a card or clip takes to fade in or out, and the video to fade from and to black. */
 const FADE_SECONDS = 0.5
 
@@ -54,7 +62,7 @@ const params = new URLSearchParams(location.search)
 /** Whether `scripts/frames.mjs` is driving the page: nothing but the picture then. */
 const capture = params.has("capture")
 
-/** The timeline playing: the frame, the caption, the title card, the clip, the fades and the keyboard. */
+/** The timeline playing: the frame, the text box, the title card, the clip, the fades and the keyboard. */
 const Player = ({
   stage,
   cues,
@@ -69,6 +77,20 @@ const Player = ({
   const px = useStagePx(stageRef)
   const [shown, setShown] = useState<Shown>()
   const [clips, setClips] = useState<Record<string, Clip | null>>({})
+
+  // Each scene's narration, paged for the text box: printed from the voice's cue to its end,
+  // or across the scene when there is no voice yet.
+  const pages = useMemo(() => {
+    const measure = boxMeasure()
+    return new Map(
+      schedule(cues).map((slot) => {
+        const from = slot.voiceAt === null ? LEAD_SECONDS : slot.voiceAt - slot.start
+        const to =
+          slot.voiceSeconds === null ? slot.length - TAIL_SECONDS : from + slot.voiceSeconds
+        return [slot.id, pagesFor(slot.narration, from, to, measure)]
+      }),
+    )
+  }, [cues])
 
   useEffect(() => {
     // The gameplay clips' manifests, for the scenes that show one; a missing clip shows a placeholder.
@@ -186,9 +208,14 @@ const Player = ({
     ? Math.max(0, 1 - Math.min(shown.seconds, duration - shown.seconds) / (FADE_SECONDS * 1.6))
     : 1
 
-  const caption = shown?.slot.caption
-  const captionText = caption?.join("\n") ?? ""
-  const printed = Math.min(captionText.length, Math.floor(local * LETTERS_PER_SECOND))
+  const page =
+    shown && local >= (pages.get(shown.slot.id)?.[0]?.from ?? Infinity)
+      ? pageAt(pages.get(shown.slot.id)!, local)
+      : undefined
+  const pageText = page?.text ?? ""
+  const printed = page
+    ? Math.min(pageText.length, Math.floor((local - page.from) * LETTERS_PER_SECOND))
+    : 0
 
   const title = direction?.title
   const titleAlpha = title && shown ? alphaIn(title, local, shown.slot.length) : 0
@@ -223,7 +250,7 @@ const Player = ({
             style={
               {
                 opacity: insertAlpha,
-                // The clip at 2.5 GBA pixels per pixel: 600 by 400 at 1080p, clear of the caption.
+                // The clip at 2.5 GBA pixels per pixel: 600 by 400 at 1080p, clear of the text box.
                 "--px": `${px * 0.625}px`,
                 width: "calc(256 * var(--px))",
                 height: "calc(176 * var(--px))",
@@ -246,30 +273,6 @@ const Player = ({
           </div>
         )}
 
-        {caption && (
-          <div
-            className="absolute bottom-[calc(8*var(--px))] left-1/2 -translate-x-1/2"
-            style={{ width: "calc(240 * var(--px))" }}
-          >
-            <div className="gba-window relative bg-paper">
-              <p
-                className="gba-text whitespace-pre-line"
-                style={{ minHeight: "calc(32 * var(--px))" }}
-              >
-                {captionText.slice(0, printed)}
-                <span className="invisible">{captionText.slice(printed)}</span>
-              </p>
-              {printed >= captionText.length && (
-                <span
-                  aria-hidden="true"
-                  className="gba-down-arrow absolute"
-                  style={{ right: 0, bottom: "calc(-2 * var(--px))" }}
-                />
-              )}
-            </div>
-          </div>
-        )}
-
         {title && titleAlpha > 0 && (
           <div
             className="absolute inset-0 flex flex-col items-center justify-center gap-[calc(12*var(--px))] bg-black/55"
@@ -289,14 +292,32 @@ const Player = ({
           </div>
         )}
 
-        <div className="pointer-events-none absolute inset-0 bg-black" style={{ opacity: black }} />
-
-        {/* The narration, to read along while there is no voice: in the browser only, never in a captured frame. */}
-        {!capture && shown?.slot.narration && (
-          <p className="pointer-events-none absolute inset-x-0 top-[calc(8*var(--px))] mx-auto max-w-[70%] rounded bg-black/60 px-4 py-2 text-center font-sans text-[calc(5*var(--px))] leading-snug text-white/90">
-            {shown.slot.narration}
-          </p>
+        {/* Over the title card too: the narrator has the last word. */}
+        {page && (
+          <div
+            className="absolute bottom-[calc(8*var(--px))] left-1/2 -translate-x-1/2"
+            style={{ width: "calc(240 * var(--px))" }}
+          >
+            <div className="gba-window relative bg-paper">
+              <p
+                className="gba-text whitespace-pre-line"
+                style={{ minHeight: "calc(32 * var(--px))" }}
+              >
+                {pageText.slice(0, printed)}
+                <span className="invisible">{pageText.slice(printed)}</span>
+              </p>
+              {printed >= pageText.length && (
+                <span
+                  aria-hidden="true"
+                  className="gba-down-arrow absolute"
+                  style={{ right: 0, bottom: "calc(-2 * var(--px))" }}
+                />
+              )}
+            </div>
+          </div>
         )}
+
+        <div className="pointer-events-none absolute inset-0 bg-black" style={{ opacity: black }} />
       </div>
 
       {/* The dashboard, outside the frame: where we are, for the keyboard (space, arrows, Home). */}
@@ -326,7 +347,11 @@ export const App = () => {
   const [studio, setStudio] = useState(params.has("studio") && !capture)
 
   useEffect(() => {
-    loadStage().then(setStage, (error: unknown) => setFailed(String(error)))
+    // The text box's font first: the narration is wrapped by measuring it.
+    Promise.all([loadStage(), document.fonts.load(BOX_FONT)]).then(
+      ([loaded]) => setStage(loaded),
+      (error: unknown) => setFailed(String(error)),
+    )
     void loadCues().then(setCues)
   }, [])
 

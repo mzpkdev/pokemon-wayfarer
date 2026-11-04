@@ -2,8 +2,8 @@
 
 The launch video, made from the website's world map: the camera flies over
 the same map the landing page draws, with its ships, Gym Leaders, weather and
-time of day, while the game's text box captions each highlight and a voice
-says a little more. Short gameplay clips sit in a GBA frame beside the map
+time of day, while a traveler tells of it and the game's text box prints
+their words, page by page. Short gameplay clips sit in a GBA frame beside the map
 where the words name something concrete.
 
 Everything the map needs is the website's own code and data: `~/world-map`
@@ -69,8 +69,8 @@ renders one scene and `--from 12 --to 20` a range, to check a change.
 `pnpm render` places each scene's voice clip at its cue, mixes in the first
 track in `audio/music/` at a quarter volume (see its README; `--music` picks
 another, `--music-volume` changes the level) and encodes H.264. `--no-voice`
-renders the caption-and-music version: the captions carry the same words, so
-the video stands without a narrator.
+renders the text-box-and-music version: the text box prints every word the
+voice says, so the video stands without a narrator.
 
 ### The voice
 
@@ -89,8 +89,9 @@ by default.
 
 ## How it is put together
 
-- `src/script.ts` is the storyboard's words: each scene's narration, its
-  caption and the least it lasts. It imports nothing, so `scripts/voice.mjs`
+- `src/script.ts` is the storyboard's words: each scene's narration
+  (the voice and the text box alike), the least it lasts, and the names the
+  box prints in capitals. It imports nothing, so `scripts/voice.mjs`
   reads it under Node.
 - `src/timeline.ts` is the storyboard's pictures, keyed by scene: camera
   keyframes (`world`, `regions`, a `map` point, a grid `point` from the
@@ -108,7 +109,10 @@ by default.
   turns a scene into a shot (camera keyframes, clock, ride) and draws a shot
   with the website's renderer and overlays.
 - `src/Studio.tsx` is the studio: the free camera, the panel and its set pieces.
-- `src/App.tsx` is the page: the canvas, the caption printing a letter every
+- `src/box.ts` pages the narration for the text box: names in the game's
+  capitals, wrapped in the game's font, two lines a page, each page timed
+  across the voice (or the scene, without one).
+- `src/App.tsx` is the page: the canvas, the text box printing a letter every
   two frames, the title card, the clip frame, the fades, the keyboard, and
   `window.wayfarerVideo`, which `scripts/frames.mjs` drives.
 - `clips/` holds the gameplay clips (see its README for the plan to record
