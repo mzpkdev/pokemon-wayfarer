@@ -115,7 +115,7 @@ const ShipRow = ({ ship, living }: { ship: Ship; living: LivingWorld }) => {
   return (
     <li className="grid items-center gap-x-6 sm:grid-cols-[10rem_1fr]">
       <div>
-        <p className="pixel-label text-[16px] leading-none text-logo-yellow">{ship.name}</p>
+        <p className="pixel-label text-[16px] leading-none text-sign">{ship.name}</p>
         <p className="mt-1.5 text-sm leading-snug text-paper/75">
           {ship.at === "port" ? `In port at ${from}` : `${from} to ${next}`}
         </p>
@@ -137,7 +137,7 @@ const ShipRow = ({ ship, living }: { ship: Ship; living: LivingWorld }) => {
 const TrainRow = ({ train, name }: { train: Train; name: string }) => (
   <li className="grid items-center gap-x-6 sm:grid-cols-[10rem_1fr]">
     <div>
-      <p className="pixel-label text-[16px] leading-none text-logo-yellow">{name}</p>
+      <p className="pixel-label text-[16px] leading-none text-sign">{name}</p>
       <p className="mt-1.5 text-sm leading-snug text-paper/75">
         {train.at === "station" ? `At ${train.from} Station` : `${train.from} to ${train.to}`}
       </p>
@@ -267,7 +267,7 @@ export const RightNow = () => {
   return (
     <div
       ref={rootRef}
-      className="pixel-corners pixel-panel relative px-5 py-6 sm:px-8 sm:py-8"
+      className="pixel-corners mat relative px-5 py-6 sm:px-8 sm:py-8"
       aria-busy={!ready && !failed}
     >
       {failed ? (
@@ -288,7 +288,7 @@ export const RightNow = () => {
             </p>
           </div>
 
-          <h3 className="pixel-label mt-8 text-[16px] text-logo-yellow">AT SEA AND ON THE RAILS</h3>
+          <h3 className="pixel-label mt-8 text-[16px] text-sign">AT SEA AND ON THE RAILS</h3>
           <ul className="mt-4 grid gap-5">
             {ships.map((ship) => (
               <ShipRow key={ship.id} ship={ship} living={living} />
@@ -297,7 +297,7 @@ export const RightNow = () => {
           </ul>
 
           <div className="mt-8 flex flex-wrap items-center justify-between gap-3">
-            <h3 className="pixel-label text-[16px] text-logo-yellow">ON THEIR ROUNDS</h3>
+            <h3 className="pixel-label text-[16px] text-sign">ON THEIR ROUNDS</h3>
             <ul className="flex flex-wrap gap-1.5" aria-label="Who to show">
               {GROUPS.map((entry) => {
                 const on = entry.id === chosen.id
@@ -309,7 +309,7 @@ export const RightNow = () => {
                       onClick={() => setGroup(entry.id)}
                       className={`pixel-corners px-3 py-1.5 font-[family-name:var(--font-gba)] text-[14px] leading-[16px] ${
                         on
-                          ? "bg-[rgb(232_208_64)] text-[rgb(56_56_56)]"
+                          ? "bg-sign text-ink"
                           : "bg-black/30 text-paper/80 hover:bg-black/50 hover:text-paper"
                       }`}
                     >

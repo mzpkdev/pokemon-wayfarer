@@ -1,131 +1,115 @@
 ---
 /**
- * What players ask before they play: how to get it running, how it battles,
- * trading and saves. Native disclosure widgets, so it works without
- * JavaScript and every answer is in the page for search and screen readers.
+ * What players ask before they play, read the way the game has you read
+ * signs along a road: each question on its own plank, its answer right under
+ * it, nothing folded away. Works without JavaScript and every answer is in
+ * the page for search and screen readers.
  */
+import Sign from "~/components/Sign.astro"
 import { PATCHER_URL, REPOSITORY_URL } from "~/lib/content"
 import { RELEASE_LABEL } from "~/lib/release"
 ---
 
-<section aria-labelledby="faq" class="relative mx-auto max-w-3xl px-6 py-16">
-  <p class="pixel-label text-logo-yellow">Questions</p>
-  <h2 id="faq" class="pixel-heading mt-4">Before you set out</h2>
+<section aria-labelledby="faq" class="period-night night-sky">
+  <div class="mx-auto max-w-5xl px-6 py-20">
+    <div class="waypoint">
+      <Sign>QUESTIONS</Sign>
+    </div>
+    <h2 id="faq" class="pixel-heading mt-5">Before you set out</h2>
+    <p class="mt-6 max-w-2xl text-lg leading-relaxed text-paper/80">
+      The signs at the edge of town. Read them once and you're ready to go.
+    </p>
 
-  <div class="mt-10 grid gap-3">
-    <details class="faq pixel-corners pixel-panel" name="faq">
-      <summary>How do I play it?</summary>
-      <div class="faq-answer">
-        <p>
-          Wayfarer comes as a .ups patch. Apply it to your own Pokémon Emerald (U) ROM, for example
-          with <a href={PATCHER_URL}>Rom Patcher JS</a> in your browser, and play the patched ROM in an
-          emulator. The patch doesn't include the game itself.
-        </p>
+    <dl class="faq mt-12 grid gap-x-12 gap-y-12 md:grid-cols-2">
+      <div>
+        <Sign as="dt">How do I play it?</Sign>
+        <dd>
+          <p>
+            Wayfarer comes as a .ups patch. Apply it to your own Pokémon Emerald (U) ROM, for example
+            with <a href={PATCHER_URL}>Rom Patcher JS</a> in your browser, and play the patched ROM in an
+            emulator. The patch doesn't include the game itself.
+          </p>
+        </dd>
       </div>
-    </details>
 
-    <details class="faq pixel-corners pixel-panel" name="faq">
-      <summary>Which emulators work?</summary>
-      <div class="faq-answer">
-        <p>Any up-to-date emulator that runs ROM hacks. These are known to work:</p>
-        <ul>
-          <li><strong>PC and Mac:</strong> mGBA</li>
-          <li><strong>Android:</strong> Pizza Boy, Lemuroid, or RetroArch with the mGBA core</li>
-          <li><strong>iOS:</strong> Delta, Ignited, or RetroArch with the mGBA core</li>
-          <li><strong>Linux handhelds:</strong> RetroArch with the mGBA core</li>
-        </ul>
+      <div>
+        <Sign as="dt">Which emulators work?</Sign>
+        <dd>
+          <p>Any up-to-date emulator that runs ROM hacks. These are known to work:</p>
+          <ul>
+            <li><strong>PC and Mac:</strong> mGBA</li>
+            <li><strong>Android:</strong> Pizza Boy, Lemuroid, or RetroArch with the mGBA core</li>
+            <li><strong>iOS:</strong> Delta, Ignited, or RetroArch with the mGBA core</li>
+            <li><strong>Linux handhelds:</strong> RetroArch with the mGBA core</li>
+          </ul>
+        </dd>
       </div>
-    </details>
 
-    <details class="faq pixel-corners pixel-panel" name="faq">
-      <summary>How does it battle?</summary>
-      <div class="faq-answer">
-        <p>
-          With modern mechanics: the physical and special split, and updated stats, types and moves. TMs
-          are reusable, so teach them as often as you like.
-        </p>
+      <div>
+        <Sign as="dt">How does it battle?</Sign>
+        <dd>
+          <p>
+            With modern mechanics: the physical and special split, and updated stats, types and moves. TMs
+            are reusable, so teach them as often as you like.
+          </p>
+        </dd>
       </div>
-    </details>
 
-    <details class="faq pixel-corners pixel-panel" name="faq">
-      <summary>Can I trade and battle with friends?</summary>
-      <div class="faq-answer">
-        <p>
-          Yes. Trades and battles over the GBA link work, with a link cable or your emulator's link play.
-          The GameCube, e-Reader and Berry Fix extras are gone.
-        </p>
+      <div>
+        <Sign as="dt">Can I trade and battle with friends?</Sign>
+        <dd>
+          <p>
+            Yes. Trades and battles over the GBA link work, with a link cable or your emulator's link play.
+            The GameCube, e-Reader and Berry Fix extras are gone.
+          </p>
+        </dd>
       </div>
-    </details>
 
-    <details class="faq pixel-corners pixel-panel" name="faq">
-      <summary>Will my save carry over to updates?</summary>
-      <div class="faq-answer">
-        <p>From v1.0 on, yes. Updates after that keep your save.</p>
+      <div>
+        <Sign as="dt">Will my save carry over to updates?</Sign>
+        <dd>
+          <p>From v1.0 on, yes. Updates after that keep your save.</p>
+        </dd>
       </div>
-    </details>
 
-    <details class="faq pixel-corners pixel-panel" name="faq">
-      <summary>Is it free?</summary>
-      <div class="faq-answer">
-        <p>
-          Yes. Wayfarer is a free fan game, and you can follow every change
-          <a href={REPOSITORY_URL}>on GitHub</a>.
-        </p>
+      <div>
+        <Sign as="dt">Is it free?</Sign>
+        <dd>
+          <p>
+            Yes. Wayfarer is a free fan game, and you can follow every change{" "}
+            <a href={REPOSITORY_URL}>on GitHub</a>.
+          </p>
+        </dd>
       </div>
-    </details>
 
-    <details class="faq pixel-corners pixel-panel" name="faq">
-      <summary>When does it come out?</summary>
-      <div class="faq-answer">
-        <p>
-          On {RELEASE_LABEL}. <a href="/wayfarer-release.ics" download>Add it to your calendar</a>, or leave your
-          email with Professor Oak and he'll write when it's out.
-        </p>
+      <div>
+        <Sign as="dt">When does it come out?</Sign>
+        <dd>
+          <p>
+            On {RELEASE_LABEL}. <a href="/wayfarer-release.ics" download>Add it to your calendar</a>, or leave your
+            email with Professor Oak and he'll write when it's out.
+          </p>
+        </dd>
       </div>
-    </details>
+    </dl>
   </div>
 </section>
 
 <style>
-  .faq summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 1.25rem 1.5rem;
-    cursor: pointer;
-    font-weight: 600;
-    list-style: none;
+  /* A question wraps onto a second line of its plank when it must (the plank is another component's, hence global). */
+  .faq :global(dt) {
+    white-space: normal;
+    text-wrap: balance;
   }
 
-  .faq summary::-webkit-details-marker {
-    display: none;
-  }
-
-  /* The game's menu cursor, pointing at the open answer. */
-  .faq summary::after {
-    content: "▶";
-    flex-shrink: 0;
-    color: var(--color-logo-yellow);
-    transition: rotate 0.15s steps(2);
-  }
-
-  .faq[open] summary::after {
-    rotate: 90deg;
-  }
-
-  .faq summary:focus-visible {
-    outline: 4px solid var(--color-logo-yellow);
-    outline-offset: -8px;
-  }
-
-  .faq-answer {
-    padding: 0 1.5rem 1.5rem;
+  .faq dd {
+    margin-top: 1rem;
+    max-width: 36rem;
     line-height: 1.65;
     color: rgb(248 248 248 / 0.8);
   }
 
-  .faq-answer ul {
+  .faq dd ul {
     margin-top: 0.75rem;
     display: grid;
     gap: 0.375rem;
@@ -133,20 +117,21 @@ import { RELEASE_LABEL } from "~/lib/release"
     list-style: square;
   }
 
-  .faq-answer strong {
+  .faq dd strong {
     color: var(--color-paper);
     font-weight: 600;
   }
 
-  .faq-answer a {
-    color: var(--color-logo-yellow);
+  .faq dd a {
+    color: var(--color-sign);
     text-decoration: underline;
+    text-decoration-thickness: 2px;
     text-underline-offset: 4px;
+    text-decoration-color: rgb(230 172 123 / 0.45);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .faq summary::after {
-      transition: none;
-    }
+  .faq dd a:hover {
+    color: var(--color-sign-light);
+    text-decoration-color: currentColor;
   }
 </style>

@@ -4,8 +4,8 @@ import { REPOSITORY_URL } from "~/lib/content"
 import { useReducedMotion } from "~/lib/hooks"
 
 /**
- * The page's menu, as the game's START menu: a MENU button in the corner once
- * the title screen is behind (top right; a pill in the bottom corner on a
+ * The page's menu, as the game's START menu: a small wooden MENU sign in the
+ * corner once the title screen is behind (top right; the bottom corner on a
  * phone), opening a text window of entries with the ▶ cursor, and under it
  * the window that describes the entry the cursor is on.
  * The arrow keys move the cursor, Enter picks, Esc (or B, as on the GBA)
@@ -156,7 +156,7 @@ export const StartMenu = () => {
         aria-controls={id}
         tabIndex={shown ? 0 : -1}
         onClick={() => (open ? close() : setOpen(true))}
-        className="pixel-corners pixel-panel pixel-label px-4 py-1.5 text-[16px] leading-none text-paper hover:text-logo-yellow focus-visible:text-logo-yellow focus-visible:outline-none"
+        className="sign sign-1x hover:brightness-110 focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-sign-light"
       >
         MENU
       </button>

@@ -6,9 +6,21 @@
   font-display: block;
 }
 
+/* Figtree (SIL OFL, public/fonts/FIGTREE-OFL.txt), the page's reading face: friendly and a little wide, like the game's own text. */
+@font-face {
+  font-family: "Figtree";
+  src: url("/fonts/figtree-latin.woff2") format("woff2");
+  font-weight: 300 900;
+  font-display: swap;
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 @theme {
   --font-sans:
-    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
   --font-gba: "Wayfarer Text", ui-monospace, monospace;
   /* Colors sampled from the opening's layers and the game's text palettes. */
   --color-sky: rgb(131 205 238);
@@ -27,6 +39,19 @@
   /* The Pokémon logo's yellow and blue. */
   --color-logo-yellow: rgb(255 214 0);
   --color-logo-blue: rgb(40 72 200);
+  /* The wood map name popup's plank: Wayfarer's own accent, for signs, links and cursors. */
+  --color-sign: rgb(230 172 123);
+  --color-sign-light: rgb(255 213 164);
+  --color-sign-dark: rgb(197 90 57);
+  --color-sign-ink: rgb(90 90 123);
+  /* The day below the map, in the game's own order: day under the leaves, then evening, dusk, night and dawn (from the title screen's dawn). */
+  --color-day: rgb(8 41 0);
+  --color-evening: rgb(34 42 12);
+  --color-dusk: rgb(40 28 52);
+  --color-night: rgb(8 16 36);
+  --color-dawn-sky: rgb(24 83 157);
+  --color-dawn-glow: rgb(255 204 119);
+  --color-dawn-peach: rgb(255 170 119);
 }
 
 :root {
@@ -58,6 +83,8 @@
     /* Sprites run past the edges; clip, unlike hidden, keeps the title scene sticky. */
     overflow-x: clip;
     font-family: var(--font-sans);
+    font-size: 17px;
+    letter-spacing: 0.002em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -224,25 +251,44 @@
     inset 0 -4px 0 rgb(0 16 0);
 }
 
-/** Headings in the game's font with its drop shadow, at a whole-pixel scale. */
+/**
+ * Headings in the game's font with its drop shadow, at a whole-pixel scale.
+ * The shadow is the one the game gives light text (grey, not the ground's
+ * green), so the letters keep their weight on any time of day.
+ */
 @utility pixel-heading {
   --dot: 2px;
+  --heading-shadow: rgb(64 64 72);
   font-family: var(--font-gba);
   font-size: 32px;
   line-height: 36px;
   font-weight: normal;
+  text-wrap: balance;
   -webkit-font-smoothing: none;
   font-smooth: never;
   color: var(--color-paper);
   text-shadow:
-    var(--dot) 0 rgb(0 16 0),
-    0 var(--dot) rgb(0 16 0),
-    var(--dot) var(--dot) rgb(0 16 0);
+    var(--dot) 0 var(--heading-shadow),
+    0 var(--dot) var(--heading-shadow),
+    var(--dot) var(--dot) var(--heading-shadow);
 
   @media (min-width: 640px) {
     --dot: 3px;
     font-size: 48px;
     line-height: 52px;
+  }
+}
+
+/** A heading one step down (h3 under an h2): it stays at 2x on every screen. */
+@utility pixel-heading-sm {
+  --dot: 2px;
+  font-size: 32px;
+  line-height: 36px;
+
+  @media (min-width: 640px) {
+    --dot: 2px;
+    font-size: 32px;
+    line-height: 36px;
   }
 }
 
@@ -298,6 +344,199 @@
 @media (prefers-reduced-motion: reduce) {
   .sprite {
     animation: none;
+  }
+}
+
+/* ---- The journey: the page below the map as a road through a day ---- */
+
+/** The wood map name popup as a signpost: a plank that stretches to its words, text printed as the game prints it. */
+@utility sign {
+  --sign-px: 2px;
+  --sign-src: url("/game/popups/wood.png");
+  --ink: var(--color-ink);
+  --shadow: var(--color-ink-shadow);
+  display: inline-block;
+  width: fit-content;
+  max-width: 100%;
+  border-style: solid;
+  border-width: calc(8 * var(--sign-px));
+  border-image: var(--sign-src) 8 fill / calc(8 * var(--sign-px)) stretch;
+  image-rendering: pixelated;
+  padding: calc(4 * var(--sign-px)) calc(6 * var(--sign-px));
+  font-family: var(--font-gba);
+  font-size: calc(16 * var(--sign-px));
+  line-height: calc(16 * var(--sign-px));
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  color: var(--ink);
+  text-shadow:
+    var(--sign-px) 0 var(--shadow),
+    0 var(--sign-px) var(--shadow),
+    var(--sign-px) var(--sign-px) var(--shadow);
+  white-space: nowrap;
+}
+
+/** A small sign, at one GBA pixel per CSS pixel: the MENU in the corner. */
+@utility sign-1x {
+  --sign-px: 1px;
+}
+
+/**
+ * A mat under a feature: it darkens whatever time of day it sits on, with a
+ * faint lit edge, so one panel style follows the page from day into night.
+ */
+@utility mat {
+  background: rgb(0 0 0 / 0.24);
+  box-shadow: inset 0 0 0 2px rgb(255 255 255 / 0.07);
+}
+
+/** A slot in the Bag's pockets: the dark square an item icon sits in. */
+@utility pocket {
+  background: rgb(0 0 0 / 0.32);
+  box-shadow:
+    inset 0 0 0 2px rgb(0 0 0 / 0.35),
+    inset 0 0 0 4px rgb(255 255 255 / 0.06);
+}
+
+/** A text link in the sign's tan. */
+@utility link {
+  color: var(--color-sign);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  text-decoration-color: rgb(230 172 123 / 0.45);
+
+  &:hover {
+    color: var(--color-sign-light);
+    text-decoration-color: currentColor;
+  }
+}
+
+/*
+ * The road: a dashed trail like the map's sea lanes, down the margin beside
+ * the content, with a waypoint where each sign stands. Only where the margin
+ * has room for it.
+ */
+:root {
+  /* Where the trail runs: left of a 64rem column, 2.75rem out from its text. */
+  --trail-x: calc(50% - 32rem - 1.25rem);
+}
+
+.trail {
+  position: relative;
+}
+
+@media (min-width: 80rem) {
+  .trail::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--trail-x);
+    width: 0;
+    border-left: 4px dashed rgb(255 255 255 / 0.16);
+    pointer-events: none;
+  }
+
+  .waypoint {
+    position: relative;
+  }
+
+  /* The waypoint's lamp, as the dawn's route marks its islands. */
+  .waypoint::before {
+    content: "";
+    position: absolute;
+    /* The column's text sits 1.5rem in from its edge; the trail 1.25rem out from it. */
+    left: calc(-2.75rem - 10px);
+    top: calc(50% - 10px);
+    width: 20px;
+    height: 20px;
+    border-radius: 9999px;
+    background: var(--color-sign-light);
+    box-shadow:
+      0 0 0 6px rgb(255 213 164 / 0.18),
+      0 0 24px 4px rgb(255 204 119 / 0.35);
+  }
+}
+
+/* The hours the page passes through, each band fading into the next. */
+.period-day {
+  background: var(--color-day);
+}
+
+.period-day-evening {
+  background: linear-gradient(to bottom, var(--color-day) 0%, var(--color-evening) 100%);
+}
+
+.period-evening-dusk {
+  background: linear-gradient(to bottom, var(--color-evening) 0%, var(--color-dusk) 100%);
+}
+
+.period-dusk-night {
+  background: linear-gradient(to bottom, var(--color-dusk) 0%, var(--color-night) 100%);
+}
+
+.period-night {
+  background-color: var(--color-night);
+}
+
+/* A few stars over the night, no more than the GBA would draw. */
+.night-sky {
+  background-image:
+    radial-gradient(2px 2px at 12% 18%, rgb(255 255 255 / 0.55) 50%, transparent 51%),
+    radial-gradient(2px 2px at 28% 62%, rgb(255 255 255 / 0.35) 50%, transparent 51%),
+    radial-gradient(2px 2px at 41% 30%, rgb(255 255 255 / 0.45) 50%, transparent 51%),
+    radial-gradient(2px 2px at 57% 74%, rgb(255 255 255 / 0.3) 50%, transparent 51%),
+    radial-gradient(2px 2px at 66% 12%, rgb(255 255 255 / 0.5) 50%, transparent 51%),
+    radial-gradient(2px 2px at 79% 44%, rgb(255 255 255 / 0.35) 50%, transparent 51%),
+    radial-gradient(2px 2px at 88% 82%, rgb(255 255 255 / 0.45) 50%, transparent 51%),
+    radial-gradient(2px 2px at 94% 24%, rgb(255 255 255 / 0.3) 50%, transparent 51%),
+    radial-gradient(2px 2px at 6% 86%, rgb(255 255 255 / 0.4) 50%, transparent 51%),
+    radial-gradient(2px 2px at 50% 50%, rgb(255 255 255 / 0.25) 50%, transparent 51%);
+  background-size: 100% 100%;
+}
+
+/* Sunrise over the meadow at the foot of the page: night, the dawn's gold and peach, then the grass. */
+.period-sunrise {
+  background: linear-gradient(
+    to bottom,
+    var(--color-night) 0%,
+    var(--color-dawn-sky) 38%,
+    rgb(131 132 162) 60%,
+    var(--color-dawn-peach) 80%,
+    var(--color-dawn-glow) 100%
+  );
+}
+
+/** The player on the Mach Bike, pedaling east along the meadow: frames 7, 2, 8, 2 of the west-facing row, mirrored. */
+.biker {
+  width: calc(32 * var(--scene-px));
+  height: calc(32 * var(--scene-px));
+  background: url("/game/sprites/red-mach-bike.png") 0 0 / calc(288 * var(--scene-px)) auto;
+  image-rendering: pixelated;
+  scale: -1 1;
+  animation: biker-pedal 0.4s steps(1) infinite;
+}
+
+@keyframes biker-pedal {
+  0% {
+    background-position-x: calc(-7 * 32 * var(--scene-px));
+  }
+  25% {
+    background-position-x: calc(-2 * 32 * var(--scene-px));
+  }
+  50% {
+    background-position-x: calc(-8 * 32 * var(--scene-px));
+  }
+  75% {
+    background-position-x: calc(-2 * 32 * var(--scene-px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .biker {
+    animation: none;
+    background-position-x: calc(-2 * 32 * var(--scene-px));
   }
 }
 

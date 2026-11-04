@@ -5,6 +5,7 @@ import { BagDrop } from "~/components/BagDrop"
 import { DialogBox } from "~/components/DialogBox"
 import Faq from "~/components/Faq.astro"
 import { RightNow } from "~/components/RightNow"
+import Sign from "~/components/Sign.astro"
 import SignupForm from "~/components/SignupForm.astro"
 import { StartMenu } from "~/components/StartMenu"
 import { StoryShuffle } from "~/components/StoryShuffle"
@@ -30,6 +31,11 @@ import { RELEASE_LABEL } from "~/lib/release"
       pinned stretch, so its grass edge rises over the map the way the
       opening's layers cover one another. The edge lets clicks through to the
       map under it; the page's content takes them again.
+
+      From here the page is a road through one of Wayfarer's days: it starts
+      in the day under the leaves, passes through evening and dusk, reaches
+      night at the edge of town, and ends at dawn with the player setting off.
+      A dashed trail runs down the margin, a signpost at every stop.
     -->
     <div class="pointer-events-none relative z-20 -mt-[calc(112*var(--scene-px))]">
       <div
@@ -39,249 +45,294 @@ import { RELEASE_LABEL } from "~/lib/release"
       </div>
 
       <!-- Content starts over the edge's solid ground, so it follows the plants closely. -->
-      <div
-        class="pointer-events-auto relative -mt-[calc(12*var(--scene-px))] overflow-x-clip bg-ground"
-      >
-        <!-- Then PROF. OAK asks for your email. -->
+      <div class="trail pointer-events-auto relative -mt-[calc(12*var(--scene-px))] overflow-x-clip bg-day">
+        <!-- Day. PROF. OAK asks for your email. -->
         <CtaProfessor />
 
         <!--
-          The world as it is this moment, on the clock the map runs on: proof
-          the map's ships, train and Gym Leaders weren't a loop for the tour.
+          Day into evening. The world as it is this moment, on the clock the
+          map runs on: proof the map's ships, train and Gym Leaders weren't a
+          loop for the tour.
         -->
-        <section aria-labelledby="right-now" class="relative mx-auto max-w-5xl px-6 py-16">
-          <p class="pixel-label text-logo-yellow">Right now</p>
-          <h2 id="right-now" class="pixel-heading mt-4">The world doesn't wait for you.</h2>
-          <p class="mt-6 max-w-2xl text-lg leading-relaxed text-paper/80">
-            The ships sail their loops, the Magnet Train runs its line and every Gym Leader keeps
-            to their own day, whether you're there to see it or not. This is where everyone is on
-            this page's clock, the same one the map above runs on.
-          </p>
-          <div class="mt-10">
-            <RightNow client:visible />
+        <section aria-labelledby="right-now" class="period-day-evening">
+          <div class="mx-auto max-w-5xl px-6 py-20">
+            <div class="waypoint">
+              <Sign>RIGHT NOW</Sign>
+            </div>
+            <h2 id="right-now" class="pixel-heading mt-5">The world doesn't wait for you.</h2>
+            <p class="mt-6 max-w-2xl text-lg leading-relaxed text-paper/80">
+              The ships sail their loops, the Magnet Train runs its line and every Gym Leader keeps
+              to their own day, whether you're there to see it or not. This is where everyone is on
+              this page's clock, the same one the map above runs on.
+            </p>
+            <div class="mt-10">
+              <RightNow client:visible />
+            </div>
           </div>
         </section>
 
         <!--
-          What the map can't show: how an open world stays fair, then the two
-          things that set Wayfarer apart, each drawn the way the game draws it.
+          Evening into dusk. What the map can't show: how an open world stays
+          fair, then the two things that set Wayfarer apart, each drawn the
+          way the game draws it.
         -->
-        <section aria-labelledby="open-world" class="relative mx-auto max-w-5xl px-6 py-16">
-          <p class="pixel-label text-logo-yellow">Open world</p>
-          <h2 id="open-world" class="pixel-heading mt-4">Go anywhere. There's always a way.</h2>
-          <p class="mt-6 max-w-2xl text-lg leading-relaxed text-paper/80">
-            Every region is open, in any order, with no badge standing in the way. Wayfarer doesn't take every obstacle
-            away: a road can still be blocked, a sea too wide or a door shut. But a blocked road is never the
-            only one. There's always another way around.
-          </p>
+        <section aria-labelledby="open-world" class="period-evening-dusk">
+          <div class="mx-auto max-w-5xl px-6 py-20">
+            <div class="waypoint">
+              <Sign>OPEN WORLD</Sign>
+            </div>
+            <h2 id="open-world" class="pixel-heading mt-5">Go anywhere. There's always a way.</h2>
+            <p class="mt-6 max-w-2xl text-lg leading-relaxed text-paper/80">
+              Every region is open, in any order, with no badge standing in the way. Wayfarer doesn't take every obstacle
+              away: a road can still be blocked, a sea too wide or a door shut. But a blocked road is never the
+              only one. There's always another way around.
+            </p>
 
-          <div class="mt-16 grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[1fr_auto] lg:gap-16">
-            <div>
-              <p class="pixel-label text-logo-yellow">Story</p>
-              <h3 class="pixel-heading mt-3">Every story, in your order.</h3>
-              <p class="mt-5 text-lg leading-relaxed text-paper/80">
-                Open worlds usually make you pick between a story and your freedom. Wayfarer keeps both. The
-                original games' stories, from Mt. Moon to the Radio Tower, are split into standalone beats,
-                and each one makes sense whenever you reach it.
-              </p>
-              <p class="mt-4 leading-relaxed text-paper/70">
-                Walk into Slowpoke Well first or last: it still opens at its start and ends with the Rockets
-                gone.
-              </p>
-            </div>
-            <div class="pixel-corners pixel-panel grid place-items-center px-10 py-8 sm:px-14 sm:py-10">
-              <StoryShuffle client:visible />
-            </div>
-          </div>
-
-          <div class="mt-16 grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[auto_1fr] lg:gap-16">
-            <div class="lg:order-2">
-              <p class="pixel-label text-logo-yellow">Field moves</p>
-              <h3 class="pixel-heading mt-3">Surf the moment you catch it.</h3>
-              <p class="mt-5 text-lg leading-relaxed text-paper/80">
-                Wild Pokémon can already know field moves when you catch them. Find one that knows Surf and
-                the sea is open, with no HM and no badge.
-              </p>
-              <p class="mt-4 leading-relaxed text-paper/70">
-                Find the HM later and you won't even need to teach it: it works whenever someone in your
-                party could learn the move.
-              </p>
-            </div>
-            <!-- The game's own prompt at the water's edge, with its YES/NO menu. -->
-            <div
-              class="pixel-corners pixel-panel grid place-items-center px-4 py-8 sm:px-10 sm:py-10 lg:order-1"
-              aria-hidden="true"
-            >
-              <div class="flex w-full flex-col sm:w-[calc(232*var(--px))] items-end gap-[calc(2*var(--px))] [--px:2px]">
-                <div class="gba-window gba-text">
-                  <span class="block">▶YES</span>
-                  <span class="block pl-[calc(8*var(--px))]">NO</span>
-                </div>
-                <DialogBox
-                  client:visible
-                  lines={["The water is dyed a deep blue…", "Would you like to SURF?"]}
-                  className="w-full"
-                />
+            <div class="mt-20 grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[1fr_auto] lg:gap-16">
+              <div>
+                <p class="pixel-label text-sign">STORY</p>
+                <h3 class="pixel-heading pixel-heading-sm mt-4">Every story, in your order.</h3>
+                <p class="mt-5 text-lg leading-relaxed text-paper/80">
+                  Open worlds usually make you pick between a story and your freedom. Wayfarer keeps both. The
+                  original games' stories, from Mt. Moon to the Radio Tower, are split into standalone beats,
+                  and each one makes sense whenever you reach it.
+                </p>
+                <p class="mt-4 leading-relaxed text-paper/70">
+                  Walk into Slowpoke Well first or last: it still opens at its start and ends with the Rockets
+                  gone.
+                </p>
+              </div>
+              <div class="pixel-corners mat grid place-items-center px-10 py-8 sm:px-14 sm:py-10">
+                <StoryShuffle client:visible />
               </div>
             </div>
-          </div>
 
-          <div class="mt-16 grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[1fr_auto] lg:gap-16">
-            <div>
-              <p class="pixel-label text-logo-yellow">Level scaling</p>
-              <h3 class="pixel-heading mt-3">The world keeps pace.</h3>
-              <p class="mt-5 text-lg leading-relaxed text-paper/80">
-                Every badge, from any region, raises your level cap, and the wild Pokémon follow it by where
-                they live. Roads fall further behind you with each badge, the grass off the road sits a step
-                above, and places far from home meet you at your cap all game.
-              </p>
-              <p class="mt-4 leading-relaxed text-paper/70">
-                The cap is soft: past it, Pokémon earn half the experience and may not obey. Trainers, Gym
-                Leaders and the leagues scale too, and an evolved form only appears once it's at the level to
-                evolve.
-              </p>
+            <div class="mt-20 grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[auto_1fr] lg:gap-16">
+              <div class="lg:order-2">
+                <p class="pixel-label text-sign">FIELD MOVES</p>
+                <h3 class="pixel-heading pixel-heading-sm mt-4">Surf the moment you catch it.</h3>
+                <p class="mt-5 text-lg leading-relaxed text-paper/80">
+                  Wild Pokémon can already know field moves when you catch them. Find one that knows Surf and
+                  the sea is open, with no HM and no badge.
+                </p>
+                <p class="mt-4 leading-relaxed text-paper/70">
+                  Find the HM later and you won't even need to teach it: it works whenever someone in your
+                  party could learn the move.
+                </p>
+              </div>
+              <!-- The game's own prompt at the water's edge, with its YES/NO menu. -->
+              <div
+                class="pixel-corners mat grid place-items-center px-4 py-8 sm:px-10 sm:py-10 lg:order-1"
+                aria-hidden="true"
+              >
+                <div class="flex w-full flex-col sm:w-[calc(232*var(--px))] items-end gap-[calc(2*var(--px))] [--px:2px]">
+                  <div class="gba-window gba-text">
+                    <span class="block">▶YES</span>
+                    <span class="block pl-[calc(8*var(--px))]">NO</span>
+                  </div>
+                  <DialogBox
+                    client:visible
+                    lines={["The water is dyed a deep blue…", "Would you like to SURF?"]}
+                    className="w-full"
+                  />
+                </div>
+              </div>
             </div>
-            <!-- Whole GBA pixels at 2x. Phones drop the panel and the 4-badge column, and tighten the columns, to fit. -->
-            <figure class="grid justify-items-center gap-4 sm:pixel-corners sm:pixel-panel sm:px-10 sm:py-10">
-              <div class="gba-window [--px:2px]">
-                <table class="gba-text">
-                <caption class="sr-only">Wild Pokémon levels and your level cap by badges earned</caption>
-                <thead>
-                  <tr>
-                    <th scope="col" class="gba-text gba-text-blue pr-[calc(6*var(--px))] sm:pr-[calc(8*var(--px))] text-left font-normal">BADGES</th>
-                    {
-                      LEVELS.badges.map((badges, column) => (
-                        <th
-                          scope="col"
-                          class:list={[
-                            "gba-text gba-text-blue px-[calc(3*var(--px))] sm:px-[calc(4*var(--px))] text-right font-normal",
-                            column === LEVELS.hiddenOnPhones && "hidden sm:table-cell",
-                          ]}
-                        >
-                          {badges}
-                        </th>
-                      ))
-                    }
-                  </tr>
-                </thead>
-                <tbody>
-                  {
-                    LEVELS.rows.map((row) => (
-                      <tr>
-                        <th scope="row" class="pr-[calc(6*var(--px))] sm:pr-[calc(8*var(--px))] text-left font-normal whitespace-nowrap">
-                          {row.label}
-                        </th>
-                        {row.levels.map((level, column) => (
-                          <td
+
+            <div class="mt-20 grid grid-cols-[minmax(0,1fr)] items-center gap-10 lg:grid-cols-[1fr_auto] lg:gap-16">
+              <div>
+                <p class="pixel-label text-sign">LEVEL SCALING</p>
+                <h3 class="pixel-heading pixel-heading-sm mt-4">The world keeps pace.</h3>
+                <p class="mt-5 text-lg leading-relaxed text-paper/80">
+                  Every badge, from any region, raises your level cap, and the wild Pokémon follow it by where
+                  they live. Roads fall further behind you with each badge, the grass off the road sits a step
+                  above, and places far from home meet you at your cap all game.
+                </p>
+                <p class="mt-4 leading-relaxed text-paper/70">
+                  The cap is soft: past it, Pokémon earn half the experience and may not obey. Trainers, Gym
+                  Leaders and the leagues scale too, and an evolved form only appears once it's at the level to
+                  evolve.
+                </p>
+              </div>
+              <!-- Whole GBA pixels at 2x. Phones drop the mat and the 4-badge column, and tighten the columns, to fit. -->
+              <figure class="grid justify-items-center gap-4 sm:pixel-corners sm:mat sm:px-10 sm:py-10">
+                <div class="gba-window [--px:2px]">
+                  <table class="gba-text">
+                  <caption class="sr-only">Wild Pokémon levels and your level cap by badges earned</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col" class="gba-text gba-text-blue pr-[calc(6*var(--px))] sm:pr-[calc(8*var(--px))] text-left font-normal">BADGES</th>
+                      {
+                        LEVELS.badges.map((badges, column) => (
+                          <th
+                            scope="col"
                             class:list={[
-                              "px-[calc(3*var(--px))] sm:px-[calc(4*var(--px))] text-right",
+                              "gba-text gba-text-blue px-[calc(3*var(--px))] sm:px-[calc(4*var(--px))] text-right font-normal",
                               column === LEVELS.hiddenOnPhones && "hidden sm:table-cell",
                             ]}
                           >
-                            {level}
-                          </td>
-                        ))}
-                      </tr>
-                    ))
-                  }
-                </tbody>
-              </table>
+                            {badges}
+                          </th>
+                        ))
+                      }
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      LEVELS.rows.map((row) => (
+                        <tr>
+                          <th scope="row" class="pr-[calc(6*var(--px))] sm:pr-[calc(8*var(--px))] text-left font-normal whitespace-nowrap">
+                            {row.label}
+                          </th>
+                          {row.levels.map((level, column) => (
+                            <td
+                              class:list={[
+                                "px-[calc(3*var(--px))] sm:px-[calc(4*var(--px))] text-right",
+                                column === LEVELS.hiddenOnPhones && "hidden sm:table-cell",
+                              ]}
+                            >
+                              {level}
+                            </td>
+                          ))}
+                        </tr>
+                      ))
+                    }
+                  </tbody>
+                  </table>
+                </div>
+                <figcaption class="text-center text-sm text-paper/60">
+                  Levels today, still being tuned before release.
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </section>
+
+        <!-- Dusk into night. The tour in short, for anyone who scrolled past it. -->
+        <section aria-labelledby="highlights" class="period-dusk-night">
+          <div class="mx-auto max-w-5xl px-6 py-20">
+            <!-- The Bag beside the heading: the highlights' icons are its key items, and a click puts one in it. -->
+            <div class="flex items-end justify-between gap-6">
+              <div>
+                <div class="waypoint">
+                  <Sign>THE SHORT VERSION</Sign>
+                </div>
+                <h2 id="highlights" class="pixel-heading mt-5">A world that keeps moving</h2>
               </div>
-              <figcaption class="text-center text-sm text-paper/60">
-                Levels today, still being tuned before release.
+              <BagDrop client:idle />
+            </div>
+            <dl class="mt-12 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
+              {
+                NUMBERS.map((number) => (
+                  <div class="flex flex-col">
+                    <dt class="order-2 mt-3 text-sm text-paper/75">{number.label}</dt>
+                    <dd class="logo-number order-1">{number.value}</dd>
+                  </div>
+                ))
+              }
+            </dl>
+            <ul class="mt-14 grid gap-x-10 gap-y-7 sm:grid-cols-2">
+              {
+                HIGHLIGHTS.map((highlight) => (
+                  <li class="flex gap-4">
+                    <div class="pixel-corners pocket grid size-16 shrink-0 place-items-center">
+                      <button
+                        type="button"
+                        data-bag-item
+                        aria-label={`Put the ${highlight.icon.replaceAll("-", " ")} in the Bag`}
+                        class="grid place-items-center focus-visible:outline-2 focus-visible:outline-sign"
+                      >
+                        <img
+                          src={`/game/items/${highlight.icon}.png`}
+                          alt=""
+                          width="48"
+                          height="48"
+                          class="pixelated size-12"
+                        />
+                      </button>
+                    </div>
+                    <div>
+                      <h3 class="font-semibold">{highlight.title}</h3>
+                      <p class="mt-1 text-sm leading-relaxed text-paper/75">{highlight.body}</p>
+                    </div>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </section>
+
+        <!-- Night, at the edge of town. -->
+        <Faq />
+
+        <!--
+          Still night. One more chance to sign up, for anyone the questions
+          won over, beside the dawn the title screen shows: what the first
+          morning of the journey looks like.
+        -->
+        <section aria-labelledby="notify-again" class="period-night night-sky">
+          <div class="mx-auto grid max-w-5xl items-center gap-12 px-6 py-20 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-16">
+            <div>
+              <div class="waypoint">
+                <Sign>{RELEASE_LABEL}</Sign>
+              </div>
+              <h2 id="notify-again" class="pixel-heading mt-5">Your journey is almost ready.</h2>
+              <p class="mt-6 max-w-xl text-lg leading-relaxed text-paper/80">
+                Leave your email and Professor Oak will write the moment it begins.
+              </p>
+              <SignupForm id="signup-email-again" class="mt-8 max-w-xl" />
+              <CtaLinks class="mt-8" />
+            </div>
+            <figure class="justify-self-center">
+              <div class="gba-window p-0 [--px:1px] sm:[--px:2px]">
+                <img
+                  src="/game/title/dawn.png"
+                  alt="The title screen's dawn: the sun rising over a sea of islands, a route marked across them under a compass rose."
+                  width="240"
+                  height="160"
+                  class="pixelated block h-auto w-[calc(240*var(--px))]"
+                />
+              </div>
+              <figcaption class="mt-3 text-center text-sm text-paper/60">
+                The first morning, as the title screen shows it.
               </figcaption>
             </figure>
           </div>
         </section>
 
-        <!-- The tour in short, for anyone who scrolled past it. -->
-        <section aria-labelledby="highlights" class="relative mx-auto max-w-5xl px-6 py-16">
-          <!-- The Bag beside the heading: the highlights' icons are its key items, and a click puts one in it. -->
-          <div class="flex items-end justify-between gap-6">
-            <div>
-              <p class="pixel-label text-logo-yellow">The short version</p>
-              <h2 id="highlights" class="pixel-heading mt-4">A world that keeps moving</h2>
+        <footer class="period-night">
+          <div class="mx-auto flex max-w-5xl flex-col gap-8 px-6 pt-8 pb-14 text-sm text-paper/70 sm:flex-row sm:items-end sm:justify-between">
+            <div class="max-w-md">
+              <img
+                src="/game/title/wordmark.png"
+                alt="Wayfarer"
+                width="112"
+                height="27"
+                class="pixelated h-[54px] w-auto"
+              />
+              <p class="mt-4 leading-relaxed">
+                Pokémon Wayfarer is a free fan game. It is not affiliated with Nintendo, Creatures Inc. or GAME
+                FREAK inc. Pokémon is a trademark of Nintendo.
+              </p>
             </div>
-            <BagDrop client:idle />
+            <nav aria-label="Footer" class="flex gap-6">
+              <a href="#top" class="underline-offset-4 hover:text-sign hover:underline">Back to the title</a>
+              <a href={REPOSITORY_URL} class="underline-offset-4 hover:text-sign hover:underline">GitHub</a>
+            </nav>
           </div>
-          <dl class="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
-            {
-              NUMBERS.map((number) => (
-                <div class="flex flex-col">
-                  <dt class="order-2 mt-3 text-sm text-paper/75">{number.label}</dt>
-                  <dd class="logo-number order-1">{number.value}</dd>
-                </div>
-              ))
-            }
-          </dl>
-          <ul class="mt-14 grid gap-x-8 gap-y-6 sm:grid-cols-2">
-            {
-              HIGHLIGHTS.map((highlight) => (
-                <li class="flex gap-4">
-                  <div class="pixel-corners pixel-panel grid size-16 shrink-0 place-items-center">
-                    <button
-                      type="button"
-                      data-bag-item
-                      aria-label={`Put the ${highlight.icon.replaceAll("-", " ")} in the Bag`}
-                      class="grid place-items-center focus-visible:outline-2 focus-visible:outline-logo-yellow"
-                    >
-                      <img
-                        src={`/game/items/${highlight.icon}.png`}
-                        alt=""
-                        width="48"
-                        height="48"
-                        class="pixelated size-12"
-                      />
-                    </button>
-                  </div>
-                  <div>
-                    <h3 class="font-semibold">{highlight.title}</h3>
-                    <p class="mt-1 text-sm leading-relaxed text-paper/75">{highlight.body}</p>
-                  </div>
-                </li>
-              ))
-            }
-          </ul>
-        </section>
-
-        <Faq />
-
-        <!-- One more chance to sign up, for anyone the questions won over. -->
-        <section aria-labelledby="notify-again" class="relative mx-auto max-w-3xl px-6 py-16">
-          <p class="pixel-label text-logo-yellow">{RELEASE_LABEL}</p>
-          <h2 id="notify-again" class="pixel-heading mt-4">Your journey is almost ready.</h2>
-          <p class="mt-6 text-lg leading-relaxed text-paper/80">
-            Leave your email and Professor Oak will write the moment it begins.
-          </p>
-          <SignupForm id="signup-email-again" class="mt-8" />
-          <CtaLinks class="mt-8" />
-        </section>
-
-        <footer class="relative mx-auto flex max-w-5xl flex-col gap-6 px-6 pt-16 pb-10 text-sm text-paper/70 sm:flex-row sm:justify-between">
-          <p class="max-w-md leading-relaxed">
-            Pokémon Wayfarer is a free fan game. It is not affiliated with Nintendo, Creatures Inc. or GAME
-            FREAK inc. Pokémon is a trademark of Nintendo.
-          </p>
-          <nav aria-label="Footer" class="flex gap-6">
-            <a href="#top" class="hover:text-paper">Back to the title</a>
-            <a href={REPOSITORY_URL} class="hover:text-paper">GitHub</a>
-          </nav>
         </footer>
       </div>
 
-      <!-- The title screen's meadow closes the page, with a Torchic running through it. -->
-      <div class="relative overflow-hidden">
+      <!-- Dawn. The sun comes up over the title screen's meadow, and the player rides out. -->
+      <div class="period-sunrise relative overflow-hidden">
+        <div class="h-[calc(72*var(--scene-px))]" aria-hidden="true"></div>
         <div
-          class="scene-strip h-[calc(64*var(--scene-px))] bg-ground bg-[url(/game/page/meadow.png)]"
+          class="scene-strip h-[calc(64*var(--scene-px))] bg-[url(/game/page/meadow.png)]"
           aria-hidden="true"
         >
         </div>
-        <div class="torchic-path absolute bottom-[calc(14*var(--scene-px))] left-0" aria-hidden="true">
-          <div
-            class="sprite torchic bg-[url(/game/sprites/torchic.png)]"
-            style="--size: 32; --sprite-px: var(--scene-px)"
-          >
-          </div>
+        <div class="biker-path absolute bottom-[calc(10*var(--scene-px))] left-0" aria-hidden="true">
+          <div class="biker"></div>
         </div>
       </div>
     </div>
@@ -289,48 +340,25 @@ import { RELEASE_LABEL } from "~/lib/release"
 </Layout>
 
 <style>
-  @keyframes drift {
+  @keyframes ride {
     from {
-      translate: -120px 0;
+      translate: -160px 0;
     }
     to {
-      translate: calc(100vw + 120px) 0;
+      translate: calc(100vw + 160px) 0;
     }
   }
 
-  /* TORCHIC runs rightward (its sprite faces left), cycling frames 0, 1, 2, 1. */
-  .torchic-path {
-    animation: drift 16s linear infinite;
-  }
-
-  .torchic {
-    scale: -1 1;
-    animation: torchic-run 0.2s steps(1) infinite;
-  }
-
-  @keyframes torchic-run {
-    0% {
-      background-position-y: 0;
-    }
-    25% {
-      background-position-y: calc(-32 * var(--scene-px));
-    }
-    50% {
-      background-position-y: calc(-64 * var(--scene-px));
-    }
-    75% {
-      background-position-y: calc(-32 * var(--scene-px));
-    }
+  /* The player rides rightward, out of the page. */
+  .biker-path {
+    animation: ride 14s linear infinite;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .torchic-path,
-    .torchic {
+    .biker-path {
       animation: none;
-    }
-
-    .torchic-path {
-      display: none;
+      left: auto;
+      right: 12%;
     }
   }
 </style>

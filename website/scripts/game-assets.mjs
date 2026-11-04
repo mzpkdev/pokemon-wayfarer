@@ -389,29 +389,39 @@ save("text/down-arrow.png", renderIndexed(source("fonts/down_arrow.png")))
 // Text window frame 1, the game's default.
 save("frames/1.png", renderIndexed(source("text_window/1.png")))
 
-// The wood map name popup, for the world map's ROUTE 101 and LITTLEROOT TOWN,
-// framed as DrawMapNamePopUpFrame lays out the outline tiles: 12 along the
-// top, three down each side, 12 along the bottom. Wood colors its outline
-// with the body's palette.
+// The wood map name popup, for the world map's ROUTE 101 and LITTLEROOT TOWN
+// and the page's signposts, framed as DrawMapNamePopUpFrame lays out the
+// outline tiles: 12 along the top, three down each side, 12 along the bottom.
+// Wood colors its outline with the body's palette.
 const placeTile = (target, tile, x, y) => {
   for (let row = 0; row < 8; row++)
     target.rgba.set(tile.rgba.subarray(row * 32, row * 32 + 32), ((y + row) * target.width + x) * 4)
 }
-const woodPalette = readPng(source("map_popup/wood.png")).palette
-const popupBody = renderIndexed(source("map_popup/wood.png"), woodPalette)
-const popupOutline = spriteTiles(renderIndexed(source("map_popup/wood_outline.png"), woodPalette))
-const popup = { width: 96, height: 40, rgba: new Uint8Array(96 * 40 * 4) }
-for (let y = 0; y < 24; y++)
-  popup.rgba.set(popupBody.rgba.subarray(y * 80 * 4, (y + 1) * 80 * 4), ((y + 8) * 96 + 8) * 4)
-for (let i = 0; i < 12; i++) {
-  placeTile(popup, popupOutline[i], i * 8, 0)
-  placeTile(popup, popupOutline[18 + i], i * 8, 32)
+const popupOf = (body, outline) => {
+  const bodyImage = renderIndexed(
+    source(`map_popup/${body}.png`),
+    readPng(source(`map_popup/${body}.png`)).palette,
+  )
+  const outlineTiles = spriteTiles(
+    renderIndexed(
+      source(`map_popup/${outline}.png`),
+      readPng(source(`map_popup/${outline}.png`)).palette,
+    ),
+  )
+  const popup = { width: 96, height: 40, rgba: new Uint8Array(96 * 40 * 4) }
+  for (let y = 0; y < 24; y++)
+    popup.rgba.set(bodyImage.rgba.subarray(y * 80 * 4, (y + 1) * 80 * 4), ((y + 8) * 96 + 8) * 4)
+  for (let i = 0; i < 12; i++) {
+    placeTile(popup, outlineTiles[i], i * 8, 0)
+    placeTile(popup, outlineTiles[18 + i], i * 8, 32)
+  }
+  for (let side = 0; side < 3; side++) {
+    placeTile(popup, outlineTiles[12 + side * 2], 0, 8 + side * 8)
+    placeTile(popup, outlineTiles[13 + side * 2], 88, 8 + side * 8)
+  }
+  return popup
 }
-for (let side = 0; side < 3; side++) {
-  placeTile(popup, popupOutline[12 + side * 2], 0, 8 + side * 8)
-  placeTile(popup, popupOutline[13 + side * 2], 88, 8 + side * 8)
-}
-save("popups/wood.png", popup)
+save("popups/wood.png", popupOf("wood", "wood_outline"))
 
 // The Bag, from Heart & Soul's BAG screen: six 64x64 frames stacked, one per
 // pocket, for the highlights the page drops into it.
