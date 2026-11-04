@@ -22,7 +22,7 @@ export const gameCase = (text: string) =>
   BOX_CAPS.reduce(
     (out, name) =>
       out.replace(
-        new RegExp(`\\b${name}\\b`, "g"),
+        new RegExp(`\\b${name.replaceAll(".", "\\.")}\\b`, "g"),
         name.toUpperCase().replace("POKÉMON", "POKéMON"),
       ),
     text,
@@ -49,7 +49,8 @@ export const wrap = (text: string, width: number, measure: (line: string) => num
  * sentence too long for one page runs on over the next.
  */
 export const paginate = (text: string, measure: (line: string) => number) => {
-  const sentences = text.match(/[^.?!]+(?:[.?!]+|$)/g)?.map((s) => s.trim()) ?? []
+  // A sentence ends at . ? or ! before a space, but not after a lone capital, as in S.S.
+  const sentences = text.split(/(?<=(?<!\b[A-Z])[.?!]+)\s+/)
   const pages: string[][] = []
   let open = ""
   for (const sentence of sentences.filter(Boolean)) {

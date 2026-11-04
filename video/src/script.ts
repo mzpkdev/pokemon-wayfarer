@@ -2,9 +2,10 @@
 // game's text box under the map prints as they say it. This file imports nothing, so
 // `scripts/voice.mjs` can read it under Node to make the voice-over.
 //
-// The WAYFARER narrates: a traveler who has walked all seven lands, met at
-// a Pokémon Center counter, a little weathered and glad to see a familiar
-// face. Nobody from the games; a character the project owns. The text box
+// The WAYFARER narrates: a traveler who has walked all seven lands, glad
+// to see an old face back. The script unfolds the way a player's hopes do:
+// start anywhere, then the question every FRLG player had (where was the
+// S.S. Anne going?), and its answer opens the whole world. Nobody from the games; a character the project owns. The text box
 // prints their words as ordinary NPC dialogue, so the cut without a voice
 // still reads as them talking.
 
@@ -21,13 +22,15 @@ export const BOX_CAPS = [
   "Pokémon Wayfarer",
   "Pokémon",
   "Pallet Town",
+  "New Bark Town",
+  "Littleroot",
   "Kanto",
   "Johto",
   "Hoenn",
   "Sinnoh",
   "Sevii Islands",
   "Alola",
-  "Anne",
+  "S.S. Anne",
   "Vermilion",
   "Falkner",
   "Sprout Tower",
@@ -35,64 +38,65 @@ export const BOX_CAPS = [
   "Celadon",
   "Goldenrod",
   "League",
+  "Gym Leaders",
+  "Gyms",
 ]
 
 export const SCENES: Scene[] = [
   {
     id: "pallet",
-    narration: "Pallet Town. Every journey used to start right here.",
+    narration: "Well, look who's back. Last time, you set out from Pallet Town. Everyone did.",
     seconds: 7,
   },
   {
     id: "newbark",
-    narration: "Then it started here.",
+    narration: "This time? Maybe New Bark Town.",
     seconds: 4,
   },
   {
     id: "littleroot",
-    narration: "And here. Now? You choose where.",
+    narration: "Or Littleroot. Start wherever you like.",
     seconds: 5,
   },
   {
     id: "anne",
     narration:
-      "See the Anne? Folks used to say she sailed off and never came back. She comes back. Every evening, half past eight, out of Vermilion. Where to? Somewhere you've never been. Be on the pier, or don't be. She won't wait.",
+      "Remember the S.S. Anne? She sailed out of Vermilion, and you never saw her again. Ever wonder where she was going?",
     seconds: 12,
   },
   {
     id: "lands",
     narration:
-      "Kanto and Johto are one land, always were. And past them... Hoenn. Sinnoh. The Sevii Islands. Alola. Seven lands, one sea, and every one of them keeps its own Pokémon, right where they've always been.",
+      "Alola. She still makes the run, every evening. And Kanto was never the whole map. Seven lands, one journey, and you can walk to every one. Each keeps its own Pokémon. Galar's, even. Try the Sevii Islands.",
     seconds: 13,
   },
   {
     id: "leaders",
     narration:
-      "The famous names? They've got lives. Falkner trains at Sprout Tower after lunch. Erika's shopping in Celadon. Catch them on the road, and you might walk away with their number.",
+      "The Gym Leaders don't sit around waiting for you, either. Falkner's up Sprout Tower after lunch. Erika's shopping in Celadon. Get friendly, and they might give you their number.",
     seconds: 11,
   },
   {
     id: "night",
-    narration:
-      "Evening comes, the lights go on in Goldenrod, and everybody heads home. Clock only runs while you're out here, mind.",
+    narration: "Come evening, the lights go on in Goldenrod, and folks head home.",
     seconds: 8,
   },
   {
     id: "daily",
     narration:
-      "Come back in a week, it won't be the same route. New faces, new finds, and somebody you beat once ringing you up for another go.",
+      "Walk the same road tomorrow, and it won't be the same road. New faces, new finds, and someone you beat, calling for a rematch.",
     seconds: 10,
   },
   {
     id: "gyms",
     narration:
-      "Eight badges. Any eight you like. Then your phone rings, and it's the League asking.",
+      "Twenty-four Gyms. Win any eight, in any order you like. Then the phone rings. It's the League.",
     seconds: 10,
   },
   {
     id: "open",
     narration:
-      "Pokémon Wayfarer. Free, made in the open. Road opens the twentieth of January. I'll see you out there.",
+      "Pokémon Wayfarer. Free, out January twentieth. Good to have you back. See you out there.",
     seconds: 9,
   },
 ]
