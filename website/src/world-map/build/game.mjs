@@ -192,15 +192,18 @@ export const openGame = (root = gameRoot) => {
 export const createAtlas = (game) => {
   const keys = new Map()
   const tiles = []
+  /** Per index, the metatile it draws; none for a tile made later (the sea's tints). */
+  const metatiles = []
   const index = (primary, secondary, id) => {
     const key = `${primary}|${secondary}|${id}`
     if (!keys.has(key)) {
       keys.set(key, tiles.length)
+      metatiles[tiles.length] = { primary, secondary, id }
       tiles.push(game.drawMetatile(primary, secondary, id))
     }
     return keys.get(key)
   }
-  return { tiles, index }
+  return { tiles, metatiles, index }
 }
 
 // Town Map cells, to place the pieces no connection reaches: the game's own

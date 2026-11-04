@@ -12,7 +12,7 @@ import { renderIndexed } from "../../../scripts/lib/gba.mjs"
 import { writePng } from "../../../scripts/lib/png.mjs"
 import { writeDaily } from "./daily.mjs"
 import { writeEncounters } from "./encounters.mjs"
-import { readSpawns } from "./spawns.mjs"
+import { readBehavior, readBehaviorFlags, readSpawns, TILE_FLAG_SURFABLE } from "./spawns.mjs"
 import { createAtlas, openGame } from "./game.mjs"
 import { buildLand } from "./land.mjs"
 import { buildLandmarks } from "./landmarks.mjs"
@@ -56,6 +56,43 @@ const overview = packLevels(
 )
 writePng(`${outDir}/overview.png`, overview.width, overview.height, overview.rgba)
 fs.rmSync(`${outDir}/overview.jpg`, { force: true })
+// Which cells are water, a bit each (row by row, high bit first), for the
+// living sea: its glints far out and its ripples close in keep to the water.
+// A metatile is water by the game's own behaviour (surfable, as the wild
+// encounters' water is), and so is the open sea past every map (EMPTY).
+// From there the water grows into the cells that only look like water (the
+// sea's tinted copies, made after the atlas, and the few water tiles with a
+// plain behaviour), so a blue roof, which looks like water but touches
+// none, stays dry.
+const flagsOf = readBehaviorFlags(game)
+const behaviorReaders = new Map()
+const isSurfable = (k) => {
+  const metatile = metatiles.metatiles[k]
+  if (!metatile) return false
+  const key = `${metatile.primary}|${metatile.secondary}`
+  if (!behaviorReaders.has(key))
+    behaviorReaders.set(key, readBehavior(game, metatile.primary, metatile.secondary))
+  return Boolean(flagsOf.get(behaviorReaders.get(key)(metatile.id)) & TILE_FLAG_SURFABLE)
+}
+const wet = new Uint8Array(W * H)
+const front = []
+for (let i = 0; i < W * H; i++)
+  if (grid[i] === 0xffff || isSurfable(grid[i])) {
+    wet[i] = 1
+    front.push(i)
+  }
+for (let p = 0; p < front.length; p++) {
+  const i = front[p]
+  const x = i % W
+  for (const j of [i - W, i + W, x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1])
+    if (j >= 0 && j < W * H && !wet[j] && land.isWater(grid[j])) {
+      wet[j] = 1
+      front.push(j)
+    }
+}
+const water = new Uint8Array(Math.ceil((W * H) / 8))
+for (let i = 0; i < W * H; i++) if (wet[i]) water[i >> 3] |= 0x80 >> (i & 7)
+fs.writeFileSync(`${outDir}/water.bin.gz`, gzipSync(Buffer.from(water.buffer), { level: 9 }))
 const towns = all
   .filter((p) => ["MAP_TYPE_TOWN", "MAP_TYPE_CITY"].includes(p.m.map_type))
   .map((p) => ({ name: p.m.name, x: p.x - minX + p.l.width / 2, y: p.y - minY + p.l.height / 2 }))
@@ -71,6 +108,18 @@ const labelFor = (p) => {
   if (JOHTO.test(p.m.name)) return "JOHTO"
   if (KANTO.test(p.m.name)) return "KANTO"
   return null
+}
+// The weather a map has, where the game gives it one worth drawing: rain and
+// storms along Johto's west coast, snow on Mt. Silver and in Sinnoh's north,
+// a sandstorm on Route 228, the shade of the forests and the leaves on
+// Bellchime Trail (`weather` in map.json; the fog and ash maps aren't placed).
+const WEATHER = {
+  WEATHER_RAIN: "rain",
+  WEATHER_RAIN_THUNDERSTORM: "storm",
+  WEATHER_SNOW: "snow",
+  WEATHER_SANDSTORM: "sand",
+  WEATHER_SHADE: "shade",
+  WEATHER_LEAVES: "leaves",
 }
 const regionLabels = new Map()
 for (const p of all) {
@@ -121,6 +170,7 @@ fs.writeFileSync(
       width: p.l.width,
       height: p.l.height,
       region: p.region,
+      ...(WEATHER[p.m.weather] ? { weather: WEATHER[p.m.weather] } : {}),
     })),
   }),
 )

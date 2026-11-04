@@ -3,7 +3,9 @@ import { type ReactNode, useEffect, useMemo, useRef, useState } from "react"
 import { useReducedMotion } from "~/lib/hooks"
 
 import { type Camera, fit, fly } from "./camera"
+import { cloudsOverlay } from "./clouds"
 import { type Bounds, DATA, type Meta, loadWorld } from "./data"
+import { lightsOverlay } from "./lights"
 import { stepped } from "./fade"
 import {
   BADGES_SRC,
@@ -44,12 +46,18 @@ import { type LivingWorld, livingOverlay, loadLiving } from "./living"
 import { type Notables, loadNotables, notableAt, notablesOverlay } from "./notables"
 import { PlaceExtra } from "./PlaceExtra"
 import type { PlaceInfo } from "./PlaceCard"
+import { seaOverlay } from "./sea"
+import { loadWater } from "./water"
+import { weatherOverlay } from "./weather"
 import { DAILY_SEED, type Daily, type DailyDay, dailyOn, loadDaily } from "./daily"
 import { type DailyScene, dailyOverlay } from "./dailyView"
 import { BUTTON } from "./ui"
 import { loadWild, type Wild, type WildClock, wildOverlay } from "./wild"
 import { WildTally } from "./WildTally"
 import { WorldMap } from "./WorldMap"
+
+/** The real clock the sea, the weather, the clouds and the lights run on. */
+const tick = () => performance.now()
 
 /** The explorer's place cards also name a town's Gym, league stop and ferries. */
 const placeExtra = (place: PlaceInfo) => <PlaceExtra place={place} />
@@ -691,6 +699,8 @@ export const WorldTour = ({
   const stopRef = useRef(0)
   // Whether the map's data is in; until then a line says it's coming.
   const [ready, setReady] = useState(false)
+  // The world's meta once it's in, for what the overlays need of it.
+  const [meta, setMeta] = useState<Meta>()
   const [living, setLiving] = useState<LivingWorld>()
   const [minutes, setMinutes] = useState(pageMinutes)
   const [notables, setNotables] = useState<Notables>()
@@ -767,7 +777,15 @@ export const WorldTour = ({
       ...(living
         ? (["world", "explore"] as const).map((at) => ({
             stop: at,
-            overlay: livingOverlay(living, pageMinutes),
+            overlay: livingOverlay(living, pageMinutes, { still: reducedMotion }),
+            animated: !reducedMotion,
+          }))
+        : []),
+      // After dark the towns glow and the lighthouse sweeps, over the tint.
+      ...(living && meta
+        ? (["world", "explore"] as const).map((at) => ({
+            stop: at,
+            overlay: lightsOverlay(meta, living, pageMinutes, !reducedMotion, tick),
             animated: !reducedMotion,
           }))
         : []),
@@ -788,7 +806,7 @@ export const WorldTour = ({
       ...(stopOverlays ?? []),
     ]
     redrawRef.current()
-  }, [stopOverlays, living, notables, wild, daily, trainerSheet, reducedMotion])
+  }, [stopOverlays, living, notables, wild, daily, trainerSheet, reducedMotion, meta])
   const atWorld = STOPS[stop] === "world" || STOPS[stop] === "explore"
   const ticking = atWorld || gym !== null
   useEffect(() => {
@@ -915,7 +933,21 @@ export const WorldTour = ({
     ]).then(([world, landmarks]) => {
       if (disposed) return
       setReady(true)
+      setMeta(world.meta)
       const renderer = rendererFor(world)
+      // Under everything at every stop: the living sea, the maps' weather and
+      // the clouds' shadows (which thin out as the camera comes in).
+      let sea: Overlay | undefined
+      void loadWater(world.meta, base).then(
+        (water) => {
+          if (disposed) return
+          sea = seaOverlay(water, !reducedMotion, tick)
+          schedule()
+        },
+        () => {},
+      )
+      const weather = weatherOverlay(world.meta, !reducedMotion, tick)
+      const clouds = cloudsOverlay(!reducedMotion, tick)
       let start = startOf(DEFAULT_START)
       let route = routeIn(world.meta, start)
       let ride = rideMs(route)
@@ -1030,7 +1062,8 @@ export const WorldTour = ({
           stopClock.alpha = Math.max(0, 1 - (now - badgesLeft) / BADGES_OUT_MS)
           badgesUp = stopClock.alpha > 0
         } else stopClock.alpha = 0
-        const overlays = badgesUp ? [...pins] : []
+        const overlays: Overlay[] = [...(sea ? [sea] : []), weather, clouds]
+        if (badgesUp) overlays.push(...pins)
         stopClock.selected = gymRef.current?.badge ?? null
         const target = STOPS[current] === "circuit" ? 1 : 0
         const step = Math.min(100, now - lastFrame) / CIRCUIT_MS
@@ -1045,7 +1078,8 @@ export const WorldTour = ({
         stopClock.earnedAt = earnedAtRef.current
         stopClock.calling = callingFor(earnedRef.current)
         stopClock.league = leagueFocus
-        let animated = badgesUp && !reducedMotion
+        // The sea, the weather and the clouds keep every stop moving.
+        let animated = !reducedMotion
         if (circuitMix !== target) animated = true
         // The leader whose Gym card is open walks the badge stop's map.
         const card = gymRef.current
