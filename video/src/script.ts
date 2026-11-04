@@ -2,10 +2,11 @@
 // game's text box prints under the map. This file imports nothing, so
 // `scripts/voice.mjs` can read it under Node to make the voice-over.
 //
-// PROFESSOR OAK narrates, as he opens every one of these games, speaking to
-// a trainer who has been away: warm, a little grand, and glad to have them
-// back. The text box prints his words the way the game would, so the cut
-// without a voice still reads as Oak talking.
+// The WAYFARER narrates: a traveler who has walked all seven lands, met at
+// a Pokémon Center counter, a little weathered and glad to see a familiar
+// face. Nobody from the games; a character the project owns. The text box
+// prints their words as ordinary NPC dialogue, so the cut without a voice
+// still reads as them talking.
 
 export type Scene = {
   id: string
@@ -21,63 +22,63 @@ export const SCENES: Scene[] = [
   {
     id: "pallet",
     narration:
-      "Hello again. Welcome back to the world of Pokémon. It is a good deal bigger than you remember.",
-    caption: ["Hello again! Welcome back", "to the world of POKéMON."],
+      "Haven't seen you round here in years. Remember it? One Pokémon in your pocket, and the whole world out past the trees. Well. It's still out there. More of it than you'd think.",
+    caption: ["Haven't seen you round here", "in years!"],
     seconds: 8,
   },
   {
     id: "starts",
     narration:
-      "Pallet Town, New Bark, Littleroot. Begin wherever your own story began. The roads out are open, all of them.",
-    caption: ["Begin wherever your own", "story began."],
+      "Doesn't matter where you're from. Pallet, New Bark, Littleroot. Pick your door and walk out of it. Nobody stops you at the edge of town.",
+    caption: ["Pick your door and walk", "out of it."],
     seconds: 8,
   },
   {
     id: "anne",
     narration:
-      "Ah, the S.S. Anne. You always did wonder where she went. Every evening at half past eight she sails for Alola, by way of the islands, and I'm afraid she won't wait for you.",
-    caption: ["She sails for ALOLA at half", "past eight. She won't wait."],
+      "See the Anne? Folks used to say she sailed off and never came back. She comes back. Every evening, half past eight, out of Vermilion for Alola by way of the islands. Be on the pier, or don't be. She won't wait.",
+    caption: ["The ANNE? Half past eight,", "for ALOLA. She won't wait."],
     seconds: 12,
   },
   {
     id: "lands",
     narration:
-      "Kanto and Johto, one land. Beyond them Hoenn, Sinnoh, the Sevii Islands, Alola. Seven lands on one sea, and each with its own Pokémon, living where they always have.",
-    caption: ["Seven lands, one sea, and", "each with its own POKéMON."],
+      "Kanto and Johto are one land, always were. Past them, Hoenn. Sinnoh. The Sevii Islands. Alola. Seven lands, one sea, and each one keeps its own Pokémon, right where they've always been.",
+    caption: ["Seven lands, one sea, each", "with its own POKéMON."],
     seconds: 13,
   },
   {
     id: "leaders",
     narration:
-      "And the people you remember have lives of their own. Falkner trains at Sprout Tower after lunch. Erika is out shopping in Celadon. Meet them on the road, and they may well give you their number.",
-    caption: ["FALKNER trains at SPROUT", "TOWER after lunch, I hear."],
+      "The famous names? They've got lives. Falkner trains at Sprout Tower after lunch. Erika's shopping in Celadon. Catch them on the road, and you might walk away with their number.",
+    caption: ["FALKNER? SPROUT TOWER,", "after lunch. Try there."],
     seconds: 11,
   },
   {
     id: "night",
     narration:
-      "Evening comes, the lights go on in Goldenrod, and everybody heads home. Time passes only while you play, mind.",
-    caption: ["Evening comes, and everyone", "heads home."],
+      "Evening comes, the lights go on in Goldenrod, and everybody heads home. Clock only runs while you're out here, mind.",
+    caption: ["Gets dark out here.", "Everybody heads home."],
     seconds: 8,
   },
   {
     id: "daily",
     narration:
-      "Come back in a week, and it isn't the same route. New faces, new finds, and an old acquaintance on the phone, wanting a rematch.",
-    caption: ["Come back in a week. It", "won't be the same route."],
+      "Come back in a week, it won't be the same route. New faces, new finds, and somebody you beat once ringing you up for another go.",
+    caption: ["Come back in a week. Won't", "be the same route, I swear."],
     seconds: 10,
   },
   {
     id: "gyms",
     narration:
-      "Earn eight badges, any eight you please, and the telephone rings. The League wants a word with you.",
-    caption: ["Eight badges, any eight,", "and the LEAGUE will call."],
+      "Eight badges. Any eight you like. Then your phone rings, and it's the League asking.",
+    caption: ["Eight badges, any eight,", "and the LEAGUE rings you."],
     seconds: 10,
   },
   {
     id: "open",
     narration:
-      "Pokémon Wayfarer. Free, and made in the open. Now then. Are you ready? Your very own adventure is about to unfold. Once more, on the twentieth of January.",
+      "Pokémon Wayfarer. Free, made in the open. Road opens the twentieth of January. I'll see you out there.",
     seconds: 9,
   },
 ]
