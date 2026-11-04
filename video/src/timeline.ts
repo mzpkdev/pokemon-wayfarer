@@ -14,7 +14,6 @@ export type Target =
   | { kind: "circuit"; room?: number }
   /** A Gym Leader or Elite Four member (their slug in `notables.json`), wherever the scene's clock has them. */
   | { kind: "notable"; slug: string; zoom: number }
-  | { kind: "circuit"; room?: number }
 
 /** The camera at `at` of the way through the scene (0 to 1); the camera flies between keyframes. */
 export type Keyframe = { at: number; to: Target }

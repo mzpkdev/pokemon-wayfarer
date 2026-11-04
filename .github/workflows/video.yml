@@ -6,6 +6,8 @@ on:
     paths:
       - video/**
       - website/src/**
+      - website/public/**
+      - website/tsconfig.json
       - pnpm-lock.yaml
       - pnpm-workspace.yaml
       - .github/workflows/video.yml
@@ -18,6 +20,8 @@ on:
     paths:
       - video/**
       - website/src/**
+      - website/public/**
+      - website/tsconfig.json
       - pnpm-lock.yaml
       - pnpm-workspace.yaml
       - .github/workflows/video.yml
