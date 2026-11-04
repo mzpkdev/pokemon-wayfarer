@@ -44,8 +44,8 @@ export const BOX_CAPS = [
   "Brock",
   "Lt. Surge",
   "Game Corner",
-  "Lance",
-  "Dragonite",
+  "Wallace",
+  "Route 119",
   "Day-Care",
   "Golem",
   "Gyms",
@@ -91,8 +91,8 @@ export const SCENES: Scene[] = [
     seconds: 3.5,
   },
   {
-    id: "lance",
-    narration: "Ever battled with Lance's Dragonite?\nIt might even listen.",
+    id: "wallace",
+    narration: "Wallace is fishing Route 119.\nHas been for days.",
     seconds: 5,
   },
   {

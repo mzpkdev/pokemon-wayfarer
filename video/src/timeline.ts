@@ -169,9 +169,9 @@ export const DIRECTIONS: Record<string, Direction> = {
     fade: { out: CUT },
   },
   // Two more lives, a warp between each: Lt. Surge at the Game Corner in the afternoon,
-  // and Lance at the Dragon's Den at dawn, whose Dragonite you might battle with.
+  // and Wallace fishing Route 119 at noon, where Feebas hides on a few tiles of the river.
   surge: vignette("lt-surge", h(16)),
-  lance: vignette("lance", h(5, 45)),
+  wallace: vignette("wallace", h(12, 30)),
   // Evening into night over Johto and Kanto, closing on Goldenrod as its lights come on.
   night: {
     shots: [
