@@ -27,6 +27,8 @@ export type Direction = {
   clock: { at: number } | { from: number; to: number }
   /** The badge pins, and how much of the league circuit is drawn (0 pins only, 1 the whole circuit). */
   badges?: { circuit: number | [number, number] }
+  /** The daily trainers and items on every road, with the day stepping from 1 to `days` across the scene. */
+  daily?: { days: number }
   /** Gym Leaders and the Elite Four walking their routines: everyone, or the named few picked out. */
   notables?: { only?: string[]; marker?: boolean; minHeight?: number }
   /** A card over the map: the logo and lines of text. */
@@ -106,10 +108,12 @@ export const DIRECTIONS: Record<string, Direction> = {
   },
   daily: {
     shots: [
-      { at: 0, to: { kind: "map", name: "Route15_hns", x: 30, y: 10, zoom: 20 } },
-      { at: 1, to: { kind: "map", name: "Route15_hns", x: 56, y: 10, zoom: 20 } },
+      { at: 0, to: { kind: "map", name: "Route15_hns", x: 36, y: 10, zoom: 20 } },
+      { at: 1, to: { kind: "map", name: "Route15_hns", x: 48, y: 10, zoom: 20 } },
     ],
     clock: { at: h(10) },
+    // Four days pass: the trainers and items pop into new spots, or stay away.
+    daily: { days: 4 },
   },
   open: {
     shots: [
