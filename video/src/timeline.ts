@@ -168,11 +168,10 @@ export const DIRECTIONS: Record<string, Direction> = {
     notables: { marker: true, minHeight: 64 },
     fade: { out: CUT },
   },
-  // Three more lives, a warp between each: Lt. Surge at the Game Corner in the afternoon,
-  // Wallace fishing Route 119 (where Feebas is) at noon, Giovanni at the Burned Tower at night.
+  // Two more lives, a warp between each: Lt. Surge at the Game Corner in the afternoon,
+  // and Lance at the Dragon's Den at dawn, whose Dragonite you might battle with.
   surge: vignette("lt-surge", h(16)),
-  wallace: vignette("wallace", h(12, 30)),
-  giovanni: vignette("giovanni", h(0, 30)),
+  lance: vignette("lance", h(5, 45)),
   // Evening into night over Johto and Kanto, closing on Goldenrod as its lights come on.
   night: {
     shots: [

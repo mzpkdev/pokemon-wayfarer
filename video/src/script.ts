@@ -44,9 +44,8 @@ export const BOX_CAPS = [
   "Brock",
   "Lt. Surge",
   "Game Corner",
-  "Wallace",
-  "Route 119",
-  "Giovanni",
+  "Lance",
+  "Dragonite",
   "Day-Care",
   "Golem",
   "Gyms",
@@ -92,13 +91,8 @@ export const SCENES: Scene[] = [
     seconds: 3.5,
   },
   {
-    id: "wallace",
-    narration: "Wallace is fishing Route 119.\nWonder what for.",
-    seconds: 5,
-  },
-  {
-    id: "giovanni",
-    narration: "And Giovanni's lying low.\nSomewhere in Johto.",
+    id: "lance",
+    narration: "Ever battled with Lance's Dragonite?\nIt might even listen.",
     seconds: 5,
   },
   {
