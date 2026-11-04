@@ -308,12 +308,22 @@ so each holds at one moment.
   down some of the water tiles, a light stroke of a few game pixels and a
   shorter one eight rows under it, the way the overworld cycles its water.
   The glints are gone by 7 and the ripples all in by 10.
-- The clouds (`clouds.ts`). A tiling noise texture, a texel to four
-  metatiles, thresholded to three whole steps of cover (a wisp, the body and
-  the thick of it) so it stays as blocky as the far-out view, drawn as a
-  shadow on the world and, a little to the north-west of it, the faint cloud
-  itself. They drift east and a little south, and thin from 1.6 CSS pixels a
-  metatile to nothing at 4.5, so the tiles are never under them close in.
+- The clouds (`clouds.ts`). Seen from above, as from a satellite: faint,
+  irregular masses in hard pixels of four metatiles, stepped into three
+  levels of cover (a wisp, the body and the thick of it) and a few flat
+  tones lit from the north-west, each casting its shadow 32 metatiles to the
+  south-east. One noise texture is baked the first time they're drawn, sampled
+  every eight metatiles and blended between to the pixels: the
+  clouds' noise, curled by a slower one so their edges don't follow its
+  lattice, plus a slower one still that gathers them into banks with clear
+  sky between. It tiles every 3840 metatiles, wider than the world, so no
+  repeat is ever on screen. Far out, where a pixel of cloud is under two
+  screen pixels, it's blended so it doesn't shimmer as it drifts. They drift
+  east and a little south. The clouds thin from 1.6 CSS pixels a metatile to
+  nothing at 4.5, so the tiles are never under them close in, but their
+  shadows stay at every zoom, a little lighter, going from blocks to a soft
+  dimming by 10 (a second, unstepped shadow texture) so they don't pass over
+  the towns as squares many game pixels wide.
 - The weather (`weather.ts`, from `weather` on the maps in `meta.json`). Each
   map with weather gets a haze in its color from any distance and, from 2 CSS
   pixels a metatile (all there at 4), its drops: rain and a thunderstorm's
