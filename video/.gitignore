@@ -1,0 +1,4 @@
+# Music is dropped in by hand; only its README is tracked. (dist/ and out/ are
+# ignored by the repository's root .gitignore.)
+audio/music/*
+!audio/music/README.md

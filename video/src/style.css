@@ -1,0 +1,15 @@
+/* The website's styles: the game's font, text and window utilities, its colors. */
+@import "~/styles/global.css";
+
+html,
+body {
+  margin: 0;
+  background: black;
+  overflow: hidden;
+}
+
+/* The video's frame: 16:9, as large as the window allows. */
+.stage {
+  width: min(100vw, calc(100vh * 16 / 9));
+  aspect-ratio: 16 / 9;
+}

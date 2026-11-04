@@ -4,6 +4,7 @@ packages:
   - devtools/tools/*
   - devtools/ui
   - website
+  - video
 
 allowBuilds:
   "@playwright/browser-chromium": true
