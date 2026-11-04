@@ -196,13 +196,13 @@ import { RELEASE_LABEL } from "~/lib/release"
 
         <!-- The tour in short, for anyone who scrolled past it. -->
         <section aria-labelledby="highlights" class="relative mx-auto max-w-5xl px-6 py-16">
-          <!-- The Bag beside the heading: the highlights' icons are its key items, and they hop into it. -->
+          <!-- The Bag beside the heading: the highlights' icons are its key items, and a click puts one in it. -->
           <div class="flex items-end justify-between gap-6">
             <div>
               <p class="pixel-label text-logo-yellow">The short version</p>
               <h2 id="highlights" class="pixel-heading mt-4">A world that keeps moving</h2>
             </div>
-            <BagDrop client:visible />
+            <BagDrop client:idle />
           </div>
           <dl class="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
             {
@@ -217,16 +217,22 @@ import { RELEASE_LABEL } from "~/lib/release"
           <ul class="mt-14 grid gap-x-8 gap-y-6 sm:grid-cols-2">
             {
               HIGHLIGHTS.map((highlight) => (
-                <li class="flex gap-4" data-bag-row>
+                <li class="flex gap-4">
                   <div class="pixel-corners pixel-panel grid size-16 shrink-0 place-items-center">
-                    <img
+                    <button
+                      type="button"
                       data-bag-item
-                      src={`/game/items/${highlight.icon}.png`}
-                      alt=""
-                      width="48"
-                      height="48"
-                      class="pixelated size-12"
-                    />
+                      aria-label={`Put the ${highlight.icon.replaceAll("-", " ")} in the Bag`}
+                      class="grid place-items-center focus-visible:outline-2 focus-visible:outline-logo-yellow"
+                    >
+                      <img
+                        src={`/game/items/${highlight.icon}.png`}
+                        alt=""
+                        width="48"
+                        height="48"
+                        class="pixelated size-12"
+                      />
+                    </button>
                   </div>
                   <div>
                     <h3 class="font-semibold">{highlight.title}</h3>
