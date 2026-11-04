@@ -5,6 +5,7 @@
 - `game/` is the GBA ROM project: engine code, data, maps, generators, mechanics tests, and Makefile build targets. Avoid concurrent builds for different map versions because they share generated map files.
 - `e2e/` is the pnpm/Turborepo TypeScript suite that drives a prebuilt E2E-enabled HNS ROM through headless SkyEmu. It requires explicit `SKYEMU_ROM` and `SKYEMU_SYMS` paths and does not build or scan `game/`.
 - `website/` is the public Wayfarer website (`@wayfarer/website`): Astro with React islands, Ark UI, Tailwind CSS, oxlint/oxfmt, and TypeScript 7. Run its scripts from `website/`; see its README.
+- `video/` is the launch video (`@wayfarer/video`): a Vite page that reuses the website's world map (`~` resolves to `website/src`) to fly the camera over the storyboard, rendered frame by frame through Playwright and muxed with the ElevenLabs voice-over by ffmpeg. Run its scripts from `video/`; see its README.
 - `.product/` holds durable product documentation: product requirements in `prds/`, implementable behavior in `specs/`, and evidence-based investigations in `research/`.
 
 ## Map editing
