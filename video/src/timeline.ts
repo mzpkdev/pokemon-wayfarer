@@ -118,7 +118,8 @@ export const DIRECTIONS: Record<string, Direction> = {
     clock: { from: h(20, 18), to: h(21, 5) },
     fade: { in: CUT },
   },
-  // Still with the Anne while the box answers where she was going; then, on "And
+  // Still with the Anne while the box answers where she was going, and that she
+  // won't wait, as she steams off without you; then, on "And
   // Kanto was never the whole map", one pull-out in the evening light: Kanto and
   // Johto with their Pokémon popping out once they fill the frame, then every land.
   lands: {
@@ -126,13 +127,13 @@ export const DIRECTIONS: Record<string, Direction> = {
     // stopping while their Pokémon pop, then goes on at speed and settles on every land.
     shots: [
       { at: 0, to: { kind: "ship", id: "anne", zoom: 16 } },
-      { at: 0.24, to: { kind: "ship", id: "anne", zoom: 12 }, ease: "none" },
-      { at: 0.5, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.8 }, ease: "in" },
-      { at: 0.82, to: LANDS, ease: "out" },
+      { at: 0.33, to: { kind: "ship", id: "anne", zoom: 12 }, ease: "none" },
+      { at: 0.56, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.8 }, ease: "in" },
+      { at: 0.85, to: LANDS, ease: "out" },
       { at: 1, to: LANDS },
     ],
     clock: { from: h(21, 5), to: h(23, 30) },
-    wild: { from: 0.42 },
+    wild: { from: 0.5 },
   },
   // Straight on from every land at night: every Gym Leader and Elite Four member's marker
   // lights up, then one dive onto Falkner while the night and the next morning go by;
