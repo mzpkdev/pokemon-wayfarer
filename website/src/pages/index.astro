@@ -216,7 +216,7 @@ import { RELEASE_LABEL } from "~/lib/release"
 
           <!-- One more chance to sign up, for anyone the questions won over. -->
           <Place id="notify-again" popup="cherry" name={RELEASE_LABEL} grass={[6, 3]} title="Your journey is almost ready.">
-            <div class="mt-8 grid max-w-3xl gap-6">
+            <div class="mt-8 grid max-w-3xl grid-cols-[minmax(0,1fr)] gap-6">
               <div class="gba-window gba-text [--px:2px]">
                 <p>Leave your email and Professor Oak will write the moment it begins.</p>
               </div>
@@ -275,7 +275,7 @@ import { RELEASE_LABEL } from "~/lib/release"
 
   .footer-link:hover,
   .footer-link:focus-visible {
-    --ink: var(--color-logo-yellow);
+    color: var(--color-logo-yellow);
     outline: none;
   }
 

@@ -334,7 +334,7 @@ export const RightNow = () => {
                         type="button"
                         aria-pressed={on}
                         onClick={() => setGroup(entry.id)}
-                        className="group flex items-center focus-visible:outline-none"
+                        className="group flex items-center focus-visible:text-ink-blue focus-visible:outline-none"
                       >
                         <span
                           aria-hidden="true"
