@@ -45,6 +45,7 @@ export const OakStage = ({ className, oval = true }: { className?: string; oval?
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
     let raf = 0
+    let disposed = false
     let visible = true
     let frame = 0
     let carry = 0
@@ -69,6 +70,8 @@ export const OakStage = ({ className, oval = true }: { className?: string; oval?
         ),
         Promise.all(ROSTER.map(({ species }) => loadImage(`/game/people/mons/${species}.png`))),
       ])
+      // Cleaned up while the art was loading: don't start a loop nothing will cancel.
+      if (disposed) return
 
       const draw = ({
         ball: ballState,
@@ -174,6 +177,7 @@ export const OakStage = ({ className, oval = true }: { className?: string; oval?
     })
     resizer.observe(canvas)
     return () => {
+      disposed = true
       cancelAnimationFrame(raf)
       observer.disconnect()
       resizer.disconnect()

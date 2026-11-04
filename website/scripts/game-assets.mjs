@@ -392,7 +392,7 @@ save("frames/1.png", renderIndexed(source("text_window/1.png")))
 // The wood map name popup, for the world map's ROUTE 101 and LITTLEROOT TOWN
 // and the page's signposts, framed as DrawMapNamePopUpFrame lays out the
 // outline tiles: 12 along the top, three down each side, 12 along the bottom.
-// Wood colors its outline with the body's palette.
+// The body and its outline each carry the same palette.
 const placeTile = (target, tile, x, y) => {
   for (let row = 0; row < 8; row++)
     target.rgba.set(tile.rgba.subarray(row * 32, row * 32 + 32), ((y + row) * target.width + x) * 4)

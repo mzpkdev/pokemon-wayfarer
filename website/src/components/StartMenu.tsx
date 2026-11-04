@@ -156,7 +156,7 @@ export const StartMenu = () => {
         aria-controls={id}
         tabIndex={shown ? 0 : -1}
         onClick={() => (open ? close() : setOpen(true))}
-        className="sign sign-1x hover:brightness-110 focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-sign-light"
+        className="sign sign-1x hover:brightness-110 focus-visible:shadow-[0_0_0_8px_rgb(0_0_0/0.6)] focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-sign-light"
       >
         MENU
       </button>

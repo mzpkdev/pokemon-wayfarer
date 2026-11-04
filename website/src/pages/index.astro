@@ -340,12 +340,13 @@ import { RELEASE_LABEL } from "~/lib/release"
 </Layout>
 
 <style>
+  /* From fully off the left edge (the biker is 32 scene pixels wide) to fully off the right. */
   @keyframes ride {
     from {
-      translate: -160px 0;
+      translate: calc(-32 * var(--scene-px)) 0;
     }
     to {
-      translate: calc(100vw + 160px) 0;
+      translate: 100vw 0;
     }
   }
 
