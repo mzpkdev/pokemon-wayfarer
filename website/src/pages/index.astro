@@ -269,11 +269,10 @@ import { RELEASE_LABEL } from "~/lib/release"
 
         <!--
           Still night. One more chance to sign up, for anyone the questions
-          won over, beside the dawn the title screen shows: what the first
-          morning of the journey looks like.
+          won over.
         -->
         <section aria-labelledby="notify-again" class="period-night night-sky">
-          <div class="mx-auto grid max-w-5xl items-center gap-12 px-6 py-20 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-16">
+          <div class="mx-auto max-w-5xl px-6 py-20">
             <div>
               <div class="waypoint">
                 <Sign>{RELEASE_LABEL}</Sign>
@@ -285,20 +284,6 @@ import { RELEASE_LABEL } from "~/lib/release"
               <SignupForm id="signup-email-again" class="mt-8 max-w-xl" />
               <CtaLinks class="mt-8" />
             </div>
-            <figure class="justify-self-center">
-              <div class="gba-window p-0 [--px:1px] sm:[--px:2px]">
-                <img
-                  src="/game/title/dawn.png"
-                  alt="The title screen's dawn: the sun rising over a sea of islands, a route marked across them under a compass rose."
-                  width="240"
-                  height="160"
-                  class="pixelated block h-auto w-[calc(240*var(--px))]"
-                />
-              </div>
-              <figcaption class="mt-3 text-center text-sm text-paper/60">
-                The first morning, as the title screen shows it.
-              </figcaption>
-            </figure>
           </div>
         </section>
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // Renders the website's art from the game's own graphics in ../game/graphics:
 // the opening's parallax layers and Poké Ball, the title screen's logo,
-// wordmark and passing sprites, the default text window frame, the dawn
-// scene, key item icons, and a web font traced from the game's normal Latin font.
+// wordmark and passing sprites, the default text window frame, key item icons, and a web font traced from
+// the game's normal Latin font.
 //
 // The output is committed under public/game/, so building the site does not
 // need the game tree. Rerun with `pnpm run assets` after the source art changes.
@@ -181,24 +181,6 @@ save("page/edge.png", mirrorPair(edge))
 save("page/meadow.png", mirrorPair(crop(layer(2), 0, 16, 240, 64)))
 
 save("intro/pokeball.png", renderIndexed(source("intro/scene_1/wayfarer_pokeball.png")))
-
-// The dawn artwork the Wayfarer title screen loads behind the mountain pan.
-// Only its GBA screen's 240x160 is drawn.
-save(
-  "title/dawn.png",
-  crop(
-    tilemap(
-      readTiles(source("title_screen/wayfarer/background/scene.png")),
-      source("title_screen/wayfarer/background/scene.bin"),
-      8,
-      readJascPalette(source("title_screen/wayfarer/background/shared.pal")),
-    ),
-    0,
-    0,
-    240,
-    160,
-  ),
-)
 
 // The Pokémon logo is four 64x64 sprites stacked in its sheet, shown side by side.
 const logo = renderIndexed(source("title_screen/wayfarer/overlays/pokemon_logo_obj.png"))

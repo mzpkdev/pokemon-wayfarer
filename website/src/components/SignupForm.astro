@@ -16,7 +16,13 @@ const { id, class: className } = Astro.props
 const open = SIGNUP_ACTION !== undefined
 ---
 
-<form action={SIGNUP_ACTION} method="post" class={cn("naming-board pixel-corners w-full", className)}>
+<form
+  action={SIGNUP_ACTION}
+  method="post"
+  data-signup
+  data-open={open ? "true" : undefined}
+  class={cn("naming-board pixel-corners w-full", className)}
+>
   <div class="naming-box pixel-corners flex items-center gap-4 sm:gap-5">
     <img
       src="/game/items/letter.png"
@@ -36,17 +42,27 @@ const open = SIGNUP_ACTION !== undefined
           required
           autocomplete="email"
           placeholder="you@example.com"
-          disabled={!open}
           class="naming-field min-w-0 flex-1 bg-transparent px-1 pb-2 text-lg text-ink placeholder:text-ink/40 focus:outline-none"
         />
       </div>
     </div>
   </div>
   <div class="mt-4 flex items-center justify-end gap-3">
-    {!open && <span class="text-sm text-ink/70">Sign-ups open soon</span>}
-    <button type="submit" disabled={!open} class="naming-ok pixel-corners pixel-label">OK</button>
+    {!open && <span class="text-sm text-ink/70" data-signup-note aria-live="polite">Sign-ups open soon</span>}
+    <button type="submit" class="naming-ok pixel-corners pixel-label">OK</button>
   </div>
 </form>
+
+<script>
+  // Without a mailing list to post to, OK keeps the email on the page and says so.
+  for (const form of document.querySelectorAll<HTMLFormElement>("form[data-signup]:not([data-open])")) {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault()
+      const note = form.querySelector("[data-signup-note]")
+      if (note) note.textContent = "Not sent: sign-ups open soon. Thanks for trying the screen!"
+    })
+  }
+</script>
 
 <style>
   /* Colors sampled from the naming screen. */
