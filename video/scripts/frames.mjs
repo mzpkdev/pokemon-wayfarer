@@ -65,17 +65,12 @@ try {
   })
   await page.evaluate(() => document.fonts.ready)
   // The page's clock ran in real time while it loaded; pause it just past where it got to.
-  await page.clock.pauseAt((await page.evaluate(() => Date.now())) + 100)
+  await page.clock.pauseAt((await page.evaluate(() => Date.now())) + 1000)
 
   const { duration, slots } = await page.evaluate(() => {
     const video = globalThis.wayfarerVideo
     return { duration: video.duration, slots: video.slots }
   })
-  fs.writeFileSync(
-    path.join(out, "schedule.json"),
-    JSON.stringify({ fps, duration, slots }, null, 2),
-  )
-
   let from = values.from ? Number(values.from) : 0
   let to = values.to ? Number(values.to) : duration
   if (values.scene) {
@@ -89,6 +84,10 @@ try {
   const total = last - first
   fs.rmSync(frames, { recursive: true, force: true })
   fs.mkdirSync(frames, { recursive: true })
+  fs.writeFileSync(
+    path.join(out, "schedule.json"),
+    JSON.stringify({ fps, duration, slots }, null, 2),
+  )
   console.log(
     `${total} frames at ${fps} fps, ${from.toFixed(2)}s to ${to.toFixed(2)}s of ${duration.toFixed(2)}s`,
   )
