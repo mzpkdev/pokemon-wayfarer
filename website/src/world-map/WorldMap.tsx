@@ -294,7 +294,10 @@ export const WorldMap = ({
                 : []),
               ...(livingRef.current
                 ? [
-                    livingOverlay(livingRef.current, pageMinutes, { still: reducedRef.current }),
+                    livingOverlay(livingRef.current, pageMinutes, {
+                      still: reducedRef.current,
+                      decks: world.meta.overpasses,
+                    }),
                     lightsFor(livingRef.current),
                   ]
                 : []),

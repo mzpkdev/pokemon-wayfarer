@@ -160,18 +160,18 @@ PNG/palette helpers in `scripts/lib/`.
 the site doesn't need the game tree. Rebuild it after maps, tilesets or the
 builder change.
 
-| File              | What it holds                                                                                                                                                                                                                                                                                                           |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `atlas.png`       | Every metatile the world uses, 16×16 each, 64 to a row                                                                                                                                                                                                                                                                  |
-| `grid.bin.gz`     | The world as gzipped little-endian u16 atlas indices, row by row; `0xffff` is open sea                                                                                                                                                                                                                                  |
-| `overview.png`    | The far-out view: the tiles averaged, one pixel per metatile, and coarser levels for further out, packed side by side                                                                                                                                                                                                   |
-| `encounters.json` | Per placed map, its name and wild Pokémon (species slot and percent) by method and time of day; its sampled land (`l`) and water (`w`) encounter cells; `gens`, each slot's roster `entry`, the roster by `homes`, and the Safari Zones' Kalos by `safari`                                                              |
-| `icons.png`       | One 32×32 icon per species used, 16 to a row, indexed by the slot in `encounters.json`                                                                                                                                                                                                                                  |
-| `daily.json`      | The game's daily trainer slots (home trainer name, sprite cells, absence chance, group, placed objects' grid cells), the groups in the game's order, the placed item spots with their reach tier and region, and the item pools; `dailyOn` in `daily.ts` replays a day's draws from them                                |
-| `trainers.png`    | One 32×32 cell per trainer sprite used (first standing frame, facing down, bottom-centred) and the item ball, 16 to a row, indexed by `daily.json`                                                                                                                                                                      |
-| `notables.json`   | The notables' stops, cycles and routes (see below)                                                                                                                                                                                                                                                                      |
-| `water.bin.gz`    | Which cells are water, a bit each, row by row with the high bit first; the open sea past every map is water, the Magnet Train's viaduct is not, and a cell that only looks like water counts when it touches water (so the sea's tints do and a blue roof doesn't). The living sea keeps its glints and ripples to them |
-| `meta.json`       | Grid size, atlas columns, the overview's levels, the open ocean's tiles and color, towns, region labels with bounds, and placed maps, each with the game's `weather` where it has one worth drawing (`rain`, `storm`, `snow`, `sand`, `shade` or `leaves`, from map.json)                                               |
+| File              | What it holds                                                                                                                                                                                                                                                                                                                                                                                 |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `atlas.png`       | Every metatile the world uses, 16×16 each, 64 to a row                                                                                                                                                                                                                                                                                                                                        |
+| `grid.bin.gz`     | The world as gzipped little-endian u16 atlas indices, row by row; `0xffff` is open sea                                                                                                                                                                                                                                                                                                        |
+| `overview.png`    | The far-out view: the tiles averaged, one pixel per metatile, and coarser levels for further out, packed side by side                                                                                                                                                                                                                                                                         |
+| `encounters.json` | Per placed map, its name and wild Pokémon (species slot and percent) by method and time of day; its sampled land (`l`) and water (`w`) encounter cells; `gens`, each slot's roster `entry`, the roster by `homes`, and the Safari Zones' Kalos by `safari`                                                                                                                                    |
+| `icons.png`       | One 32×32 icon per species used, 16 to a row, indexed by the slot in `encounters.json`                                                                                                                                                                                                                                                                                                        |
+| `daily.json`      | The game's daily trainer slots (home trainer name, sprite cells, absence chance, group, placed objects' grid cells), the groups in the game's order, the placed item spots with their reach tier and region, and the item pools; `dailyOn` in `daily.ts` replays a day's draws from them                                                                                                      |
+| `trainers.png`    | One 32×32 cell per trainer sprite used (first standing frame, facing down, bottom-centred) and the item ball, 16 to a row, indexed by `daily.json`                                                                                                                                                                                                                                            |
+| `notables.json`   | The notables' stops, cycles and routes (see below)                                                                                                                                                                                                                                                                                                                                            |
+| `water.bin.gz`    | Which cells are water, a bit each, row by row with the high bit first; the open sea past every map is water, the Magnet Train's viaduct is not, and a cell that only looks like water counts when it touches water (so the sea's tints do and a blue roof doesn't). The living sea keeps its glints and ripples to them                                                                       |
+| `meta.json`       | Grid size, atlas columns, the overview's levels, the open ocean's tiles and color, towns, region labels with bounds, `overpasses` (the bridge decks and the viaduct over water, which the ships pass under: no ship is drawn over them), and placed maps, each with the game's `weather` where it has one worth drawing (`rain`, `storm`, `snow`, `sand`, `shade` or `leaves`, from map.json) |
 
 ## Builder (`build/`)
 
@@ -199,7 +199,12 @@ Plain Node scripts. Each stage gets a module:
   land. The insides of loops are filled, straits keep regions apart, every
   ferry port and Sevii Island dock (a town warp into a `_HARBOR` map) keeps a
   way out to the open sea, cut through the grown land as an inlet that widens
-  toward the sea where the land closes its bay, and each filled cell takes the border blocks of the nearest land-bordered map (an
+  toward the sea where the land closes its bay (the way may sail a sea
+  route's own water and pass under a bridge, `build/bridges.mjs`: a stretch
+  of a road map that is a deck over water, like the cycling road's west of
+  VERMILION CITY, which is how its harbour reaches the sea; the inlet keeps
+  its width clear of the maps, so it never squeezes through a slit between
+  two), and each filled cell takes the border blocks of the nearest land-bordered map (an
   island town far from any takes its own edge's ground). The sea takes the
   nearest map's water by the coasts, then deepens in four noisy steps, each a
   tinted copy of that water a quarter nearer one deep ocean, so every game's
@@ -276,8 +281,10 @@ Islands (Vermilion's Seagallop).
   Day hours and the time-of-day tint colors are read from the game's source
   (`wayfarer_ferry.c`, `constants/wayfarer_ferry.h`, `constants/rtc.h`,
   `overworld.c`). The sea lanes are not the game's: it has no ship on a map,
-  so they are routed over the grid's open water, kept off coasts where the
-  straits allow, and rounded. Each ship's cycle starts at the first moment the
+  so they are routed over the grid's open water (and under the bridges of
+  `build/bridges.mjs` and the viaduct, whose decks `livingOverlay` clips the
+  ships out of, `overpasses` in meta.json), kept off coasts where the straits
+  allow, and rounded. Each ship's cycle starts at the first moment the
   game's schedule table has it at its first port (Aqua and Tidal 8:00, Anne
   20:00). In the game a voyage starts at boarding, so on the map this is an
   illustration of the loop, not a live position.

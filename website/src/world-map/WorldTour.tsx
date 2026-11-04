@@ -784,7 +784,10 @@ export const WorldTour = ({
       ...(living
         ? (["world", "explore"] as const).map((at) => ({
             stop: at,
-            overlay: livingOverlay(living, pageMinutes, { still: reducedMotion }),
+            overlay: livingOverlay(living, pageMinutes, {
+              still: reducedMotion,
+              decks: meta?.overpasses,
+            }),
             animated: !reducedMotion,
           }))
         : []),

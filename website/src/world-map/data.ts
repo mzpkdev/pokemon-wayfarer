@@ -20,6 +20,8 @@ export type Meta = {
   sea: [number, number, number]
   towns: { name: string; x: number; y: number }[]
   regions: { name: string; x: number; y: number; bounds?: Bounds }[]
+  /** Bridge decks the ships pass under (grid cells): no ship is drawn over them. */
+  overpasses?: Bounds[]
   maps: {
     name: string
     region?: string
