@@ -167,6 +167,12 @@
     "x": 0,
     "y": 0
   },
+  "bag.png": {
+    "width": 64,
+    "height": 384,
+    "x": 0,
+    "y": 0
+  },
   "people/oak.png": {
     "width": 64,
     "height": 96,

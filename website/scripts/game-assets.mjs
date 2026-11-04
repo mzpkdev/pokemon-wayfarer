@@ -413,6 +413,13 @@ for (let side = 0; side < 3; side++) {
 }
 save("popups/wood.png", popup)
 
+// The Bag, from Heart & Soul's BAG screen: six 64x64 frames stacked, one per
+// pocket, for the highlights the page drops into it.
+save(
+  "bag.png",
+  renderIndexed(source("bag/hns/bag_male.png"), readJascPalette(source("bag/hns/bag.pal"))),
+)
+
 // PROF. OAK from the FireRed and LeafGreen intro, an 8bpp picture whose
 // palette the game loads at BG palette 6, so pixel n takes color n - 96.
 const oakPalette = Array.from({ length: 256 }, () => [0, 0, 0, 0])
