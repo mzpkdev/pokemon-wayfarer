@@ -27,11 +27,6 @@
   /* The Pokémon logo's yellow and blue. */
   --color-logo-yellow: rgb(255 214 0);
   --color-logo-blue: rgb(40 72 200);
-  /* Route 101's grass and tree shadow, and the default text window's frame. */
-  --color-route: rgb(112 192 160);
-  --color-canopy: rgb(56 80 0);
-  --color-frame: rgb(74 74 106);
-  --color-outline: rgb(41 49 49);
 }
 
 :root {
@@ -306,66 +301,7 @@
   }
 }
 
-/* ---- The route below the world map ---- */
-
-/**
- * The route the page walks down: Route 101's grass, in metatiles drawn two
- * CSS pixels per GBA pixel, the same scale as the page's text windows.
- */
-@utility route-grass {
-  background: var(--color-route) url("/game/route/grass.png") 0 0 / 32px 32px repeat;
-  image-rendering: pixelated;
-}
-
-/** The two staggered columns of trees that wall the route in, tiling down. */
-@utility route-trees {
-  background: url("/game/route/trees.png") 0 0 / 128px 64px repeat;
-  image-rendering: pixelated;
-}
-
-/** A one-way ledge across the route, the way the page drops into each place. */
-@utility route-ledge {
-  height: 32px;
-  background: url("/game/route/ledge.png") 0 0 / 32px 32px repeat-x;
-  image-rendering: pixelated;
-}
-
-/** A patch of tall grass. */
-@utility route-tall-grass {
-  background: url("/game/route/tall-grass.png") 0 0 / 32px 32px repeat;
-  image-rendering: pixelated;
-}
-
-/**
- * Text outlined the way the game prints names over pictures: ink on every
- * side, so it reads over grass or a popup's scene. --outline-dot sets the
- * outline's pixel (2px unless set).
- */
-@utility outline-text {
-  --o: var(--outline-dot, 2px);
-  --ink: var(--color-outline);
-  color: var(--color-paper);
-  text-shadow:
-    var(--o) 0 var(--ink),
-    calc(-1 * var(--o)) 0 var(--ink),
-    0 var(--o) var(--ink),
-    0 calc(-1 * var(--o)) var(--ink),
-    var(--o) var(--o) var(--ink),
-    calc(-1 * var(--o)) var(--o) var(--ink),
-    var(--o) calc(-1 * var(--o)) var(--ink),
-    calc(-1 * var(--o)) calc(-1 * var(--o)) var(--ink),
-    0 calc(2 * var(--o)) var(--ink),
-    var(--o) calc(2 * var(--o)) var(--ink);
-}
-
-/** The game's font at its own size and no color, for text that brings its own ink. */
-@utility gba-font {
-  font-family: var(--font-gba);
-  font-size: calc(16 * var(--px));
-  line-height: calc(16 * var(--px));
-  -webkit-font-smoothing: none;
-  font-smooth: never;
-}
+/* ---- Text windows below the world map ---- */
 
 /** A heading line inside a text window (one that sets --dot), in the game's blue ink. */
 @utility window-title {

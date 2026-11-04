@@ -6,12 +6,12 @@
  * works without JavaScript and every answer is in the page for search and
  * screen readers.
  */
-import Place from "~/components/route/Place.astro"
+import Place from "~/components/Place.astro"
 import { PATCHER_URL, REPOSITORY_URL } from "~/lib/content"
 import { RELEASE_LABEL } from "~/lib/release"
 ---
 
-<Place id="faq" popup="fall" name="QUESTIONS" title="Before you set out." grass={[4, 5]}>
+<Place id="faq" name="QUESTIONS" title="Before you set out.">
   <div class="faq-menu gba-window gba-text window-links mt-8 grid max-w-3xl gap-[calc(4*var(--px))] [--px:2px]">
     <details class="faq" name="faq" open>
       <summary>How do I play it?</summary>

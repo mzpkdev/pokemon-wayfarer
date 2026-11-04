@@ -30,11 +30,12 @@ export const BagScreen = ({ items }: { items: Highlight[] }) => {
     if (focus) buttons.current[next]?.focus()
   }
 
-  const onKeyDown = (event: KeyboardEvent) => {
+  // Steps from the item that has focus, wherever the pointer last chose.
+  const onKeyDown = (event: KeyboardEvent, index: number) => {
     const step = { ArrowDown: 1, ArrowUp: -1 }[event.key]
     if (step === undefined) return
     event.preventDefault()
-    choose(chosen + step, true)
+    choose(index + step, true)
   }
 
   return (
@@ -64,7 +65,7 @@ export const BagScreen = ({ items }: { items: Highlight[] }) => {
                 onFocus={() => choose(index)}
                 onMouseEnter={() => choose(index)}
                 onClick={() => choose(index)}
-                onKeyDown={onKeyDown}
+                onKeyDown={(event) => onKeyDown(event, index)}
                 className="flex w-full items-center text-left focus-visible:outline-none"
               >
                 <span aria-hidden="true" className="inline-block w-[calc(10*var(--px))] shrink-0">

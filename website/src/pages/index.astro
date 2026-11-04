@@ -11,9 +11,7 @@ import WorldSection from "~/components/WorldSection.astro"
 import { TitleScene } from "~/components/TitleScene"
 import Layout from "~/layouts/Layout.astro"
 import { BagScreen } from "~/components/BagScreen"
-import Ledge from "~/components/route/Ledge.astro"
-import Place from "~/components/route/Place.astro"
-import Route from "~/components/route/Route.astro"
+import Place from "~/components/Place.astro"
 import WorldCard from "~/components/WorldCard.astro"
 import { HIGHLIGHTS, LEVELS, REPOSITORY_URL } from "~/lib/content"
 import { RELEASE_LABEL } from "~/lib/release"
@@ -50,15 +48,15 @@ import { RELEASE_LABEL } from "~/lib/release"
         <CtaProfessor />
 
         <!--
-          Out of the dark grass and onto the route: every place below is one
-          of the game's screens, met under its map name popup.
+          Every place below is one of the game's screens, met under its map
+          name popup, in text windows on the dark grass.
         -->
-        <Route>
+        <div class="mx-auto max-w-[68rem]">
           <!--
             The world as it is this moment, on the clock the map runs on: proof
             the map's ships, train and Gym Leaders weren't a loop for the tour.
           -->
-          <Place id="right-now" popup="ocean" name="RIGHT NOW" grass={[7, 3]} title="The world doesn't wait for you.">
+          <Place id="right-now" name="RIGHT NOW" title="The world doesn't wait for you.">
             <div class="gba-window gba-text mt-8 max-w-3xl [--px:2px]">
               <p>
                 The ships sail their loops, the Magnet Train runs its line and every Gym Leader keeps to their
@@ -71,13 +69,12 @@ import { RELEASE_LABEL } from "~/lib/release"
             </div>
           </Place>
 
-          <Ledge />
 
           <!--
             What the map can't show: how an open world stays fair, then the
             things that set Wayfarer apart, each drawn the way the game draws it.
           -->
-          <Place id="open-world" popup="kanto" name="OPEN WORLD" grass={[5, 4]} title="Go anywhere. There's always a way.">
+          <Place id="open-world" name="OPEN WORLD" title="Go anywhere. There's always a way.">
             <div class="gba-window gba-text mt-8 max-w-3xl [--px:2px]">
               <p>
                 Every region is open, in any order, with no badge in the way. A road can still be blocked, a
@@ -193,29 +190,26 @@ import { RELEASE_LABEL } from "~/lib/release"
                     </tbody>
                   </table>
                 </div>
-                <figcaption class="gba-font outline-text [--outline-dot:var(--px)] [--px:2px]">Levels today, still being tuned.</figcaption>
+                <figcaption class="gba-text gba-text-light [--px:2px]">Levels today, still being tuned.</figcaption>
               </figure>
             </div>
           </Place>
 
-          <Ledge />
 
           <!-- The tour in short, for anyone who scrolled past it: the world's card, then the BAG. -->
-          <Place id="highlights" popup="town" name="IN SHORT" grass={[8, 2]} title="A world that keeps moving.">
+          <Place id="highlights" name="IN SHORT" title="A world that keeps moving.">
             <WorldCard />
             <div class="mt-10">
               <BagScreen client:visible items={HIGHLIGHTS} />
             </div>
           </Place>
 
-          <Ledge />
 
           <Faq />
 
-          <Ledge />
 
           <!-- One more chance to sign up, for anyone the questions won over. -->
-          <Place id="notify-again" popup="cherry" name={RELEASE_LABEL} grass={[6, 3]} title="Your journey is almost ready.">
+          <Place id="notify-again" name={RELEASE_LABEL} title="Your journey is almost ready.">
             <div class="mt-8 grid max-w-3xl grid-cols-[minmax(0,1fr)] gap-6">
               <div class="gba-window gba-text [--px:2px]">
                 <p>Leave your email and Professor Oak will write the moment it begins.</p>
@@ -224,7 +218,7 @@ import { RELEASE_LABEL } from "~/lib/release"
               <CtaLinks />
             </div>
           </Place>
-        </Route>
+        </div>
 
         <footer class="relative mx-auto flex max-w-5xl flex-col gap-8 px-6 pt-16 pb-10 sm:flex-row sm:items-start sm:justify-between">
           <p class="gba-text gba-text-light max-w-2xl [--px:2px]">
@@ -260,7 +254,7 @@ import { RELEASE_LABEL } from "~/lib/release"
 <style>
   /* Route 103's water, with a pixel-stepped shore. */
   .pond {
-    background: url("/game/route/water.png") 0 0 / 32px 32px repeat;
+    background: url("/game/water.png") 0 0 / 32px 32px repeat;
     image-rendering: pixelated;
     box-shadow:
       inset 0 0 0 4px rgb(48 88 176),

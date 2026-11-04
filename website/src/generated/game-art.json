@@ -167,69 +167,9 @@
     "x": 0,
     "y": 0
   },
-  "popups/ocean.png": {
-    "width": 96,
-    "height": 40,
-    "x": 0,
-    "y": 0
-  },
-  "popups/kanto.png": {
-    "width": 96,
-    "height": 40,
-    "x": 0,
-    "y": 0
-  },
-  "popups/town.png": {
-    "width": 96,
-    "height": 40,
-    "x": 0,
-    "y": 0
-  },
-  "popups/fall.png": {
-    "width": 96,
-    "height": 40,
-    "x": 0,
-    "y": 0
-  },
-  "popups/johto.png": {
-    "width": 96,
-    "height": 40,
-    "x": 0,
-    "y": 0
-  },
-  "popups/cherry.png": {
-    "width": 96,
-    "height": 40,
-    "x": 0,
-    "y": 0
-  },
-  "route/grass.png": {
+  "water.png": {
     "width": 16,
     "height": 16,
-    "x": 0,
-    "y": 0
-  },
-  "route/tall-grass.png": {
-    "width": 16,
-    "height": 16,
-    "x": 0,
-    "y": 0
-  },
-  "route/water.png": {
-    "width": 16,
-    "height": 16,
-    "x": 0,
-    "y": 0
-  },
-  "route/ledge.png": {
-    "width": 16,
-    "height": 16,
-    "x": 0,
-    "y": 0
-  },
-  "route/trees.png": {
-    "width": 64,
-    "height": 32,
     "x": 0,
     "y": 0
   },

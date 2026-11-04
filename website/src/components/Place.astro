@@ -1,0 +1,43 @@
+---
+/**
+ * A section of the page, opened the way the game names a place on arrival:
+ * the wooden map name popup, then the heading, then whatever it holds.
+ */
+type Props = {
+  id: string
+  /** The popup's name line, in capitals like the game's. */
+  name: string
+  title: string
+  class?: string
+}
+
+const { id, name, title, class: className } = Astro.props
+---
+
+<section aria-labelledby={id} class:list={["relative px-4 py-14 sm:px-8", className]}>
+  <p class="place-popup pixelated grid place-items-center">
+    <span class="gba-text whitespace-nowrap">{name}</span>
+  </p>
+  <h2 id={id} class="place-title pixel-heading mt-6 max-w-3xl">{title}</h2>
+  <slot />
+</section>
+
+<style>
+  .place-popup {
+    --px: 2px;
+    width: calc(96 * var(--px));
+    height: calc(40 * var(--px));
+    background: url("/game/popups/wood.png") 0 0 / 100% 100%;
+  }
+
+  @media (min-width: 640px) {
+    .place-popup {
+      --px: 3px;
+    }
+  }
+
+  /* A jump from the START menu stops above the popup, so the place's name shows too. */
+  .place-title {
+    scroll-margin-top: calc(40 * var(--px) + 3rem);
+  }
+</style>
