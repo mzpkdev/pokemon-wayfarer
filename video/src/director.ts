@@ -35,6 +35,7 @@ import {
 } from "~/world-map/starts"
 import { loadWater } from "~/world-map/water"
 import { weatherOverlay } from "~/world-map/weather"
+import { stepped } from "~/world-map/fade"
 import { loadWild, type WildClock, wildOverlay } from "~/world-map/wild"
 
 import type { Slot } from "./schedule"
@@ -45,6 +46,8 @@ import { DEFAULT_MINUTES, type Direction, DIRECTIONS, type Target } from "./time
 export const RIDER_MIN_ZOOM = 6
 /** The zoom of the close-up at the end of a ride, in CSS pixels per tile. */
 export const HOME_ZOOM = 24
+/** Each half of the warp between rides, in seconds: the game's 8 steps to black, and back. */
+const WARP_SECONDS = 0.35
 
 export type Stage = {
   world: World
@@ -300,14 +303,23 @@ export const shotFor = (
   const local = fraction * slot.length
   let camera = cameraAt(direction, fraction, stage, minute, width, height)
   let rider: Shot["rider"]
-  if (direction.rider) {
-    const { start, from, to } = direction.rider
-    const progress = Math.min(1, Math.max(0, (fraction - from) / (to - from)))
-    rider = { start, progress }
-    // While the ride is on, the camera follows it in from the opening shot.
-    if (fraction >= from && fraction <= to) {
-      const shots = rideShots(stage, startOf(start), width, height)
-      camera = fly(shots.opening, shots.home, progress)
+  let fade = 0
+  const rides = direction.rides?.toSorted((a, b) => a.from - b.from) ?? []
+  if (rides.length) {
+    // The ride under way, or the last one done: its rider waits at the door until the next.
+    const index = Math.max(
+      0,
+      rides.findLastIndex((ride) => ride.from <= fraction),
+    )
+    const ride = rides[index]!
+    const progress = Math.min(1, Math.max(0, (fraction - ride.from) / (ride.to - ride.from)))
+    rider = { start: ride.start, progress }
+    const shots = rideShots(stage, startOf(ride.start), width, height)
+    camera = fly(shots.opening, shots.home, progress)
+    // The warp to each ride after the first: black at its start, fading out before and in after.
+    for (const next of rides.slice(1)) {
+      const off = Math.abs(fraction - next.from) * slot.length
+      if (off < WARP_SECONDS) fade = Math.max(fade, stepped(1 - off / WARP_SECONDS))
     }
   }
   return {
@@ -327,7 +339,7 @@ export const shotFor = (
     // The waves' cycle began with the scene, so they are the same at a time however it was reached.
     wild: direction.wild ? { start: now() - local * 1000, still: null } : undefined,
     rider,
-    fade: 0,
+    fade,
   }
 }
 
