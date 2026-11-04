@@ -86,21 +86,25 @@ export const DIRECTIONS: Record<string, Direction> = {
     rides: [{ start: "kanto", from: 0, to: 0.7 }],
     fade: { in: 0.6, out: CUT },
   },
-  // GOLD and BRENDAN, quickly, a warp between: start anywhere.
-  starts: {
+  // GOLD rides in to New Bark Town.
+  newbark: {
     shots: [{ at: 0, to: { kind: "map", name: "NewBarkTown_hns", x: 14, y: 16, zoom: 24 } }],
     clock: { at: h(9) },
-    rides: [
-      { start: "johto", from: 0, to: 0.42 },
-      { start: "hoenn", from: 0.5, to: 0.92 },
-    ],
+    rides: [{ start: "johto", from: 0, to: 0.8 }],
+    fade: { in: CUT, out: CUT },
+  },
+  // BRENDAN rides in to Littleroot Town.
+  littleroot: {
+    shots: [{ at: 0, to: { kind: "map", name: "LittlerootTown", x: 10, y: 10, zoom: 24 } }],
+    clock: { at: h(9) },
+    rides: [{ start: "hoenn", from: 0, to: 0.8 }],
     fade: { in: CUT, out: CUT },
   },
   // The Anne at Vermilion's pier in the evening; she casts off at half past eight and the camera goes with her.
   anne: {
     shots: [
-      { at: 0, to: { kind: "ship", id: "anne", zoom: 12 } },
-      { at: 0.45, to: { kind: "ship", id: "anne", zoom: 12 } },
+      { at: 0, to: { kind: "ship", id: "anne", zoom: 24 } },
+      { at: 0.4, to: { kind: "ship", id: "anne", zoom: 24 } },
       { at: 1, to: { kind: "ship", id: "anne", zoom: 6 } },
     ],
     clock: { from: h(20, 18), to: h(21, 5) },
