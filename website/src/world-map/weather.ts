@@ -80,9 +80,8 @@ type Box = { x: number; y: number; w: number; h: number }
  * Fills `box` with `color`, fading in from its edges over `feather` device
  * pixels, so it doesn't lie on the world as a hard-edged shape where a map
  * runs over open sea. Along `joins` (in device pixels along each side) the
- * edge stays full, so two maps' weather reads as one; where a join ends
- * short of a corner the full edge tapers off over the same distance, to
- * meet the next map's own fade.
+ * edge stays full, so two maps' weather reads as one; a join reaching into
+ * a corner shortens that corner to the open part.
  */
 const hazeFill = (
   context: CanvasRenderingContext2D,
@@ -103,13 +102,14 @@ const hazeFill = (
     edge.addColorStop(1, color)
     return edge
   }
-  // Each side: its strip between the corners, split along the side into the
-  // open runs, which fade in from the edge, and the joined runs, which stay full.
-  const covered = {
-    left: [false, false],
-    right: [false, false],
-    top: [false, false],
-    bottom: [false, false],
+  // Each side: its strip, split along the side into the open runs, which
+  // fade in from the edge, and the joined runs, which stay full. The corner
+  // zones at its ends are the corners' unless a join reaches into one.
+  const open: Record<Side, [number, number]> = {
+    left: [f, f],
+    right: [f, f],
+    top: [f, f],
+    bottom: [f, f],
   }
   for (const side of ["left", "top", "right", "bottom"] as const) {
     const vertical = side === "left" || side === "right"
@@ -133,84 +133,55 @@ const hazeFill = (
       .map(({ from, to }) => ({ from: Math.max(lo, from), to: Math.min(hi, to) }))
       .filter(({ from, to }) => to > from)
       .toSorted((a, b) => a.from - b.from)
-    let cursor = lo + f
+    for (const run of runs) {
+      open[side][0] = Math.min(open[side][0], run.from - lo)
+      open[side][1] = Math.min(open[side][1], hi - run.to)
+    }
+    let cursor = lo + open[side][0]
+    const end = hi - open[side][1]
     for (const run of runs) {
       rect(cursor, Math.max(cursor, run.from), across)
-      rect(Math.max(cursor, run.from), Math.min(hi - f, run.to), color)
-      cursor = Math.max(cursor, Math.min(hi - f, run.to))
-      // Where the join covers a corner, that corner is joined on this side;
-      // where it ends short of one, the full edge tapers off.
-      if (run.from <= lo) covered[side][0] = true
-      else
-        rect(
-          run.from - f,
-          run.from,
-          vertical ? fade(0, run.from - f, 0, run.from) : fade(run.from - f, 0, run.from, 0),
-        )
-      if (run.to >= hi) covered[side][1] = true
-      else
-        rect(
-          run.to,
-          run.to + f,
-          vertical ? fade(0, run.to + f, 0, run.to) : fade(run.to + f, 0, run.to, 0),
-        )
+      rect(Math.max(cursor, run.from), Math.min(end, run.to), color)
+      cursor = Math.max(cursor, Math.min(end, run.to))
     }
-    rect(cursor, hi - f, across)
+    rect(cursor, end, across)
   }
-  // The corners: full where joined on both sides, one side's fade where
-  // joined on the other, and a quarter round where open on both.
-  for (const [cx, cy, rx, ry, joinedV, joinedH, fadeV, fadeH] of [
+  // The corners, each as wide as the open part of its horizontal side and as
+  // tall as that of its vertical one: full where joins reach in on both
+  // sides, the other side's fade where one does, a quarter round where none.
+  for (const [cx, cy, ox, oy, fadeV, fadeH] of [
+    [x, y, open.top[0], open.left[0], fade(x, 0, x + f, 0), fade(0, y, 0, y + f)],
+    [x + w, y, open.top[1], open.right[0], fade(x + w, 0, x + w - f, 0), fade(0, y, 0, y + f)],
+    [x, y + h, open.bottom[0], open.left[1], fade(x, 0, x + f, 0), fade(0, y + h, 0, y + h - f)],
     [
-      x + f,
-      y + f,
-      x,
-      y,
-      covered.left[0],
-      covered.top[0],
-      fade(x, 0, x + f, 0),
-      fade(0, y, 0, y + f),
-    ],
-    [
-      x + w - f,
-      y + f,
-      x + w - f,
-      y,
-      covered.right[0],
-      covered.top[1],
-      fade(x + w, 0, x + w - f, 0),
-      fade(0, y, 0, y + f),
-    ],
-    [
-      x + f,
-      y + h - f,
-      x,
-      y + h - f,
-      covered.left[1],
-      covered.bottom[0],
-      fade(x, 0, x + f, 0),
-      fade(0, y + h, 0, y + h - f),
-    ],
-    [
-      x + w - f,
-      y + h - f,
-      x + w - f,
-      y + h - f,
-      covered.right[1],
-      covered.bottom[1],
+      x + w,
+      y + h,
+      open.bottom[1],
+      open.right[1],
       fade(x + w, 0, x + w - f, 0),
       fade(0, y + h, 0, y + h - f),
     ],
   ] as const) {
-    if (joinedV && joinedH) context.fillStyle = color
-    else if (joinedV) context.fillStyle = fadeH
-    else if (joinedH) context.fillStyle = fadeV
+    if (ox <= 0 || oy <= 0) continue
+    const rx = cx === x ? x : x + w - ox
+    const ry = cy === y ? y : y + h - oy
+    if (ox < f && oy < f) context.fillStyle = color
+    else if (oy < f) context.fillStyle = fadeH
+    else if (ox < f) context.fillStyle = fadeV
     else {
-      const corner = context.createRadialGradient(cx, cy, 0, cx, cy, f)
+      const corner = context.createRadialGradient(
+        cx === x ? x + f : x + w - f,
+        cy === y ? y + f : y + h - f,
+        0,
+        cx === x ? x + f : x + w - f,
+        cy === y ? y + f : y + h - f,
+        f,
+      )
       corner.addColorStop(0, color)
       corner.addColorStop(1, clear)
       context.fillStyle = corner
     }
-    context.fillRect(rx, ry, f, f)
+    context.fillRect(rx, ry, ox, oy)
   }
 }
 

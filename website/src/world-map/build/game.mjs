@@ -198,8 +198,8 @@ export const createAtlas = (game) => {
     const key = `${primary}|${secondary}|${id}`
     if (!keys.has(key)) {
       keys.set(key, tiles.length)
+      metatiles[tiles.length] = { primary, secondary, id }
       tiles.push(game.drawMetatile(primary, secondary, id))
-      metatiles.push({ primary, secondary, id })
     }
     return keys.get(key)
   }

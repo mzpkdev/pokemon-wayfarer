@@ -59,22 +59,39 @@ fs.rmSync(`${outDir}/overview.jpg`, { force: true })
 // Which cells are water, a bit each (row by row, high bit first), for the
 // living sea: its glints far out and its ripples close in keep to the water.
 // A metatile is water by the game's own behaviour (surfable, as the wild
-// encounters' water is), so no blue roof or glass passes; the sea's tinted
-// copies, made after the atlas, go by colour. The open sea past every map
-// (EMPTY) is water too; the viaduct's deck is not.
+// encounters' water is), and so is the open sea past every map (EMPTY).
+// From there the water grows into the cells that only look like water (the
+// sea's tinted copies, made after the atlas, and the few water tiles with a
+// plain behaviour), so a blue roof, which looks like water but touches
+// none, stays dry.
 const flagsOf = readBehaviorFlags(game)
 const behaviorReaders = new Map()
-const isWaterTile = (k) => {
+const isSurfable = (k) => {
   const metatile = metatiles.metatiles[k]
-  if (!metatile) return land.isWater(k)
+  if (!metatile) return false
   const key = `${metatile.primary}|${metatile.secondary}`
   if (!behaviorReaders.has(key))
     behaviorReaders.set(key, readBehavior(game, metatile.primary, metatile.secondary))
   return Boolean(flagsOf.get(behaviorReaders.get(key)(metatile.id)) & TILE_FLAG_SURFABLE)
 }
-const water = new Uint8Array(Math.ceil((W * H) / 8))
+const wet = new Uint8Array(W * H)
+const front = []
 for (let i = 0; i < W * H; i++)
-  if (grid[i] === 0xffff || isWaterTile(grid[i])) water[i >> 3] |= 0x80 >> (i & 7)
+  if (grid[i] === 0xffff || isSurfable(grid[i])) {
+    wet[i] = 1
+    front.push(i)
+  }
+for (let p = 0; p < front.length; p++) {
+  const i = front[p]
+  const x = i % W
+  for (const j of [i - W, i + W, x > 0 ? i - 1 : -1, x < W - 1 ? i + 1 : -1])
+    if (j >= 0 && j < W * H && !wet[j] && land.isWater(grid[j])) {
+      wet[j] = 1
+      front.push(j)
+    }
+}
+const water = new Uint8Array(Math.ceil((W * H) / 8))
+for (let i = 0; i < W * H; i++) if (wet[i]) water[i >> 3] |= 0x80 >> (i & 7)
 fs.writeFileSync(`${outDir}/water.bin.gz`, gzipSync(Buffer.from(water.buffer), { level: 9 }))
 const towns = all
   .filter((p) => ["MAP_TYPE_TOWN", "MAP_TYPE_CITY"].includes(p.m.map_type))
