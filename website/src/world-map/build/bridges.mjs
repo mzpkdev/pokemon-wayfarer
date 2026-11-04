@@ -6,7 +6,7 @@
 export const BRIDGES = [
   // The cycling road is a long bridge over the sea west of VERMILION CITY;
   // under this stretch of it, the harbour's water reaches the open sea.
-  { map: "Route17_hns", rows: [74, 98], deck: [11, 26] },
+  { map: "Route17_hns", rows: [74, 98], deck: [10, 27] },
 ]
 
 /** How far past the rows ships pass under the deck is drawn again, for a ship's own height. */
