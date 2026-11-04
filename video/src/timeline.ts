@@ -83,7 +83,7 @@ export const DIRECTIONS: Record<string, Direction> = {
   pallet: {
     shots: [{ at: 0, to: { kind: "map", name: "PalletTown_hns", x: 12, y: 10, zoom: 24 } }],
     clock: { at: h(9) },
-    rides: [{ start: "kanto", from: 0, to: 0.8 }],
+    rides: [{ start: "kanto", from: 0, to: 0.7 }],
     fade: { in: 0.6, out: CUT },
   },
   // GOLD and BRENDAN, quickly, a warp between: start anywhere.

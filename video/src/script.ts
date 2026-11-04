@@ -22,16 +22,16 @@ export const SCENES: Scene[] = [
   {
     id: "pallet",
     narration:
-      "Haven't seen you round here in years. Remember it? One Pokémon in your pocket, and the whole world out past the trees. Well. It's still out there. More of it than you'd think.",
-    caption: ["Haven't seen you round here", "in years!"],
-    seconds: 8,
+      "Pallet Town. You know every tile of it. One Pokémon in your pocket, a whole world past the trees... and a road that only ever went one way. Not anymore.",
+    caption: ["Pallet Town. You know every", "tile of it."],
+    seconds: 10,
   },
   {
     id: "starts",
     narration:
-      "Doesn't matter where you're from. Pallet, New Bark, Littleroot. Pick your door and walk out of it. Nobody stops you at the edge of town.",
-    caption: ["Pick your door and walk", "out of it."],
-    seconds: 8,
+      "Kanto. Johto. Hoenn. Start in any one of them. And from there? Anywhere. No badge to earn first, no guard with a cough blocking the road. Just a world, and you in it.",
+    caption: ["KANTO, JOHTO or HOENN.", "Then anywhere you like."],
+    seconds: 10,
   },
   {
     id: "anne",
