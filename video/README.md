@@ -22,6 +22,7 @@ Run these from `video/`, or from the repository root with
 | `pnpm dev`    | Play the video in the browser, with the voice when it has been made    |
 | `pnpm build`  | Build the page the frames are rendered from, into `dist/`              |
 | `pnpm voice`  | Speak the script with ElevenLabs into `audio/vo/`                      |
+| `pnpm takes`  | Bring in voice takes made by hand into `audio/vo/`, timed              |
 | `pnpm actors` | Cut the actors' sprites from the game's art into `actors/`             |
 | `pnpm scout`  | Stills of a place with each tile's coordinates, into `out/scout/`      |
 | `pnpm frames` | Render every frame of the built page into `out/frames/`                |
@@ -104,8 +105,8 @@ however fast it draws. The whole video takes a few minutes; `--scene gyms`
 renders one scene and `--from 12 --to 20` a range, to check a change.
 
 `pnpm render` places each scene's voice clip at its cue, mixes in the first
-track in `audio/music/` at a quarter volume (see its README; `--music` picks
-another, `--music-volume` changes the level) and encodes H.264. `--no-voice`
+track in `audio/music/`, dipping under every line (see its README for where it
+starts and how loud it plays; `--music` picks another track) and encodes H.264. `--no-voice`
 renders the text-box-and-music version: the text box prints every word the
 voice says, so the video stands without a narrator.
 
@@ -127,6 +128,21 @@ text box only. `pnpm voice` only speaks the scenes whose
 words, voice or model changed since (`--force` speaks them all, `--scene`
 one). `ELEVENLABS_MODEL` or `--model` picks the model, `eleven_multilingual_v2`
 by default.
+
+The launch's voice was made by hand instead, in ElevenLabs' website with Eleven
+v3 (the voice, its prompt and every line's direction are in
+`audio/vo/README.md`), and brought in with
+
+```sh
+pnpm takes ~/Downloads/takes    # --dry-run to see the matches first
+```
+
+which matches each file to its scene by its words (name each after what it
+says), trims its ends, copies it to `audio/vo/<scene>.mp3` and times its letters
+from its pauses: a take carries no timing, so the words between two pauses are
+spread over the speech between them. Where a take says a line differently, change
+the script to match it first: the box prints the script. `pnpm voice` won't
+replace hand-made takes unless told to with `--force`.
 
 ## How it is put together
 
