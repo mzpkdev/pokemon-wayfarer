@@ -7,6 +7,17 @@ import { BOX_CAPS } from "./script"
 export const LETTERS_PER_SECOND = 30
 /** Width of the box's text, in GBA pixels: 240 across, less the 8-pixel frame and 4-pixel padding a side. */
 export const BOX_TEXT_WIDTH = 216
+/** GBA pixels across the frame: the video is 480 of them wide, so 4 CSS pixels each at 1080p. */
+export const GBA_COLUMNS = 480
+/** Gap under the box, and the box's height: its 8-pixel frame top and bottom, 2-pixel padding and two 16-pixel lines. */
+export const BOX_BOTTOM = 8
+export const BOX_TEXT_HEIGHT = 32
+const BOX_HEIGHT = 8 + 2 + BOX_TEXT_HEIGHT + 2 + 8
+/** CSS pixels of a frame `width` across that one GBA pixel takes. */
+export const gbaPx = (width: number) => Math.max(1, Math.round(width / GBA_COLUMNS))
+/** How much of a frame `width` across the text box hides at its foot, in CSS pixels. */
+export const boxCover = (width: number) => (BOX_BOTTOM + BOX_HEIGHT) * gbaPx(width)
+
 /** Lines a page holds, as in the game's own text box. */
 const LINES_PER_PAGE = 2
 /** Weight of a page beyond its letters, so a short page still stays up long enough to read. */

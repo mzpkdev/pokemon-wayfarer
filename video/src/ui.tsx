@@ -2,8 +2,7 @@
 // game art drawn at it, and the map name popup's plank.
 import { type RefObject, useEffect, useState } from "react"
 
-/** GBA pixels across the frame: the video is 480 of them wide, so 4 CSS pixels each at 1080p. */
-const GBA_COLUMNS = 480
+import { gbaPx } from "./box"
 
 /** One GBA pixel in CSS pixels for a stage element, following its width. */
 export const useStagePx = (stageRef: RefObject<HTMLElement | null>) => {
@@ -11,7 +10,7 @@ export const useStagePx = (stageRef: RefObject<HTMLElement | null>) => {
   useEffect(() => {
     const element = stageRef.current
     if (!element) return
-    const measure = () => setPx(Math.max(1, Math.round(element.clientWidth / GBA_COLUMNS)))
+    const measure = () => setPx(gbaPx(element.clientWidth))
     measure()
     const observer = new ResizeObserver(measure)
     observer.observe(element)

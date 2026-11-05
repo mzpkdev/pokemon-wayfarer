@@ -1,7 +1,7 @@
 // Draws a shot of the world on the canvas, and makes the timeline's shots.
 // Everything drawn is the website's own code (`~/world-map`); this file only
 // decides what it draws when.
-import { type Camera, fit, fly as flyEased } from "~/world-map/camera"
+import { type Camera, fit as fitView, fly as flyEased } from "~/world-map/camera"
 import { cloudsOverlay } from "~/world-map/clouds"
 import { DAILY_SEED, dailyOn, loadDaily, placedMaps } from "~/world-map/daily"
 import { type DailyScene, dailyOverlay } from "~/world-map/dailyView"
@@ -39,6 +39,7 @@ import { weatherOverlay } from "~/world-map/weather"
 import { stepped } from "~/world-map/fade"
 import { loadWild, type WildClock, wildOverlay } from "~/world-map/wild"
 
+import { boxCover } from "./box"
 import type { Slot } from "./schedule"
 import { ALL_LAYERS, type Shot } from "./shot"
 import { DEFAULT_MINUTES, type Direction, DIRECTIONS, type Target } from "./timeline"
@@ -195,19 +196,28 @@ export const wholeWorld = (stage: Stage): Bounds => ({
   bottom: stage.world.meta.height,
 })
 
-/** The camera for a target in a view `width` by `height` CSS pixels. */
+/**
+ * The camera for a target in a view `width` by `height` CSS pixels. A target
+ * fitted to bounds fits the view above its bottom `below` pixels, where the
+ * text box sits, so nothing the shot is framing hides under the box.
+ */
 export const resolve = (
   target: Target,
   stage: Stage,
   minute: number,
   width: number,
   height: number,
+  below = 0,
 ): Camera => {
   const { meta } = stage.world
   const whole = wholeWorld(stage)
+  const fit = (bounds: Bounds, room?: number): Camera => {
+    const camera = fitView(bounds, width, height - below, room)
+    return { ...camera, y: camera.y + below / 2 / camera.zoom }
+  }
   switch (target.kind) {
     case "world":
-      return fit(whole, width, height, target.room)
+      return fit(whole, target.room)
     case "point":
       return { x: target.x, y: target.y, zoom: target.zoom }
     case "regions": {
@@ -226,13 +236,13 @@ export const resolve = (
             : whole)
         )
       })
-      return fit(union(boxes), width, height, target.room)
+      return fit(union(boxes), target.room)
     }
     case "map": {
       const map = meta.maps.find((m) => m.name === target.name)
       if (!map) {
         warn(`No map named ${target.name}; the camera shows the world instead.`)
-        return fit(whole, width, height)
+        return fit(whole)
       }
       return {
         x: map.x + (target.x ?? map.width / 2),
@@ -242,13 +252,13 @@ export const resolve = (
     }
     case "circuit": {
       const bounds = landmarkBounds(stage.landmarks, target.room ?? 0.9)
-      return fit(bounds ?? whole, width, height, target.room)
+      return fit(bounds ?? whole, target.room)
     }
     case "ship": {
       const ship = shipsAt(stage.living, minute).find((s) => s.id === target.id)
       if (!ship) {
         warn(`No ship named ${target.id}; the camera shows the world instead.`)
-        return fit(whole, width, height)
+        return fit(whole)
       }
       return { x: ship.x, y: ship.y, zoom: target.zoom }
     }
@@ -258,7 +268,7 @@ export const resolve = (
         warn(
           `${target.slug} isn't on the map at ${Math.floor(minute / 60)}:00; the camera shows the world instead.`,
         )
-        return fit(whole, width, height)
+        return fit(whole)
       }
       return { x: who.x, y: who.y, zoom: target.zoom }
     }
@@ -273,11 +283,12 @@ export const cameraAt = (
   minute: number,
   width: number,
   height: number,
+  below = 0,
 ): Camera => {
   const shots = direction.shots.toSorted((a, b) => a.at - b.at)
   const first = shots[0]
-  if (!first) return fit(wholeWorld(stage), width, height)
-  const at = (shot: typeof first) => resolve(shot.to, stage, minute, width, height)
+  if (!first) return resolve({ kind: "world" }, stage, minute, width, height, below)
+  const at = (shot: typeof first) => resolve(shot.to, stage, minute, width, height, below)
   if (fraction <= first.at) return at(first)
   for (let i = 0; i < shots.length - 1; i++) {
     const a = shots[i]!
@@ -291,7 +302,7 @@ export const cameraAt = (
 export const rideShots = (stage: Stage, start: Start, width: number, height: number) => {
   const { meta } = stage.world
   return {
-    opening: fit(openingIn(meta, start), width, height),
+    opening: fitView(openingIn(meta, start), width, height),
     home: { ...focusIn(meta, start), zoom: HOME_ZOOM },
     route: routeIn(meta, start),
     ms: rideMs(routeIn(meta, start)),
@@ -392,7 +403,9 @@ export const shotFor = (
   const direction = directionFor(slot)
   const minute = minuteAt(direction, fraction)
   const local = fraction * slot.length
-  let camera = cameraAt(direction, fraction, stage, minute, width, height)
+  // Wide shots frame what they show above the text box, in a scene that has one.
+  const below = slot.boxed === false ? 0 : boxCover(width)
+  let camera = cameraAt(direction, fraction, stage, minute, width, height, below)
   let rider: Shot["rider"]
   // The scene's own fades from and to black, then the warps between rides.
   let fade = 0

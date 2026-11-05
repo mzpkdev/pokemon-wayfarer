@@ -2,7 +2,15 @@ import { useEffect, useMemo, useRef, useState } from "react"
 
 import { clockText } from "~/world-map/living"
 
-import { BOX_FONT, boxMeasure, LETTERS_PER_SECOND, pageAt, pagesFor } from "./box"
+import {
+  BOX_BOTTOM,
+  BOX_FONT,
+  BOX_TEXT_HEIGHT,
+  boxMeasure,
+  LETTERS_PER_SECOND,
+  pageAt,
+  pagesFor,
+} from "./box"
 import { directionFor, drawFrame, loadStage, riderPlace, type Stage } from "./director"
 import {
   type Cues,
@@ -233,13 +241,13 @@ const Player = ({
 
         {page && (
           <div
-            className="absolute bottom-[calc(8*var(--px))] left-1/2 -translate-x-1/2"
-            style={{ width: "calc(240 * var(--px))" }}
+            className="absolute left-1/2 -translate-x-1/2"
+            style={{ bottom: `calc(${BOX_BOTTOM} * var(--px))`, width: "calc(240 * var(--px))" }}
           >
             <div className="gba-window relative bg-paper">
               <p
                 className="gba-text whitespace-pre-line"
-                style={{ minHeight: "calc(32 * var(--px))" }}
+                style={{ minHeight: `calc(${BOX_TEXT_HEIGHT} * var(--px))` }}
               >
                 {pageText.slice(0, printed)}
                 <span className="invisible">{pageText.slice(printed)}</span>
