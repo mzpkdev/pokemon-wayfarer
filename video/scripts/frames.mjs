@@ -86,6 +86,10 @@ try {
   }
   const first = Math.round(from * fps)
   const last = Math.ceil(to * fps)
+  // A range starts its clock where a full render would be at its first frame,
+  // so the sea, the weather and the walkers match; a jump, so nothing runs between.
+  if (first > 0)
+    await page.clock.pauseAt(START.getTime() + LOAD_MS + Math.round((first * 1000) / fps))
   const total = last - first
   fs.rmSync(frames, { recursive: true, force: true })
   fs.mkdirSync(frames, { recursive: true })

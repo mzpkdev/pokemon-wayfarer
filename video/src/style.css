@@ -13,3 +13,13 @@ body {
   width: min(calc(100vw - var(--aside, 0px)), calc(100vh * 16 / 9));
   aspect-ratio: 16 / 9;
 }
+
+/*
+ * Captured frames: CSS transitions and animations run on the real clock, which
+ * the capture doesn't turn, so they're off there; the plank and the text box's
+ * arrow show at rest.
+ */
+.capture * {
+  transition: none !important;
+  animation: none !important;
+}

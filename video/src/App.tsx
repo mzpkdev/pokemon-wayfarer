@@ -295,7 +295,7 @@ export const App = () => {
 
   return (
     <div
-      className="flex h-dvh w-dvw items-center justify-center bg-black"
+      className={`flex h-dvh w-dvw items-center justify-center bg-black ${capture ? "capture" : ""}`}
       style={{ "--aside": studio ? "20rem" : "0px" } as React.CSSProperties}
     >
       {failed && <p className="font-sans text-paper">{failed}</p>}
