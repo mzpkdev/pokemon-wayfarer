@@ -172,7 +172,7 @@ const MEADOW: Target = { kind: "map", name: "FiveIsland_Meadow_Frlg", x: 12.5, y
 /** The flock: where each stands, the step it takes, and the way it faces first. */
 const WOOLOO: [number, number, number, number, "south" | "west" | "east" | "north"][] = [
   [11, 23, 1, 0, "east"],
-  [14, 22, 0, 1, "south"],
+  [14, 22, -1, 0, "west"],
   [12, 26, 0, 0, "south"],
   [14, 26, -1, 0, "west"],
   [11, 28, 1, 0, "east"],
@@ -282,7 +282,7 @@ export const DIRECTIONS: Record<string, Direction> = {
       { at: 1, to: { kind: "ship", id: "anne", zoom: 16 }, ease: "in" },
     ],
     clock: { from: h(20, 18), to: h(21, 5) },
-    fade: { in: CUT },
+    fade: { in: CUT, out: CUT },
   },
   // The answer, shown: morning at Melemele, and the Anne steams in to the beach she lands at.
   // You step off onto the sand, and the palm you walk past turns to look at you.
@@ -393,8 +393,10 @@ export const DIRECTIONS: Record<string, Direction> = {
       map: "FiveIsland_Meadow_Frlg",
       marks: [
         { at: 0, x, y },
-        { at: { on: "Ask the", plus: 0.3 + i * 0.15 }, x, y },
-        { at: { on: "Ask the", plus: 1.1 + i * 0.15 }, x: x + dx, y: y + dy },
+        // Each takes its step as the camera comes down, and is standing again before the
+        // box names them: a turn made while one still walks would be lost.
+        { at: { on: "Ask the", plus: -0.7 + i * 0.1 }, x, y },
+        { at: { on: "Ask the", plus: -0.1 + i * 0.1 }, x: x + dx, y: y + dy },
       ],
       face: [
         { at: 0, to: face },
@@ -432,18 +434,20 @@ export const DIRECTIONS: Record<string, Direction> = {
         sprite: "vivillon",
         map: SAFARI_BEACH,
         marks: [
-          { at: 0, x: 26, y: 26 },
-          { at: "The Safari", x: 26, y: 26 },
-          { at: 1, x: 23, y: 31 },
+          // Fluttering by the path's bend, clear of where you stop.
+          { at: 0, x: 27, y: 25 },
+          { at: "The Safari", x: 27, y: 25 },
+          { at: 1, x: 26, y: 27 },
         ],
       },
       {
         sprite: "leaf",
         map: SAFARI_BEACH,
         marks: [
-          { at: 0, x: 20, y: 38 },
-          { at: "The Safari", x: 20, y: 38 },
-          { at: { on: "home", plus: -0.9 }, x: 20, y: 28 },
+          // Already a little way up the path, so the rest is a walk, not a run.
+          { at: 0, x: 20, y: 33 },
+          { at: "The Safari", x: 20, y: 33 },
+          { at: { on: "home", plus: -1.1 }, x: 20, y: 28 },
           { at: "home", x: 24, y: 28 },
         ],
         face: [{ at: "home", to: "east" }],
@@ -749,7 +753,7 @@ export const DIRECTIONS: Record<string, Direction> = {
         hops: [{ on: "He hasn't", plus: 0.1 }],
       },
     ],
-    fade: { in: CUT },
+    fade: { in: CUT, out: CUT },
   },
   // Clair at the Dragon's Den before noon, and you walk straight up to her, no badges on you:
   // she turns, and the screen flashes the way it does when a battle starts.

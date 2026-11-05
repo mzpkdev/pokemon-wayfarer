@@ -200,8 +200,8 @@ export const poseCast = (
       const turn = actor.face.findLast((t) => t.at <= seconds)
       if (turn && (turn.at >= arrived || !heading)) facing = turn.to
     }
-    // Two strides a tile, each a step then a stand, as the game walks.
-    const stride = Math.floor(walked * 4) % 4
+    // A step then a stand each tile, the feet taking turns, as the game walks.
+    const stride = Math.floor(walked * 2) % 4
     const step: 0 | 1 | 2 = walking ? (stride === 0 ? 1 : stride === 2 ? 2 : 0) : 0
     const bob = (Math.floor(seconds / BOB_SECONDS) % 2) as 0 | 1
     const hop = actor.hops?.findLast((at) => at <= seconds)
