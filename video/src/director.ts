@@ -17,7 +17,7 @@ import {
   type StopClock,
 } from "~/world-map/landmarks"
 import { lightsOverlay } from "~/world-map/lights"
-import { type LivingWorld, livingOverlay, loadLiving, shipsAt } from "~/world-map/living"
+import { type LivingWorld, livingOverlay, loadLiving, shipsAt, tintAt } from "~/world-map/living"
 import { loadNotables, notableAt, type Notables, notablesOverlay } from "~/world-map/notables"
 import { type Overlay, type Renderer, rendererFor } from "~/world-map/render"
 import { riderAt } from "~/world-map/rider"
@@ -148,7 +148,8 @@ export const loadStage = async (): Promise<Stage> => {
     sea: seaOverlay(water, true, now),
     weather: weatherOverlay(world.meta, true, now),
     clouds: cloudsOverlay(true, now),
-    ships: livingOverlay(living, minutes),
+    // The tint is drawn on its own (`shot.layers.tint`), under the ships.
+    ships: livingOverlay(living, minutes, { tint: false }),
     lights: lightsOverlay(world.meta, living, minutes, true, now),
     sightings: sightingsOverlay(encounters, icons, minutes, true, now),
     pins: badgeOverlays(landmarks, badges, stopClock),
@@ -340,6 +341,18 @@ export const directionFor = (slot: Slot): Direction =>
     clock: { at: DEFAULT_MINUTES },
   }
 
+/** The game's time of day tint, multiplied over what is drawn so far, as the game does to its palettes. */
+const tintOverlay =
+  (living: Stage["living"], minutes: () => number): Overlay =>
+  (context) => {
+    const [r, g, b] = tintAt(living, minutes())
+    if (r >= 255 && g >= 255 && b >= 255) return
+    context.globalCompositeOperation = "multiply"
+    context.fillStyle = `rgb(${Math.round(r)} ${Math.round(g)} ${Math.round(b)})`
+    context.fillRect(0, 0, context.canvas.width, context.canvas.height)
+    context.globalCompositeOperation = "source-over"
+  }
+
 /** The timeline's shot `fraction` of the way through `slot`, for a view `width` by `height`. */
 export const shotFor = (
   stage: Stage,
@@ -477,6 +490,7 @@ export const drawShot = (stage: Stage, context: CanvasRenderingContext2D, shot: 
     if (stage.today?.day !== day) stage.today = { day, scene: dayScene(stage, day), since: now() }
     overlays.push(stage.daily)
   }
+  if (shot.layers.tint) overlays.push(tintOverlay(stage.living, minutes))
   if (shot.layers.walkers) {
     const { only, ...rest } = shot.walkers ?? {}
     const picked = only && new Set(only)

@@ -11,8 +11,10 @@ export type Layers = {
   sea: boolean
   weather: boolean
   clouds: boolean
-  /** The ships, the train and the time of day's tint. */
+  /** The ships and the train. */
   ships: boolean
+  /** The time of day's tint: off, the map stays in daylight whatever the clock says. */
+  tint: boolean
   /** The night lights. */
   lights: boolean
   /** Gym Leaders and the Elite Four on their routines. */
@@ -21,12 +23,14 @@ export type Layers = {
   sightings: boolean
 }
 
+/** What a scene draws unless it says otherwise: daylight, so only a scene about the time of day shows it. */
 export const ALL_LAYERS: Layers = {
   sea: true,
   weather: true,
   clouds: true,
   ships: true,
-  lights: true,
+  tint: false,
+  lights: false,
   walkers: true,
   sightings: false,
 }

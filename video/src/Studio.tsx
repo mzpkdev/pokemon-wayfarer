@@ -423,7 +423,8 @@ export const Studio = ({ stage, onPlay }: { stage: Stage; onPlay: () => void }) 
             {layer("sea", "Sea")}
             {layer("weather", "Weather")}
             {layer("clouds", "Clouds")}
-            {layer("ships", "Ships & tint")}
+            {layer("ships", "Ships & train")}
+            {layer("tint", "Time of day tint")}
             {layer("lights", "Night lights")}
             {layer("sightings", "Wild close in")}
             {layer("walkers", "Gym Leaders")}

@@ -148,8 +148,8 @@ export const DIRECTIONS: Record<string, Direction> = {
     wild: { from: 0.5 },
   },
   // Straight on from every land at night: every Gym Leader and Elite Four member's marker
-  // lights up, then one dive onto Brock while the night and the next morning go by; he is
-  // walking south out of Pewter, all the way to the Day-Care on Route 34.
+  // lights up, then one dive onto Brock while two days go by, to the morning he is
+  // caring for the Pokémon at the Day-Care on Route 34, in Johto.
   leaders: {
     shots: [
       { at: 0, to: LANDS },
@@ -157,12 +157,12 @@ export const DIRECTIONS: Record<string, Direction> = {
       { at: 0.55, to: { kind: "notable", slug: "brock", zoom: 16 } },
       { at: 1, to: { kind: "notable", slug: "brock", zoom: 16 } },
     ],
-    // The night goes by before the camera is close; then he walks at about a walk's pace.
+    // The days go by before the camera is close; then the clock runs at about a walk's pace.
     clock: {
       keys: [
         [0.12, h(23, 30)],
-        [0.46, h(34)],
-        [1, h(35)],
+        [0.46, h(82)],
+        [1, h(82, 30)],
       ],
     },
     notables: { marker: true, minHeight: 64 },
@@ -181,6 +181,8 @@ export const DIRECTIONS: Record<string, Direction> = {
       { at: 1, to: { kind: "map", name: "GoldenrodCity_hns", zoom: 9 } },
     ],
     clock: { from: h(18), to: h(26) },
+    // The one scene about the time of day: the tint and the lights are on.
+    layers: { tint: true, lights: true },
     fade: { in: CUT },
   },
   // Route 15 across four days: the trainers and items pop into new spots, or stay away.

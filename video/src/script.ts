@@ -82,7 +82,7 @@ export const SCENES: Scene[] = [
   {
     id: "leaders",
     narration:
-      "Ever wonder what Gym Leaders do when nobody's at the door?\nBrock's off to the Day-Care in Johto. Trade with him sometime.",
+      "Ever wonder what Gym Leaders do when nobody's at the door?\nBrock's helping out at the Day-Care in Johto. Trade with him sometime.",
     seconds: 8,
   },
   {
