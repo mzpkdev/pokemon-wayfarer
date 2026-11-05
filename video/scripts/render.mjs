@@ -1,11 +1,16 @@
 #!/usr/bin/env node
 // Muxes the rendered frames with the voice-over and music into the video:
 //
-//   pnpm render [--no-voice] [--music path] [--out out/wayfarer-launch.mp4]
+//   pnpm render [--no-voice] [--music path] [--music-at seconds] [--duck 0.35] [--out out/wayfarer-launch.mp4]
 //
 // Reads out/frames/ and out/schedule.json from `pnpm frames`, the voice clips
 // from audio/vo/ (placed where the schedule has each scene's cue) and the
-// first track in audio/music/. Needs ffmpeg on the PATH.
+// first track in audio/music/. A track shorter than the film starts late, so
+// its own ending lands on the film's; a longer one starts with the film and
+// fades out at its end. `--music-at` says where in the film it starts instead.
+// The music dips to `--duck` of its level while the narrator speaks, easing
+// down just before each line and back up after it.
+// Needs ffmpeg on the PATH.
 import { spawnSync } from "node:child_process"
 import * as fs from "node:fs"
 import * as path from "node:path"
@@ -23,7 +28,9 @@ const { values } = parseArgs({
     "no-voice": { type: "boolean", default: false },
     music: { type: "string" },
     out: { type: "string", default: path.join(out, "wayfarer-launch.mp4") },
-    "music-volume": { type: "string", default: "0.25" },
+    "music-at": { type: "string" },
+    "music-volume": { type: "string", default: "0.3" },
+    duck: { type: "string", default: "0.35" },
   },
 })
 const voice = values.voice && !values["no-voice"]
@@ -72,6 +79,8 @@ const inputs = [
 ]
 const filters = []
 const mixed = []
+/** Where the narrator speaks, in seconds of the rendered range, for the music to dip under. */
+const spoken = []
 let n = 1
 if (voice)
   for (const slot of slots) {
@@ -89,16 +98,68 @@ if (voice)
         : `[${n}:a]atrim=start=${(-at).toFixed(3)},asetpts=PTS-STARTPTS[v${n}]`,
     )
     mixed.push(`[v${n}]`)
+    spoken.push([at, at + (cues.scenes[slot.id]?.seconds ?? 0)])
     n++
   }
+
+/** Seconds the music takes to dip before a line, and to come back after it. */
+const EASE = 0.5
+/**
+ * The music's level over the rendered range, as an ffmpeg expression of `t`:
+ * full, then down to `duck` under each line. Lines closer than two eases stay
+ * under one dip, so the music doesn't bob up between them.
+ */
+const duckedLevel = (base, duck) => {
+  const dips = []
+  for (const [from, to] of spoken.toSorted((a, b) => a[0] - b[0])) {
+    const last = dips.at(-1)
+    if (last && from - last[1] < 2 * EASE) last[1] = Math.max(last[1], to)
+    else dips.push([from, to])
+  }
+  if (!dips.length) return String(base)
+  // How far under a dip the music is at t: 0 clear of it, 1 inside it, eased between.
+  const under = dips
+    .map(
+      ([from, to]) =>
+        `clip(min((t-${(from - EASE).toFixed(3)})/${EASE},(${(to + EASE).toFixed(3)}-t)/${EASE}),0,1)`,
+    )
+    .reduce((a, b) => `max(${a},${b})`)
+  return `${base}*(1-${(1 - duck).toFixed(3)}*${under})`
+}
 if (music) {
-  inputs.push("-stream_loop", "-1", "-i", music)
-  const fade = Math.min(3, length / 2)
-  filters.push(
-    `[${n}:a]volume=${values["music-volume"]},afade=t=in:st=0:d=1,afade=t=out:st=${(length - fade).toFixed(3)}:d=${fade.toFixed(3)}[m]`,
+  const track = Number(
+    spawnSync(
+      "ffprobe",
+      ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", music],
+      { encoding: "utf8" },
+    ).stdout.trim(),
   )
-  mixed.push("[m]")
-  n++
+  // Where in the film the track starts, and so where in the rendered range.
+  const musicAt =
+    values["music-at"] !== undefined ? Number(values["music-at"]) : Math.max(0, duration - track)
+  const at = musicAt - start
+  const ends = at + track
+  if (ends > 0 && at < length) {
+    inputs.push("-i", music)
+    const steps = []
+    // Started before the rendered range: trimmed to it, not delayed.
+    if (at < 0) steps.push(`atrim=start=${(-at).toFixed(3)}`, "asetpts=PTS-STARTPTS")
+    else steps.push(`adelay=${Math.round(at * 1000)}:all=1`)
+    // After the delay, so its clock is the rendered range's, as the lines are.
+    const level = duckedLevel(Number(values["music-volume"]), Number(values.duck))
+    steps.push(`volume='${level}':eval=frame`)
+    // A track that outlasts the range fades out with it; one that ends inside it ends as it was made.
+    if (ends > length + 0.05) {
+      const fade = Math.min(3, length / 2)
+      steps.push(`afade=t=out:st=${(length - fade).toFixed(3)}:d=${fade.toFixed(3)}`)
+    }
+    filters.push(`[${n}:a]${steps.join(",")}[m]`)
+    mixed.push("[m]")
+    n++
+    console.log(
+      `  music from ${musicAt.toFixed(2)}s of the film to ${(musicAt + track).toFixed(2)}s`,
+    )
+  }
 }
 
 const args = ["-y", ...inputs]
@@ -138,7 +199,7 @@ args.push(
 fs.mkdirSync(path.dirname(values.out), { recursive: true })
 console.log(
   `${files.length} frames (${length.toFixed(1)}s of ${duration.toFixed(1)}s)` +
-    `${voice ? `, voice in ${mixed.length - (music ? 1 : 0)} scenes` : ", no voice"}` +
+    `${voice ? `, voice in ${mixed.filter((m) => m !== "[m]").length} scenes` : ", no voice"}` +
     `${music ? `, music ${path.basename(music)}` : ", no music"}`,
 )
 const result = spawnSync("ffmpeg", args, { stdio: ["ignore", "inherit", "inherit"] })

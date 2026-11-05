@@ -96,6 +96,11 @@ fs.mkdirSync(vo, { recursive: true })
 const cues = fs.existsSync(cuesPath)
   ? JSON.parse(fs.readFileSync(cuesPath, "utf8"))
   : { scenes: {} }
+// Hand-made takes (`pnpm takes`) can't be spoken again: replacing them is a choice.
+if (cues.voice === "takes" && !values.force) {
+  console.error("audio/vo/ holds hand-made takes (pnpm takes); --force replaces them.")
+  process.exit(1)
+}
 cues.voice = voiceId
 cues.model = values.model
 

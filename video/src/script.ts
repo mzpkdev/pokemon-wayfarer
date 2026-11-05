@@ -89,7 +89,7 @@ export const SCENES: Scene[] = [
   },
   {
     id: "littleroot",
-    narration: "Or Littleroot. Start wherever you like.",
+    narration: "Or Littleroot. | Never did matter much where you start.",
     seconds: 5,
   },
   {
@@ -100,18 +100,17 @@ export const SCENES: Scene[] = [
   },
   {
     id: "alola",
-    narration: "Alola. | And now you can sail with her.",
+    narration: "Alola. | And this time, you don't have to watch her go.",
     seconds: 6.5,
   },
   {
     id: "wait",
-    narration: "Keeps her own hours, mind. | She won't wait.",
+    narration: "Course, she sails when she sails. | Blink, and you're watching her go again.",
     seconds: 6,
   },
   {
     id: "lands",
-    narration:
-      "And Kanto was never the whole map. | Seven lands. Walk every one of them. Each keeps its own Pokémon.",
+    narration: "No matter. Kanto was never the whole world. | Seven of 'em, all told.",
     seconds: 8,
   },
   {
@@ -121,30 +120,29 @@ export const SCENES: Scene[] = [
   },
   {
     id: "kalos",
-    narration:
-      "Never been to Kalos myself. Too far. | The Safari Zones brought a bit of it home, though.",
+    narration: "Never been to Kalos myself. Too far. | But now? Kalos came to the Safari Zone.",
     seconds: 6,
   },
   {
     id: "surf",
     narration:
-      "Still on that beach? | Nobody hands you Surf this time.\nFish. | Something down there already knows it.",
+      "Still on that beach? | Nobody's handing out Surf anymore.\nI bet something down there already knows it.",
     seconds: 12,
   },
   {
     id: "leaders",
     narration:
-      "Ever wonder what Gym Leaders do when nobody's at the door?\nBrock's helping out at the Day-Care in Johto. | Trade with him sometime.",
+      "Gym Leaders? | Hardly ever at the Gym these days.\nBrock's helping out at the Day-Care in Johto. | Always up for a trade, that one.",
     seconds: 13.5,
   },
   {
     id: "surge",
-    narration: "Lt. Surge? | Game Corner. | Again.",
+    narration: "Lt. Surge? | Oh... | Game Corner. | Again.",
     seconds: 3.5,
   },
   {
     id: "wallace",
-    narration: "Wallace is fishing Route 119.\n| Has been for days.",
+    narration: "Wallace, still fishing Route 119.\n| Has been for days.",
     seconds: 5,
   },
   {
@@ -154,35 +152,34 @@ export const SCENES: Scene[] = [
   },
   {
     id: "don",
-    narration: "That Bug Catcher you beat on Route 30?",
+    narration: "That Bug Catcher you beat on Route 30...",
     seconds: 3.5,
   },
   {
     id: "donagain",
-    narration: "He's moved on. You'll run into him again.\n| He hasn't forgotten you.",
+    narration: "He's moved on.\n| He hasn't forgotten you.",
     seconds: 5,
   },
   {
     id: "clair",
-    narration: "Twenty-four Gyms. Fancy Clair's first?\nGo on. | It'll be a fair fight.",
+    narration: "Twenty-four Gyms. Want to challenge Clair first?\nGo on. | It'll be a fair fight.",
     seconds: 7,
   },
   {
     id: "fame",
     narration:
-      "Word gets around. Soon the names you grew up with know yours.\nThen the phone rings. | It's the League.",
+      "Word gets around. | And soon, the folks you looked up to will know your name.\nWho's that? | Oh... | it's the League calling.",
     seconds: 8,
   },
   {
     id: "golem",
     narration:
-      "And who's in the Elite Four this year? | Brock. | With a Golem.\n| Wonder where he got that.",
+      "And who's in the Elite Four this year? | Brock. With a Golem.\n| Wonder where he got that.",
     seconds: 8,
   },
   {
     id: "open",
-    narration:
-      "Pokémon Wayfarer. Free, out January twentieth. | Good to have you back. | See you out there.",
+    narration: "Good to have you back, wayfarer. | See you out there.",
     seconds: 9,
     boxed: false,
   },

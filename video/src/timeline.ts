@@ -153,8 +153,9 @@ const MELEMELE_BEACH: Target = { kind: "map", name: MELEMELE, x: 37.5, y: 9.5, z
 const SAFARI_BEACH = "FuchsiaCity_SafariZoneBeach_hns"
 const SAFARI: Target = { kind: "map", name: SAFARI_BEACH, x: 27.5, y: 32, zoom: 64 }
 
-/** The tug on the line, a beat after the box says to fish; and setting off on what was caught. */
-const BITE: Moment = { on: "Something", plus: -0.5 }
+/** The cast, as the box's Surf sentence ends; the tug on the line as it says what's down there; and setting off on what was caught. */
+const FISH: Moment = { on: "I bet", plus: -0.6 }
+const BITE: Moment = { on: "something", plus: 0.2 }
 const RIDE: Moment = { on: BITE, plus: 2.1 }
 /** Off the beach and away east, clear of the palm on the next islet, stopping short of the reef's rocks. */
 const RIDE_MARKS = [
@@ -164,8 +165,11 @@ const RIDE_MARKS = [
   { at: 1, x: 51, y: 9 },
 ]
 
-/** When you notice the Anne leaving without you: as the box says she keeps her own hours. */
-const NOTICED = { on: "hours", plus: 0.2 }
+/** The League rings half a second before the box asks who it is, so he answers what you see. */
+const RINGS = { on: "Who's that", plus: -0.5 }
+
+/** When you notice the Anne leaving without you: as the box says she sails when she sails. */
+const NOTICED = { on: "when she sails", plus: 0.2 }
 
 /** Five Isle Meadow, close, where the Wooloo graze. */
 const MEADOW: Target = { kind: "map", name: "FiveIsland_Meadow_Frlg", x: 12.5, y: 27, zoom: 64 }
@@ -186,7 +190,7 @@ const CLAIR_CAST: Direction["cast"] = [
     map: "BlackthornCity_hns",
     marks: [
       { at: 0, x: 23, y: 16 },
-      { at: "Fancy", x: 23, y: 16 },
+      { at: "Want to", x: 23, y: 16 },
       { at: "Go on", x: 29, y: 16 },
     ],
   },
@@ -306,21 +310,21 @@ export const DIRECTIONS: Record<string, Direction> = {
         marks: [{ at: 0, x: 34, y: 10 }],
         face: [
           { at: 0, to: "south" },
-          { at: { on: "sail with her", plus: 0.5 }, to: "east" },
+          { at: { on: "watch her go", plus: 0.5 }, to: "east" },
         ],
       },
       {
         sprite: "red",
         map: MELEMELE,
-        from: "And now",
+        from: "And this time",
         marks: [
-          { at: "And now", x: 39, y: 10 },
-          { at: { on: "And now", plus: 0.3 }, x: 39, y: 11 },
-          { at: { on: "sail with her", plus: 0.4 }, x: 36, y: 11 },
+          { at: "And this time", x: 39, y: 10 },
+          { at: { on: "And this time", plus: 0.3 }, x: 39, y: 11 },
+          { at: { on: "watch her go", plus: 0.4 }, x: 36, y: 11 },
         ],
-        face: [{ at: { on: "sail with her", plus: 0.4 }, to: "west" }],
-        hops: [{ on: "sail with her", plus: 0.7 }],
-        emotes: [{ at: { on: "sail with her", plus: 0.7 }, kind: "exclamation", seconds: 1.2 }],
+        face: [{ at: { on: "watch her go", plus: 0.4 }, to: "west" }],
+        hops: [{ on: "watch her go", plus: 0.7 }],
+        emotes: [{ at: { on: "watch her go", plus: 0.7 }, kind: "exclamation", seconds: 1.2 }],
       },
     ],
     fade: { in: CUT },
@@ -366,7 +370,7 @@ export const DIRECTIONS: Record<string, Direction> = {
     shots: [
       { at: 0, to: MELEMELE_BEACH },
       { at: 0.04, to: MELEMELE_BEACH },
-      { at: "Seven lands", to: LANDS, ease: "both" },
+      { at: "Seven of", to: LANDS, ease: "both" },
       { at: 1, to: LANDS },
     ],
     clock: { from: h(33, 39), to: h(34, 30) },
@@ -374,7 +378,7 @@ export const DIRECTIONS: Record<string, Direction> = {
       { sprite: "exeggutor-alola", map: MELEMELE, marks: [{ at: 0, x: 34, y: 10 }], face: "east" },
       { sprite: "red", map: MELEMELE, marks: [{ at: 0, x: 39, y: 10 }], face: "north" },
     ],
-    wild: { from: "the whole map" },
+    wild: { from: "the whole world" },
   },
   // Over to the Sevii Islands while the box passes on what folk there say, their Galar
   // Pokémon popping, then straight down into Five Isle Meadow for the punchline: the flock.
@@ -413,7 +417,7 @@ export const DIRECTIONS: Record<string, Direction> = {
     shots: [
       { at: 0, to: LANDS },
       { at: "Too far", to: LANDS },
-      { at: "The Safari", to: SAFARI, ease: "in" },
+      { at: "But now", to: SAFARI, ease: "in" },
       { at: 1, to: SAFARI },
     ],
     clock: { at: h(34, 30) },
@@ -425,8 +429,8 @@ export const DIRECTIONS: Record<string, Direction> = {
         map: SAFARI_BEACH,
         marks: [
           { at: 0, x: 33, y: 31 },
-          { at: "brought", x: 33, y: 31 },
-          { at: { on: "brought", plus: 1 }, x: 31, y: 31 },
+          { at: "came to", x: 33, y: 31 },
+          { at: { on: "came to", plus: 1 }, x: 31, y: 31 },
         ],
         face: "west",
       },
@@ -436,7 +440,7 @@ export const DIRECTIONS: Record<string, Direction> = {
         marks: [
           // Fluttering by the path's bend, clear of where you stop.
           { at: 0, x: 27, y: 25 },
-          { at: "The Safari", x: 27, y: 25 },
+          { at: "But now", x: 27, y: 25 },
           { at: 1, x: 26, y: 27 },
         ],
       },
@@ -446,13 +450,13 @@ export const DIRECTIONS: Record<string, Direction> = {
         marks: [
           // Already a little way up the path, so the rest is a walk, not a run.
           { at: 0, x: 20, y: 33 },
-          { at: "The Safari", x: 20, y: 33 },
-          { at: { on: "home", plus: -1.1 }, x: 20, y: 28 },
-          { at: "home", x: 24, y: 28 },
+          { at: "But now", x: 20, y: 33 },
+          { at: { on: "Safari Zone", plus: -1.1 }, x: 20, y: 28 },
+          { at: "Safari Zone", x: 24, y: 28 },
         ],
-        face: [{ at: "home", to: "east" }],
-        hops: [{ on: "home", plus: 0.1 }],
-        emotes: [{ at: { on: "home", plus: 0.1 }, kind: "exclamation", seconds: 1.4 }],
+        face: [{ at: "Safari Zone", to: "east" }],
+        hops: [{ on: "Safari Zone", plus: 0.1 }],
+        emotes: [{ at: { on: "Safari Zone", plus: 0.1 }, kind: "exclamation", seconds: 1.4 }],
       },
     ],
     fade: { in: CUT, out: CUT },
@@ -480,7 +484,7 @@ export const DIRECTIONS: Record<string, Direction> = {
       {
         sprite: "red",
         map: MELEMELE,
-        to: "Fish",
+        to: FISH,
         marks: [{ at: 0, x: 39, y: 10 }],
         face: [
           { at: 0, to: "north" },
@@ -493,15 +497,15 @@ export const DIRECTIONS: Record<string, Direction> = {
       {
         sprite: "red-fishing",
         map: MELEMELE,
-        from: "Fish",
+        from: FISH,
         to: RIDE,
         marks: [{ at: 0, x: 39, y: 10 }],
         face: "east",
         poses: [
-          { at: "Fish", frame: 0 },
-          { at: { on: "Fish", plus: 0.12 }, frame: 1 },
-          { at: { on: "Fish", plus: 0.24 }, frame: 2 },
-          { at: { on: "Fish", plus: 0.36 }, frame: 3 },
+          { at: FISH, frame: 0 },
+          { at: { on: FISH, plus: 0.12 }, frame: 1 },
+          { at: { on: FISH, plus: 0.24 }, frame: 2 },
+          { at: { on: FISH, plus: 0.36 }, frame: 3 },
           { at: BITE, frame: 2 },
           { at: { on: BITE, plus: 0.12 }, frame: 3 },
           { at: { on: BITE, plus: 0.24 }, frame: 2 },
@@ -549,7 +553,7 @@ export const DIRECTIONS: Record<string, Direction> = {
   leaders: {
     shots: [
       { at: 0, to: LANDS },
-      { at: "Gym Leaders do", to: LANDS },
+      { at: "Hardly ever", to: LANDS },
       // Landing close on him, so Goldenrod's cut-off edges, 16 tiles and more to his east,
       // stay out of frame.
       { at: "Brock's helping", to: BROCK },
@@ -569,9 +573,9 @@ export const DIRECTIONS: Record<string, Direction> = {
         marks: [{ at: 0, x: 530, y: 1186 }],
         face: [
           { at: 0, to: "south" },
-          { at: "Trade with", to: "west" },
+          { at: "Always up", to: "west" },
         ],
-        emotes: [{ at: { on: "Trade with", plus: 2.3 }, kind: "heart", seconds: 1.5 }],
+        emotes: [{ at: { on: "Always up", plus: 2.3 }, kind: "heart", seconds: 1.5 }],
       },
       {
         sprite: "kris",
@@ -585,7 +589,7 @@ export const DIRECTIONS: Record<string, Direction> = {
       {
         sprite: "graveler",
         from: { on: "Brock's helping", plus: 0.2 },
-        to: { on: "Trade with", plus: 0.5 },
+        to: { on: "Always up", plus: 0.5 },
         marks: [
           { at: { on: "Brock's helping", plus: 0.2 }, x: 523, y: 1177 },
           { at: { on: "Brock's helping", plus: 2.1 }, x: 523, y: 1186 },
@@ -598,13 +602,13 @@ export const DIRECTIONS: Record<string, Direction> = {
         sprite: "ball",
         from: { x: 527, y: 1186 },
         to: { x: 530, y: 1186 },
-        span: { from: { on: "Trade with", plus: 0.5 }, to: { on: "Trade with", plus: 1.1 } },
+        span: { from: { on: "Always up", plus: 0.5 }, to: { on: "Always up", plus: 1.1 } },
       },
       {
         sprite: "ball",
         from: { x: 530, y: 1186 },
         to: { x: 528, y: 1186 },
-        span: { from: { on: "Trade with", plus: 1.5 }, to: { on: "Trade with", plus: 2.1 } },
+        span: { from: { on: "Always up", plus: 1.5 }, to: { on: "Always up", plus: 2.1 } },
       },
     ],
     fade: { in: CUT, out: CUT },
@@ -784,9 +788,9 @@ export const DIRECTIONS: Record<string, Direction> = {
     badges: {
       circuit: 0,
       // Clair's Rising Badge first: the one GSC players remember as the wall.
-      earn: { from: 0.02, to: "Then the phone", badges: [7, 8, 2, 9, 1, 11, 3, 10] },
+      earn: { from: 0.02, to: RINGS, badges: [7, 8, 2, 9, 1, 11, 3, 10] },
     },
-    phone: { from: "Then the phone", to: 1, caller: "INDIGO LEAGUE", named: "It's the" },
+    phone: { from: RINGS, to: 1, caller: "INDIGO LEAGUE", named: "the League" },
     fade: { in: CUT },
   },
   // The whole circuit, then who you'll face, picked like a slot machine as on the website:
@@ -825,7 +829,12 @@ export const DIRECTIONS: Record<string, Direction> = {
       { at: 1, to: LANDS },
     ],
     clock: { at: h(17) },
-    title: { from: 0.25, to: 1, lines: ["Free. Made in the open.", "20.01.2027"], logo: true },
+    title: {
+      from: "wayfarer",
+      to: 1,
+      lines: ["Free. Made in the open.", "20.01.2027"],
+      logo: true,
+    },
   },
 }
 
