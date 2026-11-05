@@ -41,6 +41,7 @@ export const BOX_CAPS = [
   "Safari Zone",
   "Galar",
   "Wooloo",
+  "Potions",
   "Alola",
   "S.S. Anne",
   "Vermilion",
@@ -106,7 +107,7 @@ export const SCENES: Scene[] = [
   },
   {
     id: "night",
-    narration: "Stray off the road after dark.\n| You'll hear things in the grass.",
+    narration: "Stray off the road after dark?\n| Pack more Potions than you think.",
     seconds: 5,
   },
   {
