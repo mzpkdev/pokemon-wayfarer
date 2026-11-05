@@ -138,6 +138,7 @@ const paintMaps = (game, world, atlas) => {
   const owner = new Int32Array(W * H).fill(-1)
   all.forEach((p, mapIndex) => {
     const blocks = game.read(p.l.blockdata_filepath)
+    const wide = game.wideOf(p.l)
     for (let y = 0; y < p.l.height; y++)
       for (let x = 0; x < p.l.width; x++) {
         const i = (p.y - minY + y) * W + (p.x - minX + x)
@@ -145,6 +146,7 @@ const paintMaps = (game, world, atlas) => {
           p.l.primary_tileset,
           p.l.secondary_tileset,
           blocks.readUInt16LE((y * p.l.width + x) * 2) & 0x3ff,
+          wide,
         )
         owner[i] = mapIndex
       }
@@ -219,6 +221,7 @@ const readBorders = (game, world, atlas, grid, { isWater, isDark, tileColor }) =
         layout.primary_tileset,
         layout.secondary_tileset,
         bin.readUInt16LE(k * 2) & 0x3ff,
+        game.wideOf(layout),
       ),
     )
     const water = ids.filter(isWater).length

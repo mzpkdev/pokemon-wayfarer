@@ -194,19 +194,26 @@ export const createDoors = (game, { all, minX, minY }) => {
         y: warp.y,
       })
 
-  /** The door in a placed map the way into `target` starts from, found through any caves or halls between. */
+  /**
+   * The door in a placed map the way into `target` starts from, found through any caves or
+   * halls between. A gate house opens both on its town and on the enclave behind it (a
+   * Safari Zone): its door is the town's.
+   */
   const doorTo = (target) => {
     const seen = new Set([target])
     const queue = [target]
     while (queue.length) {
       const current = queue.shift()
+      const doors = []
       for (const entrance of entrances[current] ?? []) {
         if (seen.has(entrance.from)) continue
         seen.add(entrance.from)
         const p = placed.get(entrance.from)
-        if (p) return { p, x: p.x - minX + entrance.x + 0.5, y: p.y - minY + entrance.y + 0.5 }
-        queue.push(entrance.from)
+        if (p) doors.push({ p, x: p.x - minX + entrance.x + 0.5, y: p.y - minY + entrance.y + 0.5 })
+        else queue.push(entrance.from)
       }
+      const door = doors.find(({ p }) => !p.enclave) ?? doors[0]
+      if (door) return door
     }
     return null
   }

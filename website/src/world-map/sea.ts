@@ -1,8 +1,10 @@
 // The living sea: far out, glints of light come and go across the open
 // water, the way sun catches waves; close in, where the game's own water
 // tiles show, a ripple drifts over each, the way the overworld cycles its
-// water. Nothing is stored: a glint or a ripple is a hash of its place and
+// water; closer still, at the game's own size, the water is the game's alone.
+// Nothing is stored: a glint or a ripple is a hash of its place and
 // the stretch of time, so every frame agrees. Both keep to the water mask.
+import { extrasAt } from "./extras"
 import { roll, ramp } from "./noise"
 import type { Overlay } from "./render"
 import { isWaterAt, type Water } from "./water"
@@ -71,7 +73,8 @@ export const seaOverlay = (water: Water, animate: boolean, now: () => number): O
       context.globalAlpha = 1
     }
 
-    const ripples = ramp(zoom, RIPPLES_FROM, RIPPLES_FULL)
+    // In as the game's tiles come in, and out again close in, with the surf (`extras.ts`).
+    const ripples = ramp(zoom, RIPPLES_FROM, RIPPLES_FULL) * extrasAt(zoom)
     if (ripples > 0) {
       // A game pixel, in device pixels: ripples are drawn on the tiles' own
       // grid. Below 16 device pixels a tile the pattern is coarser than the

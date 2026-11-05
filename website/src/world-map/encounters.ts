@@ -34,7 +34,7 @@ export type Encounters = {
   entry: number[]
   /** The page's roster by home region, in the tour's order: every species of Gen I to VIII and the regional forms. */
   homes: { id: string; slots: number[] }[]
-  /** The three Safari Zones' Kalos species, and the placed map nearest each one's gate. */
+  /** The three Safari Zones' Kalos species, and the map in the middle of each. */
   safari: { zone: string; near: string; slots: number[] }[]
   /** By the map's folder name, as in `Meta.maps`. */
   maps: Record<string, Place>

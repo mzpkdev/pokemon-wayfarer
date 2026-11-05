@@ -13,6 +13,8 @@ import {
 } from "./box"
 import { directionFor, drawFrame, loadStage, riderPlace, type Stage } from "./director"
 import { type Cues, loadCues, type Slot, schedule, slotAt, totalSeconds } from "./schedule"
+import { Lineup } from "./Lineup"
+import { Scout } from "./Scout"
 import { Studio } from "./Studio"
 import type { Span } from "./timeline"
 import { PixelImage, Popup, useStagePx } from "./ui"
@@ -192,6 +194,14 @@ const Player = ({
   const title = direction?.title
   const titleAlpha = title && shown ? alphaIn(title, local, shown.slot.length) : 0
 
+  const length = shown?.slot.length ?? 1
+  const phone = direction?.phone
+  const ringing = phone && local >= phone.from * length && local <= phone.to * length
+  // The handset shakes left and right eight times a second, as the site's does.
+  const shake = [0, -8, 0, 8][Math.floor(local / 0.125) % 4]!
+  const lineup = direction?.lineup
+  const roster = stage.landmarks.roster
+
   return (
     <>
       <div
@@ -219,6 +229,48 @@ const Player = ({
                 {line}
               </p>
             ))}
+          </div>
+        )}
+
+        {lineup && roster && (
+          <Lineup lineup={lineup} roster={roster} seconds={local} length={length} />
+        )}
+
+        {ringing && (
+          <div className="absolute top-[calc(20*var(--px))] left-1/2 flex -translate-x-1/2 items-center gap-[calc(8*var(--px))]">
+            <svg
+              viewBox="0 0 12 16"
+              shapeRendering="crispEdges"
+              aria-hidden="true"
+              style={{
+                width: "calc(24 * var(--px))",
+                height: "calc(32 * var(--px))",
+                rotate: `${shake}deg`,
+              }}
+            >
+              <rect x="1" y="0" width="10" height="16" fill="rgb(56 56 56)" />
+              <rect x="2" y="1" width="8" height="14" fill="rgb(48 80 200)" />
+              <rect x="2" y="1" width="8" height="1" fill="rgb(120 152 248)" />
+              <rect x="3" y="2" width="6" height="5" fill="rgb(56 56 56)" />
+              <rect x="4" y="3" width="4" height="3" fill="rgb(168 224 160)" />
+              {[9, 11, 13].flatMap((y) =>
+                [3, 5, 7].map((x) => (
+                  <rect
+                    key={`${x}-${y}`}
+                    x={x}
+                    y={y}
+                    width="2"
+                    height="1"
+                    fill="rgb(248 248 248)"
+                  />
+                )),
+              )}
+            </svg>
+            {local >= phone.named * length && (
+              <div className="gba-window bg-paper">
+                <p className="gba-text whitespace-nowrap">{phone.caller}</p>
+              </div>
+            )}
           </div>
         )}
 
@@ -290,7 +342,8 @@ export const App = () => {
       style={{ "--aside": studio ? "20rem" : "0px" } as React.CSSProperties}
     >
       {failed && <p className="font-sans text-paper">{failed}</p>}
-      {stage && cues !== undefined && !studio && (
+      {stage && params.has("scout") && <Scout stage={stage} params={params} />}
+      {stage && cues !== undefined && !studio && !params.has("scout") && (
         <Player stage={stage} cues={cues} onStudio={() => setStudio(true)} />
       )}
       {stage && studio && <Studio stage={stage} onPlay={() => setStudio(false)} />}

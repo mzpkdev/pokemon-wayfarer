@@ -209,14 +209,13 @@ const HOMES = [
 
 /**
  * The three Safari Zones, which hold Kalos (Gen VI): their areas by v2 table
- * key, and the placed map nearest each one's gate, where the tour shows them
- * (the Safari Zones aren't on the overworld).
+ * key, and the map in the middle of each, where the tour shows them (the
+ * layout places the Safari Zones as enclaves, see `ENCLAVES` in layout.mjs).
  */
 const SAFARI = [
-  { zone: "KANTO", near: "FuchsiaCity_hns", key: /^MAP_FUCHSIA_CITY_SAFARI_ZONE_/ },
-  // Through Routes 47 and 48, which the overworld doesn't place.
-  { zone: "JOHTO", near: "CianwoodCity_hns", key: /^MAP_SAFARI_ZONE_\w+_HNS$/ },
-  { zone: "HOENN", near: "Route121", key: /^MAP_SAFARI_ZONE_[A-Z]+$/ },
+  { zone: "KANTO", near: "FuchsiaCity_SafariZoneBeach_hns", key: /^MAP_FUCHSIA_CITY_SAFARI_ZONE_/ },
+  { zone: "JOHTO", near: "SafariZone_Low_Mid_hns", key: /^MAP_SAFARI_ZONE_\w+_HNS$/ },
+  { zone: "HOENN", near: "SafariZone_South", key: /^MAP_SAFARI_ZONE_[A-Z]+$/ },
 ]
 
 /** The weight of each slot, per method; `rod` for each rod. */

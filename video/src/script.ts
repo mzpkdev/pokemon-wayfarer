@@ -8,6 +8,9 @@
 // S.S. Anne going?), and its answer opens the whole world. Nobody from the games; a character the project owns. The text box
 // prints their words as ordinary NPC dialogue, so the cut without a voice
 // still reads as them talking.
+//
+// A scene is one picture's worth of words: each punchline has its own scene,
+// so the picture can act it out (`cast` in `timeline.ts`) and cut on it.
 
 export type Scene = {
   id: string
@@ -22,6 +25,13 @@ export type Scene = {
   seconds: number
   /** False keeps the text box away, as over the title card, which says it itself; the voice still speaks. */
   boxed?: boolean
+  /**
+   * Seconds of picture before the words start and after they end, in place of the usual
+   * (`LEAD_SECONDS` and `TAIL_SECONDS` in `schedule.ts`): less, for a scene that should
+   * get on with it.
+   */
+  lead?: number
+  tail?: number
 }
 
 /** Names the text box prints in capitals, as the game does; the longer of two overlapping names first. */
@@ -42,6 +52,7 @@ export const BOX_CAPS = [
   "Galar",
   "Wooloo",
   "Potions",
+  "Surf",
   "Alola",
   "S.S. Anne",
   "Vermilion",
@@ -64,8 +75,12 @@ export const BOX_CAPS = [
 export const SCENES: Scene[] = [
   {
     id: "pallet",
-    narration: "Well, look who's back. | Last time, you set out from Pallet Town. | Everyone did.",
-    seconds: 7,
+    // The opening has one beat, before its punchline, and cuts on it: any slower and the
+    // film starts by waiting.
+    narration: "Well, look who's back. Last time, you set out from Pallet Town. | Everyone did.",
+    seconds: 6,
+    lead: 0.35,
+    tail: 0.35,
   },
   {
     id: "newbark",
@@ -84,16 +99,43 @@ export const SCENES: Scene[] = [
     seconds: 12,
   },
   {
+    id: "alola",
+    narration: "Alola. | And now you can sail with her.",
+    seconds: 6.5,
+  },
+  {
+    id: "wait",
+    narration: "Keeps her own hours, mind. | She won't wait.",
+    seconds: 6,
+  },
+  {
     id: "lands",
     narration:
-      "Alola. | And now you can sail with her.\nKeeps her own hours, mind. | She won't wait.\nAnd Kanto was never the whole map. | Seven lands. Walk every one of them. Each keeps its own Pokémon.\nFolk on the Sevii Islands swear they're Galar now. | Ask the Wooloo.\nNever been to Kalos myself. Too far. | The Safari Zones brought a bit of it home, though.",
-    seconds: 13,
+      "And Kanto was never the whole map. | Seven lands. Walk every one of them. Each keeps its own Pokémon.",
+    seconds: 8,
+  },
+  {
+    id: "galar",
+    narration: "Folk on the Sevii Islands swear they're Galar now. | Ask the Wooloo.",
+    seconds: 7,
+  },
+  {
+    id: "kalos",
+    narration:
+      "Never been to Kalos myself. Too far. | The Safari Zones brought a bit of it home, though.",
+    seconds: 6,
+  },
+  {
+    id: "surf",
+    narration:
+      "Still on that beach? | Nobody hands you Surf this time.\nFish. | Something down there already knows it.",
+    seconds: 12,
   },
   {
     id: "leaders",
     narration:
       "Ever wonder what Gym Leaders do when nobody's at the door?\nBrock's helping out at the Day-Care in Johto. | Trade with him sometime.",
-    seconds: 8,
+    seconds: 13.5,
   },
   {
     id: "surge",
@@ -121,10 +163,21 @@ export const SCENES: Scene[] = [
     seconds: 5,
   },
   {
-    id: "gyms",
+    id: "clair",
+    narration: "Twenty-four Gyms. Fancy Clair's first?\nGo on. | It'll be a fair fight.",
+    seconds: 7,
+  },
+  {
+    id: "fame",
     narration:
-      "Twenty-four Gyms. Fancy Clair's first?\nGo on. | It'll be a fair fight.\nWord gets around. Soon the names you grew up with know yours.\nThen the phone rings. | It's the League.\nAnd who's in the Elite Four this year? | Brock. | With a Golem.\n| Wonder where he got that.",
-    seconds: 10,
+      "Word gets around. Soon the names you grew up with know yours.\nThen the phone rings. | It's the League.",
+    seconds: 8,
+  },
+  {
+    id: "golem",
+    narration:
+      "And who's in the Elite Four this year? | Brock. | With a Golem.\n| Wonder where he got that.",
+    seconds: 8,
   },
   {
     id: "open",

@@ -61,7 +61,7 @@ const storyboard = (): Plugin => ({
 })
 
 export default defineConfig({
-  plugins: [react(), tailwindcss(), extras(["audio"]), storyboard()],
+  plugins: [react(), tailwindcss(), extras(["audio", "actors"]), storyboard()],
   // The map's data and the game's art are the website's; the page reads them at the same paths.
   publicDir: path.join(website, "public"),
   resolve: {

@@ -140,18 +140,30 @@ export const openGame = (root = gameRoot) => {
   }
   const byName = Object.fromEntries(Object.values(maps).map((m) => [m.name, m]))
 
-  // One metatile's 16x16 RGBA.
+  /**
+   * Where a layout's metatile ids, tiles and palettes pass from its primary tileset to its
+   * secondary: after 640, 640 and 7 in a layout of the HNS or FRLG version, after 512, 512
+   * and 6 in any other. The game reads it off the layout's `layout_version` (`mapjson.cpp`,
+   * `fieldmap.c`), and so does this: most layouts pair a primary tileset of their own
+   * version's size, but Fuchsia's Safari Zone is an HNS layout on Emerald's 512-metatile
+   * `gTileset_General`, and still splits at 640.
+   */
+  const wideOf = (layout) => layout.layout_version === "hns" || layout.layout_version === "frlg"
+  const splitOf = (primary, wide = primary.count !== 512) =>
+    wide ? { metatiles: 640, tiles: 640, palettes: 7 } : { metatiles: 512, tiles: 512, palettes: 6 }
+
+  // One metatile's 16x16 RGBA; `wide` is its layout's split (`wideOf`), the primary tileset's own when left out.
   const metatileCache = new Map()
-  const drawMetatile = (primaryName, secondaryName, id) => {
-    const key = `${primaryName}|${secondaryName}|${id}`
+  const drawMetatile = (primaryName, secondaryName, id, wide) => {
+    const key = `${primaryName}|${secondaryName}|${id}|${wide ?? ""}`
     if (metatileCache.has(key)) return metatileCache.get(key)
     const primary = tileset(primaryName),
       secondary = tileset(secondaryName)
-    const emerald = primary.count === 512
-    const primaryTiles = emerald ? 512 : 640,
-      primaryPals = emerald ? 6 : 7
-    const source = id < primary.count ? primary : secondary
-    const local = id < primary.count ? id : id - primary.count
+    const split = splitOf(primary, wide)
+    const primaryTiles = split.tiles,
+      primaryPals = split.palettes
+    const source = id < split.metatiles ? primary : secondary
+    const local = id < split.metatiles ? id : id - split.metatiles
     const out = new Uint8Array(16 * 16 * 4)
     const backdrop = primary.palettes[0]?.[0] ?? [0, 0, 0]
     for (let i = 0; i < 256; i++) out.set([...backdrop.slice(0, 3), 255], i * 4)
@@ -184,7 +196,7 @@ export const openGame = (root = gameRoot) => {
     metatileCache.set(key, out)
     return out
   }
-  return { root, read, layouts, maps, byName, tileset, drawMetatile }
+  return { root, read, layouts, maps, byName, tileset, drawMetatile, wideOf, splitOf }
 }
 
 // The grid of atlas indices: every distinct metatile drawn once, in the order
@@ -194,12 +206,14 @@ export const createAtlas = (game) => {
   const tiles = []
   /** Per index, the metatile it draws; none for a tile made later (the sea's tints). */
   const metatiles = []
-  const index = (primary, secondary, id) => {
-    const key = `${primary}|${secondary}|${id}`
+  /** `wide` is the layout's split (`game.wideOf`); two layouts that split alike share a tile. */
+  const index = (primary, secondary, id, wide) => {
+    const split = wide ?? game.tileset(primary).count !== 512
+    const key = `${primary}|${secondary}|${id}|${split}`
     if (!keys.has(key)) {
       keys.set(key, tiles.length)
-      metatiles[tiles.length] = { primary, secondary, id }
-      tiles.push(game.drawMetatile(primary, secondary, id))
+      metatiles[tiles.length] = { primary, secondary, id, wide: split }
+      tiles.push(game.drawMetatile(primary, secondary, id, split))
     }
     return keys.get(key)
   }

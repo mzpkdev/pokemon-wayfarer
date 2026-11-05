@@ -8,6 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "voice": "node scripts/voice.mjs",
+    "actors": "node scripts/actors.mjs",
+    "scout": "node scripts/scout.mjs",
     "frames": "node scripts/frames.mjs",
     "render": "node scripts/render.mjs",
     "check": "pnpm run typecheck && pnpm run lint && pnpm run format:check",

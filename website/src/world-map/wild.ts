@@ -17,7 +17,7 @@ export type Home = {
   chip: string
   /** Its generations, for the chip's label to a screen reader and the card's line. */
   line: string
-  /** The `region` of its placed maps in `meta.json`; the Safari Zones use their gates instead. */
+  /** The `region` of its placed maps in `meta.json`; the Safari Zones use their own maps instead. */
   regions: string[]
   /** Not in the wild yet: drawn as silhouettes. */
   later?: boolean
@@ -266,7 +266,7 @@ export const loadWild = async (base = DATA): Promise<Wild> => {
     const at = (weights: Map<number, number>) => [...weights].filter(([slot]) => slots.has(slot))
     let crowd: Icon[]
     if (home.id === "safari") {
-      // Each Safari Zone's own Kalos, huddled at its gate.
+      // Each Safari Zone's own Kalos, huddled over it.
       crowd = encounters.safari.flatMap(({ near, slots: zone }, z) => {
         const map = placed.get(near)
         if (!map) return []

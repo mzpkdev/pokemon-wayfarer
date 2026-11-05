@@ -46,17 +46,21 @@ const sample = (cells) => {
   return out
 }
 
-/** A metatile id's behavior, for a layout's pair of tilesets. */
-export const readBehavior = (game, primaryName, secondaryName) => {
+/** A metatile id's behavior, for a layout's pair of tilesets and its split (`game.wideOf`). */
+export const readBehavior = (game, primaryName, secondaryName, wide) => {
   const primary = game.tileset(primaryName)
   const secondary = game.tileset(secondaryName)
+  const split = game.splitOf(primary, wide).metatiles
   return (id) => {
-    const source = id < primary.count ? primary : secondary
-    const local = id < primary.count ? id : id - primary.count
+    const source = id < split ? primary : secondary
+    const local = id < split ? id : id - split
     const { attributes } = source
     if (!attributes) return 0
     // FRLG's are u32 with a 9-bit behavior, Emerald's u16 with 8 bits.
-    return attributes.length / source.count >= 4
+    const wide = attributes.length / source.count >= 4
+    // A metatile past the end of its tileset's attributes has no behavior.
+    if ((local + 1) * (wide ? 4 : 2) > attributes.length) return 0
+    return wide
       ? attributes.readUInt32LE(local * 4) & 0x1ff
       : attributes.readUInt16LE(local * 2) & 0xff
   }
@@ -70,7 +74,12 @@ export const readSpawns = (game, { all, minX, minY }) => {
   const flagsOf = readBehaviorFlags(game)
   const spawns = {}
   for (const p of all) {
-    const behavior = readBehavior(game, p.l.primary_tileset, p.l.secondary_tileset)
+    const behavior = readBehavior(
+      game,
+      p.l.primary_tileset,
+      p.l.secondary_tileset,
+      game.wideOf(p.l),
+    )
     const blocks = game.read(p.l.blockdata_filepath)
     const land = []
     const water = []

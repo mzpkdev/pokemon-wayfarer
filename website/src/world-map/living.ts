@@ -3,6 +3,7 @@
 // (see build/living.mjs); `livingOverlay` draws it for a game time.
 import type { Bounds } from "./data"
 import { DATA } from "./data"
+import { extrasAt } from "./extras"
 import type { Overlay, Projection } from "./render"
 
 type Point = [number, number]
@@ -419,6 +420,8 @@ const drawWake = (
   height: number,
   { toScreen, ratio, scale }: Projection,
   now: number,
+  /** How much of it shows, 0 to 1. */
+  alpha: number,
 ) => {
   const { lane, along } = ship
   if (!lane || along === undefined) return
@@ -434,7 +437,7 @@ const drawWake = (
     const a = toScreen(from.x, from.y)
     const b = toScreen(to.x, to.y)
     const fade = 1 - i / segments
-    context.strokeStyle = `rgb(255 255 255 / ${0.42 * fade})`
+    context.strokeStyle = `rgb(255 255 255 / ${0.42 * fade * alpha})`
     context.lineWidth = Math.max(1.5 * ratio, height * 0.34 * fade)
     context.beginPath()
     context.moveTo(a.x, a.y + height * 0.2)
@@ -450,7 +453,7 @@ const drawWake = (
     const back = pointAlong(lane, along - length * phase * 0.9)
     const p = toScreen(back.x, back.y)
     const side = (k % 2 ? 1 : -1) * height * 0.12 * phase
-    context.globalAlpha = (1 - phase) * 0.7
+    context.globalAlpha = (1 - phase) * 0.7 * alpha
     context.fillRect(
       Math.round(p.x - fleck / 2),
       Math.round(p.y + height * 0.2 + side),
@@ -502,13 +505,17 @@ export const livingOverlay =
     const { width, height } = context.canvas
     const clock = still ? 0 : performance.now()
 
-    context.lineJoin = "round"
-    context.lineCap = "round"
-    context.strokeStyle = "rgb(255 255 255 / 0.3)"
-    context.lineWidth = Math.min(3, Math.max(1.5, scale * 0.12)) * ratio
-    context.setLineDash([6 * ratio, 8 * ratio])
-    for (const lane of living.shapes.values()) drawLane(context, lane, toScreen)
-    context.setLineDash([])
+    // The lanes and the wakes are the map's, not the game's: gone close in (`extras.ts`).
+    const extras = extrasAt(scale / ratio)
+    if (extras > 0) {
+      context.lineJoin = "round"
+      context.lineCap = "round"
+      context.strokeStyle = `rgb(255 255 255 / ${0.3 * extras})`
+      context.lineWidth = Math.min(3, Math.max(1.5, scale * 0.12)) * ratio
+      context.setLineDash([6 * ratio, 8 * ratio])
+      for (const lane of living.shapes.values()) drawLane(context, lane, toScreen)
+      context.setLineDash([])
+    }
 
     context.imageSmoothingEnabled = false
     const names: { name: string; x: number; y: number }[] = []
@@ -533,7 +540,7 @@ export const livingOverlay =
       )
       const h = (w * image.naturalHeight) / image.naturalWidth
       if (p.x < -w * 3 || p.y < -h * 3 || p.x > width + w * 3 || p.y > height + h * 3) continue
-      if (ship.at === "sea") drawWake(context, ship, w, h, projection, clock)
+      if (ship.at === "sea" && extras > 0) drawWake(context, ship, w, h, projection, clock, extras)
       // A soft shadow on the water under the hull, and a gentle lift and fall
       // on the swell, a game pixel at a time.
       const bob = still
@@ -567,10 +574,15 @@ export const livingOverlay =
       context.globalCompositeOperation = "source-over"
     }
 
-    // The names last, untinted, so they read at night too.
-    context.font = `${Math.round(16 * ratio)}px "Wayfarer Text", monospace`
-    context.textAlign = "center"
-    context.textBaseline = "top"
-    for (const { name, x, y } of names) drawName(context, name, x, y, ratio)
-    context.textBaseline = "alphabetic"
+    // The names last, untinted, so they read at night too. They are the map's, like the
+    // lanes: close in, a ship is just the ship.
+    if (extras > 0) {
+      context.globalAlpha = extras
+      context.font = `${Math.round(16 * ratio)}px "Wayfarer Text", monospace`
+      context.textAlign = "center"
+      context.textBaseline = "top"
+      for (const { name, x, y } of names) drawName(context, name, x, y, ratio)
+      context.textBaseline = "alphabetic"
+      context.globalAlpha = 1
+    }
   }

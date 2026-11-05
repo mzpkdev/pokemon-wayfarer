@@ -45,6 +45,7 @@ import {
   wildOverlay,
 } from "~/world-map/wild"
 
+import { type CastImages, castSprites, EMOTES, emotesOverlay, poseCast, SHEETS } from "./actors"
 import { boxCover } from "./box"
 import { fractionOf, type Slot } from "./schedule"
 import { ALL_LAYERS, type Shot } from "./shot"
@@ -110,6 +111,8 @@ export type Stage = {
   dailyFor: (day: number) => DailyScene
   /** Each start's rider on their bike. */
   riders: Record<StartId, HTMLImageElement>
+  /** The actors' sheets and the bubbles over their heads. */
+  cast: CastImages
   /** The game minute the overlays read; `drawShot` sets it from the shot. */
   clock: { minute: number; ships: number }
 }
@@ -148,9 +151,26 @@ export const loadStage = async (): Promise<Stage> => {
       STARTS.map(async (start) => [start.id, await loadImage(start.rider)] as const),
     ),
   ) as Record<StartId, HTMLImageElement>
+  const images = async <K extends string>(sources: Record<K, string>) =>
+    Object.fromEntries(
+      await Promise.all(
+        Object.entries<string>(sources).map(async ([id, src]) => [id, await loadImage(src)]),
+      ),
+    ) as Record<K, HTMLImageElement>
+  const cast: CastImages = {
+    sheets: await images(
+      Object.fromEntries(Object.entries(SHEETS).map(([id, sheet]) => [id, sheet.src])) as Record<
+        keyof typeof SHEETS,
+        string
+      >,
+    ),
+    emotes: await images(EMOTES),
+  }
   const clock = { minute: DEFAULT_MINUTES, ships: DEFAULT_MINUTES }
   const minutes = () => clock.minute
-  const stopClock: StopClock = { alpha: 0, elapsed: 0, animate: true, circuit: 0 }
+  // Made by a call, not written out: the bundler takes a literal's `alpha: 0` for a constant,
+  // since it is only ever set through `stage`, and drops the pins' drawing as dead code.
+  const stopClock: StopClock = structuredClone({ alpha: 0, elapsed: 0, animate: true, circuit: 0 })
   const wildClock: WildClock = { start: now(), still: null }
   const roads = placedMaps(daily)
   const stage: Stage = {
@@ -175,6 +195,7 @@ export const loadStage = async (): Promise<Stage> => {
     today: null,
     dailyFor: (day) => dailyOn(daily, roads, day, DAILY_SEED),
     riders,
+    cast,
     clock,
   }
   stage.daily = dailyOverlay({ image: trainers, ...daily.sheet }, () => stage.today, true, now)
@@ -322,6 +343,44 @@ export const rideShots = (stage: Stage, start: Start, width: number, height: num
   }
 }
 
+/**
+ * The camera close on a rider `progress` of the way along their ride: on them, lifted
+ * clear of the text box's `below` pixels, and held inside `within` (the town's tiles).
+ */
+const trackRider = (
+  stage: Stage,
+  id: StartId,
+  progress: number,
+  track: { zoom: number | [number, number]; within: Bounds },
+  width: number,
+  height: number,
+  below: number,
+): Camera => {
+  const { meta } = stage.world
+  const start = startOf(id)
+  const sprite = riderAt(routeIn(meta, start), progress, stage.riders[id])
+  const zoom = mix(track.zoom, progress)
+  const town = meta.maps.find((map) => map.name === start.town)!
+  // Between the two edges while the view fits inside them, else midway.
+  const hold = (at: number, low: number, high: number, half: number) =>
+    low + half > high - half ? (low + high) / 2 : Math.min(high - half, Math.max(low + half, at))
+  return {
+    x: hold(
+      sprite.x + 1,
+      town.x + track.within.left,
+      town.x + track.within.right,
+      width / 2 / zoom,
+    ),
+    y: hold(
+      sprite.y + 2 + below / 2 / zoom,
+      town.y + track.within.top,
+      town.y + track.within.bottom,
+      height / 2 / zoom,
+    ),
+    zoom,
+  }
+}
+
 /** The name the map name popup shows while the rider is on screen. */
 export const riderPlace = (stage: Stage, rider: Shot["rider"]) => {
   if (!rider) return null
@@ -370,9 +429,32 @@ export const directionFor = (slot: Slot): Direction<number> => {
   }
   const at = (moment: Moment) => fractionOf(slot, moment)
   const span = <S extends Span>(s: S) => ({ ...s, from: at(s.from), to: at(s.to) })
-  const { shots, wild, rides, badges, title } = direction
+  const { shots, wild, rides, badges, title, cast, tosses, phone, flashes, lineup } = direction
   return {
     ...direction,
+    cast: cast?.map((actor) => ({
+      ...actor,
+      marks: actor.marks.map((mark) => ({ ...mark, at: at(mark.at) })),
+      from: actor.from === undefined ? undefined : at(actor.from),
+      to: actor.to === undefined ? undefined : at(actor.to),
+      face:
+        typeof actor.face === "object"
+          ? actor.face.map((turn) => ({ ...turn, at: at(turn.at) }))
+          : actor.face,
+      emotes: actor.emotes?.map((emote) => ({ ...emote, at: at(emote.at) })),
+      hops: actor.hops?.map(at),
+      poses: actor.poses?.map((pose) => ({ ...pose, at: at(pose.at) })),
+    })),
+    tosses: tosses?.map((toss) => ({ ...toss, span: span(toss.span) })),
+    phone: phone && { ...span(phone), named: at(phone.named) },
+    lineup: lineup && {
+      ...lineup,
+      from: at(lineup.from),
+      seats: lineup.seats.map((seat) => ({ ...seat, at: at(seat.at) })),
+      grow: at(lineup.grow),
+      partner: { ...lineup.partner, at: at(lineup.partner.at) },
+    },
+    flashes: flashes?.map(at),
     shots: shots.map((shot) => ({ ...shot, at: at(shot.at) })),
     wild:
       typeof wild === "object"
@@ -383,33 +465,6 @@ export const directionFor = (slot: Slot): Direction<number> => {
     title: title && span(title),
   }
 }
-
-/** Least height a daily trainer is drawn at, in CSS pixels, as the daily overlay has it. */
-const DAILY_MIN_HEIGHT = 28
-
-/**
- * The game's yellow down arrow, bobbing over the daily trainer standing at a
- * world cell: the sprite stands on the cell's bottom edge at least two tiles tall.
- */
-const markOverlay =
-  ({ x, y }: { x: number; y: number }): Overlay =>
-  (context, { scale, ratio, toScreen }) => {
-    const feet = toScreen(x + 0.5, y + 1)
-    const tall = Math.max(scale * 2, DAILY_MIN_HEIGHT * ratio)
-    const size = Math.round(6 * ratio)
-    const bob = Math.floor(now() / 300) % 2 ? size * 0.5 : 0
-    const top = feet.y - tall - size * 2.2 + bob
-    context.fillStyle = "rgb(255 214 0)"
-    context.strokeStyle = "rgb(0 0 0 / 0.8)"
-    context.lineWidth = Math.max(1, ratio)
-    context.beginPath()
-    context.moveTo(feet.x - size, top)
-    context.lineTo(feet.x + size, top)
-    context.lineTo(feet.x, top + size * 1.2)
-    context.closePath()
-    context.fill()
-    context.stroke()
-  }
 
 /** The game's time of day tint, multiplied over what is drawn so far, as the game does to its palettes. */
 const tintOverlay =
@@ -451,13 +506,24 @@ export const shotFor = (
       rides.findLastIndex((ride) => ride.from <= fraction),
     )
     const ride = rides[index]!
-    const progress = Math.min(1, Math.max(0, (fraction - ride.from) / (ride.to - ride.from)))
+    const through = Math.min(1, Math.max(0, (fraction - ride.from) / (ride.to - ride.from)))
+    // A ride that picks up partway along its route covers the rest of it in its span.
+    const route = routeIn(stage.world.meta, startOf(ride.start))
+    const tiles = route.reduce(
+      (sum, point, i) =>
+        sum + (i ? Math.hypot(point.x - route[i - 1]!.x, point.y - route[i - 1]!.y) : 0),
+      0,
+    )
+    const skipped = Math.min(1, (ride.skip ?? 0) / tiles)
+    const progress = skipped + (1 - skipped) * through
     rider = { start: ride.start, progress }
     const shots = rideShots(stage, startOf(ride.start), width, height)
     const home = ride.look
       ? { ...shots.home, x: shots.home.x + ride.look.dx, y: shots.home.y + ride.look.dy }
       : shots.home
-    camera = fly(shots.opening, home, progress)
+    camera = ride.track
+      ? trackRider(stage, ride.start, progress, ride.track, width, height, below)
+      : fly(shots.opening, home, progress)
     // The warp to each ride after the first: black at its start, fading out before and in after.
     for (const next of rides.slice(1)) {
       const off = Math.abs(fraction - next.from) * slot.length
@@ -491,12 +557,50 @@ export const shotFor = (
           ? direction.daily.day
           : 1 + Math.min(direction.daily.days - 1, Math.floor(fraction * direction.daily.days)),
     },
-    mark: direction.mark,
     // The waves' cycle began at a set point of the scene, so they are the same at a time however it was reached.
     wild: wildAt(direction.wild, local, slot.length),
     rider,
+    cast: castAt(stage, direction, local, slot.length),
     fade,
+    flash: flashAt(direction.flashes, local, slot.length),
   }
+}
+
+/** The scene's actors `local` seconds into it; their moments are fractions of the scene, their emotes' lengths seconds. */
+const castAt = (stage: Stage, direction: Direction<number>, local: number, length: number) => {
+  if (!direction.cast && !direction.tosses) return undefined
+  const s = (fraction: number) => fraction * length
+  const actors = (direction.cast ?? []).map((actor) => ({
+    ...actor,
+    marks: actor.marks.map((mark) => ({ ...mark, at: s(mark.at) })),
+    from: actor.from === undefined ? undefined : s(actor.from),
+    to: actor.to === undefined ? undefined : s(actor.to),
+    face:
+      typeof actor.face === "object"
+        ? actor.face.map((turn) => ({ ...turn, at: s(turn.at) }))
+        : actor.face,
+    emotes: actor.emotes?.map((emote) => ({ ...emote, at: s(emote.at) })),
+    hops: actor.hops?.map(s),
+    poses: actor.poses?.map((pose) => ({ ...pose, at: s(pose.at) })),
+  }))
+  const tosses = (direction.tosses ?? []).map((toss) => ({
+    ...toss,
+    span: { from: s(toss.span.from), to: s(toss.span.to) },
+  }))
+  return poseCast(actors, tosses, local, (name) => {
+    if (!name) return { x: 0, y: 0 }
+    const map = stage.world.meta.maps.find((m) => m.name === name)
+    if (!map) warn(`No map named ${name}; its actors stand at the world's corner.`)
+    return map ?? { x: 0, y: 0 }
+  })
+}
+
+/** Seconds a flash into battle lasts: white at once, then gone. */
+const FLASH_SECONDS = 0.14
+
+const flashAt = (flashes: number[] | undefined, local: number, length: number) => {
+  const since = flashes?.map((at) => local - at * length).filter((t) => t >= 0 && t < FLASH_SECONDS)
+  return since?.length ? stepped(1 - Math.min(...since) / FLASH_SECONDS) : 0
 }
 
 /**
@@ -538,13 +642,21 @@ const wildAt = (wild: Direction<number>["wild"], local: number, length: number):
   return { start: now() - (local - loop) * 1000, still: null }
 }
 
+/** The zoom from which the wild waves are left out: a game pixel a pixel. */
+const WILD_MAX_ZOOM = 16
+
 const EMPTY = new Set<number>()
 
 /**
  * Draws the shot onto the canvas. True when some map chunks are still to come
  * and the frame should be drawn again.
  */
-export const drawShot = (stage: Stage, context: CanvasRenderingContext2D, shot: Shot): boolean => {
+export const drawShot = (
+  stage: Stage,
+  context: CanvasRenderingContext2D,
+  shot: Shot,
+  extra: Overlay[] = [],
+): boolean => {
   const { canvas } = context
   const width = canvas.clientWidth
   const height = canvas.clientHeight
@@ -569,7 +681,9 @@ export const drawShot = (stage: Stage, context: CanvasRenderingContext2D, shot: 
     overlays.push(...stage.pins)
   }
   if (shot.layers.sightings) overlays.push(stage.sightings)
-  if (shot.wild) {
+  // The waves are icons for a wide view; close in, where a scene's cast stands, one would
+  // pop on a roof or a tree.
+  if (shot.wild && shot.camera.zoom < WILD_MAX_ZOOM) {
     stage.wildClock.start = shot.wild.start
     stage.wildClock.still = shot.wild.still
     overlays.push(stage.wild)
@@ -580,20 +694,25 @@ export const drawShot = (stage: Stage, context: CanvasRenderingContext2D, shot: 
     overlays.push(stage.daily)
   }
   if (shot.layers.walkers) {
-    const { only, ...rest } = shot.walkers ?? {}
+    const { only, except, ...rest } = shot.walkers ?? {}
     const picked = only && new Set(only)
+    const hidden = new Set(except)
     overlays.push(
       notablesOverlay(stage.notables, minutes, {
         ...rest,
-        only: picked ? (slug) => picked.has(slug) : undefined,
+        only:
+          picked || hidden.size
+            ? (slug) => (picked?.has(slug) ?? true) && !hidden.has(slug)
+            : undefined,
       }),
     )
   }
-  if (shot.mark) overlays.push(markOverlay(shot.mark))
+  if (shot.cast?.length) overlays.push(emotesOverlay(shot.cast, stage.cast))
   if (shot.layers.ships) overlays.push(stage.ships)
   // Over everything the world draws, people and ships too, as the game tints its palettes; the lights shine through.
   if (shot.layers.tint) overlays.push(tintOverlay(stage.living, minutes))
   if (shot.layers.lights) overlays.push(stage.lights)
+  overlays.push(...extra)
 
   const sprites =
     shot.rider && shot.camera.zoom >= RIDER_MIN_ZOOM
@@ -605,6 +724,7 @@ export const drawShot = (stage: Stage, context: CanvasRenderingContext2D, shot: 
           ),
         ]
       : []
+  if (shot.cast?.length) sprites.push(...castSprites(shot.cast, stage.cast))
 
   const pending = stage.renderer.draw(context, {
     camera: shot.camera,
@@ -617,6 +737,11 @@ export const drawShot = (stage: Stage, context: CanvasRenderingContext2D, shot: 
   if (shot.fade > 0) {
     context.setTransform(1, 0, 0, 1, 0, 0)
     context.fillStyle = `rgb(0 0 0 / ${shot.fade})`
+    context.fillRect(0, 0, canvas.width, canvas.height)
+  }
+  if (shot.flash) {
+    context.setTransform(1, 0, 0, 1, 0, 0)
+    context.fillStyle = `rgb(255 255 255 / ${shot.flash})`
     context.fillRect(0, 0, canvas.width, canvas.height)
   }
   return pending

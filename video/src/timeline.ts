@@ -1,9 +1,11 @@
 // The storyboard's pictures: where the camera is in each scene, what time of
 // day the world keeps, what is drawn over the map and what is laid over it.
 // The words are in `script.ts`; each direction here is keyed by its scene.
+import type { Bounds } from "~/world-map/data"
 import { DAY_START } from "~/world-map/living"
 import type { StartId } from "~/world-map/starts"
 
+import type { Actor, Toss } from "./actors"
 import type { Layers } from "./shot"
 
 /** Where the camera looks: resolved against the map's data once it has loaded. */
@@ -27,8 +29,9 @@ export type Target =
  * A moment of a scene: a fraction of the way through it (0 to 1), or a phrase
  * of its narration, when the voice starts it (or the box, without a voice).
  * A phrase holds the picture to the words however long the voice takes.
+ * `{ on, plus }` is `plus` seconds after the moment `on` (before it, when negative).
  */
-export type Moment = number | string
+export type Moment = number | string | { on: Moment; plus: number }
 
 /**
  * The camera at the moment `at` of the scene; the camera flies
@@ -70,9 +73,18 @@ export type Direction<M = Moment> = {
    * The player rides in on their bike along a start's route over each span,
    * the camera coming in with them; between rides they wait at the door, and
    * the game's warp (a fade to black and back) cuts to the next start. `look`
-   * moves where the camera ends up off the door, in tiles.
+   * moves where the camera ends up off the door, in tiles. With `track` the
+   * camera stays close on the rider instead, as the game's does, at a zoom (or
+   * from one to another across the ride) and never looking outside `within`,
+   * a box in the town's own tiles: what lies past it has seams to keep out of frame.
    */
-  rides?: (Span<M> & { start: StartId; look?: { dx: number; dy: number } })[]
+  rides?: (Span<M> & {
+    start: StartId
+    look?: { dx: number; dy: number }
+    track?: { zoom: number | [number, number]; within: Bounds }
+    /** Tiles of the route already ridden when the ride begins: it picks up that far along. */
+    skip?: number
+  })[]
   /**
    * The badge pins, and how much of the league circuit is drawn (0 pins only,
    * 1 the whole circuit). With `earn`, the named badges are earned one after
@@ -82,16 +94,38 @@ export type Direction<M = Moment> = {
   badges?: { circuit: number | [number, number]; earn?: Span<M> & { badges: number[] } }
   /** The daily trainers and items on every road, with the day stepping from 1 to `days` across the scene. */
   daily?: { days: number } | { day: number }
-  /** The game's yellow arrow over a daily trainer standing at this world cell, to pick them out. */
-  mark?: { x: number; y: number }
   /**
    * Gym Leaders and the Elite Four walking their routines: everyone, or the named
    * few picked out. `minHeight` is their least height close in (zoom 16); further
    * out it shrinks back to the map's own, so a wide shot isn't crowded with them.
    */
-  notables?: { only?: string[]; marker?: boolean; minHeight?: number }
+  notables?: { only?: string[]; except?: string[]; marker?: boolean; minHeight?: number }
   /** A card over the map: the logo and lines of text. */
   title?: Span<M> & { lines: string[]; logo?: boolean }
+  /**
+   * The scene's actors: the player, people and Pokémon walking the map and
+   * the bubbles over their heads (`actors.ts`), and things thrown between them.
+   */
+  cast?: Actor<M>[]
+  tosses?: Toss<M>[]
+  /** The phone ringing over the picture for a span; the caller's name comes up at `named`. */
+  phone?: Span<M> & { caller: string; named: M }
+  /**
+   * The league's five picked like a slot machine, as the website's tour shows it: from a
+   * moment on the map dims and five seats shuffle through every trainer's face, each
+   * stopping on its own (by their slug in the roster) at its moment, in battle order. Then
+   * the `star` steps forward at `grow`, the rest falling away, and a partner's picture
+   * slides in beside them.
+   */
+  lineup?: {
+    from: M
+    seats: { slug: string; at: M }[]
+    star: string
+    grow: M
+    partner: { src: string; at: M }
+  }
+  /** White flashes at these moments, as the game flashes into a battle. */
+  flashes?: M[]
 }
 
 const h = (hours: number, minutes = 0) => hours * 60 + minutes
@@ -111,43 +145,132 @@ const BROCK: Target = { kind: "notable", slug: "brock", zoom: 64 }
 /** The Sevii Islands, Galar's land, all of the chain in view. */
 const SEVII: Target = { kind: "regions", names: ["SEVII ISLANDS"], room: 0.9 }
 
-/** One Gym Leader where their routine has them at `minute`, picked out and held close. */
-const vignette = (
-  slug: string,
-  minute: number,
-  { zoom = [14, 16], dx = 0 }: { zoom?: [number, number]; dx?: number } = {},
-): Direction => ({
-  shots: [
-    { at: 0, to: { kind: "notable", slug, zoom: zoom[0], dx } },
-    { at: 1, to: { kind: "notable", slug, zoom: zoom[1], dx } },
-  ],
-  clock: { from: minute, to: minute + 10 },
-  notables: { only: [slug], marker: true, minHeight: 64 },
-  fade: { in: CUT, out: CUT },
-})
+/** Melemele's beach, where the Anne lands in Alola: the sand, its palms and the water she comes in by. */
+const MELEMELE = "MelemeleIsle_hns"
+const MELEMELE_BEACH: Target = { kind: "map", name: MELEMELE, x: 37.5, y: 9.5, zoom: 64 }
 
+/** Kanto's Safari Zone, the beach side: the gate's path, and the tall grass east of it. */
+const SAFARI_BEACH = "FuchsiaCity_SafariZoneBeach_hns"
+const SAFARI: Target = { kind: "map", name: SAFARI_BEACH, x: 27.5, y: 32, zoom: 64 }
+
+/** The tug on the line, a beat after the box says to fish; and setting off on what was caught. */
+const BITE: Moment = { on: "Something", plus: -0.5 }
+const RIDE: Moment = { on: BITE, plus: 2.1 }
+/** Off the beach and away east, clear of the palm on the next islet, stopping short of the reef's rocks. */
+const RIDE_MARKS = [
+  { at: RIDE, x: 40, y: 10 },
+  { at: { on: RIDE, plus: 0.5 }, x: 40, y: 10 },
+  { at: { on: RIDE, plus: 1 }, x: 42, y: 9 },
+  { at: 1, x: 51, y: 9 },
+]
+
+/** When you notice the Anne leaving without you: as the box says she keeps her own hours. */
+const NOTICED = { on: "hours", plus: 0.2 }
+
+/** Five Isle Meadow, close, where the Wooloo graze. */
+const MEADOW: Target = { kind: "map", name: "FiveIsland_Meadow_Frlg", x: 12.5, y: 27, zoom: 64 }
+/** The flock: where each stands, the step it takes, and the way it faces first. */
+const WOOLOO: [number, number, number, number, "south" | "west" | "east" | "north"][] = [
+  [11, 23, 1, 0, "east"],
+  [14, 22, -1, 0, "west"],
+  [12, 26, 0, 0, "south"],
+  [14, 26, -1, 0, "west"],
+  [11, 28, 1, 0, "east"],
+  [13, 29, 0, -1, "north"],
+]
+
+/** You, walking up to Clair across the grass by the Dragon's Den. */
+const CLAIR_CAST: Direction["cast"] = [
+  {
+    sprite: "kris",
+    map: "BlackthornCity_hns",
+    marks: [
+      { at: 0, x: 23, y: 16 },
+      { at: "Fancy", x: 23, y: 16 },
+      { at: "Go on", x: 29, y: 16 },
+    ],
+  },
+  // Clair, standing by the water until you reach her; then she turns to you.
+  {
+    sprite: "clair",
+    map: "BlackthornCity_hns",
+    marks: [{ at: 0, x: 30, y: 16 }],
+    face: [
+      { at: 0, to: "south" },
+      { at: { on: "Go on", plus: 0.15 }, to: "west" },
+    ],
+    emotes: [{ at: { on: "Go on", plus: 0.15 }, kind: "exclamation", seconds: 1.2 }],
+  },
+]
+
+// Who "you" are changes with where the scene is, so nobody is in two lands at once: RED,
+// who sailed from Vermilion, is the one left on the beach in Alola (and still there to
+// fish his way off it); LEAF walks Kanto's Safari Zone; KRIS trades with Brock and walks
+// up to Clair in Johto; and GOLD, whom the film saw ride home to New Bark Town, is out on
+// Route 29 that night, on Route 30 the next morning, and in Ilex Forest two days on.
 export const DIRECTIONS: Record<string, Direction> = {
   // Cold open: RED rides in to his front door, the camera coming in with him.
   pallet: {
     shots: [{ at: 0, to: { kind: "map", name: "PalletTown_hns", x: 12, y: 10, zoom: 24 } }],
     clock: { at: h(9) },
-    // Ending a little south of the door, with Pallet in the frame's upper part above the box,
-    // keeps the seam where Route 1's forest meets Pallet's out of the top of the frame.
-    rides: [{ start: "kanto", from: 0, to: 0.7, look: { dx: 0, dy: 9 } }],
-    fade: { in: 0.6, out: CUT },
+    // Close on him all the way, four pixels a pixel. Past the town's own tiles the map has
+    // seams: Route 1's forest to the north, and to the east the forest that fills the gap to
+    // the coast. The forest to the west is clean.
+    rides: [
+      {
+        start: "kanto",
+        from: 0,
+        to: 0.55,
+        track: { zoom: 64, within: { left: -9, top: 0.5, right: 23, bottom: 19.5 } },
+      },
+    ],
+    // Blue is one of the cast here, standing outside the lab: the map's own stands on its
+    // door. He looks round as you reach yours.
+    notables: { except: ["blue"] },
+    cast: [
+      {
+        sprite: "blue",
+        map: "PalletTown_hns",
+        marks: [{ at: 0, x: 16, y: 14 }],
+        face: [
+          { at: 0, to: "south" },
+          { at: 0.57, to: "west" },
+        ],
+      },
+    ],
+    fade: { in: 0.4, out: CUT },
   },
   // GOLD rides in to New Bark Town.
   newbark: {
     shots: [{ at: 0, to: { kind: "map", name: "NewBarkTown_hns", x: 14, y: 16, zoom: 24 } }],
     clock: { at: h(9) },
-    rides: [{ start: "johto", from: 0, to: 0.8 }],
+    // Close on him from Route 29's grass to his door, clear of the cliff north of town
+    // and of the open sea past the pond to the east.
+    rides: [
+      {
+        start: "johto",
+        from: 0,
+        to: 0.8,
+        track: { zoom: 64, within: { left: -40, top: 1, right: 33.5, bottom: 38 } },
+      },
+    ],
     fade: { in: CUT, out: CUT },
   },
-  // BRENDAN rides in to Littleroot Town.
+  // BRENDAN rides in to Littleroot Town, close on him like the other two. The ride picks up
+  // at the foot of Route 101, below its last ledge, and the camera never looks north of there:
+  // a bike going down over ledges is not a thing the game lets you do.
   littleroot: {
     shots: [{ at: 0, to: { kind: "map", name: "LittlerootTown", x: 10, y: 10, zoom: 24 } }],
     clock: { at: h(9) },
-    rides: [{ start: "hoenn", from: 0, to: 0.8 }],
+    rides: [
+      {
+        start: "hoenn",
+        from: 0,
+        to: 0.8,
+        skip: 18,
+        track: { zoom: 64, within: { left: -14, top: -5.9, right: 34, bottom: 20 } },
+      },
+    ],
     fade: { in: CUT, out: CUT },
   },
   // The Anne at Vermilion's pier in the evening; she casts off at half past eight and
@@ -159,37 +282,266 @@ export const DIRECTIONS: Record<string, Direction> = {
       { at: 1, to: { kind: "ship", id: "anne", zoom: 16 }, ease: "in" },
     ],
     clock: { from: h(20, 18), to: h(21, 5) },
+    fade: { in: CUT, out: CUT },
+  },
+  // The answer, shown: morning at Melemele, and the Anne steams in to the beach she lands at.
+  // You step off onto the sand, and the palm you walk past turns to look at you.
+  alola: {
+    shots: [
+      { at: 0, to: MELEMELE_BEACH },
+      { at: 1, to: MELEMELE_BEACH },
+    ],
+    // She is due at nine the morning after she left Vermilion, and is in as the box goes on.
+    clock: {
+      keys: [
+        [0, h(32, 51)],
+        [0.36, h(33)],
+        [1, h(33, 6)],
+      ],
+    },
+    cast: [
+      {
+        sprite: "exeggutor-alola",
+        map: MELEMELE,
+        marks: [{ at: 0, x: 34, y: 10 }],
+        face: [
+          { at: 0, to: "south" },
+          { at: { on: "sail with her", plus: 0.5 }, to: "east" },
+        ],
+      },
+      {
+        sprite: "red",
+        map: MELEMELE,
+        from: "And now",
+        marks: [
+          { at: "And now", x: 39, y: 10 },
+          { at: { on: "And now", plus: 0.3 }, x: 39, y: 11 },
+          { at: { on: "sail with her", plus: 0.4 }, x: 36, y: 11 },
+        ],
+        face: [{ at: { on: "sail with her", plus: 0.4 }, to: "west" }],
+        hops: [{ on: "sail with her", plus: 0.7 }],
+        emotes: [{ at: { on: "sail with her", plus: 0.7 }, kind: "exclamation", seconds: 1.2 }],
+      },
+    ],
     fade: { in: CUT },
   },
-  // Still with the Anne while the box answers where she was going; as it says she keeps her
-  // own hours the camera lets her steam off without you, one pull-out in the evening light:
-  // through Kanto and Johto as the box says Kanto was never the whole map, their Pokémon
-  // popping out, and settling on every land on "Seven lands", held there for the rest.
-  lands: {
-    // One move: the camera keeps riding with her, slows through Kanto and Johto without
-    // stopping while their Pokémon pop, then goes on at speed and settles on every land.
+  // Half an hour on she casts off again while you're still looking at the palm tree:
+  // you turn, run for the water's edge, and she's gone.
+  wait: {
     shots: [
-      { at: 0, to: { kind: "ship", id: "anne", zoom: 16 } },
-      { at: "Keeps her", to: { kind: "ship", id: "anne", zoom: 12 }, ease: "none" },
+      { at: 0, to: MELEMELE_BEACH },
+      { at: 1, to: MELEMELE_BEACH },
+    ],
+    // She casts off at half past nine, a second into the scene, and is out of sight in three.
+    clock: { from: h(33, 28), to: h(33, 39) },
+    cast: [
+      { sprite: "exeggutor-alola", map: MELEMELE, marks: [{ at: 0, x: 34, y: 10 }], face: "east" },
       {
-        at: "the whole map",
-        to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.8 },
-        ease: "in",
+        sprite: "red",
+        map: MELEMELE,
+        to: { on: NOTICED, plus: 0.4 },
+        marks: [{ at: 0, x: 36, y: 11 }],
+        face: [
+          { at: 0, to: "west" },
+          { at: NOTICED, to: "east" },
+        ],
+        emotes: [{ at: NOTICED, kind: "exclamation", seconds: 0.4 }],
       },
-      // Settled by "Walk every", so it reads as there on "Seven lands".
-      { at: "Walk every", to: LANDS, ease: "out" },
-      // Over to the Sevii Islands while the box passes on what folk there say, their
-      // Galar Pokémon popping, and back out to every land for Kalos, far off.
-      { at: "Folk on", to: LANDS },
-      { at: "Ask the Wooloo", to: SEVII },
-      { at: "Never been", to: SEVII },
-      { at: "Too far", to: LANDS },
+      {
+        sprite: "red",
+        map: MELEMELE,
+        from: { on: NOTICED, plus: 0.4 },
+        marks: [
+          { at: { on: NOTICED, plus: 0.4 }, x: 36, y: 11 },
+          { at: { on: NOTICED, plus: 0.8 }, x: 39, y: 11 },
+          { at: { on: NOTICED, plus: 0.95 }, x: 39, y: 10 },
+        ],
+        face: [{ at: { on: NOTICED, plus: 0.95 }, to: "north" }],
+      },
+    ],
+  },
+  // Left behind on the beach, the camera lifts off you: Alola, then every land there is,
+  // their Pokémon popping out, settled as the box counts them.
+  lands: {
+    shots: [
+      { at: 0, to: MELEMELE_BEACH },
+      { at: 0.04, to: MELEMELE_BEACH },
+      { at: "Seven lands", to: LANDS, ease: "both" },
       { at: 1, to: LANDS },
     ],
-    clock: { from: h(21, 5), to: h(23, 30) },
-    // Popping from the pull-out on, timed so Galar's wave pops on the Sevii Islands as the box
-    // passes on what folk there say, still popping on the punchline.
-    wild: { from: "And Kanto", wave: { home: "sevii", at: "Galar now" } },
+    clock: { from: h(33, 39), to: h(34, 30) },
+    cast: [
+      { sprite: "exeggutor-alola", map: MELEMELE, marks: [{ at: 0, x: 34, y: 10 }], face: "east" },
+      { sprite: "red", map: MELEMELE, marks: [{ at: 0, x: 39, y: 10 }], face: "north" },
+    ],
+    wild: { from: "the whole map" },
+  },
+  // Over to the Sevii Islands while the box passes on what folk there say, their Galar
+  // Pokémon popping, then straight down into Five Isle Meadow for the punchline: the flock.
+  galar: {
+    shots: [
+      { at: 0, to: LANDS },
+      { at: "swear", to: SEVII },
+      { at: "Galar now", to: SEVII },
+      { at: "Ask the", to: MEADOW, ease: "in" },
+      { at: 1, to: MEADOW },
+    ],
+    clock: { at: h(34, 30) },
+    wild: { from: 0, wave: { home: "sevii", at: "they're Galar" } },
+    cast: WOOLOO.map(([x, y, dx, dy, face], i) => ({
+      sprite: "wooloo" as const,
+      map: "FiveIsland_Meadow_Frlg",
+      marks: [
+        { at: 0, x, y },
+        // Each takes its step as the camera comes down, and is standing again before the
+        // box names them: a turn made while one still walks would be lost.
+        { at: { on: "Ask the", plus: -0.7 + i * 0.1 }, x, y },
+        { at: { on: "Ask the", plus: -0.1 + i * 0.1 }, x: x + dx, y: y + dy },
+      ],
+      face: [
+        { at: 0, to: face },
+        { at: { on: "Wooloo", plus: 0.5 }, to: "south" as const },
+      ],
+      hops: i === 2 ? [{ on: "Wooloo", plus: 0.6 }] : undefined,
+    })),
+    fade: { out: CUT },
+  },
+  // Every land, and Kalos nowhere on it. Then down into the Safari Zone at Fuchsia, the one
+  // everybody remembers: you come in at the gate and up the path, and it is Kalos standing
+  // in the tall grass (Gogoat, Pyroar, Furfrou and Vivillon are all this zone's own).
+  kalos: {
+    shots: [
+      { at: 0, to: LANDS },
+      { at: "Too far", to: LANDS },
+      { at: "The Safari", to: SAFARI, ease: "in" },
+      { at: 1, to: SAFARI },
+    ],
+    clock: { at: h(34, 30) },
+    cast: [
+      { sprite: "gogoat", map: SAFARI_BEACH, marks: [{ at: 0, x: 32, y: 34 }], face: "west" },
+      { sprite: "pyroar", map: SAFARI_BEACH, marks: [{ at: 0, x: 36, y: 31 }], face: "south" },
+      {
+        sprite: "furfrou",
+        map: SAFARI_BEACH,
+        marks: [
+          { at: 0, x: 33, y: 31 },
+          { at: "brought", x: 33, y: 31 },
+          { at: { on: "brought", plus: 1 }, x: 31, y: 31 },
+        ],
+        face: "west",
+      },
+      {
+        sprite: "vivillon",
+        map: SAFARI_BEACH,
+        marks: [
+          // Fluttering by the path's bend, clear of where you stop.
+          { at: 0, x: 27, y: 25 },
+          { at: "The Safari", x: 27, y: 25 },
+          { at: 1, x: 26, y: 27 },
+        ],
+      },
+      {
+        sprite: "leaf",
+        map: SAFARI_BEACH,
+        marks: [
+          // Already a little way up the path, so the rest is a walk, not a run.
+          { at: 0, x: 20, y: 33 },
+          { at: "The Safari", x: 20, y: 33 },
+          { at: { on: "home", plus: -1.1 }, x: 20, y: 28 },
+          { at: "home", x: 24, y: 28 },
+        ],
+        face: [{ at: "home", to: "east" }],
+        hops: [{ on: "home", plus: 0.1 }],
+        emotes: [{ at: { on: "home", plus: 0.1 }, kind: "exclamation", seconds: 1.4 }],
+      },
+    ],
+    fade: { in: CUT, out: CUT },
+  },
+  // Back on Melemele's beach, where the Anne left you: you have been standing there all this
+  // while. You turn to the water, cast, and what bites carries you off east, the palm tree
+  // seeing you go. It is a Luvdisc: of what a rod brings up off Melemele by day, the one
+  // that knows Surf the day it's caught and that the game draws you riding (it has surfing
+  // sprites for some Pokémon, and a plain blob for the rest).
+  surf: {
+    shots: [
+      { at: 0, to: MELEMELE_BEACH },
+      { at: RIDE, to: MELEMELE_BEACH },
+      { at: 1, to: { kind: "map", name: MELEMELE, x: 43, y: 9.5, zoom: 64 } },
+    ],
+    clock: { at: h(36) },
+    cast: [
+      {
+        sprite: "exeggutor-alola",
+        map: MELEMELE,
+        marks: [{ at: 0, x: 34, y: 10 }],
+        face: "east",
+        hops: [{ on: RIDE, plus: 1 }],
+      },
+      {
+        sprite: "red",
+        map: MELEMELE,
+        to: "Fish",
+        marks: [{ at: 0, x: 39, y: 10 }],
+        face: [
+          { at: 0, to: "north" },
+          { at: { on: "Still", plus: 0.7 }, to: "south" },
+          { at: "Nobody", to: "east" },
+        ],
+        emotes: [{ at: { on: "Nobody", plus: 0.2 }, kind: "question", seconds: 1.4 }],
+      },
+      // The rod out over the water, the float down, a tug, and the reel in.
+      {
+        sprite: "red-fishing",
+        map: MELEMELE,
+        from: "Fish",
+        to: RIDE,
+        marks: [{ at: 0, x: 39, y: 10 }],
+        face: "east",
+        poses: [
+          { at: "Fish", frame: 0 },
+          { at: { on: "Fish", plus: 0.12 }, frame: 1 },
+          { at: { on: "Fish", plus: 0.24 }, frame: 2 },
+          { at: { on: "Fish", plus: 0.36 }, frame: 3 },
+          { at: BITE, frame: 2 },
+          { at: { on: BITE, plus: 0.12 }, frame: 3 },
+          { at: { on: BITE, plus: 0.24 }, frame: 2 },
+          { at: { on: BITE, plus: 0.36 }, frame: 3 },
+          { at: { on: BITE, plus: 0.6 }, frame: 2 },
+          { at: { on: BITE, plus: 0.72 }, frame: 1 },
+          { at: { on: BITE, plus: 0.84 }, frame: 0 },
+        ],
+        emotes: [{ at: BITE, kind: "exclamation", seconds: 0.6 }],
+      },
+      {
+        sprite: "luvdisc",
+        map: MELEMELE,
+        from: { on: BITE, plus: 0.7 },
+        to: { on: BITE, plus: 1.75 },
+        marks: [{ at: 0, x: 41, y: 10 }],
+        face: "west",
+        hops: [{ on: BITE, plus: 0.7 }],
+      },
+      { sprite: "luvdisc-surf", map: MELEMELE, from: RIDE, marks: RIDE_MARKS, face: "east" },
+      {
+        sprite: "red-surfing",
+        map: MELEMELE,
+        from: RIDE,
+        marks: RIDE_MARKS,
+        face: "east",
+        lift: 0.35,
+      },
+    ],
+    tosses: [
+      {
+        sprite: "ball",
+        map: MELEMELE,
+        from: { x: 39, y: 10 },
+        to: { x: 41, y: 10 },
+        span: { from: { on: BITE, plus: 1.25 }, to: { on: BITE, plus: 1.75 } },
+        height: 1,
+      },
+    ],
+    fade: { in: CUT, out: CUT },
   },
   // Straight on from every land at night: every Gym Leader and Elite Four member's marker
   // lights up, then one dive onto Brock, landing as the box names him, on the morning
@@ -206,25 +558,136 @@ export const DIRECTIONS: Record<string, Direction> = {
     // Two days on from the Anne, cut on as the markers light up, so nobody races to get there;
     // the ships stay where the last scene left them.
     clock: { from: h(82), to: h(82, 15) },
-    shipsAt: h(23, 30),
-    notables: { marker: true, minHeight: 64 },
-    fade: { out: CUT },
+    shipsAt: h(34, 30),
+    // Brock is one of the cast here, so he can turn to you: the map's own Brock stays out.
+    notables: { marker: true, minHeight: 64, except: ["brock"] },
+    // You come down the road with a Graveler at your heels; he turns, the Graveler goes
+    // over in its ball, and one comes back. What a trade does to a Graveler, players know.
+    cast: [
+      {
+        sprite: "brock",
+        marks: [{ at: 0, x: 530, y: 1186 }],
+        face: [
+          { at: 0, to: "south" },
+          { at: "Trade with", to: "west" },
+        ],
+        emotes: [{ at: { on: "Trade with", plus: 2.3 }, kind: "heart", seconds: 1.5 }],
+      },
+      {
+        sprite: "kris",
+        from: "Brock's helping",
+        marks: [
+          { at: "Brock's helping", x: 523, y: 1177 },
+          { at: { on: "Brock's helping", plus: 1.9 }, x: 523, y: 1186 },
+          { at: { on: "Brock's helping", plus: 3 }, x: 528, y: 1186 },
+        ],
+      },
+      {
+        sprite: "graveler",
+        from: { on: "Brock's helping", plus: 0.2 },
+        to: { on: "Trade with", plus: 0.5 },
+        marks: [
+          { at: { on: "Brock's helping", plus: 0.2 }, x: 523, y: 1177 },
+          { at: { on: "Brock's helping", plus: 2.1 }, x: 523, y: 1186 },
+          { at: { on: "Brock's helping", plus: 3 }, x: 527, y: 1186 },
+        ],
+      },
+    ],
+    tosses: [
+      {
+        sprite: "ball",
+        from: { x: 527, y: 1186 },
+        to: { x: 530, y: 1186 },
+        span: { from: { on: "Trade with", plus: 0.5 }, to: { on: "Trade with", plus: 1.1 } },
+      },
+      {
+        sprite: "ball",
+        from: { x: 530, y: 1186 },
+        to: { x: 528, y: 1186 },
+        span: { from: { on: "Trade with", plus: 1.5 }, to: { on: "Trade with", plus: 2.1 } },
+      },
+    ],
+    fade: { in: CUT, out: CUT },
   },
-  // Two more lives, a warp between each: Lt. Surge at the Game Corner in the afternoon,
-  // and Wallace fishing Route 119 at noon, where Feebas hides on a few tiles of the river.
-  surge: vignette("lt-surge", h(16)),
-  // Closer, and a few tiles west of him, so a pale strip of river fill stays out of frame.
-  wallace: vignette("wallace", h(12, 30), { zoom: [22, 25], dx: -4 }),
+  // Two more lives, a warp between each. Lt. Surge in Celadon in the afternoon, coming down
+  // the street, through the gap in the fence and in at the Game Corner's door, on "Again."
+  surge: {
+    shots: [
+      { at: 0, to: { kind: "point", x: 1281.5, y: 1003.5, zoom: 60 } },
+      { at: 1, to: { kind: "point", x: 1281.5, y: 1003.5, zoom: 64 } },
+    ],
+    clock: { from: h(16), to: h(16, 10) },
+    // The map's own Surge stands on the door; this one walks to it.
+    layers: { walkers: false },
+    cast: [
+      {
+        sprite: "surge",
+        to: { on: "Again", plus: 0.35 },
+        marks: [
+          { at: { on: "Again", plus: -5 }, x: 1293, y: 1006 },
+          { at: { on: "Again", plus: -1 }, x: 1281, y: 1006 },
+          { at: "Again", x: 1281, y: 1003 },
+          { at: { on: "Again", plus: 0.35 }, x: 1281, y: 1002 },
+        ],
+      },
+    ],
+    fade: { in: CUT, out: CUT },
+  },
+  // Wallace on Route 119 at noon, on the open bank east of the river with his rod out over
+  // the water, where Feebas hides on a few tiles of it. He doesn't move: that's the joke.
+  wallace: {
+    shots: [
+      { at: 0, to: { kind: "point", x: 378.5, y: 1627, zoom: 60 } },
+      { at: 1, to: { kind: "point", x: 378.5, y: 1627, zoom: 64 } },
+    ],
+    clock: { from: h(12, 30), to: h(12, 40) },
+    // The map's own Wallace stands in the long grass across the river.
+    layers: { walkers: false },
+    cast: [
+      { sprite: "wallace", marks: [{ at: 0, x: 378, y: 1626 }], face: "west" },
+      // The rod in his hands, reaching half a tile out over the water.
+      { sprite: "rod", marks: [{ at: 0, x: 377.5, y: 1626 }] },
+    ],
+    fade: { in: CUT, out: CUT },
+  },
   // Route 29 off the road, deep into the night, the wild Pokémon of the night popping in the grass.
   night: {
     shots: [
-      { at: 0, to: { kind: "map", name: "Route29_hns", x: 30, y: 14, zoom: 18 } },
-      { at: 1, to: { kind: "map", name: "Route29_hns", x: 38, y: 14, zoom: 20 } },
+      { at: 0, to: { kind: "map", name: "Route29_hns", x: 39, y: 14.5, zoom: 60 } },
+      { at: 1, to: { kind: "map", name: "Route29_hns", x: 42, y: 14.5, zoom: 64 } },
     ],
     // The game's darkest tint runs from 1:00 to 4:00.
     clock: { from: h(25), to: h(27, 30) },
     // The one scene about the time of day: the tint and the lights are on.
     layers: { tint: true, lights: true, sightings: true },
+    // You come out of the gate and down its path, then leave it for the tall grass as the
+    // box asks, along the open row south of the trees; a Noctowl, Route 29's own by night,
+    // drops in front of you, and the screen flashes into the battle.
+    cast: [
+      {
+        sprite: "gold",
+        map: "Route29_hns",
+        marks: [
+          { at: 0, x: 35, y: 11 },
+          { at: 0.16, x: 35, y: 16 },
+          { at: "Pack more", x: 43, y: 16 },
+        ],
+        emotes: [{ at: { on: "Pack more", plus: 0.35 }, kind: "exclamation", seconds: 1.5 }],
+        hops: [{ on: "Pack more", plus: 0.35 }],
+      },
+      {
+        sprite: "noctowl",
+        map: "Route29_hns",
+        from: { on: "Pack more", plus: 0.2 },
+        marks: [{ at: 0, x: 45, y: 16 }],
+        face: "west",
+        hops: [{ on: "Pack more", plus: 0.2 }],
+      },
+    ],
+    flashes: [
+      { on: "you think", plus: 0.9 },
+      { on: "you think", plus: 1.15 },
+    ],
     fade: { in: CUT, out: CUT },
   },
   // Bug Catcher Don, the first trainer most GSC players fought, on Route 30 on day 10 of the
@@ -237,36 +700,123 @@ export const DIRECTIONS: Record<string, Direction> = {
     ],
     clock: { at: h(10) },
     daily: { day: 10 },
-    mark: { x: 720, y: 1103 },
+    // You, walking on up the road past him, the way the road lets you: it has a ledge
+    // below this stretch and another above it, which only drop southward, so you start
+    // above the one and step round the other by the grass beside it, up to the stairs.
+    cast: [
+      {
+        sprite: "gold",
+        map: "Route30_hns",
+        marks: [
+          { at: 0, x: 22, y: 10 },
+          { at: 0.39, x: 22, y: 4 },
+          { at: 0.52, x: 24, y: 4 },
+          { at: 0.65, x: 24, y: 2 },
+          { at: 0.72, x: 23, y: 2 },
+          { at: 0.85, x: 23, y: 0 },
+        ],
+      },
+    ],
     fade: { in: CUT, out: CUT },
   },
   donagain: {
     shots: [
-      // Close on him and a little south, so he stands above the box and the seam where the
-      // fills of two forests meet, north of the clearing, stays out of frame.
-      { at: 0, to: { kind: "point", x: 577.5, y: 1257, zoom: 60 } },
-      { at: 1, to: { kind: "point", x: 577.5, y: 1257, zoom: 64 } },
+      // Close on the two of you and a little south, so you stand above the box and the seam
+      // where the fills of two forests meet, north of the clearing, stays out of frame.
+      { at: 0, to: { kind: "point", x: 583.5, y: 1257, zoom: 60 } },
+      { at: 1, to: { kind: "point", x: 583.5, y: 1257, zoom: 64 } },
     ],
     clock: { at: h(10) },
-    daily: { day: 12 },
-    mark: { x: 577, y: 1254 },
-    fade: { in: CUT },
+    // Don is one of the cast here (the day's draw has him in Ilex Forest, tucked beside a
+    // tree at the clearing's end): he stands in the open on the row you walk in along, sees
+    // you, and comes over, the way a trainer does.
+    cast: [
+      {
+        sprite: "bug-catcher",
+        map: "IlexForest_hns",
+        marks: [
+          { at: 0, x: 42, y: 8 },
+          { at: { on: "He hasn't", plus: 0.7 }, x: 42, y: 8 },
+          { at: { on: "He hasn't", plus: 1.7 }, x: 46, y: 8 },
+        ],
+        face: [{ at: 0, to: "east" }],
+        emotes: [{ at: "He hasn't", kind: "exclamation", seconds: 0.7 }],
+      },
+      // You come into the clearing from the east, and stop short when he looks up.
+      {
+        sprite: "gold",
+        map: "IlexForest_hns",
+        marks: [
+          { at: 0, x: 56, y: 8 },
+          { at: { on: "He hasn't", plus: -0.1 }, x: 47, y: 8 },
+        ],
+        hops: [{ on: "He hasn't", plus: 0.1 }],
+      },
+    ],
+    fade: { in: CUT, out: CUT },
+  },
+  // Clair at the Dragon's Den before noon, and you walk straight up to her, no badges on you:
+  // she turns, and the screen flashes the way it does when a battle starts.
+  clair: {
+    shots: [
+      { at: 0, to: { kind: "map", name: "BlackthornCity_hns", x: 27, y: 15, zoom: 60 } },
+      { at: 1, to: { kind: "map", name: "BlackthornCity_hns", x: 27, y: 15, zoom: 64 } },
+    ],
+    clock: { at: h(11) },
+    // She is one of the cast, so she can stand still and turn: the map's own Clair, who
+    // steps on the spot and wears a marker, stays out.
+    layers: { walkers: false },
+    cast: CLAIR_CAST,
+    flashes: [
+      { on: "fair fight", plus: 1.0 },
+      { on: "fair fight", plus: 1.25 },
+    ],
+    fade: { in: CUT, out: CUT },
   },
   // Eight badges from three regions land one by one over Johto and Kanto while word of you
-  // gets around; the eighth lands as the phone rings and the Indigo League calls, and the
-  // circuit comes up as the box asks who's in the Elite Four.
-  gyms: {
+  // gets around; the eighth lands as the phone rings, and it's the Indigo League calling.
+  fame: {
     shots: [
       { at: 0, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.92 } },
-      { at: "Then the phone", to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.92 } },
-      { at: "And who's in", to: { kind: "circuit", room: 0.9 } },
+      { at: 1, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.92 } },
+    ],
+    clock: { at: h(11) },
+    badges: {
+      circuit: 0,
+      // Clair's Rising Badge first: the one GSC players remember as the wall.
+      earn: { from: 0.02, to: "Then the phone", badges: [7, 8, 2, 9, 1, 11, 3, 10] },
+    },
+    phone: { from: "Then the phone", to: 1, caller: "INDIGO LEAGUE", named: "It's the" },
+    fade: { in: CUT },
+  },
+  // The whole circuit, then who you'll face, picked like a slot machine as on the website:
+  // four seats stop on Elite Four regulars and the last on Brock. He steps forward, the
+  // Golem slides in beside him, and the box wonders where he got it.
+  golem: {
+    shots: [
+      { at: 0, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.92 } },
+      { at: "Elite Four", to: { kind: "circuit", room: 0.9 } },
       { at: 1, to: { kind: "circuit", room: 0.9 } },
     ],
     clock: { at: h(11) },
     badges: {
       circuit: [0, 1],
-      // Clair's Rising Badge first, as the box names her: the one GSC players remember as the wall.
-      earn: { from: "Fancy", to: "Then the phone", badges: [7, 8, 2, 9, 1, 11, 3, 10] },
+      earn: { from: -1, to: -0.5, badges: [7, 8, 2, 9, 1, 11, 3, 10] },
+    },
+    // The five in battle order, weakest first. The reels stop on the four you'd expect one
+    // after another while the box asks, and the first seat, last, on the one you wouldn't.
+    lineup: {
+      from: "And who's in",
+      seats: [
+        { slug: "brock", at: "Brock" },
+        { slug: "koga", at: { on: "And who's in", plus: 1.3 } },
+        { slug: "lorelei", at: { on: "And who's in", plus: 1.7 } },
+        { slug: "will", at: { on: "And who's in", plus: 2.1 } },
+        { slug: "karen", at: { on: "And who's in", plus: 2.5 } },
+      ],
+      star: "brock",
+      grow: "With a",
+      partner: { src: "/actors/golem-front.png", at: "With a" },
     },
   },
   open: {
