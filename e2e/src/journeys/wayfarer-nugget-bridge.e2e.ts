@@ -77,10 +77,7 @@ const giveFixtureLeftovers = async (game: GameSession): Promise<void> => {
   await game.controls.press("down")
   await game.controls.press("a")
   await game.wait.frames(90)
-  for (let pocket = 0; pocket < 3; pocket++) {
-    await game.controls.press("right")
-    await game.wait.frames(30)
-  }
+  // The Bag opens on its first pocket, which is Items in the HNS 2.0.6 pocket order.
   await game.controls.press("a")
   await game.wait.frames(30)
   await game.controls.press("right")
