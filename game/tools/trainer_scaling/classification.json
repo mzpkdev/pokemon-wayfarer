@@ -5949,7 +5949,7 @@
           "role": "TRAINER_CLASS_BUG_CATCHER_HNS"
         },
         {
-          "path": "data/maps/Route2_hns/scripts.inc",
+          "path": "data/maps/ViridianForest_hns/scripts.inc",
           "symbol": "TRAINER_DOUG_HNS"
         }
       ]
@@ -6479,7 +6479,7 @@
           "role": "TRAINER_CLASS_BUG_CATCHER_HNS"
         },
         {
-          "path": "data/maps/Route2_hns/scripts.inc",
+          "path": "data/maps/ViridianForest_hns/scripts.inc",
           "symbol": "TRAINER_ED_HNS"
         }
       ]
@@ -17549,18 +17549,18 @@
       "reason": "Authored boss, rival, facility head, or special story opponent."
     },
     {
-      "id": "TRAINER_RED_2_HNS",
+      "id": "TRAINER_RED_HNS",
       "policy": "EXCLUDED",
       "region": "Johto",
       "evidence": [
         {
           "path": "src/data/trainers_hns.party",
-          "symbol": "TRAINER_RED_2_HNS",
+          "symbol": "TRAINER_RED_HNS",
           "role": "TRAINER_CLASS_PKMN_TRAINER_1_HNS"
         },
         {
           "path": "data/maps/MtSilver_SummitDay_hns/scripts.inc",
-          "symbol": "TRAINER_RED_2_HNS"
+          "symbol": "TRAINER_RED_HNS"
         }
       ],
       "reason": "Authored boss, rival, facility head, or special story opponent."
@@ -18399,7 +18399,7 @@
           "role": "TRAINER_CLASS_BUG_CATCHER_HNS"
         },
         {
-          "path": "data/maps/Route2_hns/scripts.inc",
+          "path": "data/maps/ViridianForest_hns/scripts.inc",
           "symbol": "TRAINER_ROB_2_HNS"
         }
       ]
@@ -18428,7 +18428,7 @@
           "role": "TRAINER_CLASS_BUG_CATCHER_HNS"
         },
         {
-          "path": "data/maps/Route2_hns/scripts.inc",
+          "path": "data/maps/ViridianForest_hns/scripts.inc",
           "symbol": "TRAINER_ROB_HNS"
         }
       ]
@@ -22726,13 +22726,13 @@
       "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
     },
     {
-      "id": "TRAINER_CLAIR_OBC_HNS",
+      "id": "TRAINER_CLAIR_POSTOBC_HNS",
       "policy": "EXCLUDED",
       "region": "HNS unplaced",
       "evidence": [
         {
           "path": "src/data/trainers_hns.party",
-          "symbol": "TRAINER_CLAIR_OBC_HNS",
+          "symbol": "TRAINER_CLAIR_POSTOBC_HNS",
           "role": "TRAINER_CLASS_LEADER_HNS"
         }
       ],

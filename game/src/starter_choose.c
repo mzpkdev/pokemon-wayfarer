@@ -118,9 +118,18 @@ static const u8 sStarterLabelCoords[STARTER_MON_COUNT][2] =
     {8, 4},
 };
 
+// Wayfarer keeps the Hoenn trio here: its Hoenn origin gives these from Birch's bag,
+// while Johto and Kanto origins use their own starter tables.
+#if IS_HNS && !IS_WAYFARER
+// Must match the VAR_STARTER_MON values set in NewBarkTown_Lab_hns/scripts.inc
+#define GRASS_STARTER SPECIES_CHIKORITA
+#define FIRE_STARTER  SPECIES_CYNDAQUIL
+#define WATER_STARTER SPECIES_TOTODILE
+#else
 #define GRASS_STARTER (IS_FRLG ? SPECIES_BULBASAUR  : SPECIES_TREECKO)
 #define FIRE_STARTER  (IS_FRLG ? SPECIES_CHARMANDER : SPECIES_TORCHIC)
 #define WATER_STARTER (IS_FRLG ? SPECIES_SQUIRTLE   : SPECIES_MUDKIP )
+#endif
 
 static const u16 sStarterMon[STARTER_MON_COUNT] =
 {

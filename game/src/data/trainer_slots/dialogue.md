@@ -633,7 +633,7 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_BILL_HNS | UnionCave_1F_hns | say | On weekends, you can hear strange roars from deep in the cave. | landmark: in the cave |
 | TRAINER_LARRY_HNS | UnionCave_1F_hns | intro | I roam far and wide in search of POKéMON. Are you looking for POKéMON too? Then you're my collecting rival! |  |
 | TRAINER_LARRY_HNS | UnionCave_1F_hns | defeat | Ugh. My poor POKéMON… |  |
-| TRAINER_LARRY_HNS | UnionCave_1F_hns | say | Every Friday, you can hear POKéMON roars from deep inside the cave. | landmark: inside the cave |
+| TRAINER_LARRY_HNS | UnionCave_1F_hns | say | Sometimes, you can hear POKéMON roars from deep inside the cave. | landmark: inside the cave |
 | TRAINER_RAY_HNS | UnionCave_1F_hns | intro | If it's light, a cave isn't scary. If you're strong, POKéMON aren't scary. |  |
 | TRAINER_RAY_HNS | UnionCave_1F_hns | defeat | FLASH! |  |
 | TRAINER_RAY_HNS | UnionCave_1F_hns | say | It's my POKéMON's fire that lights up this cave. | landmark: this cave |

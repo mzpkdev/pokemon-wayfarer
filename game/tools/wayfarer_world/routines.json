@@ -644,9 +644,9 @@
         },
         {
           "serves": "relax",
-          "map": "IcePath_1F_hns",
+          "map": "Route44_hns",
           "kind": "water_edge",
-          "note": "Ice Path"
+          "note": "Route 44, below Ice Path"
         }
       ]
     },

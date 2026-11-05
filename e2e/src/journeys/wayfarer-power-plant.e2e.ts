@@ -578,10 +578,7 @@ describe.sequential("Wayfarer Power Plant old generating hall", () => {
     await game.controls.press("down")
     await game.controls.press("a")
     await game.wait.frames(120)
-    for (let pocket = 0; pocket < 3; pocket++) {
-      await game.controls.press("right")
-      await game.wait.frames(30)
-    }
+    // The Bag opens on its first pocket, which is Items in the HNS 2.0.6 pocket order.
     for (let slot = 0; slot < 20; slot++) await game.controls.press("up")
     // Escape Rope is the only item in the ordinary Items pocket.
     await game.controls.press("a")

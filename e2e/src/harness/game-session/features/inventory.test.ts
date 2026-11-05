@@ -63,11 +63,11 @@ describe("game-session inventory", () => {
     await expect(inventory.contains("ssTicket")).resolves.toBe(true)
     await expect(inventory.contains("pass")).resolves.toBe(false)
     await expect(inventory.contains("cut")).resolves.toBe(false)
-    pocketContents.get(4)!.item = 682
+    pocketContents.get(3)!.item = 682
     await expect(inventory.contains("cut")).resolves.toBe(true)
     await inventory.freeSlot("tmHm")
     expect(writes).toEqual([
-      { address: pocketContents.get(4)!.address, bytes: new Uint8Array([0, 0, 0, 0]) },
+      { address: pocketContents.get(3)!.address, bytes: new Uint8Array([0, 0, 0, 0]) },
     ])
     expect(Math.max(...bagReadLengths)).toBeLessThanOrEqual(32)
   })

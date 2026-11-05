@@ -451,9 +451,6 @@ extern const u8 Route27_EventScript_Jose[];
 extern const u8 Route27_EventScript_Megan[];
 extern const u8 Route27_EventScript_Reena[];
 extern const u8 Route27_EventScript_Scott[];
-extern const u8 Route2_EventScript_Doug[];
-extern const u8 Route2_EventScript_Ed[];
-extern const u8 Route2_EventScript_Rob[];
 extern const u8 Route30_EventScript_Bugcatcher_Don[];
 extern const u8 Route30_EventScript_Youngster_Mikey[];
 extern const u8 Route31_EventScript_Bugcatcher_Wade[];
@@ -648,6 +645,9 @@ extern const u8 VictoryRoad_B2F_EventScript_Felix[];
 extern const u8 VictoryRoad_B2F_EventScript_Julie[];
 extern const u8 VictoryRoad_B2F_EventScript_Owen[];
 extern const u8 VictoryRoad_B2F_EventScript_Vito[];
+extern const u8 ViridianForest_EventScript_Doug[];
+extern const u8 ViridianForest_EventScript_Ed[];
+extern const u8 ViridianForest_EventScript_Rob[];
 extern const u8 WayfarerSevii_Trainer_FiveIsland_LostCave_Room1_EventScript_Lawson[];
 extern const u8 WayfarerSevii_Trainer_FiveIsland_LostCave_Room4_EventScript_Laura[];
 extern const u8 WayfarerSevii_Trainer_FiveIsland_MemorialPillar_EventScript_Chaz[];
@@ -935,9 +935,9 @@ static const struct WorldTrainerSlot sWorldTrainerSlots[WORLD_TRAINER_SLOT_COUNT
     { TRAINER_DARIN_HNS, MAP_GROUP(MAP_DRAGONS_DEN_CAVERN_HNS), MAP_NUM(MAP_DRAGONS_DEN_CAVERN_HNS), { 1, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(1), { OBJ_EVENT_GFX_COOLTRAINER_M_HNS, 0 }, { DragonsDen_Cavern_EventScript_Darin, NULL } }, // DragonsDen_Cavern_hns home 0%
     { TRAINER_LEA_AND_PIA_HNS, MAP_GROUP(MAP_DRAGONS_DEN_CAVERN_HNS), MAP_NUM(MAP_DRAGONS_DEN_CAVERN_HNS), { 2, 3 }, 83, WORLD_TRAINER_SLOT_PAIR | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_TWIN_HNS, OBJ_EVENT_GFX_TWIN_HNS }, { DragonsDen_Cavern_EventScript_TwinPia, DragonsDen_Cavern_EventScript_TwinLea } }, // DragonsDen_Cavern_hns TWINS 25%
     { TRAINER_CARA_HNS, MAP_GROUP(MAP_DRAGONS_DEN_CAVERN_HNS), MAP_NUM(MAP_DRAGONS_DEN_CAVERN_HNS), { 4, 0 }, 66, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_COOLTRAINER_F_HNS, 0 }, { DragonsDen_Cavern_EventScript_Cara, NULL } }, // DragonsDen_Cavern_hns COOLTRAINER 25%
-    { TRAINER_DOUG_HNS, MAP_GROUP(MAP_VIRIDIAN_FOREST_HNS), MAP_NUM(MAP_VIRIDIAN_FOREST_HNS), { 1, 0 }, 6, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { Route2_EventScript_Doug, NULL } }, // ViridianForest_hns BUG_CATCHER 25%
-    { TRAINER_ED_HNS, MAP_GROUP(MAP_VIRIDIAN_FOREST_HNS), MAP_NUM(MAP_VIRIDIAN_FOREST_HNS), { 2, 0 }, 6, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { Route2_EventScript_Ed, NULL } }, // ViridianForest_hns BUG_CATCHER 25%
-    { TRAINER_ROB_HNS, MAP_GROUP(MAP_VIRIDIAN_FOREST_HNS), MAP_NUM(MAP_VIRIDIAN_FOREST_HNS), { 8, 0 }, 6, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { Route2_EventScript_Rob, NULL } }, // ViridianForest_hns BUG_CATCHER 25%
+    { TRAINER_DOUG_HNS, MAP_GROUP(MAP_VIRIDIAN_FOREST_HNS), MAP_NUM(MAP_VIRIDIAN_FOREST_HNS), { 1, 0 }, 6, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { ViridianForest_EventScript_Doug, NULL } }, // ViridianForest_hns BUG_CATCHER 25%
+    { TRAINER_ED_HNS, MAP_GROUP(MAP_VIRIDIAN_FOREST_HNS), MAP_NUM(MAP_VIRIDIAN_FOREST_HNS), { 2, 0 }, 6, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { ViridianForest_EventScript_Ed, NULL } }, // ViridianForest_hns BUG_CATCHER 25%
+    { TRAINER_ROB_HNS, MAP_GROUP(MAP_VIRIDIAN_FOREST_HNS), MAP_NUM(MAP_VIRIDIAN_FOREST_HNS), { 8, 0 }, 6, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_BUG_CATCHER_HNS, 0 }, { ViridianForest_EventScript_Rob, NULL } }, // ViridianForest_hns BUG_CATCHER 25%
     { TRAINER_PONI_SWIMMER_2_HNS, MAP_GROUP(MAP_PONI_ISLE_HNS), MAP_NUM(MAP_PONI_ISLE_HNS), { 4, 0 }, 93, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_TUBER_M_SWIMMING_HNS, 0 }, { Alola_Poni_TrainerBattleSwimmer2, NULL } }, // PoniIsle_hns TUBER_M 25%
     { TRAINER_PONI_SWIMMER_1_HNS, MAP_GROUP(MAP_PONI_ISLE_HNS), MAP_NUM(MAP_PONI_ISLE_HNS), { 5, 0 }, 91, WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_SWIMMER_F_HNS, 0 }, { Alola_Poni_TrainerBattleSwimmer1, NULL } }, // PoniIsle_hns SWIMMER_F 25%
     { TRAINER_AKALA_HIKER_HNS, MAP_GROUP(MAP_AKALA_ISLE_HNS), MAP_NUM(MAP_AKALA_ISLE_HNS), { 7, 0 }, WORLD_TRAINER_GROUP_HOME, WORLD_TRAINER_SLOT_HOME | WORLD_TRAINER_ABSENCE(0), { OBJ_EVENT_GFX_HIKER_HNS, 0 }, { Alola_Akala_TrainerBattleHiker, NULL } }, // AkalaIsle_hns home 25%

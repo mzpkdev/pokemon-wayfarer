@@ -104,8 +104,6 @@ PokemonLeague_WillsRoom_EventScript_LanceRematch::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, PokemonLeague_WillsRoom_EventScript_LanceRematchStandard
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, PokemonLeague_WillsRoom_EventScript_LanceRematchPostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, PokemonLeague_WillsRoom_EventScript_LanceRematchPostOBC
-	goto_if_set FLAG_USED_TELEPORTER, PokemonLeague_WillsRoom_EventScript_LanceRematchPostOBC
 #endif
 
 PokemonLeague_WillsRoom_EventScript_LanceRematchStandard::

@@ -803,6 +803,13 @@ u16 WayfarerGetHoennBadgeCountForScript(void)
 {
     return GetBadgeCountForRegion(REGION_HOENN);
 }
+
+// The Blend Master waits for the champion of the region he is in, so Hoenn's
+// Lilycove Blend Master does not depend on the Johto League.
+u16 WayfarerIsCurrentRegionChampionForScript(void)
+{
+    return GetChampionStateForRegion(GetCurrentRegion());
+}
 #endif
 
 bool8 GetChampionStateForRegion(enum Region region)

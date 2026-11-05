@@ -297,6 +297,7 @@ gSpecials::
 	def_special WayfarerGetCurrentRegionForScript
 	def_special WayfarerGetKantoBadgeCountForScript
 	def_special WayfarerGetHoennBadgeCountForScript
+	def_special WayfarerIsCurrentRegionChampionForScript
 	def_special WayfarerShouldWhiteOutToLavaridge
 	def_special WayfarerCoast_IsArticunoEligible
 	def_special WayfarerPowerPlant_IsZapdosEligible

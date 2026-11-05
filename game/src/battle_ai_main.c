@@ -997,8 +997,14 @@ static u32 ChooseMoveOrAction_Doubles(enum BattlerId battler)
             actionOrMoveIndex[battlerIndex] = mostViableMovesIndices[RandomUniform(RNG_AI_SCORE_TIE_DOUBLES_MOVE, 0, mostViableMovesNo - 1)];
             bestMovePointsForTarget[battlerIndex] = mostViableMovesScores[0];
 
-            // Don't use a move against ally if it has less than 100 points.
+#if IS_WAYFARER
+            // Don't use a move against ally if it has less than 100 points. Wayfarer keeps the
+            // expansion rule its AI tests pin; HNS 2.0.6 needs a score above 100 for its Factory.
             if (battlerIndex == BATTLE_PARTNER(battler) && bestMovePointsForTarget[battlerIndex] < AI_SCORE_DEFAULT)
+#else
+            // Don't use a move against ally unless it scores above the default 100 points.
+            if (battlerIndex == BATTLE_PARTNER(battler) && bestMovePointsForTarget[battlerIndex] <= AI_SCORE_DEFAULT)
+#endif
             {
                 bestMovePointsForTarget[battlerIndex] = -1;
             }

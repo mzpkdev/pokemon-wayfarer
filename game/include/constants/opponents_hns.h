@@ -474,7 +474,7 @@
 #define TRAINER_RIVAL_TOTODILE_5_HNS                  461
 #define TRAINER_RIVAL_TOTODILE_6_HNS                  462
 #define TRAINER_RIVAL_TOTODILE_7_HNS                  463
-#define TRAINER_RED_2_HNS                             464
+#define TRAINER_RED_HNS                             464
 #define TRAINER_EUSINE_HNS                            465
 #define TRAINER_GIOVANNI_HNS                          466
 #define TRAINER_PROTON_1_HNS                          467
@@ -679,7 +679,7 @@
 #define TRAINER_CHUCK_POSTOBC_HNS             HNS_POSTOBC_TRAINER_ID(643)
 #define TRAINER_JASMINE_POSTOBC_HNS           HNS_POSTOBC_TRAINER_ID(644)
 #define TRAINER_PRYCE_POSTOBC_HNS             HNS_POSTOBC_TRAINER_ID(645)
-#define TRAINER_CLAIR_OBC_HNS                 HNS_POSTOBC_TRAINER_ID(646)
+#define TRAINER_CLAIR_POSTOBC_HNS             HNS_POSTOBC_TRAINER_ID(646)
 #define TRAINER_BROCK_POSTOBC_HNS             HNS_POSTOBC_TRAINER_ID(647)
 #define TRAINER_LTSURGE_POSTOBC_HNS           HNS_POSTOBC_TRAINER_ID(648)
 #define TRAINER_JANINE_POSTOBC_HNS            HNS_POSTOBC_TRAINER_ID(649)
