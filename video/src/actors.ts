@@ -18,8 +18,6 @@ type Sheet = {
   height: number
   /** "facing" has one frame each way at every other frame; "still" only ever shows the frames it is posed in. */
   layout: "person" | "pokemon" | "facing" | "still"
-  /** A Pokémon sheet laid out another way: its two frames each way. */
-  frames?: Record<"south" | "north" | "west", [number, number]>
 }
 
 const person = (name: string): Sheet => ({
@@ -44,10 +42,7 @@ export const SHEETS = {
   golem: pokemon("golem"),
   noctowl: pokemon("noctowl"),
   "exeggutor-alola": pokemon("exeggutor-alola", 64),
-  krabby: {
-    ...pokemon("krabby"),
-    frames: { west: [0, 1], north: [4, 5], south: [6, 7] },
-  },
+  mareanie: pokemon("mareanie"),
   "gold-fishing": { src: "/actors/gold-fishing.png", frame: 32, height: 32, layout: "still" },
   "gold-surfing": { src: "/actors/gold-surfing.png", frame: 32, height: 32, layout: "facing" },
   "surf-blob": { src: "/actors/surf-blob.png", frame: 32, height: 32, layout: "still" },
@@ -132,12 +127,7 @@ const ROW = { south: 0, north: 1, west: 2, east: 2 } as const
 const frameOf = (sheet: Sheet, facing: Facing, step: 0 | 1 | 2, bob: 0 | 1) => {
   const row = ROW[facing]
   if (sheet.layout === "person") return step === 0 ? row : 3 + row * 2 + (step - 1)
-  if (sheet.layout === "pokemon") {
-    const which = step === 0 ? bob : step - 1
-    return sheet.frames
-      ? sheet.frames[facing === "east" ? "west" : facing][which]!
-      : row * 2 + which
-  }
+  if (sheet.layout === "pokemon") return row * 2 + (step === 0 ? bob : step - 1)
   if (sheet.layout === "facing") return row * 2
   return 0
 }

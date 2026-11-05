@@ -65,8 +65,7 @@ for (const [name, dir] of [
   ["golem", "golem"],
   ["exeggutor-alola", "exeggutor/alola"],
   ["noctowl", "noctowl"],
-  // Eight frames: two steps west, two more, then two north and two south.
-  ["krabby", "krabby"],
+  ["mareanie", "mareanie"],
 ])
   save(name, renderIndexed(path.join(graphics, "pokemon", dir, "overworld.png")))
 

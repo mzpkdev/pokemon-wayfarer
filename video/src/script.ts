@@ -117,8 +117,8 @@ export const SCENES: Scene[] = [
   {
     id: "surf",
     narration:
-      "That water south of Pallet Town? | Nobody hands you Surf this time.\nFish. | Something down there already knows it.",
-    seconds: 12.5,
+      "Still on that beach? | Nobody hands you Surf this time.\nFish. | Something down there already knows it.",
+    seconds: 12,
   },
   {
     id: "leaders",

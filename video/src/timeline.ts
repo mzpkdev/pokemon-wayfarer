@@ -129,17 +129,15 @@ const SEVII: Target = { kind: "regions", names: ["SEVII ISLANDS"], room: 0.9 }
 const MELEMELE = "MelemeleIsle_hns"
 const MELEMELE_BEACH: Target = { kind: "map", name: MELEMELE, x: 37.5, y: 9.5, zoom: 64 }
 
-/** Pallet Town's south shore, where its water runs out to Route 21 and Cinnabar. */
-const PALLET = "PalletTown_hns"
-const PALLET_SHORE: Target = { kind: "map", name: PALLET, x: 9.5, y: 18, zoom: 64 }
 /** The tug on the line, a beat after the box says to fish; and setting off on what was caught. */
 const BITE: Moment = { on: "Something", plus: -0.5 }
 const RIDE: Moment = { on: BITE, plus: 2.1 }
-/** Down the water and out of the frame. */
+/** Off the beach and away east, clear of the palm on the next islet. */
 const RIDE_MARKS = [
-  { at: RIDE, x: 9, y: 18 },
-  { at: { on: RIDE, plus: 0.5 }, x: 9, y: 18 },
-  { at: 1, x: 9, y: 28 },
+  { at: RIDE, x: 40, y: 10 },
+  { at: { on: RIDE, plus: 0.5 }, x: 40, y: 10 },
+  { at: { on: RIDE, plus: 1 }, x: 42, y: 9 },
+  { at: 1, x: 54, y: 9 },
 ]
 
 /** When you notice the Anne leaving without you: as the box says she keeps her own hours. */
@@ -357,77 +355,91 @@ export const DIRECTIONS: Record<string, Direction> = {
     wild: { from: 0, wave: { home: "safari", at: "The Safari" } },
     fade: { in: CUT, out: CUT },
   },
-  // Back where the film began, at the water every Kanto player stood at with no way across.
-  // You walk down to it, cast, and what bites (a Krabby, Pallet's own on the Old Rod, and one
-  // that knows Surf the day it's caught) carries you south, the camera going with you.
+  // Back on Melemele's beach, where the Anne left you: you have been standing there all this
+  // while. You turn to the water, cast, and what bites (a Mareanie, Melemele's commonest on
+  // the Old Rod, which knows Surf the day it's caught) carries you off east, the palm tree
+  // seeing you go.
   surf: {
     shots: [
-      { at: 0, to: PALLET_SHORE },
-      { at: RIDE, to: PALLET_SHORE },
-      { at: 1, to: { kind: "map", name: PALLET, x: 9.5, y: 25.5, zoom: 64 } },
+      { at: 0, to: MELEMELE_BEACH },
+      { at: RIDE, to: MELEMELE_BEACH },
+      { at: 1, to: { kind: "map", name: MELEMELE, x: 43, y: 9.5, zoom: 64 } },
     ],
-    clock: { at: h(11) },
-    // Nobody else in town: this is between you and the water.
-    layers: { walkers: false },
+    clock: { at: h(36) },
     cast: [
       {
-        sprite: "gold",
-        map: PALLET,
-        to: "Fish",
-        marks: [
-          { at: 0, x: 9, y: 10 },
-          { at: 0.04, x: 9, y: 10 },
-          { at: "Nobody", x: 9, y: 16 },
-        ],
-        emotes: [{ at: { on: "Nobody", plus: 0.3 }, kind: "question", seconds: 1.4 }],
+        sprite: "exeggutor-alola",
+        map: MELEMELE,
+        marks: [{ at: 0, x: 34, y: 10 }],
+        face: "east",
+        hops: [{ on: RIDE, plus: 1 }],
       },
-      // The rod out, the float down, a tug, and the reel in.
+      {
+        sprite: "gold",
+        map: MELEMELE,
+        to: "Fish",
+        marks: [{ at: 0, x: 39, y: 10 }],
+        face: [
+          { at: 0, to: "north" },
+          { at: { on: "Still", plus: 0.7 }, to: "south" },
+          { at: "Nobody", to: "east" },
+        ],
+        emotes: [{ at: { on: "Nobody", plus: 0.2 }, kind: "question", seconds: 1.4 }],
+      },
+      // The rod out over the water, the float down, a tug, and the reel in.
       {
         sprite: "gold-fishing",
-        map: PALLET,
+        map: MELEMELE,
         from: "Fish",
         to: RIDE,
-        marks: [{ at: 0, x: 9, y: 16 }],
+        marks: [{ at: 0, x: 39, y: 10 }],
+        face: "east",
         poses: [
-          { at: "Fish", frame: 8 },
-          { at: { on: "Fish", plus: 0.12 }, frame: 9 },
-          { at: { on: "Fish", plus: 0.24 }, frame: 10 },
-          { at: { on: "Fish", plus: 0.36 }, frame: 11 },
-          { at: BITE, frame: 10 },
-          { at: { on: BITE, plus: 0.12 }, frame: 11 },
-          { at: { on: BITE, plus: 0.24 }, frame: 10 },
-          { at: { on: BITE, plus: 0.36 }, frame: 11 },
-          { at: { on: BITE, plus: 0.6 }, frame: 10 },
-          { at: { on: BITE, plus: 0.72 }, frame: 9 },
-          { at: { on: BITE, plus: 0.84 }, frame: 8 },
+          { at: "Fish", frame: 0 },
+          { at: { on: "Fish", plus: 0.12 }, frame: 1 },
+          { at: { on: "Fish", plus: 0.24 }, frame: 2 },
+          { at: { on: "Fish", plus: 0.36 }, frame: 3 },
+          { at: BITE, frame: 2 },
+          { at: { on: BITE, plus: 0.12 }, frame: 3 },
+          { at: { on: BITE, plus: 0.24 }, frame: 2 },
+          { at: { on: BITE, plus: 0.36 }, frame: 3 },
+          { at: { on: BITE, plus: 0.6 }, frame: 2 },
+          { at: { on: BITE, plus: 0.72 }, frame: 1 },
+          { at: { on: BITE, plus: 0.84 }, frame: 0 },
         ],
         emotes: [{ at: BITE, kind: "exclamation", seconds: 0.6 }],
       },
       {
-        sprite: "krabby",
-        map: PALLET,
+        sprite: "mareanie",
+        map: MELEMELE,
         from: { on: BITE, plus: 0.7 },
         to: { on: BITE, plus: 1.75 },
-        marks: [{ at: 0, x: 9, y: 18 }],
-        face: "south",
+        marks: [{ at: 0, x: 41, y: 10 }],
+        face: "west",
         hops: [{ on: BITE, plus: 0.7 }],
       },
-      { sprite: "surf-blob", map: PALLET, from: RIDE, marks: RIDE_MARKS },
       {
-        sprite: "gold-surfing",
-        map: PALLET,
+        sprite: "surf-blob",
+        map: MELEMELE,
         from: RIDE,
         marks: RIDE_MARKS,
-        face: "south",
+        poses: [{ at: 0, frame: 1 }],
+      },
+      {
+        sprite: "gold-surfing",
+        map: MELEMELE,
+        from: RIDE,
+        marks: RIDE_MARKS,
+        face: "east",
         lift: 0.35,
       },
     ],
     tosses: [
       {
         sprite: "ball",
-        map: PALLET,
-        from: { x: 9, y: 16 },
-        to: { x: 9, y: 18 },
+        map: MELEMELE,
+        from: { x: 39, y: 10 },
+        to: { x: 41, y: 10 },
         span: { from: { on: BITE, plus: 1.25 }, to: { on: BITE, plus: 1.75 } },
         height: 1,
       },
