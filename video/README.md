@@ -59,10 +59,18 @@ scene's `cast` (`timeline.ts`) puts the player, people and Pokémon on the map
 as the game draws them in the overworld: each walks between its marks, turns,
 hops, and gets the game's bubbles over its head (`!`, `?`, a heart). `tosses`
 throw a Poké Ball from one tile to another, `flashes` are the white flashes
-into a battle, `phone` rings the phone over the picture, and `portraits` slide
-battle pictures in over the dimmed map. Any moment can be a phrase of the
+into a battle, `phone` rings the phone over the picture, and `lineup` picks a
+league's five like a slot machine, as the website's tour does, then lets one
+of them step forward. A ride can `track` its rider, the camera staying close
+on them inside a box of clean tiles. Any moment can be a phrase of the
 narration, or `{ on, plus }` for some seconds after one, so the acting keeps
 time with the words.
+
+Someone the map already draws (a Gym Leader on their routine) steps on the
+spot, may stand on a door and wears an arrow far out, so a close-up casts
+them instead and leaves the map's own out (`layers: { walkers: false }`, or
+`notables.except`). Walks follow the game's rules: scout the tiles first, and
+keep to ones a player could walk.
 
 The sprites are the game's own, cut by `pnpm actors` from `../game/graphics`
 into `actors/` and committed, so rendering does not need the game tree. A new
