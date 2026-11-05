@@ -13,13 +13,11 @@ import {
 } from "./box"
 import { directionFor, drawFrame, loadStage, riderPlace, type Stage } from "./director"
 import { type Cues, loadCues, type Slot, schedule, slotAt, totalSeconds } from "./schedule"
+import { Lineup } from "./Lineup"
 import { Scout } from "./Scout"
 import { Studio } from "./Studio"
 import type { Span } from "./timeline"
 import { PixelImage, Popup, useStagePx } from "./ui"
-
-/** Seconds a battle picture takes to slide in. */
-const PORTRAIT_SECONDS = 0.3
 
 /** Seconds a card takes to fade in or out, and the video to fade from and to black. */
 const FADE_SECONDS = 0.5
@@ -201,8 +199,8 @@ const Player = ({
   const ringing = phone && local >= phone.from * length && local <= phone.to * length
   // The handset shakes left and right eight times a second, as the site's does.
   const shake = [0, -8, 0, 8][Math.floor(local / 0.125) % 4]!
-  const portraits = direction?.portraits
-  const facing = portraits && local >= portraits.from * length
+  const lineup = direction?.lineup
+  const roster = stage.landmarks.roster
 
   return (
     <>
@@ -234,31 +232,8 @@ const Player = ({
           </div>
         )}
 
-        {facing && (
-          <div className="absolute inset-0 bg-black/50">
-            {portraits.pictures.map((picture) => {
-              const since = local - picture.at * length
-              if (since < 0) return null
-              // In from its side of the frame, fast then settling, as a battle slides its pictures in.
-              const off = (1 - Math.min(1, since / PORTRAIT_SECONDS)) ** 2 * 200
-              const sign = picture.side === "left" ? -1 : 1
-              return (
-                <div
-                  key={picture.src}
-                  className="absolute top-[calc(36*var(--px))]"
-                  style={{
-                    left: `calc(${picture.side === "left" ? 104 : 248} * var(--px))`,
-                    translate: `calc(${Math.round(sign * off)} * var(--px)) 0`,
-                  }}
-                >
-                  {/* Twice the frame's pixel: a 64-pixel picture stands half the frame tall. */}
-                  <div style={{ ["--px" as string]: `${px * 2}px` }}>
-                    <PixelImage src={picture.src} alt="" />
-                  </div>
-                </div>
-              )
-            })}
-          </div>
+        {lineup && roster && (
+          <Lineup lineup={lineup} roster={roster} seconds={local} length={length} />
         )}
 
         {ringing && (

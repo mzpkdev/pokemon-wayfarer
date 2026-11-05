@@ -429,7 +429,7 @@ export const directionFor = (slot: Slot): Direction<number> => {
   }
   const at = (moment: Moment) => fractionOf(slot, moment)
   const span = <S extends Span>(s: S) => ({ ...s, from: at(s.from), to: at(s.to) })
-  const { shots, wild, rides, badges, title, cast, tosses, phone, flashes, portraits } = direction
+  const { shots, wild, rides, badges, title, cast, tosses, phone, flashes, lineup } = direction
   return {
     ...direction,
     cast: cast?.map((actor) => ({
@@ -447,9 +447,12 @@ export const directionFor = (slot: Slot): Direction<number> => {
     })),
     tosses: tosses?.map((toss) => ({ ...toss, span: span(toss.span) })),
     phone: phone && { ...span(phone), named: at(phone.named) },
-    portraits: portraits && {
-      from: at(portraits.from),
-      pictures: portraits.pictures.map((picture) => ({ ...picture, at: at(picture.at) })),
+    lineup: lineup && {
+      ...lineup,
+      from: at(lineup.from),
+      seats: lineup.seats.map((seat) => ({ ...seat, at: at(seat.at) })),
+      grow: at(lineup.grow),
+      partner: { ...lineup.partner, at: at(lineup.partner.at) },
     },
     flashes: flashes?.map(at),
     shots: shots.map((shot) => ({ ...shot, at: at(shot.at) })),

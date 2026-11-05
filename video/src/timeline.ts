@@ -112,8 +112,20 @@ export type Direction<M = Moment> = {
   tosses?: Toss<M>[]
   /** The phone ringing over the picture for a span; the caller's name comes up at `named`. */
   phone?: Span<M> & { caller: string; named: M }
-  /** The map dimmed from a moment on, and big pictures popping in over it, as a battle shows who you face. */
-  portraits?: { from: M; pictures: { src: string; at: M; side: "left" | "right" }[] }
+  /**
+   * The league's five picked like a slot machine, as the website's tour shows it: from a
+   * moment on the map dims and five seats shuffle through every trainer's face, each
+   * stopping on its own (by their slug in the roster) at its moment, in battle order. Then
+   * the `star` steps forward at `grow`, the rest falling away, and a partner's picture
+   * slides in beside them.
+   */
+  lineup?: {
+    from: M
+    seats: { slug: string; at: M }[]
+    star: string
+    grow: M
+    partner: { src: string; at: M }
+  }
   /** White flashes at these moments, as the game flashes into a battle. */
   flashes?: M[]
 }
@@ -720,8 +732,9 @@ export const DIRECTIONS: Record<string, Direction> = {
     phone: { from: "Then the phone", to: 1, caller: "INDIGO LEAGUE", named: "It's the" },
     fade: { in: CUT },
   },
-  // The whole circuit, then who you'll face, the way a battle shows them: Brock slides in,
-  // then the Golem, and the box wonders where he got it.
+  // The whole circuit, then who you'll face, picked like a slot machine as on the website:
+  // four seats stop on Elite Four regulars and the last on Brock. He steps forward, the
+  // Golem slides in beside him, and the box wonders where he got it.
   golem: {
     shots: [
       { at: 0, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.92 } },
@@ -733,12 +746,20 @@ export const DIRECTIONS: Record<string, Direction> = {
       circuit: [0, 1],
       earn: { from: -1, to: -0.5, badges: [7, 8, 2, 9, 1, 11, 3, 10] },
     },
-    portraits: {
-      from: { on: "Brock", plus: -0.2 },
-      pictures: [
-        { src: "/world-map/leaders/leader_brock_hns.png", at: "Brock", side: "left" },
-        { src: "/actors/golem-front.png", at: "With a", side: "right" },
+    // The five in battle order, weakest first. The reels stop on the four you'd expect one
+    // after another while the box asks, and the first seat, last, on the one you wouldn't.
+    lineup: {
+      from: "And who's in",
+      seats: [
+        { slug: "brock", at: "Brock" },
+        { slug: "koga", at: { on: "And who's in", plus: 1.3 } },
+        { slug: "lorelei", at: { on: "And who's in", plus: 1.7 } },
+        { slug: "will", at: { on: "And who's in", plus: 2.1 } },
+        { slug: "karen", at: { on: "And who's in", plus: 2.5 } },
       ],
+      star: "brock",
+      grow: "With a",
+      partner: { src: "/actors/golem-front.png", at: "With a" },
     },
   },
   open: {
