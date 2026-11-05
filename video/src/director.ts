@@ -40,9 +40,16 @@ import { stepped } from "~/world-map/fade"
 import { loadWild, type WildClock, wildOverlay } from "~/world-map/wild"
 
 import { boxCover } from "./box"
-import type { Slot } from "./schedule"
+import { fractionOf, type Slot } from "./schedule"
 import { ALL_LAYERS, type Shot } from "./shot"
-import { DEFAULT_MINUTES, type Direction, DIRECTIONS, type Target } from "./timeline"
+import {
+  DEFAULT_MINUTES,
+  type Direction,
+  DIRECTIONS,
+  type Moment,
+  type Span,
+  type Target,
+} from "./timeline"
 
 /** The website's `ease`, which `fly` applies: gentle at both ends. */
 const easeBoth = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2)
@@ -277,7 +284,7 @@ export const resolve = (
 
 /** The camera `fraction` of the way through a scene, flying between its keyframes. */
 export const cameraAt = (
-  direction: Direction,
+  direction: Direction<number>,
   fraction: number,
   stage: Stage,
   minute: number,
@@ -321,7 +328,7 @@ export const riderPlace = (stage: Stage, rider: Shot["rider"]) => {
   return placeAt(stage.world.meta, start, { x: sprite.x + 1, y: sprite.y + 2 })
 }
 
-const minuteAt = ({ clock }: Direction, fraction: number) => {
+const minuteAt = ({ clock }: Direction<number>, fraction: number) => {
   if ("at" in clock) return clock.at
   const keys: [number, number][] =
     "keys" in clock
@@ -346,12 +353,27 @@ const WALKERS_FAR_HEIGHT = 26
 const mix = (value: number | [number, number], fraction: number) =>
   typeof value === "number" ? value : value[0] + (value[1] - value[0]) * fraction
 
-/** The direction for a slot; a scene with none holds the whole world by day. */
-export const directionFor = (slot: Slot): Direction =>
-  DIRECTIONS[slot.id] ?? {
+/**
+ * The direction for a slot, its moments as fractions of the scene: a phrase
+ * falls where the slot's words have it. A scene with none holds the whole world by day.
+ */
+export const directionFor = (slot: Slot): Direction<number> => {
+  const direction: Direction = DIRECTIONS[slot.id] ?? {
     shots: [{ at: 0, to: { kind: "world" } }],
     clock: { at: DEFAULT_MINUTES },
   }
+  const at = (moment: Moment) => fractionOf(slot, moment)
+  const span = <S extends Span>(s: S) => ({ ...s, from: at(s.from), to: at(s.to) })
+  const { shots, wild, rides, badges, title } = direction
+  return {
+    ...direction,
+    shots: shots.map((shot) => ({ ...shot, at: at(shot.at) })),
+    wild: typeof wild === "object" ? { from: at(wild.from) } : wild,
+    rides: rides?.map(span),
+    badges: badges && { ...badges, earn: badges.earn && span(badges.earn) },
+    title: title && span(title),
+  }
+}
 
 /** Least height a daily trainer is drawn at, in CSS pixels, as the daily overlay has it. */
 const DAILY_MIN_HEIGHT = 28
@@ -471,7 +493,7 @@ export const shotFor = (
  * the same however the time was reached), and the leagues that calls up.
  */
 const earnedBy = (
-  earn: NonNullable<Direction["badges"]>["earn"],
+  earn: NonNullable<Direction<number>["badges"]>["earn"],
   local: number,
   length: number,
 ): Pick<Shot, "pins">["pins"] extends infer P ? Partial<NonNullable<P>> : never => {
@@ -490,7 +512,7 @@ const earnedBy = (
 }
 
 /** The wild waves' clock `local` seconds into a scene, once they have begun. */
-const wildAt = (wild: Direction["wild"], local: number, length: number): Shot["wild"] => {
+const wildAt = (wild: Direction<number>["wild"], local: number, length: number): Shot["wild"] => {
   if (!wild) return undefined
   const from = typeof wild === "object" ? wild.from * length : 0
   return local >= from ? { start: now() - (local - from) * 1000, still: null } : undefined

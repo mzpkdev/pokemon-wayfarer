@@ -14,6 +14,8 @@ export type Scene = {
   /**
    * What the voice says and the text box prints. Empty for a scene with music
    * only. A line break (\n) turns the box's page there; the voice reads on.
+   * A beat (|) holds a moment before the words after it, as before a
+   * punchline: the voice pauses and the box waits to print on (|| holds longer).
    */
   narration: string
   /** The least the scene lasts, in seconds; it runs longer when the words need it. */
@@ -58,12 +60,12 @@ export const BOX_CAPS = [
 export const SCENES: Scene[] = [
   {
     id: "pallet",
-    narration: "Well, look who's back. Last time, you set out from Pallet Town. Everyone did.",
+    narration: "Well, look who's back. | Last time, you set out from Pallet Town. | Everyone did.",
     seconds: 7,
   },
   {
     id: "newbark",
-    narration: "This time? Maybe New Bark Town.",
+    narration: "This time? | Maybe New Bark Town.",
     seconds: 4,
   },
   {
@@ -74,34 +76,34 @@ export const SCENES: Scene[] = [
   {
     id: "anne",
     narration:
-      "Remember the S.S. Anne? She sailed out of Vermilion, and you never saw her again. Ever wonder where she was going?",
+      "Remember the S.S. Anne? She sailed out of Vermilion, and you never saw her again. | Ever wonder where she was going?",
     seconds: 12,
   },
   {
     id: "lands",
     narration:
-      "Alola. And now you can sail with her.\nKeeps her own hours, mind. She won't wait.\nAnd Kanto was never the whole map. Seven lands. Walk every one of them. Each keeps its own Pokémon. Galar's on the Sevii Islands. Kalos hides in the Safari Zones.",
+      "Alola. | And now you can sail with her.\nKeeps her own hours, mind. | She won't wait.\nAnd Kanto was never the whole map. | Seven lands. Walk every one of them. Each keeps its own Pokémon. Galar's on the Sevii Islands. Kalos hides in the Safari Zones.",
     seconds: 13,
   },
   {
     id: "leaders",
     narration:
-      "Ever wonder what Gym Leaders do when nobody's at the door?\nBrock's helping out at the Day-Care in Johto. Trade with him sometime.",
+      "Ever wonder what Gym Leaders do when nobody's at the door?\nBrock's helping out at the Day-Care in Johto. | Trade with him sometime.",
     seconds: 8,
   },
   {
     id: "surge",
-    narration: "Lt. Surge? Game Corner. Again.",
+    narration: "Lt. Surge? | Game Corner. | Again.",
     seconds: 3.5,
   },
   {
     id: "wallace",
-    narration: "Wallace is fishing Route 119.\nHas been for days.",
+    narration: "Wallace is fishing Route 119.\n| Has been for days.",
     seconds: 5,
   },
   {
     id: "night",
-    narration: "Stray off the road after dark.\nYou'll hear things in the grass.",
+    narration: "Stray off the road after dark.\n| You'll hear things in the grass.",
     seconds: 5,
   },
   {
@@ -111,19 +113,19 @@ export const SCENES: Scene[] = [
   },
   {
     id: "donagain",
-    narration: "He's moved on. You'll run into him again.\nHe hasn't forgotten you.",
+    narration: "He's moved on. You'll run into him again.\n| He hasn't forgotten you.",
     seconds: 5,
   },
   {
     id: "gyms",
     narration:
-      "Twenty-four Gyms. Fancy Clair's first?\nGo on. It'll be a fair fight.\nWord gets around. Soon the names you grew up with know yours.\nThen the phone rings. It's the League.\nAnd who's in the Elite Four this year? Brock. With a Golem.\nWonder where he got that.",
+      "Twenty-four Gyms. Fancy Clair's first?\nGo on. | It'll be a fair fight.\nWord gets around. Soon the names you grew up with know yours.\nThen the phone rings. | It's the League.\nAnd who's in the Elite Four this year? | Brock. | With a Golem.\n| Wonder where he got that.",
     seconds: 10,
   },
   {
     id: "open",
     narration:
-      "Pokémon Wayfarer. Free, out January twentieth. Good to have you back. See you out there.",
+      "Pokémon Wayfarer. Free, out January twentieth. | Good to have you back. | See you out there.",
     seconds: 9,
     boxed: false,
   },

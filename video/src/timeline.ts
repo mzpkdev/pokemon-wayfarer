@@ -23,19 +23,27 @@ export type Target =
   | { kind: "ship"; id: string; zoom: number }
 
 /**
- * The camera at `at` of the way through the scene (0 to 1); the camera flies
+ * A moment of a scene: a fraction of the way through it (0 to 1), or a phrase
+ * of its narration, when the voice starts it (or the box, without a voice).
+ * A phrase holds the picture to the words however long the voice takes.
+ */
+export type Moment = number | string
+
+/**
+ * The camera at the moment `at` of the scene; the camera flies
  * between keyframes. `ease` shapes the flight into this keyframe: "both" (the
  * default) starts and ends gently, "in" only starts gently and arrives at
  * speed, "out" leaves at speed and settles, "none" keeps one pace, so a long
  * move can pass through a keyframe without stopping.
  */
-export type Keyframe = { at: number; to: Target; ease?: "both" | "in" | "out" | "none" }
+export type Keyframe<M = Moment> = { at: M; to: Target; ease?: "both" | "in" | "out" | "none" }
 
-/** A span of a scene, as fractions of its length. */
-export type Span = { from: number; to: number }
+/** A span of a scene, between two moments. */
+export type Span<M = Moment> = { from: M; to: M }
 
-export type Direction = {
-  shots: Keyframe[]
+/** A scene's pictures; `Direction<number>` once its moments are fractions of the scene. */
+export type Direction<M = Moment> = {
+  shots: Keyframe<M>[]
   /** A fade from black at the scene's start, and to black at its end, in seconds. */
   fade?: { in?: number; out?: number }
   /**
@@ -51,21 +59,21 @@ export type Direction = {
   shipsAt?: number
   /** Layers to turn off or on, over the default of everything but the sightings. */
   layers?: Partial<Layers>
-  /** The wild Pokémon waves, popping out of the whole world from the scene's start, or from `from` of the way through it. */
-  wild?: boolean | { from: number }
+  /** The wild Pokémon waves, popping out of the whole world from the scene's start, or from the moment `from`. */
+  wild?: boolean | { from: M }
   /**
    * The player rides in on their bike along a start's route over each span,
    * the camera coming in with them; between rides they wait at the door, and
    * the game's warp (a fade to black and back) cuts to the next start.
    */
-  rides?: (Span & { start: StartId })[]
+  rides?: (Span<M> & { start: StartId })[]
   /**
    * The badge pins, and how much of the league circuit is drawn (0 pins only,
    * 1 the whole circuit). With `earn`, the named badges are earned one after
    * another across that span, each lighting with a sparkle, and a league calls
    * once it has its eight, its leg of the trail lighting.
    */
-  badges?: { circuit: number | [number, number]; earn?: Span & { badges: number[] } }
+  badges?: { circuit: number | [number, number]; earn?: Span<M> & { badges: number[] } }
   /** The daily trainers and items on every road, with the day stepping from 1 to `days` across the scene. */
   daily?: { days: number } | { day: number }
   /** The game's yellow arrow over a daily trainer standing at this world cell, to pick them out. */
@@ -77,7 +85,7 @@ export type Direction = {
    */
   notables?: { only?: string[]; marker?: boolean; minHeight?: number }
   /** A card over the map: the logo and lines of text. */
-  title?: Span & { lines: string[]; logo?: boolean }
+  title?: Span<M> & { lines: string[]; logo?: boolean }
 }
 
 const h = (hours: number, minutes = 0) => hours * 60 + minutes
@@ -135,31 +143,36 @@ export const DIRECTIONS: Record<string, Direction> = {
     clock: { from: h(20, 18), to: h(21, 5) },
     fade: { in: CUT },
   },
-  // Still with the Anne while the box answers where she was going, and that she
-  // won't wait, as she steams off without you; then, on "And
-  // Kanto was never the whole map", one pull-out in the evening light: Kanto and
-  // Johto with their Pokémon popping out once they fill the frame, then every land.
+  // Still with the Anne while the box answers where she was going; as it says she keeps her
+  // own hours the camera lets her steam off without you, one pull-out in the evening light:
+  // through Kanto and Johto as the box says Kanto was never the whole map, their Pokémon
+  // popping out, and settling on every land on "Seven lands", held there for the rest.
   lands: {
     // One move: the camera keeps riding with her, slows through Kanto and Johto without
     // stopping while their Pokémon pop, then goes on at speed and settles on every land.
     shots: [
       { at: 0, to: { kind: "ship", id: "anne", zoom: 16 } },
-      { at: 0.33, to: { kind: "ship", id: "anne", zoom: 12 }, ease: "none" },
-      { at: 0.56, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.8 }, ease: "in" },
-      { at: 0.85, to: LANDS, ease: "out" },
+      { at: "Keeps her", to: { kind: "ship", id: "anne", zoom: 12 }, ease: "none" },
+      {
+        at: "the whole map",
+        to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.8 },
+        ease: "in",
+      },
+      // Settled by "Walk every", so it reads as there on "Seven lands".
+      { at: "Walk every", to: LANDS, ease: "out" },
       { at: 1, to: LANDS },
     ],
     clock: { from: h(21, 5), to: h(23, 30) },
-    wild: { from: 0.5 },
+    wild: { from: "And Kanto" },
   },
   // Straight on from every land at night: every Gym Leader and Elite Four member's marker
-  // lights up, then one dive onto Brock, on the morning two days on that he's caring for
-  // the Pokémon at the Day-Care on Route 34, in Johto.
+  // lights up, then one dive onto Brock, landing as the box names him, on the morning
+  // two days on that he's caring for the Pokémon at the Day-Care on Route 34, in Johto.
   leaders: {
     shots: [
       { at: 0, to: LANDS },
-      { at: 0.14, to: LANDS },
-      { at: 0.55, to: { kind: "notable", slug: "brock", zoom: 16 } },
+      { at: "Gym Leaders do", to: LANDS },
+      { at: "Brock's helping", to: { kind: "notable", slug: "brock", zoom: 16 } },
       { at: 1, to: { kind: "notable", slug: "brock", zoom: 16 } },
     ],
     // Two days on from the Anne, cut on as the markers light up, so nobody races to get there;
@@ -208,19 +221,20 @@ export const DIRECTIONS: Record<string, Direction> = {
     fade: { in: CUT },
   },
   // Eight badges from three regions land one by one over Johto and Kanto while word of you
-  // gets around; at the eighth the Indigo League calls, and the circuit comes up as the box asks who's in the Elite Four.
+  // gets around; the eighth lands as the phone rings and the Indigo League calls, and the
+  // circuit comes up as the box asks who's in the Elite Four.
   gyms: {
     shots: [
       { at: 0, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.92 } },
-      { at: 0.48, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.92 } },
-      { at: 0.64, to: { kind: "circuit", room: 0.9 } },
+      { at: "Then the phone", to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.92 } },
+      { at: "And who's in", to: { kind: "circuit", room: 0.9 } },
       { at: 1, to: { kind: "circuit", room: 0.9 } },
     ],
     clock: { at: h(11) },
     badges: {
       circuit: [0, 1],
-      // Clair's Rising Badge first: the one GSC players remember as the wall.
-      earn: { from: 0.04, to: 0.44, badges: [7, 8, 2, 9, 1, 11, 3, 10] },
+      // Clair's Rising Badge first, as the box names her: the one GSC players remember as the wall.
+      earn: { from: "Fancy", to: "Then the phone", badges: [7, 8, 2, 9, 1, 11, 3, 10] },
     },
   },
   open: {

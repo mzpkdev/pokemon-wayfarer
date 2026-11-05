@@ -1,16 +1,20 @@
-// When each scene starts and how long it runs. A scene lasts at least its
-// `seconds`; with a voice-over clip (`audio/vo/cues.json`, from `pnpm voice`)
-// it lasts the clip plus a lead-in and a tail, so the picture waits for the words.
-// Without one it still lasts long enough to read its words in the text box.
+// When each scene starts and how long it runs, and when each of its words is
+// said. A scene lasts at least its `seconds`; with a voice-over clip
+// (`audio/vo/cues.json`, from `pnpm voice`) it lasts the clip plus a lead-in
+// and a tail, so the picture waits for the words. Without one its words are
+// paced as a voice would read them (`words.ts`), and it lasts as long as that.
 import { SCENES, type Scene } from "./script"
+import { paced, type Words, wordsOf } from "./words"
 
 /** Seconds of picture before the voice starts in a scene, and after it ends. */
 export const LEAD_SECONDS = 0.6
 export const TAIL_SECONDS = 0.8
-/** Letters a second the text box's words can be read at, printing included, when no voice sets the pace. */
-const READ_LETTERS_PER_SECOND = 14
 
-export type Cue = { seconds: number; hash: string; text: string }
+/**
+ * A scene's voice clip: how long it runs, and when each letter of its words
+ * (`wordsOf(narration).text`) is said, in seconds from the clip's start.
+ */
+export type Cue = { seconds: number; hash: string; text: string; times?: number[] }
 export type Cues = { voice?: string; model?: string; scenes: Record<string, Cue> }
 
 export type Slot = Scene & {
@@ -19,6 +23,20 @@ export type Slot = Scene & {
   voiceAt: number | null
   /** How long the voice clip runs, when there is one. */
   voiceSeconds: number | null
+  /** The narration without its beats, as the box prints it. */
+  words: Words
+  /** When each letter of `words.text` is said, in seconds into the scene. */
+  times: number[]
+}
+
+/** When each letter is said, from the first, and when the last is done: the voice's, or paced. */
+const timing = (words: Words, cue: Cue | undefined) => {
+  const own = paced(words)
+  if (!cue) return own
+  if (cue.times?.length === words.text.length) return { times: cue.times, end: cue.seconds }
+  // A clip made before the voice kept its timing: the paced words, stretched over it.
+  const stretch = own.end ? cue.seconds / own.end : 1
+  return { times: own.times.map((t) => t * stretch), end: cue.seconds }
 }
 
 export const schedule = (cues: Cues | null, scenes = SCENES): Slot[] => {
@@ -26,18 +44,39 @@ export const schedule = (cues: Cues | null, scenes = SCENES): Slot[] => {
   let start = 0
   for (const scene of scenes) {
     const cue = cues?.scenes[scene.id]
-    const words = cue ? cue.seconds : scene.narration.length / READ_LETTERS_PER_SECOND
-    const length = Math.max(scene.seconds, words + LEAD_SECONDS + TAIL_SECONDS)
+    const words = wordsOf(scene.narration)
+    const said = timing(words, cue)
+    const length = Math.max(scene.seconds, words.text ? said.end + LEAD_SECONDS + TAIL_SECONDS : 0)
     slots.push({
       ...scene,
       start,
       length,
       voiceAt: cue ? start + LEAD_SECONDS : null,
       voiceSeconds: cue ? cue.seconds : null,
+      words,
+      times: said.times.map((t) => t + LEAD_SECONDS),
     })
     start += length
   }
   return slots
+}
+
+const missing = new Set<string>()
+
+/**
+ * How far through its scene (0 to 1) a moment of the timeline falls: a
+ * fraction as it is, or a phrase of the narration, when the voice starts it.
+ */
+export const fractionOf = (slot: Slot, moment: number | string) => {
+  if (typeof moment === "number") return moment
+  const index = slot.words.text.indexOf(moment)
+  if (index < 0) {
+    if (!missing.has(`${slot.id}:${moment}`))
+      console.warn(`${slot.id}: no "${moment}" in its narration; the moment falls at its start.`)
+    missing.add(`${slot.id}:${moment}`)
+    return 0
+  }
+  return slot.times[index]! / slot.length
 }
 
 export const totalSeconds = (slots: Slot[]) =>
