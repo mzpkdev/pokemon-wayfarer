@@ -1,21 +1,29 @@
 // The narration in the game's text box: names in the game's capitals, the
-// words wrapped to the box in its own font, two lines a page, and each page
-// given its share of the scene to print and be read.
+// words wrapped to the box in its own font, two lines a page, and each letter
+// printed as the voice says it (or as the paced words would, without one).
 import { BOX_CAPS } from "./script"
 
-/** Letters the box prints a second: the game's MID text speed, a letter every two frames. */
-export const LETTERS_PER_SECOND = 30
 /** Width of the box's text, in GBA pixels: 240 across, less the 8-pixel frame and 4-pixel padding a side. */
 export const BOX_TEXT_WIDTH = 216
+/** GBA pixels across the frame: the video is 480 of them wide, so 4 CSS pixels each at 1080p. */
+export const GBA_COLUMNS = 480
+/** Gap under the box, and the box's height: its 8-pixel frame top and bottom, 2-pixel padding and two 16-pixel lines. */
+export const BOX_BOTTOM = 8
+export const BOX_TEXT_HEIGHT = 32
+const BOX_HEIGHT = 8 + 2 + BOX_TEXT_HEIGHT + 2 + 8
+/** CSS pixels of a frame `width` across that one GBA pixel takes. */
+export const gbaPx = (width: number) => Math.max(1, Math.round(width / GBA_COLUMNS))
+/** How much of a frame `width` across the text box hides at its foot, in CSS pixels. */
+export const boxCover = (width: number) => (BOX_BOTTOM + BOX_HEIGHT) * gbaPx(width)
+
 /** Lines a page holds, as in the game's own text box. */
 const LINES_PER_PAGE = 2
-/** Weight of a page beyond its letters, so a short page still stays up long enough to read. */
-const PAGE_LETTERS = 24
 
 /** The game's font at one GBA pixel a pixel, for measuring. */
 export const BOX_FONT = '16px "Wayfarer Text"'
 
-export type Page = { lines: string[]; text: string; from: number; to: number }
+/** A page of the box: its lines, and when it comes up and each of its letters prints, in seconds into the scene. */
+export type Page = { lines: string[]; text: string; from: number; printAt: number[] }
 
 /** The narration as the game writes it: POKéMON, place names and people in capitals. */
 export const gameCase = (text: string) =>
@@ -76,31 +84,39 @@ export const paginate = (text: string, measure: (line: string) => number): strin
 }
 
 /**
- * The narration paged and timed between `from` and `to` seconds into its
- * scene: each page's share follows its length, and it prints at the game's
- * speed from the start of its share.
+ * The words paged, each page up from the moment the voice starts it and each
+ * letter printing as it is said, never ahead of the voice, so a punchline
+ * isn't read before it's heard. `times` holds when each letter of
+ * `words.text` is said, in seconds into the scene.
  */
 export const pagesFor = (
-  narration: string,
-  from: number,
-  to: number,
+  text: string,
+  times: number[],
   measure: (line: string) => number,
 ): Page[] => {
-  const groups = paginate(gameCase(narration), measure)
-  const weights = groups.map((group) => group.join(" ").length + PAGE_LETTERS)
-  const total = weights.reduce((sum, weight) => sum + weight, 0)
-  let at = from
-  return groups.map((group, index) => {
-    const length = ((to - from) * weights[index]!) / total
-    const page = { lines: group, text: group.join("\n"), from: at, to: at + length }
-    at += length
-    return page
+  // The pages hold the text's letters in order, only its spaces redrawn, so the
+  // n-th letter on the pages is the n-th letter of the text.
+  const letters = text.split("").flatMap((letter, i) => (/\s/.test(letter) ? [] : [times[i]!]))
+  let n = 0
+  return paginate(gameCase(text), measure).map((lines) => {
+    const page = lines.join("\n")
+    let at = letters[n] ?? 0
+    const printAt = page
+      .split("")
+      .map((letter) => (/\s/.test(letter) ? at : (at = letters[n++] ?? at)))
+    return { lines, text: page, from: printAt[0] ?? 0, printAt }
   })
 }
 
-/** The page showing at `seconds` into the scene: the last one stays up to the scene's end. */
+/** The page up at `seconds` into the scene: each stays until the next is started, the last to the end. */
 export const pageAt = (pages: Page[], seconds: number) =>
-  pages.find((page) => seconds < page.to) ?? pages[pages.length - 1]
+  pages.findLast((page) => page.from <= seconds)
+
+/** How many of a page's letters have printed at `seconds` into the scene. */
+export const printedAt = (page: Page, seconds: number) => {
+  const next = page.printAt.findIndex((at) => at > seconds)
+  return next < 0 ? page.text.length : next
+}
 
 /** A measure of text in the box's font, in GBA pixels; the font must have loaded. */
 export const boxMeasure = () => {

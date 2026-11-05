@@ -203,8 +203,11 @@ const readBorders = (game, world, atlas, grid, { isWater, isDark, tileColor }) =
   // Sinjoh's maps are bordered by a cave's black void; give them the snow past
   // Route 217's edge instead, so Sinjoh joins the land on either side.
   const route217 = layouts[byName.Route217.layout]
+  // Ilex Forest is walled in by a rock border in the game, which would grow a
+  // field of bare rock round a forest; it takes Azalea Town's trees instead.
+  const azalea = layouts[byName.AzaleaTown_hns.layout]
   const borders = all.map((p) => {
-    const layout = p.region === "Sinjoh" ? route217 : p.l
+    const layout = p.region === "Sinjoh" ? route217 : p.m.name === "IlexForest_hns" ? azalea : p.l
     const bin = game.read(layout.border_filepath)
     // A few layouts declare a bigger border than their file holds; fall back to 2x2.
     const declared = (layout.border_width ?? 2) * (layout.border_height ?? 2)
@@ -249,10 +252,14 @@ const readBorders = (game, world, atlas, grid, { isWater, isDark, tileColor }) =
   })
   return borders
 }
-const pattern = (b, i, W) => {
+// A border's block for cell `i`, counted from the corner of the map that lends
+// it, as the game does past a map's edge, so the fill carries on the map's own
+// rows of trees in step instead of half a tree out wherever a map's corner is odd.
+const mod = (n, m) => ((n % m) + m) % m
+const pattern = (b, i, W, origin = [0, 0]) => {
   const x = i % W,
     y = (i - x) / W
-  return b.ids[(y % b.bh) * b.bw + (x % b.bw)]
+  return b.ids[mod(y - origin[1], b.bh) * b.bw + mod(x - origin[0], b.bw)]
 }
 
 // The land between the maps. Map tiles say where the world is land and where
@@ -748,10 +755,24 @@ const fillBorders = (
   for (let i = 0; i < N; i++) landFrom[i] = toMainland[i] < 70 ? mainland[i] : island[i]
   const ocean = borders[all.findIndex((p) => p.m.name === "Route105")]
   // The water each map lends the sea beside it: its border if that is water,
-  // else the water tile it draws most, else none. The sea near the coasts takes
-  // the nearest such map's, so a sea route's water runs on in its own tiles.
+  // else, when its water runs off its edge (a sea route's, a river's; not a
+  // pond's, which would paint the sea its own pale blue), the water tile it
+  // draws most, else none. The sea near the coasts takes the nearest such
+  // map's, so a sea route's water runs on in its own tiles.
+  const WATER_AT_EDGE = 12
   const waterOf = borders.map((b, m) => {
     if (b.kind === "water") return b
+    const { l } = all[m]
+    const x0 = all[m].x - world.minX,
+      y0 = all[m].y - world.minY
+    let atEdge = 0
+    for (let y = 0; y < l.height; y++)
+      for (let x = 0; x < l.width; x++) {
+        if (x > 1 && y > 1 && x < l.width - 2 && y < l.height - 2) continue
+        const i = (y0 + y) * W + x0 + x
+        if (owner[i] === m && isWater(grid[i])) atEdge++
+      }
+    if (atEdge < WATER_AT_EDGE) return null
     const counts = new Map()
     for (let i = 0; i < N; i++)
       if (owner[i] === m && isWater(grid[i])) counts.set(grid[i], (counts.get(grid[i]) ?? 0) + 1)
@@ -793,14 +814,16 @@ const fillBorders = (
     const j = Math.min(H - 1, Math.max(0, wy)) * W + Math.min(W - 1, Math.max(0, wx))
     return from[j] >= 0 ? from[j] : from[i]
   }
+  // Each map's top-left corner on the grid, which its border's blocks count from.
+  const corner = (m) => [all[m].x - world.minX, all[m].y - world.minY]
   const fillBorder = new Int32Array(N).fill(-1)
   for (let i = 0; i < N; i++) {
     if (owner[i] >= 0) continue
     if (land[i]) {
       fillBorder[i] = warped(landFrom, i)
-      grid[i] = pattern(borders[fillBorder[i]].land, i, W)
+      grid[i] = pattern(borders[fillBorder[i]].land, i, W, corner(fillBorder[i]))
     } else if (spill[i] >= 0 && waterOf[owner[spill[i]]])
-      grid[i] = pattern(waterOf[owner[spill[i]]], i, W)
+      grid[i] = pattern(waterOf[owner[spill[i]]], i, W, corner(owner[spill[i]]))
     else {
       const depth = depthOf(i)
       // Right by a map, its own water, so the sea doesn't outline its rectangle.
@@ -809,8 +832,12 @@ const fillBorders = (
         near >= 0 && Math.hypot((i % W) - (near % W), Math.floor(i / W) - Math.floor(near / W)) < 14
       const from = close || dug[i] ? waterFrom[i] : warped(waterFrom, i)
       if (depth === 4 || from < 0) grid[i] = tint(pattern(ocean, i, W), DEEP_SEA)
-      else if (depth === 0) grid[i] = pattern(waterOf[from], i, W)
-      else grid[i] = tint(pattern(waterOf[from], i, W), stepColor(waterColor[from], depth))
+      else if (depth === 0) grid[i] = pattern(waterOf[from], i, W, corner(from))
+      else
+        grid[i] = tint(
+          pattern(waterOf[from], i, W, corner(from)),
+          stepColor(waterColor[from], depth),
+        )
     }
   }
   return {

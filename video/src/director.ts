@@ -1,7 +1,7 @@
 // Draws a shot of the world on the canvas, and makes the timeline's shots.
 // Everything drawn is the website's own code (`~/world-map`); this file only
 // decides what it draws when.
-import { type Camera, fit, fly as flyEased } from "~/world-map/camera"
+import { type Camera, fit as fitView, fly as flyEased } from "~/world-map/camera"
 import { cloudsOverlay } from "~/world-map/clouds"
 import { DAILY_SEED, dailyOn, loadDaily, placedMaps } from "~/world-map/daily"
 import { type DailyScene, dailyOverlay } from "~/world-map/dailyView"
@@ -37,11 +37,25 @@ import {
 import { loadWater } from "~/world-map/water"
 import { weatherOverlay } from "~/world-map/weather"
 import { stepped } from "~/world-map/fade"
-import { loadWild, type WildClock, wildOverlay } from "~/world-map/wild"
+import {
+  HOMES,
+  loadWild,
+  timeline as waveTimeline,
+  type WildClock,
+  wildOverlay,
+} from "~/world-map/wild"
 
-import type { Slot } from "./schedule"
+import { boxCover } from "./box"
+import { fractionOf, type Slot } from "./schedule"
 import { ALL_LAYERS, type Shot } from "./shot"
-import { DEFAULT_MINUTES, type Direction, DIRECTIONS, type Target } from "./timeline"
+import {
+  DEFAULT_MINUTES,
+  type Direction,
+  DIRECTIONS,
+  type Moment,
+  type Span,
+  type Target,
+} from "./timeline"
 
 /** The website's `ease`, which `fly` applies: gentle at both ends. */
 const easeBoth = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2)
@@ -195,19 +209,28 @@ export const wholeWorld = (stage: Stage): Bounds => ({
   bottom: stage.world.meta.height,
 })
 
-/** The camera for a target in a view `width` by `height` CSS pixels. */
+/**
+ * The camera for a target in a view `width` by `height` CSS pixels. A target
+ * fitted to bounds fits the view above its bottom `below` pixels, where the
+ * text box sits, so nothing the shot is framing hides under the box.
+ */
 export const resolve = (
   target: Target,
   stage: Stage,
   minute: number,
   width: number,
   height: number,
+  below = 0,
 ): Camera => {
   const { meta } = stage.world
   const whole = wholeWorld(stage)
+  const fit = (bounds: Bounds, room?: number): Camera => {
+    const camera = fitView(bounds, width, height - below, room)
+    return { ...camera, y: camera.y + below / 2 / camera.zoom }
+  }
   switch (target.kind) {
     case "world":
-      return fit(whole, width, height, target.room)
+      return fit(whole, target.room)
     case "point":
       return { x: target.x, y: target.y, zoom: target.zoom }
     case "regions": {
@@ -226,13 +249,13 @@ export const resolve = (
             : whole)
         )
       })
-      return fit(union(boxes), width, height, target.room)
+      return fit(union(boxes), target.room)
     }
     case "map": {
       const map = meta.maps.find((m) => m.name === target.name)
       if (!map) {
         warn(`No map named ${target.name}; the camera shows the world instead.`)
-        return fit(whole, width, height)
+        return fit(whole)
       }
       return {
         x: map.x + (target.x ?? map.width / 2),
@@ -242,13 +265,13 @@ export const resolve = (
     }
     case "circuit": {
       const bounds = landmarkBounds(stage.landmarks, target.room ?? 0.9)
-      return fit(bounds ?? whole, width, height, target.room)
+      return fit(bounds ?? whole, target.room)
     }
     case "ship": {
       const ship = shipsAt(stage.living, minute).find((s) => s.id === target.id)
       if (!ship) {
         warn(`No ship named ${target.id}; the camera shows the world instead.`)
-        return fit(whole, width, height)
+        return fit(whole)
       }
       return { x: ship.x, y: ship.y, zoom: target.zoom }
     }
@@ -258,26 +281,27 @@ export const resolve = (
         warn(
           `${target.slug} isn't on the map at ${Math.floor(minute / 60)}:00; the camera shows the world instead.`,
         )
-        return fit(whole, width, height)
+        return fit(whole)
       }
-      return { x: who.x, y: who.y, zoom: target.zoom }
+      return { x: who.x + (target.dx ?? 0), y: who.y + (target.dy ?? 0), zoom: target.zoom }
     }
   }
 }
 
 /** The camera `fraction` of the way through a scene, flying between its keyframes. */
 export const cameraAt = (
-  direction: Direction,
+  direction: Direction<number>,
   fraction: number,
   stage: Stage,
   minute: number,
   width: number,
   height: number,
+  below = 0,
 ): Camera => {
   const shots = direction.shots.toSorted((a, b) => a.at - b.at)
   const first = shots[0]
-  if (!first) return fit(wholeWorld(stage), width, height)
-  const at = (shot: typeof first) => resolve(shot.to, stage, minute, width, height)
+  if (!first) return resolve({ kind: "world" }, stage, minute, width, height, below)
+  const at = (shot: typeof first) => resolve(shot.to, stage, minute, width, height, below)
   if (fraction <= first.at) return at(first)
   for (let i = 0; i < shots.length - 1; i++) {
     const a = shots[i]!
@@ -291,7 +315,7 @@ export const cameraAt = (
 export const rideShots = (stage: Stage, start: Start, width: number, height: number) => {
   const { meta } = stage.world
   return {
-    opening: fit(openingIn(meta, start), width, height),
+    opening: fitView(openingIn(meta, start), width, height),
     home: { ...focusIn(meta, start), zoom: HOME_ZOOM },
     route: routeIn(meta, start),
     ms: rideMs(routeIn(meta, start)),
@@ -310,7 +334,7 @@ export const riderPlace = (stage: Stage, rider: Shot["rider"]) => {
   return placeAt(stage.world.meta, start, { x: sprite.x + 1, y: sprite.y + 2 })
 }
 
-const minuteAt = ({ clock }: Direction, fraction: number) => {
+const minuteAt = ({ clock }: Direction<number>, fraction: number) => {
   if ("at" in clock) return clock.at
   const keys: [number, number][] =
     "keys" in clock
@@ -335,12 +359,30 @@ const WALKERS_FAR_HEIGHT = 26
 const mix = (value: number | [number, number], fraction: number) =>
   typeof value === "number" ? value : value[0] + (value[1] - value[0]) * fraction
 
-/** The direction for a slot; a scene with none holds the whole world by day. */
-export const directionFor = (slot: Slot): Direction =>
-  DIRECTIONS[slot.id] ?? {
+/**
+ * The direction for a slot, its moments as fractions of the scene: a phrase
+ * falls where the slot's words have it. A scene with none holds the whole world by day.
+ */
+export const directionFor = (slot: Slot): Direction<number> => {
+  const direction: Direction = DIRECTIONS[slot.id] ?? {
     shots: [{ at: 0, to: { kind: "world" } }],
     clock: { at: DEFAULT_MINUTES },
   }
+  const at = (moment: Moment) => fractionOf(slot, moment)
+  const span = <S extends Span>(s: S) => ({ ...s, from: at(s.from), to: at(s.to) })
+  const { shots, wild, rides, badges, title } = direction
+  return {
+    ...direction,
+    shots: shots.map((shot) => ({ ...shot, at: at(shot.at) })),
+    wild:
+      typeof wild === "object"
+        ? { from: at(wild.from), wave: wild.wave && { ...wild.wave, at: at(wild.wave.at) } }
+        : wild,
+    rides: rides?.map(span),
+    badges: badges && { ...badges, earn: badges.earn && span(badges.earn) },
+    title: title && span(title),
+  }
+}
 
 /** Least height a daily trainer is drawn at, in CSS pixels, as the daily overlay has it. */
 const DAILY_MIN_HEIGHT = 28
@@ -392,7 +434,9 @@ export const shotFor = (
   const direction = directionFor(slot)
   const minute = minuteAt(direction, fraction)
   const local = fraction * slot.length
-  let camera = cameraAt(direction, fraction, stage, minute, width, height)
+  // Wide shots frame what they show above the text box, in a scene that has one.
+  const below = slot.boxed === false ? 0 : boxCover(width)
+  let camera = cameraAt(direction, fraction, stage, minute, width, height, below)
   let rider: Shot["rider"]
   // The scene's own fades from and to black, then the warps between rides.
   let fade = 0
@@ -410,7 +454,10 @@ export const shotFor = (
     const progress = Math.min(1, Math.max(0, (fraction - ride.from) / (ride.to - ride.from)))
     rider = { start: ride.start, progress }
     const shots = rideShots(stage, startOf(ride.start), width, height)
-    camera = fly(shots.opening, shots.home, progress)
+    const home = ride.look
+      ? { ...shots.home, x: shots.home.x + ride.look.dx, y: shots.home.y + ride.look.dy }
+      : shots.home
+    camera = fly(shots.opening, home, progress)
     // The warp to each ride after the first: black at its start, fading out before and in after.
     for (const next of rides.slice(1)) {
       const off = Math.abs(fraction - next.from) * slot.length
@@ -458,7 +505,7 @@ export const shotFor = (
  * the same however the time was reached), and the leagues that calls up.
  */
 const earnedBy = (
-  earn: NonNullable<Direction["badges"]>["earn"],
+  earn: NonNullable<Direction<number>["badges"]>["earn"],
   local: number,
   length: number,
 ): Pick<Shot, "pins">["pins"] extends infer P ? Partial<NonNullable<P>> : never => {
@@ -476,11 +523,19 @@ const earnedBy = (
   return { earned, earnedAt, calling: callingFor(earned) }
 }
 
-/** The wild waves' clock `local` seconds into a scene, once they have begun. */
-const wildAt = (wild: Direction["wild"], local: number, length: number): Shot["wild"] => {
+/**
+ * The wild waves' clock `local` seconds into a scene, once they have begun: the loop
+ * starts at `from`, or wherever has the scene's `wave` begin at its moment.
+ */
+const wildAt = (wild: Direction<number>["wild"], local: number, length: number): Shot["wild"] => {
   if (!wild) return undefined
   const from = typeof wild === "object" ? wild.from * length : 0
-  return local >= from ? { start: now() - (local - from) * 1000, still: null } : undefined
+  if (local < from) return undefined
+  const wave = typeof wild === "object" && wild.wave
+  const index = wave ? HOMES.findIndex((home) => home.id === wave.home) : -1
+  if (wave && index < 0) warn(`No wild home named ${wave.home}; the waves start at \`from\`.`)
+  const loop = wave && index >= 0 ? wave.at * length - waveTimeline().starts[index]! / 1000 : from
+  return { start: now() - (local - loop) * 1000, still: null }
 }
 
 const EMPTY = new Set<number>()

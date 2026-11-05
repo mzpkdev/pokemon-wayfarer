@@ -2,18 +2,17 @@ import { useEffect, useMemo, useRef, useState } from "react"
 
 import { clockText } from "~/world-map/living"
 
-import { BOX_FONT, boxMeasure, LETTERS_PER_SECOND, pageAt, pagesFor } from "./box"
-import { directionFor, drawFrame, loadStage, riderPlace, type Stage } from "./director"
 import {
-  type Cues,
-  LEAD_SECONDS,
-  loadCues,
-  type Slot,
-  schedule,
-  slotAt,
-  TAIL_SECONDS,
-  totalSeconds,
-} from "./schedule"
+  BOX_BOTTOM,
+  BOX_FONT,
+  BOX_TEXT_HEIGHT,
+  boxMeasure,
+  pageAt,
+  pagesFor,
+  printedAt,
+} from "./box"
+import { directionFor, drawFrame, loadStage, riderPlace, type Stage } from "./director"
+import { type Cues, loadCues, type Slot, schedule, slotAt, totalSeconds } from "./schedule"
 import { Studio } from "./Studio"
 import type { Span } from "./timeline"
 import { PixelImage, Popup, useStagePx } from "./ui"
@@ -22,7 +21,7 @@ import { PixelImage, Popup, useStagePx } from "./ui"
 const FADE_SECONDS = 0.5
 
 /** How much of a span is showing at `seconds` into the scene, fading at both ends. */
-const alphaIn = (span: Span, seconds: number, length: number) => {
+const alphaIn = (span: Span<number>, seconds: number, length: number) => {
   const from = span.from * length
   const to = span.to * length
   if (seconds < from || seconds > to) return 0
@@ -75,17 +74,14 @@ const Player = ({
   const px = useStagePx(stageRef)
   const [shown, setShown] = useState<Shown>()
 
-  // Each scene's narration, paged for the text box: printed from the voice's cue to its end,
-  // or across the scene when there is no voice yet.
+  // Each scene's narration, paged for the text box and printed as its words are said.
   const pages = useMemo(() => {
     const measure = boxMeasure()
     return new Map(
-      schedule(cues).map((slot) => {
-        const from = slot.voiceAt === null ? LEAD_SECONDS : slot.voiceAt - slot.start
-        const to =
-          slot.voiceSeconds === null ? slot.length - TAIL_SECONDS : from + slot.voiceSeconds
-        return [slot.id, slot.boxed === false ? [] : pagesFor(slot.narration, from, to, measure)]
-      }),
+      schedule(cues).map((slot) => [
+        slot.id,
+        slot.boxed === false ? [] : pagesFor(slot.words.text, slot.times, measure),
+      ]),
     )
   }, [cues])
 
@@ -189,14 +185,9 @@ const Player = ({
     ? Math.max(0, 1 - Math.min(shown.seconds, duration - shown.seconds) / (FADE_SECONDS * 1.6))
     : 1
 
-  const page =
-    shown && local >= (pages.get(shown.slot.id)?.[0]?.from ?? Infinity)
-      ? pageAt(pages.get(shown.slot.id)!, local)
-      : undefined
+  const page = shown && pageAt(pages.get(shown.slot.id) ?? [], local)
   const pageText = page?.text ?? ""
-  const printed = page
-    ? Math.min(pageText.length, Math.floor((local - page.from) * LETTERS_PER_SECOND))
-    : 0
+  const printed = page ? printedAt(page, local) : 0
 
   const title = direction?.title
   const titleAlpha = title && shown ? alphaIn(title, local, shown.slot.length) : 0
@@ -233,13 +224,13 @@ const Player = ({
 
         {page && (
           <div
-            className="absolute bottom-[calc(8*var(--px))] left-1/2 -translate-x-1/2"
-            style={{ width: "calc(240 * var(--px))" }}
+            className="absolute left-1/2 -translate-x-1/2"
+            style={{ bottom: `calc(${BOX_BOTTOM} * var(--px))`, width: "calc(240 * var(--px))" }}
           >
             <div className="gba-window relative bg-paper">
               <p
                 className="gba-text whitespace-pre-line"
-                style={{ minHeight: "calc(32 * var(--px))" }}
+                style={{ minHeight: `calc(${BOX_TEXT_HEIGHT} * var(--px))` }}
               >
                 {pageText.slice(0, printed)}
                 <span className="invisible">{pageText.slice(printed)}</span>

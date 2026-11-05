@@ -79,10 +79,13 @@ pnpm voice --list                         # the account's voices
 ELEVENLABS_VOICE_ID=... pnpm voice        # speak what changed
 ```
 
-One clip per scene, with ElevenLabs' timestamps for its length, into
-`audio/vo/<scene>.mp3` and `audio/vo/cues.json`. Commit them once made, so
-anyone can render without a key. Until then scenes last as long as their words
-take to read, and the render is music and text box only. `pnpm voice` only speaks the scenes whose
+One clip per scene into `audio/vo/<scene>.mp3`, and into `audio/vo/cues.json`
+its length and ElevenLabs' time for every letter, which the text box prints by
+and the timeline's phrases fall on. A beat in the script goes to the voice as a
+pause tag (`<break>`; `eleven_multilingual_v2` honours them, the v3 models
+don't). Commit them once made, so anyone can render without a key. Until then
+the words are paced as a voice would read them, and the render is music and
+text box only. `pnpm voice` only speaks the scenes whose
 words, voice or model changed since (`--force` speaks them all, `--scene`
 one). `ELEVENLABS_MODEL` or `--model` picks the model, `eleven_multilingual_v2`
 by default.
@@ -91,17 +94,26 @@ by default.
 
 - `src/script.ts` is the storyboard's words: each scene's narration
   (the voice and the text box alike), the least it lasts, and the names the
-  box prints in capitals. It imports nothing, so `scripts/voice.mjs`
-  reads it under Node.
-- `src/timeline.ts` is the storyboard's pictures, keyed by scene: camera
+  box prints in capitals. A `\n` turns the box's page; a `|` is a beat, a
+  held pause before the words after it, as before a punchline. It imports
+  nothing, so `scripts/voice.mjs` reads it under Node.
+- `src/words.ts` is when the words are said: the beats taken out of the
+  narration, the text the voice is sent, and the words paced as a voice would
+  read them (pausing between sentences and at each beat) for a scene with no
+  clip yet.
+- `src/timeline.ts` is the storyboard's pictures, keyed by scene. Its moments
+  are fractions of the scene or phrases of the narration (`at: "Seven lands"`),
+  which fall wherever the voice says them, so the picture keeps to the words
+  however long a take runs. Camera
   keyframes (`world`, `regions`, a `map` point, a grid `point` from the
   studio, the league `circuit`, a `notable` wherever their routine has them,
   or a `ship` wherever her loop has her), the game clock (held, or run across the scene for a time-lapse),
   layers, the badge pins, the walkers, the daily roads, the wild waves, the
   rides in and a title card.
-- `src/schedule.ts` turns the script into start times: a scene lasts its
-  `seconds`, or its voice clip plus a lead-in and a tail when that is longer,
-  so the picture always waits for the words.
+- `src/schedule.ts` turns the script into start times and the time of every
+  letter: a scene lasts its `seconds`, or its words (the voice clip, or the
+  paced words) plus a lead-in and a tail when that is longer, so the picture
+  always waits for the words.
 - `src/shot.ts` is one picture of the world: camera, game minute, layers,
   pins, daily day, wild waves, the rider and a fade. The timeline makes one
   per frame, the studio makes one from its panel.
@@ -110,8 +122,7 @@ by default.
   with the website's renderer and overlays.
 - `src/Studio.tsx` is the studio: the free camera, the panel and its set pieces.
 - `src/box.ts` pages the narration for the text box: names in the game's
-  capitals, wrapped in the game's font, two lines a page, each page timed
-  across the voice (or the scene, without one).
-- `src/App.tsx` is the page: the canvas, the text box printing a letter every
-  two frames, the title card, the fades, the keyboard, and
+  capitals, wrapped in the game's font, two lines a page, each page up when
+  the voice starts it and each letter printing as it's said, never ahead.
+- `src/App.tsx` is the page: the canvas, the text box, the title card, the fades, the keyboard, and
   `window.wayfarerVideo`, which `scripts/frames.mjs` drives.

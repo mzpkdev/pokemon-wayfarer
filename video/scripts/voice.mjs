@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 // Speaks the script with ElevenLabs: one clip per scene into audio/vo/, and
-// audio/vo/cues.json with each clip's length, which the page and the render
-// read to give every scene the time its words need.
+// audio/vo/cues.json with each clip's length and when each letter is said,
+// which the page and the render read to give every scene the time its words
+// need and to print the text box along with the voice. A beat in the script
+// (`|`) goes to the voice as a pause.
 //
 //   ELEVENLABS_API_KEY=... ELEVENLABS_VOICE_ID=... pnpm voice [--force] [--scene gyms]
 //   ELEVENLABS_API_KEY=... pnpm voice --list        # the voices on the account
@@ -54,8 +56,41 @@ if (!voiceId) {
   process.exit(1)
 }
 
-// Node runs the TypeScript as is: the script's words have no types to compile.
+// Node runs the TypeScript as is: the script and its words import nothing.
 const { SCENES } = await import("../src/script.ts")
+const { voiceText, wordsOf } = await import("../src/words.ts")
+
+/**
+ * When each letter of `text` is said, from ElevenLabs' alignment of `sent`
+ * (the text with its pause tags). The tags, if the alignment echoes them, are
+ * skipped; a letter it reads otherwise (a number spelled out, say) takes its
+ * time from the letters around it.
+ */
+const lettersTimed = (text, { characters, character_start_times_seconds: starts }) => {
+  const spoken = text.replaceAll("\n", " ")
+  const tags = [...characters.join("").matchAll(/<break[^>]*\/>/g)]
+  const said = characters
+    .map((letter, i) => ({ letter, at: starts[i] }))
+    .filter((_, i) => !tags.some((tag) => i >= tag.index && i < tag.index + tag[0].length))
+  const times = []
+  let j = 0
+  for (const letter of spoken) {
+    const found = said.slice(j, j + 8).findIndex((s) => s.letter === letter)
+    if (found < 0) times.push(null)
+    else {
+      times.push(said[j + found].at)
+      j += found + 1
+    }
+  }
+  // Fill what wasn't matched between its neighbours.
+  for (let i = 0; i < times.length; i++) {
+    if (times[i] !== null) continue
+    const before = times.findLast((t, k) => k < i && t !== null) ?? 0
+    const after = times.find((t, k) => k > i && t !== null) ?? before
+    times[i] = (before + after) / 2
+  }
+  return times.map((t) => Math.round(t * 1000) / 1000)
+}
 
 fs.mkdirSync(vo, { recursive: true })
 const cues = fs.existsSync(cuesPath)
@@ -76,7 +111,9 @@ for (const scene of SCENES) {
     fs.rmSync(clip, { force: true })
     continue
   }
-  const hash = hashOf(scene.narration)
+  const words = wordsOf(scene.narration)
+  const sent = voiceText(words)
+  const hash = hashOf(sent)
   const have = cues.scenes[scene.id]
   if (!values.force && have?.hash === hash && fs.existsSync(clip)) {
     console.log(`  ${scene.id}: unchanged (${have.seconds.toFixed(2)}s)`)
@@ -87,7 +124,7 @@ for (const scene of SCENES) {
     {
       method: "POST",
       headers,
-      body: JSON.stringify({ text: scene.narration, model_id: values.model }),
+      body: JSON.stringify({ text: sent, model_id: values.model }),
     },
   )
   if (!response.ok) throw new Error(`${scene.id}: HTTP ${response.status} ${await response.text()}`)
@@ -95,7 +132,8 @@ for (const scene of SCENES) {
   fs.writeFileSync(clip, Buffer.from(audio_base64, "base64"))
   const ends = alignment?.character_end_times_seconds ?? []
   const seconds = ends.length ? ends[ends.length - 1] : 0
-  cues.scenes[scene.id] = { hash, seconds, text: scene.narration }
+  const times = alignment ? lettersTimed(words.text, alignment) : undefined
+  cues.scenes[scene.id] = { hash, seconds, text: scene.narration, times }
   console.log(`  ${scene.id}: ${seconds.toFixed(2)}s`)
   spoke++
 }
