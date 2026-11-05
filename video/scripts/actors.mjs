@@ -49,12 +49,37 @@ for (const [name, file] of [
       palette("gold_hns.pal"),
     ),
   )
+// A rod for someone the game never drew fishing: the one in GOLD's hands, cast out west
+// (his fourth frame: five rows of it, left of his hands), on a 16x32 frame of its own to
+// lay over a person standing beside the water.
+{
+  const cast = renderIndexed(
+    path.join(graphics, "object_events/pics/people/gold/fishing_hns.png"),
+    palette("gold_hns.pal"),
+  )
+  const rod = { width: 16, height: 32, rgba: new Uint8Array(16 * 32 * 4) }
+  // His hands are at column 18; row 25 runs into them, so it stops short.
+  for (let y = 21; y <= 25; y++)
+    for (let x = 4; x <= (y === 25 ? 16 : 17); x++) {
+      const from = (y * cast.width + 3 * 32 + x) * 4
+      rod.rgba.set(cast.rgba.subarray(from, from + 4), ((y - 1) * 16 + x - 4) * 4)
+    }
+  save("rod", rod)
+}
+
 // What a surfer rides: the game's blob, three 32x32 frames.
 save("surf-blob", renderIndexed(path.join(graphics, "field_effects/pics/surf_blob.png")))
 
 // People by their OBJ_EVENT_GFX_* name, laid out the same way.
 const objectGraphics = openObjectGraphics(game)
-for (const [name, id] of [["brock", "OBJ_EVENT_GFX_BROCK_HNS"]])
+for (const [name, id] of [
+  ["brock", "OBJ_EVENT_GFX_BROCK_HNS"],
+  ["blue", "OBJ_EVENT_GFX_BLUE_HNS"],
+  ["surge", "OBJ_EVENT_GFX_SURGE_HNS"],
+  ["wallace", "OBJ_EVENT_GFX_WALLACE"],
+  // A tenth frame after the usual nine, which the video doesn't use.
+  ["bug-catcher", "OBJ_EVENT_GFX_BUG_CATCHER_HNS"],
+])
   save(name, objectGraphics(id).sheet)
 
 // Pokémon as they follow the player: six frames (two steps south, north and

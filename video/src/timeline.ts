@@ -185,21 +185,6 @@ const CLAIR_CAST: Direction["cast"] = [
   },
 ]
 
-/** One Gym Leader where their routine has them at `minute`, picked out and held close. */
-const vignette = (
-  slug: string,
-  minute: number,
-  { zoom = [14, 16], dx = 0 }: { zoom?: [number, number]; dx?: number } = {},
-): Direction => ({
-  shots: [
-    { at: 0, to: { kind: "notable", slug, zoom: zoom[0], dx } },
-    { at: 1, to: { kind: "notable", slug, zoom: zoom[1], dx } },
-  ],
-  clock: { from: minute, to: minute + 10 },
-  notables: { only: [slug], marker: true, minHeight: 64 },
-  fade: { in: CUT, out: CUT },
-})
-
 export const DIRECTIONS: Record<string, Direction> = {
   // Cold open: RED rides in to his front door, the camera coming in with him.
   pallet: {
@@ -213,7 +198,21 @@ export const DIRECTIONS: Record<string, Direction> = {
         start: "kanto",
         from: 0,
         to: 0.7,
-        track: { zoom: 64, within: { left: -9, top: 0.5, right: 24, bottom: 19.5 } },
+        track: { zoom: 64, within: { left: -9, top: 0.5, right: 23, bottom: 19.5 } },
+      },
+    ],
+    // Blue is one of the cast here, standing outside the lab: the map's own stands on its
+    // door. He looks round as you reach yours.
+    notables: { except: ["blue"] },
+    cast: [
+      {
+        sprite: "blue",
+        map: "PalletTown_hns",
+        marks: [{ at: 0, x: 16, y: 14 }],
+        face: [
+          { at: 0, to: "south" },
+          { at: 0.72, to: "west" },
+        ],
       },
     ],
     fade: { in: 0.6, out: CUT },
@@ -549,11 +548,47 @@ export const DIRECTIONS: Record<string, Direction> = {
     ],
     fade: { in: CUT, out: CUT },
   },
-  // Two more lives, a warp between each: Lt. Surge at the Game Corner in the afternoon,
-  // and Wallace fishing Route 119 at noon, where Feebas hides on a few tiles of the river.
-  surge: vignette("lt-surge", h(16), { zoom: [60, 64] }),
-  // Closer, and a few tiles west of him, so a pale strip of river fill stays out of frame.
-  wallace: vignette("wallace", h(12, 30), { zoom: [60, 64] }),
+  // Two more lives, a warp between each. Lt. Surge in Celadon in the afternoon, coming down
+  // the street, through the gap in the fence and in at the Game Corner's door, on "Again."
+  surge: {
+    shots: [
+      { at: 0, to: { kind: "point", x: 1281.5, y: 1003.5, zoom: 60 } },
+      { at: 1, to: { kind: "point", x: 1281.5, y: 1003.5, zoom: 64 } },
+    ],
+    clock: { from: h(16), to: h(16, 10) },
+    // The map's own Surge stands on the door; this one walks to it.
+    layers: { walkers: false },
+    cast: [
+      {
+        sprite: "surge",
+        to: { on: "Again", plus: 0.35 },
+        marks: [
+          { at: { on: "Again", plus: -5 }, x: 1293, y: 1006 },
+          { at: { on: "Again", plus: -1 }, x: 1281, y: 1006 },
+          { at: "Again", x: 1281, y: 1003 },
+          { at: { on: "Again", plus: 0.35 }, x: 1281, y: 1002 },
+        ],
+      },
+    ],
+    fade: { in: CUT, out: CUT },
+  },
+  // Wallace on Route 119 at noon, on the open bank east of the river with his rod out over
+  // the water, where Feebas hides on a few tiles of it. He doesn't move: that's the joke.
+  wallace: {
+    shots: [
+      { at: 0, to: { kind: "point", x: 378.5, y: 1627, zoom: 60 } },
+      { at: 1, to: { kind: "point", x: 378.5, y: 1627, zoom: 64 } },
+    ],
+    clock: { from: h(12, 30), to: h(12, 40) },
+    // The map's own Wallace stands in the long grass across the river.
+    layers: { walkers: false },
+    cast: [
+      { sprite: "wallace", marks: [{ at: 0, x: 378, y: 1626 }], face: "west" },
+      // The rod in his hands, reaching half a tile out over the water.
+      { sprite: "rod", marks: [{ at: 0, x: 377.5, y: 1626 }] },
+    ],
+    fade: { in: CUT, out: CUT },
+  },
   // Route 29 off the road, deep into the night, the wild Pokémon of the night popping in the grass.
   night: {
     shots: [
@@ -619,27 +654,34 @@ export const DIRECTIONS: Record<string, Direction> = {
   },
   donagain: {
     shots: [
-      // Close on him and a little south, so he stands above the box and the seam where the
-      // fills of two forests meet, north of the clearing, stays out of frame.
-      { at: 0, to: { kind: "point", x: 577.5, y: 1257, zoom: 60 } },
-      { at: 1, to: { kind: "point", x: 577.5, y: 1257, zoom: 64 } },
+      // Close on the two of you and a little south, so you stand above the box and the seam
+      // where the fills of two forests meet, north of the clearing, stays out of frame.
+      { at: 0, to: { kind: "point", x: 583.5, y: 1257, zoom: 60 } },
+      { at: 1, to: { kind: "point", x: 583.5, y: 1257, zoom: 64 } },
     ],
     clock: { at: h(10) },
-    daily: { day: 12 },
-    // No arrow this time: he spots you, the way a trainer does.
+    // Don is one of the cast here (the day's draw has him in Ilex Forest, tucked beside a
+    // tree at the clearing's end): he stands in the open on the row you walk in along, sees
+    // you, and comes over, the way a trainer does. No arrow this time.
     cast: [
       {
-        sprite: null,
-        marks: [{ at: 0, x: 577, y: 1254 }],
-        emotes: [{ at: "He hasn't", kind: "exclamation", seconds: 2.5 }],
+        sprite: "bug-catcher",
+        map: "IlexForest_hns",
+        marks: [
+          { at: 0, x: 42, y: 8 },
+          { at: { on: "He hasn't", plus: 0.7 }, x: 42, y: 8 },
+          { at: { on: "He hasn't", plus: 1.7 }, x: 46, y: 8 },
+        ],
+        face: [{ at: 0, to: "east" }],
+        emotes: [{ at: "He hasn't", kind: "exclamation", seconds: 0.7 }],
       },
       // You come into the clearing from the east, and stop short when he looks up.
       {
         sprite: "gold",
         map: "IlexForest_hns",
         marks: [
-          { at: 0, x: 55, y: 9 },
-          { at: { on: "He hasn't", plus: -0.1 }, x: 42, y: 9 },
+          { at: 0, x: 56, y: 8 },
+          { at: { on: "He hasn't", plus: -0.1 }, x: 47, y: 8 },
         ],
         hops: [{ on: "He hasn't", plus: 0.1 }],
       },
