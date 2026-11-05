@@ -105,8 +105,8 @@ const LANDS: Target = {
   room: 0.95,
 }
 
-/** Brock at the Day-Care, framed with the sea to his west. */
-const BROCK: Target = { kind: "notable", slug: "brock", zoom: 32, dx: -15 }
+/** Brock at the Day-Care, close: four pixels a pixel, 15 tiles either side of him. */
+const BROCK: Target = { kind: "notable", slug: "brock", zoom: 64 }
 
 /** The Sevii Islands, Galar's land, all of the chain in view. */
 const SEVII: Target = { kind: "regions", names: ["SEVII ISLANDS"], room: 0.9 }
@@ -198,8 +198,8 @@ export const DIRECTIONS: Record<string, Direction> = {
     shots: [
       { at: 0, to: LANDS },
       { at: "Gym Leaders do", to: LANDS },
-      // Landing close, the camera west of him over the sea, so Goldenrod's cut-off edge
-      // to his east stays out of frame.
+      // Landing close on him, so Goldenrod's cut-off edges, 16 tiles and more to his east,
+      // stay out of frame.
       { at: "Brock's helping", to: BROCK },
       { at: 1, to: BROCK },
     ],
@@ -231,8 +231,9 @@ export const DIRECTIONS: Record<string, Direction> = {
   // daily draw; two days on he stands in Ilex Forest (the draw puts him there on day 12).
   don: {
     shots: [
-      { at: 0, to: { kind: "point", x: 720.5, y: 1102, zoom: 20 } },
-      { at: 1, to: { kind: "point", x: 720.5, y: 1102, zoom: 22 } },
+      // Close on him, so the forest fill's seams either side of Route 30 stay out of frame.
+      { at: 0, to: { kind: "point", x: 720.5, y: 1102, zoom: 60 } },
+      { at: 1, to: { kind: "point", x: 720.5, y: 1102, zoom: 64 } },
     ],
     clock: { at: h(10) },
     daily: { day: 10 },
@@ -241,8 +242,10 @@ export const DIRECTIONS: Record<string, Direction> = {
   },
   donagain: {
     shots: [
-      { at: 0, to: { kind: "point", x: 577.5, y: 1253, zoom: 20 } },
-      { at: 1, to: { kind: "point", x: 577.5, y: 1253, zoom: 22 } },
+      // Close on him and a little south, so he stands above the box and the seam where the
+      // fills of two forests meet, north of the clearing, stays out of frame.
+      { at: 0, to: { kind: "point", x: 577.5, y: 1257, zoom: 60 } },
+      { at: 1, to: { kind: "point", x: 577.5, y: 1257, zoom: 64 } },
     ],
     clock: { at: h(10) },
     daily: { day: 12 },
