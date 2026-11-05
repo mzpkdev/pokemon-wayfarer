@@ -99,6 +99,11 @@ for (const [name, dir] of [
   ["exeggutor-alola", "exeggutor/alola"],
   ["noctowl", "noctowl"],
   ["luvdisc", "luvdisc"],
+  // Kalos, as the Safari Zone at Fuchsia keeps it.
+  ["gogoat", "gogoat"],
+  ["pyroar", "pyroar"],
+  ["furfrou", "furfrou"],
+  ["vivillon", "vivillon"],
 ])
   save(name, renderIndexed(path.join(graphics, "pokemon", dir, "overworld.png")))
 

@@ -149,6 +149,10 @@ const SEVII: Target = { kind: "regions", names: ["SEVII ISLANDS"], room: 0.9 }
 const MELEMELE = "MelemeleIsle_hns"
 const MELEMELE_BEACH: Target = { kind: "map", name: MELEMELE, x: 37.5, y: 9.5, zoom: 64 }
 
+/** Kanto's Safari Zone, the beach side: the gate's path, and the tall grass east of it. */
+const SAFARI_BEACH = "FuchsiaCity_SafariZoneBeach_hns"
+const SAFARI: Target = { kind: "map", name: SAFARI_BEACH, x: 27.5, y: 32, zoom: 64 }
+
 /** The tug on the line, a beat after the box says to fish; and setting off on what was caught. */
 const BITE: Moment = { on: "Something", plus: -0.5 }
 const RIDE: Moment = { on: BITE, plus: 2.1 }
@@ -395,14 +399,53 @@ export const DIRECTIONS: Record<string, Direction> = {
     })),
     fade: { out: CUT },
   },
-  // Every land again, and Kalos nowhere on it; its Pokémon pop at the three Safari Zones' gates.
+  // Every land, and Kalos nowhere on it. Then down into the Safari Zone at Fuchsia, the one
+  // everybody remembers: you come in at the gate and up the path, and it is Kalos standing
+  // in the tall grass (Gogoat, Pyroar, Furfrou and Vivillon are all this zone's own).
   kalos: {
     shots: [
       { at: 0, to: LANDS },
-      { at: 1, to: LANDS },
+      { at: "Too far", to: LANDS },
+      { at: "The Safari", to: SAFARI, ease: "in" },
+      { at: 1, to: SAFARI },
     ],
     clock: { at: h(34, 30) },
-    wild: { from: 0, wave: { home: "safari", at: "The Safari" } },
+    cast: [
+      { sprite: "gogoat", map: SAFARI_BEACH, marks: [{ at: 0, x: 32, y: 34 }], face: "west" },
+      { sprite: "pyroar", map: SAFARI_BEACH, marks: [{ at: 0, x: 36, y: 31 }], face: "south" },
+      {
+        sprite: "furfrou",
+        map: SAFARI_BEACH,
+        marks: [
+          { at: 0, x: 33, y: 31 },
+          { at: "brought", x: 33, y: 31 },
+          { at: { on: "brought", plus: 1 }, x: 31, y: 31 },
+        ],
+        face: "west",
+      },
+      {
+        sprite: "vivillon",
+        map: SAFARI_BEACH,
+        marks: [
+          { at: 0, x: 26, y: 26 },
+          { at: "The Safari", x: 26, y: 26 },
+          { at: 1, x: 23, y: 31 },
+        ],
+      },
+      {
+        sprite: "gold",
+        map: SAFARI_BEACH,
+        marks: [
+          { at: 0, x: 20, y: 38 },
+          { at: "The Safari", x: 20, y: 38 },
+          { at: { on: "home", plus: -0.9 }, x: 20, y: 28 },
+          { at: "home", x: 24, y: 28 },
+        ],
+        face: [{ at: "home", to: "east" }],
+        hops: [{ on: "home", plus: 0.1 }],
+        emotes: [{ at: { on: "home", plus: 0.1 }, kind: "exclamation", seconds: 1.4 }],
+      },
+    ],
     fade: { in: CUT, out: CUT },
   },
   // Back on Melemele's beach, where the Anne left you: you have been standing there all this
