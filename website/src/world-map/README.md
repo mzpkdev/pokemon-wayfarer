@@ -191,7 +191,7 @@ Plain Node scripts. Each stage gets a module:
   of the Five and Six Island pieces, and Faraway Island one south of Hoenn), and the regions are arranged on the sea, wide straits apart.
   Sinnoh sits well north of Kanto; Sinjoh, under it, is bridged to it by land.
   The Safari Zones are enclaves (`ENCLAVES`): the game enters them through a
-  gate house, so no connection reaches them and no Town Map cell is theirs.
+  gate house, so no connection reaches them.
   Each is set down by hand beside a placed map, after everything else, so
   nothing moves for it: Hoenn's north of Route 121, Johto's west of Cianwood
   City with Routes 47 and 48 and the Safari Zone Gate that lead to it, and

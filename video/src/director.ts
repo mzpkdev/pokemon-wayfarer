@@ -642,6 +642,9 @@ const wildAt = (wild: Direction<number>["wild"], local: number, length: number):
   return { start: now() - (local - loop) * 1000, still: null }
 }
 
+/** The zoom from which the wild waves are left out: a game pixel a pixel. */
+const WILD_MAX_ZOOM = 16
+
 const EMPTY = new Set<number>()
 
 /**
@@ -678,7 +681,9 @@ export const drawShot = (
     overlays.push(...stage.pins)
   }
   if (shot.layers.sightings) overlays.push(stage.sightings)
-  if (shot.wild) {
+  // The waves are icons for a wide view; close in, where a scene's cast stands, one would
+  // pop on a roof or a tree.
+  if (shot.wild && shot.camera.zoom < WILD_MAX_ZOOM) {
     stage.wildClock.start = shot.wild.start
     stage.wildClock.still = shot.wild.still
     overlays.push(stage.wild)

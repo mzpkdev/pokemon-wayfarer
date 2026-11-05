@@ -156,12 +156,12 @@ const SAFARI: Target = { kind: "map", name: SAFARI_BEACH, x: 27.5, y: 32, zoom: 
 /** The tug on the line, a beat after the box says to fish; and setting off on what was caught. */
 const BITE: Moment = { on: "Something", plus: -0.5 }
 const RIDE: Moment = { on: BITE, plus: 2.1 }
-/** Off the beach and away east, clear of the palm on the next islet. */
+/** Off the beach and away east, clear of the palm on the next islet, stopping short of the reef's rocks. */
 const RIDE_MARKS = [
   { at: RIDE, x: 40, y: 10 },
   { at: { on: RIDE, plus: 0.5 }, x: 40, y: 10 },
   { at: { on: RIDE, plus: 1 }, x: 42, y: 9 },
-  { at: 1, x: 54, y: 9 },
+  { at: 1, x: 51, y: 9 },
 ]
 
 /** When you notice the Anne leaving without you: as the box says she keeps her own hours. */
@@ -172,7 +172,7 @@ const MEADOW: Target = { kind: "map", name: "FiveIsland_Meadow_Frlg", x: 12.5, y
 /** The flock: where each stands, the step it takes, and the way it faces first. */
 const WOOLOO: [number, number, number, number, "south" | "west" | "east" | "north"][] = [
   [11, 23, 1, 0, "east"],
-  [13, 24, 0, 1, "south"],
+  [14, 22, 0, 1, "south"],
   [12, 26, 0, 0, "south"],
   [14, 26, -1, 0, "west"],
   [11, 28, 1, 0, "east"],

@@ -386,7 +386,7 @@ const REGIONS = [
 ]
 /**
  * Enclaves: outdoor places the game reaches only through a door, so no connection leads to
- * them, and no Town Map cell is theirs. The Safari Zones are the ones worth showing: each
+ * them. The Safari Zones are the ones worth showing: each
  * is a piece of connected maps, set down by hand `at` so many metatiles from the top left
  * of the placed map it is `beside`, in the nearest room there is to its gate, and it joins
  * that map's region. The land between grows round it like any other.
