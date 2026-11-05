@@ -466,33 +466,6 @@ export const directionFor = (slot: Slot): Direction<number> => {
   }
 }
 
-/** Least height a daily trainer is drawn at, in CSS pixels, as the daily overlay has it. */
-const DAILY_MIN_HEIGHT = 28
-
-/**
- * The game's yellow down arrow, bobbing over the daily trainer standing at a
- * world cell: the sprite stands on the cell's bottom edge at least two tiles tall.
- */
-const markOverlay =
-  ({ x, y }: { x: number; y: number }): Overlay =>
-  (context, { scale, ratio, toScreen }) => {
-    const feet = toScreen(x + 0.5, y + 1)
-    const tall = Math.max(scale * 2, DAILY_MIN_HEIGHT * ratio)
-    const size = Math.round(6 * ratio)
-    const bob = Math.floor(now() / 300) % 2 ? size * 0.5 : 0
-    const top = feet.y - tall - size * 2.2 + bob
-    context.fillStyle = "rgb(255 214 0)"
-    context.strokeStyle = "rgb(0 0 0 / 0.8)"
-    context.lineWidth = Math.max(1, ratio)
-    context.beginPath()
-    context.moveTo(feet.x - size, top)
-    context.lineTo(feet.x + size, top)
-    context.lineTo(feet.x, top + size * 1.2)
-    context.closePath()
-    context.fill()
-    context.stroke()
-  }
-
 /** The game's time of day tint, multiplied over what is drawn so far, as the game does to its palettes. */
 const tintOverlay =
   (living: Stage["living"], minutes: () => number): Overlay =>
@@ -584,7 +557,6 @@ export const shotFor = (
           ? direction.daily.day
           : 1 + Math.min(direction.daily.days - 1, Math.floor(fraction * direction.daily.days)),
     },
-    mark: direction.mark,
     // The waves' cycle began at a set point of the scene, so they are the same at a time however it was reached.
     wild: wildAt(direction.wild, local, slot.length),
     rider,
@@ -731,7 +703,6 @@ export const drawShot = (
     )
   }
   if (shot.cast?.length) overlays.push(emotesOverlay(shot.cast, stage.cast))
-  if (shot.mark) overlays.push(markOverlay(shot.mark))
   if (shot.layers.ships) overlays.push(stage.ships)
   // Over everything the world draws, people and ships too, as the game tints its palettes; the lights shine through.
   if (shot.layers.tint) overlays.push(tintOverlay(stage.living, minutes))

@@ -76,8 +76,6 @@ export type Shot = {
   pins?: Pins
   /** The daily roads on `day`. */
   daily?: { day: number }
-  /** The game's yellow arrow over the daily trainer at this world cell. */
-  mark?: { x: number; y: number }
   /** The wild Pokémon waves: when their cycle began (`performance.now()` ms), or a wave held still. */
   wild?: { start: number; still: number | null }
   /** The player riding in on their bike, `progress` of the way (0 to 1) along a start's route. */

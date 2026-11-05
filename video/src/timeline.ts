@@ -94,8 +94,6 @@ export type Direction<M = Moment> = {
   badges?: { circuit: number | [number, number]; earn?: Span<M> & { badges: number[] } }
   /** The daily trainers and items on every road, with the day stepping from 1 to `days` across the scene. */
   daily?: { days: number } | { day: number }
-  /** The game's yellow arrow over a daily trainer standing at this world cell, to pick them out. */
-  mark?: { x: number; y: number }
   /**
    * Gym Leaders and the Elite Four walking their routines: everyone, or the named
    * few picked out. `minHeight` is their least height close in (zoom 16); further
@@ -650,7 +648,6 @@ export const DIRECTIONS: Record<string, Direction> = {
     ],
     clock: { at: h(10) },
     daily: { day: 10 },
-    mark: { x: 720, y: 1103 },
     // You, walking on up the road past him.
     cast: [
       {
@@ -674,7 +671,7 @@ export const DIRECTIONS: Record<string, Direction> = {
     clock: { at: h(10) },
     // Don is one of the cast here (the day's draw has him in Ilex Forest, tucked beside a
     // tree at the clearing's end): he stands in the open on the row you walk in along, sees
-    // you, and comes over, the way a trainer does. No arrow this time.
+    // you, and comes over, the way a trainer does.
     cast: [
       {
         sprite: "bug-catcher",

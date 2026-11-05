@@ -8,6 +8,7 @@
 // start) is the page's, and the walking routes are ours. `notablesAt` is
 // deterministic: the same game minute always puts everyone in the same place.
 import { DATA } from "./data"
+import { extrasAt } from "./extras"
 import type { Overlay } from "./render"
 
 type Point = [number, number]
@@ -441,7 +442,7 @@ export const notablesOverlay =
       only?: (slug: string) => boolean
       /** The least height on screen, in CSS pixels, in place of the default. */
       minHeight?: number
-      /** A bouncing arrow over their heads, to pick them out. */
+      /** A bouncing arrow over their heads, to pick them out from far out; gone close in (`extras.ts`). */
       marker?: boolean
       /** Everyone stands still: no walking frames, hops or bobbing. */
       standing?: boolean
@@ -456,6 +457,7 @@ export const notablesOverlay =
     const w = h / 2
     const far = h > 2 * scale * 1.01
     const tick = Math.floor(performance.now() / STEP_MS)
+    const arrows = marker ? extrasAt(zoom) : 0
     context.imageSmoothingEnabled = false
     for (const notable of notablesAt(world, now)) {
       if (only && !only(notable.slug)) continue
@@ -487,8 +489,9 @@ export const notablesOverlay =
       }
       context.drawImage(world.image, frame * 16, notable.row * 32, 16, 32, 0, 0, w, h)
       context.restore()
-      if (marker) {
+      if (arrows > 0) {
         // The game's down arrow, in its yellow, bobbing two steps.
+        context.globalAlpha = arrows
         const size = Math.round(6 * ratio)
         const bob = !standing && Math.floor(performance.now() / 300) % 2 ? size * 0.5 : 0
         const head = p.y - h * (1 - (world.tops[notable.row] ?? 0)) - hop
@@ -503,6 +506,7 @@ export const notablesOverlay =
         context.closePath()
         context.fill()
         context.stroke()
+        context.globalAlpha = 1
       }
     }
   }
