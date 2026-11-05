@@ -384,6 +384,28 @@ const REGIONS = [
   },
   { name: "Alola", roots: ["MAP_MELEMELE_ISLE_HNS"], at: [1400, 880] },
 ]
+/**
+ * Enclaves: outdoor places the game reaches only through a door, so no connection leads to
+ * them, and no Town Map cell is theirs. The Safari Zones are the ones worth showing: each
+ * is a piece of connected maps, set down by hand `at` so many metatiles from the top left
+ * of the placed map it is `beside`, in the nearest room there is to its gate, and it joins
+ * that map's region. The land between grows round it like any other.
+ *
+ * - Hoenn's lies north of Route 121, as on Hoenn's own Town Map, a little east of its gate
+ *   to keep clear of Route 120.
+ * - Johto's lies where HeartGold and SoulSilver have it: west of Cianwood City by Route 47's
+ *   cliffs (through the Cliff Edge Gate), north up Route 48 to the Safari Zone Gate, with the
+ *   Safari Zone behind it.
+ * - Kanto's has no room north of Fuchsia City, between the city and the channel the ships
+ *   take to Vermilion, so it lies on the shore south of Route 15, east of Route 19.
+ */
+const ENCLAVES = [
+  { root: "MAP_SAFARI_ZONE_SOUTH", beside: "Route121", at: [5, -93] },
+  { root: "MAP_ROUTE47_HNS", beside: "CianwoodCity_hns", at: [-124, -59] },
+  { root: "MAP_SAFARI_ZONE_ENTERANCE_HNS", beside: "CianwoodCity_hns", at: [-136, -146] },
+  { root: "MAP_FUCHSIA_CITY_SAFARI_ZONE_BEACH_HNS", beside: "FuchsiaCity_hns", at: [43, 51] },
+]
+
 // Each Sevii Town Map is its own cell space; set them out like the islands lie.
 const SEVII_MAPS = [
   {
@@ -510,7 +532,8 @@ const separate = (pieces) => {
 /**
  * Places every map of the world. Returns the placed maps (`all`, each with its
  * map `m`, layout `l`, position `x`, `y` and `region`), and the world's size
- * `W` x `H` with the top left `minX`, `minY`, in metatiles, sea margin included,
+ * `W` x `H` with the top left `minX`, `minY`, in metatiles, sea margin included
+ * (a map of an enclave has `enclave` set),
  * and the `links` between placed maps (given-up ones too).
  */
 export const placeWorld = (game) => {
@@ -658,6 +681,28 @@ export const placeWorld = (game) => {
   }
   for (const p of all.filter((q) => q.region === "Sinjoh"))
     console.log("  ", p.m.name, p.x, p.y, p.l.width, p.l.height)
+  // The enclaves, each beside a map already placed. Their place is given, not solved, so
+  // nothing else moves for them.
+  for (const enclave of ENCLAVES) {
+    const beside = all.find((p) => p.m.name === enclave.beside)
+    if (!maps[enclave.root] || !beside) {
+      console.log(`  missing enclave ${enclave.root} or ${enclave.beside}`)
+      continue
+    }
+    const piece = layOut(game, enclave.root)
+    const left = Math.min(...piece.map((p) => p.x)),
+      top = Math.min(...piece.map((p) => p.y))
+    for (const p of piece) {
+      p.x += beside.x + enclave.at[0] - left
+      p.y += beside.y + enclave.at[1] - top
+      p.region = beside.region
+      p.enclave = true
+    }
+    const taken = piece.flatMap((p) => all.filter((q) => covered(p, q)).map((q) => q.m.name))
+    if (taken.length)
+      throw new Error(`the enclave ${enclave.root} lies over ${[...new Set(taken)].join(", ")}`)
+    all.push(...piece)
+  }
   // Open sea all round.
   const MARGIN = 72
   const minX = Math.min(...all.map((p) => p.x)) - MARGIN,

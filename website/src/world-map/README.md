@@ -59,8 +59,8 @@ Leaders where the map has them. The two parts a visitor meets:
   comes up there, so Hoenn's Gen V share grows to the east), crowding the home
   region's routes where they make up at least 35% of what turns up (Gen
   I crowds Johto too, Gen II keeps mostly to Johto); a small home (Alola, Sinjoh) and
-  each Safari Zone, by the town nearest its gate since the Safari Zones aren't
-  on the overworld, huddle a few icons together so they still read as a crowd
+  each Safari Zone, over the map in its middle, huddle a few icons together so
+  they still read as a crowd
   at world zoom. Up to three icons per wave are real strays: its species where
   they live away from home. Gen IV waits for Sinnoh, which has no wild
   Pokémon yet: its wave stands black silhouettes with a "?" over Sinnoh, keeping its count so
@@ -190,6 +190,13 @@ Plain Node scripts. Each stage gets a module:
   Navel Rock and Birth Island near FRLG's on the Sevii Town Maps, just clear
   of the Five and Six Island pieces, and Faraway Island one south of Hoenn), and the regions are arranged on the sea, wide straits apart.
   Sinnoh sits well north of Kanto; Sinjoh, under it, is bridged to it by land.
+  The Safari Zones are enclaves (`ENCLAVES`): the game enters them through a
+  gate house, so no connection reaches them and no Town Map cell is theirs.
+  Each is set down by hand beside a placed map, after everything else, so
+  nothing moves for it: Hoenn's north of Route 121, Johto's west of Cianwood
+  City with Routes 47 and 48 and the Safari Zone Gate that lead to it, and
+  Kanto's on the shore south of Route 15, the nearest room to Fuchsia City.
+  A gate house's door stays on its town's side (`createDoors`).
 - `land.mjs`: fills in land between the maps, so no map's rectangle shows.
   A gap between two connected maps is bridged by stretching both edges across
   it (sliding by any misalignment, so the road jogs instead of stopping).

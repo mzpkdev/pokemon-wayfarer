@@ -76,9 +76,12 @@ const behaviorReaders = new Map()
 const isSurfable = (k) => {
   const metatile = metatiles.metatiles[k]
   if (!metatile) return false
-  const key = `${metatile.primary}|${metatile.secondary}`
+  const key = `${metatile.primary}|${metatile.secondary}|${metatile.wide}`
   if (!behaviorReaders.has(key))
-    behaviorReaders.set(key, readBehavior(game, metatile.primary, metatile.secondary))
+    behaviorReaders.set(
+      key,
+      readBehavior(game, metatile.primary, metatile.secondary, metatile.wide),
+    )
   return Boolean(flagsOf.get(behaviorReaders.get(key)(metatile.id)) & TILE_FLAG_SURFABLE)
 }
 const wet = new Uint8Array(W * H)
