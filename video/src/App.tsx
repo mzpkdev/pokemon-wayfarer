@@ -87,7 +87,7 @@ const Player = ({
         const from = slot.voiceAt === null ? LEAD_SECONDS : slot.voiceAt - slot.start
         const to =
           slot.voiceSeconds === null ? slot.length - TAIL_SECONDS : from + slot.voiceSeconds
-        return [slot.id, pagesFor(slot.narration, from, to, measure)]
+        return [slot.id, slot.boxed === false ? [] : pagesFor(slot.narration, from, to, measure)]
       }),
     )
   }, [cues])
@@ -292,7 +292,6 @@ const Player = ({
           </div>
         )}
 
-        {/* Over the title card too: the narrator has the last word. */}
         {page && (
           <div
             className="absolute bottom-[calc(8*var(--px))] left-1/2 -translate-x-1/2"

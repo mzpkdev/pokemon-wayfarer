@@ -18,6 +18,8 @@ export type Scene = {
   narration: string
   /** The least the scene lasts, in seconds; it runs longer when the words need it. */
   seconds: number
+  /** False keeps the text box away, as over the title card, which says it itself; the voice still speaks. */
+  boxed?: boolean
 }
 
 /** Names the text box prints in capitals, as the game does; the longer of two overlapping names first. */
@@ -123,5 +125,6 @@ export const SCENES: Scene[] = [
     narration:
       "Pokémon Wayfarer. Free, out January twentieth. Good to have you back. See you out there.",
     seconds: 9,
+    boxed: false,
   },
 ]
