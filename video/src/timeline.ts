@@ -18,7 +18,8 @@ export type Target =
   /** The 24 Gyms and the three leagues. */
   | { kind: "circuit"; room?: number }
   /** A Gym Leader or Elite Four member (their slug in `notables.json`), wherever the scene's clock has them. */
-  | { kind: "notable"; slug: string; zoom: number }
+  /** `dx` and `dy` move the camera off them, in tiles, to keep a seam of the map out of the frame. */
+  | { kind: "notable"; slug: string; zoom: number; dx?: number; dy?: number }
   /** A ship (`aqua`, `anne` or `tidal`), wherever the scene's clock has her: at her pier or out on her lane. */
   | { kind: "ship"; id: string; zoom: number }
 
@@ -68,9 +69,10 @@ export type Direction<M = Moment> = {
   /**
    * The player rides in on their bike along a start's route over each span,
    * the camera coming in with them; between rides they wait at the door, and
-   * the game's warp (a fade to black and back) cuts to the next start.
+   * the game's warp (a fade to black and back) cuts to the next start. `look`
+   * moves where the camera ends up off the door, in tiles.
    */
-  rides?: (Span<M> & { start: StartId })[]
+  rides?: (Span<M> & { start: StartId; look?: { dx: number; dy: number } })[]
   /**
    * The badge pins, and how much of the league circuit is drawn (0 pins only,
    * 1 the whole circuit). With `earn`, the named badges are earned one after
@@ -103,14 +105,21 @@ const LANDS: Target = {
   room: 0.95,
 }
 
+/** Brock at the Day-Care, framed with the sea to his west. */
+const BROCK: Target = { kind: "notable", slug: "brock", zoom: 32, dx: -15 }
+
 /** The Sevii Islands, Galar's land, all of the chain in view. */
 const SEVII: Target = { kind: "regions", names: ["SEVII ISLANDS"], room: 0.9 }
 
 /** One Gym Leader where their routine has them at `minute`, picked out and held close. */
-const vignette = (slug: string, minute: number): Direction => ({
+const vignette = (
+  slug: string,
+  minute: number,
+  { zoom = [14, 16], dx = 0 }: { zoom?: [number, number]; dx?: number } = {},
+): Direction => ({
   shots: [
-    { at: 0, to: { kind: "notable", slug, zoom: 14 } },
-    { at: 1, to: { kind: "notable", slug, zoom: 16 } },
+    { at: 0, to: { kind: "notable", slug, zoom: zoom[0], dx } },
+    { at: 1, to: { kind: "notable", slug, zoom: zoom[1], dx } },
   ],
   clock: { from: minute, to: minute + 10 },
   notables: { only: [slug], marker: true, minHeight: 64 },
@@ -122,7 +131,9 @@ export const DIRECTIONS: Record<string, Direction> = {
   pallet: {
     shots: [{ at: 0, to: { kind: "map", name: "PalletTown_hns", x: 12, y: 10, zoom: 24 } }],
     clock: { at: h(9) },
-    rides: [{ start: "kanto", from: 0, to: 0.7 }],
+    // Ending a little south of the door, with Pallet in the frame's upper part above the box,
+    // keeps the seam where Route 1's forest meets Pallet's out of the top of the frame.
+    rides: [{ start: "kanto", from: 0, to: 0.7, look: { dx: 0, dy: 9 } }],
     fade: { in: 0.6, out: CUT },
   },
   // GOLD rides in to New Bark Town.
@@ -187,8 +198,10 @@ export const DIRECTIONS: Record<string, Direction> = {
     shots: [
       { at: 0, to: LANDS },
       { at: "Gym Leaders do", to: LANDS },
-      { at: "Brock's helping", to: { kind: "notable", slug: "brock", zoom: 16 } },
-      { at: 1, to: { kind: "notable", slug: "brock", zoom: 16 } },
+      // Landing close, the camera west of him over the sea, so Goldenrod's cut-off edge
+      // to his east stays out of frame.
+      { at: "Brock's helping", to: BROCK },
+      { at: 1, to: BROCK },
     ],
     // Two days on from the Anne, cut on as the markers light up, so nobody races to get there;
     // the ships stay where the last scene left them.
@@ -200,7 +213,8 @@ export const DIRECTIONS: Record<string, Direction> = {
   // Two more lives, a warp between each: Lt. Surge at the Game Corner in the afternoon,
   // and Wallace fishing Route 119 at noon, where Feebas hides on a few tiles of the river.
   surge: vignette("lt-surge", h(16)),
-  wallace: vignette("wallace", h(12, 30)),
+  // Closer, and a few tiles west of him, so a pale strip of river fill stays out of frame.
+  wallace: vignette("wallace", h(12, 30), { zoom: [22, 25], dx: -4 }),
   // Route 29 off the road, deep into the night, the wild Pokémon of the night popping in the grass.
   night: {
     shots: [

@@ -283,7 +283,7 @@ export const resolve = (
         )
         return fit(whole)
       }
-      return { x: who.x, y: who.y, zoom: target.zoom }
+      return { x: who.x + (target.dx ?? 0), y: who.y + (target.dy ?? 0), zoom: target.zoom }
     }
   }
 }
@@ -454,7 +454,10 @@ export const shotFor = (
     const progress = Math.min(1, Math.max(0, (fraction - ride.from) / (ride.to - ride.from)))
     rider = { start: ride.start, progress }
     const shots = rideShots(stage, startOf(ride.start), width, height)
-    camera = fly(shots.opening, shots.home, progress)
+    const home = ride.look
+      ? { ...shots.home, x: shots.home.x + ride.look.dx, y: shots.home.y + ride.look.dy }
+      : shots.home
+    camera = fly(shots.opening, home, progress)
     // The warp to each ride after the first: black at its start, fading out before and in after.
     for (const next of rides.slice(1)) {
       const off = Math.abs(fraction - next.from) * slot.length
