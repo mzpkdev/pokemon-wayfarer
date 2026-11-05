@@ -530,7 +530,16 @@ export const shotFor = (
       rides.findLastIndex((ride) => ride.from <= fraction),
     )
     const ride = rides[index]!
-    const progress = Math.min(1, Math.max(0, (fraction - ride.from) / (ride.to - ride.from)))
+    const through = Math.min(1, Math.max(0, (fraction - ride.from) / (ride.to - ride.from)))
+    // A ride that picks up partway along its route covers the rest of it in its span.
+    const route = routeIn(stage.world.meta, startOf(ride.start))
+    const tiles = route.reduce(
+      (sum, point, i) =>
+        sum + (i ? Math.hypot(point.x - route[i - 1]!.x, point.y - route[i - 1]!.y) : 0),
+      0,
+    )
+    const skipped = Math.min(1, (ride.skip ?? 0) / tiles)
+    const progress = skipped + (1 - skipped) * through
     rider = { start: ride.start, progress }
     const shots = rideShots(stage, startOf(ride.start), width, height)
     const home = ride.look

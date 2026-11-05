@@ -82,6 +82,8 @@ export type Direction<M = Moment> = {
     start: StartId
     look?: { dx: number; dy: number }
     track?: { zoom: number | [number, number]; within: Bounds }
+    /** Tiles of the route already ridden when the ride begins: it picks up that far along. */
+    skip?: number
   })[]
   /**
    * The badge pins, and how much of the league circuit is drawn (0 pins only,
@@ -232,11 +234,21 @@ export const DIRECTIONS: Record<string, Direction> = {
     ],
     fade: { in: CUT, out: CUT },
   },
-  // BRENDAN rides in to Littleroot Town.
+  // BRENDAN rides in to Littleroot Town, close on him like the other two. The ride picks up
+  // at the foot of Route 101, below its last ledge, and the camera never looks north of there:
+  // a bike going down over ledges is not a thing the game lets you do.
   littleroot: {
     shots: [{ at: 0, to: { kind: "map", name: "LittlerootTown", x: 10, y: 10, zoom: 24 } }],
     clock: { at: h(9) },
-    rides: [{ start: "hoenn", from: 0, to: 0.8 }],
+    rides: [
+      {
+        start: "hoenn",
+        from: 0,
+        to: 0.8,
+        skip: 18,
+        track: { zoom: 64, within: { left: -14, top: -5.9, right: 34, bottom: 20 } },
+      },
+    ],
     fade: { in: CUT, out: CUT },
   },
   // The Anne at Vermilion's pier in the evening; she casts off at half past eight and
