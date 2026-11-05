@@ -97,7 +97,7 @@ export type Stage = {
   /** Each start's rider on their bike. */
   riders: Record<StartId, HTMLImageElement>
   /** The game minute the overlays read; `drawShot` sets it from the shot. */
-  clock: { minute: number }
+  clock: { minute: number; ships: number }
 }
 
 /** The real clock the sea, the clouds and the walkers' steps run on. */
@@ -134,7 +134,7 @@ export const loadStage = async (): Promise<Stage> => {
       STARTS.map(async (start) => [start.id, await loadImage(start.rider)] as const),
     ),
   ) as Record<StartId, HTMLImageElement>
-  const clock = { minute: DEFAULT_MINUTES }
+  const clock = { minute: DEFAULT_MINUTES, ships: DEFAULT_MINUTES }
   const minutes = () => clock.minute
   const stopClock: StopClock = { alpha: 0, elapsed: 0, animate: true, circuit: 0 }
   const wildClock: WildClock = { start: now(), still: null }
@@ -149,7 +149,7 @@ export const loadStage = async (): Promise<Stage> => {
     weather: weatherOverlay(world.meta, true, now),
     clouds: cloudsOverlay(true, now),
     // The tint is drawn on its own (`shot.layers.tint`), under the ships.
-    ships: livingOverlay(living, minutes, { tint: false }),
+    ships: livingOverlay(living, () => clock.ships, { tint: false }),
     lights: lightsOverlay(world.meta, living, minutes, true, now),
     sightings: sightingsOverlay(encounters, icons, minutes, true, now),
     pins: badgeOverlays(landmarks, badges, stopClock),
@@ -392,6 +392,7 @@ export const shotFor = (
   return {
     camera,
     minute,
+    shipsMinute: direction.shipsAt,
     labels: camera.zoom < 12,
     layers: { ...ALL_LAYERS, ...direction.layers },
     walkers: direction.notables && {
@@ -461,6 +462,7 @@ export const drawShot = (stage: Stage, context: CanvasRenderingContext2D, shot: 
   const width = canvas.clientWidth
   const height = canvas.clientHeight
   stage.clock.minute = shot.minute
+  stage.clock.ships = shot.shipsMinute ?? shot.minute
   const minutes = () => stage.clock.minute
 
   // In the website's order: the sea under all, the names last.

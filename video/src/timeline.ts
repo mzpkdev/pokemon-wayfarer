@@ -44,6 +44,11 @@ export type Direction = {
    * straight from each to the next and held before the first and after the last.
    */
   clock: { at: number } | { from: number; to: number } | { keys: [number, number][] }
+  /**
+   * The ships and the train held at this game minute while the clock is elsewhere:
+   * a scene that jumps in time at its cut keeps them where the last scene left them.
+   */
+  shipsAt?: number
   /** Layers to turn off or on, over the default of everything but the sightings. */
   layers?: Partial<Layers>
   /** The wild Pokémon waves, popping out of the whole world from the scene's start, or from `from` of the way through it. */
@@ -148,8 +153,8 @@ export const DIRECTIONS: Record<string, Direction> = {
     wild: { from: 0.5 },
   },
   // Straight on from every land at night: every Gym Leader and Elite Four member's marker
-  // lights up, then one dive onto Brock while two days go by, to the morning he is
-  // caring for the Pokémon at the Day-Care on Route 34, in Johto.
+  // lights up, then one dive onto Brock, on the morning two days on that he's caring for
+  // the Pokémon at the Day-Care on Route 34, in Johto.
   leaders: {
     shots: [
       { at: 0, to: LANDS },
@@ -157,14 +162,10 @@ export const DIRECTIONS: Record<string, Direction> = {
       { at: 0.55, to: { kind: "notable", slug: "brock", zoom: 16 } },
       { at: 1, to: { kind: "notable", slug: "brock", zoom: 16 } },
     ],
-    // The days go by before the camera is close; then the clock runs at about a walk's pace.
-    clock: {
-      keys: [
-        [0.12, h(23, 30)],
-        [0.46, h(82)],
-        [1, h(82, 30)],
-      ],
-    },
+    // Two days on from the Anne, cut on as the markers light up, so nobody races to get there;
+    // the ships stay where the last scene left them.
+    clock: { from: h(82), to: h(82, 15) },
+    shipsAt: h(23, 30),
     notables: { marker: true, minHeight: 64 },
     fade: { out: CUT },
   },

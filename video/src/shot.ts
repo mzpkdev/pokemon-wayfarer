@@ -58,6 +58,8 @@ export type Shot = {
   camera: Camera
   /** The game minute: the time of day the ships, walkers, tint and lights follow. */
   minute: number
+  /** The ships' and the train's own minute, when they keep another time than the rest. */
+  shipsMinute?: number
   /** Region and town names on the map. */
   labels: boolean
   layers: Layers
