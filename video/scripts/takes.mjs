@@ -17,6 +17,7 @@
 import { spawnSync } from "node:child_process"
 import { createHash } from "node:crypto"
 import * as fs from "node:fs"
+import * as os from "node:os"
 import * as path from "node:path"
 import { parseArgs } from "node:util"
 import { fileURLToPath } from "node:url"
@@ -205,7 +206,7 @@ const cues = fs.existsSync(cuesPath)
   : { scenes: {} }
 cues.voice = "takes"
 cues.model = "takes"
-const scratch = fs.mkdtempSync(path.join(root, "out", ".takes-"))
+const scratch = fs.mkdtempSync(path.join(os.tmpdir(), "wayfarer-takes-"))
 let brought = 0
 for (const scene of spoken) {
   const file = matched.get(scene.id)

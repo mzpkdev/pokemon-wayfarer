@@ -168,7 +168,7 @@ export const SCENES: Scene[] = [
   {
     id: "fame",
     narration:
-      "Word gets around. | And soon, the folks you looked up to will know your name.\nWho's that? | Oh... | it's the League calling.",
+      "Word gets around. | And soon, the folks you looked up to will know your name.\n| Who's that? | Oh... it's the League calling.",
     seconds: 8,
   },
   {
