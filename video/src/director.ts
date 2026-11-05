@@ -45,6 +45,7 @@ import {
   wildOverlay,
 } from "~/world-map/wild"
 
+import { type CastImages, castSprites, EMOTES, emotesOverlay, poseCast, SHEETS } from "./actors"
 import { boxCover } from "./box"
 import { fractionOf, type Slot } from "./schedule"
 import { ALL_LAYERS, type Shot } from "./shot"
@@ -110,6 +111,8 @@ export type Stage = {
   dailyFor: (day: number) => DailyScene
   /** Each start's rider on their bike. */
   riders: Record<StartId, HTMLImageElement>
+  /** The actors' sheets and the bubbles over their heads. */
+  cast: CastImages
   /** The game minute the overlays read; `drawShot` sets it from the shot. */
   clock: { minute: number; ships: number }
 }
@@ -148,9 +151,26 @@ export const loadStage = async (): Promise<Stage> => {
       STARTS.map(async (start) => [start.id, await loadImage(start.rider)] as const),
     ),
   ) as Record<StartId, HTMLImageElement>
+  const images = async <K extends string>(sources: Record<K, string>) =>
+    Object.fromEntries(
+      await Promise.all(
+        Object.entries<string>(sources).map(async ([id, src]) => [id, await loadImage(src)]),
+      ),
+    ) as Record<K, HTMLImageElement>
+  const cast: CastImages = {
+    sheets: await images(
+      Object.fromEntries(Object.entries(SHEETS).map(([id, sheet]) => [id, sheet.src])) as Record<
+        keyof typeof SHEETS,
+        string
+      >,
+    ),
+    emotes: await images(EMOTES),
+  }
   const clock = { minute: DEFAULT_MINUTES, ships: DEFAULT_MINUTES }
   const minutes = () => clock.minute
-  const stopClock: StopClock = { alpha: 0, elapsed: 0, animate: true, circuit: 0 }
+  // Made by a call, not written out: the bundler takes a literal's `alpha: 0` for a constant,
+  // since it is only ever set through `stage`, and drops the pins' drawing as dead code.
+  const stopClock: StopClock = structuredClone({ alpha: 0, elapsed: 0, animate: true, circuit: 0 })
   const wildClock: WildClock = { start: now(), still: null }
   const roads = placedMaps(daily)
   const stage: Stage = {
@@ -175,6 +195,7 @@ export const loadStage = async (): Promise<Stage> => {
     today: null,
     dailyFor: (day) => dailyOn(daily, roads, day, DAILY_SEED),
     riders,
+    cast,
     clock,
   }
   stage.daily = dailyOverlay({ image: trainers, ...daily.sheet }, () => stage.today, true, now)
@@ -370,9 +391,28 @@ export const directionFor = (slot: Slot): Direction<number> => {
   }
   const at = (moment: Moment) => fractionOf(slot, moment)
   const span = <S extends Span>(s: S) => ({ ...s, from: at(s.from), to: at(s.to) })
-  const { shots, wild, rides, badges, title } = direction
+  const { shots, wild, rides, badges, title, cast, tosses, phone, flashes, portraits } = direction
   return {
     ...direction,
+    cast: cast?.map((actor) => ({
+      ...actor,
+      marks: actor.marks.map((mark) => ({ ...mark, at: at(mark.at) })),
+      from: actor.from === undefined ? undefined : at(actor.from),
+      to: actor.to === undefined ? undefined : at(actor.to),
+      face:
+        typeof actor.face === "object"
+          ? actor.face.map((turn) => ({ ...turn, at: at(turn.at) }))
+          : actor.face,
+      emotes: actor.emotes?.map((emote) => ({ ...emote, at: at(emote.at) })),
+      hops: actor.hops?.map(at),
+    })),
+    tosses: tosses?.map((toss) => ({ ...toss, span: span(toss.span) })),
+    phone: phone && { ...span(phone), named: at(phone.named) },
+    portraits: portraits && {
+      from: at(portraits.from),
+      pictures: portraits.pictures.map((picture) => ({ ...picture, at: at(picture.at) })),
+    },
+    flashes: flashes?.map(at),
     shots: shots.map((shot) => ({ ...shot, at: at(shot.at) })),
     wild:
       typeof wild === "object"
@@ -495,8 +535,46 @@ export const shotFor = (
     // The waves' cycle began at a set point of the scene, so they are the same at a time however it was reached.
     wild: wildAt(direction.wild, local, slot.length),
     rider,
+    cast: castAt(stage, direction, local, slot.length),
     fade,
+    flash: flashAt(direction.flashes, local, slot.length),
   }
+}
+
+/** The scene's actors `local` seconds into it; their moments are fractions of the scene, their emotes' lengths seconds. */
+const castAt = (stage: Stage, direction: Direction<number>, local: number, length: number) => {
+  if (!direction.cast && !direction.tosses) return undefined
+  const s = (fraction: number) => fraction * length
+  const actors = (direction.cast ?? []).map((actor) => ({
+    ...actor,
+    marks: actor.marks.map((mark) => ({ ...mark, at: s(mark.at) })),
+    from: actor.from === undefined ? undefined : s(actor.from),
+    to: actor.to === undefined ? undefined : s(actor.to),
+    face:
+      typeof actor.face === "object"
+        ? actor.face.map((turn) => ({ ...turn, at: s(turn.at) }))
+        : actor.face,
+    emotes: actor.emotes?.map((emote) => ({ ...emote, at: s(emote.at) })),
+    hops: actor.hops?.map(s),
+  }))
+  const tosses = (direction.tosses ?? []).map((toss) => ({
+    ...toss,
+    span: { from: s(toss.span.from), to: s(toss.span.to) },
+  }))
+  return poseCast(actors, tosses, local, (name) => {
+    if (!name) return { x: 0, y: 0 }
+    const map = stage.world.meta.maps.find((m) => m.name === name)
+    if (!map) warn(`No map named ${name}; its actors stand at the world's corner.`)
+    return map ?? { x: 0, y: 0 }
+  })
+}
+
+/** Seconds a flash into battle lasts: white at once, then gone. */
+const FLASH_SECONDS = 0.14
+
+const flashAt = (flashes: number[] | undefined, local: number, length: number) => {
+  const since = flashes?.map((at) => local - at * length).filter((t) => t >= 0 && t < FLASH_SECONDS)
+  return since?.length ? stepped(1 - Math.min(...since) / FLASH_SECONDS) : 0
 }
 
 /**
@@ -544,7 +622,12 @@ const EMPTY = new Set<number>()
  * Draws the shot onto the canvas. True when some map chunks are still to come
  * and the frame should be drawn again.
  */
-export const drawShot = (stage: Stage, context: CanvasRenderingContext2D, shot: Shot): boolean => {
+export const drawShot = (
+  stage: Stage,
+  context: CanvasRenderingContext2D,
+  shot: Shot,
+  extra: Overlay[] = [],
+): boolean => {
   const { canvas } = context
   const width = canvas.clientWidth
   const height = canvas.clientHeight
@@ -580,20 +663,26 @@ export const drawShot = (stage: Stage, context: CanvasRenderingContext2D, shot: 
     overlays.push(stage.daily)
   }
   if (shot.layers.walkers) {
-    const { only, ...rest } = shot.walkers ?? {}
+    const { only, except, ...rest } = shot.walkers ?? {}
     const picked = only && new Set(only)
+    const hidden = new Set(except)
     overlays.push(
       notablesOverlay(stage.notables, minutes, {
         ...rest,
-        only: picked ? (slug) => picked.has(slug) : undefined,
+        only:
+          picked || hidden.size
+            ? (slug) => (picked?.has(slug) ?? true) && !hidden.has(slug)
+            : undefined,
       }),
     )
   }
+  if (shot.cast?.length) overlays.push(emotesOverlay(shot.cast, stage.cast))
   if (shot.mark) overlays.push(markOverlay(shot.mark))
   if (shot.layers.ships) overlays.push(stage.ships)
   // Over everything the world draws, people and ships too, as the game tints its palettes; the lights shine through.
   if (shot.layers.tint) overlays.push(tintOverlay(stage.living, minutes))
   if (shot.layers.lights) overlays.push(stage.lights)
+  overlays.push(...extra)
 
   const sprites =
     shot.rider && shot.camera.zoom >= RIDER_MIN_ZOOM
@@ -605,6 +694,7 @@ export const drawShot = (stage: Stage, context: CanvasRenderingContext2D, shot: 
           ),
         ]
       : []
+  if (shot.cast?.length) sprites.push(...castSprites(shot.cast, stage.cast))
 
   const pending = stage.renderer.draw(context, {
     camera: shot.camera,
@@ -617,6 +707,11 @@ export const drawShot = (stage: Stage, context: CanvasRenderingContext2D, shot: 
   if (shot.fade > 0) {
     context.setTransform(1, 0, 0, 1, 0, 0)
     context.fillStyle = `rgb(0 0 0 / ${shot.fade})`
+    context.fillRect(0, 0, canvas.width, canvas.height)
+  }
+  if (shot.flash) {
+    context.setTransform(1, 0, 0, 1, 0, 0)
+    context.fillStyle = `rgb(255 255 255 / ${shot.flash})`
     context.fillRect(0, 0, canvas.width, canvas.height)
   }
   return pending

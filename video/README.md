@@ -22,6 +22,8 @@ Run these from `video/`, or from the repository root with
 | `pnpm dev`    | Play the video in the browser, with the voice when it has been made    |
 | `pnpm build`  | Build the page the frames are rendered from, into `dist/`              |
 | `pnpm voice`  | Speak the script with ElevenLabs into `audio/vo/`                      |
+| `pnpm actors` | Cut the actors' sprites from the game's art into `actors/`             |
+| `pnpm scout`  | Stills of a place with each tile's coordinates, into `out/scout/`      |
 | `pnpm frames` | Render every frame of the built page into `out/frames/`                |
 | `pnpm render` | Mux the frames, the voice and the music into `out/wayfarer-launch.mp4` |
 | `pnpm check`  | Type check, lint, and check formatting                                 |
@@ -49,6 +51,34 @@ start, with the game's warp before it; and a fade to black. **Copy camera**
 gives a `{ kind: "point", x, y, zoom }` target to paste into `timeline.ts`.
 Everything the studio shows, a scene can show: the same `Shot` is drawn
 either way (`src/shot.ts`).
+
+### The actors
+
+The map alone shows where things are; the actors show what happens there. A
+scene's `cast` (`timeline.ts`) puts the player, people and Pokémon on the map
+as the game draws them in the overworld: each walks between its marks, turns,
+hops, and gets the game's bubbles over its head (`!`, `?`, a heart). `tosses`
+throw a Poké Ball from one tile to another, `flashes` are the white flashes
+into a battle, `phone` rings the phone over the picture, and `portraits` slide
+battle pictures in over the dimmed map. Any moment can be a phrase of the
+narration, or `{ on, plus }` for some seconds after one, so the acting keeps
+time with the words.
+
+The sprites are the game's own, cut by `pnpm actors` from `../game/graphics`
+into `actors/` and committed, so rendering does not need the game tree. A new
+actor is a line in `scripts/actors.mjs` and one in `SHEETS` (`src/actors.ts`).
+
+To place actors, scout the location first:
+
+```sh
+pnpm build
+pnpm scout "map=MelemeleIsle_hns&x=37&y=9&zoom=64&minute=1990"
+```
+
+writes `out/scout/1.png`, the place at that game minute with every tile's
+coordinates on it (the map's own tiles with `map`, else the world grid; `day`
+adds that day's daily trainers, `pins` the badges, `night` the night, and
+`plain` leaves the grid off).
 
 ### Rendering it
 

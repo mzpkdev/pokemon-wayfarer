@@ -4,6 +4,7 @@
 import { DAY_START } from "~/world-map/living"
 import type { StartId } from "~/world-map/starts"
 
+import type { Actor, Toss } from "./actors"
 import type { Layers } from "./shot"
 
 /** Where the camera looks: resolved against the map's data once it has loaded. */
@@ -27,8 +28,9 @@ export type Target =
  * A moment of a scene: a fraction of the way through it (0 to 1), or a phrase
  * of its narration, when the voice starts it (or the box, without a voice).
  * A phrase holds the picture to the words however long the voice takes.
+ * `{ on, plus }` is `plus` seconds after the moment `on` (before it, when negative).
  */
-export type Moment = number | string
+export type Moment = number | string | { on: Moment; plus: number }
 
 /**
  * The camera at the moment `at` of the scene; the camera flies
@@ -89,9 +91,21 @@ export type Direction<M = Moment> = {
    * few picked out. `minHeight` is their least height close in (zoom 16); further
    * out it shrinks back to the map's own, so a wide shot isn't crowded with them.
    */
-  notables?: { only?: string[]; marker?: boolean; minHeight?: number }
+  notables?: { only?: string[]; except?: string[]; marker?: boolean; minHeight?: number }
   /** A card over the map: the logo and lines of text. */
   title?: Span<M> & { lines: string[]; logo?: boolean }
+  /**
+   * The scene's actors: the player, people and Pokémon walking the map and
+   * the bubbles over their heads (`actors.ts`), and things thrown between them.
+   */
+  cast?: Actor<M>[]
+  tosses?: Toss<M>[]
+  /** The phone ringing over the picture for a span; the caller's name comes up at `named`. */
+  phone?: Span<M> & { caller: string; named: M }
+  /** The map dimmed from a moment on, and big pictures popping in over it, as a battle shows who you face. */
+  portraits?: { from: M; pictures: { src: string; at: M; side: "left" | "right" }[] }
+  /** White flashes at these moments, as the game flashes into a battle. */
+  flashes?: M[]
 }
 
 const h = (hours: number, minutes = 0) => hours * 60 + minutes
@@ -110,6 +124,45 @@ const BROCK: Target = { kind: "notable", slug: "brock", zoom: 64 }
 
 /** The Sevii Islands, Galar's land, all of the chain in view. */
 const SEVII: Target = { kind: "regions", names: ["SEVII ISLANDS"], room: 0.9 }
+
+/** Melemele's beach, where the Anne lands in Alola: the sand, its palms and the water she comes in by. */
+const MELEMELE = "MelemeleIsle_hns"
+const MELEMELE_BEACH: Target = { kind: "map", name: MELEMELE, x: 37.5, y: 9.5, zoom: 64 }
+
+/** When you notice the Anne leaving without you: as the box says she keeps her own hours. */
+const NOTICED = { on: "hours", plus: 0.2 }
+
+/** Five Isle Meadow, close, where the Wooloo graze. */
+const MEADOW: Target = { kind: "map", name: "FiveIsland_Meadow_Frlg", x: 12.5, y: 27, zoom: 64 }
+/** The flock: where each stands, the step it takes, and the way it faces first. */
+const WOOLOO: [number, number, number, number, "south" | "west" | "east" | "north"][] = [
+  [11, 23, 1, 0, "east"],
+  [13, 24, 0, 1, "south"],
+  [12, 26, 0, 0, "south"],
+  [14, 26, -1, 0, "west"],
+  [11, 28, 1, 0, "east"],
+  [13, 29, 0, -1, "north"],
+]
+
+/** You, walking up to Clair across the grass by the Dragon's Den. */
+const CLAIR_CAST: Direction["cast"] = [
+  {
+    sprite: "gold",
+    map: "BlackthornCity_hns",
+    marks: [
+      { at: 0, x: 23, y: 16 },
+      { at: "Fancy", x: 23, y: 16 },
+      { at: "Go on", x: 29, y: 16 },
+    ],
+  },
+  // Clair is the map's own; this only puts the bubble over her as you reach her.
+  {
+    sprite: null,
+    map: "BlackthornCity_hns",
+    marks: [{ at: 0, x: 30, y: 16 }],
+    emotes: [{ at: { on: "Go on", plus: 0.15 }, kind: "exclamation", seconds: 1.2 }],
+  },
+]
 
 /** One Gym Leader where their routine has them at `minute`, picked out and held close. */
 const vignette = (
@@ -161,35 +214,135 @@ export const DIRECTIONS: Record<string, Direction> = {
     clock: { from: h(20, 18), to: h(21, 5) },
     fade: { in: CUT },
   },
-  // Still with the Anne while the box answers where she was going; as it says she keeps her
-  // own hours the camera lets her steam off without you, one pull-out in the evening light:
-  // through Kanto and Johto as the box says Kanto was never the whole map, their Pokémon
-  // popping out, and settling on every land on "Seven lands", held there for the rest.
-  lands: {
-    // One move: the camera keeps riding with her, slows through Kanto and Johto without
-    // stopping while their Pokémon pop, then goes on at speed and settles on every land.
+  // The answer, shown: morning at Melemele, and the Anne steams in to the beach she lands at.
+  // You step off onto the sand, and the palm you walk past turns to look at you.
+  alola: {
     shots: [
-      { at: 0, to: { kind: "ship", id: "anne", zoom: 16 } },
-      { at: "Keeps her", to: { kind: "ship", id: "anne", zoom: 12 }, ease: "none" },
+      { at: 0, to: MELEMELE_BEACH },
+      { at: 1, to: MELEMELE_BEACH },
+    ],
+    // She is due at nine the morning after she left Vermilion, and is in as the box goes on.
+    clock: {
+      keys: [
+        [0, h(32, 51)],
+        [0.36, h(33)],
+        [1, h(33, 6)],
+      ],
+    },
+    cast: [
       {
-        at: "the whole map",
-        to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.8 },
-        ease: "in",
+        sprite: "exeggutor-alola",
+        map: MELEMELE,
+        marks: [{ at: 0, x: 34, y: 10 }],
+        face: [
+          { at: 0, to: "south" },
+          { at: { on: "sail with her", plus: 0.5 }, to: "east" },
+        ],
       },
-      // Settled by "Walk every", so it reads as there on "Seven lands".
-      { at: "Walk every", to: LANDS, ease: "out" },
-      // Over to the Sevii Islands while the box passes on what folk there say, their
-      // Galar Pokémon popping, and back out to every land for Kalos, far off.
-      { at: "Folk on", to: LANDS },
-      { at: "Ask the Wooloo", to: SEVII },
-      { at: "Never been", to: SEVII },
-      { at: "Too far", to: LANDS },
+      {
+        sprite: "gold",
+        map: MELEMELE,
+        from: "And now",
+        marks: [
+          { at: "And now", x: 39, y: 10 },
+          { at: { on: "And now", plus: 0.3 }, x: 39, y: 11 },
+          { at: { on: "sail with her", plus: 0.4 }, x: 36, y: 11 },
+        ],
+        face: [{ at: { on: "sail with her", plus: 0.4 }, to: "west" }],
+        hops: [{ on: "sail with her", plus: 0.7 }],
+        emotes: [{ at: { on: "sail with her", plus: 0.7 }, kind: "exclamation", seconds: 1.2 }],
+      },
+    ],
+    fade: { in: CUT },
+  },
+  // Half an hour on she casts off again while you're still looking at the palm tree:
+  // you turn, run for the water's edge, and she's gone.
+  wait: {
+    shots: [
+      { at: 0, to: MELEMELE_BEACH },
+      { at: 1, to: MELEMELE_BEACH },
+    ],
+    // She casts off at half past nine, a second into the scene, and is out of sight in three.
+    clock: { from: h(33, 28), to: h(33, 39) },
+    cast: [
+      { sprite: "exeggutor-alola", map: MELEMELE, marks: [{ at: 0, x: 34, y: 10 }], face: "east" },
+      {
+        sprite: "gold",
+        map: MELEMELE,
+        to: { on: NOTICED, plus: 0.4 },
+        marks: [{ at: 0, x: 36, y: 11 }],
+        face: [
+          { at: 0, to: "west" },
+          { at: NOTICED, to: "east" },
+        ],
+        emotes: [{ at: NOTICED, kind: "exclamation", seconds: 0.4 }],
+      },
+      {
+        sprite: "gold-running",
+        map: MELEMELE,
+        from: { on: NOTICED, plus: 0.4 },
+        marks: [
+          { at: { on: NOTICED, plus: 0.4 }, x: 36, y: 11 },
+          { at: { on: NOTICED, plus: 0.8 }, x: 39, y: 11 },
+          { at: { on: NOTICED, plus: 0.95 }, x: 39, y: 10 },
+        ],
+        face: [{ at: { on: NOTICED, plus: 0.95 }, to: "north" }],
+      },
+    ],
+  },
+  // Left behind on the beach, the camera lifts off you: Alola, then every land there is,
+  // their Pokémon popping out, settled as the box counts them.
+  lands: {
+    shots: [
+      { at: 0, to: MELEMELE_BEACH },
+      { at: 0.04, to: MELEMELE_BEACH },
+      { at: "Seven lands", to: LANDS, ease: "both" },
       { at: 1, to: LANDS },
     ],
-    clock: { from: h(21, 5), to: h(23, 30) },
-    // Popping from the pull-out on, timed so Galar's wave pops on the Sevii Islands as the box
-    // passes on what folk there say, still popping on the punchline.
-    wild: { from: "And Kanto", wave: { home: "sevii", at: "Galar now" } },
+    clock: { from: h(33, 39), to: h(34, 30) },
+    cast: [
+      { sprite: "exeggutor-alola", map: MELEMELE, marks: [{ at: 0, x: 34, y: 10 }], face: "east" },
+      { sprite: "gold", map: MELEMELE, marks: [{ at: 0, x: 39, y: 10 }], face: "north" },
+    ],
+    wild: { from: "the whole map" },
+  },
+  // Over to the Sevii Islands while the box passes on what folk there say, their Galar
+  // Pokémon popping, then straight down into Five Isle Meadow for the punchline: the flock.
+  galar: {
+    shots: [
+      { at: 0, to: LANDS },
+      { at: "swear", to: SEVII },
+      { at: "Galar now", to: SEVII },
+      { at: "Ask the", to: MEADOW, ease: "in" },
+      { at: 1, to: MEADOW },
+    ],
+    clock: { at: h(34, 30) },
+    wild: { from: 0, wave: { home: "sevii", at: "they're Galar" } },
+    cast: WOOLOO.map(([x, y, dx, dy, face], i) => ({
+      sprite: "wooloo" as const,
+      map: "FiveIsland_Meadow_Frlg",
+      marks: [
+        { at: 0, x, y },
+        { at: { on: "Ask the", plus: 0.3 + i * 0.15 }, x, y },
+        { at: { on: "Ask the", plus: 1.1 + i * 0.15 }, x: x + dx, y: y + dy },
+      ],
+      face: [
+        { at: 0, to: face },
+        { at: { on: "Wooloo", plus: 0.5 }, to: "south" as const },
+      ],
+      hops: i === 2 ? [{ on: "Wooloo", plus: 0.6 }] : undefined,
+    })),
+    fade: { out: CUT },
+  },
+  // Every land again, and Kalos nowhere on it; its Pokémon pop at the three Safari Zones' gates.
+  kalos: {
+    shots: [
+      { at: 0, to: LANDS },
+      { at: 1, to: LANDS },
+    ],
+    clock: { at: h(34, 30) },
+    wild: { from: 0, wave: { home: "safari", at: "The Safari" } },
+    fade: { in: CUT },
   },
   // Straight on from every land at night: every Gym Leader and Elite Four member's marker
   // lights up, then one dive onto Brock, landing as the box names him, on the morning
@@ -206,25 +359,99 @@ export const DIRECTIONS: Record<string, Direction> = {
     // Two days on from the Anne, cut on as the markers light up, so nobody races to get there;
     // the ships stay where the last scene left them.
     clock: { from: h(82), to: h(82, 15) },
-    shipsAt: h(23, 30),
-    notables: { marker: true, minHeight: 64 },
+    shipsAt: h(34, 30),
+    // Brock is one of the cast here, so he can turn to you: the map's own Brock stays out.
+    notables: { marker: true, minHeight: 64, except: ["brock"] },
+    // You come down the road with a Graveler at your heels; he turns, the Graveler goes
+    // over in its ball, and one comes back. What a trade does to a Graveler, players know.
+    cast: [
+      {
+        sprite: "brock",
+        marks: [{ at: 0, x: 530, y: 1186 }],
+        face: [
+          { at: 0, to: "south" },
+          { at: "Trade with", to: "west" },
+        ],
+        emotes: [{ at: { on: "Trade with", plus: 2.3 }, kind: "heart", seconds: 1.5 }],
+      },
+      {
+        sprite: "gold",
+        from: "Brock's helping",
+        marks: [
+          { at: "Brock's helping", x: 523, y: 1177 },
+          { at: { on: "Brock's helping", plus: 1.9 }, x: 523, y: 1186 },
+          { at: { on: "Brock's helping", plus: 3 }, x: 528, y: 1186 },
+        ],
+      },
+      {
+        sprite: "graveler",
+        from: { on: "Brock's helping", plus: 0.2 },
+        to: { on: "Trade with", plus: 0.5 },
+        marks: [
+          { at: { on: "Brock's helping", plus: 0.2 }, x: 523, y: 1177 },
+          { at: { on: "Brock's helping", plus: 2.1 }, x: 523, y: 1186 },
+          { at: { on: "Brock's helping", plus: 3 }, x: 527, y: 1186 },
+        ],
+      },
+    ],
+    tosses: [
+      {
+        sprite: "ball",
+        from: { x: 527, y: 1186 },
+        to: { x: 530, y: 1186 },
+        span: { from: { on: "Trade with", plus: 0.5 }, to: { on: "Trade with", plus: 1.1 } },
+      },
+      {
+        sprite: "ball",
+        from: { x: 530, y: 1186 },
+        to: { x: 528, y: 1186 },
+        span: { from: { on: "Trade with", plus: 1.5 }, to: { on: "Trade with", plus: 2.1 } },
+      },
+    ],
     fade: { out: CUT },
   },
   // Two more lives, a warp between each: Lt. Surge at the Game Corner in the afternoon,
   // and Wallace fishing Route 119 at noon, where Feebas hides on a few tiles of the river.
-  surge: vignette("lt-surge", h(16)),
+  surge: vignette("lt-surge", h(16), { zoom: [60, 64] }),
   // Closer, and a few tiles west of him, so a pale strip of river fill stays out of frame.
-  wallace: vignette("wallace", h(12, 30), { zoom: [22, 25], dx: -4 }),
+  wallace: vignette("wallace", h(12, 30), { zoom: [60, 64] }),
   // Route 29 off the road, deep into the night, the wild Pokémon of the night popping in the grass.
   night: {
     shots: [
-      { at: 0, to: { kind: "map", name: "Route29_hns", x: 30, y: 14, zoom: 18 } },
-      { at: 1, to: { kind: "map", name: "Route29_hns", x: 38, y: 14, zoom: 20 } },
+      { at: 0, to: { kind: "map", name: "Route29_hns", x: 39, y: 13, zoom: 60 } },
+      { at: 1, to: { kind: "map", name: "Route29_hns", x: 42, y: 13, zoom: 64 } },
     ],
     // The game's darkest tint runs from 1:00 to 4:00.
     clock: { from: h(25), to: h(27, 30) },
     // The one scene about the time of day: the tint and the lights are on.
     layers: { tint: true, lights: true, sightings: true },
+    // You leave the path for the tall grass as the box asks; a Noctowl, Route 29's own
+    // by night, drops in front of you, and the screen flashes into the battle.
+    cast: [
+      {
+        sprite: "gold",
+        map: "Route29_hns",
+        marks: [
+          { at: 0, x: 36, y: 11 },
+          { at: 0.1, x: 36, y: 14 },
+          { at: "Pack more", x: 44, y: 14 },
+        ],
+        emotes: [{ at: { on: "Pack more", plus: 0.35 }, kind: "exclamation", seconds: 1.5 }],
+        hops: [{ on: "Pack more", plus: 0.35 }],
+      },
+      {
+        sprite: "noctowl",
+        map: "Route29_hns",
+        from: { on: "Pack more", plus: 0.2 },
+        marks: [{ at: 0, x: 46, y: 14 }],
+        face: "west",
+        hops: [{ on: "Pack more", plus: 0.2 }],
+      },
+    ],
+    flashes: [
+      { on: "you think", plus: 0.9 },
+      { on: "you think", plus: 1.15 },
+    ],
     fade: { in: CUT, out: CUT },
   },
   // Bug Catcher Don, the first trainer most GSC players fought, on Route 30 on day 10 of the
@@ -238,6 +465,17 @@ export const DIRECTIONS: Record<string, Direction> = {
     clock: { at: h(10) },
     daily: { day: 10 },
     mark: { x: 720, y: 1103 },
+    // You, walking on up the road past him.
+    cast: [
+      {
+        sprite: "gold",
+        map: "Route30_hns",
+        marks: [
+          { at: 0, x: 22, y: 13 },
+          { at: 0.85, x: 22, y: 1 },
+        ],
+      },
+    ],
     fade: { in: CUT, out: CUT },
   },
   donagain: {
@@ -249,24 +487,77 @@ export const DIRECTIONS: Record<string, Direction> = {
     ],
     clock: { at: h(10) },
     daily: { day: 12 },
-    mark: { x: 577, y: 1254 },
+    // No arrow this time: he spots you, the way a trainer does.
+    cast: [
+      {
+        sprite: null,
+        marks: [{ at: 0, x: 577, y: 1254 }],
+        emotes: [{ at: "He hasn't", kind: "exclamation", seconds: 2.5 }],
+      },
+      // You come into the clearing from the east, and stop short when he looks up.
+      {
+        sprite: "gold",
+        map: "IlexForest_hns",
+        marks: [
+          { at: 0, x: 55, y: 9 },
+          { at: { on: "He hasn't", plus: -0.1 }, x: 42, y: 9 },
+        ],
+        hops: [{ on: "He hasn't", plus: 0.1 }],
+      },
+    ],
     fade: { in: CUT },
   },
+  // Clair at the Dragon's Den before noon, and you walk straight up to her, no badges on you:
+  // she turns, and the screen flashes the way it does when a battle starts.
+  clair: {
+    shots: [
+      { at: 0, to: { kind: "map", name: "BlackthornCity_hns", x: 27, y: 15, zoom: 60 } },
+      { at: 1, to: { kind: "map", name: "BlackthornCity_hns", x: 27, y: 15, zoom: 64 } },
+    ],
+    clock: { at: h(11) },
+    notables: { only: ["clair"], marker: true, minHeight: 64 },
+    cast: CLAIR_CAST,
+    flashes: [
+      { on: "fair fight", plus: 1.0 },
+      { on: "fair fight", plus: 1.25 },
+    ],
+    fade: { in: CUT, out: CUT },
+  },
   // Eight badges from three regions land one by one over Johto and Kanto while word of you
-  // gets around; the eighth lands as the phone rings and the Indigo League calls, and the
-  // circuit comes up as the box asks who's in the Elite Four.
-  gyms: {
+  // gets around; the eighth lands as the phone rings, and it's the Indigo League calling.
+  fame: {
     shots: [
       { at: 0, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.92 } },
-      { at: "Then the phone", to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.92 } },
-      { at: "And who's in", to: { kind: "circuit", room: 0.9 } },
+      { at: 1, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.92 } },
+    ],
+    clock: { at: h(11) },
+    badges: {
+      circuit: 0,
+      // Clair's Rising Badge first: the one GSC players remember as the wall.
+      earn: { from: 0.02, to: "Then the phone", badges: [7, 8, 2, 9, 1, 11, 3, 10] },
+    },
+    phone: { from: "Then the phone", to: 1, caller: "INDIGO LEAGUE", named: "It's the" },
+    fade: { in: CUT },
+  },
+  // The whole circuit, then who you'll face, the way a battle shows them: Brock slides in,
+  // then the Golem, and the box wonders where he got it.
+  golem: {
+    shots: [
+      { at: 0, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 0.92 } },
+      { at: "Elite Four", to: { kind: "circuit", room: 0.9 } },
       { at: 1, to: { kind: "circuit", room: 0.9 } },
     ],
     clock: { at: h(11) },
     badges: {
       circuit: [0, 1],
-      // Clair's Rising Badge first, as the box names her: the one GSC players remember as the wall.
-      earn: { from: "Fancy", to: "Then the phone", badges: [7, 8, 2, 9, 1, 11, 3, 10] },
+      earn: { from: -1, to: -0.5, badges: [7, 8, 2, 9, 1, 11, 3, 10] },
+    },
+    portraits: {
+      from: { on: "Brock", plus: -0.2 },
+      pictures: [
+        { src: "/world-map/leaders/leader_brock_hns.png", at: "Brock", side: "left" },
+        { src: "/actors/golem-front.png", at: "With a", side: "right" },
+      ],
     },
   },
   open: {

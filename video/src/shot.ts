@@ -6,6 +6,8 @@ import type { Camera } from "~/world-map/camera"
 import type { LeagueId } from "~/world-map/landmarks"
 import type { StartId } from "~/world-map/starts"
 
+import type { Posed } from "./actors"
+
 /** What is drawn over the map, each on or off. */
 export type Layers = {
   sea: boolean
@@ -64,7 +66,13 @@ export type Shot = {
   labels: boolean
   layers: Layers
   /** How the walkers are drawn: all of them, or the named few picked out. */
-  walkers?: { only?: string[]; marker?: boolean; minHeight?: number; standing?: boolean }
+  walkers?: {
+    only?: string[]
+    except?: string[]
+    marker?: boolean
+    minHeight?: number
+    standing?: boolean
+  }
   pins?: Pins
   /** The daily roads on `day`. */
   daily?: { day: number }
@@ -74,6 +82,10 @@ export type Shot = {
   wild?: { start: number; still: number | null }
   /** The player riding in on their bike, `progress` of the way (0 to 1) along a start's route. */
   rider?: { start: StartId; progress: number }
+  /** The scene's actors, posed for this frame. */
+  cast?: Posed[]
   /** Black over everything, 0 to 1. */
   fade: number
+  /** White over everything, 0 to 1: the flash into a battle. */
+  flash?: number
 }

@@ -67,7 +67,10 @@ const missing = new Set<string>()
  * How far through its scene (0 to 1) a moment of the timeline falls: a
  * fraction as it is, or a phrase of the narration, when the voice starts it.
  */
-export const fractionOf = (slot: Slot, moment: number | string) => {
+type Moment = number | string | { on: Moment; plus: number }
+
+export const fractionOf = (slot: Slot, moment: Moment): number => {
+  if (typeof moment === "object") return fractionOf(slot, moment.on) + moment.plus / slot.length
   if (typeof moment === "number") return moment
   const index = slot.words.text.indexOf(moment)
   if (index < 0) {
