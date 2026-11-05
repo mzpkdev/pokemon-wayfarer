@@ -77,6 +77,7 @@ for (const [name, id] of [
   ["blue", "OBJ_EVENT_GFX_BLUE_HNS"],
   ["surge", "OBJ_EVENT_GFX_SURGE_HNS"],
   ["wallace", "OBJ_EVENT_GFX_WALLACE"],
+  ["clair", "OBJ_EVENT_GFX_CLAIR_HNS"],
   // A tenth frame after the usual nine, which the video doesn't use.
   ["bug-catcher", "OBJ_EVENT_GFX_BUG_CATCHER_HNS"],
 ])

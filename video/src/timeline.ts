@@ -188,11 +188,15 @@ const CLAIR_CAST: Direction["cast"] = [
       { at: "Go on", x: 29, y: 16 },
     ],
   },
-  // Clair is the map's own; this only puts the bubble over her as you reach her.
+  // Clair, standing by the water until you reach her; then she turns to you.
   {
-    sprite: null,
+    sprite: "clair",
     map: "BlackthornCity_hns",
     marks: [{ at: 0, x: 30, y: 16 }],
+    face: [
+      { at: 0, to: "south" },
+      { at: { on: "Go on", plus: 0.15 }, to: "west" },
+    ],
     emotes: [{ at: { on: "Go on", plus: 0.15 }, kind: "exclamation", seconds: 1.2 }],
   },
 ]
@@ -604,23 +608,24 @@ export const DIRECTIONS: Record<string, Direction> = {
   // Route 29 off the road, deep into the night, the wild Pokémon of the night popping in the grass.
   night: {
     shots: [
-      { at: 0, to: { kind: "map", name: "Route29_hns", x: 39, y: 13, zoom: 60 } },
-      { at: 1, to: { kind: "map", name: "Route29_hns", x: 42, y: 13, zoom: 64 } },
+      { at: 0, to: { kind: "map", name: "Route29_hns", x: 39, y: 14.5, zoom: 60 } },
+      { at: 1, to: { kind: "map", name: "Route29_hns", x: 42, y: 14.5, zoom: 64 } },
     ],
     // The game's darkest tint runs from 1:00 to 4:00.
     clock: { from: h(25), to: h(27, 30) },
     // The one scene about the time of day: the tint and the lights are on.
     layers: { tint: true, lights: true, sightings: true },
-    // You leave the path for the tall grass as the box asks; a Noctowl, Route 29's own
-    // by night, drops in front of you, and the screen flashes into the battle.
+    // You come out of the gate and down its path, then leave it for the tall grass as the
+    // box asks, along the open row south of the trees; a Noctowl, Route 29's own by night,
+    // drops in front of you, and the screen flashes into the battle.
     cast: [
       {
         sprite: "gold",
         map: "Route29_hns",
         marks: [
-          { at: 0, x: 36, y: 11 },
-          { at: 0.1, x: 36, y: 14 },
-          { at: "Pack more", x: 44, y: 14 },
+          { at: 0, x: 35, y: 11 },
+          { at: 0.16, x: 35, y: 16 },
+          { at: "Pack more", x: 43, y: 16 },
         ],
         emotes: [{ at: { on: "Pack more", plus: 0.35 }, kind: "exclamation", seconds: 1.5 }],
         hops: [{ on: "Pack more", plus: 0.35 }],
@@ -629,7 +634,7 @@ export const DIRECTIONS: Record<string, Direction> = {
         sprite: "noctowl",
         map: "Route29_hns",
         from: { on: "Pack more", plus: 0.2 },
-        marks: [{ at: 0, x: 46, y: 14 }],
+        marks: [{ at: 0, x: 45, y: 16 }],
         face: "west",
         hops: [{ on: "Pack more", plus: 0.2 }],
       },
@@ -708,7 +713,9 @@ export const DIRECTIONS: Record<string, Direction> = {
       { at: 1, to: { kind: "map", name: "BlackthornCity_hns", x: 27, y: 15, zoom: 64 } },
     ],
     clock: { at: h(11) },
-    notables: { only: ["clair"], marker: true, minHeight: 64 },
+    // She is one of the cast, so she can stand still and turn: the map's own Clair, who
+    // steps on the spot and wears a marker, stays out.
+    layers: { walkers: false },
     cast: CLAIR_CAST,
     flashes: [
       { on: "fair fight", plus: 1.0 },

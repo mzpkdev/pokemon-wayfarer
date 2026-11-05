@@ -40,6 +40,7 @@ export const SHEETS = {
   blue: person("blue"),
   surge: person("surge"),
   wallace: person("wallace"),
+  clair: person("clair"),
   "bug-catcher": person("bug-catcher"),
   rod: { src: "/actors/rod.png", frame: 16, height: 32, layout: "still" },
   wooloo: pokemon("wooloo"),
