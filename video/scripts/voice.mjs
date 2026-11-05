@@ -8,7 +8,7 @@
 //
 // A scene whose words, voice and model haven't changed since its clip was made
 // is skipped, so re-running after a script edit only speaks what changed. The
-// clips are committed: a render needs no key.
+// clips are meant to be committed, so a render needs no key.
 import { createHash } from "node:crypto"
 import * as fs from "node:fs"
 import * as path from "node:path"

@@ -78,8 +78,6 @@ export type Direction = {
   notables?: { only?: string[]; marker?: boolean; minHeight?: number }
   /** A card over the map: the logo and lines of text. */
   title?: Span & { lines: string[]; logo?: boolean }
-  /** A gameplay clip in a GBA frame beside the map (`clips/<clip>/`). */
-  insert?: Span & { clip: string }
 }
 
 const h = (hours: number, minutes = 0) => hours * 60 + minutes

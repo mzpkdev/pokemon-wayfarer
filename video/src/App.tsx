@@ -18,7 +18,7 @@ import { Studio } from "./Studio"
 import type { Span } from "./timeline"
 import { PixelImage, Popup, useStagePx } from "./ui"
 
-/** Seconds a card or clip takes to fade in or out, and the video to fade from and to black. */
+/** Seconds a card takes to fade in or out, and the video to fade from and to black. */
 const FADE_SECONDS = 0.5
 
 /** How much of a span is showing at `seconds` into the scene, fading at both ends. */
@@ -28,8 +28,6 @@ const alphaIn = (span: Span, seconds: number, length: number) => {
   if (seconds < from || seconds > to) return 0
   return Math.min(1, (seconds - from) / FADE_SECONDS, (to - seconds) / FADE_SECONDS)
 }
-
-type Clip = { fps: number; frames: string[] }
 
 /** What the page is doing, for `scripts/frames.mjs` and the keyboard. */
 export type Controls = {
@@ -62,7 +60,7 @@ const params = new URLSearchParams(location.search)
 /** Whether `scripts/frames.mjs` is driving the page: nothing but the picture then. */
 const capture = params.has("capture")
 
-/** The timeline playing: the frame, the text box, the title card, the clip, the fades and the keyboard. */
+/** The timeline playing: the frame, the text box, the title card, the fades and the keyboard. */
 const Player = ({
   stage,
   cues,
@@ -76,7 +74,6 @@ const Player = ({
   const stageRef = useRef<HTMLDivElement>(null)
   const px = useStagePx(stageRef)
   const [shown, setShown] = useState<Shown>()
-  const [clips, setClips] = useState<Record<string, Clip | null>>({})
 
   // Each scene's narration, paged for the text box: printed from the voice's cue to its end,
   // or across the scene when there is no voice yet.
@@ -90,22 +87,6 @@ const Player = ({
         return [slot.id, slot.boxed === false ? [] : pagesFor(slot.narration, from, to, measure)]
       }),
     )
-  }, [cues])
-
-  useEffect(() => {
-    // The gameplay clips' manifests, for the scenes that show one; a missing clip shows a placeholder.
-    const names = new Set<string>()
-    for (const slot of schedule(cues)) {
-      const { insert } = directionFor(slot)
-      if (insert) names.add(insert.clip)
-    }
-    for (const name of names)
-      fetch(`/clips/${name}/manifest.json`)
-        .then((response) => (response.ok ? (response.json() as Promise<Clip>) : null))
-        .then(
-          (loaded) => setClips((known) => ({ ...known, [name]: loaded })),
-          () => {},
-        )
   }, [cues])
 
   useEffect(() => {
@@ -220,19 +201,6 @@ const Player = ({
   const title = direction?.title
   const titleAlpha = title && shown ? alphaIn(title, local, shown.slot.length) : 0
 
-  const insert = direction?.insert
-  const insertAlpha = insert && shown ? alphaIn(insert, local, shown.slot.length) : 0
-  const clip = insert ? clips[insert.clip] : undefined
-  const clipFrame =
-    clip && insert && shown
-      ? clip.frames[
-          Math.min(
-            clip.frames.length - 1,
-            Math.floor(Math.max(0, local - insert.from * shown.slot.length) * clip.fps),
-          )
-        ]
-      : undefined
-
   return (
     <>
       <div
@@ -243,35 +211,6 @@ const Player = ({
         <canvas ref={canvasRef} className="block h-full w-full" aria-hidden="true" />
 
         <Popup label={shown?.popup ?? null} />
-
-        {insert && (
-          <div
-            className="gba-window absolute top-1/2 right-[calc(16*var(--px))] -translate-y-1/2 bg-black"
-            style={
-              {
-                opacity: insertAlpha,
-                // The clip at 2.5 GBA pixels per pixel: 600 by 400 at 1080p, clear of the text box.
-                "--px": `${px * 0.625}px`,
-                width: "calc(256 * var(--px))",
-                height: "calc(176 * var(--px))",
-              } as React.CSSProperties
-            }
-          >
-            {clipFrame ? (
-              <img
-                src={`/clips/${insert.clip}/${clipFrame}`}
-                alt=""
-                className="h-full w-full"
-                style={{ imageRendering: "pixelated" }}
-              />
-            ) : (
-              <div className="flex h-full w-full flex-col items-center justify-center gap-[calc(8*var(--px))] bg-black">
-                <span className="gba-text gba-text-light">CLIP</span>
-                <span className="gba-text gba-text-light">{insert.clip}</span>
-              </div>
-            )}
-          </div>
-        )}
 
         {title && titleAlpha > 0 && (
           <div

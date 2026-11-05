@@ -148,8 +148,8 @@ export const loadStage = async (): Promise<Stage> => {
     sea: seaOverlay(water, true, now),
     weather: weatherOverlay(world.meta, true, now),
     clouds: cloudsOverlay(true, now),
-    // The tint is drawn on its own (`shot.layers.tint`), under the ships.
-    ships: livingOverlay(living, () => clock.ships, { tint: false }),
+    // Kept off the bridge decks, as on the site; the tint is drawn on its own (`shot.layers.tint`).
+    ships: livingOverlay(living, () => clock.ships, { tint: false, decks: world.meta.overpasses }),
     lights: lightsOverlay(world.meta, living, minutes, true, now),
     // Livelier than the site's (a fifth of the time), so a few seconds of grass show a few.
     sightings: sightingsOverlay(encounters, icons, minutes, true, now, { quiet: 0.5 }),
@@ -524,7 +524,6 @@ export const drawShot = (stage: Stage, context: CanvasRenderingContext2D, shot: 
     if (stage.today?.day !== day) stage.today = { day, scene: dayScene(stage, day), since: now() }
     overlays.push(stage.daily)
   }
-  if (shot.layers.tint) overlays.push(tintOverlay(stage.living, minutes))
   if (shot.layers.walkers) {
     const { only, ...rest } = shot.walkers ?? {}
     const picked = only && new Set(only)
@@ -537,6 +536,8 @@ export const drawShot = (stage: Stage, context: CanvasRenderingContext2D, shot: 
   }
   if (shot.mark) overlays.push(markOverlay(shot.mark))
   if (shot.layers.ships) overlays.push(stage.ships)
+  // Over everything the world draws, people and ships too, as the game tints its palettes; the lights shine through.
+  if (shot.layers.tint) overlays.push(tintOverlay(stage.living, minutes))
   if (shot.layers.lights) overlays.push(stage.lights)
 
   const sprites =

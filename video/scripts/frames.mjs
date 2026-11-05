@@ -49,6 +49,10 @@ if (
     "audio/vo/cues.json is newer than the build: run pnpm build first, or the scenes keep their old lengths.",
   )
 
+/** The page's clock at install, and where it is paused once loaded: well past the 60s a load may take. */
+const START = new Date("2027-01-20T10:00:00Z")
+const LOAD_MS = 5 * 60_000
+
 const { server, url } = await serve(dist)
 const browser = await chromium.launch(
   process.env.CHROME ? { executablePath: process.env.CHROME } : {},
@@ -58,14 +62,15 @@ try {
   page.on("pageerror", (error) => console.error("page error:", error.message))
   // The page's clocks (performance.now, requestAnimationFrame, timers) are
   // ours from the first script on: they move only when this script turns them.
-  await page.clock.install({ time: new Date("2027-01-20T10:00:00Z") })
+  await page.clock.install({ time: START })
   await page.goto(`${url}?paused&capture`, { waitUntil: "networkidle" })
   await page.waitForFunction(() => globalThis.wayfarerVideo?.ready === true, null, {
     timeout: 60_000,
   })
   await page.evaluate(() => document.fonts.ready)
-  // The page's clock ran in real time while it loaded; pause it just past where it got to.
-  await page.clock.pauseAt((await page.evaluate(() => Date.now())) + 1000)
+  // The page's clock ran in real time while it loaded; pause it at a set time past
+  // any load, so the sea, clouds and sightings are the same in every render.
+  await page.clock.pauseAt(START.getTime() + LOAD_MS)
 
   const { duration, slots } = await page.evaluate(() => {
     const video = globalThis.wayfarerVideo

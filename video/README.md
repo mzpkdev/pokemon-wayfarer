@@ -3,8 +3,7 @@
 The launch video, made from the website's world map: the camera flies over
 the same map the landing page draws, with its ships, Gym Leaders, weather and
 time of day, while a traveler tells of it and the game's text box prints
-their words, page by page. Short gameplay clips sit in a GBA frame beside the map
-where the words name something concrete.
+their words, page by page.
 
 Everything the map needs is the website's own code and data: `~/world-map`
 resolves to `../website/src/world-map`, and `/world-map` and `/game` are served
@@ -81,8 +80,9 @@ ELEVENLABS_VOICE_ID=... pnpm voice        # speak what changed
 ```
 
 One clip per scene, with ElevenLabs' timestamps for its length, into
-`audio/vo/<scene>.mp3` and `audio/vo/cues.json`. The clips are committed, so
-anyone can render without a key; `pnpm voice` only speaks the scenes whose
+`audio/vo/<scene>.mp3` and `audio/vo/cues.json`. Commit them once made, so
+anyone can render without a key. Until then scenes last as long as their words
+take to read, and the render is music and text box only. `pnpm voice` only speaks the scenes whose
 words, voice or model changed since (`--force` speaks them all, `--scene`
 one). `ELEVENLABS_MODEL` or `--model` picks the model, `eleven_multilingual_v2`
 by default.
@@ -98,7 +98,7 @@ by default.
   studio, the league `circuit`, a `notable` wherever their routine has them,
   or a `ship` wherever her loop has her), the game clock (held, or run across the scene for a time-lapse),
   layers, the badge pins, the walkers, the daily roads, the wild waves, the
-  rides in, a title card and a gameplay `insert`.
+  rides in and a title card.
 - `src/schedule.ts` turns the script into start times: a scene lasts its
   `seconds`, or its voice clip plus a lead-in and a tail when that is longer,
   so the picture always waits for the words.
@@ -113,8 +113,5 @@ by default.
   capitals, wrapped in the game's font, two lines a page, each page timed
   across the voice (or the scene, without one).
 - `src/App.tsx` is the page: the canvas, the text box printing a letter every
-  two frames, the title card, the clip frame, the fades, the keyboard, and
+  two frames, the title card, the fades, the keyboard, and
   `window.wayfarerVideo`, which `scripts/frames.mjs` drives.
-- `clips/` holds the gameplay clips (see its README for the plan to record
-  them from the E2E ROM); a scene whose clip is missing shows a placeholder
-  frame with its name, so the storyboard renders before any footage exists.
