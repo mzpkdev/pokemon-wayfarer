@@ -405,6 +405,7 @@ export const directionFor = (slot: Slot): Direction<number> => {
           : actor.face,
       emotes: actor.emotes?.map((emote) => ({ ...emote, at: at(emote.at) })),
       hops: actor.hops?.map(at),
+      poses: actor.poses?.map((pose) => ({ ...pose, at: at(pose.at) })),
     })),
     tosses: tosses?.map((toss) => ({ ...toss, span: span(toss.span) })),
     phone: phone && { ...span(phone), named: at(phone.named) },
@@ -556,6 +557,7 @@ const castAt = (stage: Stage, direction: Direction<number>, local: number, lengt
         : actor.face,
     emotes: actor.emotes?.map((emote) => ({ ...emote, at: s(emote.at) })),
     hops: actor.hops?.map(s),
+    poses: actor.poses?.map((pose) => ({ ...pose, at: s(pose.at) })),
   }))
   const tosses = (direction.tosses ?? []).map((toss) => ({
     ...toss,

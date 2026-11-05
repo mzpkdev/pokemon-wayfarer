@@ -129,6 +129,19 @@ const SEVII: Target = { kind: "regions", names: ["SEVII ISLANDS"], room: 0.9 }
 const MELEMELE = "MelemeleIsle_hns"
 const MELEMELE_BEACH: Target = { kind: "map", name: MELEMELE, x: 37.5, y: 9.5, zoom: 64 }
 
+/** Pallet Town's south shore, where its water runs out to Route 21 and Cinnabar. */
+const PALLET = "PalletTown_hns"
+const PALLET_SHORE: Target = { kind: "map", name: PALLET, x: 9.5, y: 18, zoom: 64 }
+/** The tug on the line, a beat after the box says to fish; and setting off on what was caught. */
+const BITE: Moment = { on: "Something", plus: -0.5 }
+const RIDE: Moment = { on: BITE, plus: 2.1 }
+/** Down the water and out of the frame. */
+const RIDE_MARKS = [
+  { at: RIDE, x: 9, y: 18 },
+  { at: { on: RIDE, plus: 0.5 }, x: 9, y: 18 },
+  { at: 1, x: 9, y: 28 },
+]
+
 /** When you notice the Anne leaving without you: as the box says she keeps her own hours. */
 const NOTICED = { on: "hours", plus: 0.2 }
 
@@ -342,7 +355,84 @@ export const DIRECTIONS: Record<string, Direction> = {
     ],
     clock: { at: h(34, 30) },
     wild: { from: 0, wave: { home: "safari", at: "The Safari" } },
-    fade: { in: CUT },
+    fade: { in: CUT, out: CUT },
+  },
+  // Back where the film began, at the water every Kanto player stood at with no way across.
+  // You walk down to it, cast, and what bites (a Krabby, Pallet's own on the Old Rod, and one
+  // that knows Surf the day it's caught) carries you south, the camera going with you.
+  surf: {
+    shots: [
+      { at: 0, to: PALLET_SHORE },
+      { at: RIDE, to: PALLET_SHORE },
+      { at: 1, to: { kind: "map", name: PALLET, x: 9.5, y: 25.5, zoom: 64 } },
+    ],
+    clock: { at: h(11) },
+    // Nobody else in town: this is between you and the water.
+    layers: { walkers: false },
+    cast: [
+      {
+        sprite: "gold",
+        map: PALLET,
+        to: "Fish",
+        marks: [
+          { at: 0, x: 9, y: 10 },
+          { at: 0.04, x: 9, y: 10 },
+          { at: "Nobody", x: 9, y: 16 },
+        ],
+        emotes: [{ at: { on: "Nobody", plus: 0.3 }, kind: "question", seconds: 1.4 }],
+      },
+      // The rod out, the float down, a tug, and the reel in.
+      {
+        sprite: "gold-fishing",
+        map: PALLET,
+        from: "Fish",
+        to: RIDE,
+        marks: [{ at: 0, x: 9, y: 16 }],
+        poses: [
+          { at: "Fish", frame: 8 },
+          { at: { on: "Fish", plus: 0.12 }, frame: 9 },
+          { at: { on: "Fish", plus: 0.24 }, frame: 10 },
+          { at: { on: "Fish", plus: 0.36 }, frame: 11 },
+          { at: BITE, frame: 10 },
+          { at: { on: BITE, plus: 0.12 }, frame: 11 },
+          { at: { on: BITE, plus: 0.24 }, frame: 10 },
+          { at: { on: BITE, plus: 0.36 }, frame: 11 },
+          { at: { on: BITE, plus: 0.6 }, frame: 10 },
+          { at: { on: BITE, plus: 0.72 }, frame: 9 },
+          { at: { on: BITE, plus: 0.84 }, frame: 8 },
+        ],
+        emotes: [{ at: BITE, kind: "exclamation", seconds: 0.6 }],
+      },
+      {
+        sprite: "krabby",
+        map: PALLET,
+        from: { on: BITE, plus: 0.7 },
+        to: { on: BITE, plus: 1.75 },
+        marks: [{ at: 0, x: 9, y: 18 }],
+        face: "south",
+        hops: [{ on: BITE, plus: 0.7 }],
+      },
+      { sprite: "surf-blob", map: PALLET, from: RIDE, marks: RIDE_MARKS },
+      {
+        sprite: "gold-surfing",
+        map: PALLET,
+        from: RIDE,
+        marks: RIDE_MARKS,
+        face: "south",
+        lift: 0.35,
+      },
+    ],
+    tosses: [
+      {
+        sprite: "ball",
+        map: PALLET,
+        from: { x: 9, y: 16 },
+        to: { x: 9, y: 18 },
+        span: { from: { on: BITE, plus: 1.25 }, to: { on: BITE, plus: 1.75 } },
+        height: 1,
+      },
+    ],
+    fade: { in: CUT, out: CUT },
   },
   // Straight on from every land at night: every Gym Leader and Elite Four member's marker
   // lights up, then one dive onto Brock, landing as the box names him, on the morning
@@ -408,7 +498,7 @@ export const DIRECTIONS: Record<string, Direction> = {
         span: { from: { on: "Trade with", plus: 1.5 }, to: { on: "Trade with", plus: 2.1 } },
       },
     ],
-    fade: { out: CUT },
+    fade: { in: CUT, out: CUT },
   },
   // Two more lives, a warp between each: Lt. Surge at the Game Corner in the afternoon,
   // and Wallace fishing Route 119 at noon, where Feebas hides on a few tiles of the river.

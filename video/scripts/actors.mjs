@@ -35,6 +35,23 @@ for (const gait of ["walking", "running"])
     ),
   )
 
+// GOLD with a rod (twelve 32x32 frames: four each casting west, north and
+// south) and on the water (two each south, north and west; the first of each
+// pair sits, the second jumps).
+for (const [name, file] of [
+  ["gold-fishing", "fishing_hns"],
+  ["gold-surfing", "surfing_hns"],
+])
+  save(
+    name,
+    renderIndexed(
+      path.join(graphics, `object_events/pics/people/gold/${file}.png`),
+      palette("gold_hns.pal"),
+    ),
+  )
+// What a surfer rides: the game's blob, three 32x32 frames.
+save("surf-blob", renderIndexed(path.join(graphics, "field_effects/pics/surf_blob.png")))
+
 // People by their OBJ_EVENT_GFX_* name, laid out the same way.
 const objectGraphics = openObjectGraphics(game)
 for (const [name, id] of [["brock", "OBJ_EVENT_GFX_BROCK_HNS"]])
@@ -48,6 +65,8 @@ for (const [name, dir] of [
   ["golem", "golem"],
   ["exeggutor-alola", "exeggutor/alola"],
   ["noctowl", "noctowl"],
+  // Eight frames: two steps west, two more, then two north and two south.
+  ["krabby", "krabby"],
 ])
   save(name, renderIndexed(path.join(graphics, "pokemon", dir, "overworld.png")))
 

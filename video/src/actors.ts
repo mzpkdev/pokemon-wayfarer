@@ -12,7 +12,15 @@ export type Facing = "south" | "north" | "west" | "east"
  * west, then two steps each way. A Pokémon's: two steps south, north and west.
  * East is west mirrored. `tiles` is a frame's size on the map, in metatiles.
  */
-type Sheet = { src: string; frame: number; height: number; layout: "person" | "pokemon" | "still" }
+type Sheet = {
+  src: string
+  frame: number
+  height: number
+  /** "facing" has one frame each way at every other frame; "still" only ever shows the frames it is posed in. */
+  layout: "person" | "pokemon" | "facing" | "still"
+  /** A Pokémon sheet laid out another way: its two frames each way. */
+  frames?: Record<"south" | "north" | "west", [number, number]>
+}
 
 const person = (name: string): Sheet => ({
   src: `/actors/${name}.png`,
@@ -36,6 +44,13 @@ export const SHEETS = {
   golem: pokemon("golem"),
   noctowl: pokemon("noctowl"),
   "exeggutor-alola": pokemon("exeggutor-alola", 64),
+  krabby: {
+    ...pokemon("krabby"),
+    frames: { west: [0, 1], north: [4, 5], south: [6, 7] },
+  },
+  "gold-fishing": { src: "/actors/gold-fishing.png", frame: 32, height: 32, layout: "still" },
+  "gold-surfing": { src: "/actors/gold-surfing.png", frame: 32, height: 32, layout: "facing" },
+  "surf-blob": { src: "/actors/surf-blob.png", frame: 32, height: 32, layout: "still" },
   ball: { src: "/actors/ball.png", frame: 16, height: 32, layout: "still" },
 } satisfies Record<string, Sheet>
 export type SheetId = keyof typeof SHEETS
@@ -69,8 +84,10 @@ export type Actor<M> = {
   emotes?: { at: M; kind: EmoteId; seconds?: number }[]
   /** Little jumps on the spot, as the game's sprites hop in surprise or joy. */
   hops?: M[]
-  /** Tiles a second, walking: the game's walk is about four, its run eight. */
-  speed?: number
+  /** Frames of their sheet shown from a moment on, over their own: a cast of the rod, say. */
+  poses?: { at: M; frame: number }[]
+  /** Tiles they are drawn off the ground, as a surfer sits up on what they ride. */
+  lift?: number
 }
 
 /** A thing thrown in an arc from one tile to another over a span, like a Poké Ball handed over. */
@@ -115,7 +132,13 @@ const ROW = { south: 0, north: 1, west: 2, east: 2 } as const
 const frameOf = (sheet: Sheet, facing: Facing, step: 0 | 1 | 2, bob: 0 | 1) => {
   const row = ROW[facing]
   if (sheet.layout === "person") return step === 0 ? row : 3 + row * 2 + (step - 1)
-  if (sheet.layout === "pokemon") return row * 2 + (step === 0 ? bob : step - 1)
+  if (sheet.layout === "pokemon") {
+    const which = step === 0 ? bob : step - 1
+    return sheet.frames
+      ? sheet.frames[facing === "east" ? "west" : facing][which]!
+      : row * 2 + which
+  }
+  if (sheet.layout === "facing") return row * 2
   return 0
 }
 
@@ -186,18 +209,21 @@ export const poseCast = (
       (e) => e.at <= seconds && seconds < e.at + (e.seconds ?? 1),
     )
     const pop = emote ? (seconds - emote.at) / EMOTE_POP_SECONDS : 1
+    const pose = actor.poses?.findLast((p) => p.at <= seconds)
     posed.push({
       sprite: actor.sprite,
-      frame: frameOf(
-        sheet,
-        facing,
-        step,
-        sheet.layout === "pokemon" && walking ? ((Math.floor(walked * 2) % 2) as 0 | 1) : bob,
-      ),
+      frame:
+        pose?.frame ??
+        frameOf(
+          sheet,
+          facing,
+          step,
+          sheet.layout === "pokemon" && walking ? ((Math.floor(walked * 2) % 2) as 0 | 1) : bob,
+        ),
       flip: facing === "east",
       x: base.x + x,
       y: base.y + y,
-      lift,
+      lift: lift + (actor.lift ?? 0),
       emote: emote && {
         kind: emote.kind,
         lift: pop < 1 ? Math.sin(Math.PI * pop) * EMOTE_POP : 0,

@@ -45,6 +45,7 @@ export const BOX_CAPS = [
   "Galar",
   "Wooloo",
   "Potions",
+  "Surf",
   "Alola",
   "S.S. Anne",
   "Vermilion",
@@ -112,6 +113,12 @@ export const SCENES: Scene[] = [
     narration:
       "Never been to Kalos myself. Too far. | The Safari Zones brought a bit of it home, though.",
     seconds: 6,
+  },
+  {
+    id: "surf",
+    narration:
+      "That water south of Pallet Town? | Nobody hands you Surf this time.\nFish. | Something down there already knows it.",
+    seconds: 12.5,
   },
   {
     id: "leaders",
