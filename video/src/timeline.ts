@@ -1,6 +1,7 @@
 // The storyboard's pictures: where the camera is in each scene, what time of
 // day the world keeps, what is drawn over the map and what is laid over it.
 // The words are in `script.ts`; each direction here is keyed by its scene.
+import type { Bounds } from "~/world-map/data"
 import { DAY_START } from "~/world-map/living"
 import type { StartId } from "~/world-map/starts"
 
@@ -72,9 +73,16 @@ export type Direction<M = Moment> = {
    * The player rides in on their bike along a start's route over each span,
    * the camera coming in with them; between rides they wait at the door, and
    * the game's warp (a fade to black and back) cuts to the next start. `look`
-   * moves where the camera ends up off the door, in tiles.
+   * moves where the camera ends up off the door, in tiles. With `track` the
+   * camera stays close on the rider instead, as the game's does, at a zoom (or
+   * from one to another across the ride) and never looking outside `within`,
+   * a box in the town's own tiles: what lies past it has seams to keep out of frame.
    */
-  rides?: (Span<M> & { start: StartId; look?: { dx: number; dy: number } })[]
+  rides?: (Span<M> & {
+    start: StartId
+    look?: { dx: number; dy: number }
+    track?: { zoom: number | [number, number]; within: Bounds }
+  })[]
   /**
    * The badge pins, and how much of the league circuit is drawn (0 pins only,
    * 1 the whole circuit). With `earn`, the named badges are earned one after
@@ -195,16 +203,33 @@ export const DIRECTIONS: Record<string, Direction> = {
   pallet: {
     shots: [{ at: 0, to: { kind: "map", name: "PalletTown_hns", x: 12, y: 10, zoom: 24 } }],
     clock: { at: h(9) },
-    // Ending a little south of the door, with Pallet in the frame's upper part above the box,
-    // keeps the seam where Route 1's forest meets Pallet's out of the top of the frame.
-    rides: [{ start: "kanto", from: 0, to: 0.7, look: { dx: 0, dy: 9 } }],
+    // Close on him all the way, four pixels a pixel. Past the town's own tiles the map has
+    // seams: Route 1's forest to the north, and to the east the forest that fills the gap to
+    // the coast. The forest to the west is clean.
+    rides: [
+      {
+        start: "kanto",
+        from: 0,
+        to: 0.7,
+        track: { zoom: 64, within: { left: -9, top: 0.5, right: 24, bottom: 19.5 } },
+      },
+    ],
     fade: { in: 0.6, out: CUT },
   },
   // GOLD rides in to New Bark Town.
   newbark: {
     shots: [{ at: 0, to: { kind: "map", name: "NewBarkTown_hns", x: 14, y: 16, zoom: 24 } }],
     clock: { at: h(9) },
-    rides: [{ start: "johto", from: 0, to: 0.8 }],
+    // Close on him from Route 29's grass to his door, clear of the cliff north of town
+    // and of the open sea past the pond to the east.
+    rides: [
+      {
+        start: "johto",
+        from: 0,
+        to: 0.8,
+        track: { zoom: 64, within: { left: -40, top: 1, right: 33.5, bottom: 38 } },
+      },
+    ],
     fade: { in: CUT, out: CUT },
   },
   // BRENDAN rides in to Littleroot Town.

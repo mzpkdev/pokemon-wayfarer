@@ -343,6 +343,44 @@ export const rideShots = (stage: Stage, start: Start, width: number, height: num
   }
 }
 
+/**
+ * The camera close on a rider `progress` of the way along their ride: on them, lifted
+ * clear of the text box's `below` pixels, and held inside `within` (the town's tiles).
+ */
+const trackRider = (
+  stage: Stage,
+  id: StartId,
+  progress: number,
+  track: { zoom: number | [number, number]; within: Bounds },
+  width: number,
+  height: number,
+  below: number,
+): Camera => {
+  const { meta } = stage.world
+  const start = startOf(id)
+  const sprite = riderAt(routeIn(meta, start), progress, stage.riders[id])
+  const zoom = mix(track.zoom, progress)
+  const town = meta.maps.find((map) => map.name === start.town)!
+  // Between the two edges while the view fits inside them, else midway.
+  const hold = (at: number, low: number, high: number, half: number) =>
+    low + half > high - half ? (low + high) / 2 : Math.min(high - half, Math.max(low + half, at))
+  return {
+    x: hold(
+      sprite.x + 1,
+      town.x + track.within.left,
+      town.x + track.within.right,
+      width / 2 / zoom,
+    ),
+    y: hold(
+      sprite.y + 2 + below / 2 / zoom,
+      town.y + track.within.top,
+      town.y + track.within.bottom,
+      height / 2 / zoom,
+    ),
+    zoom,
+  }
+}
+
 /** The name the map name popup shows while the rider is on screen. */
 export const riderPlace = (stage: Stage, rider: Shot["rider"]) => {
   if (!rider) return null
@@ -498,7 +536,9 @@ export const shotFor = (
     const home = ride.look
       ? { ...shots.home, x: shots.home.x + ride.look.dx, y: shots.home.y + ride.look.dy }
       : shots.home
-    camera = fly(shots.opening, home, progress)
+    camera = ride.track
+      ? trackRider(stage, ride.start, progress, ride.track, width, height, below)
+      : fly(shots.opening, home, progress)
     // The warp to each ride after the first: black at its start, fading out before and in after.
     for (const next of rides.slice(1)) {
       const off = Math.abs(fraction - next.from) * slot.length
