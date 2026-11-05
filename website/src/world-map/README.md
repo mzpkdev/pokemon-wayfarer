@@ -205,8 +205,12 @@ Plain Node scripts. Each stage gets a module:
   VERMILION CITY, which is how its harbour reaches the sea; the inlet keeps
   its width clear of the maps, so it never squeezes through a slit between
   two), and each filled cell takes the border blocks of the nearest land-bordered map (an
-  island town far from any takes its own edge's ground). The sea takes the
-  nearest map's water by the coasts, then deepens in four noisy steps, each a
+  island town far from any takes its own edge's ground), counted from that
+  map's corner as the game counts them, so its rows of trees carry on past
+  its edge in step. Ilex Forest, walled in by rock in the game, lends Azalea
+  Town's trees instead. The sea takes the
+  nearest map's water by the coasts (a map lends its water only when the
+  water runs off its edge, so a pond doesn't paint the sea pale), then deepens in four noisy steps, each a
   tinted copy of that water a quarter nearer one deep ocean, so every game's
   water meets out at sea in one color and tile (`DEEP_SEA`). The tints are new
   metatiles in the atlas, so the tiles and the far-out view agree.
