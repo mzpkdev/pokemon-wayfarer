@@ -648,14 +648,20 @@ export const DIRECTIONS: Record<string, Direction> = {
     ],
     clock: { at: h(10) },
     daily: { day: 10 },
-    // You, walking on up the road past him.
+    // You, walking on up the road past him, the way the road lets you: it has a ledge
+    // below this stretch and another above it, which only drop southward, so you start
+    // above the one and step round the other by the grass beside it, up to the stairs.
     cast: [
       {
         sprite: "gold",
         map: "Route30_hns",
         marks: [
-          { at: 0, x: 22, y: 13 },
-          { at: 0.85, x: 22, y: 1 },
+          { at: 0, x: 22, y: 10 },
+          { at: 0.39, x: 22, y: 4 },
+          { at: 0.52, x: 24, y: 4 },
+          { at: 0.65, x: 24, y: 2 },
+          { at: 0.72, x: 23, y: 2 },
+          { at: 0.85, x: 23, y: 0 },
         ],
       },
     ],
