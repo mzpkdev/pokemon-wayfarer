@@ -2763,7 +2763,7 @@
         "TRAINER_CLAIR_1_HNS",
         "TRAINER_CLAIR_2_HNS",
         "TRAINER_CLAIR_3_HNS",
-        "TRAINER_CLAIR_OBC_HNS"
+        "TRAINER_CLAIR_POSTOBC_HNS"
       ],
       "characterId": 22,
       "league": {

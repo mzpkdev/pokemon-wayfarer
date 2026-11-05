@@ -21,7 +21,7 @@ In a clean uberepo task based on current `origin/main`, fetch and inspect the ta
 ```sh
 git fetch upstream
 git rev-parse upstream/master
-git log --oneline 8cb27a9fb01a0f80063c6285fa5805ae9c594329..upstream/master
+git log --oneline 167aa6d537b109bb229c231ddce4616974c4da71..upstream/master
 ```
 
 Record that full target SHA, then run `git subtree merge --prefix=game <target-sha>`.
@@ -36,8 +36,9 @@ same SHA again in a clean task must report that it is already up to date.
 
 ## Imported revision and Wayfarer behavior
 
-The imported HNS revision is `8cb27a9fb01a0f80063c6285fa5805ae9c594329`.
-The preceding baseline was `93c5eee2abb78f0baaf4050da4a65572bbdcfb66`.
+The imported HNS revision is `167aa6d537b109bb229c231ddce4616974c4da71` (HnS 2.0.6).
+The preceding imports were `8cb27a9fb01a0f80063c6285fa5805ae9c594329` and
+`93c5eee2abb78f0baaf4050da4a65572bbdcfb66`.
 
 - Wayfarer keeps its existing trainer IDs, League selection, and Dojo rematches.
   Upstream post-OBC teams have distinct IDs; their HNS postgame routing does not
@@ -50,6 +51,20 @@ The preceding baseline was `93c5eee2abb78f0baaf4050da4a65572bbdcfb66`.
   EVs on the Skills page when the L=A option is enabled.
 - Dynamic Punch tutors use separate taught messages for Mossdeep and HNS Route 4,
   so the upstream Cerulean text does not replace Hoenn's Mossdeep text.
+- Wayfarer excludes upstream's Paras Ingrain at 26 and Powder at 30, and Seaking
+  Flip Turn at 45, to preserve their Cut and Waterfall catch windows. The pinned
+  delta in `game/tools/learnset_helpers/native_hm_upstream_delta.json` records
+  every upstream learnset change since the HM design input; an optional third
+  element pins the index of a move upstream inserted out of level order.
+- The starter selection table keeps Treecko, Torchic and Mudkip in Wayfarer, because
+  Wayfarer's Hoenn origin uses it. Upstream's Johto trio applies to standalone HNS only.
+- The Blend Master asks for the current region's champion title in Wayfarer, not
+  the Johto title that upstream checks, so Hoenn's Lilycove Blend Master does not
+  depend on the Johto League.
+- Upstream claimed vars `0x40DB` and `0x40DC`, so Wayfarer's Silph Giovanni scene
+  moved to `0x40F8`. Pryce's relax spot moved from Ice Path, which no longer has a
+  water-edge tile, to Route 44. Upstream's post-OBC teams and Safari Zone rules
+  (1000 steps, map-wide Pokéblock feeders) apply as imported.
 
 ## Historical squash imports
 

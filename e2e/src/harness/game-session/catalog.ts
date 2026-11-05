@@ -511,7 +511,7 @@ export const storyVars = {
   days: 0x4040, // VAR_DAYS: the in-game day the daily update last ran on
   wadeItem: 0x4097,
   silphElevatorFloor: 0x40da,
-  silphGiovanniScene: 0x40db,
+  silphGiovanniScene: 0x40f8,
   baobaResearch: 0x4054,
   fuchsiaCityState: 0x4067,
   kantoSafariProgress: 0x406d,

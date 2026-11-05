@@ -51,8 +51,6 @@ SaffronCity_FightingDojoVIP_EventScript_Falkner::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Falkner_Rematch
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Falkner_PostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Falkner_PostOBC
-	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Falkner_PostOBC
 #endif
 
 SaffronCity_FightingDojoVIP_EventScript_Falkner_Rematch::
@@ -86,8 +84,6 @@ SaffronCity_FightingDojoVIP_EventScript_Bugsy::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Bugsy_Rematch
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Bugsy_PostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Bugsy_PostOBC
-	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Bugsy_PostOBC
 #endif
 
 SaffronCity_FightingDojoVIP_EventScript_Bugsy_Rematch::
@@ -121,8 +117,6 @@ SaffronCity_FightingDojoVIP_EventScript_Whitney::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Whitney_Rematch
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Whitney_PostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Whitney_PostOBC
-	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Whitney_PostOBC
 #endif
 
 SaffronCity_FightingDojoVIP_EventScript_Whitney_Rematch::
@@ -156,8 +150,6 @@ SaffronCity_FightingDojoVIP_EventScript_Morty::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Morty_Rematch
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Morty_PostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Morty_PostOBC
-	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Morty_PostOBC
 #endif
 
 SaffronCity_FightingDojoVIP_EventScript_Morty_Rematch::
@@ -191,8 +183,6 @@ SaffronCity_FightingDojoVIP_EventScript_Chuck::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Chuck_Rematch
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Chuck_PostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Chuck_PostOBC
-	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Chuck_PostOBC
 #endif
 
 SaffronCity_FightingDojoVIP_EventScript_Chuck_Rematch::
@@ -226,8 +216,6 @@ SaffronCity_FightingDojoVIP_EventScript_Jasmine::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Jasmine_Rematch
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Jasmine_PostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Jasmine_PostOBC
-	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Jasmine_PostOBC
 #endif
 
 SaffronCity_FightingDojoVIP_EventScript_Jasmine_Rematch::
@@ -261,8 +249,6 @@ SaffronCity_FightingDojoVIP_EventScript_Pryce::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Pryce_Rematch
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Pryce_PostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Pryce_PostOBC
-	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Pryce_PostOBC
 #endif
 
 SaffronCity_FightingDojoVIP_EventScript_Pryce_Rematch::
@@ -296,8 +282,6 @@ SaffronCity_FightingDojoVIP_EventScript_Clair::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Clair_Rematch
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Clair_PostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Clair_PostOBC
-	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Clair_PostOBC
 #endif
 
 SaffronCity_FightingDojoVIP_EventScript_Clair_Rematch::
@@ -312,7 +296,7 @@ SaffronCity_FightingDojoVIP_EventScript_Clair_Rematch::
 
 #if !IS_WAYFARER
 SaffronCity_FightingDojoVIP_EventScript_Clair_PostOBC::
-	trainerbattle_no_intro TRAINER_CLAIR_OBC_HNS, SaffronCity_FightingDojoVIP_Text_Clair_RematchDefeat
+	trainerbattle_no_intro TRAINER_CLAIR_POSTOBC_HNS, SaffronCity_FightingDojoVIP_Text_Clair_RematchDefeat
 	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
 	givebp 10
@@ -331,8 +315,6 @@ SaffronCity_FightingDojoVIP_EventScript_Brock::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Brock_Rematch
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Brock_PostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Brock_PostOBC
-	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Brock_PostOBC
 #endif
 
 SaffronCity_FightingDojoVIP_EventScript_Brock_Rematch::
@@ -370,8 +352,6 @@ SaffronCity_FightingDojoVIP_EventScript_Misty::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Misty_Rematch
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Misty_PostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Misty_PostOBC
-	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Misty_PostOBC
 #endif
 
 SaffronCity_FightingDojoVIP_EventScript_Misty_Rematch::
@@ -409,8 +389,6 @@ SaffronCity_FightingDojoVIP_EventScript_Surge::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Surge_Rematch
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Surge_PostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Surge_PostOBC
-	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Surge_PostOBC
 #endif
 
 SaffronCity_FightingDojoVIP_EventScript_Surge_Rematch::
@@ -448,8 +426,6 @@ SaffronCity_FightingDojoVIP_EventScript_Erika::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Erika_Rematch
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Erika_PostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Erika_PostOBC
-	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Erika_PostOBC
 #endif
 
 SaffronCity_FightingDojoVIP_EventScript_Erika_Rematch::
@@ -487,8 +463,6 @@ SaffronCity_FightingDojoVIP_EventScript_Janine::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Janine_Rematch
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Janine_PostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Janine_PostOBC
-	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Janine_PostOBC
 #endif
 
 SaffronCity_FightingDojoVIP_EventScript_Janine_Rematch::
@@ -526,8 +500,6 @@ SaffronCity_FightingDojoVIP_EventScript_Sabrina::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Sabrina_Rematch
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Sabrina_PostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Sabrina_PostOBC
-	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Sabrina_PostOBC
 #endif
 
 SaffronCity_FightingDojoVIP_EventScript_Sabrina_Rematch::
@@ -565,8 +537,6 @@ SaffronCity_FightingDojoVIP_EventScript_Blaine::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Blaine_Rematch
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Blaine_PostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Blaine_PostOBC
-	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Blaine_PostOBC
 #endif
 
 SaffronCity_FightingDojoVIP_EventScript_Blaine_Rematch::
@@ -604,8 +574,6 @@ SaffronCity_FightingDojoVIP_EventScript_Blue::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Blue_Rematch
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Blue_PostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Blue_PostOBC
-	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Blue_PostOBC
 #endif
 
 SaffronCity_FightingDojoVIP_EventScript_Blue_Rematch::

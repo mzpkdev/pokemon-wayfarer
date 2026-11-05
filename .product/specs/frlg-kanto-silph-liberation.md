@@ -130,7 +130,7 @@ after later map loads. It must not set individual Trainer defeat bits, award
 skipped money or experience, consume pickups, or suppress Lapras. Noncombat
 staff remain and use recovered dialogue.
 
-VAR_SILPH_GIOVANNI_SCENE_HNS at 0x40DB replaces the source 11F approach and
+VAR_SILPH_GIOVANNI_SCENE_HNS at 0x40F8 replaces the source 11F approach and
 post-battle scene variable only for Wayfarer. It may track occupied and
 liberated callbacks but does not replace any unrelated HNS state. Do not
 allocate the source 7F rival state because the whole Blue branch is excluded.

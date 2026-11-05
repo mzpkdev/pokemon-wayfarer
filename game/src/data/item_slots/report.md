@@ -717,7 +717,7 @@ Every item spot by region. Status is prize (kept flag, gives its prize once), dy
 | - | NewBarkTown_Lab_hns local id 6 (10,4) | - | fixed | - | starter Poke Balls (Pokemon gift; not named in the spec's Johto list) |
 | - | GoldenrodCity_UndergroundTunnel_hns local id 8 (13,13) | ITEM_COIN_CASE | fixed | - | Coin Case (fixed story item) |
 | - | RuinsOfAlph_B1F_hns local id 15 (5,4) | ITEM_GS_BALL | fixed | - | GS Ball (fixed story item) |
-| - | IcePath_1F_hns local id 2 (41,12) | ITEM_HM_WATERFALL | fixed | - | HM Waterfall (fixed story item) |
+| - | IcePath_1F_hns local id 2 (41,11) | ITEM_HM_WATERFALL | fixed | - | HM Waterfall (fixed story item) |
 | - | MtSilver_2F_hns local id 18 (21,48) | ITEM_AZURE_FLUTE | fixed | - | Azure Flute (fixed story item) |
 
 ### Alola

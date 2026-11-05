@@ -40,10 +40,11 @@ export type InventoryApi = {
   rodSlots: () => Promise<Record<StandardRod, number>>
 }
 
+// HNS 2.0.6 pocket order: Items, Medicine, Poke Balls, TMs/HMs, Berries, Key Items.
 const fillablePocketIds = {
-  balls: 1,
-  items: 3,
-  tmHm: 4,
+  items: 0,
+  balls: 2,
+  tmHm: 3,
   keyItems: 5,
 } as const satisfies Record<FillablePocket, number>
 

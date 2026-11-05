@@ -1,6 +1,6 @@
 {
   "upstream_base": "93c5eee2ab",
-  "upstream_commit": "8cb27a9fb01a0f80063c6285fa5805ae9c594329",
+  "upstream_commit": "167aa6d537b109bb229c231ddce4616974c4da71",
   "modern": {
     "sPolitoedLevelUpLearnset": {
       "removed": [],
@@ -190,13 +190,348 @@
           "MOVE_PLAY_ROUGH"
         ]
       ]
+    },
+    "sAriadosLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          1,
+          "MOVE_FIRST_IMPRESSION",
+          0
+        ]
+      ]
+    },
+    "sButterfreeLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          27,
+          "MOVE_POWDER"
+        ]
+      ]
+    },
+    "sCharizardLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          9,
+          "MOVE_METAL_CLAW"
+        ]
+      ]
+    },
+    "sCharmanderLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          9,
+          "MOVE_METAL_CLAW"
+        ]
+      ]
+    },
+    "sCharmeleonLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          9,
+          "MOVE_METAL_CLAW"
+        ]
+      ]
+    },
+    "sCradilyLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          0,
+          "MOVE_LEECH_SEED"
+        ],
+        [
+          64,
+          "MOVE_GRASSY_TERRAIN"
+        ]
+      ]
+    },
+    "sCrobatLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          65,
+          "MOVE_CRUNCH"
+        ]
+      ]
+    },
+    "sFurretLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          25,
+          "MOVE_NUZZLE"
+        ],
+        [
+          44,
+          "MOVE_PLAY_ROUGH"
+        ]
+      ]
+    },
+    "sGolbatLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          65,
+          "MOVE_CRUNCH"
+        ]
+      ]
+    },
+    "sIvysaurLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          25,
+          "MOVE_SLUDGE"
+        ]
+      ]
+    },
+    "sKabutoLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          51,
+          "MOVE_LIQUIDATION"
+        ]
+      ]
+    },
+    "sKabutopsLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          51,
+          "MOVE_LIQUIDATION"
+        ]
+      ]
+    },
+    "sKecleonLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          27,
+          "MOVE_FIRST_IMPRESSION"
+        ]
+      ]
+    },
+    "sLedianLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          36,
+          "MOVE_POWER_UP_PUNCH"
+        ],
+        [
+          45,
+          "MOVE_FIRST_IMPRESSION"
+        ]
+      ]
+    },
+    "sMrMimeLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          60,
+          "MOVE_FIRST_IMPRESSION"
+        ]
+      ]
+    },
+    "sParasLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          26,
+          "MOVE_INGRAIN"
+        ],
+        [
+          30,
+          "MOVE_POWDER"
+        ]
+      ]
+    },
+    "sParasectLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          32,
+          "MOVE_INGRAIN"
+        ],
+        [
+          35,
+          "MOVE_POWDER"
+        ],
+        [
+          55,
+          "MOVE_CRABHAMMER"
+        ]
+      ]
+    },
+    "sPidgeotLevelUpLearnset": {
+      "removed": [
+        [
+          38,
+          "MOVE_WING_ATTACK"
+        ]
+      ],
+      "added": [
+        [
+          1,
+          "MOVE_PECK",
+          1
+        ],
+        [
+          23,
+          "MOVE_WING_ATTACK"
+        ],
+        [
+          38,
+          "MOVE_AERIAL_ACE"
+        ],
+        [
+          41,
+          "MOVE_SKY_DROP"
+        ]
+      ]
+    },
+    "sPidgeottoLevelUpLearnset": {
+      "removed": [
+        [
+          37,
+          "MOVE_WING_ATTACK"
+        ]
+      ],
+      "added": [
+        [
+          1,
+          "MOVE_PECK",
+          1
+        ],
+        [
+          23,
+          "MOVE_WING_ATTACK"
+        ],
+        [
+          37,
+          "MOVE_AERIAL_ACE"
+        ],
+        [
+          40,
+          "MOVE_SKY_DROP"
+        ]
+      ]
+    },
+    "sPidgeyLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          1,
+          "MOVE_PECK"
+        ]
+      ]
+    },
+    "sPinsirLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          45,
+          "MOVE_LUNGE"
+        ]
+      ]
+    },
+    "sProbopassLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          50,
+          "MOVE_BODY_PRESS"
+        ]
+      ]
+    },
+    "sSeakingLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          45,
+          "MOVE_FLIP_TURN"
+        ]
+      ]
+    },
+    "sSentretLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          10,
+          "MOVE_BABY_DOLL_EYES"
+        ]
+      ]
+    },
+    "sSteelixLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          54,
+          "MOVE_IRON_HEAD"
+        ]
+      ]
+    },
+    "sSunfloraLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          23,
+          "MOVE_POWDER"
+        ]
+      ]
+    },
+    "sSunkernLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          23,
+          "MOVE_POWDER"
+        ]
+      ]
+    },
+    "sSylveonLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          35,
+          "MOVE_ECHOED_VOICE"
+        ],
+        [
+          48,
+          "MOVE_HYPER_VOICE"
+        ]
+      ]
+    },
+    "sVenusaurLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          25,
+          "MOVE_SLUDGE"
+        ]
+      ]
+    },
+    "sYanmegaLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          63,
+          "MOVE_DRAGON_DANCE"
+        ]
+      ]
     }
   },
   "modern_standalone_sha256": {
-    "HNS": "19df9f6de2631eaa5a53fff450fb8d3e0cf4b2a5b64c4df336a774a3a1bc56f0",
-    "EMERALD": "fff7d0748ee5884d0a39f3b61f4007a452a3b594e7cef4390e584f71e94aca5d",
-    "FRLG": "06c228e3134094813a96813243b2d9faa171788d115b187f33d3415854e1c628",
-    "NONE": "bb93137826c7bc100cb94971f3517c1fccff0d245b28b7c1ed5bda229aecd912"
+    "HNS": "b6b53964bdfd60a4a2b0399152284183b716370abbeb319579a64e7c17108f13",
+    "EMERALD": "99718b7494100f535178c307ebe31a2f8d4123cb9ad839353cb2a83a3a875a81",
+    "FRLG": "0e26a745b4aebcc9e7efefd3cad23cfeb042bc583378ba4493a9fa29ef1ccb59",
+    "NONE": "0ecf8a74cc030593b5f582ecd2f504ef549be96871fda4e064cdf4e61d924776"
   },
   "wayfarer_exclusions": {
     "modern": {
@@ -217,6 +552,28 @@
           ]
         ],
         "reason": "Preserve approved Strength catch levels 55 through 62."
+      },
+      "sParasLevelUpLearnset": {
+        "added": [
+          [
+            26,
+            "MOVE_INGRAIN"
+          ],
+          [
+            30,
+            "MOVE_POWDER"
+          ]
+        ],
+        "reason": "Preserve approved Cut catch levels 12 through 32."
+      },
+      "sSeakingLevelUpLearnset": {
+        "added": [
+          [
+            45,
+            "MOVE_FLIP_TURN"
+          ]
+        ],
+        "reason": "Preserve approved Waterfall catch levels 32 through 53."
       }
     }
   }

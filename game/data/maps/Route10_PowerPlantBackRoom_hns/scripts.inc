@@ -56,6 +56,7 @@ Route10_PowerPlantBackRoom_EventScript_ManagerCommitRepair::
 	clearflag FLAG_HIDE_ROUTE25_MISTY
 	setvar VAR_CERULEAN_CITY_STATE, 2
 	setflag FLAG_HIDE_POWER_PLANT_ENGINEER
+	setvar VAR_VERMILION_CITY_SAMSON, 1
 	removeobject LOCALID_POWER_PLANT_BACK_ROOM_ENGINEER
 	msgbox Route10_PowerPlantBackRoom_Text_ManagerGeneratorRestored, MSGBOX_DEFAULT
 	closemessage

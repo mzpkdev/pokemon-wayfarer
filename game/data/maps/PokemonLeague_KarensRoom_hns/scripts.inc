@@ -40,8 +40,6 @@ PokemonLeague_KarensRoom_EventScript_KarenRematch::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, PokemonLeague_KarensRoom_EventScript_KarenRematchStandard
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, PokemonLeague_KarensRoom_EventScript_KarenRematchPostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, PokemonLeague_KarensRoom_EventScript_KarenRematchPostOBC
-	goto_if_set FLAG_USED_TELEPORTER, PokemonLeague_KarensRoom_EventScript_KarenRematchPostOBC
 #endif
 
 PokemonLeague_KarensRoom_EventScript_KarenRematchStandard::

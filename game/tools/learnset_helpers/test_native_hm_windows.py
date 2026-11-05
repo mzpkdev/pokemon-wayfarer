@@ -37,11 +37,17 @@ def with_upstream_moves(entries, mode, symbol, wayfarer=True):
     exclusions = (UPSTREAM_DELTA.get('wayfarer_exclusions', {}).get(mode, {}).get(symbol, {})
                   if wayfarer else {})
     for entry in changes.get('added', []):
-        if entry in exclusions.get('added', []):
+        # An optional third element pins the index upstream inserted the move at,
+        # for additions placed out of level order (e.g. ahead of an evolution move).
+        move = entry[:2]
+        if move in exclusions.get('added', []):
             continue
-        index = next((i for i, existing in enumerate(result) if existing[0] > entry[0]),
-                     len(result))
-        result.insert(index, entry[:])
+        if len(entry) > 2:
+            index = entry[2]
+        else:
+            index = next((i for i, existing in enumerate(result) if existing[0] > move[0]),
+                         len(result))
+        result.insert(index, move)
     return result
 
 

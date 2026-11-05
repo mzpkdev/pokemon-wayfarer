@@ -42,6 +42,7 @@ bool8 WayfarerIsDiveAuthorizedForCurrentMap(void);
 u16 WayfarerGetCurrentRegionForScript(void);
 u16 WayfarerGetKantoBadgeCountForScript(void);
 u16 WayfarerGetHoennBadgeCountForScript(void);
+u16 WayfarerIsCurrentRegionChampionForScript(void);
 u16 WayfarerShouldWhiteOutToLavaridge(void);
 bool8 WayfarerInitializeHoennState(s16 mapGroup, s16 mapNum, s16 x, s16 y);
 bool8 WayfarerPrepareHoennEntry(s16 mapGroup, s16 mapNum, s16 x, s16 y, u8 healLocationId);

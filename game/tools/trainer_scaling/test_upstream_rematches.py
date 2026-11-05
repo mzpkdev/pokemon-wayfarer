@@ -15,7 +15,7 @@ POSTOBC = ('FALKNER', 'BUGSY', 'WHITNEY', 'MORTY', 'CHUCK', 'JASMINE', 'PRYCE',
 
 
 def postobc_id(leader):
-    return 'TRAINER_CLAIR_OBC_HNS' if leader == 'CLAIR' else f'TRAINER_{leader}_POSTOBC_HNS'
+    return f'TRAINER_{leader}_POSTOBC_HNS'
 
 
 def script(map_name, wayfarer):
@@ -75,7 +75,9 @@ class UpstreamRematchTests(unittest.TestCase):
         self.assertEqual(battle_ids(source), expected)
         for leader in KANTO + JOHTO:
             self.assertIn(postobc_id(leader), source)
-        self.assertEqual(source.count('goto_if_set FLAG_USED_TELEPORTER,'), 16)
+        # HNS 2.0.6 opens post-OBC teams after Sinjoh only, not after Alola or the teleporter.
+        self.assertEqual(source.count('goto_if_ge VAR_SINJOH_STORYLINE, 13,'), 16)
+        self.assertNotIn('FLAG_USED_TELEPORTER', source)
 
     def test_postgame_flags_cannot_select_postobc_league_or_red_in_wayfarer(self):
         for room, leader in LEAGUE.items():
@@ -85,12 +87,13 @@ class UpstreamRematchTests(unittest.TestCase):
             self.assertNotIn('PostOBC', wayfarer)
             self.assertIn(f'TRAINER_{leader}_2_HNS', battle_ids(wayfarer))
             self.assertIn(postobc_id(leader), battle_ids(hns))
-            self.assertIn('goto_if_set FLAG_USED_TELEPORTER,', hns)
+            self.assertIn('goto_if_ge VAR_SINJOH_STORYLINE, 13,', hns)
+            self.assertNotIn('FLAG_USED_TELEPORTER', hns)
         wayfarer = script('MtSilver_SummitDay_hns', True)
-        self.assertEqual(battle_ids(wayfarer), {'TRAINER_RED_2_HNS'})
+        self.assertEqual(battle_ids(wayfarer), {'TRAINER_RED_HNS'})
         self.assertNotIn('PostOBC', wayfarer)
         self.assertEqual(battle_ids(script('MtSilver_SummitDay_hns', False)),
-                         {'TRAINER_RED_2_HNS', 'TRAINER_RED_POSTOBC_HNS'})
+                         {'TRAINER_RED_HNS', 'TRAINER_RED_POSTOBC_HNS'})
 
 
 if __name__ == '__main__':

@@ -4,7 +4,7 @@
   "manifest_baseline": {
     "projection_sha256": "47b97c6d5911ed1d19029ef858c9a26d6f62c170901ca508221234a69d098095",
     "wild_encounters_sha256": "a2264a3346ae5ac0a37cdc22169a1455b2a51a9b7b626f3090504d84eaabb0b7",
-    "event_island_baseline_sha256": "6f3bb6b4529414fe74a9608aa2ccf6e81c0f2a5768db00618c15f8448c2ef611"
+    "event_island_baseline_sha256": "1a490fcd61aef136a8513e881ad6c957e47d2f600c27d259627d91bbba67d3f2"
   },
   "exploration": {
     "map_count": 135,

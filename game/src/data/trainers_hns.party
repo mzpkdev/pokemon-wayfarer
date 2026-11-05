@@ -18,7 +18,7 @@ Name: ROSS
 Class: Collector Hns
 Pic: Collector
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -35,7 +35,7 @@ Name: MITCH
 Class: Collector Hns
 Pic: Collector
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -48,7 +48,7 @@ Name: JED
 Class: Collector Hns
 Pic: Collector
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -65,7 +65,7 @@ Name: MARC
 Class: Collector Hns
 Pic: Collector
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -78,7 +78,7 @@ Name: RICH
 Class: Collector Hns
 Pic: Collector
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -597,7 +597,7 @@ Name: ROY
 Class: Biker Hns
 Pic: Biker Hns
 Gender: Male
-Music: Hg Boy 2
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -720,7 +720,7 @@ Name: CARRIE
 Class: Lass Hns
 Pic: Lass
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -733,7 +733,7 @@ Name: BRIDGET
 Class: Lass Hns
 Pic: Lass
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -750,7 +750,7 @@ Name: ALICE
 Class: Lass Hns
 Pic: Lass
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -771,7 +771,7 @@ Name: KRISE
 Class: Lass Hns
 Pic: Lass
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -788,7 +788,7 @@ Name: CONNIE
 Class: Lass Hns
 Pic: Lass
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -805,7 +805,7 @@ Name: LINDA
 Class: Lass Hns
 Pic: Lass
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -826,7 +826,7 @@ Name: LAURA
 Class: Lass Hns
 Pic: Lass
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -847,7 +847,7 @@ Name: SHANNON
 Class: Lass Hns
 Pic: Lass
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -868,7 +868,7 @@ Name: MICHELLE
 Class: Lass Hns
 Pic: Lass
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -889,7 +889,7 @@ Name: DANA
 Class: Lass Hns
 Pic: Lass
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -906,7 +906,7 @@ Name: ELLEN
 Class: Lass Hns
 Pic: Lass
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -1337,7 +1337,7 @@ Name: GWEN
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1362,7 +1362,7 @@ Name: LOIS
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1379,7 +1379,7 @@ Name: FRAN
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1400,7 +1400,7 @@ Name: LOLA
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1425,7 +1425,7 @@ Name: KATE
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1442,7 +1442,7 @@ Name: IRENE
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1459,7 +1459,7 @@ Name: KELLY
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1484,7 +1484,7 @@ Name: JOYCE
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1513,7 +1513,7 @@ Name: BETH
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1542,7 +1542,7 @@ Name: REENA
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1571,7 +1571,7 @@ Name: MEGAN
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1596,7 +1596,7 @@ Name: CAROL
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1617,7 +1617,7 @@ Name: QUINN
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1634,7 +1634,7 @@ Name: EMMA
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1647,7 +1647,7 @@ Name: CYBIL
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1668,7 +1668,7 @@ Name: JENN
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1685,7 +1685,7 @@ Name: CARA
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1706,7 +1706,7 @@ Name: VICTORIA
 Class: Beauty Hns
 Pic: Beauty
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1723,7 +1723,7 @@ Name: SAMANTHA
 Class: Beauty Hns
 Pic: Beauty
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1736,7 +1736,7 @@ Name: JULIE
 Class: Beauty Hns
 Pic: Beauty
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1749,7 +1749,7 @@ Name: JACLYN
 Class: Beauty Hns
 Pic: Beauty
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1762,7 +1762,7 @@ Name: BRENDA
 Class: Beauty Hns
 Pic: Beauty
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1775,7 +1775,7 @@ Name: CASSIE
 Class: Beauty Hns
 Pic: Beauty
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1792,7 +1792,7 @@ Name: CAROLINE
 Class: Beauty Hns
 Pic: Beauty
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1813,7 +1813,7 @@ Name: CARLENE
 Class: Beauty Hns
 Pic: Beauty
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1826,7 +1826,7 @@ Name: JESSICA
 Class: Beauty Hns
 Pic: Beauty
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1839,7 +1839,7 @@ Name: RACHAEL
 Class: Beauty Hns
 Pic: Beauty
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1852,7 +1852,7 @@ Name: ANGELICA
 Class: Beauty Hns
 Pic: Beauty
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1865,7 +1865,7 @@ Name: KENDRA
 Class: Beauty Hns
 Pic: Beauty
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1878,7 +1878,7 @@ Name: VERONICA
 Class: Beauty Hns
 Pic: Beauty
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1891,7 +1891,7 @@ Name: JULIA
 Class: Beauty Hns
 Pic: Beauty
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1912,7 +1912,7 @@ Name: THERESA
 Class: Beauty Hns
 Pic: Beauty
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1925,7 +1925,7 @@ Name: VALERIE
 Class: Beauty Hns
 Pic: Beauty
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1942,7 +1942,7 @@ Name: OLIVIA
 Class: Beauty Hns
 Pic: Beauty
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1955,7 +1955,7 @@ Name: LARRY
 Class: Pokemaniac Hns
 Pic: Pokemaniac
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1968,7 +1968,7 @@ Name: ANDREW
 Class: Pokemaniac Hns
 Pic: Pokemaniac
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1985,7 +1985,7 @@ Name: CALVIN
 Class: Pokemaniac Hns
 Pic: Pokemaniac
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -1998,7 +1998,7 @@ Name: SHANE
 Class: Pokemaniac Hns
 Pic: Pokemaniac
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -2015,7 +2015,7 @@ Name: BEN
 Class: Pokemaniac Hns
 Pic: Pokemaniac
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -2032,7 +2032,7 @@ Name: BRENT
 Class: Pokemaniac Hns
 Pic: Pokemaniac
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -2049,7 +2049,7 @@ Name: RON
 Class: Pokemaniac Hns
 Pic: Pokemaniac
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -2066,7 +2066,7 @@ Name: ETHAN
 Class: Pokemaniac Hns
 Pic: Pokemaniac
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -2083,7 +2083,7 @@ Name: ISSAC
 Class: Pokemaniac Hns
 Pic: Pokemaniac
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -2096,7 +2096,7 @@ Name: DONALD
 Class: Pokemaniac Hns
 Pic: Pokemaniac
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -2113,7 +2113,7 @@ Name: ZACH
 Class: Pokemaniac Hns
 Pic: Pokemaniac
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -2134,7 +2134,7 @@ Name: MILLER
 Class: Pokemaniac Hns
 Pic: Pokemaniac
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -2823,7 +2823,7 @@ Name: PRESTON
 Class: Gentleman Hns
 Pic: Gentleman
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -2840,7 +2840,7 @@ Name: EDWARD
 Class: Gentleman Hns
 Pic: Gentleman
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -2853,7 +2853,7 @@ Name: GREGORY
 Class: Gentleman Hns
 Pic: Gentleman
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -2870,7 +2870,7 @@ Name: VIRGIL
 Class: Gentleman Hns
 Pic: Gentleman
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -2883,7 +2883,7 @@ Name: ALFRED
 Class: Gentleman Hns
 Pic: Gentleman
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -2896,7 +2896,7 @@ Name: ROXANNE
 Class: Skier Hns
 Pic: Skier F Hns
 Gender: Female
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -2909,7 +2909,7 @@ Name: CLARISSA
 Class: Skier Hns
 Pic: Skier F Hns
 Gender: Female
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -2922,7 +2922,7 @@ Name: COLETTE
 Class: Expert Hns
 Pic: Expert F
 Gender: Female
-Music: Hg Girl 2
+Music: Hg Sage
 Double Battle: No
 AI: Check Bad Move
 
@@ -2952,7 +2952,7 @@ Name: SHIRLEY
 Class: Expert Hns
 Pic: Expert F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Sage
 Double Battle: No
 AI: Check Bad Move
 
@@ -3845,7 +3845,7 @@ Name: ELAINE
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -3858,7 +3858,7 @@ Name: PAULA
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -3875,7 +3875,7 @@ Name: KAYLEE
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -3896,7 +3896,7 @@ Name: SUSIE
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -3913,7 +3913,7 @@ Name: DENISE
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -3926,7 +3926,7 @@ Name: KARA
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -3943,7 +3943,7 @@ Name: WENDY
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -3960,7 +3960,7 @@ Name: LISA
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -3973,7 +3973,7 @@ Name: JILL
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -3986,7 +3986,7 @@ Name: MARY
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -3999,7 +3999,7 @@ Name: KATIE
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -4013,7 +4013,7 @@ Name: DAWN
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -4027,7 +4027,7 @@ Name: TARA
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -4041,7 +4041,7 @@ Name: NICOLE
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -4058,7 +4058,7 @@ Name: LORI
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -4076,7 +4076,7 @@ Name: JODY
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -4090,7 +4090,7 @@ Name: NIKKI
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -4112,7 +4112,7 @@ Name: DIANA
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -4133,7 +4133,7 @@ Name: BRIANA
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -4566,7 +4566,7 @@ Name: CLYDE
 Class: Guitarist Hns
 Pic: Guitarist
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -4579,7 +4579,7 @@ Name: VINCENT
 Class: Guitarist Hns
 Pic: Guitarist
 Gender: Male
-Music: Hg Boy 2
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -4937,7 +4937,7 @@ Name: KAZU
 Class: Biker Hns
 Pic: Biker Hns
 Gender: Male
-Music: Hg Boy 2
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -4958,7 +4958,7 @@ Name: DWAYNE
 Class: Biker Hns
 Pic: Biker Hns
 Gender: Male
-Music: Hg Boy 2
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -4983,7 +4983,7 @@ Name: HARRIS
 Class: Biker Hns
 Pic: Biker Hns
 Gender: Male
-Music: Hg Boy 2
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -4996,7 +4996,7 @@ Name: ZEKE
 Class: Biker Hns
 Pic: Biker Hns
 Gender: Male
-Music: Hg Boy 2
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -5013,7 +5013,7 @@ Name: CHARLES
 Class: Biker Hns
 Pic: Biker Hns
 Gender: Male
-Music: Hg Boy 2
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -5034,7 +5034,7 @@ Name: RILEY
 Class: Biker Hns
 Pic: Biker Hns
 Gender: Male
-Music: Hg Boy 2
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -5047,7 +5047,7 @@ Name: JOEL
 Class: Biker Hns
 Pic: Biker Hns
 Gender: Male
-Music: Hg Boy 2
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -5064,7 +5064,7 @@ Name: GLENN
 Class: Biker Hns
 Pic: Biker Hns
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -5085,7 +5085,7 @@ Name: DUNCAN
 Class: Burglar Hns
 Pic: Burglar Hns
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -5102,7 +5102,7 @@ Name: EDDIE
 Class: Burglar Hns
 Pic: Burglar Hns
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -5119,7 +5119,7 @@ Name: RICHARDO
 Class: Burglar Hns
 Pic: Burglar Hns
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -5716,7 +5716,7 @@ Name: LIZ
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -5729,7 +5729,7 @@ Name: GINA
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -5746,7 +5746,7 @@ Name: BROOKE
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -5759,7 +5759,7 @@ Name: KIM
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -5772,7 +5772,7 @@ Name: CINDY
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -5789,7 +5789,7 @@ Name: HOPE
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -5802,7 +5802,7 @@ Name: SHARON
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -5819,7 +5819,7 @@ Name: DEBRA
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -5832,7 +5832,7 @@ Name: ERIN
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -5857,7 +5857,7 @@ Name: HEIDI
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -5874,7 +5874,7 @@ Name: EDNA
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -5891,7 +5891,7 @@ Name: TIFFANY
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -5908,7 +5908,7 @@ Name: TANYA
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -6623,7 +6623,7 @@ Name: RONALD
 Class: Skier Hns
 Pic: Skier M Hns
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Boy 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -6640,7 +6640,7 @@ Name: BRAD
 Class: Skier Hns
 Pic: Skier M Hns
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Boy 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -6657,7 +6657,7 @@ Name: DOUGLAS
 Class: Skier Hns
 Pic: Skier M Hns
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Boy 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -6823,7 +6823,7 @@ Name: ALEX
 Class: Battle Girl Hns
 Pic: Battle Girl
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -6870,7 +6870,7 @@ Name: NAOKO
 Class: Kimono Girl Hns
 Pic: Kimono Girl Hns
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Kimono Girl
 Double Battle: No
 AI: Basic Trainer
 Mugshot: Pink
@@ -6888,7 +6888,7 @@ Name: SAYO
 Class: Kimono Girl Hns
 Pic: Kimono Girl Hns
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Kimono Girl
 Double Battle: No
 AI: Basic Trainer
 Mugshot: Yellow
@@ -6906,7 +6906,7 @@ Name: ZUKI
 Class: Kimono Girl Hns
 Pic: Kimono Girl Hns
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Kimono Girl
 Double Battle: No
 AI: Basic Trainer
 Mugshot: Purple
@@ -6924,7 +6924,7 @@ Name: KUNI
 Class: Kimono Girl Hns
 Pic: Kimono Girl Hns
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Kimono Girl
 Double Battle: No
 AI: Basic Trainer
 Mugshot: Light Blue
@@ -6942,7 +6942,7 @@ Name: MIKI
 Class: Kimono Girl Hns
 Pic: Kimono Girl Hns
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Kimono Girl
 Double Battle: No
 AI: Basic Trainer
 Mugshot: Dark Red
@@ -6960,7 +6960,7 @@ Name: AMY&MAY
 Class: Twins Hns
 Pic: Twins Hns
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: Yes
 AI: Check Bad Move
 
@@ -6977,7 +6977,7 @@ Name: ANN&ANNE
 Class: Twins Hns
 Pic: Twins Hns
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: Yes
 AI: Check Bad Move
 
@@ -6994,7 +6994,7 @@ Name: JO&ZOE
 Class: Twins Hns
 Pic: Twins Hns
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: Yes
 AI: Check Bad Move
 
@@ -7011,7 +7011,7 @@ Name: MEG&PEG
 Class: Twins Hns
 Pic: Twins Hns
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: Yes
 AI: Check Bad Move
 
@@ -7028,7 +7028,7 @@ Name: LEA&PIA
 Class: Twins Hns
 Pic: Twins Hns
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: Yes
 AI: Check Bad Move
 
@@ -7053,7 +7053,7 @@ Name: BEVERLY
 Class: Parasol Lady Hns
 Pic: Parasol Lady
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -7066,7 +7066,7 @@ Name: RUTH
 Class: Parasol Lady Hns
 Pic: Parasol Lady
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -7079,7 +7079,7 @@ Name: GEORGIA
 Class: Parasol Lady Hns
 Pic: Parasol Lady
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -7108,7 +7108,7 @@ Name: JAIME
 Class: Parasol Lady Hns
 Pic: Parasol Lady
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -9059,7 +9059,7 @@ Name: WILL
 Class: Elite Four Hns
 Pic: Elite Four Will Hns
 Gender: Male
-Music: Elite Four
+Music: Hg Elite Four
 Double Battle: No
 AI: Basic Trainer
 Mugshot: Pink
@@ -9110,7 +9110,7 @@ Name: WILL
 Class: Elite Four Hns
 Pic: Elite Four Will Hns
 Gender: Male
-Music: Elite Four
+Music: Hg Elite Four
 Double Battle: No
 AI: Basic Trainer
 Mugshot: Pink
@@ -9169,7 +9169,7 @@ Name: BRUNO
 Class: Elite Four Hns
 Pic: Elite Four Bruno Hns
 Gender: Male
-Music: Elite Four
+Music: Hg Elite Four
 Double Battle: No
 AI: Basic Trainer
 Mugshot: Orange
@@ -9220,7 +9220,7 @@ Name: BRUNO
 Class: Elite Four Hns
 Pic: Elite Four Bruno Hns
 Gender: Male
-Music: Elite Four
+Music: Hg Elite Four
 Double Battle: No
 AI: Basic Trainer
 Mugshot: Orange
@@ -9279,7 +9279,7 @@ Name: KAREN
 Class: Elite Four Hns
 Pic: Elite Four Karen Hns
 Gender: Male
-Music: Elite Four
+Music: Hg Elite Four
 Double Battle: No
 AI: Basic Trainer
 Mugshot: Yellow
@@ -9330,7 +9330,7 @@ Name: KAREN
 Class: Elite Four Hns
 Pic: Elite Four Karen Hns
 Gender: Male
-Music: Elite Four
+Music: Hg Elite Four
 Double Battle: No
 AI: Basic Trainer
 Mugshot: Yellow
@@ -9389,7 +9389,7 @@ Name: KOGA
 Class: Elite Four Hns
 Pic: Elite Four Koga Hns
 Gender: Male
-Music: Elite Four
+Music: Hg Elite Four
 Double Battle: No
 AI: Basic Trainer
 Mugshot: Purple
@@ -9440,7 +9440,7 @@ Name: KOGA
 Class: Elite Four Hns
 Pic: Elite Four Koga Hns
 Gender: Male
-Music: Elite Four
+Music: Hg Elite Four
 Double Battle: No
 AI: Basic Trainer
 Mugshot: Purple
@@ -10636,7 +10636,7 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Stone Edge
 - Fire Fang
 
-=== TRAINER_RED_2_HNS ===
+=== TRAINER_RED_HNS ===
 Name: RED
 Class: Pkmn Trainer 1 Hns
 Pic: Red Hns
@@ -10646,7 +10646,7 @@ Double Battle: No
 AI: Basic Trainer
 Items: Full Restore / Full Restore
 
-Pikachu @ Light Ball
+Pikachu-Starter @ Light Ball
 Level: 93
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Thunderbolt
@@ -10655,7 +10655,7 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Double Team
 
 Snorlax @ Leftovers
-Level: 75
+Level: 77
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Belly Drum
 - Curse
@@ -10663,7 +10663,7 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Earthquake
 
 Charizard @ Charcoal
-Level: 77
+Level: 79
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Fire Blast
 - Aerial Ace
@@ -10671,7 +10671,7 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Steel Wing
 
 Venusaur @ Miracle Seed
-Level: 77
+Level: 79
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Petal Blizzard
 - Double Edge
@@ -10679,7 +10679,7 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Leech Seed
 
 Blastoise @ Quick Claw
-Level: 77
+Level: 79
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Ice Beam
 - Hydro Pump
@@ -11554,7 +11554,7 @@ Name: LIZ
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -11569,7 +11569,7 @@ Name: LIZ
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -11587,7 +11587,7 @@ Name: LIZ
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -11605,7 +11605,7 @@ Name: LIZ
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -11794,7 +11794,7 @@ Name: GINA
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -11812,7 +11812,7 @@ Name: GINA
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -11830,7 +11830,7 @@ Name: GINA
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -11848,7 +11848,7 @@ Name: GINA
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -12119,7 +12119,7 @@ Name: DANA
 Class: Lass Hns
 Pic: Lass
 Gender: Female
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -12142,7 +12142,7 @@ Name: DANA
 Class: Lass Hns
 Pic: Lass
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -12165,7 +12165,7 @@ Name: DANA
 Class: Lass Hns
 Pic: Lass
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -12188,7 +12188,7 @@ Name: DANA
 Class: Lass Hns
 Pic: Lass
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -12399,7 +12399,7 @@ Name: BRENT
 Class: Pokemaniac Hns
 Pic: Pokemaniac
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -12411,7 +12411,7 @@ Name: BRENT
 Class: Pokemaniac Hns
 Pic: Pokemaniac
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -12427,7 +12427,7 @@ Name: BRENT
 Class: Pokemaniac Hns
 Pic: Pokemaniac
 Gender: Male
-Music: Hg Boy 1
+Music: Hg Suspicious 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -12443,7 +12443,7 @@ Name: TIFFANY
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -12459,7 +12459,7 @@ Name: TIFFANY
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -12475,7 +12475,7 @@ Name: TIFFANY
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -12661,7 +12661,7 @@ Name: ERIN
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -12682,7 +12682,7 @@ Name: ERIN
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Male
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -12797,7 +12797,7 @@ Name: BEVERLY
 Class: Parasol Lady Hns
 Pic: Parasol Lady
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -12810,7 +12810,7 @@ Name: BEVERLY
 Class: Parasol Lady Hns
 Pic: Parasol Lady
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -12823,7 +12823,7 @@ Name: BEVERLY
 Class: Parasol Lady Hns
 Pic: Parasol Lady
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -12836,7 +12836,7 @@ Name: BEVERLY
 Class: Parasol Lady Hns
 Pic: Parasol Lady
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -12994,7 +12994,7 @@ Name: BETH
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -13037,7 +13037,7 @@ Name: BETH
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -13125,7 +13125,7 @@ Name: REENA
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -13149,7 +13149,7 @@ Name: REENA
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 
@@ -13173,7 +13173,7 @@ Name: ALEX
 Class: Battle Girl Hns
 Pic: Battle Girl
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -13194,7 +13194,7 @@ Name: ALEX
 Class: Battle Girl Hns
 Pic: Battle Girl
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -13218,7 +13218,7 @@ Name: RILEY
 Class: Biker Hns
 Pic: Biker Hns
 Gender: Male
-Music: Hg Boy 2
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -13233,7 +13233,7 @@ Name: RILEY
 Class: Biker Hns
 Pic: Biker Hns
 Gender: Male
-Music: Hg Boy 2
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -13251,7 +13251,7 @@ Name: RILEY
 Class: Biker Hns
 Pic: Biker Hns
 Gender: Male
-Music: Hg Boy 2
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -13453,7 +13453,7 @@ Name: NICOLE
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -13472,7 +13472,7 @@ Name: NICOLE
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Male
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -13577,7 +13577,7 @@ Name: JOEL
 Class: Biker Hns
 Pic: Biker Hns
 Gender: Male
-Music: Hg Boy 2
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -13601,7 +13601,7 @@ Name: JOEL
 Class: Biker Hns
 Pic: Biker Hns
 Gender: Male
-Music: Hg Boy 2
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -13625,7 +13625,7 @@ Name: CHARLES
 Class: Biker Hns
 Pic: Biker Hns
 Gender: Male
-Music: Hg Boy 2
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -13646,7 +13646,7 @@ Name: CHARLES
 Class: Biker Hns
 Pic: Biker Hns
 Gender: Male
-Music: Hg Boy 2
+Music: Hg Suspicious 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -13670,7 +13670,7 @@ Name: SAMSON OAK
 Class: Professor Hns
 Pic: Samson Oak Hns
 Gender: Male
-Music: Elite Four
+Music: Rg Gym Leader
 Double Battle: No
 AI: Smart Trainer
 Mugshot: Green
@@ -13774,40 +13774,40 @@ Name: MIA
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Female
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
-Politoed @ Damp Rock  
-Ability: Drizzle  
-Level: 63   
-Bold Nature  
-IVs: 0 Atk  
-- Weather Ball  
-- Icy Wind  
-- Whirlpool  
-- Perish Song  
+Politoed @ Damp Rock
+Ability: Drizzle
+Level: 63
+Bold Nature
+IVs: 0 Atk
+- Weather Ball
+- Icy Wind
+- Whirlpool
+- Perish Song
 
-Mantine @ Leftovers  
-Ability: Swift Swim  
-Level: 63    
-Modest Nature  
-IVs: 0 Atk  
-- Hurricane  
-- Water Pulse  
-- Signal Beam  
-- Aqua Ring  
+Mantine @ Leftovers
+Ability: Swift Swim
+Level: 63
+Modest Nature
+IVs: 0 Atk
+- Hurricane
+- Water Pulse
+- Signal Beam
+- Aqua Ring
 
-Luvdisc (F) @ Big Root  
-Ability: Swift Swim  
-Level: 64  
-EVs: 248 Spe  
-Timid Nature  
-IVs: 0 Atk  
-- Attract  
-- Draining Kiss  
-- Scald  
-- Sweet Kiss  
+Luvdisc (F) @ Big Root
+Ability: Swift Swim
+Level: 64
+EVs: 248 Spe
+Timid Nature
+IVs: 0 Atk
+- Attract
+- Draining Kiss
+- Scald
+- Sweet Kiss
 
 
 
@@ -13851,36 +13851,36 @@ Name: KELSIE
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Female
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
-Starmie @ Lagging Tail  
-Ability: Analytic  
-Level: 66    
-EVs: 140 HP / 204 Atk / 104 Def / 60 SpD  
-Adamant Nature  
-- Dive  
-- Avalanche  
-- Curse  
-- Recover  
+Starmie @ Lagging Tail
+Ability: Analytic
+Level: 66
+EVs: 140 HP / 204 Atk / 104 Def / 60 SpD
+Adamant Nature
+- Dive
+- Avalanche
+- Curse
+- Recover
 
-Seaking @ King's Rock  
-Ability: Lightning Rod  
-Level: 67    
-- Drill Run  
-- Acupressure  
-- Scale Shot  
-- Tail Whip  
+Seaking @ King's Rock
+Ability: Lightning Rod
+Level: 67
+- Drill Run
+- Acupressure
+- Scale Shot
+- Tail Whip
 
-Golduck @ Scope Lens  
-Ability: Cloud Nine  
-Level: 60     
-Jolly Nature  
-- Cross Chop  
-- Aqua Jet  
-- Shadow Claw  
-- Yawn  
+Golduck @ Scope Lens
+Ability: Cloud Nine
+Level: 60
+Jolly Nature
+- Cross Chop
+- Aqua Jet
+- Shadow Claw
+- Yawn
 
 
 
@@ -13889,36 +13889,36 @@ Name: PORTIA
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Female
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
-Corsola @ Zoom Lens  
-Ability: Hustle  
-Level: 65   
-Brave Nature  
-IVs: 0 Spe  
-- Liquidation  
-- Head Smash  
-- Recover  
-- Sucker Punch  
+Corsola @ Zoom Lens
+Ability: Hustle
+Level: 65
+Brave Nature
+IVs: 0 Spe
+- Liquidation
+- Head Smash
+- Recover
+- Sucker Punch
 
-Octillery @ Leftovers  
-Ability: Moody  
-Level: 65  
-- Protect  
-- Octazooka  
-- Gunk Shot  
-- Rock Blast  
+Octillery @ Leftovers
+Ability: Moody
+Level: 65
+- Protect
+- Octazooka
+- Gunk Shot
+- Rock Blast
 
-Mantine @ Assault Vest  
-Ability: Water Absorb  
-Level: 66      
-Careful Nature  
-- Mirror Coat  
-- Seed Bomb  
-- Aqua Tail  
-- Rock Blast  
+Mantine @ Assault Vest
+Ability: Water Absorb
+Level: 66
+Careful Nature
+- Mirror Coat
+- Seed Bomb
+- Aqua Tail
+- Rock Blast
 
 === TRAINER_AKALA_SWIMMER_3_HNS ===
 Name: GEOFF
@@ -13961,39 +13961,39 @@ Name: JADE
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: Female
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
-Gorebyss  
-Ability: Hydration  
-Level: 63   
-EVs: 252 Def / 248 Spe  
-Timid Nature  
-- Scald  
-- Draining Kiss  
-- Bind  
-- Confuse Ray  
-
-Luvdisc  
-Ability: Swift Swim  
+Gorebyss
+Ability: Hydration
 Level: 63
-EVs: 252 Spe  
-Jolly Nature  
-- Charm  
-- Captivate  
-- Flip Turn  
-- Wish  
+EVs: 252 Def / 248 Spe
+Timid Nature
+- Scald
+- Draining Kiss
+- Bind
+- Confuse Ray
 
-Milotic (F)  
-Ability: Cute Charm  
+Luvdisc
+Ability: Swift Swim
+Level: 63
+EVs: 252 Spe
+Jolly Nature
+- Charm
+- Captivate
+- Flip Turn
+- Wish
+
+Milotic (F)
+Ability: Cute Charm
 Level: 66
-EVs: 248 Atk / 248 SpD  
-Adamant Nature  
-- Tickle  
-- Avalanche  
-- Aqua Tail  
-- Coil  
+EVs: 248 Atk / 248 SpD
+Adamant Nature
+- Tickle
+- Avalanche
+- Aqua Tail
+- Coil
 
 
 
@@ -14002,38 +14002,38 @@ Name: RODDY
 Class: Tuber M
 Pic: Tuber M
 Gender: Male
-Music: Hg Boy 2
+Music: Hg Boy 1
 Double Battle: No
 AI: Check Bad Move
 
-Lanturn  
-Ability: Volt Absorb  
-Level: 61 
-EVs: 252 HP / 252 SpA  
-IVs: 0 Atk  
-- Discharge  
-- Ice Beam  
-- Charge  
-- Flash  
+Lanturn
+Ability: Volt Absorb
+Level: 61
+EVs: 252 HP / 252 SpA
+IVs: 0 Atk
+- Discharge
+- Ice Beam
+- Charge
+- Flash
 
-Wailord @ Sitrus Berry  
-Ability: Pressure  
-Level: 61 
-EVs: 252 HP / 116 Def / 140 SpD  
-IVs: 0 Atk  
-- Water Spout  
-- Aqua Ring  
-- Noble Roar  
-- Ice Beam  
+Wailord @ Sitrus Berry
+Ability: Pressure
+Level: 61
+EVs: 252 HP / 116 Def / 140 SpD
+IVs: 0 Atk
+- Water Spout
+- Aqua Ring
+- Noble Roar
+- Ice Beam
 
-Kingler @ Life Orb  
-Ability: Sheer Force  
-Level: 65 
-EVs: 8 HP / 248 Atk / 252 SpD  
-- Crabhammer  
-- Hone Claws  
-- Dig  
-- Guillotine  
+Kingler @ Life Orb
+Ability: Sheer Force
+Level: 65
+EVs: 8 HP / 248 Atk / 252 SpD
+- Crabhammer
+- Hone Claws
+- Dig
+- Guillotine
 
 
 
@@ -14079,34 +14079,34 @@ Name: TATIANA
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Female
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Dustox @ Focus Sash  
-Ability: Compound Eyes  
-Level: 64   
-IVs: 0 Atk  
-- Venoshock  
-- Toxic  
-- Iron Defense  
-- Quiver Dance  
+Dustox @ Focus Sash
+Ability: Compound Eyes
+Level: 64
+IVs: 0 Atk
+- Venoshock
+- Toxic
+- Iron Defense
+- Quiver Dance
 
-Pinsir @ Life Orb  
-Ability: Moxie  
-Level: 61 
-- Storm Throw  
-- X-Scissor  
-- Guillotine  
-- Curse  
+Pinsir @ Life Orb
+Ability: Moxie
+Level: 61
+- Storm Throw
+- X-Scissor
+- Guillotine
+- Curse
 
-Ludicolo  
-Ability: Rain Dish  
+Ludicolo
+Ability: Rain Dish
 Level: 63
-- Teeter Dance  
-- Scald  
-- Trailblaze  
-- Encore  
+- Teeter Dance
+- Scald
+- Trailblaze
+- Encore
 
 
 
@@ -14206,7 +14206,7 @@ Name: MELISSA
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Female
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
@@ -14308,35 +14308,35 @@ Name: MELISSA
 Class: Picnicker Hns
 Pic: Picnicker
 Gender: Female
-Music: Hg Girl 1
+Music: Hg Girl 2
 Double Battle: No
 AI: Check Bad Move
 
-Swellow  
-Ability: Scrappy  
-Level: 61  
-IVs: 0 Atk  
-- Heat Wave  
-- Air Cutter  
-- Feather Dance  
-- Supersonic  
+Swellow
+Ability: Scrappy
+Level: 61
+IVs: 0 Atk
+- Heat Wave
+- Air Cutter
+- Feather Dance
+- Supersonic
 
-Tangela @ Eviolite  
-Ability: Chlorophyll  
-Level: 63    
-IVs: 0 Atk  
-- Giga Drain  
-- Toxic  
-- Substitute  
-- Sludge Bomb  
+Tangela @ Eviolite
+Ability: Chlorophyll
+Level: 63
+IVs: 0 Atk
+- Giga Drain
+- Toxic
+- Substitute
+- Sludge Bomb
 
-Miltank  
-Ability: Thick Fat  
-Level: 61  
-- Retaliate  
-- Earthquake  
-- Heal Bell  
-- Milk Drink  
+Miltank
+Ability: Thick Fat
+Level: 61
+- Retaliate
+- Earthquake
+- Heal Bell
+- Milk Drink
 
 
 
@@ -14417,7 +14417,7 @@ Name: LOIS
 Class: Cooltrainer Hns
 Pic: Cooltrainer F
 Gender: Female
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
@@ -14522,62 +14522,62 @@ Name: MIHARU
 Class: Kimono Girl Hns
 Pic: Kimono Girl Hns
 Gender: Female
-Music: Hg Girl 2
+Music: Hg Kimono Girl
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 Mugshot: Green
 
-Leafeon @ Meadow Plate  
-Ability: Chlorophyll  
+Leafeon @ Meadow Plate
+Ability: Chlorophyll
 Level: 70
-EVs: 4 HP / 252 Atk / 252 Def  
-Adamant Nature  
-- Leaf Blade  
-- Synthesis  
-- Iron Tail  
-- Yawn  
+EVs: 4 HP / 252 Atk / 252 Def
+Adamant Nature
+- Leaf Blade
+- Synthesis
+- Iron Tail
+- Yawn
 
 === TRAINER_YOUKO_HNS ===
 Name: YOUKO
 Class: Kimono Girl Hns
 Pic: Kimono Girl Hns
 Gender: Female
-Music: Hg Girl 2
+Music: Hg Kimono Girl
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 Mugshot: Light Blue
 
-Glaceon @ Icicle Plate  
-Ability: Ice Body  
+Glaceon @ Icicle Plate
+Ability: Ice Body
 Level: 70
-EVs: 252 HP / 252 SpA / 4 SpD  
-Modest Nature  
-IVs: 0 Atk  
+EVs: 252 HP / 252 SpA / 4 SpD
+Modest Nature
+IVs: 0 Atk
 - Synchronoise
-- Blizzard  
-- Chilling Water  
-- Shadow Ball 
+- Blizzard
+- Chilling Water
+- Shadow Ball
 
 === TRAINER_SHIZUKO_HNS ===
 Name: SHIZUKO
 Class: Kimono Girl Hns
 Pic: Kimono Girl Hns
 Gender: Female
-Music: Hg Girl 2
+Music: Hg Kimono Girl
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability
 Mugshot: Pink
 
-Sylveon @ Pixie Plate  
-Ability: Pixilate  
+Sylveon @ Pixie Plate
+Ability: Pixilate
 Level: 70
-Happiness: 254   
-EVs: 124 HP / 252 Atk / 132 Def  
-Adamant Nature  
-- Skull Bash  
-- Iron Tail  
-- Curse  
-- Sing  
+Happiness: 254
+EVs: 124 HP / 252 Atk / 132 Def
+Adamant Nature
+- Skull Bash
+- Iron Tail
+- Curse
+- Sing
 
 === TRAINER_STEVEN_HNS ===
 Name: STEVEN
@@ -14706,73 +14706,73 @@ Name: MUALANI
 Class: Swimmer F Hns
 Pic: Swimmer F
 Gender: female
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: Yes
 AI: Smart Trainer / Prediction
 
-Politoed @ Damp Rock  
-Ability: Drizzle  
+Politoed @ Damp Rock
+Ability: Drizzle
 Level: 70
-EVs: 116 HP / 140 SpA / 252 SpD  
-Sassy Nature  
-IVs: 0 Atk  
-- Weather Ball  
-- Earth Power  
-- Seismic Toss  
-- Ice Beam  
-
-Whiscash @ Black Sludge    
-Level: 70 
-EVs: 252 HP / 92 Def / 72 SpA / 92 SpD  
-Quiet Nature  
-IVs: 0 Atk  
-- Clear Smog  
-- Scald  
+EVs: 116 HP / 140 SpA / 252 SpD
+Sassy Nature
+IVs: 0 Atk
+- Weather Ball
 - Earth Power
-- Recover  
+- Seismic Toss
+- Ice Beam
 
-Lanturn @ Assault Vest  
-Ability: Volt Absorb  
+Whiscash @ Black Sludge
 Level: 70
-EVs: 252 HP / 4 SpA / 252 SpD  
-Sassy Nature  
-IVs: 0 Atk  
-- Discharge  
-- Signal Beam  
-- Volt Switch  
-- Dazzling Gleam  
+EVs: 252 HP / 92 Def / 72 SpA / 92 SpD
+Quiet Nature
+IVs: 0 Atk
+- Clear Smog
+- Scald
+- Earth Power
+- Recover
 
-Blastoise (M) @ Leftovers  
-Ability: Rain Dish  
+Lanturn @ Assault Vest
+Ability: Volt Absorb
 Level: 70
-EVs: 36 HP / 252 Def / 220 SpD  
-Bold Nature  
-IVs: 0 Atk  
-- Aqua Ring  
-- Rain Dance  
-- Ice Beam  
-- Hydro Cannon  
+EVs: 252 HP / 4 SpA / 252 SpD
+Sassy Nature
+IVs: 0 Atk
+- Discharge
+- Signal Beam
+- Volt Switch
+- Dazzling Gleam
+
+Blastoise (M) @ Leftovers
+Ability: Rain Dish
+Level: 70
+EVs: 36 HP / 252 Def / 220 SpD
+Bold Nature
+IVs: 0 Atk
+- Aqua Ring
+- Rain Dance
+- Ice Beam
+- Hydro Cannon
 
 Huntail @ Shell Bell
-Ability: Swift Swim  
-Level: 70    
-EVs: 252 Atk / 252 Spe  
-Jolly Nature  
-- Aqua Tail  
-- Shell Smash  
-- Crunch  
-- Ice Fang  
+Ability: Swift Swim
+Level: 70
+EVs: 252 Atk / 252 Spe
+Jolly Nature
+- Aqua Tail
+- Shell Smash
+- Crunch
+- Ice Fang
 
-Pelipper @ Splash Plate  
-Ability: Drizzle  
-Level: 70  
-EVs: 192 HP / 64 SpA / 252 SpD  
-Modest Nature  
-IVs: 0 Atk  
-- Hurricane  
-- Hydro Pump  
-- Tailwind  
-- Feather Dance  
+Pelipper @ Splash Plate
+Ability: Drizzle
+Level: 70
+EVs: 192 HP / 64 SpA / 252 SpD
+Modest Nature
+IVs: 0 Atk
+- Hurricane
+- Hydro Pump
+- Tailwind
+- Feather Dance
 
 === TRAINER_WESSEL_HNS ===
 Name: WESSEL
@@ -14838,59 +14838,59 @@ Name: SKYLAR
 Class: Skier Hns
 Pic: Skier F Hns
 Gender: Female
-Music: Hg Girl 2
+Music: Hg Girl 1
 Double Battle: No
 AI: Check Bad Move
 
-Scyther @ King's Rock  
-Ability: Technician  
+Scyther @ King's Rock
+Ability: Technician
 Level: 70
-EVs: 4 HP / 252 Atk / 252 Spe  
-Hasty Nature  
-- Dual Wingbeat  
-- Close Combat  
-- Lunge  
-- Psycho Cut  
+EVs: 4 HP / 252 Atk / 252 Spe
+Hasty Nature
+- Dual Wingbeat
+- Close Combat
+- Lunge
+- Psycho Cut
 
-Gliscor @ Toxic Orb  
-Ability: Poison Heal  
-Level: 70 
-EVs: 124 Atk / 252 Def / 132 SpD  
-Adamant Nature  
-- Tailwind  
-- Fling  
-- Acrobatics  
-- Earthquake  
+Gliscor @ Toxic Orb
+Ability: Poison Heal
+Level: 70
+EVs: 124 Atk / 252 Def / 132 SpD
+Adamant Nature
+- Tailwind
+- Fling
+- Acrobatics
+- Earthquake
 
-Crobat @ Big Root  
-Ability: Inner Focus  
-Level: 70 
-EVs: 252 HP / 252 Atk / 4 SpD  
-Adamant Nature  
-- Cross Poison  
-- Brave Bird  
-- Roost  
-- Leech Life  
+Crobat @ Big Root
+Ability: Inner Focus
+Level: 70
+EVs: 252 HP / 252 Atk / 4 SpD
+Adamant Nature
+- Cross Poison
+- Brave Bird
+- Roost
+- Leech Life
 
-Swellow @ Flame Orb  
-Ability: Guts  
-Level: 70  
-EVs: 252 Atk / 252 Spe  
-Adamant Nature  
-- Facade  
-- Roost  
-- Steel Wing  
-- Tailwind  
+Swellow @ Flame Orb
+Ability: Guts
+Level: 70
+EVs: 252 Atk / 252 Spe
+Adamant Nature
+- Facade
+- Roost
+- Steel Wing
+- Tailwind
 
-Fearow @ Scope Lens  
-Ability: Sniper  
-Level: 70  
-EVs: 252 Atk / 252 Spe  
-Naive Nature  
-- Drill Run  
-- Focus Energy  
-- Drill Peck  
-- Double-Edge  
+Fearow @ Scope Lens
+Ability: Sniper
+Level: 70
+EVs: 252 Atk / 252 Spe
+Naive Nature
+- Drill Run
+- Focus Energy
+- Drill Peck
+- Double-Edge
 
 === TRAINER_BROCK_DOJO_HNS ===
 Name: BROCK
@@ -15141,7 +15141,7 @@ Items: Full Restore / Full Restore
 
 Noctowl
 Ability: Tinted Lens
-Level: 74
+Level: 69
 IVs: 0 Atk
 - Psychic
 - Air Slash
@@ -15150,7 +15150,7 @@ IVs: 0 Atk
 
 Skarmory
 Ability: Keen Eye
-Level: 74
+Level: 69
 - Drill Peck
 - Steel Wing
 - Stealth Rock
@@ -15158,7 +15158,7 @@ Level: 74
 
 Swellow @ Flame Orb
 Ability: Guts
-Level: 74
+Level: 69
 - Brave Bird
 - Endeavor
 - Double Team
@@ -15166,7 +15166,7 @@ Level: 74
 
 Honchkrow
 Ability: Moxie
-Level: 74
+Level: 69
 - Acrobatics
 - Night Slash
 - Mimic
@@ -15174,7 +15174,7 @@ Level: 74
 
 Pidgeot
 Ability: Keen Eye
-Level: 74
+Level: 69
 - Extreme Speed
 - Fly
 - Tailwind
@@ -15182,7 +15182,7 @@ Level: 74
 
 Pelipper
 Ability: Drizzle
-Level: 74
+Level: 69
 IVs: 0 Atk
 - Hurricane
 - Brine
@@ -15202,7 +15202,7 @@ Items: Full Restore / Full Restore
 
 Forretress
 Ability: Sturdy
-Level: 74
+Level: 69
 IVs: 0 Spe
 - Toxic Spikes
 - Stealth Rock
@@ -15211,7 +15211,7 @@ IVs: 0 Spe
 
 Ledian
 Ability: Iron Fist
-Level: 76
+Level: 71
 - Drain Punch
 - Acrobatics
 - Swords Dance
@@ -15219,7 +15219,7 @@ Level: 76
 
 Masquerain
 Ability: Intimidate
-Level: 74
+Level: 69
 IVs: 0 Atk
 - Quiver Dance
 - Hydro Pump
@@ -15228,7 +15228,7 @@ IVs: 0 Atk
 
 Yanmega @ Sitrus Berry
 Ability: Speed Boost
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Air Slash
 - Protect
@@ -15237,7 +15237,7 @@ IVs: 0 Atk
 
 Shedinja @ Focus Sash
 Ability: Wonder Guard
-Level: 76
+Level: 71
 - Phantom Force
 - X-Scissor
 - Hone Claws
@@ -15245,7 +15245,7 @@ Level: 76
 
 Scizor @ Scope Lens
 Ability: Technician
-Level: 74
+Level: 69
 - Bullet Punch
 - Bug Bite
 - Swords Dance
@@ -15264,7 +15264,7 @@ Items: Full Restore / Full Restore
 
 Clefable
 Ability: Cute Charm
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Moonblast
 - Meteor Beam
@@ -15273,7 +15273,7 @@ IVs: 0 Atk
 
 Delcatty
 Ability: Cute Charm
-Level: 75
+Level: 70
 - Attract
 - Fake Out
 - Double-Edge
@@ -15281,7 +15281,7 @@ Level: 75
 
 Ambipom @ Loaded Dice
 Ability: Technician
-Level: 75
+Level: 70
 - Tail Slap
 - Knock Off
 - Tail Whip
@@ -15289,7 +15289,7 @@ Level: 75
 
 Ursaluna-Bloodmoon
 Ability: Mind's Eye
-Level: 74
+Level: 69
 IVs: 0 Atk
 - Blood Moon
 - Lunar Blessing
@@ -15298,7 +15298,7 @@ IVs: 0 Atk
 
 Miltank @ Silk Scarf
 Ability: Thick Fat
-Level: 75
+Level: 70
 - Milk Drink
 - Defense Curl
 - Rollout
@@ -15306,7 +15306,7 @@ Level: 75
 
 Obstagoon
 Ability: Reckless
-Level: 75
+Level: 70
 - Double-Edge
 - Obstruct
 - Cross Poison
@@ -15325,7 +15325,7 @@ Items: Full Restore / Full Restore
 
 Sableye
 Ability: Prankster
-Level: 77
+Level: 72
 IVs: 0 Atk
 - Foul Play
 - Will-O-Wisp
@@ -15334,7 +15334,7 @@ IVs: 0 Atk
 
 Wyrdeer @ Silk Scarf
 Ability: Sap Sipper
-Level: 75
+Level: 70
 - Psyshield Bash
 - Megahorn
 - Hypnosis
@@ -15342,7 +15342,7 @@ Level: 75
 
 Dusknoir
 Ability: Pressure
-Level: 75
+Level: 70
 - Shadow Punch
 - Fire Punch
 - Will-O-Wisp
@@ -15350,7 +15350,7 @@ Level: 75
 
 Typhlosion-Hisui
 Ability: Blaze
-Level: 75
+Level: 70
 Quirky Nature
 IVs: 0 Atk
 - Infernal Parade
@@ -15360,7 +15360,7 @@ IVs: 0 Atk
 
 Mismagius
 Ability: Levitate
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Mean Look
 - Perish Song
@@ -15369,7 +15369,7 @@ IVs: 0 Atk
 
 Gengar @ Sitrus Berry
 Ability: Cursed Body
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Hex
 - Hypnosis
@@ -15389,7 +15389,7 @@ Items: Full Restore / Full Restore
 
 Hitmonchan
 Ability: Iron Fist
-Level: 75
+Level: 70
 - Sky Uppercut
 - Thunder Punch
 - Ice Punch
@@ -15397,7 +15397,7 @@ Level: 75
 
 Medicham
 Ability: Pure Power
-Level: 75
+Level: 70
 - Acupressure
 - Stored Power
 - High Jump Kick
@@ -15405,7 +15405,7 @@ Level: 75
 
 Annihilape
 Ability: Vital Spirit
-Level: 75
+Level: 70
 - Cross Chop
 - Rage Fist
 - Drain Punch
@@ -15413,7 +15413,7 @@ Level: 75
 
 Sirfetch’d @ Leek
 Ability: Scrappy
-Level: 75
+Level: 70
 - Leaf Blade
 - Protect
 - Quick Attack
@@ -15421,7 +15421,7 @@ Level: 75
 
 Sneasler
 Ability: Poison Touch
-Level: 75
+Level: 70
 - Dire Claw
 - Close Combat
 - Fake Out
@@ -15429,7 +15429,7 @@ Level: 75
 
 Poliwrath @ Sitrus Berry
 Ability: Water Absorb
-Level: 76
+Level: 71
 - Liquidation
 - Submission
 - Belly Drum
@@ -15448,7 +15448,7 @@ Items: Full Restore / Full Restore
 
 Skarmory
 Ability: Keen Eye
-Level: 75
+Level: 70
 - Drill Peck
 - Torment
 - Steel Wing
@@ -15456,7 +15456,7 @@ Level: 75
 
 Sandslash-Alola
 Ability: Snow Cloak
-Level: 77
+Level: 72
 - Curse
 - Avalanche
 - Iron Head
@@ -15464,7 +15464,7 @@ Level: 77
 
 Corsola @ Damp Rock
 Ability: Regenerator
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Rain Dance
 - Power Gem
@@ -15473,7 +15473,7 @@ IVs: 0 Atk
 
 Magnezone
 Ability: Analytic
-Level: 75
+Level: 70
 Sassy Nature
 IVs: 0 Atk / 0 Spe
 - Thunder
@@ -15483,7 +15483,7 @@ IVs: 0 Atk / 0 Spe
 
 Perrserker
 Ability: Steely Spirit
-Level: 75
+Level: 70
 IVs: 0 Spe
 - Gyro Ball
 - Play Rough
@@ -15492,7 +15492,7 @@ IVs: 0 Spe
 
 Steelix @ Quick Claw
 Ability: Rock Head
-Level: 75
+Level: 70
 - Head Smash
 - Earthquake
 - Dragon Dance
@@ -15511,7 +15511,7 @@ Items: Full Restore / Full Restore
 
 Weavile
 Ability: Pressure
-Level: 75
+Level: 70
 - Fake Out
 - Night Slash
 - Beat Up
@@ -15519,7 +15519,7 @@ Level: 75
 
 Mr. Rime
 Ability: Ice Body
-Level: 76
+Level: 71
 IVs: 0 Atk
 - Teeter Dance
 - Snowscape
@@ -15528,7 +15528,7 @@ IVs: 0 Atk
 
 Ninetales-Alola @ Light Clay
 Ability: Snow Warning
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Aurora Veil
 - Blizzard
@@ -15537,7 +15537,7 @@ IVs: 0 Atk
 
 Slowking
 Ability: Regenerator
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Chilly Reception
 - Hydro Pump
@@ -15546,7 +15546,7 @@ IVs: 0 Atk
 
 Mamoswine @ Soft Sand
 Ability: Oblivious
-Level: 76
+Level: 71
 - Earthquake
 - Avalanche
 - Curse
@@ -15554,14 +15554,14 @@ Level: 76
 
 Froslass (F)
 Ability: Snow Cloak
-Level: 77
+Level: 72
 IVs: 0 Atk
 - Shadow Ball
 - Blizzard
 - Will-O-Wisp
 - Pain Split
 
-=== TRAINER_CLAIR_OBC_HNS ===
+=== TRAINER_CLAIR_POSTOBC_HNS ===
 Name: CLAIR
 Class: Leader Hns
 Pic: Leader Clair Hns
@@ -15574,7 +15574,7 @@ Items: Full Restore / Full Restore
 
 Dragonair @ Eviolite
 Ability: Marvel Scale
-Level: 77
+Level: 71
 - Thunder Wave
 - Thunderbolt
 - Aqua Tail
@@ -15582,7 +15582,7 @@ Level: 77
 
 Dudunsparce
 Ability: Serene Grace
-Level: 75
+Level: 69
 - Charge Beam
 - Boomburst
 - Poison Jab
@@ -15590,7 +15590,7 @@ Level: 75
 
 Exeggutor-Alola @ Sitrus Berry
 Ability: Harvest
-Level: 76
+Level: 70
 - Wood Hammer
 - Dragon Hammer
 - Leech Seed
@@ -15598,7 +15598,7 @@ Level: 76
 
 Salamence
 Ability: Moxie
-Level: 77
+Level: 71
 - Dragon Dance
 - Dragon Rush
 - Iron Head
@@ -15606,7 +15606,7 @@ Level: 77
 
 Kingdra @ Scope Lens
 Ability: Sniper
-Level: 75
+Level: 69
 IVs: 0 Atk
 - Focus Energy
 - Dragon Pulse
@@ -15615,7 +15615,7 @@ IVs: 0 Atk
 
 Dragonite
 Ability: Multiscale
-Level: 76
+Level: 70
 - Extreme Speed
 - Dragon Pulse
 - Flamethrower
@@ -15634,7 +15634,7 @@ Items: Full Restore / Full Restore
 
 Kleavor @ Razor Claw
 Ability: Sharpness
-Level: 77
+Level: 72
 - Stone Axe
 - X-Scissor
 - Agility
@@ -15642,7 +15642,7 @@ Level: 77
 
 Gliscor @ Toxic Orb
 Ability: Poison Heal
-Level: 76
+Level: 71
 - Spikes
 - Protect
 - Crabhammer
@@ -15650,7 +15650,7 @@ Level: 76
 
 Aerodactyl
 Ability: Unnerve
-Level: 77
+Level: 72
 - Fire Fang
 - Sky Attack
 - Earthquake
@@ -15658,7 +15658,7 @@ Level: 77
 
 Omastar
 Ability: Swift Swim
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Ancient Power
 - Surf
@@ -15667,7 +15667,7 @@ IVs: 0 Atk
 
 Relicanth @ Hard Stone
 Ability: Rock Head
-Level: 75
+Level: 70
 - Wave Crash
 - Head Smash
 - Calm Mind
@@ -15675,7 +15675,7 @@ Level: 75
 
 Golem-Alola @ Magnet
 Ability: Galvanize
-Level: 77
+Level: 72
 - Stone Edge
 - Body Slam
 - Autotomize
@@ -15694,7 +15694,7 @@ Items: Full Restore / Full Restore
 
 Politoed @ Damp Rock
 Ability: Drizzle
-Level: 76
+Level: 71
 - Weather Ball
 - Seismic Toss
 - Metronome
@@ -15702,7 +15702,7 @@ Level: 76
 
 Swampert @ Quick Claw
 Ability: Torrent
-Level: 76
+Level: 71
 - Rain Dance
 - Barrier
 - Earthquake
@@ -15710,7 +15710,7 @@ Level: 76
 
 Vaporeon @ Leftovers
 Ability: Water Absorb
-Level: 76
+Level: 71
 EVs: 32 HP / 40 Def / 12 SpD
 IVs: 0 Atk
 - Aqua Ring
@@ -15720,7 +15720,7 @@ IVs: 0 Atk
 
 Milotic @ Shell Bell
 Ability: Marvel Scale
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Scald
 - Ice Beam
@@ -15729,7 +15729,7 @@ IVs: 0 Atk
 
 Lapras
 Ability: Shell Armor
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Freeze-Dry
 - Hydro Pump
@@ -15738,7 +15738,7 @@ IVs: 0 Atk
 
 Starmie @ Mystic Water
 Ability: Natural Cure
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Psyshock
 - Surf
@@ -15758,14 +15758,14 @@ Mugshot: Yellow
 
 Electrode @ Normal Gem
 Ability: Soundproof
-Level: 75
+Level: 70
 - Electro Ball
 - Rain Dance
 - Explosion
 
 Jolteon
 Ability: Volt Absorb
-Level: 74
+Level: 69
 IVs: 0 Atk
 - Electric Terrain
 - Thunder
@@ -15774,7 +15774,7 @@ IVs: 0 Atk
 
 Lanturn @ Leftovers
 Ability: Volt Absorb
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Rain Dance
 - Thunder
@@ -15783,7 +15783,7 @@ IVs: 0 Atk
 
 Manectric @ Terrain Extender
 Ability: Lightning Rod
-Level: 75
+Level: 70
 - Electric Terrain
 - Charge
 - Wild Charge
@@ -15791,7 +15791,7 @@ Level: 75
 
 Electivire @ Scope Lens
 Ability: Motor Drive
-Level: 74
+Level: 69
 - Thunder Punch
 - Ice Punch
 - Cross Chop
@@ -15799,7 +15799,7 @@ Level: 74
 
 Raichu-Alola @ Electric Seed
 Ability: Surge Surfer
-Level: 76
+Level: 71
 IVs: 0 Atk
 - Rising Voltage
 - Electric Terrain
@@ -15819,7 +15819,7 @@ Items: Full Restore / Full Restore
 
 Roserade @ Focus Sash
 Ability: Natural Cure
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Toxic Spikes
 - Venoshock
@@ -15828,7 +15828,7 @@ IVs: 0 Atk
 
 Tangrowth @ Leftovers
 Ability: Chlorophyll
-Level: 76
+Level: 71
 IVs: 0 Atk
 - Ingrain
 - Giga Drain
@@ -15837,7 +15837,7 @@ IVs: 0 Atk
 
 Venusaur
 Ability: Overgrow
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Sludge Bomb
 - Energy Ball
@@ -15846,7 +15846,7 @@ IVs: 0 Atk
 
 Electrode-Hisui @ Miracle Seed
 Ability: Aftermath
-Level: 76
+Level: 71
 IVs: 0 Atk
 - Chloroblast
 - Electro Ball
@@ -15854,7 +15854,7 @@ IVs: 0 Atk
 
 Bellossom @ Lum Berry
 Ability: Chlorophyll
-Level: 77
+Level: 72
 IVs: 0 Atk
 - Grassy Terrain
 - Quiver Dance
@@ -15863,7 +15863,7 @@ IVs: 0 Atk
 
 Ludicolo
 Ability: Swift Swim
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Rain Dance
 - Hydro Pump
@@ -15884,7 +15884,7 @@ Items: Full Restore / Full Restore
 Swalot
 Ability: Liquid Ooze
 IVs: 0 Atk
-Level: 75
+Level: 70
 - Toxic Spikes
 - Stockpile
 - Swallow
@@ -15892,7 +15892,7 @@ Level: 75
 
 Weezing-Galar @ Fairy Feather
 Ability: Levitate
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Strange Steam
 - Sludge Bomb
@@ -15901,7 +15901,7 @@ IVs: 0 Atk
 
 Muk-Alola @ Leftovers
 Ability: Poison Touch
-Level: 75
+Level: 70
 - Gunk Shot
 - Acid Armor
 - Power-Up Punch
@@ -15909,7 +15909,7 @@ Level: 75
 
 Crobat
 Ability: Infiltrator
-Level: 75
+Level: 70
 - Leech Life
 - Confuse Ray
 - Brave Bird
@@ -15917,7 +15917,7 @@ Level: 75
 
 Sneasler @ Flying Gem
 Ability: Unburden
-Level: 75
+Level: 70
 - Acrobatics
 - Dire Claw
 - Close Combat
@@ -15925,7 +15925,7 @@ Level: 75
 
 Venomoth @ Bright Powder
 Ability: Shield Dust
-Level: 78
+Level: 73
 IVs: 0 Atk
 - Venoshock
 - Signal Beam
@@ -15945,7 +15945,7 @@ Items: Full Restore / Full Restore
 
 Mr. Mime-Galar @ Eviolite
 Ability: Vital Spirit
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Light Screen
 - Reflect
@@ -15954,7 +15954,7 @@ IVs: 0 Atk
 
 Slowbro-Galar @ Quick Claw
 Ability: Quick Draw
-Level: 75
+Level: 70
 - Shell Side Arm
 - Calm Mind
 - Psyshock
@@ -15962,7 +15962,7 @@ Level: 75
 
 Espeon
 Ability: Magic Bounce
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Psychic
 - Morning Sun
@@ -15971,7 +15971,7 @@ IVs: 0 Atk
 
 Rapidash-Galar
 Ability: Pastel Veil
-Level: 75
+Level: 70
 - Play Rough
 - Psycho Cut
 - Wild Charge
@@ -15979,7 +15979,7 @@ Level: 75
 
 Wobbuffet @ Leftovers
 Ability: Shadow Tag
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Counter
 - Mirror Coat
@@ -15988,7 +15988,7 @@ IVs: 0 Atk
 
 Alakazam
 Ability: Magic Guard
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Psyshock
 - Shadow Ball
@@ -16008,7 +16008,7 @@ Items: Full Restore / Full Restore
 
 Torkoal @ Heat Rock
 Ability: Drought
-Level: 76
+Level: 71
 IVs: 0 Spe
 - Solar Beam
 - Heat Wave
@@ -16017,7 +16017,7 @@ IVs: 0 Spe
 
 Magmortar @ Magnet
 Ability: Flame Body
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Fire Blast
 - Thunderbolt
@@ -16026,7 +16026,7 @@ IVs: 0 Atk
 
 Blaziken @ Scope Lens
 Ability: Speed Boost
-Level: 75
+Level: 70
 - Blaze Kick
 - Power-Up Punch
 - Thunder Punch
@@ -16034,7 +16034,7 @@ Level: 75
 
 Magcargo @ Absorb Bulb
 Ability: Flame Body
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Sunny Day
 - Flamethrower
@@ -16043,7 +16043,7 @@ IVs: 0 Atk
 
 Arcanine-Hisui @ Rock Incense
 Ability: Rock Head
-Level: 75
+Level: 70
 - Head Smash
 - Raging Fury
 - Wild Charge
@@ -16051,7 +16051,7 @@ Level: 75
 
 Camerupt @ Leftovers
 Ability: Solid Rock
-Level: 75
+Level: 70
 IVs: 0 Atk
 - Eruption
 - Protect
@@ -16071,7 +16071,7 @@ Items: Full Restore / Full Restore
 
 Rhyperior @ Loaded Dice
 Ability: Solid Rock
-Level: 75
+Level: 70
 - Rock Blast
 - Drill Run
 - Toxic
@@ -16079,7 +16079,7 @@ Level: 75
 
 Pidgeot @ Quick Claw
 Ability: Keen Eye
-Level: 75
+Level: 70
 - Feather Dance
 - Air Slash
 - Brave Bird
@@ -16087,7 +16087,7 @@ Level: 75
 
 Machamp @ Scope Lens
 Ability: No Guard
-Level: 75
+Level: 70
 - Dynamic Punch
 - Dual Chop
 - Stone Edge
@@ -16095,7 +16095,7 @@ Level: 75
 
 Marowak-Alola @ Thick Club
 Ability: Lightning Rod
-Level: 76
+Level: 71
 - Shadow Bone
 - Flame Charge
 - Pain Split
@@ -16103,7 +16103,7 @@ Level: 76
 
 Tyranitar @ Rocky Helmet
 Ability: Unnerve
-Level: 75
+Level: 70
 - Stone Edge
 - Crunch
 - Curse
@@ -16111,7 +16111,7 @@ Level: 75
 
 Blastoise @ Sitrus Berry
 Ability: Torrent
-Level: 78
+Level: 73
 IVs: 0 Atk
 - Scald
 - Dark Pulse
@@ -16123,7 +16123,7 @@ Name: WILL
 Class: Elite Four Hns
 Pic: Elite Four Will Hns
 Gender: Male
-Music: Elite Four
+Music: Hg Elite Four
 Double Battle: No
 AI: Smart Trainer / Prediction
 Mugshot: Pink
@@ -16131,7 +16131,7 @@ Items: Full Restore / Full Restore
 
 Gardevoir @ Light Clay
 Ability: Trace
-Level: 77
+Level: 74
 IVs: 0 Atk
 - Psyshock
 - Moonblast
@@ -16140,7 +16140,7 @@ IVs: 0 Atk
 
 Jynx @ Never-Melt Ice
 Ability: Dry Skin
-Level: 77
+Level: 75
 IVs: 0 Atk
 - Lovely Kiss
 - Sweet Kiss
@@ -16149,7 +16149,7 @@ IVs: 0 Atk
 
 Slowking-Galar @ Black Sludge
 Ability: Own Tempo
-Level: 77
+Level: 76
 IVs: 0 Atk
 - Eerie Spell
 - Trick Room
@@ -16175,7 +16175,7 @@ Level: 77
 
 Xatu
 Ability: Magic Bounce
-Level: 77
+Level: 79
 IVs: 0 Atk
 - Future Sight
 - Air Slash
@@ -16187,7 +16187,7 @@ Name: KOGA
 Class: Elite Four Hns
 Pic: Elite Four Koga Hns
 Gender: Male
-Music: Elite Four
+Music: Hg Elite Four
 Double Battle: No
 AI: Smart Trainer / Prediction
 Mugshot: Purple
@@ -16195,7 +16195,7 @@ Items: Full Restore / Full Restore
 
 Clodsire
 Ability: Water Absorb
-Level: 77
+Level: 74
 - Toxic Spikes
 - Earthquake
 - Gunk Shot
@@ -16203,7 +16203,7 @@ Level: 77
 
 Overqwil @ Black Sludge
 Ability: Poison Point
-Level: 77
+Level: 75
 - Barb Barrage
 - Lash Out
 - Swords Dance
@@ -16211,7 +16211,7 @@ Level: 77
 
 Ariados @ Blunder Policy
 Ability: Sniper
-Level: 77
+Level: 76
 EVs: 252 Spe
 Jolly Nature
 - Sticky Web
@@ -16239,7 +16239,7 @@ IVs: 0 Atk
 
 Crobat
 Ability: Inner Focus
-Level: 77
+Level: 79
 - Acrobatics
 - Cross Poison
 - Toxic
@@ -16250,7 +16250,7 @@ Name: BRUNO
 Class: Elite Four Hns
 Pic: Elite Four Bruno Hns
 Gender: Male
-Music: Elite Four
+Music: Hg Elite Four
 Double Battle: No
 AI: Smart Trainer / Prediction
 Mugshot: Orange
@@ -16258,7 +16258,7 @@ Items: Full Restore / Full Restore
 
 Steelix @ Assault Vest
 Ability: Rock Head
-Level: 77
+Level: 74
 EVs: 252 SpD
 Sassy Nature
 - Heavy Slam
@@ -16268,7 +16268,7 @@ Sassy Nature
 
 Tauros-Paldea-Blaze
 Ability: Intimidate
-Level: 77
+Level: 75
 - Raging Bull
 - Close Combat
 - Rock Slide
@@ -16276,7 +16276,7 @@ Level: 77
 
 Heracross @ Loaded Dice
 Ability: Moxie
-Level: 77
+Level: 76
 - Pin Missile
 - Close Combat
 - Earthquake
@@ -16300,7 +16300,7 @@ Level: 77
 
 Machamp @ Flame Orb
 Ability: Guts
-Level: 77
+Level: 79
 - Facade
 - Cross Chop
 - Earthquake
@@ -16311,7 +16311,7 @@ Name: KAREN
 Class: Elite Four Hns
 Pic: Elite Four Karen Hns
 Gender: Male
-Music: Elite Four
+Music: Hg Elite Four
 Double Battle: No
 AI: Smart Trainer / Prediction
 Mugshot: Yellow
@@ -16319,7 +16319,7 @@ Items: Full Restore / Full Restore
 
 Umbreon @ Black Glasses
 Ability: Synchronize
-Level: 77
+Level: 74
 IVs: 0 Atk
 - Lunar Blessing
 - Foul Play
@@ -16328,7 +16328,7 @@ IVs: 0 Atk
 
 Weavile @ Razor Claw
 Ability: Pressure
-Level: 78
+Level: 75
 - Hone Claws
 - Night Slash
 - Icicle Crash
@@ -16336,7 +16336,7 @@ Level: 78
 
 Persian-Alola @ Charcoal
 Ability: Fur Coat
-Level: 79
+Level: 76
 - Fake Out
 - Dark Pulse
 - Nasty Plot
@@ -16360,7 +16360,7 @@ Level: 77
 
 Houndoom
 Ability: Unnerve
-Level: 77
+Level: 79
 - Fire Blast
 - Crunch
 - Iron Tail
@@ -16379,7 +16379,7 @@ Mugshot: Blue
 
 Salamence @ Assault Vest
 Ability: Intimidate
-Level: 80
+Level: 77
 - Draco Meteor
 - Iron Head
 - Double-Edge
@@ -16387,7 +16387,7 @@ Level: 80
 
 Gyarados @ Eject Button
 Ability: Intimidate
-Level: 80
+Level: 77
 - Waterfall
 - Hyper Beam
 - Crunch
@@ -16395,7 +16395,7 @@ Level: 80
 
 Charizard
 Ability: Blaze
-Level: 80
+Level: 78
 - Fire Blast
 - Earthquake
 - Acrobatics
@@ -16403,7 +16403,7 @@ Level: 80
 
 Noivern @ Silk Scarf
 Ability: Infiltrator
-Level: 80
+Level: 78
 IVs: 0 Atk
 - Boomburst
 - Dragon Pulse
@@ -16412,7 +16412,7 @@ IVs: 0 Atk
 
 Aerodactyl @ Scope Lens
 Ability: Rock Head
-Level: 80
+Level: 79
 - Rock Slide
 - Earthquake
 - Sky Attack
@@ -16420,7 +16420,7 @@ Level: 80
 
 Dragonite @ Leftovers
 Ability: Multiscale
-Level: 80
+Level: 79
 - Iron Head
 - Fire Punch
 - Dragon Rush
@@ -16438,7 +16438,7 @@ Items: Full Restore / Full Restore
 
 Pikachu-Starter @ Light Ball
 Ability: Lightning Rod
-Level: 100
+Level: 95
 - Volt Tackle
 - Surf
 - Iron Tail
@@ -16446,7 +16446,7 @@ Level: 100
 
 Snorlax @ Chesto Berry
 Ability: Immunity
-Level: 89
+Level: 85
 - Belly Drum
 - Earthquake
 - Rest
@@ -16454,7 +16454,7 @@ Level: 89
 
 Charizard
 Ability: Blaze
-Level: 91
+Level: 87
 - Fire Blast
 - Seismic Toss
 - Outrage
@@ -16462,7 +16462,7 @@ Level: 91
 
 Venusaur @ Blunder Policy
 Ability: Chlorophyll
-Level: 93
+Level: 87
 Tera Type: Grass
 EVs: 252 Spe
 IVs: 0 Atk
@@ -16473,7 +16473,7 @@ IVs: 0 Atk
 
 Blastoise @ Leftovers
 Ability: Torrent
-Level: 91
+Level: 86
 - Hydro Cannon
 - Skull Bash
 - Ice Beam
@@ -16481,7 +16481,7 @@ Level: 91
 
 Tauros-Paldea-Combat @ Sitrus Berry
 Ability: Cud Chew
-Level: 92
+Level: 85
 Tera Type: Fighting
 - Raging Bull
 - Wild Charge

@@ -613,7 +613,7 @@
     },
     {
       "path": "game/src/data/wild_encounters.json",
-      "sha256": "06ec4238fdc1bfe380d21ee17c64fbf019c0ff70536dd77f9379615a350e74d5"
+      "sha256": "a1d0019b9f1a071f8f3f5a3bd4db2cc724ea7d091101bbac12b6c0062a147070"
     },
     {
       "path": "game/data/event_scripts.s",

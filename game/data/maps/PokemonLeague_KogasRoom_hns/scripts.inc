@@ -40,8 +40,6 @@ PokemonLeague_KogasRoom_EventScript_KogaRematch::
 #if !IS_WAYFARER
 	goto_if_unset FLAG_IS_KANTO_CHAMPION, PokemonLeague_KogasRoom_EventScript_KogaRematchStandard
 	goto_if_ge VAR_SINJOH_STORYLINE, 13, PokemonLeague_KogasRoom_EventScript_KogaRematchPostOBC
-	goto_if_ge VAR_ALOLA_STATE, 4, PokemonLeague_KogasRoom_EventScript_KogaRematchPostOBC
-	goto_if_set FLAG_USED_TELEPORTER, PokemonLeague_KogasRoom_EventScript_KogaRematchPostOBC
 #endif
 
 PokemonLeague_KogasRoom_EventScript_KogaRematchStandard::
