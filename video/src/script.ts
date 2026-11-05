@@ -37,11 +37,13 @@ export const BOX_CAPS = [
   "Alola",
   "S.S. Anne",
   "Vermilion",
-  "Goldenrod",
   "League",
   "Gym Leaders",
   "Elite Four",
   "Brock",
+  "Bug Catcher",
+  "Route 30",
+  "Clair",
   "Lt. Surge",
   "Game Corner",
   "Wallace",
@@ -97,19 +99,23 @@ export const SCENES: Scene[] = [
   },
   {
     id: "night",
-    narration: "Come evening, the lights go on in Goldenrod, and folks head home.",
-    seconds: 6,
+    narration: "Stray off the road after dark.\nYou'll hear things in the grass.",
+    seconds: 5,
   },
   {
-    id: "daily",
-    narration:
-      "Walk the same road tomorrow, and it won't be the same road. New faces, new finds, and someone you beat, calling for a rematch.",
-    seconds: 10,
+    id: "don",
+    narration: "That Bug Catcher you beat on Route 30?",
+    seconds: 3.5,
+  },
+  {
+    id: "donagain",
+    narration: "He's moved on. You'll run into him again.\nHe hasn't forgotten you.",
+    seconds: 5,
   },
   {
     id: "gyms",
     narration:
-      "Twenty-four Gyms. Any eight, any order.\nWord gets around. Soon the names you grew up with know yours.\nThen the phone rings. It's the League.\nAnd who's in the Elite Four this year? Brock. With a Golem.\nWonder where he got that.",
+      "Twenty-four Gyms. Fancy Clair's first?\nGo on. It'll be a fair fight.\nWord gets around. Soon the names you grew up with know yours.\nThen the phone rings. It's the League.\nAnd who's in the Elite Four this year? Brock. With a Golem.\nWonder where he got that.",
     seconds: 10,
   },
   {

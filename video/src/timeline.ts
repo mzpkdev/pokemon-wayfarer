@@ -67,7 +67,9 @@ export type Direction = {
    */
   badges?: { circuit: number | [number, number]; earn?: Span & { badges: number[] } }
   /** The daily trainers and items on every road, with the day stepping from 1 to `days` across the scene. */
-  daily?: { days: number }
+  daily?: { days: number } | { day: number }
+  /** The game's yellow arrow over a daily trainer standing at this world cell, to pick them out. */
+  mark?: { x: number; y: number }
   /**
    * Gym Leaders and the Elite Four walking their routines: everyone, or the named
    * few picked out. `minHeight` is their least height close in (zoom 16); further
@@ -173,27 +175,38 @@ export const DIRECTIONS: Record<string, Direction> = {
   // and Wallace fishing Route 119 at noon, where Feebas hides on a few tiles of the river.
   surge: vignette("lt-surge", h(16)),
   wallace: vignette("wallace", h(12, 30)),
-  // Evening into night over Johto and Kanto, closing on Goldenrod as its lights come on.
+  // Route 29 off the road, deep into the night, the wild Pokémon of the night popping in the grass.
   night: {
     shots: [
-      { at: 0, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 1 } },
-      { at: 0.4, to: { kind: "regions", names: ["JOHTO", "KANTO"], room: 1 } },
-      { at: 0.8, to: { kind: "map", name: "GoldenrodCity_hns", zoom: 9 } },
-      { at: 1, to: { kind: "map", name: "GoldenrodCity_hns", zoom: 9 } },
+      { at: 0, to: { kind: "map", name: "Route29_hns", x: 30, y: 14, zoom: 18 } },
+      { at: 1, to: { kind: "map", name: "Route29_hns", x: 38, y: 14, zoom: 20 } },
     ],
-    clock: { from: h(18), to: h(26) },
+    // The game's darkest tint runs from 1:00 to 4:00.
+    clock: { from: h(25), to: h(27, 30) },
     // The one scene about the time of day: the tint and the lights are on.
-    layers: { tint: true, lights: true },
-    fade: { in: CUT },
+    layers: { tint: true, lights: true, sightings: true },
+    fade: { in: CUT, out: CUT },
   },
-  // Route 15 across four days: the trainers and items pop into new spots, or stay away.
-  daily: {
+  // Bug Catcher Don, the first trainer most GSC players fought, on Route 30 on day 10 of the
+  // daily draw; two days on he stands in Ilex Forest (the draw puts him there on day 12).
+  don: {
     shots: [
-      { at: 0, to: { kind: "map", name: "Route15_hns", x: 36, y: 10, zoom: 20 } },
-      { at: 1, to: { kind: "map", name: "Route15_hns", x: 48, y: 10, zoom: 20 } },
+      { at: 0, to: { kind: "point", x: 720.5, y: 1102, zoom: 20 } },
+      { at: 1, to: { kind: "point", x: 720.5, y: 1102, zoom: 22 } },
     ],
     clock: { at: h(10) },
-    daily: { days: 4 },
+    daily: { day: 10 },
+    mark: { x: 720, y: 1103 },
+    fade: { in: CUT, out: CUT },
+  },
+  donagain: {
+    shots: [
+      { at: 0, to: { kind: "point", x: 577.5, y: 1253, zoom: 20 } },
+      { at: 1, to: { kind: "point", x: 577.5, y: 1253, zoom: 22 } },
+    ],
+    clock: { at: h(10) },
+    daily: { day: 12 },
+    mark: { x: 577, y: 1254 },
     fade: { in: CUT },
   },
   // Eight badges from three regions land one by one over Johto and Kanto while word of you
@@ -208,7 +221,8 @@ export const DIRECTIONS: Record<string, Direction> = {
     clock: { at: h(11) },
     badges: {
       circuit: [0, 1],
-      earn: { from: 0.04, to: 0.44, badges: [0, 8, 2, 9, 1, 11, 3, 10] },
+      // Clair's Rising Badge first: the one GSC players remember as the wall.
+      earn: { from: 0.04, to: 0.44, badges: [7, 8, 2, 9, 1, 11, 3, 10] },
     },
   },
   open: {

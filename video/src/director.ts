@@ -151,7 +151,8 @@ export const loadStage = async (): Promise<Stage> => {
     // The tint is drawn on its own (`shot.layers.tint`), under the ships.
     ships: livingOverlay(living, () => clock.ships, { tint: false }),
     lights: lightsOverlay(world.meta, living, minutes, true, now),
-    sightings: sightingsOverlay(encounters, icons, minutes, true, now),
+    // Livelier than the site's (a fifth of the time), so a few seconds of grass show a few.
+    sightings: sightingsOverlay(encounters, icons, minutes, true, now, { quiet: 0.5 }),
     pins: badgeOverlays(landmarks, badges, stopClock),
     stopClock,
     wild: wildOverlay(wild, wildClock, true, now),
@@ -341,6 +342,33 @@ export const directionFor = (slot: Slot): Direction =>
     clock: { at: DEFAULT_MINUTES },
   }
 
+/** Least height a daily trainer is drawn at, in CSS pixels, as the daily overlay has it. */
+const DAILY_MIN_HEIGHT = 28
+
+/**
+ * The game's yellow down arrow, bobbing over the daily trainer standing at a
+ * world cell: the sprite stands on the cell's bottom edge at least two tiles tall.
+ */
+const markOverlay =
+  ({ x, y }: { x: number; y: number }): Overlay =>
+  (context, { scale, ratio, toScreen }) => {
+    const feet = toScreen(x + 0.5, y + 1)
+    const tall = Math.max(scale * 2, DAILY_MIN_HEIGHT * ratio)
+    const size = Math.round(6 * ratio)
+    const bob = Math.floor(now() / 300) % 2 ? size * 0.5 : 0
+    const top = feet.y - tall - size * 2.2 + bob
+    context.fillStyle = "rgb(255 214 0)"
+    context.strokeStyle = "rgb(0 0 0 / 0.8)"
+    context.lineWidth = Math.max(1, ratio)
+    context.beginPath()
+    context.moveTo(feet.x - size, top)
+    context.lineTo(feet.x + size, top)
+    context.lineTo(feet.x, top + size * 1.2)
+    context.closePath()
+    context.fill()
+    context.stroke()
+  }
+
 /** The game's time of day tint, multiplied over what is drawn so far, as the game does to its palettes. */
 const tintOverlay =
   (living: Stage["living"], minutes: () => number): Overlay =>
@@ -411,8 +439,12 @@ export const shotFor = (
       ...earnedBy(direction.badges.earn, local, slot.length),
     },
     daily: direction.daily && {
-      day: 1 + Math.min(direction.daily.days - 1, Math.floor(fraction * direction.daily.days)),
+      day:
+        "day" in direction.daily
+          ? direction.daily.day
+          : 1 + Math.min(direction.daily.days - 1, Math.floor(fraction * direction.daily.days)),
     },
+    mark: direction.mark,
     // The waves' cycle began at a set point of the scene, so they are the same at a time however it was reached.
     wild: wildAt(direction.wild, local, slot.length),
     rider,
@@ -503,6 +535,7 @@ export const drawShot = (stage: Stage, context: CanvasRenderingContext2D, shot: 
       }),
     )
   }
+  if (shot.mark) overlays.push(markOverlay(shot.mark))
   if (shot.layers.ships) overlays.push(stage.ships)
   if (shot.layers.lights) overlays.push(stage.lights)
 
