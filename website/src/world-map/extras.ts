@@ -1,6 +1,6 @@
 // What the map draws that the game never does: the ripples on the water and
-// the surf along the coast, the ships' lanes and wakes, and the arrow over a
-// Gym Leader's head. They help read the world from far out. Close in, where
+// the surf along the coast, the ships' lanes, wakes and names (and the
+// train's), and the arrow over a Gym Leader's head. They help read the world from far out. Close in, where
 // the picture is the game's own pixels at their own size or larger, they
 // step aside, so what is left looks like the game.
 import { ramp } from "./noise"

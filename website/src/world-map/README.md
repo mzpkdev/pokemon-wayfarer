@@ -325,8 +325,8 @@ so each holds at one moment.
   shorter one eight rows under it, the way the overworld cycles its water.
   The glints are gone by 7 and the ripples all in by 10.
 - Close in, the map is the game's alone (`extras.ts`): what the map adds that
-  the game never draws (the ripples and the surf, the ships' lanes and wakes,
-  the arrow over a Gym Leader's head) fades out from 12 CSS pixels a metatile
+  the game never draws (the ripples and the surf, the ships' lanes, wakes and
+  names and the train's name, the arrow over a Gym Leader's head) fades out from 12 CSS pixels a metatile
   and is gone at 16, a game pixel a pixel, so a close view looks like the game.
 - The clouds (`clouds.ts`). Seen from above, as from a satellite: faint,
   irregular masses in hard pixels of four metatiles, stepped into three

@@ -574,10 +574,15 @@ export const livingOverlay =
       context.globalCompositeOperation = "source-over"
     }
 
-    // The names last, untinted, so they read at night too.
-    context.font = `${Math.round(16 * ratio)}px "Wayfarer Text", monospace`
-    context.textAlign = "center"
-    context.textBaseline = "top"
-    for (const { name, x, y } of names) drawName(context, name, x, y, ratio)
-    context.textBaseline = "alphabetic"
+    // The names last, untinted, so they read at night too. They are the map's, like the
+    // lanes: close in, a ship is just the ship.
+    if (extras > 0) {
+      context.globalAlpha = extras
+      context.font = `${Math.round(16 * ratio)}px "Wayfarer Text", monospace`
+      context.textAlign = "center"
+      context.textBaseline = "top"
+      for (const { name, x, y } of names) drawName(context, name, x, y, ratio)
+      context.textBaseline = "alphabetic"
+      context.globalAlpha = 1
+    }
   }
