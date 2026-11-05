@@ -37,7 +37,13 @@ import {
 import { loadWater } from "~/world-map/water"
 import { weatherOverlay } from "~/world-map/weather"
 import { stepped } from "~/world-map/fade"
-import { loadWild, type WildClock, wildOverlay } from "~/world-map/wild"
+import {
+  HOMES,
+  loadWild,
+  timeline as waveTimeline,
+  type WildClock,
+  wildOverlay,
+} from "~/world-map/wild"
 
 import { boxCover } from "./box"
 import { fractionOf, type Slot } from "./schedule"
@@ -368,7 +374,10 @@ export const directionFor = (slot: Slot): Direction<number> => {
   return {
     ...direction,
     shots: shots.map((shot) => ({ ...shot, at: at(shot.at) })),
-    wild: typeof wild === "object" ? { from: at(wild.from) } : wild,
+    wild:
+      typeof wild === "object"
+        ? { from: at(wild.from), wave: wild.wave && { ...wild.wave, at: at(wild.wave.at) } }
+        : wild,
     rides: rides?.map(span),
     badges: badges && { ...badges, earn: badges.earn && span(badges.earn) },
     title: title && span(title),
@@ -511,11 +520,19 @@ const earnedBy = (
   return { earned, earnedAt, calling: callingFor(earned) }
 }
 
-/** The wild waves' clock `local` seconds into a scene, once they have begun. */
+/**
+ * The wild waves' clock `local` seconds into a scene, once they have begun: the loop
+ * starts at `from`, or wherever has the scene's `wave` begin at its moment.
+ */
 const wildAt = (wild: Direction<number>["wild"], local: number, length: number): Shot["wild"] => {
   if (!wild) return undefined
   const from = typeof wild === "object" ? wild.from * length : 0
-  return local >= from ? { start: now() - (local - from) * 1000, still: null } : undefined
+  if (local < from) return undefined
+  const wave = typeof wild === "object" && wild.wave
+  const index = wave ? HOMES.findIndex((home) => home.id === wave.home) : -1
+  if (wave && index < 0) warn(`No wild home named ${wave.home}; the waves start at \`from\`.`)
+  const loop = wave && index >= 0 ? wave.at * length - waveTimeline().starts[index]! / 1000 : from
+  return { start: now() - (local - loop) * 1000, still: null }
 }
 
 const EMPTY = new Set<number>()

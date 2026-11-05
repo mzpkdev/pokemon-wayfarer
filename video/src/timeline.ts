@@ -59,8 +59,12 @@ export type Direction<M = Moment> = {
   shipsAt?: number
   /** Layers to turn off or on, over the default of everything but the sightings. */
   layers?: Partial<Layers>
-  /** The wild Pokémon waves, popping out of the whole world from the scene's start, or from the moment `from`. */
-  wild?: boolean | { from: M }
+  /**
+   * The wild Pokémon waves, popping out of the whole world from the scene's start, or from
+   * the moment `from`. They pop one home after another (`HOMES` in the website's `wild.ts`);
+   * `wave` times the loop so the named home's wave (its `id`) begins at its moment.
+   */
+  wild?: boolean | { from: M; wave?: { home: string; at: M } }
   /**
    * The player rides in on their bike along a start's route over each span,
    * the camera coming in with them; between rides they wait at the door, and
@@ -98,6 +102,9 @@ const LANDS: Target = {
   names: ["JOHTO", "KANTO", "HOENN", "SINJOH", "SINNOH", "SEVII ISLANDS", "ALOLA"],
   room: 0.95,
 }
+
+/** The Sevii Islands, Galar's land, all of the chain in view. */
+const SEVII: Target = { kind: "regions", names: ["SEVII ISLANDS"], room: 0.9 }
 
 /** One Gym Leader where their routine has them at `minute`, picked out and held close. */
 const vignette = (slug: string, minute: number): Direction => ({
@@ -160,10 +167,18 @@ export const DIRECTIONS: Record<string, Direction> = {
       },
       // Settled by "Walk every", so it reads as there on "Seven lands".
       { at: "Walk every", to: LANDS, ease: "out" },
+      // Over to the Sevii Islands while the box passes on what folk there say, their
+      // Galar Pokémon popping, and back out to every land for Kalos, far off.
+      { at: "Folk on", to: LANDS },
+      { at: "Ask the Wooloo", to: SEVII },
+      { at: "Never been", to: SEVII },
+      { at: "Too far", to: LANDS },
       { at: 1, to: LANDS },
     ],
     clock: { from: h(21, 5), to: h(23, 30) },
-    wild: { from: "And Kanto" },
+    // Popping from the pull-out on, timed so Galar's wave pops on the Sevii Islands as the box
+    // passes on what folk there say, still popping on the punchline.
+    wild: { from: "And Kanto", wave: { home: "sevii", at: "Galar now" } },
   },
   // Straight on from every land at night: every Gym Leader and Elite Four member's marker
   // lights up, then one dive onto Brock, landing as the box names him, on the morning
