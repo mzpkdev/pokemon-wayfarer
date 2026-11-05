@@ -67,8 +67,15 @@ for (const [name, file] of [
   save("rod", rod)
 }
 
-// What a surfer rides: the game's blob, three 32x32 frames.
-save("surf-blob", renderIndexed(path.join(graphics, "field_effects/pics/surf_blob.png")))
+// What a surfer rides: the Pokémon itself, as the game draws the ones it has surfing
+// sprites for. The sheet's top row is six 32x32 frames (two each facing south, north and
+// west); the row under it, drawn over the rider, is left out.
+for (const [name, file] of [["luvdisc-surf", "0370_luvdisc"]]) {
+  const sheet = renderIndexed(
+    path.join(graphics, `object_events/pics/pokemon/surfable/${file}.png`),
+  )
+  save(name, { width: 192, height: 32, rgba: sheet.rgba.subarray(0, 192 * 32 * 4) })
+}
 
 // People by their OBJ_EVENT_GFX_* name, laid out the same way.
 const objectGraphics = openObjectGraphics(game)
@@ -91,7 +98,7 @@ for (const [name, dir] of [
   ["golem", "golem"],
   ["exeggutor-alola", "exeggutor/alola"],
   ["noctowl", "noctowl"],
-  ["mareanie", "mareanie"],
+  ["luvdisc", "luvdisc"],
 ])
   save(name, renderIndexed(path.join(graphics, "pokemon", dir, "overworld.png")))
 

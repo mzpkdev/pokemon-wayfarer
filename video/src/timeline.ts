@@ -408,9 +408,10 @@ export const DIRECTIONS: Record<string, Direction> = {
     fade: { in: CUT, out: CUT },
   },
   // Back on Melemele's beach, where the Anne left you: you have been standing there all this
-  // while. You turn to the water, cast, and what bites (a Mareanie, Melemele's commonest on
-  // the Old Rod, which knows Surf the day it's caught) carries you off east, the palm tree
-  // seeing you go.
+  // while. You turn to the water, cast, and what bites carries you off east, the palm tree
+  // seeing you go. It is a Luvdisc: of what a rod brings up off Melemele by day, the one
+  // that knows Surf the day it's caught and that the game draws you riding (it has surfing
+  // sprites for some Pokémon, and a plain blob for the rest).
   surf: {
     shots: [
       { at: 0, to: MELEMELE_BEACH },
@@ -462,7 +463,7 @@ export const DIRECTIONS: Record<string, Direction> = {
         emotes: [{ at: BITE, kind: "exclamation", seconds: 0.6 }],
       },
       {
-        sprite: "mareanie",
+        sprite: "luvdisc",
         map: MELEMELE,
         from: { on: BITE, plus: 0.7 },
         to: { on: BITE, plus: 1.75 },
@@ -470,13 +471,7 @@ export const DIRECTIONS: Record<string, Direction> = {
         face: "west",
         hops: [{ on: BITE, plus: 0.7 }],
       },
-      {
-        sprite: "surf-blob",
-        map: MELEMELE,
-        from: RIDE,
-        marks: RIDE_MARKS,
-        poses: [{ at: 0, frame: 1 }],
-      },
+      { sprite: "luvdisc-surf", map: MELEMELE, from: RIDE, marks: RIDE_MARKS, face: "east" },
       {
         sprite: "gold-surfing",
         map: MELEMELE,

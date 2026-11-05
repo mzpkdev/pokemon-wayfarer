@@ -48,10 +48,10 @@ export const SHEETS = {
   golem: pokemon("golem"),
   noctowl: pokemon("noctowl"),
   "exeggutor-alola": pokemon("exeggutor-alola", 64),
-  mareanie: pokemon("mareanie"),
+  luvdisc: pokemon("luvdisc"),
+  "luvdisc-surf": pokemon("luvdisc-surf"),
   "gold-fishing": { src: "/actors/gold-fishing.png", frame: 32, height: 32, layout: "still" },
   "gold-surfing": { src: "/actors/gold-surfing.png", frame: 32, height: 32, layout: "facing" },
-  "surf-blob": { src: "/actors/surf-blob.png", frame: 32, height: 32, layout: "still" },
   ball: { src: "/actors/ball.png", frame: 16, height: 32, layout: "still" },
 } satisfies Record<string, Sheet>
 export type SheetId = keyof typeof SHEETS
