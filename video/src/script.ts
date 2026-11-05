@@ -25,6 +25,13 @@ export type Scene = {
   seconds: number
   /** False keeps the text box away, as over the title card, which says it itself; the voice still speaks. */
   boxed?: boolean
+  /**
+   * Seconds of picture before the words start and after they end, in place of the usual
+   * (`LEAD_SECONDS` and `TAIL_SECONDS` in `schedule.ts`): less, for a scene that should
+   * get on with it.
+   */
+  lead?: number
+  tail?: number
 }
 
 /** Names the text box prints in capitals, as the game does; the longer of two overlapping names first. */
@@ -68,8 +75,12 @@ export const BOX_CAPS = [
 export const SCENES: Scene[] = [
   {
     id: "pallet",
-    narration: "Well, look who's back. | Last time, you set out from Pallet Town. | Everyone did.",
-    seconds: 7,
+    // The opening has one beat, before its punchline, and cuts on it: any slower and the
+    // film starts by waiting.
+    narration: "Well, look who's back. Last time, you set out from Pallet Town. | Everyone did.",
+    seconds: 6,
+    lead: 0.35,
+    tail: 0.35,
   },
   {
     id: "newbark",

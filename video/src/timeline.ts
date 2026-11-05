@@ -211,7 +211,7 @@ export const DIRECTIONS: Record<string, Direction> = {
       {
         start: "kanto",
         from: 0,
-        to: 0.7,
+        to: 0.55,
         track: { zoom: 64, within: { left: -9, top: 0.5, right: 23, bottom: 19.5 } },
       },
     ],
@@ -225,11 +225,11 @@ export const DIRECTIONS: Record<string, Direction> = {
         marks: [{ at: 0, x: 16, y: 14 }],
         face: [
           { at: 0, to: "south" },
-          { at: 0.72, to: "west" },
+          { at: 0.57, to: "west" },
         ],
       },
     ],
-    fade: { in: 0.6, out: CUT },
+    fade: { in: 0.4, out: CUT },
   },
   // GOLD rides in to New Bark Town.
   newbark: {

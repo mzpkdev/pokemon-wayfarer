@@ -6,7 +6,7 @@
 import { SCENES, type Scene } from "./script"
 import { paced, type Words, wordsOf } from "./words"
 
-/** Seconds of picture before the voice starts in a scene, and after it ends. */
+/** Seconds of picture before the voice starts in a scene, and after it ends, unless the scene sets its own. */
 export const LEAD_SECONDS = 0.6
 export const TAIL_SECONDS = 0.8
 
@@ -46,15 +46,17 @@ export const schedule = (cues: Cues | null, scenes = SCENES): Slot[] => {
     const cue = cues?.scenes[scene.id]
     const words = wordsOf(scene.narration)
     const said = timing(words, cue)
-    const length = Math.max(scene.seconds, words.text ? said.end + LEAD_SECONDS + TAIL_SECONDS : 0)
+    const lead = scene.lead ?? LEAD_SECONDS
+    const tail = scene.tail ?? TAIL_SECONDS
+    const length = Math.max(scene.seconds, words.text ? said.end + lead + tail : 0)
     slots.push({
       ...scene,
       start,
       length,
-      voiceAt: cue ? start + LEAD_SECONDS : null,
+      voiceAt: cue ? start + lead : null,
       voiceSeconds: cue ? cue.seconds : null,
       words,
-      times: said.times.map((t) => t + LEAD_SECONDS),
+      times: said.times.map((t) => t + lead),
     })
     start += length
   }
