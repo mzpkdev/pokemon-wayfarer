@@ -24,31 +24,15 @@ const save = (name, image) => {
 }
 const palette = (name) => readJascPalette(path.join(graphics, "object_events/palettes", name))
 
-// GOLD on foot: nine 16x32 frames each (stand south, north, west; then two
-// steps each way), walking and running.
-for (const gait of ["walking", "running"])
-  save(
-    `gold-${gait}`,
-    renderIndexed(
-      path.join(graphics, `object_events/pics/people/gold/${gait}_hns.png`),
-      palette("gold_hns.pal"),
-    ),
-  )
+// GOLD on foot: nine 16x32 frames (stand south, north, west; then two steps each way).
+save(
+  "gold-walking",
+  renderIndexed(
+    path.join(graphics, "object_events/pics/people/gold/walking_hns.png"),
+    palette("gold_hns.pal"),
+  ),
+)
 
-// GOLD with a rod (twelve 32x32 frames: four each casting west, north and
-// south) and on the water (two each south, north and west; the first of each
-// pair sits, the second jumps).
-for (const [name, file] of [
-  ["gold-fishing", "fishing_hns"],
-  ["gold-surfing", "surfing_hns"],
-])
-  save(
-    name,
-    renderIndexed(
-      path.join(graphics, `object_events/pics/people/gold/${file}.png`),
-      palette("gold_hns.pal"),
-    ),
-  )
 // A rod for someone the game never drew fishing: the one in GOLD's hands, cast out west
 // (his fourth frame: five rows of it, left of his hands), on a 16x32 frame of its own to
 // lay over a person standing beside the water.
@@ -79,7 +63,26 @@ for (const [name, file] of [["luvdisc-surf", "0370_luvdisc"]]) {
 
 // People by their OBJ_EVENT_GFX_* name, laid out the same way.
 const objectGraphics = openObjectGraphics(game)
+
+// The other players, each for the scenes in their own land. RED also fishes (twelve
+// 32x32 frames: four each casting west, north and south) and sits a surfing Pokémon
+// (the first three 16x32 frames of his surfing and running sheet: south, north, west).
+save("red-fishing", objectGraphics("OBJ_EVENT_GFX_RED_FISH").sheet)
+{
+  const { sheet } = objectGraphics("OBJ_EVENT_GFX_RED_SURF")
+  const sitting = { width: 48, height: 32, rgba: new Uint8Array(48 * 32 * 4) }
+  for (let y = 0; y < 32; y++)
+    sitting.rgba.set(
+      sheet.rgba.subarray(y * sheet.width * 4, (y * sheet.width + 48) * 4),
+      y * 48 * 4,
+    )
+  save("red-surfing", sitting)
+}
+
 for (const [name, id] of [
+  ["red", "OBJ_EVENT_GFX_RED_NORMAL"],
+  ["leaf", "OBJ_EVENT_GFX_GREEN_NORMAL"],
+  ["kris", "OBJ_EVENT_GFX_KRIS_NORMAL_HNS"],
   ["brock", "OBJ_EVENT_GFX_BROCK_HNS"],
   ["blue", "OBJ_EVENT_GFX_BLUE_HNS"],
   ["surge", "OBJ_EVENT_GFX_SURGE_HNS"],

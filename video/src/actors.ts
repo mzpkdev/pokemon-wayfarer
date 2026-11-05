@@ -16,7 +16,7 @@ type Sheet = {
   src: string
   frame: number
   height: number
-  /** "facing" has one frame each way at every other frame; "still" only ever shows the frames it is posed in. */
+  /** "facing" has one frame each way (south, north, west); "still" only ever shows the frames it is posed in. */
   layout: "person" | "pokemon" | "facing" | "still"
 }
 
@@ -35,7 +35,9 @@ const pokemon = (name: string, frame = 32): Sheet => ({
 
 export const SHEETS = {
   gold: person("gold-walking"),
-  "gold-running": person("gold-running"),
+  red: person("red"),
+  leaf: person("leaf"),
+  kris: person("kris"),
   brock: person("brock"),
   blue: person("blue"),
   surge: person("surge"),
@@ -54,8 +56,8 @@ export const SHEETS = {
   "exeggutor-alola": pokemon("exeggutor-alola", 64),
   luvdisc: pokemon("luvdisc"),
   "luvdisc-surf": pokemon("luvdisc-surf"),
-  "gold-fishing": { src: "/actors/gold-fishing.png", frame: 32, height: 32, layout: "still" },
-  "gold-surfing": { src: "/actors/gold-surfing.png", frame: 32, height: 32, layout: "facing" },
+  "red-fishing": { src: "/actors/red-fishing.png", frame: 32, height: 32, layout: "still" },
+  "red-surfing": { src: "/actors/red-surfing.png", frame: 16, height: 32, layout: "facing" },
   ball: { src: "/actors/ball.png", frame: 16, height: 32, layout: "still" },
 } satisfies Record<string, Sheet>
 export type SheetId = keyof typeof SHEETS
@@ -138,7 +140,7 @@ const frameOf = (sheet: Sheet, facing: Facing, step: 0 | 1 | 2, bob: 0 | 1) => {
   const row = ROW[facing]
   if (sheet.layout === "person") return step === 0 ? row : 3 + row * 2 + (step - 1)
   if (sheet.layout === "pokemon") return row * 2 + (step === 0 ? bob : step - 1)
-  if (sheet.layout === "facing") return row * 2
+  if (sheet.layout === "facing") return row
   return 0
 }
 

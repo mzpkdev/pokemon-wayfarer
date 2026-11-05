@@ -182,7 +182,7 @@ const WOOLOO: [number, number, number, number, "south" | "west" | "east" | "nort
 /** You, walking up to Clair across the grass by the Dragon's Den. */
 const CLAIR_CAST: Direction["cast"] = [
   {
-    sprite: "gold",
+    sprite: "kris",
     map: "BlackthornCity_hns",
     marks: [
       { at: 0, x: 23, y: 16 },
@@ -203,6 +203,11 @@ const CLAIR_CAST: Direction["cast"] = [
   },
 ]
 
+// Who "you" are changes with where the scene is, so nobody is in two lands at once: RED,
+// who sailed from Vermilion, is the one left on the beach in Alola (and still there to
+// fish his way off it); LEAF walks Kanto's Safari Zone; KRIS trades with Brock and walks
+// up to Clair in Johto; and GOLD, whom the film saw ride home to New Bark Town, is out on
+// Route 29 that night, on Route 30 the next morning, and in Ilex Forest two days on.
 export const DIRECTIONS: Record<string, Direction> = {
   // Cold open: RED rides in to his front door, the camera coming in with him.
   pallet: {
@@ -305,7 +310,7 @@ export const DIRECTIONS: Record<string, Direction> = {
         ],
       },
       {
-        sprite: "gold",
+        sprite: "red",
         map: MELEMELE,
         from: "And now",
         marks: [
@@ -332,7 +337,7 @@ export const DIRECTIONS: Record<string, Direction> = {
     cast: [
       { sprite: "exeggutor-alola", map: MELEMELE, marks: [{ at: 0, x: 34, y: 10 }], face: "east" },
       {
-        sprite: "gold",
+        sprite: "red",
         map: MELEMELE,
         to: { on: NOTICED, plus: 0.4 },
         marks: [{ at: 0, x: 36, y: 11 }],
@@ -343,7 +348,7 @@ export const DIRECTIONS: Record<string, Direction> = {
         emotes: [{ at: NOTICED, kind: "exclamation", seconds: 0.4 }],
       },
       {
-        sprite: "gold-running",
+        sprite: "red",
         map: MELEMELE,
         from: { on: NOTICED, plus: 0.4 },
         marks: [
@@ -367,7 +372,7 @@ export const DIRECTIONS: Record<string, Direction> = {
     clock: { from: h(33, 39), to: h(34, 30) },
     cast: [
       { sprite: "exeggutor-alola", map: MELEMELE, marks: [{ at: 0, x: 34, y: 10 }], face: "east" },
-      { sprite: "gold", map: MELEMELE, marks: [{ at: 0, x: 39, y: 10 }], face: "north" },
+      { sprite: "red", map: MELEMELE, marks: [{ at: 0, x: 39, y: 10 }], face: "north" },
     ],
     wild: { from: "the whole map" },
   },
@@ -433,7 +438,7 @@ export const DIRECTIONS: Record<string, Direction> = {
         ],
       },
       {
-        sprite: "gold",
+        sprite: "leaf",
         map: SAFARI_BEACH,
         marks: [
           { at: 0, x: 20, y: 38 },
@@ -469,7 +474,7 @@ export const DIRECTIONS: Record<string, Direction> = {
         hops: [{ on: RIDE, plus: 1 }],
       },
       {
-        sprite: "gold",
+        sprite: "red",
         map: MELEMELE,
         to: "Fish",
         marks: [{ at: 0, x: 39, y: 10 }],
@@ -482,7 +487,7 @@ export const DIRECTIONS: Record<string, Direction> = {
       },
       // The rod out over the water, the float down, a tug, and the reel in.
       {
-        sprite: "gold-fishing",
+        sprite: "red-fishing",
         map: MELEMELE,
         from: "Fish",
         to: RIDE,
@@ -514,7 +519,7 @@ export const DIRECTIONS: Record<string, Direction> = {
       },
       { sprite: "luvdisc-surf", map: MELEMELE, from: RIDE, marks: RIDE_MARKS, face: "east" },
       {
-        sprite: "gold-surfing",
+        sprite: "red-surfing",
         map: MELEMELE,
         from: RIDE,
         marks: RIDE_MARKS,
@@ -565,7 +570,7 @@ export const DIRECTIONS: Record<string, Direction> = {
         emotes: [{ at: { on: "Trade with", plus: 2.3 }, kind: "heart", seconds: 1.5 }],
       },
       {
-        sprite: "gold",
+        sprite: "kris",
         from: "Brock's helping",
         marks: [
           { at: "Brock's helping", x: 523, y: 1177 },
