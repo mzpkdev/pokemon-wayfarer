@@ -73,6 +73,12 @@ export const sightingsOverlay = (
   minutes: () => number,
   animate: boolean,
   now: () => number,
+  {
+    quiet = QUIET,
+  }: {
+    /** Of a cell's stretches, how many have nobody out (0 to 1). */
+    quiet?: number
+  } = {},
 ): Overlay => {
   const spots: Spot[] = []
   Object.values(encounters.maps).forEach((place, map) => {
@@ -141,7 +147,7 @@ export const sightingsOverlay = (
         const age = t + offset - stretch * STRETCH_MS
         if (age > OUT_MS && animate) continue
         const seed = [spot.map, cell, stretch, spot.water ? 1 : 0] as const
-        if (roll(...seed, 7) < QUIET) continue
+        if (roll(...seed, 7) < quiet) continue
         const x = spot.cells[cell * 2]! + 0.5
         const y = spot.cells[cell * 2 + 1]! + 0.5
         if (x < view.left || x > view.right || y < view.top || y > view.bottom) continue

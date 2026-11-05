@@ -487,8 +487,11 @@ export const livingOverlay =
     {
       still = false,
       decks = [],
+      tint = true,
     }: {
       still?: boolean
+      /** The time of day's tint over everything drawn so far; off leaves the map in daylight. */
+      tint?: boolean
       /** Bridge decks the ships pass under (`overpasses` in meta.json): no ship is drawn over them. */
       decks?: Bounds[]
     } = {},
@@ -556,7 +559,7 @@ export const livingOverlay =
 
     // The game multiplies each palette color by the period's tint; multiply
     // over the canvas does the same to what's drawn.
-    const [r, g, b] = tintAt(living, now)
+    const [r, g, b] = tint ? tintAt(living, now) : [255, 255, 255]
     if (r < 255 || g < 255 || b < 255) {
       context.globalCompositeOperation = "multiply"
       context.fillStyle = `rgb(${Math.round(r)} ${Math.round(g)} ${Math.round(b)})`

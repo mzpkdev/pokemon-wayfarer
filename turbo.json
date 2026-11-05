@@ -52,6 +52,18 @@
     "typecheck": {
       "dependsOn": ["^build"],
       "outputs": []
+    },
+    "@wayfarer/video#check": {
+      "dependsOn": [],
+      "outputs": []
+    },
+    "@wayfarer/video#lint": {
+      "dependsOn": [],
+      "outputs": []
+    },
+    "@wayfarer/video#typecheck": {
+      "dependsOn": [],
+      "outputs": []
     }
   }
 }
