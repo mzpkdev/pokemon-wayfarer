@@ -2,7 +2,7 @@
 
 The scripts run through the Johto story tests' interpreter, which checks state transactions and not
 presentation: message boxes pass, battles are won, and `items` is what the Bag holds.
-Spec: .product/specs/hoenn-independent-story-beats.md.
+This is the Hoenn independent story beats spec, Devon sections.
 """
 from itertools import permutations
 from pathlib import Path
