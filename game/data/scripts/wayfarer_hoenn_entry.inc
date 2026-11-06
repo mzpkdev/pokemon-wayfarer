@@ -182,3 +182,9 @@ WayfarerHoennVisitor_EventScript_InitializeArrival::
     setflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_TRUCK
     setflag FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_TRUCK
     end
+
+@ BRENDAN's and MAY's teams answer the starter taken from BIRCH, which a visitor may not have. Their
+@ scenes jump here before they start, leaving their progress untouched, so each one plays on a later
+@ visit once the starter is chosen.
+WayfarerHoennVisitor_EventScript_RivalWaitsForStarter::
+	end
