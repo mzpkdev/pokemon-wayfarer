@@ -204,12 +204,12 @@ and without `setrespawn`:
   When a charter is available, talking to her opens a menu: the ship in port
   (if any), each available charter, and Cancel. With no charter available,
   she boards with no menu.
-- **Slateport during the Aqua escape.** While
-  `FLAG_HIDE_SLATEPORT_CITY_HARBOR_PATRONS` is set (from the Aqua escape,
-  `VAR_SLATEPORT_HARBOR_STATE` 1, until the Mossdeep Gym clears it), the
-  attendant is hidden and the berth is closed: the ship object stays
-  hidden whatever the table says, and nobody boards there. Arrivals still land
-  at (9,11), which is outside the scene's x=8 triggers.
+- **Slateport during the Aqua escape.** While the harbor scene is waiting to
+  play (`VAR_SLATEPORT_HARBOR_STATE` 1, from Magma Hideout until the scene
+  ends), the attendant is hidden and the berth is closed: the ship object
+  stays hidden whatever the table says, and nobody boards there. Arrivals
+  still land at (9,11), which is outside the scene's x=8 triggers, and those
+  triggers wait for Stern's street scene.
 
 **The departure board.** A new sign event on a wall tile next to the sailor's
 path (none of the docks has a sign) reads the port's by-day and by-night

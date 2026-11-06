@@ -23,29 +23,37 @@ SlateportCity_Harbor_EventScript_ReadyAquaEscapeScene::
 	return
 
 SlateportCity_Harbor_EventScript_AquaEscapeTrigger0::
+	goto_if_lt VAR_SLATEPORT_CITY_STATE, 2, SlateportCity_Harbor_EventScript_AquaEscapeNotReady
 	lockall
 	setvar VAR_0x8008, 0
 	goto SlateportCity_Harbor_EventScript_AquaEscapeScene
 	end
 
 SlateportCity_Harbor_EventScript_AquaEscapeTrigger1::
+	goto_if_lt VAR_SLATEPORT_CITY_STATE, 2, SlateportCity_Harbor_EventScript_AquaEscapeNotReady
 	lockall
 	setvar VAR_0x8008, 1
 	goto SlateportCity_Harbor_EventScript_AquaEscapeScene
 	end
 
 SlateportCity_Harbor_EventScript_AquaEscapeTrigger2::
+	goto_if_lt VAR_SLATEPORT_CITY_STATE, 2, SlateportCity_Harbor_EventScript_AquaEscapeNotReady
 	lockall
 	setvar VAR_0x8008, 2
 	goto SlateportCity_Harbor_EventScript_AquaEscapeScene
 	end
 
 SlateportCity_Harbor_EventScript_AquaEscapeTrigger3::
+	goto_if_lt VAR_SLATEPORT_CITY_STATE, 2, SlateportCity_Harbor_EventScript_AquaEscapeNotReady
 	lockall
 	setvar VAR_0x8008, 3
 	applymovement LOCALID_PLAYER, SlateportCity_Harbor_Movement_PlayerWalkUp
 	waitmovement 0
 	goto SlateportCity_Harbor_EventScript_AquaEscapeScene
+	end
+
+@ A ferry passenger can land before Stern's street scene, with the cast not yet at the harbor.
+SlateportCity_Harbor_EventScript_AquaEscapeNotReady::
 	end
 
 SlateportCity_Harbor_EventScript_AquaEscapeScene::
@@ -74,6 +82,8 @@ SlateportCity_Harbor_EventScript_AquaEscapeScene::
 	closemessage
 	setflag FLAG_HIDE_AQUA_HIDEOUT_1F_GRUNT_1_BLOCKING_ENTRANCE
 	setflag FLAG_HIDE_AQUA_HIDEOUT_1F_GRUNT_2_BLOCKING_ENTRANCE
+	clearflag FLAG_HIDE_SLATEPORT_CITY_HARBOR_PATRONS
+	setflag FLAG_HIDE_SLATEPORT_CITY_TEAM_AQUA
 	copyobjectxytoperm LOCALID_SLATEPORT_HARBOR_CAPT_STERN
 	setobjectmovementtype LOCALID_SLATEPORT_HARBOR_CAPT_STERN, MOVEMENT_TYPE_FACE_RIGHT
 	releaseall
@@ -330,16 +340,63 @@ SlateportCity_Harbor_EventScript_FatMan::
 SlateportCity_Harbor_EventScript_CaptStern::
 	lock
 	faceplayer
+	goto_if_lt VAR_SLATEPORT_HARBOR_STATE, 2, SlateportCity_Harbor_EventScript_SternBeforeEscape
+	checkitem ITEM_DEVON_PARTS
+	goto_if_eq VAR_RESULT, TRUE, SlateportCity_Harbor_EventScript_SternTakesParts
+	goto_if_set FLAG_RECEIVED_HM_DIVE, SlateportCity_Harbor_EventScript_CaptSternFerryOrScannerComment
+	goto_if_unset FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE, SlateportCity_Harbor_EventScript_WhyStealSubmarine
+	goto_if_unset FLAG_EVIL_TEAM_ESCAPED_STERN_SPOKE, SlateportCity_Harbor_EventScript_TeamAquaLeftNeedDive
 	goto_if_set FLAG_BADGE07_GET, SlateportCity_Harbor_EventScript_CaptSternFerryOrScannerComment
-	goto_if_set FLAG_EVIL_TEAM_ESCAPED_STERN_SPOKE, SlateportCity_Harbor_EventScript_NeedDive
-	goto_if_set FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE, SlateportCity_Harbor_EventScript_TeamAquaLeftNeedDive
-	goto_if_eq VAR_SLATEPORT_HARBOR_STATE, 2, SlateportCity_Harbor_EventScript_WhyStealSubmarine
-	msgbox SlateportCity_Harbor_Text_SameThugsTriedToRobAtMuseum, MSGBOX_DEFAULT
+	goto SlateportCity_Harbor_EventScript_NeedDive
+	end
+
+@ The scene is still to play here, and the Parts wait for it. Before the harbor scene, only the museum
+@ confrontation can have delivered them.
+SlateportCity_Harbor_EventScript_SternBeforeEscape::
+	call_if_set FLAG_DELIVERED_DEVON_GOODS, SlateportCity_Harbor_EventScript_SameThugs
+	call_if_unset FLAG_DELIVERED_DEVON_GOODS, SlateportCity_Harbor_EventScript_ThoseThugs
 	closemessage
 	applymovement VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
 	release
 	end
+
+SlateportCity_Harbor_EventScript_SameThugs::
+	msgbox SlateportCity_Harbor_Text_SameThugsTriedToRobAtMuseum, MSGBOX_DEFAULT
+	return
+
+SlateportCity_Harbor_EventScript_ThoseThugs::
+	msgbox SlateportCity_Harbor_Text_ThoseThugsAtTheHarbor, MSGBOX_DEFAULT
+	return
+
+@ A Parts delivery after the harbor scene: everything the museum delivery sets, with no confrontation. Scott's
+@ meeting outside the museum is staged at its door and can no longer play, so it is counted and his call
+@ registered; a Battle Tent scene already closed by Wattson's defeat stays closed.
+SlateportCity_Harbor_EventScript_SternTakesParts::
+	msgbox SlateportCity_Harbor_Text_SternTakesParts, MSGBOX_DEFAULT
+	setvar VAR_0x8004, ITEM_DEVON_PARTS
+	call Common_EventScript_PlayerHandedOverTheItem
+	msgbox SlateportCity_Harbor_Text_SternThanksForParts, MSGBOX_DEFAULT
+	setflag FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_AQUA_GRUNTS
+	setflag FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_2F_CAPTAIN_STERN
+	setflag FLAG_HIDE_ROUTE_110_TEAM_AQUA
+	call_if_eq VAR_REGISTER_BIRCH_STATE, 0, SlateportCity_Harbor_EventScript_ReadyRegisterBirch
+	setflag FLAG_DELIVERED_DEVON_GOODS
+	clearflag FLAG_HIDE_ROUTE_116_DEVON_EMPLOYEE
+	setflag FLAG_HIDE_RUSTBORO_CITY_DEVON_CORP_3F_EMPLOYEE
+	call_if_lt VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 2, SlateportCity_Harbor_EventScript_ScottMeetingDone
+	addvar VAR_SCOTT_STATE, 1
+	setflag FLAG_ENABLE_SCOTT_MATCH_CALL
+	release
+	end
+
+SlateportCity_Harbor_EventScript_ReadyRegisterBirch::
+	setvar VAR_REGISTER_BIRCH_STATE, 1
+	return
+
+SlateportCity_Harbor_EventScript_ScottMeetingDone::
+	setvar VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 2
+	return
 
 SlateportCity_Harbor_EventScript_WhyStealSubmarine::
 	msgbox SlateportCity_Harbor_Text_CaptSternWhyStealMySubmarine, MSGBOX_DEFAULT
@@ -485,6 +542,20 @@ SlateportCity_Harbor_Text_SubTooSmallForMe:
 	.string "If I squeezed in, there wouldn't be\n"
 	.string "any room for the CAPTAIN…$"
 
+SlateportCity_Harbor_Text_ThoseThugsAtTheHarbor:
+	.string "CAPT. STERN: Those thugs…\p"
+	.string "How did they get into the HARBOR?\n"
+	.string "They must have planned this!$"
+
+SlateportCity_Harbor_Text_SternTakesParts:
+	.string "CAPT. STERN: Hm? Are those the parts\n"
+	.string "I ordered from MR. STONE of DEVON?$"
+
+SlateportCity_Harbor_Text_SternThanksForParts:
+	.string "CAPT. STERN: You came all this way\n"
+	.string "to bring them to me, {PLAYER}{KUN}?\p"
+	.string "Thank you. I'll keep them safe.$"
+
 SlateportCity_Harbor_Text_SameThugsTriedToRobAtMuseum:
 	.string "CAPT. STERN: Those thugs…\p"
 	.string "They're the same lot who tried to rob\n"
@@ -537,7 +608,7 @@ SlateportCity_Harbor_Text_NeedDiveToCatchSub:
 
 SlateportCity_Harbor_Text_WontBeLongBeforeWeFinishFerry:
 	.string "CAPT. STERN: Oh, yes.\n"
-	.string "MR. BRINEY came to our SHIPYARD.\p"
+	.string "DOCK is hard at work at our SHIPYARD.\p"
 	.string "It won't be long now before we finish\n"
 	.string "making the ferry!$"
 
@@ -546,7 +617,7 @@ SlateportCity_Harbor_Text_FinishedMakingFerry:
 	.string "We finally finished making the ferry\n"
 	.string "S.S. TIDAL!\p"
 	.string "We couldn't have done it without\n"
-	.string "your friend MR. BRINEY.\p"
+	.string "all of DOCK's hard work.\p"
 	.string "Please go for a short cruise on it!$"
 
 SlateportCity_Harbor_Text_WouldYouTradeScanner:

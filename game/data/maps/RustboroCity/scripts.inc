@@ -302,7 +302,7 @@ RustboroCity_EventScript_StolenGoodsScene::
 	clearflag FLAG_HIDE_RUSTBORO_CITY_DEVON_EMPLOYEE_1
 	setflag FLAG_DEVON_GOODS_STOLEN
 	setvar VAR_RUSTBORO_CITY_STATE, 2
-	setvar VAR_RUSTURF_TUNNEL_STATE, 2
+	call_if_lt VAR_RUSTURF_TUNNEL_STATE, 2, RustboroCity_EventScript_ReadyTunnelGrunt
 	setvar VAR_ROUTE116_STATE, 1
 	clearflag FLAG_HIDE_ROUTE_116_MR_BRINEY
 	clearflag FLAG_HIDE_RUSTURF_TUNNEL_PEEKO
@@ -311,6 +311,12 @@ RustboroCity_EventScript_StolenGoodsScene::
 	setflag FLAG_HIDE_BRINEYS_HOUSE_PEEKO
 	releaseall
 	end
+
+@ A theft that starts after the tunnel was dug through leaves the tunnel's state alone: the grunt and Peeko
+@ then stand where the state would have backed them up to.
+RustboroCity_EventScript_ReadyTunnelGrunt::
+	setvar VAR_RUSTURF_TUNNEL_STATE, 2
+	return
 
 @ Unused
 RustboroCity_EventScript_ShadyCharacterTookOff::
@@ -503,7 +509,13 @@ RustboroCity_EventScript_EmployeeAskToGetGoods::
 	setflag FLAG_INTERACTED_WITH_DEVON_EMPLOYEE_GOODS_STOLEN
 	setvar VAR_RUSTBORO_CITY_STATE, 3
 	copyobjectxytoperm LOCALID_RUSTBORO_DEVON_EMPLOYEE
+	goto_if_eq VAR_PETALBURG_WOODS_STATE, 0, RustboroCity_EventScript_StrangerAskToGetGoods
 	msgbox RustboroCity_Text_HelpMeIWasRobbed, MSGBOX_DEFAULT
+	releaseall
+	end
+
+RustboroCity_EventScript_StrangerAskToGetGoods::
+	msgbox RustboroCity_Text_HelpMeIWasRobbedStranger, MSGBOX_DEFAULT
 	releaseall
 	end
 
@@ -587,14 +599,16 @@ RustboroCity_EventScript_ReturnGoodsTrigger3::
 	end
 
 RustboroCity_EventScript_ReturnGoods::
+	checkitemspace ITEM_GREAT_BALL
+	goto_if_eq VAR_RESULT, FALSE, RustboroCity_EventScript_BagFull
 	call_if_eq VAR_TEMP_1, 0, RustboroCity_EventScript_EmployeeFacePlayerUp2
 	call_if_eq VAR_TEMP_1, 1, RustboroCity_EventScript_EmployeeFacePlayerLeft2
 	call_if_eq VAR_TEMP_1, 2, RustboroCity_EventScript_EmployeeFacePlayerDown2
 	call_if_eq VAR_TEMP_1, 3, RustboroCity_EventScript_EmployeeApproachPlayerDown2
 	call_if_eq VAR_TEMP_1, 4, RustboroCity_EventScript_EmployeeFacePlayerRight
-	msgbox RustboroCity_Text_YouGotItThankYou, MSGBOX_DEFAULT
+	call_if_eq VAR_PETALBURG_WOODS_STATE, 0, RustboroCity_EventScript_ThankStranger
+	call_if_ne VAR_PETALBURG_WOODS_STATE, 0, RustboroCity_EventScript_ThankFriend
 	giveitem ITEM_GREAT_BALL
-	call_if_eq VAR_RESULT, FALSE, RustboroCity_EventScript_BagFull
 	msgbox RustboroCity_Text_PleaseComeWithMe, MSGBOX_DEFAULT
 	closemessage
 	setflag FLAG_RETURNED_DEVON_GOODS
@@ -606,9 +620,19 @@ RustboroCity_EventScript_ReturnGoods::
 	releaseall
 	end
 
+RustboroCity_EventScript_ThankFriend::
+	msgbox RustboroCity_Text_YouGotItThankYou, MSGBOX_DEFAULT
+	return
+
+RustboroCity_EventScript_ThankStranger::
+	msgbox RustboroCity_Text_YouGotItThankYouStranger, MSGBOX_DEFAULT
+	return
+
+@ The handover waits for room in the Bag: nothing has been given or recorded, and the triggers stay armed.
 RustboroCity_EventScript_BagFull::
 	msgbox RustboroCity_Text_YoureLoadedWithItems, MSGBOX_DEFAULT
-	return
+	releaseall
+	end
 
 RustboroCity_EventScript_EmployeeFacePlayerUp2::
 	applymovement LOCALID_RUSTBORO_DEVON_EMPLOYEE, Common_Movement_WalkInPlaceFasterUp
@@ -1106,6 +1130,14 @@ RustboroCity_Text_HelpMeIWasRobbed:
 	.string "If I don't…\n"
 	.string "I'm going to be in serious trouble.$"
 
+RustboroCity_Text_HelpMeIWasRobbedStranger:
+	.string "Oh! You there!\n"
+	.string "You're a TRAINER, aren't you?\p"
+	.string "Help me! I was robbed by TEAM AQUA!\n"
+	.string "I have to get the DEVON GOODS back!\p"
+	.string "If I don't…\n"
+	.string "I'm going to be in serious trouble.$"
+
 RustboroCity_Text_ShadyCharacterTookOffTowardsTunnel:
 	.string "That shady character, I think he took\n"
 	.string "off towards the tunnel over there.$"
@@ -1119,9 +1151,21 @@ RustboroCity_Text_YouGotItThankYou:
 	.string "I know! As my thanks, I'll give you\n"
 	.string "another GREAT BALL!$"
 
+RustboroCity_Text_YouGotItThankYouStranger:
+	.string "Oh! How did it go?\n"
+	.string "The DEVON GOODS?\p"
+	.string "You did!\n"
+	.string "You got them back!\p"
+	.string "You really are a great TRAINER!\p"
+	.string "I know! As my thanks, I'll give you\n"
+	.string "a GREAT BALL!$"
+
 RustboroCity_Text_YoureLoadedWithItems:
-	.string "You're loaded with items.\n"
-	.string "I can't give you this GREAT BALL.$"
+	.string "Oh! The DEVON GOODS!\n"
+	.string "You got them back!\p"
+	.string "I want to thank you with a GREAT BALL,\n"
+	.string "but you're loaded with items.\p"
+	.string "Make some room, then come see me!$"
 
 RustboroCity_Text_PleaseComeWithMe:
 	.string "Excuse me, please!\n"

@@ -37,7 +37,7 @@ extern const u8 Ferry_EventScript_PA_CastOffAlola[];
 extern const u8 Ferry_EventScript_PA_Arrival[];
 extern const u8 Ferry_EventScript_PA_ArrivalAlola[];
 
-#define FERRY_SLATEPORT_PATRONS_FLAG HOENN_FLAG_ID(0x389)  // FLAG_HIDE_SLATEPORT_CITY_HARBOR_PATRONS
+#define FERRY_SLATEPORT_HARBOR_STATE_VAR HOENN_VAR_ID(0x40A0)  // VAR_SLATEPORT_HARBOR_STATE
 #define FERRY_CYCLE_MINUTES          (4 * (FERRY_PORT_MINUTES + FERRY_SEA_MINUTES))
 #define MINUTES_PER_DAY              (HOURS_PER_DAY * MINUTES_PER_HOUR)
 
@@ -407,8 +407,8 @@ static u8 GetBerthPort(void)
 
 static bool8 IsBerthClosed(u8 port)
 {
-    // The Aqua escape (from VAR_SLATEPORT_HARBOR_STATE 1 until the Mossdeep Gym) shuts Slateport's berth.
-    return port == FERRY_PORT_SLATEPORT && FlagGet(FERRY_SLATEPORT_PATRONS_FLAG);
+    // Slateport's berth is shut only while the harbor scene waits to play (VAR_SLATEPORT_HARBOR_STATE 1).
+    return port == FERRY_PORT_SLATEPORT && VarGet(FERRY_SLATEPORT_HARBOR_STATE_VAR) == 1;
 }
 
 // What the berth shows now. The maiden voyage keeps Olivine's Aqua in the water whatever the table says.

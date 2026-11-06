@@ -4,13 +4,16 @@ GraniteCave_StevensRoom_MapScripts::
 GraniteCave_StevensRoom_EventScript_Steven::
 	lock
 	faceplayer
+	checkitem ITEM_LETTER
+	goto_if_eq VAR_RESULT, FALSE, GraniteCave_StevensRoom_EventScript_NoLetter
 	msgbox GraniteCave_StevensRoom_Text_ImStevenLetterForMe, MSGBOX_DEFAULT
+	checkitemspace ITEM_TM_STEEL_WING
+	goto_if_eq VAR_RESULT, FALSE, GraniteCave_StevensRoom_EventScript_BagFull
 	setvar VAR_0x8004, ITEM_LETTER
 	call Common_EventScript_PlayerHandedOverTheItem
 	setflag FLAG_DELIVERED_STEVEN_LETTER
 	msgbox GraniteCave_StevensRoom_Text_ThankYouTakeThis, MSGBOX_DEFAULT
 	giveitem ITEM_TM_STEEL_WING
-	call_if_eq VAR_RESULT, FALSE, GraniteCave_StevensRoom_EventScript_BagFull
 	msgbox GraniteCave_StevensRoom_Text_CouldBecomeChampionLetsRegister, MSGBOX_DEFAULT
 	closemessage
 	delay 30
@@ -48,9 +51,16 @@ GraniteCave_StevensRoom_EventScript_StevenExitSouth::
 	waitmovement 0
 	return
 
+GraniteCave_StevensRoom_EventScript_NoLetter::
+	msgbox GraniteCave_StevensRoom_Text_ImSteven, MSGBOX_DEFAULT
+	release
+	end
+
+@ The delivery waits for room in the Bag: he keeps his place, and the player keeps the Letter.
 GraniteCave_StevensRoom_EventScript_BagFull::
 	msgbox GraniteCave_StevensRoom_Text_OhBagIsFull, MSGBOX_DEFAULT
-	return
+	release
+	end
 
 GraniteCave_StevensRoom_Movement_StevenExit:
 	walk_up
@@ -78,6 +88,11 @@ GraniteCave_StevensRoom_Movement_StevenExitSouth:
 	walk_up
 	delay_8
 	step_end
+
+GraniteCave_StevensRoom_Text_ImSteven:
+	.string "My name is STEVEN.\p"
+	.string "I'm interested in rare stones,\n"
+	.string "so I travel here and there.$"
 
 GraniteCave_StevensRoom_Text_ImStevenLetterForMe:
 	.string "My name is STEVEN.\p"
@@ -114,6 +129,8 @@ GraniteCave_StevensRoom_Text_IveGotToHurryAlong:
 	.string "Now, I've got to hurry along.$"
 
 GraniteCave_StevensRoom_Text_OhBagIsFull:
-	.string "Oh, your BAG is full…\n"
-	.string "That's too bad, then.$"
+	.string "STEVEN: I'd like to thank you with\n"
+	.string "a TM, but your BAG is full.\p"
+	.string "Make some room, and bring that\n"
+	.string "LETTER back to me.$"
 

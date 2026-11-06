@@ -382,14 +382,22 @@ TEST("Ferry: a berth offers the ship the table has in at this hour")
     EXPECT_EQ(Ferry_GetBerthShip(), FERRY_SHIP_NONE);
     FakeRtc_ManuallySetTime(1, 4, 0, 0);
     EXPECT_EQ(Ferry_GetBerthShip(), FERRY_SHIP_ANNE);
-    // The Slateport berth closes during the Aqua escape, whatever the table says.
+    // The Slateport berth closes only while the harbor scene waits to play, whatever the table says.
     gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR);
     gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_SLATEPORT_CITY_HARBOR);
     FakeRtc_ManuallySetTime(1, 12, 0, 0);
     EXPECT_EQ(Ferry_GetBerthShip(), FERRY_SHIP_TIDAL);
-    FlagSet(HOENN_FLAG_ID(0x389)); // FLAG_HIDE_SLATEPORT_CITY_HARBOR_PATRONS
+    VarSet(HOENN_VAR_ID(0x40A0), 1); // VAR_SLATEPORT_HARBOR_STATE: Magma Hideout is done, the scene waits
     EXPECT_EQ(Ferry_GetBerthShip(), FERRY_SHIP_NONE);
+    // The hide flag alone says nothing: the Mossdeep Gym win no longer reopens the berth by clearing it.
+    FlagClear(HOENN_FLAG_ID(0x389)); // FLAG_HIDE_SLATEPORT_CITY_HARBOR_PATRONS
+    EXPECT_EQ(Ferry_GetBerthShip(), FERRY_SHIP_NONE);
+    VarSet(HOENN_VAR_ID(0x40A0), 2); // the scene has played
+    EXPECT_EQ(Ferry_GetBerthShip(), FERRY_SHIP_TIDAL);
+    FlagSet(HOENN_FLAG_ID(0x389));
+    EXPECT_EQ(Ferry_GetBerthShip(), FERRY_SHIP_TIDAL);
     FlagClear(HOENN_FLAG_ID(0x389));
+    VarSet(HOENN_VAR_ID(0x40A0), 0);
 }
 
 TEST("Ferry: ship maps and ports are told apart from every other map")
