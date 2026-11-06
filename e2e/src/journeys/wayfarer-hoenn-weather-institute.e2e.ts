@@ -237,6 +237,22 @@ describe.sequential("Wayfarer Hoenn Weather Institute and late legendaries", () 
     ).toContain("loves rain")
   })
 
+  it("follows the same rule in the harbor Sailor's rumor", { timeout: 120_000 }, async () => {
+    const rumor = async (flags: Story["flags"], rating: number) => {
+      await arrange(game, "slateport-city-harbor", 5, 12, "left", {
+        flags: { ...flags, hoennHideHarborPatrons: false },
+        vars: { ...afterCrisis, trainerRating: rating },
+      })
+      return talk(game, "the harbor Sailor")
+    }
+
+    expect(await rumor({ hoennGameClear: true }, READY_TR - 1)).toContain("bottom of the sea")
+    expect(await rumor({}, READY_TR)).toContain("WEATHER INSTITUTE")
+    expect(
+      await rumor({ hoennDefeatedKyogre: true, hoennDefeatedGroudon: true }, READY_TR),
+    ).toContain("bottom of the sea")
+  })
+
   it("opens Terra Cave from the scientist's report", { timeout: 180_000 }, async () => {
     // Kyogre beaten, so the report can only be a drought over one of these eight entrances.
     const entrances: [GameMap, number, number][] = [
