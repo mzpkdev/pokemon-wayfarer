@@ -30,6 +30,7 @@
 #include "constants/opponents.h"
 #include "constants/maps.h"
 #include "constants/songs.h"
+#include "constants/weather.h"
 #include "config/league_circuit.h"
 
 #if IS_WAYFARER
@@ -47,6 +48,70 @@ TEST("Wayfarer Power Plant Zapdos requires its scaled TR threshold and unresolve
 
     FlagSet(FLAG_WAYFARER_POWER_PLANT_ZAPDOS_RESOLVED);
     EXPECT(!WayfarerPowerPlant_IsZapdosEligible());
+}
+
+TEST("Late Hoenn legendaries wait for the resolved crisis and the legendary TR, never a Hall of Fame")
+{
+    VarSet(WAYFARER_HOENN_SKY_PILLAR_STATE_VAR, 1);
+    SetTrainerRating(WAYFARER_LEGENDARY_TR);
+    FlagSet(FLAG_SYS_GAME_CLEAR);
+    EXPECT(!WayfarerHoenn_IsLateLegendaryReady());
+
+    VarSet(WAYFARER_HOENN_SKY_PILLAR_STATE_VAR, 2);
+    EXPECT(WayfarerHoenn_IsLateLegendaryReady());
+    VarSet(WAYFARER_HOENN_SKY_PILLAR_STATE_VAR, 3);
+    EXPECT(WayfarerHoenn_IsLateLegendaryReady());
+
+    SetTrainerRating(WAYFARER_LEGENDARY_TR - 1);
+    EXPECT(!WayfarerHoenn_IsLateLegendaryReady());
+}
+
+TEST("Team Aqua's Mt. Pyre lead is true only between Mt. Chimney and the orb theft")
+{
+    FlagClear(WAYFARER_HOENN_MT_CHIMNEY_DONE_FLAG);
+    FlagClear(WAYFARER_HOENN_MT_PYRE_ORB_FLAG);
+    EXPECT(!WayfarerHoenn_IsMtPyreLead());
+
+    FlagSet(WAYFARER_HOENN_MT_CHIMNEY_DONE_FLAG);
+    EXPECT(WayfarerHoenn_IsMtPyreLead());
+
+    FlagSet(WAYFARER_HOENN_MT_PYRE_ORB_FLAG);
+    EXPECT(!WayfarerHoenn_IsMtPyreLead());
+}
+
+TEST("Abnormal weather reaches the Hoenn scripts, and a beaten legendary is not reported again")
+{
+    u32 i;
+
+    FlagClear(HOENN_FLAG_ID(0x1BF));
+    FlagSet(HOENN_FLAG_ID(0x1BE)); // Kyogre beaten: only Groudon's drought is left.
+    for (i = 0; i < 32; i++)
+    {
+        CreateAbnormalWeatherEvent();
+        EXPECT_GE(VarGet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION)), TERRA_CAVE_LOCATIONS_START);
+        EXPECT_LT(VarGet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION)), MARINE_CAVE_LOCATIONS_START);
+        EXPECT(!GetAbnormalWeatherMapNameAndType());
+    }
+
+    FlagClear(HOENN_FLAG_ID(0x1BE));
+    FlagSet(HOENN_FLAG_ID(0x1BF)); // Groudon beaten: only Kyogre's rain is left.
+    for (i = 0; i < 32; i++)
+    {
+        CreateAbnormalWeatherEvent();
+        EXPECT_GE(VarGet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION)), MARINE_CAVE_LOCATIONS_START);
+        EXPECT(GetAbnormalWeatherMapNameAndType());
+    }
+}
+
+TEST("Abnormal weather ends on its own route after 1000 steps")
+{
+    VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION), ABNORMAL_WEATHER_ROUTE_114_NORTH);
+    VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_STEP_COUNTER), 999);
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_ROUTE114);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_ROUTE114);
+
+    EXPECT(AbnormalWeatherHasExpired());
+    EXPECT_EQ(VarGet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_STEP_COUNTER)), 0);
 }
 
 TEST("Wayfarer new-game state hides Blue until the Anne visitor scene")

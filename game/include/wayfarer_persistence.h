@@ -23,6 +23,10 @@ void WayfarerSetSavedCurrentRegion(enum Region region);
 // Emerald FLAG_RECEIVED_HM_DIVE (source id 0x07B) is the dedicated
 // authorization set by Steven's Hoenn reward script.
 #define WAYFARER_HOENN_DIVE_AUTHORIZATION_FLAG HOENN_FLAG_ID(0x07B)
+// Emerald's own ids for what Hoenn's scripts write: the engine build has no such names.
+#define WAYFARER_HOENN_MT_CHIMNEY_DONE_FLAG    HOENN_FLAG_ID(0x08B) // FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY
+#define WAYFARER_HOENN_MT_PYRE_ORB_FLAG        HOENN_FLAG_ID(0x0D4) // FLAG_RECEIVED_RED_OR_BLUE_ORB
+#define WAYFARER_HOENN_SKY_PILLAR_STATE_VAR    HOENN_VAR_ID(0x40CA) // VAR_SKY_PILLAR_STATE
 
 enum WayfarerDiveMapContext
 {
@@ -48,6 +52,8 @@ bool8 WayfarerInitializeHoennState(s16 mapGroup, s16 mapNum, s16 x, s16 y);
 bool8 WayfarerPrepareHoennEntry(s16 mapGroup, s16 mapNum, s16 x, s16 y, u8 healLocationId);
 u16 WayfarerCoast_IsArticunoEligible(void);
 u16 WayfarerPowerPlant_IsZapdosEligible(void);
+u16 WayfarerHoenn_IsLateLegendaryReady(void);
+u16 WayfarerHoenn_IsMtPyreLead(void);
 void WayfarerGrantKantoBadge15(void);
 #endif
 

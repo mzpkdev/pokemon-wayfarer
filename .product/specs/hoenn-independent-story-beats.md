@@ -380,7 +380,8 @@ always precede them.
 ### Legendary captures
 
 The crisis, Rayquaza's awakening, and Juan need no Trainer Rating. The later
-captures do.
+captures do. "TR 55" here means `WAYFARER_LEGENDARY_TR`: 55 on today's scale and
+120 on the v0 scale that Wayfarer runs.
 
 - **Rayquaza.** It waits at the top of Sky Pillar once the crisis is resolved,
   as today. Interacting with it below TR 55 gives a not-ready line and leaves
