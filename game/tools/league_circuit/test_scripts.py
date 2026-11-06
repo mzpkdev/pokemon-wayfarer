@@ -79,15 +79,17 @@ class CircuitScriptTests(unittest.TestCase):
         self.assertNotIn("VAR_MAHOGANY_TOWN_STATE", start)
 
     def test_wattson_relocation_is_order_independent(self):
-        helper = block(script("MauvilleCity_Gym"), "MauvilleCity_Gym_EventScript_TryRelocateWattson")
-        self.assertIn("goto_if_unset FLAG_DEFEATED_PETALBURG_GYM", helper)
+        # Entering the city or the Gym decides, from his own facts alone: no other Gym's win moves him.
+        helper = block(script("MauvilleCity_Gym"), "MauvilleCity_Gym_EventScript_PlaceWattson")
         self.assertIn("goto_if_unset FLAG_BADGE03_GET", helper)
+        self.assertIn("goto_if_unset FLAG_RECEIVED_TM_SHOCK_WAVE", helper)
         self.assertIn("setflag FLAG_HIDE_MAUVILLE_GYM_WATTSON", helper)
         self.assertIn("clearflag FLAG_HIDE_MAUVILLE_CITY_WATTSON", helper)
-        self.assertIn("call MauvilleCity_Gym_EventScript_TryRelocateWattson", block(script("MauvilleCity_Gym"), "MauvilleCity_Gym_EventScript_WattsonDefeated"))
-        norman = script("PetalburgCity_Gym").split("PetalburgCity_Gym_EventScript_NormanBattle::\n", 1)[1].split("PetalburgCity_Gym_EventScript_GiveFacade::\n", 1)[0]
-        self.assertIn("call MauvilleCity_Gym_EventScript_TryRelocateWattson", norman)
-        self.assertNotIn("setflag FLAG_HIDE_MAUVILLE_GYM_WATTSON", norman.split("#else", 1)[0])
+        self.assertNotIn("FLAG_DEFEATED_PETALBURG_GYM", script("MauvilleCity_Gym"))
+        self.assertIn("call MauvilleCity_Gym_EventScript_PlaceWattson", script("MauvilleCity_Gym"))
+        self.assertIn("call MauvilleCity_Gym_EventScript_PlaceWattson", script("MauvilleCity"))
+        self.assertNotIn("PlaceWattson", block(script("MauvilleCity_Gym"), "MauvilleCity_Gym_EventScript_WattsonDefeated"))
+        self.assertNotIn("WATTSON", script("PetalburgCity_Gym"))
 
     def test_deferred_whitney_and_clair_awards_are_idempotent_and_monotonic(self):
         whitney = script("GoldenrodCity_Gym_hns")

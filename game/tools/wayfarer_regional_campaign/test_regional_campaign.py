@@ -30,12 +30,9 @@ class WayfarerRegionalCampaignTests(unittest.TestCase):
                 constants,
             )
 
-    def test_norman_and_league_use_hoenn_badge_count(self):
-        norman = (GAME / "data/maps/PetalburgCity_Gym/scripts.inc").read_text()
+    def test_league_uses_hoenn_badge_count(self):
         league = (GAME / "data/maps/EverGrandeCity_PokemonLeague_1F/scripts.inc").read_text()
 
-        self.assertIn("specialvar VAR_RESULT, WayfarerGetHoennBadgeCountForScript", norman)
-        self.assertRegex(norman, r"case 3, PetalburgCity_Gym_EventScript_NormanThreeBadges\s+goto PetalburgCity_Gym_EventScript_NormanBattle")
         self.assertIn("specialvar VAR_RESULT, WayfarerGetHoennBadgeCountForScript", league)
         self.assertIn("goto_if_lt VAR_RESULT, 8, EverGrandeCity_PokemonLeague_1F_EventScript_NotAllBadges", league)
 

@@ -106,7 +106,9 @@ other twelve do. Scott's meetings may then happen in any order.
 - The employee's robbery line recalls the player's help in Petalburg Woods.
   Trace the Woods scene's state. Without that scene, he asks for help with no
   recall.
-- Mr. Briney keeps sailing for the whole game. Norman's defeat no longer
+- Mr. Briney keeps sailing until the Hoenn Hall of Fame, which puts him on the
+  S.S. Tidal as in Emerald and retires him from sailing at the same moment
+  (`EventScript_HideMrBriney`). Norman's defeat no longer
   hides him, and Tate & Liza's defeat no longer shows the second Briney in
   Stern's shipyard. That shipyard cameo is dropped: it is the price of Briney
   never standing in two places and never retiring in the middle of an errand.
@@ -189,9 +191,10 @@ badge first loses the berth for good.
 
 ### Steven and Kecleon, and the desert survey
 
-Both already meet the design. Keep the Route 120 scene's early and late
-greetings and its Kecleon recovery, and keep the desert survey's and
-Lavaridge's shared Go-Goggles check. No change.
+Both meet the design. Keep the Route 120 scene's early and late greetings and
+its Kecleon recovery, and keep the desert survey's and Lavaridge's shared
+Go-Goggles check. The survey and that check were compiled out of Wayfarer, so
+both are compiled in with this work.
 
 ### Wattson and New Mauville
 
@@ -223,9 +226,11 @@ Lavaridge's shared Go-Goggles check. No change.
   that state the Gym opens its rooms and puts Norman at the back, and the same
   moment runs `Common_EventScript_ReadyPetalburgGymForBattle`, which shows the
   Gym guide and expands Petalburg Mart's stock. At the end of the tutorial,
-  set the state to 6 and call that script, and remove the other Gyms'
-  increments. The rooms open on the player's next entry, since the Gym's load
-  script has already run for this visit.
+  set the state to 6, call that script, and reload the Gym around the player,
+  since its load script has already run for this visit. The rooms open and
+  Norman stands at the back: left at the entrance he would battle there, and
+  his victory scene is staged for the back room. Remove the other Gyms'
+  increments.
 - No Norman line counts or asks for badges. `NormanIntro` and
   `VisitorNormanIntro` open without "four GYM BADGES" and, for the visitor,
   without "as I promised".
@@ -260,11 +265,11 @@ conditions.
 - A waiting trigger returns before it locks the player and leaves its own
   state untouched, so it fires on a later crossing.
 - Lavaridge's scene is a frame script on `VAR_LAVARIDGE_TOWN_STATE` 1, which
-  Flannery's defeat sets. A frame script that returns without changing its
+  Flannery's defeat set in Emerald. A frame script that returns without changing its
   state runs again every frame and freezes the player. So the town must not
-  sit at state 1 without a starter: park the scene at another value that the
-  transition script does not reset. The transition script places the rival
-  only when the scene is armed.
+  sit at state 1 without a starter: Flannery's defeat and a full Bag park the
+  scene at state 4. The transition script places the rival only when the scene
+  is armed.
 - The scene is staged for a player standing at the Gym door or the Pokémon
   Center's front door, and has no other layout. Arm a parked scene only when a
   player with a starter walks out of one of those two doors, so it plays where

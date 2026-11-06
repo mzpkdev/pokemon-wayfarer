@@ -178,6 +178,10 @@ PokéNav tutorial, and the rival:
   or story gate. It and the Lavaridge handoff
   (`maps/LavaridgeTown/scripts.inc:22–32,82–131`) both check the Go-Goggles
   item and `FLAG_RECEIVED_GO_GOGGLES`, so the reward is given once.
+  Correction: at this audit both sat behind `#if !IS_FRLG && !IS_HNS`, which
+  is false in the Wayfarer build (`IS_HNS` is 1). The surveyor and his stakes
+  had an empty script, and Lavaridge used a plain `giveitem` with no item
+  check. The Norman and Wally work compiled both into Wayfarer.
 
 ## Wattson and New Mauville
 
@@ -252,7 +256,8 @@ commits a choice (`maps/LittlerootTown_ProfessorBirchsLab/scripts.inc:126–141`
 Lavaridge's scene has two layouts: for a player at the Pokémon Center door,
 and otherwise for a player at the Gym door
 (`maps/LavaridgeTown/scripts.inc:39–50,182–209,253–260`). Its transition
-script sets states 2 and 3 back to 1 (`:9–10,20–31`).
+script set states 2 and 3 back to 1 (`:9–10,20–31`) only outside Wayfarer,
+behind the same guard as the survey.
 
 Route 110, Route 119, Rustboro, Route 104, and Lilycove each end in a
 `switch VAR_HOENN_STARTER_CHOICE` with no default case. On the E2E ROM, a
