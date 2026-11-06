@@ -1,7 +1,8 @@
 # Hoenn independent story beats
 
-Status: Draft product design. Not implemented. Exact legendary readiness thresholds
-and the bounded scene decisions below remain open.
+Status: Agreed product design, revised 2026-11-06 with the owner's decisions on
+the five questions the draft left open. Not implemented.
+Specification: [Hoenn independent story beats](../specs/hoenn-independent-story-beats.md)
 
 ## Intent
 
@@ -40,11 +41,11 @@ makes the next step available without an unrelated activation errand.
 | Birch's rescue and introduction | Rescue Birch, visit his lab, and retain the existing optional starter introduction. | Other local adventures do not require this opening. Starter-dependent rival chapters may retain their necessary introduction prerequisite. |
 | Peeko and the stolen Devon Goods | Meet the existing employee and Briney, rescue Peeko, recover the Goods, and receive the existing Devon follow-up. | Remove Roxanne's badge as the theft's activation requirement. Keep the rescue locally introduced and internally ordered. |
 | Devon deliveries | Deliver the Letter to Steven and the Parts to Stern, including the existing museum confrontation. | Retain the actual items and their original acquisition prerequisites. Once both assignments are available, complete the deliveries in either order. Neither delivery requires the other. |
-| Meteor Falls and Mt. Chimney | Discover the meteorite theft, follow it to Mt. Chimney, stop the machine, and recover the meteorite. | Keep this as one ordered adventure, independent of the Devon errands and unrelated Gyms. Preserve the existing return/reward interaction. |
+| Meteor Falls and Mt. Chimney | Discover the meteorite theft, follow it to Mt. Chimney, stop the machine, and recover the meteorite. | Keep this as one ordered adventure, independent of the Devon errands and unrelated Gyms. Preserve the existing return/reward interaction. It comes before the central villain story (see [Connected villain adventures](#connected-villain-adventures)). |
 | Weather Institute | Rescue the staff, defeat the occupation, and receive Castform. | Keep the rescue locally available. Its ending must not announce a future Mt. Pyre event that already happened. The nearby rival scene has its own eligibility. |
 | Steven and Kecleon | Resolve the Route 120 encounter and receive the Devon Scope. | Preserve its existing early/late introduction and local completion behavior. Steven's Letter is not a prerequisite. |
 | Desert survey | Inspect the stakes and receive the Go-Goggles. | Preserve the existing local adventure and duplicate-reward protection with the later handoff. |
-| New Mauville | Wattson requests help with the generator and gives the existing reward afterward. | Make the request available locally without Norman's defeat. Preserve access to Wattson's initial Gym challenge throughout the errand. |
+| New Mauville | Wattson requests help with the generator and gives the existing reward afterward. | Wattson steps outside and makes the request once the player holds his badge, as in Emerald. Norman's defeat is not needed. He never leaves the Gym before his first challenge is won. |
 | Norman and Wally's introduction | Keep Wally's local introduction and Norman's challenge. | Remove the four-Hoenn-badge requirement for Norman. Retain the local introduction rather than rewriting it. Family dialogue must follow the regional-origin design. |
 
 Early visitors to Steven or Stern receive an appropriate introduction rather than
@@ -53,15 +54,18 @@ handover remain unavailable until their actual prerequisite is met. Ordinary
 access to the museum, city, harbor, and transport must remain available.
 
 Completing a later harbor event must not delete an outstanding Parts delivery or
-its reward. If Stern's existing scene ownership creates a conflict, reconcile it
-through his existing interactions rather than requiring an unrelated delivery to
-begin the submarine investigation.
+its reward. The submarine investigation never requires the delivery. Once the
+harbor scene has played, Archie has already stolen the submarine, so the museum
+confrontation is no longer told: Stern takes the Parts with a short line and no
+fight. Before the harbor scene, the delivery keeps the full confrontation.
 
 ### Connected villain adventures
 
 The proposed dependency structure is:
 
 ```text
+Meteor Falls -> Mt. Chimney
+                 |
 Mt. Pyre -> Magma Hideout
                  |
                  +-> Slateport submarine theft -> Aqua Hideout --+
@@ -70,6 +74,13 @@ Mt. Pyre -> Magma Hideout
                                                                 |
                                        Seafloor -> Sootopolis -> Sky Pillar
 ```
+
+The central villain story starts only after Meteor Falls and Mt. Chimney.
+Maxie's purpose on Mt. Chimney is to wake what sleeps in the volcano. That
+cannot be told once Groudon has woken, and no short variant repairs it. So the
+Mt. Pyre theft waits until Mt. Chimney is resolved, and Mt. Chimney's scenes
+never play late. This is the one dependency kept between a local adventure and
+the central story.
 
 Mt. Pyre introduces the stolen-orb problem and provides the existing Magma Emblem
 lead to the hideout. Keep the hideout's Groudon awakening and Maxie encounter.
@@ -82,7 +93,7 @@ Hoenn between their steps. Neither branch requires completing the other.
 
 | Chapter | Retained cause and effect | Required change |
 | --- | --- | --- |
-| Mt. Pyre -> Magma Hideout | The existing Emblem connects the theft to the hideout and Groudon's awakening. | Introduce the adventure locally and remove unrelated activation requirements. |
+| Mt. Pyre -> Magma Hideout | The existing Emblem connects the theft to the hideout and Groudon's awakening. | Start the theft only after Mt. Chimney. Before that, Mt. Pyre is open and Team Aqua is not on the summit. Add no other requirement. |
 | Slateport theft -> Aqua Hideout | The stolen submarine leads to the hideout and its escape. | Keep the theft after Magma Hideout. Make the hideout fully playable after the theft without Mossdeep's Gym or Space Center completion. |
 | Mossdeep / Space Center -> Steven's Dive | Maxie's rocket-fuel plan follows his failed control of Groudon; Steven helps defeat it and provides Dive. | Keep Magma Hideout as the story prerequisite. Remove any dependency on completing the Aqua branch. Keep the local Mossdeep Gym/invasion sequence and field-use rules. |
 | Seafloor -> Sootopolis -> Sky Pillar | Following the submarine leads to Kyogre's awakening, the weather crisis, and seeking Rayquaza's help. | Require both completed branches before starting Seafloor's story. Preserve the existing Cave of Origin, Wallace, Sky Pillar, and return-to-Sootopolis sequence. |
@@ -100,21 +111,20 @@ Juan retains his existing connection to the crisis resolution.
 
 ### Earlier villain encounters after later chapters
 
-Meteor Falls/Mt. Chimney, the museum, and the Weather Institute remain available
-even when the player first follows the central villain story. Their dialogue and
-local outcomes must remain coherent after later encounters with the same teams.
+The museum and the Weather Institute remain available even when the player
+first follows the central villain story. Their dialogue and local outcomes must
+remain coherent after later encounters with the same teams. Meteor Falls and
+Mt. Chimney always come first, as above, so they have no late form.
 
-Keep completed-event recognition only when true. Remove or vary references to an
-unplayed volcano defeat, an already-completed Mt. Pyre theft, or an organization's
-future action that the player already witnessed. A late encounter must not undo
-the weather crisis resolution or move a shared character backward through their
-development without explanation.
+Keep completed-event recognition only when true. Remove or vary references to
+an unplayed museum confrontation, an already-completed Mt. Pyre theft, or an
+organization's future action that the player already witnessed. A late
+encounter must not undo the weather crisis resolution or move a shared
+character backward through their development without explanation.
 
-Review the affected Maxie, Archie, and Shelly scenes before specifying the changes.
-Prefer brief variants over new premises. If an encounter cannot remain available
-after the finale without a substantial rewrite, record the exact conflict as an
-open product decision; do not silently delete it or add the entire original
-campaign back as a prerequisite.
+Prefer brief variants over new premises. At the Weather Institute, Shelly and
+her grunt withdraw without announcing Mt. Pyre once that theft has happened.
+At the museum, a late Parts delivery is a plain handover.
 
 ### Legendary captures and late-game readiness
 
@@ -142,11 +152,12 @@ alone is not a gate. An unmet requirement leaves the encounter available later,
 with local guidance through existing characters or presentation. It does not
 consume the encounter or award capture-related completion.
 
-Exact TR thresholds, whether the three encounters share a threshold, and the
-treatment of existing postgame activation checks remain explicit balance decisions.
-Do not automatically replace every Champion flag with TR or add a new League
-requirement. Other Hoenn legendary families and event encounters require their own
-inventory and decision before this policy is extended to them.
+The three captures share one threshold, TR 55, the number Johto's legendaries
+use. Each needs the resolved crisis and TR 55, and nothing else. Terra Cave and
+Marine Cave no longer need a Hall of Fame entry, which today a Kanto or Johto
+win satisfies and Hoenn's own may not. Other Hoenn legendary families and event
+encounters require their own inventory and decision before this policy is
+extended to them.
 
 ### Brendan, May, Wally, and the player's origin
 
@@ -157,8 +168,11 @@ for the actual relationship.
 
 A deferred rival scene must not block an independent local adventure sharing its
 map, and completing that adventure must not make the rival chapter unrecoverable.
-The exact chapter prerequisites and shared-scene handling belong in the follow-up
-specification.
+
+Every Brendan or May battle picks its team from the player's Hoenn starter. A
+visitor who never took Birch's starter does not meet Brendan or May: their
+scenes wait and play once the player has a starter. The Itemfinder and HM Fly
+stay rewards of those scenes. There is no variant with a borrowed team.
 
 Norman's relationship to the player is owned by the regional-origin design. Preserve
 his local role while making dialogue consistent with that identity. This PRD does
@@ -187,8 +201,8 @@ Each adventure owns its start, progress, completion, and outstanding rewards.
 Completing another adventure must not replay it, regress it, relocate its required
 NPC irrecoverably, or imply an item handover that never occurred.
 
-Wattson must remain available for his unearned badge even while New Mauville is
-offered or active. Completing Norman or another Gym must not overwrite the errand's
+Wattson offers New Mauville only after his badge is won, so his first challenge
+is never out of reach. Completing Norman or another Gym must not overwrite the errand's
 progress. Later Gym victories must not replay the Rustboro theft or Mossdeep invasion
 after their adventures are complete.
 
@@ -212,8 +226,11 @@ passing through a region does not complete its adventures.
   introduction and return later to complete each preserved delivery scene.
 - Complete the submarine story before an outstanding Devon delivery, then return
   for that delivery and reward without regressing harbor progress.
-- Complete local adventures before and after the central villain story. Check
-  first meetings, callbacks, departure directions, and organizational aftermath.
+- Complete the museum delivery and the Weather Institute before and after the
+  central villain story. Check first meetings, callbacks, departure directions,
+  and organizational aftermath.
+- Climb Mt. Pyre before Mt. Chimney. The theft is not available and ordinary
+  access is unaffected. Resolve Mt. Chimney and return for the theft.
 - After Magma Hideout, finish Aqua Hideout before Mossdeep and then test the reverse
   order. Both branches remain playable, including the hideout interior. Neither
   requires an unrelated early adventure.
@@ -222,10 +239,14 @@ passing through a region does not complete its adventures.
   branches make it available without another unrelated activation event.
 - Finish the crisis and access Juan below the eventual legendary capture threshold.
   Rayquaza's story intervention occurs without awarding or requiring a capture.
-- At the eventual TR boundaries, test the later Rayquaza, Groudon, and Kyogre
-  encounters, including alternate activation paths and a save made before readiness.
-- Begin New Mauville without Norman's defeat, keep Wattson's initial badge available,
-  and complete the errand before and after that badge.
+- Below and at TR 55, test the later Rayquaza, Groudon, and Kyogre encounters,
+  with and without a Hall of Fame entry in another region, and with a save made
+  before readiness.
+- Win Wattson's badge without Norman's defeat, then begin and complete New
+  Mauville.
+- As a visitor with no Hoenn starter, walk Routes 110 and 119 and visit Rustboro
+  and Lilycove. No rival scene starts and nothing is blocked. Take Birch's
+  starter and return for each scene.
 - Complete Norman's local introduction and challenge with fewer than four Hoenn
   badges. Verify dialogue against the player's origin.
 - Visit later rival locations early, complete unrelated local adventures, then
@@ -237,25 +258,29 @@ Players unfamiliar with Emerald should understand the local problem and next ste
 Players familiar with it should recognize the same adventure without needing a
 replacement cast or plot to explain the supported order.
 
-## Open questions
+## Settled questions
 
-1. Which existing employee interaction starts the Rustboro theft without Roxanne,
-   and how do Stern's museum and harbor roles coexist when those stories are reversed?
-2. Which minimal dialogue variants keep late museum, Weather Institute, and
-   Mt. Chimney encounters coherent after the central finale? Explicitly review
-   Maxie's late Mt. Chimney appearance against his Space Center reflection and
-   finale aftermath. Identify any scene that needs a retained dependency rather
-   than a substantial rewrite.
-3. What TR thresholds apply to later Rayquaza, Groudon, and Kyogre captures, and
-   which existing postgame checks remain? Crisis resolution and Juan must remain
-   independent of those capture thresholds.
-4. Which Brendan/May and Wally chapters genuinely require predecessors, and how
-   can their shared-map scenes remain recoverable without blocking local adventures?
-5. What local introduction and staging let Wattson offer New Mauville while his
-   initial Gym challenge remains available? Reuse Wattson and existing locations.
+The draft left five questions open. The owner settled them on 2026-11-06, and
+the [specification](../specs/hoenn-independent-story-beats.md) carries the
+detail.
+
+1. **The Rustboro theft and Stern.** The existing street scene outside Devon
+   starts the theft the first time the player passes, with no badge. Stern and
+   Steven accept a delivery only from a player who holds its item. A Parts
+   delivery after the harbor scene is a plain handover.
+2. **Early villain scenes played late.** Meteor Falls and Mt. Chimney come
+   before the central story. The Weather Institute gets a withdraw variant.
+3. **Capture thresholds.** TR 55 for Rayquaza, Groudon, and Kyogre, with the
+   resolved crisis and no Hall of Fame check.
+4. **Rival chapters.** Brendan and May wait for the Hoenn starter. Wally's
+   later chapters wait for his Petalburg tutorial.
+5. **Wattson.** He makes the New Mauville request outside once the player
+   holds his badge. Norman is not involved.
 
 ## References
 
+- [Hoenn independent story beats specification](../specs/hoenn-independent-story-beats.md)
+- [Hoenn story beat gates](../research/hoenn-story-beat-gates.md)
 - [Regional story independence audit](../research/regional-story-beat-independence.md)
 - [Johto independent story beats and late-game reward exception](johto-independent-story-beats.md)
 - [Emerald open-world regional traversal](emerald-open-world-region-traversal.md)
