@@ -42,6 +42,7 @@ Route119_EventScript_RivalTrigger2::
 	end
 
 Route119_EventScript_RivalEncounter::
+	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, WayfarerHoennVisitor_EventScript_RivalWaitsForStarter
 	lockall
 	addobject LOCALID_ROUTE119_RIVAL_ON_BIKE
 	checkplayergender

@@ -135,6 +135,7 @@ Route104_EventScript_DontSetRivalPos::
 	return
 
 Route104_EventScript_Rival::
+	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, WayfarerHoennVisitor_EventScript_RivalWaitsForStarter
 	lockall
 	setvar VAR_0x8008, 1
 	applymovement LOCALID_ROUTE104_RIVAL, Common_Movement_FacePlayer
@@ -142,6 +143,7 @@ Route104_EventScript_Rival::
 	goto Route104_EventScript_RivalEncounter
 
 Route104_EventScript_RivalTrigger::
+	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, WayfarerHoennVisitor_EventScript_RivalWaitsForStarter
 	lockall
 	setflag FLAG_HIDE_RUSTBORO_CITY_RIVAL
 	setvar VAR_RUSTBORO_CITY_STATE, 8
