@@ -11,8 +11,19 @@ Route110_OnResume:
 Route110_OnTransition:
 	call Common_EventScript_SetupRivalGfxId
 	call Common_EventScript_SetupRivalOnBikeGfxId
+	call_if_eq VAR_ROUTE110_STATE, 0, Route110_EventScript_ShowOrHideRival
 	call_if_eq VAR_CYCLING_CHALLENGE_STATE, 1, Route110_EventScript_SaveCyclingMusic
 	end
+
+@ The rival stands on the road until their scene has played, but not for a player without BIRCH's starter
+Route110_EventScript_ShowOrHideRival::
+	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, Route110_EventScript_HideRival
+	clearflag FLAG_HIDE_ROUTE_110_RIVAL
+	return
+
+Route110_EventScript_HideRival::
+	setflag FLAG_HIDE_ROUTE_110_RIVAL
+	return
 
 Route110_EventScript_SaveCyclingMusic::
 	savebgm MUS_CYCLING
@@ -369,6 +380,7 @@ Route110_EventScript_RivalTrigger3::
 	end
 
 Route110_EventScript_RivalScene::
+	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, WayfarerHoennVisitor_EventScript_RivalWaitsForStarter
 	lockall
 	checkplayergender
 	call_if_eq VAR_RESULT, MALE, Route110_EventScript_PlayMayMusic
