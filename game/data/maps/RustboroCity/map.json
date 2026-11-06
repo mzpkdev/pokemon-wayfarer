@@ -339,7 +339,7 @@
       "y": 20,
       "elevation": 3,
       "var": "VAR_RUSTBORO_CITY_STATE",
-      "var_value": "1",
+      "var_value": "0",
       "script": "RustboroCity_EventScript_StolenGoodsTrigger0"
     },
     {
@@ -348,7 +348,7 @@
       "y": 21,
       "elevation": 3,
       "var": "VAR_RUSTBORO_CITY_STATE",
-      "var_value": "1",
+      "var_value": "0",
       "script": "RustboroCity_EventScript_StolenGoodsTrigger1"
     },
     {
@@ -357,7 +357,7 @@
       "y": 22,
       "elevation": 3,
       "var": "VAR_RUSTBORO_CITY_STATE",
-      "var_value": "1",
+      "var_value": "0",
       "script": "RustboroCity_EventScript_StolenGoodsTrigger2"
     },
     {
@@ -366,7 +366,7 @@
       "y": 23,
       "elevation": 3,
       "var": "VAR_RUSTBORO_CITY_STATE",
-      "var_value": "1",
+      "var_value": "0",
       "script": "RustboroCity_EventScript_StolenGoodsTrigger3"
     },
     {
@@ -375,7 +375,7 @@
       "y": 24,
       "elevation": 3,
       "var": "VAR_RUSTBORO_CITY_STATE",
-      "var_value": "1",
+      "var_value": "0",
       "script": "RustboroCity_EventScript_StolenGoodsTrigger4"
     },
     {

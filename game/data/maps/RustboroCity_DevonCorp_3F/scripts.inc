@@ -46,8 +46,11 @@ RustboroCity_DevonCorp_3F_EventScript_MeetPresident::
 	applymovement LOCALID_DEVON_CORP_3F_EMPLOYEE, RustboroCity_DevonCorp_3F_Movement_EmployeeFaceDesk
 	applymovement LOCALID_PLAYER, RustboroCity_DevonCorp_3F_Movement_PlayerApproachDesk
 	waitmovement 0
+	call_if_ne VAR_PETALBURG_WOODS_STATE, 0, RustboroCity_DevonCorp_3F_EventScript_SavedStaffTwice
+	call_if_eq VAR_PETALBURG_WOODS_STATE, 0, RustboroCity_DevonCorp_3F_EventScript_SavedStaffOnce
 	msgbox RustboroCity_DevonCorp_3F_Text_MrStoneIHaveFavor, MSGBOX_DEFAULT
 	giveitem ITEM_LETTER
+	call_if_eq VAR_RESULT, FALSE, RustboroCity_DevonCorp_3F_EventScript_NoRoomForLetter
 	msgbox RustboroCity_DevonCorp_3F_Text_MrStoneWantYouToHaveThis, MSGBOX_DEFAULT
 	playfanfare MUS_OBTAIN_ITEM
 	message RustboroCity_DevonCorp_3F_Text_ReceivedPokenav
@@ -70,6 +73,19 @@ RustboroCity_DevonCorp_3F_EventScript_MeetPresident::
 	setvar VAR_RUSTBORO_CITY_STATE, 6
 	releaseall
 	end
+
+RustboroCity_DevonCorp_3F_EventScript_NoRoomForLetter::
+	msgbox gText_TooBadBagIsFull, MSGBOX_DEFAULT
+	msgbox RustboroCity_DevonCorp_3F_Text_LetterWillWait, MSGBOX_DEFAULT
+	return
+
+RustboroCity_DevonCorp_3F_EventScript_SavedStaffTwice::
+	msgbox RustboroCity_DevonCorp_3F_Text_MrStoneSavedStaffTwice, MSGBOX_DEFAULT
+	return
+
+RustboroCity_DevonCorp_3F_EventScript_SavedStaffOnce::
+	msgbox RustboroCity_DevonCorp_3F_Text_MrStoneSavedStaffOnce, MSGBOX_DEFAULT
+	return
 
 RustboroCity_DevonCorp_3F_Movement_Unused:
 	walk_up
@@ -151,10 +167,21 @@ RustboroCity_DevonCorp_3F_EventScript_MrStone::
 	faceplayer
 	goto_if_set FLAG_RECEIVED_EXP_SHARE, RustboroCity_DevonCorp_3F_EventScript_MrStoneAfterFavor
 	goto_if_set FLAG_DELIVERED_STEVEN_LETTER, RustboroCity_DevonCorp_3F_EventScript_GiveExpShare
+	checkitem ITEM_LETTER
+	goto_if_eq VAR_RESULT, FALSE, RustboroCity_DevonCorp_3F_EventScript_GiveLetter
 	msgbox RustboroCity_DevonCorp_3F_Text_CountingOnYou, MSGBOX_DEFAULT
 	closemessage
 	applymovement VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
+	release
+	end
+
+@ The Letter is missed only when a full Bag refused it at the meeting: undelivered and not held, it is still his to give.
+RustboroCity_DevonCorp_3F_EventScript_GiveLetter::
+	msgbox RustboroCity_DevonCorp_3F_Text_HereIsTheLetter, MSGBOX_DEFAULT
+	giveitem ITEM_LETTER
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
+	msgbox RustboroCity_DevonCorp_3F_Text_CountingOnYou, MSGBOX_DEFAULT
 	release
 	end
 
@@ -195,12 +222,21 @@ RustboroCity_DevonCorp_3F_EventScript_RareRocksDisplay::
 	msgbox RustboroCity_DevonCorp_3F_Text_RareRocksDisplay, MSGBOX_SIGN
 	end
 
-RustboroCity_DevonCorp_3F_Text_MrStoneIHaveFavor:
+RustboroCity_DevonCorp_3F_Text_MrStoneSavedStaffTwice:
 	.string "I'm MR. STONE, the PRESIDENT of\n"
 	.string "the DEVON CORPORATION.\p"
 	.string "I'd just got word about you!\p"
 	.string "You saved our staff not just once,\n"
-	.string "but twice!\p"
+	.string "but twice!$"
+
+RustboroCity_DevonCorp_3F_Text_MrStoneSavedStaffOnce:
+	.string "I'm MR. STONE, the PRESIDENT of\n"
+	.string "the DEVON CORPORATION.\p"
+	.string "I'd just got word about you!\p"
+	.string "You saved our staff from those\n"
+	.string "thieves!$"
+
+RustboroCity_DevonCorp_3F_Text_MrStoneIHaveFavor:
 	.string "I have a favor to ask of an amazing\n"
 	.string "person like you.\p"
 	.string "I understand that you're delivering\n"
@@ -238,6 +274,14 @@ RustboroCity_DevonCorp_3F_Text_MrStoneExplainPokenavRestUp:
 RustboroCity_DevonCorp_3F_Text_MrStoneGoWithCautionAndCare:
 	.string "MR. STONE: Well, then, {PLAYER}{KUN},\n"
 	.string "go with caution and care!$"
+
+RustboroCity_DevonCorp_3F_Text_LetterWillWait:
+	.string "MR. STONE: No matter! Make some room,\n"
+	.string "and come back for the LETTER.$"
+
+RustboroCity_DevonCorp_3F_Text_HereIsTheLetter:
+	.string "MR. STONE: I still have my LETTER\n"
+	.string "for STEVEN. Here you are!$"
 
 RustboroCity_DevonCorp_3F_Text_CountingOnYou:
 	.string "MR. STONE: I'm counting on you!$"

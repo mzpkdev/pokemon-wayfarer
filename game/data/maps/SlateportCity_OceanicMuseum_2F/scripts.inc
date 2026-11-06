@@ -1,9 +1,21 @@
 SlateportCity_OceanicMuseum_2F_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, SlateportCity_OceanicMuseum_2F_OnTransition
 	.byte 0
+
+SlateportCity_OceanicMuseum_2F_OnTransition:
+	call_if_ge VAR_SLATEPORT_HARBOR_STATE, 1, SlateportCity_OceanicMuseum_2F_EventScript_HideStern
+	end
+
+@ From Magma Hideout on, Stern is on the Slateport street and then at the harbor.
+SlateportCity_OceanicMuseum_2F_EventScript_HideStern::
+	setflag FLAG_HIDE_SLATEPORT_CITY_OCEANIC_MUSEUM_2F_CAPTAIN_STERN
+	return
 
 SlateportCity_OceanicMuseum_2F_EventScript_CaptStern::
 	lock
 	faceplayer
+	checkitem ITEM_DEVON_PARTS
+	goto_if_eq VAR_RESULT, FALSE, SlateportCity_OceanicMuseum_2F_EventScript_SternNoParts
 	msgbox SlateportCity_OceanicMuseum_2F_Text_ThankYouForTheParts, MSGBOX_DEFAULT
 	closemessage
 	playbgm MUS_ENCOUNTER_AQUA, TRUE
@@ -52,6 +64,8 @@ SlateportCity_OceanicMuseum_2F_EventScript_CaptStern::
 	closemessage
 	applymovement LOCALID_OCEANIC_MUSEUM_2F_ARCHIE, SlateportCity_OceanicMuseum_2F_Movement_ArchieApproachPlayer
 	waitmovement 0
+	call_if_unset FLAG_MET_ARCHIE_METEOR_FALLS, SlateportCity_OceanicMuseum_2F_EventScript_ArchieIntroduces
+	call_if_set FLAG_MET_ARCHIE_METEOR_FALLS, SlateportCity_OceanicMuseum_2F_EventScript_ArchieRecallsPlayer
 	msgbox SlateportCity_OceanicMuseum_2F_Text_ArchieWarning, MSGBOX_DEFAULT
 	closemessage
 	savebgm MUS_DUMMY
@@ -85,6 +99,19 @@ SlateportCity_OceanicMuseum_2F_EventScript_CaptStern::
 	fadescreen FADE_FROM_BLACK
 	release
 	end
+
+SlateportCity_OceanicMuseum_2F_EventScript_SternNoParts::
+	msgbox SlateportCity_OceanicMuseum_2F_Text_ImStern, MSGBOX_DEFAULT
+	release
+	end
+
+SlateportCity_OceanicMuseum_2F_EventScript_ArchieIntroduces::
+	msgbox SlateportCity_OceanicMuseum_2F_Text_ArchieIntroduction, MSGBOX_DEFAULT
+	return
+
+SlateportCity_OceanicMuseum_2F_EventScript_ArchieRecallsPlayer::
+	msgbox SlateportCity_OceanicMuseum_2F_Text_ArchieRecallsMeteorFalls, MSGBOX_DEFAULT
+	return
 
 SlateportCity_OceanicMuseum_2F_EventScript_ReadyRegisterBirch::
 	setvar VAR_REGISTER_BIRCH_STATE, 1
@@ -276,6 +303,13 @@ SlateportCity_OceanicMuseum_2F_Text_ThankYouForTheParts:
 	.string "Thank you! That's great!\n"
 	.string "We can prepare for our expedition now.$"
 
+SlateportCity_OceanicMuseum_2F_Text_ImStern:
+	.string "Yes? If you're looking for STERN,\n"
+	.string "that would be me.\p"
+	.string "Forgive me, I can't stop to talk.\p"
+	.string "I'm waiting on parts from DEVON for\n"
+	.string "our next seafloor expedition.$"
+
 SlateportCity_OceanicMuseum_2F_Text_WellTakeThoseParts:
 	.string "Hehehe, hold it!\n"
 	.string "We'll take those parts!$"
@@ -316,7 +350,7 @@ SlateportCity_OceanicMuseum_2F_Text_CameToSeeWhatsTakingSoLong:
 	.string "long to snatch some parts, and you\l"
 	.string "simps are held up by a mere child?$"
 
-SlateportCity_OceanicMuseum_2F_Text_ArchieWarning:
+SlateportCity_OceanicMuseum_2F_Text_ArchieIntroduction:
 	.string "We are TEAM AQUA,\n"
 	.string "and we love the sea!\p"
 	.string "And I am TEAM AQUA's leader,\n"
@@ -325,7 +359,16 @@ SlateportCity_OceanicMuseum_2F_Text_ArchieWarning:
 	.string "…No! You can't be!\n"
 	.string "You're not one of TEAM MAGMA?\p"
 	.string "Wait, that can't be right.\n"
-	.string "You're not dressed for the part.\p"
+	.string "You're not dressed for the part.$"
+
+SlateportCity_OceanicMuseum_2F_Text_ArchieRecallsMeteorFalls:
+	.string "ARCHIE: Well, well, {PLAYER}.\n"
+	.string "So we meet again.\p"
+	.string "First METEOR FALLS, and now you're\n"
+	.string "standing in our way here?\p"
+	.string "You're one odd kid, I'll say that.$"
+
+SlateportCity_OceanicMuseum_2F_Text_ArchieWarning:
 	.string "… … … … … …\n"
 	.string "… … … … … …\p"
 	.string "POKéMON, people… All life depends on\n"
