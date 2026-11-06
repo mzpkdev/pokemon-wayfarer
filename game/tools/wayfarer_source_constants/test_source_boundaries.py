@@ -148,15 +148,15 @@ class SourceBoundaryTests(unittest.TestCase):
 
         self.assertEqual(counts, {
             "LavaridgeTown/scripts.inc": 1,
-            "LilycoveCity/scripts.inc": 2,
+            "LilycoveCity/scripts.inc": 4,
             "LittlerootTown_ProfessorBirchsLab/scripts.inc": 6,
-            "MauvilleCity_GameCorner/scripts.inc": 1,
+            "MauvilleCity_GameCorner/scripts.inc": 2,
             "PetalburgCity_PokemonCenter_1F/scripts.inc": 3,
             "Route103/scripts.inc": 3,
-            "Route104/scripts.inc": 2,
-            "Route110/scripts.inc": 2,
-            "Route119/scripts.inc": 2,
-            "RustboroCity/scripts.inc": 2,
+            "Route104/scripts.inc": 4,
+            "Route110/scripts.inc": 4,
+            "Route119/scripts.inc": 3,
+            "RustboroCity/scripts.inc": 12,
         })
 
     def test_reserved_starter_received_source_flag_is_unused(self):

@@ -262,6 +262,15 @@ accept the selected Pokémon immediately or leave it with Birch and continue
 the campaign. Failed delivery leaves the same selected Pokémon available to
 retry and does not set `FLAG_HOENN_STARTER_RECEIVED`.
 
+While no choice is committed, Brendan's and May's scenes do not start: the
+forced encounters on Route 110, Route 119, Route 104 and in Rustboro City leave
+the player in control and keep their progress, and the rival is absent from
+Route 110, Rustboro City and Lilycove City. The Mauville Game Corner girl does
+not offer her starter Doll. Each of these plays, with its gift, on a later
+visit once a choice is committed, so the Itemfinder and Fly stay behind their
+scenes. The Rustboro and Route 104 meeting stays missable by sailing with Mr.
+Briney first, as in Emerald.
+
 Wayfarer does not run Emerald's moving-truck arrival, bedroom setup, clock
 setup, player creation, naming, initial money, initial Bag, initial party,
 initial PC, or initial Pokédex sequence. Hoenn scripts instead use the visitor
