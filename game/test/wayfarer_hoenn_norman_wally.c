@@ -156,18 +156,10 @@ static void WalkOutOnto(s16 x, s16 y)
     RunScriptImmediately(LavaridgeTown_EventScript_TryArmRivalScene);
 }
 
-TEST("The Lavaridge rival's scene stays parked without a Hoenn starter")
-{
-    VarSet(VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_NONE);
-    WalkOutOnto(5, 15);
-    EXPECT_EQ(VarGet(LAVARIDGE_TOWN_STATE), 4);
-    WalkOutOnto(9, 6);
-    EXPECT_EQ(VarGet(LAVARIDGE_TOWN_STATE), 4);
-}
-
 TEST("The Lavaridge rival's scene arms only at the Gym door and the Pokemon Center's front door")
 {
-    VarSet(VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_TORCHIC);
+    // Everyone gets the scene: a visitor never has a Hoenn starter.
+    VarSet(VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_NONE);
     WalkOutOnto(5, 15);
     EXPECT_EQ(VarGet(LAVARIDGE_TOWN_STATE), 1);
     WalkOutOnto(9, 6);

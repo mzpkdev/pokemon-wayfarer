@@ -30,6 +30,7 @@ u16 WayfarerGetConfirmedPendingOrigin(void);
 const struct WayfarerOriginProfile *WayfarerGetOriginProfile(u16 id);
 u16 WayfarerGetStartingOriginId(void);
 u16 WayfarerIsJohtoOrigin(void);
+u16 WayfarerIsHoennOrigin(void);
 u16 WayfarerGetOriginStarterSlot(void);
 u16 WayfarerGetOriginStarterSpecies(void);
 bool8 WayfarerInitializeOrigin(u16 id);

@@ -122,15 +122,16 @@ class WallyTests(unittest.TestCase):
 
 
 class LavaridgeTests(unittest.TestCase):
-    def test_only_a_door_arms_the_scene_for_a_player_with_a_starter(self):
+    def test_only_a_door_arms_the_scene(self):
         source = script("LavaridgeTown")
         arm = label_body(source, "LavaridgeTown_EventScript_TryArmRivalScene")
-        self.assertIn("goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP", arm)
+        self.assertNotIn("STARTER", arm)
         self.assertEqual(len(re.findall(r"setvar VAR_LAVARIDGE_TOWN_STATE, 1\b", source)), 2)
         for label, y in (("ArmAtGymDoor", 15), ("ArmAtPokemonCenterDoor", 6)):
             body = source[source.index(f"LavaridgeTown_EventScript_{label}::"):]
             self.assertIn(f"goto_if_ne VAR_0x8005, {y},", body[:200])
         self.assertIn("setvar VAR_LAVARIDGE_TOWN_STATE, 4", script("LavaridgeTown_Gym_1F"))
+        self.assertNotIn("VAR_LAVARIDGE_TOWN_STATE, 3", source)
 
     def test_the_arming_tiles_are_the_two_front_doors(self):
         warps = json.loads((GAME / "data/maps/LavaridgeTown/map.json").read_text())["warp_events"]

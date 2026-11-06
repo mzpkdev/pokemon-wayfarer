@@ -22,10 +22,11 @@ RustboroCity_EventScript_PositionScientistLeftExit::
 	setobjectxyperm LOCALID_RUSTBORO_SCIENTIST, 11, 15
 	end
 
-@ The rival waits in town from the DEVON errand until their scene has played (states 6 and 7), but not
-@ for a player without BIRCH's starter
+@ The rival waits in town from the DEVON errand until their scene has played (states 6 and 7), but only
+@ for a player who started in HOENN
 RustboroCity_EventScript_ShowOrHideRival::
-	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, RustboroCity_EventScript_HideRival
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	goto_if_eq VAR_RESULT, FALSE, RustboroCity_EventScript_HideRival
 	clearflag FLAG_HIDE_RUSTBORO_CITY_RIVAL
 	return
 
@@ -708,7 +709,6 @@ RustboroCity_EventScript_EmployeeFacePlayerRight::
 	return
 
 RustboroCity_EventScript_Rival::
-	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, WayfarerHoennVisitor_EventScript_RivalWaitsForStarter
 	lockall
 	call_if_unset FLAG_MET_RIVAL_RUSTBORO, RustboroCity_EventScript_PlayRivalMusic
 	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_FacePlayer
@@ -730,7 +730,7 @@ RustboroCity_EventScript_PlayBrendanMusic::
 	return
 
 RustboroCity_EventScript_RivalTrigger0::
-	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, WayfarerHoennVisitor_EventScript_RivalWaitsForStarter
+	goto_if_set FLAG_HIDE_RUSTBORO_CITY_RIVAL, WayfarerHoennVisitor_EventScript_NoRivalScene
 	lockall
 	call RustboroCity_EventScript_PlayRivalMusic
 	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
@@ -747,7 +747,7 @@ RustboroCity_EventScript_RivalTrigger0::
 	goto RustboroCity_EventScript_RivalEncounter
 
 RustboroCity_EventScript_RivalTrigger1::
-	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, WayfarerHoennVisitor_EventScript_RivalWaitsForStarter
+	goto_if_set FLAG_HIDE_RUSTBORO_CITY_RIVAL, WayfarerHoennVisitor_EventScript_NoRivalScene
 	lockall
 	call RustboroCity_EventScript_PlayRivalMusic
 	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
@@ -764,7 +764,7 @@ RustboroCity_EventScript_RivalTrigger1::
 	goto RustboroCity_EventScript_RivalEncounter
 
 RustboroCity_EventScript_RivalTrigger2::
-	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, WayfarerHoennVisitor_EventScript_RivalWaitsForStarter
+	goto_if_set FLAG_HIDE_RUSTBORO_CITY_RIVAL, WayfarerHoennVisitor_EventScript_NoRivalScene
 	lockall
 	call RustboroCity_EventScript_PlayRivalMusic
 	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
@@ -781,7 +781,7 @@ RustboroCity_EventScript_RivalTrigger2::
 	goto RustboroCity_EventScript_RivalEncounter
 
 RustboroCity_EventScript_RivalTrigger3::
-	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, WayfarerHoennVisitor_EventScript_RivalWaitsForStarter
+	goto_if_set FLAG_HIDE_RUSTBORO_CITY_RIVAL, WayfarerHoennVisitor_EventScript_NoRivalScene
 	lockall
 	call RustboroCity_EventScript_PlayRivalMusic
 	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
@@ -798,7 +798,7 @@ RustboroCity_EventScript_RivalTrigger3::
 	goto RustboroCity_EventScript_RivalEncounter
 
 RustboroCity_EventScript_RivalTrigger4::
-	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, WayfarerHoennVisitor_EventScript_RivalWaitsForStarter
+	goto_if_set FLAG_HIDE_RUSTBORO_CITY_RIVAL, WayfarerHoennVisitor_EventScript_NoRivalScene
 	lockall
 	call RustboroCity_EventScript_PlayRivalMusic
 	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
@@ -815,7 +815,7 @@ RustboroCity_EventScript_RivalTrigger4::
 	goto RustboroCity_EventScript_RivalEncounter
 
 RustboroCity_EventScript_RivalTrigger5::
-	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, WayfarerHoennVisitor_EventScript_RivalWaitsForStarter
+	goto_if_set FLAG_HIDE_RUSTBORO_CITY_RIVAL, WayfarerHoennVisitor_EventScript_NoRivalScene
 	lockall
 	call RustboroCity_EventScript_PlayRivalMusic
 	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
@@ -832,7 +832,7 @@ RustboroCity_EventScript_RivalTrigger5::
 	goto RustboroCity_EventScript_RivalEncounter
 
 RustboroCity_EventScript_RivalTrigger6::
-	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, WayfarerHoennVisitor_EventScript_RivalWaitsForStarter
+	goto_if_set FLAG_HIDE_RUSTBORO_CITY_RIVAL, WayfarerHoennVisitor_EventScript_NoRivalScene
 	lockall
 	call RustboroCity_EventScript_PlayRivalMusic
 	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
@@ -849,7 +849,7 @@ RustboroCity_EventScript_RivalTrigger6::
 	goto RustboroCity_EventScript_RivalEncounter
 
 RustboroCity_EventScript_RivalTrigger7::
-	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, WayfarerHoennVisitor_EventScript_RivalWaitsForStarter
+	goto_if_set FLAG_HIDE_RUSTBORO_CITY_RIVAL, WayfarerHoennVisitor_EventScript_NoRivalScene
 	lockall
 	call RustboroCity_EventScript_PlayRivalMusic
 	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown

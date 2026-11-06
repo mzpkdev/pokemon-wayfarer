@@ -3297,7 +3297,7 @@
 #define FLAG_TWO_ISLAND_SHOP_EXPANDED_3                         0
 #define FLAG_TWO_ISLAND_SHOP_INTRODUCED                         0
 #define FLAG_UNLOCKED_ROCKET_WAREHOUSE                          0
-#define FLAG_UNUSED_0x022                                       0
+#define FLAG_MET_HOENN_RIVAL_AS_VISITOR                         0
 #define FLAG_UNUSED_0x023                                       0
 #define FLAG_UNUSED_0x024                                       0
 #define FLAG_UNUSED_0x025                                       0

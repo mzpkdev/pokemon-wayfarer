@@ -15,9 +15,16 @@ Route110_OnTransition:
 	call_if_eq VAR_CYCLING_CHALLENGE_STATE, 1, Route110_EventScript_SaveCyclingMusic
 	end
 
-@ The rival stands on the road until their scene has played, but not for a player without BIRCH's starter
+@ The rival stands on the road until their scene has played. A visitor meets them only for the gift, so
+@ not while they already hold one or have no room for it.
 Route110_EventScript_ShowOrHideRival::
-	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, Route110_EventScript_HideRival
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	goto_if_eq VAR_RESULT, TRUE, Route110_EventScript_ShowRival
+	checkitem ITEM_DOWSING_MACHINE
+	goto_if_eq VAR_RESULT, TRUE, Route110_EventScript_HideRival
+	checkitemspace ITEM_DOWSING_MACHINE
+	goto_if_eq VAR_RESULT, FALSE, Route110_EventScript_HideRival
+Route110_EventScript_ShowRival::
 	clearflag FLAG_HIDE_ROUTE_110_RIVAL
 	return
 
@@ -380,7 +387,7 @@ Route110_EventScript_RivalTrigger3::
 	end
 
 Route110_EventScript_RivalScene::
-	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, WayfarerHoennVisitor_EventScript_RivalWaitsForStarter
+	goto_if_set FLAG_HIDE_ROUTE_110_RIVAL, WayfarerHoennVisitor_EventScript_NoRivalScene
 	lockall
 	checkplayergender
 	call_if_eq VAR_RESULT, MALE, Route110_EventScript_PlayMayMusic
@@ -395,6 +402,8 @@ Route110_EventScript_RivalScene::
 	call_if_eq VAR_0x8008, 1, Route110_EventScript_RivalApproachPlayer1
 	call_if_eq VAR_0x8008, 2, Route110_EventScript_RivalApproachPlayer2
 	call_if_eq VAR_0x8008, 3, Route110_EventScript_RivalApproachPlayer3
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	goto_if_eq VAR_RESULT, FALSE, Route110_EventScript_VisitorScene
 	checkplayergender
 	goto_if_eq VAR_RESULT, MALE, Route110_EventScript_MayBattle
 	goto_if_eq VAR_RESULT, FEMALE, Route110_EventScript_BrendanBattle
@@ -464,6 +473,23 @@ Route110_EventScript_BrendanBattleMudkip::
 
 Route110_EventScript_BrendanDefeated::
 	msgbox Route110_Text_BrendanTakeThis, MSGBOX_DEFAULT
+	call Route110_EventScript_GiveItemfinder
+	msgbox Route110_Text_BrendanExplainItemfinder, MSGBOX_DEFAULT
+	goto Route110_EventScript_RivalExit
+	end
+
+Route110_EventScript_VisitorScene::
+	call WayfarerHoennVisitor_EventScript_RivalGreets
+	checkplayergender
+	goto_if_eq VAR_RESULT, FEMALE, Route110_EventScript_BrendanHelpsVisitor
+	msgbox Route110_Text_MayHelpVisitor, MSGBOX_DEFAULT
+	call Route110_EventScript_GiveItemfinder
+	msgbox Route110_Text_MayExplainItemfinderToVisitor, MSGBOX_DEFAULT
+	goto Route110_EventScript_RivalExit
+	end
+
+Route110_EventScript_BrendanHelpsVisitor::
+	msgbox Route110_Text_BrendanHelpVisitor, MSGBOX_DEFAULT
 	call Route110_EventScript_GiveItemfinder
 	msgbox Route110_Text_BrendanExplainItemfinder, MSGBOX_DEFAULT
 	goto Route110_EventScript_RivalExit
@@ -817,6 +843,20 @@ Route110_Text_BrendanExplainItemfinder:
 	.string "a sound.\p"
 	.string "Anyway, I'm off to look for new\n"
 	.string "POKéMON.$"
+
+Route110_Text_MayHelpVisitor:
+	.string "MAY: You're out seeing HOENN, right?\n"
+	.string "Then this will come in handy!$"
+
+Route110_Text_MayExplainItemfinderToVisitor:
+	.string "MAY: That's an ITEMFINDER.\p"
+	.string "Try it out. If there is an item that's\n"
+	.string "not visible, it emits a sound.\p"
+	.string "Okay, let's meet again!$"
+
+Route110_Text_BrendanHelpVisitor:
+	.string "BRENDAN: If you're traveling HOENN,\n"
+	.string "you could use this. Here.$"
 
 Route110_Text_RideBikeAtFullSpeed:
 	.string "Wouldn't it be great to ride a BIKE\n"

@@ -38,7 +38,7 @@ makes the next step available without an unrelated activation errand.
 
 | Adventure | Preserved content | Required independence |
 | --- | --- | --- |
-| Birch's rescue and introduction | Rescue Birch, visit his lab, and retain the existing optional starter introduction. | Other local adventures do not require this opening. Starter-dependent rival chapters may retain their necessary introduction prerequisite. |
+| Birch's rescue and introduction | Rescue Birch and visit his lab. A Hoenn-origin player keeps their starter and Pokédex opening. A visitor is thanked and has their Pokédex rated, with no starter and no gift. | Other local adventures do not require this opening, and no rival scene depends on it. Birch rates the Pokédex once his own opening is over. |
 | Peeko and the stolen Devon Goods | Meet the existing employee and Briney, rescue Peeko, recover the Goods, and receive the existing Devon follow-up. | Remove Roxanne's badge as the theft's activation requirement. Keep the rescue locally introduced and internally ordered. |
 | Devon deliveries | Deliver the Letter to Steven and the Parts to Stern, including the existing museum confrontation. | Retain the actual items and their original acquisition prerequisites. Once both assignments are available, complete the deliveries in either order. Neither delivery requires the other. |
 | Meteor Falls and Mt. Chimney | Discover the meteorite theft, follow it to Mt. Chimney, stop the machine, and recover the meteorite. | Keep this as one ordered adventure, independent of the Devon errands and unrelated Gyms. Preserve the existing return/reward interaction. It comes before the central villain story (see [Connected villain adventures](#connected-villain-adventures)). |
@@ -161,18 +161,16 @@ extended to them.
 
 ### Brendan, May, Wally, and the player's origin
 
-Keep genuinely sequential rival development at its existing locations. Later
-chapters stay unavailable until the necessary earlier chapter is complete. Do not
-move chapters around the region or use unrelated story progress as a substitute
-for the actual relationship.
+Brendan's and May's rivalry belongs to Hoenn-origin players, the rule Blue and
+Silver already follow. For those players the sequential rival development stays
+at its existing locations, and a later chapter waits for the necessary earlier
+one. A rival scene must not block an independent local adventure sharing its map.
 
-A deferred rival scene must not block an independent local adventure sharing its
-map, and completing that adventure must not make the rival chapter unrecoverable.
-
-Every Brendan or May battle picks its team from the player's Hoenn starter. A
-visitor who never took Birch's starter does not meet Brendan or May: their
-scenes wait and play once the player has a starter. The Itemfinder and HM Fly
-stay rewards of those scenes. There is no variant with a borrowed team.
+A visitor never battles Brendan or May, is never told they share a past, and
+never needs Birch or any Pokémon from him. Where a scene carries a gift, the
+Itemfinder, HM Fly, or the Go-Goggles, the visitor gets a short scene once: the
+rival introduces themself the first time and hands it over. Scenes without a
+gift do not show the rival. There is no variant with a borrowed team.
 
 Norman's relationship to the player is owned by the regional-origin design. Preserve
 his local role while making dialogue consistent with that identity. This PRD does
@@ -244,9 +242,12 @@ passing through a region does not complete its adventures.
   before readiness.
 - Win Wattson's badge without Norman's defeat, then begin and complete New
   Mauville.
-- As a visitor with no Hoenn starter, walk Routes 110 and 119 and visit Rustboro
-  and Lilycove. No rival scene starts and nothing is blocked. Take Birch's
-  starter and return for each scene.
+- As a visitor who never met Birch, walk Routes 110 and 119 and win at Lavaridge,
+  in any order. Each gift arrives in a short scene with no battle, and the rival
+  introduces themself once. Visit Route 103, Rustboro, and Lilycove: no rival.
+- As a visitor, rescue Birch. He thanks you and rates your Pokédex, with no
+  starter offered and no Petalburg Gym visit.
+- Win the Hoenn League with Steven's HM Dive still owed. Dive stays collectable.
 - Complete Norman's local introduction and challenge with fewer than four Hoenn
   badges. Verify dialogue against the player's origin.
 - Visit later rival locations early, complete unrelated local adventures, then
@@ -272,8 +273,9 @@ detail.
    before the central story. The Weather Institute gets a withdraw variant.
 3. **Capture thresholds.** TR 55 for Rayquaza, Groudon, and Kyogre, with the
    resolved crisis and no Hall of Fame check.
-4. **Rival chapters.** Brendan and May wait for the Hoenn starter. Wally's
-   later chapters wait for his Petalburg tutorial.
+4. **Rival chapters.** Brendan and May's rivalry is for Hoenn-origin players; a
+   visitor gets the gifts in short scenes with no battle. Wally's later chapters
+   wait for his Petalburg tutorial.
 5. **Wattson.** He makes the New Mauville request outside once the player
    holds his badge. Norman is not involved.
 

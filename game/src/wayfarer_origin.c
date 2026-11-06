@@ -205,6 +205,8 @@ u16 WayfarerGetConfirmedPendingOrigin(void) { return sConfirmedOrigin; }
 u16 WayfarerGetStartingOriginId(void) { return gSaveBlock3Ptr->wayfarerHoenn.startingOriginId; }
 // Special: Johto story beats that only the New Bark origin sees read this.
 u16 WayfarerIsJohtoOrigin(void) { return WayfarerGetStartingOriginId() == ORIGIN_NEW_BARK; }
+// Special: Brendan's and May's rivalry, like Blue's and Silver's, belongs to this origin alone.
+u16 WayfarerIsHoennOrigin(void) { return WayfarerGetStartingOriginId() == ORIGIN_LITTLEROOT; }
 
 // Special: the starter slot (0 Grass, 1 Fire, 2 Water in every region) of the player's own origin,
 // or ORIGIN_STARTER_SLOT_NONE before it is chosen. Content that follows "your starter" reads this

@@ -240,36 +240,26 @@ the Wayfarer player and existing party:
 3. A loss or interruption uses normal recovery and leaves the rescue available
    to retry.
 4. A successful rescue advances only the Hoenn opening state required to visit
-   Birch's lab and select the local starter branch.
-5. Birch asks the player to select Treecko, Torchic, or Mudkip for Hoenn's rival
-   and campaign branches, then offers that Pokémon as an optional gift.
+   Birch's lab.
+5. Birch thanks the player and rates their Pokédex. A player with no Pokédex is
+   handed one first. There is no starter choice and no gift.
 
-`VAR_HOENN_STARTER_CHOICE` starts at `HOENN_STARTER_CHOICE_NONE`. A committed
-choice records Treecko, Torchic, or Mudkip using Emerald's original branch
-mapping. `FLAG_HOENN_STARTER_RECEIVED` records whether Birch successfully
-delivered the gift. Neither value reads or writes the HNS starter variable or
-changes Silver's party selection.
+`VAR_HOENN_STARTER_CHOICE` starts at `HOENN_STARTER_CHOICE_NONE` and stays there
+for a visitor. `FLAG_HOENN_STARTER_RECEIVED` stays unset. Neither value reads or
+writes the HNS starter variable or changes Silver's party selection.
 
 Every included Hoenn consumer of Emerald's shared `VAR_STARTER_MON` resolves to
 `VAR_HOENN_STARTER_CHOICE` through a Hoenn-source-scoped rewrite. Standalone
 Emerald and all HNS consumers retain their original symbol and behavior. The
 content audit fails if an included Hoenn consumer keeps the raw shared symbol.
 
-The choice prompt may be canceled. Until a choice is committed, all three
-choices remain available, the gift remains unclaimed, and rival-dependent
-Hoenn story waits. Once committed, the choice cannot change. The player may
-accept the selected Pokémon immediately or leave it with Birch and continue
-the campaign. Failed delivery leaves the same selected Pokémon available to
-retry and does not set `FLAG_HOENN_STARTER_RECEIVED`.
-
-While no choice is committed, Brendan's and May's scenes do not start: the
-forced encounters on Route 110, Route 119, Route 104 and in Rustboro City leave
-the player in control and keep their progress, and the rival is absent from
-Route 110, Rustboro City and Lilycove City. The Mauville Game Corner girl does
-not offer her starter Doll. Each of these plays, with its gift, on a later
-visit once a choice is committed, so the Itemfinder and Fly stay behind their
-scenes. The Rustboro and Route 104 meeting stays missable by sailing with Mr.
-Briney first, as in Emerald.
+Brendan and May are for Hoenn-origin players. A visitor's forced encounters on
+Route 104 and in Rustboro City leave the player in control, and the rival is
+absent from Route 103, Rustboro City and Lilycove City. Route 110, Route 119 and
+Lavaridge Town give a visitor the Itemfinder, HM Fly and the Go-Goggles in short
+scenes with no battle. The Mauville Game Corner girl does not offer a visitor
+her starter Doll. See the
+[Hoenn story beats specification](hoenn-independent-story-beats.md#brendan-and-may).
 
 Wayfarer does not run Emerald's moving-truck arrival, bedroom setup, clock
 setup, player creation, naming, initial money, initial Bag, initial party,

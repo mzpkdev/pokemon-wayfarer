@@ -144,6 +144,29 @@ class WayfarerStevenDiveRewardTests(unittest.TestCase):
             steven,
         )
 
+    def test_hall_of_fame_leaves_a_pending_dive_alone(self):
+        hall = (GAME / "data" / "scripts" / "hall_of_fame.inc").read_text()
+        self.assertEqual(hall.count("setvar VAR_STEVENS_HOUSE_STATE"), 1)
+        self.assertIn(
+            "call_if_eq VAR_STEVENS_HOUSE_STATE, 0, EverGrandeCity_HallOfFame_EventScript_SetStevensHouseAfterLeague",
+            hall,
+        )
+
+    def test_letter_and_beldum_wait_for_steven_to_leave(self):
+        load = label_body(self.source, "MossdeepCity_StevensHouse_OnLoad")
+        self.assertIn(
+            "call_if_unset FLAG_HIDE_MOSSDEEP_CITY_STEVENS_HOUSE_STEVEN, MossdeepCity_StevensHouse_EventScript_HideStevensNote",
+            load,
+        )
+        beldum = label_body(self.source, "MossdeepCity_StevensHouse_EventScript_ShowOrHideBeldum")
+        assert_order(
+            self,
+            beldum,
+            "setflag FLAG_HIDE_MOSSDEEP_CITY_STEVENS_HOUSE_BELDUM_POKEBALL",
+            "goto_if_unset FLAG_HIDE_MOSSDEEP_CITY_STEVENS_HOUSE_STEVEN",
+            "clearflag FLAG_HIDE_MOSSDEEP_CITY_STEVENS_HOUSE_BELDUM_POKEBALL",
+        )
+
     def test_non_wayfarer_branch_retains_emerald_hm08_handoff(self):
         handoff_start = self.source.index(
             "MossdeepCity_StevensHouse_EventScript_StevenGivesDive::"

@@ -225,11 +225,16 @@ LittlerootTown_OnWarp:
 
 LittlerootTown_EventScript_SetRivalBirchPosForDexUpgrade::
 	addobject LOCALID_LITTLEROOT_BIRCH
-	addobject LOCALID_LITTLEROOT_RIVAL
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	call_if_eq VAR_RESULT, TRUE, LittlerootTown_EventScript_AddRivalForDexUpgrade
 	checkplayergender
 	goto_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_SetRivalBirchPosForDexUpgradeMale
 	goto LittlerootTown_EventScript_SetRivalBirchPosForDexUpgradeFemale
 	end
+
+LittlerootTown_EventScript_AddRivalForDexUpgrade::
+	addobject LOCALID_LITTLEROOT_RIVAL
+	return
 
 LittlerootTown_EventScript_SetRivalBirchPosForDexUpgradeMale::
 	setobjectxy LOCALID_LITTLEROOT_RIVAL, 6, 10

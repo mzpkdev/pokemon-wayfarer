@@ -16,10 +16,10 @@ LittlerootTown_ProfessorBirchsLab_MapScripts::
 
 	@ State descriptions for VAR_BIRCH_LAB_STATE
 	@ 1: Never occurs
-	@ 2: Chose starter
+	@ 2: Chose starter (a visitor: rescued BIRCH)
 	@ 3: Received starter in lab
 	@ 4: Defeated rival on Route 103
-	@ 5: Received pokedex
+	@ 5: Received pokedex (a visitor: BIRCH thanked them)
 
 LittlerootTown_ProfessorBirchsLab_OnTransition:
 	call Common_EventScript_SetupRivalGfxId
@@ -67,7 +67,7 @@ LittlerootTown_ProfessorBirchsLab_EventScript_SetPlayerPosForReceiveStarter::
 LittlerootTown_ProfessorBirchsLab_EventScript_SetObjectPosForDexUpgrade::
 	turnobject LOCALID_PLAYER, DIR_NORTH
 	addobject LOCALID_BIRCHS_LAB_BIRCH
-	addobject LOCALID_BIRCHS_LAB_RIVAL
+	call LittlerootTown_ProfessorBirchsLab_EventScript_TryAddRival
 	turnobject LOCALID_BIRCHS_LAB_RIVAL, DIR_NORTH
 	setobjectxy LOCALID_BIRCHS_LAB_RIVAL, 5, 5
 	turnobject LOCALID_BIRCHS_LAB_BIRCH, DIR_SOUTH
@@ -77,14 +77,21 @@ LittlerootTown_ProfessorBirchsLab_EventScript_SetObjectPosForDexUpgrade::
 	end
 
 LittlerootTown_ProfessorBirchsLab_EventScript_AddRivalObject::
-	addobject LOCALID_BIRCHS_LAB_RIVAL
+	call LittlerootTown_ProfessorBirchsLab_EventScript_TryAddRival
 	end
+
+@ BRENDAN and MAY are in the LAB only for a player who started in HOENN
+LittlerootTown_ProfessorBirchsLab_EventScript_TryAddRival::
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_NopReturn
+	addobject LOCALID_BIRCHS_LAB_RIVAL
+	return
 
 LittlerootTown_ProfessorBirchsLab_EventScript_SetObjectPosForJohtoStarters::
 	addobject LOCALID_BIRCHS_LAB_CYNDAQUIL_BALL
 	addobject LOCALID_BIRCHS_LAB_TOTODILE_BALL
 	addobject LOCALID_BIRCHS_LAB_CHIKORITA_BALL
-	addobject LOCALID_BIRCHS_LAB_RIVAL
+	call LittlerootTown_ProfessorBirchsLab_EventScript_TryAddRival
 	turnobject LOCALID_BIRCHS_LAB_CYNDAQUIL_BALL, DIR_SOUTH
 	setobjectxy LOCALID_BIRCHS_LAB_CYNDAQUIL_BALL, 8, 4
 	turnobject LOCALID_BIRCHS_LAB_TOTODILE_BALL, DIR_SOUTH
@@ -113,110 +120,19 @@ LittlerootTown_ProfessorBirchsLab_EventScript_GiveStarterEvent::
     goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, LittlerootTown_ProfessorBirchsLab_EventScript_AuthoredStarter
     goto_if_eq VAR_RESULT, ORIGIN_SCENE_NATIVE, LittlerootTown_ProfessorBirchsLab_EventScript_AcknowledgeNativeStarter
 	lockall
-	msgbox LittlerootTown_ProfessorBirchsLab_Text_ChooseLocalStarter, MSGBOX_DEFAULT
-	multichoice 20, 0, MULTI_HOENN_STARTERS, FALSE
-	switch VAR_RESULT
-	case 0, LittlerootTown_ProfessorBirchsLab_EventScript_ChooseTreecko
-	case 1, LittlerootTown_ProfessorBirchsLab_EventScript_ChooseTorchic
-	case 2, LittlerootTown_ProfessorBirchsLab_EventScript_ChooseMudkip
-	case MULTI_B_PRESSED, LittlerootTown_ProfessorBirchsLab_EventScript_PostponeLocalStarter
-	end
-
-LittlerootTown_ProfessorBirchsLab_EventScript_ChooseTreecko::
-	setvar VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_TREECKO
-	clearflag FLAG_HIDE_ROUTE_103_RIVAL
-	bufferspeciesname STR_VAR_1, SPECIES_TREECKO
-	goto LittlerootTown_ProfessorBirchsLab_EventScript_OfferLocalStarter
-	end
-
-LittlerootTown_ProfessorBirchsLab_EventScript_ChooseTorchic::
-	setvar VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_TORCHIC
-	clearflag FLAG_HIDE_ROUTE_103_RIVAL
-	bufferspeciesname STR_VAR_1, SPECIES_TORCHIC
-	goto LittlerootTown_ProfessorBirchsLab_EventScript_OfferLocalStarter
-	end
-
-LittlerootTown_ProfessorBirchsLab_EventScript_ChooseMudkip::
-	setvar VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP
-	clearflag FLAG_HIDE_ROUTE_103_RIVAL
-	bufferspeciesname STR_VAR_1, SPECIES_MUDKIP
-	goto LittlerootTown_ProfessorBirchsLab_EventScript_OfferLocalStarter
-	end
-
-LittlerootTown_ProfessorBirchsLab_EventScript_PostponeLocalStarter::
-	msgbox LittlerootTown_ProfessorBirchsLab_Text_LocalStarterPostponed, MSGBOX_DEFAULT
-	setvar VAR_BIRCH_LAB_STATE, 1
-	releaseall
-	end
-
-LittlerootTown_ProfessorBirchsLab_EventScript_PrepareLocalStarterOffer::
-	switch VAR_HOENN_STARTER_CHOICE
-	case HOENN_STARTER_CHOICE_TREECKO, LittlerootTown_ProfessorBirchsLab_EventScript_PrepareTreeckoGift
-	case HOENN_STARTER_CHOICE_TORCHIC, LittlerootTown_ProfessorBirchsLab_EventScript_PrepareTorchicGift
-	case HOENN_STARTER_CHOICE_MUDKIP, LittlerootTown_ProfessorBirchsLab_EventScript_PrepareMudkipGift
-	goto LittlerootTown_ProfessorBirchsLab_EventScript_LocalStarterOfferEnd
-	end
-
-LittlerootTown_ProfessorBirchsLab_EventScript_PrepareTreeckoGift::
-	bufferspeciesname STR_VAR_1, SPECIES_TREECKO
-	goto LittlerootTown_ProfessorBirchsLab_EventScript_OfferLocalStarter
-
-LittlerootTown_ProfessorBirchsLab_EventScript_PrepareTorchicGift::
-	bufferspeciesname STR_VAR_1, SPECIES_TORCHIC
-	goto LittlerootTown_ProfessorBirchsLab_EventScript_OfferLocalStarter
-
-LittlerootTown_ProfessorBirchsLab_EventScript_PrepareMudkipGift::
-	bufferspeciesname STR_VAR_1, SPECIES_MUDKIP
-	goto LittlerootTown_ProfessorBirchsLab_EventScript_OfferLocalStarter
-
-LittlerootTown_ProfessorBirchsLab_EventScript_OfferLocalStarter::
-	msgbox LittlerootTown_ProfessorBirchsLab_Text_OfferSelectedLocalStarter, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, LittlerootTown_ProfessorBirchsLab_EventScript_LeaveLocalStarter
-	switch VAR_HOENN_STARTER_CHOICE
-	case HOENN_STARTER_CHOICE_TREECKO, LittlerootTown_ProfessorBirchsLab_EventScript_GiveLocalTreecko
-	case HOENN_STARTER_CHOICE_TORCHIC, LittlerootTown_ProfessorBirchsLab_EventScript_GiveLocalTorchic
-	case HOENN_STARTER_CHOICE_MUDKIP, LittlerootTown_ProfessorBirchsLab_EventScript_GiveLocalMudkip
-	goto LittlerootTown_ProfessorBirchsLab_EventScript_PostponeLocalStarter
-	end
-
-LittlerootTown_ProfessorBirchsLab_EventScript_GiveLocalTreecko::
-	givemon SPECIES_TREECKO, 5
-	goto LittlerootTown_ProfessorBirchsLab_EventScript_CommitLocalStarterGift
-	end
-
-LittlerootTown_ProfessorBirchsLab_EventScript_GiveLocalTorchic::
-	givemon SPECIES_TORCHIC, 5
-	goto LittlerootTown_ProfessorBirchsLab_EventScript_CommitLocalStarterGift
-	end
-
-LittlerootTown_ProfessorBirchsLab_EventScript_GiveLocalMudkip::
-	givemon SPECIES_MUDKIP, 5
-	goto LittlerootTown_ProfessorBirchsLab_EventScript_CommitLocalStarterGift
-	end
-
-LittlerootTown_ProfessorBirchsLab_EventScript_CommitLocalStarterGift::
-	goto_if_eq VAR_RESULT, MON_CANT_GIVE, LittlerootTown_ProfessorBirchsLab_EventScript_LocalStarterStorageFull
-	call Common_EventScript_GiftMon
-	setflag FLAG_HOENN_STARTER_RECEIVED
-	goto LittlerootTown_ProfessorBirchsLab_EventScript_ContinueLocalCampaign
-	end
-
-LittlerootTown_ProfessorBirchsLab_EventScript_LocalStarterStorageFull::
-	msgbox LittlerootTown_ProfessorBirchsLab_Text_LocalStarterStorageFull, MSGBOX_DEFAULT
-	goto LittlerootTown_ProfessorBirchsLab_EventScript_ContinueLocalCampaign
-	end
-
-LittlerootTown_ProfessorBirchsLab_EventScript_LeaveLocalStarter::
-	msgbox LittlerootTown_ProfessorBirchsLab_Text_LocalStarterWaiting, MSGBOX_DEFAULT
-
-LittlerootTown_ProfessorBirchsLab_EventScript_ContinueLocalCampaign::
-	goto_if_ge VAR_BIRCH_LAB_STATE, 3, LittlerootTown_ProfessorBirchsLab_EventScript_LocalStarterOfferEnd
-	msgbox LittlerootTown_ProfessorBirchsLab_Text_GetRivalToTeachYou, MSGBOX_DEFAULT
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_VisitorThanks, MSGBOX_DEFAULT
+	specialvar VAR_RESULT, WayfarerHasSharedPokedex
+	call_if_eq VAR_RESULT, FALSE, LittlerootTown_ProfessorBirchsLab_EventScript_VisitorReceivePokedex
 	clearflag FLAG_HIDE_ROUTE_101_BOY
-	setvar VAR_BIRCH_LAB_STATE, 3
-LittlerootTown_ProfessorBirchsLab_EventScript_LocalStarterOfferEnd::
-	releaseall
+	setflag FLAG_ADVENTURE_STARTED
+	setvar VAR_BIRCH_LAB_STATE, 5
+	goto ProfBirch_EventScript_AskRatePokedex
 	end
+
+LittlerootTown_ProfessorBirchsLab_EventScript_VisitorReceivePokedex::
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_VisitorTakePokedex, MSGBOX_DEFAULT
+	call LittlerootTown_ProfessorBirchsLab_EventScript_ReceivePokedex
+	return
 #endif
 
 LittlerootTown_ProfessorBirchsLab_EventScript_AcknowledgeNativeStarter::
@@ -296,9 +212,8 @@ LittlerootTown_ProfessorBirchsLab_EventScript_UpgradeToNationalDex::
 	applymovement LOCALID_BIRCHS_LAB_RIVAL, Common_Movement_WalkInPlaceFasterRight
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
 	waitmovement 0
-	checkplayergender
-	call_if_eq VAR_RESULT, MALE, LittlerootTown_ProfessorBirchsLab_EventScript_MayUpgradeComment
-	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_ProfessorBirchsLab_EventScript_BrendanUpgradeComment
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	call_if_eq VAR_RESULT, TRUE, LittlerootTown_ProfessorBirchsLab_EventScript_RivalUpgradeComment
 	playse SE_PC_ON
 	waitse
 	delay 20
@@ -323,6 +238,12 @@ LittlerootTown_ProfessorBirchsLab_EventScript_UpgradeToNationalDex::
 	setflag FLAG_SCOTT_CALL_BATTLE_FRONTIER
 	releaseall
 	end
+
+LittlerootTown_ProfessorBirchsLab_EventScript_RivalUpgradeComment::
+	checkplayergender
+	call_if_eq VAR_RESULT, MALE, LittlerootTown_ProfessorBirchsLab_EventScript_MayUpgradeComment
+	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_ProfessorBirchsLab_EventScript_BrendanUpgradeComment
+	return
 
 LittlerootTown_ProfessorBirchsLab_EventScript_MayUpgradeComment::
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_MayUpgradeSoCool, MSGBOX_DEFAULT
@@ -587,12 +508,6 @@ LittlerootTown_ProfessorBirchsLab_EventScript_Birch::
 #endif
 	lock
 	faceplayer
-#if IS_WAYFARER
-	goto_if_eq VAR_BIRCH_LAB_STATE, 1, LittlerootTown_ProfessorBirchsLab_EventScript_GiveStarterEvent
-	goto_if_unset FLAG_RESCUED_BIRCH, LittlerootTown_ProfessorBirchsLab_EventScript_TryRatePokedexOrRegister
-	goto_if_eq VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_NONE, LittlerootTown_ProfessorBirchsLab_EventScript_GiveStarterEvent
-	goto_if_unset FLAG_HOENN_STARTER_RECEIVED, LittlerootTown_ProfessorBirchsLab_EventScript_PrepareLocalStarterOffer
-#endif
 	goto_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 5, LittlerootTown_ProfessorBirchsLab_EventScript_CanHaveAnyOneOfRarePokemon
 	goto_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 2, LittlerootTown_ProfessorBirchsLab_EventScript_GrassyPatchWaiting
 	@ Wayfarer's phone has no BIRCH to show, so there he does not offer to register and the flag
@@ -615,10 +530,10 @@ LittlerootTown_ProfessorBirchsLab_EventScript_GrassyPatchWaiting::
 	end
 
 LittlerootTown_ProfessorBirchsLab_EventScript_TryRatePokedexOrRegister::
-	goto_if_unset FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_UNKNOWN_0x380, ProfBirch_EventScript_RatePokedexOrRegister
+	call ProfBirch_EventScript_CheckOpeningOver
+	goto_if_eq VAR_RESULT, TRUE, ProfBirch_EventScript_RatePokedexOrRegister
 	goto_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 3, ProfBirch_EventScript_RatePokedexOrRegister
 	goto_if_ge VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 6, ProfBirch_EventScript_RatePokedexOrRegister
-	goto_if_eq VAR_BIRCH_LAB_STATE, 5, LittlerootTown_ProfessorBirchsLab_EventScript_PokemonAwait
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_BirchRivalGoneHome, MSGBOX_DEFAULT
 	release
 	end
@@ -638,13 +553,8 @@ EventScript_RegisterProfBirch::
 	end
 
 LittlerootTown_ProfessorBirchsLab_EventScript_GivePokedex::
-#if IS_WAYFARER
-	specialvar VAR_RESULT, WayfarerHasSharedPokedex
-	goto_if_eq VAR_RESULT, TRUE, LittlerootTown_ProfessorBirchsLab_EventScript_AlreadyHasPokedex
-#endif
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_HeardYouBeatRivalTakePokedex, MSGBOX_DEFAULT
 	call LittlerootTown_ProfessorBirchsLab_EventScript_ReceivePokedex
-LittlerootTown_ProfessorBirchsLab_EventScript_ContinuePokedexHandoff::
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_ExplainPokedex, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_BIRCHS_LAB_RIVAL, LittlerootTown_ProfessorBirchsLab_Movement_RivalApproachPlayer
@@ -659,10 +569,6 @@ LittlerootTown_ProfessorBirchsLab_EventScript_ContinuePokedexHandoff::
 	setvar VAR_OLDALE_TOWN_STATE, 1
 	setvar VAR_LITTLEROOT_RIVAL_STATE, 4
 	setvar VAR_LITTLEROOT_TOWN_STATE, 3
-#if IS_WAYFARER
-    specialvar VAR_RESULT, WayfarerUsesNativeHoennOpening
-    call_if_eq VAR_RESULT, FALSE, LittlerootTown_ProfessorBirchsLab_EventScript_VisitorPokedexComplete
-#endif
 	releaseall
 	end
 
@@ -694,11 +600,6 @@ LittlerootTown_ProfessorBirchsLab_EventScript_ReceivePokedex::
 	setflag FLAG_RECEIVED_POKEDEX_FROM_BIRCH
 	setvar VAR_CABLE_CLUB_TUTORIAL_STATE, 1
 	return
-
-LittlerootTown_ProfessorBirchsLab_EventScript_PokemonAwait::
-	msgbox LittlerootTown_ProfessorBirchsLab_Text_CountlessPokemonAwait, MSGBOX_DEFAULT
-	release
-	end
 
 LittlerootTown_ProfessorBirchsLab_EventScript_MayNoRoomForPokeBalls::
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_OhYourBagsFull, MSGBOX_DEFAULT
@@ -898,12 +799,6 @@ LittlerootTown_ProfessorBirchsLab_Text_ExplainPokedex:
 	.string "and records its data in the POKéDEX,\l"
 	.string "why, {RIVAL} looks for me while I'm out\l"
 	.string "doing fieldwork, and shows me.$"
-
-LittlerootTown_ProfessorBirchsLab_Text_CountlessPokemonAwait:
-	.string "PROF. BIRCH: Countless POKéMON\n"
-	.string "await you!\p"
-	.string "Argh, I'm getting the itch to get out\n"
-	.string "and do fieldwork again!$"
 
 LittlerootTown_ProfessorBirchsLab_Text_MayGotPokedexTooTakeThese:
 	.string "MAY: Oh, wow, {PLAYER}{KUN}!\n"
@@ -1140,48 +1035,14 @@ LittlerootTown_ProfessorBirchsLab_Text_ScottAboardSSTidalCall:
 	.string "… … … … … Click!$"
 
 #if IS_WAYFARER
-LittlerootTown_ProfessorBirchsLab_Text_ChooseLocalStarter:
+LittlerootTown_ProfessorBirchsLab_Text_VisitorThanks:
 	.string "PROF. BIRCH: You handled that rescue\n"
 	.string "like an experienced TRAINER!\p"
-	.string "Before you continue through HOENN,\n"
-	.string "choose a partner for your local rival.$"
+	.string "Thank you, {PLAYER}{KUN}.$"
 
-LittlerootTown_ProfessorBirchsLab_Text_LocalStarterPostponed:
-	.string "PROF. BIRCH: That's fine.\n"
-	.string "Come back when you've decided.$"
-
-LittlerootTown_ProfessorBirchsLab_Text_OfferSelectedLocalStarter:
-	.string "PROF. BIRCH: {STR_VAR_1} will guide\n"
-	.string "your rival's journey through HOENN.\p"
-	.string "I can give you this {STR_VAR_1}, too.\n"
-	.string "Would you like to take it now?$"
-
-LittlerootTown_ProfessorBirchsLab_Text_LocalStarterWaiting:
-	.string "PROF. BIRCH: I'll keep {STR_VAR_1}\n"
-	.string "safe here until you want it.$"
-
-LittlerootTown_ProfessorBirchsLab_Text_LocalStarterStorageFull:
-	.string "PROF. BIRCH: Your party and PC are\n"
-	.string "both full right now.\p"
-	.string "I'll keep {STR_VAR_1} safe for you.$"
-#endif
-
-#if IS_WAYFARER
-LittlerootTown_ProfessorBirchsLab_EventScript_AlreadyHasPokedex::
-    msgbox LittlerootTown_ProfessorBirchsLab_Text_AlreadyHasPokedex, MSGBOX_DEFAULT
-    setflag FLAG_SYS_POKEDEX_GET
-    setflag FLAG_RECEIVED_POKEDEX_FROM_BIRCH
-    goto LittlerootTown_ProfessorBirchsLab_EventScript_ContinuePokedexHandoff
-
-LittlerootTown_ProfessorBirchsLab_Text_AlreadyHasPokedex:
-    .string "PROF. BIRCH: You already have a\n"
-    .string "POKéDEX! Keep recording your finds.$"
-#endif
-
-#if IS_WAYFARER
-LittlerootTown_ProfessorBirchsLab_EventScript_VisitorPokedexComplete::
-    setvar VAR_LITTLEROOT_TOWN_STATE, 4
-    return
+LittlerootTown_ProfessorBirchsLab_Text_VisitorTakePokedex:
+	.string "PROF. BIRCH: You're traveling without\n"
+	.string "a POKéDEX? Then take this one!$"
 #endif
 
 #if IS_WAYFARER

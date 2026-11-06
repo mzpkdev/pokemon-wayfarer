@@ -9,7 +9,7 @@ EverGrandeCity_HallOfFame_EventScript_SetGameClearFlags::
 	clearflag FLAG_HIDE_SS_TIDAL_CORRIDOR_MR_BRINEY
 	call EventScript_HideMrBriney
 	clearflag FLAG_HIDE_MOSSDEEP_CITY_STEVENS_HOUSE_INVISIBLE_NINJA_BOY
-	setvar VAR_STEVENS_HOUSE_STATE, 2
+	call_if_eq VAR_STEVENS_HOUSE_STATE, 0, EverGrandeCity_HallOfFame_EventScript_SetStevensHouseAfterLeague
 	setflag FLAG_HIDE_VICTORY_ROAD_ENTRANCE_WALLY
 	clearflag FLAG_HIDE_VICTORY_ROAD_EXIT_WALLY
 	clearflag FLAG_HIDE_SLATEPORT_CITY_HARBOR_SS_TIDAL
@@ -35,6 +35,11 @@ EverGrandeCity_HallOfFame_EventScript_ResetDefeatedEventLegendaries::
 
 EverGrandeCity_HallOfFame_EventScript_SetDesertUnderpassCommentReady::
 	setvar VAR_FOSSIL_MANIAC_STATE, 1
+	return
+
+@ STEVEN gives HM DIVE at states 1 and 3, and only he does, so a win must leave those states alone
+EverGrandeCity_HallOfFame_EventScript_SetStevensHouseAfterLeague::
+	setvar VAR_STEVENS_HOUSE_STATE, 2
 	return
 
 EverGrandeCity_HallOfFame_EventScript_ShowStevensHouseBeldum::

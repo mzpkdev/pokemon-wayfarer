@@ -11,8 +11,10 @@ MossdeepCity_StevensHouse_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, MossdeepCity_StevensHouse_OnFrame
 	.byte 0
 
+@ STEVEN's letter says he has left, so it and BELDUM stay out of sight while he is still home
 MossdeepCity_StevensHouse_OnLoad:
 	call_if_unset FLAG_SYS_GAME_CLEAR, MossdeepCity_StevensHouse_EventScript_HideStevensNote
+	call_if_unset FLAG_HIDE_MOSSDEEP_CITY_STEVENS_HOUSE_STEVEN, MossdeepCity_StevensHouse_EventScript_HideStevensNote
 	end
 
 MossdeepCity_StevensHouse_EventScript_HideStevensNote::
@@ -24,7 +26,15 @@ MossdeepCity_StevensHouse_OnTransition:
 #if IS_WAYFARER
 	call_if_eq VAR_STEVENS_HOUSE_STATE, 3, MossdeepCity_StevensHouse_EventScript_SetStevenPos
 #endif
+	call_if_set FLAG_SYS_GAME_CLEAR, MossdeepCity_StevensHouse_EventScript_ShowOrHideBeldum
 	end
+
+MossdeepCity_StevensHouse_EventScript_ShowOrHideBeldum::
+	setflag FLAG_HIDE_MOSSDEEP_CITY_STEVENS_HOUSE_BELDUM_POKEBALL
+	goto_if_unset FLAG_HIDE_MOSSDEEP_CITY_STEVENS_HOUSE_STEVEN, Common_EventScript_NopReturn
+	goto_if_set FLAG_RECEIVED_BELDUM, Common_EventScript_NopReturn
+	clearflag FLAG_HIDE_MOSSDEEP_CITY_STEVENS_HOUSE_BELDUM_POKEBALL
+	return
 
 MossdeepCity_StevensHouse_EventScript_SetStevenPos::
 	setobjectxyperm LOCALID_STEVENS_HOUSE_STEVEN, 6, 5

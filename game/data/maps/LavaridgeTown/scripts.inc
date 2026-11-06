@@ -5,7 +5,6 @@ LavaridgeTown_MapScripts::
 
 LavaridgeTown_OnTransition:
 	setflag FLAG_VISITED_LAVARIDGE_TOWN
-	call_if_eq VAR_LAVARIDGE_TOWN_STATE, 3, LavaridgeTown_EventScript_RivalSceneWaits
 	call_if_eq VAR_LAVARIDGE_TOWN_STATE, 2, LavaridgeTown_EventScript_ReconcileGoGoggles
 	call_if_eq VAR_LAVARIDGE_TOWN_STATE, 4, LavaridgeTown_EventScript_TryArmRivalScene
 	call_if_set FLAG_WHITEOUT_TO_LAVARIDGE, LavaridgeTown_EventScript_ClearLavaridgeWhiteOut
@@ -22,15 +21,14 @@ LavaridgeTown_EventScript_ReconcileGoGoggles::
 	setflag FLAG_RECEIVED_GO_GOGGLES
 	return
 
-@ The rival's scene is staged for a player at the GYM door or the POKéMON CENTER's front door, and
-@ needs the starter BIRCH gave. It waits at state 4 until such a player walks out of either door:
-@ the frame script runs at state 1, so the town must never sit there without the scene to play.
+@ The rival's scene is staged for a player at the GYM door or the POKéMON CENTER's front door. It
+@ waits at state 4 until a player walks out of either door: the frame script runs at state 1, so the
+@ town must never sit there with the player anywhere else.
 LavaridgeTown_EventScript_RivalSceneWaits::
 	setvar VAR_LAVARIDGE_TOWN_STATE, 4
 	return
 
 LavaridgeTown_EventScript_TryArmRivalScene::
-	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, Common_EventScript_NopReturn
 	getplayerxy VAR_0x8004, VAR_0x8005
 	call_if_eq VAR_0x8004, 5, LavaridgeTown_EventScript_ArmAtGymDoor
 	call_if_eq VAR_0x8004, 9, LavaridgeTown_EventScript_ArmAtPokemonCenterDoor
@@ -85,6 +83,8 @@ LavaridgeTown_EventScript_RivalGiveGoGoggles::
 	call_if_eq VAR_RESULT, FEMALE, LavaridgeTown_EventScript_PlayBrendanMusic
 	call_if_eq VAR_0x8008, 9, LavaridgeTown_EventScript_RivalApproachPlayer1
 	call_if_ne VAR_0x8008, 9, LavaridgeTown_EventScript_RivalApproachPlayer2
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	goto_if_eq VAR_RESULT, FALSE, LavaridgeTown_EventScript_VisitorScene
 	checkplayergender
 	goto_if_eq VAR_RESULT, MALE, LavaridgeTown_EventScript_MayGiveGoGoggles
 	goto_if_eq VAR_RESULT, FEMALE, LavaridgeTown_EventScript_BrendanGiveGoGoggles
@@ -134,11 +134,58 @@ LavaridgeTown_EventScript_BrendanRecognizeGoGoggles::
 	goto LavaridgeTown_EventScript_RivalExit
 	end
 
+LavaridgeTown_EventScript_VisitorScene::
+	call WayfarerHoennVisitor_EventScript_RivalGreets
+	checkplayergender
+	goto_if_eq VAR_RESULT, FEMALE, LavaridgeTown_EventScript_BrendanHelpsVisitor
+	checkitem ITEM_GO_GOGGLES
+	goto_if_eq VAR_RESULT, TRUE, LavaridgeTown_EventScript_MayRecognizeVisitorGoGoggles
+	msgbox LavaridgeTown_Text_MayHelpVisitor, MSGBOX_DEFAULT
+	additem ITEM_GO_GOGGLES
+	goto_if_eq VAR_RESULT, FALSE, LavaridgeTown_EventScript_GoGogglesBagFull
+	setvar VAR_0x8000, ITEM_GO_GOGGLES
+	setvar VAR_0x8001, 1
+	setvar VAR_0x8007, TRUE
+	call EventScript_ObtainItemMessage
+	setflag FLAG_RECEIVED_GO_GOGGLES
+	msgbox LavaridgeTown_Text_MayExplainGoGogglesToVisitor, MSGBOX_DEFAULT
+	goto LavaridgeTown_EventScript_RivalExit
+	end
+
+LavaridgeTown_EventScript_MayRecognizeVisitorGoGoggles::
+	setflag FLAG_RECEIVED_GO_GOGGLES
+	msgbox LavaridgeTown_Text_MayRecognizeSurveyGoGoggles, MSGBOX_DEFAULT
+	msgbox LavaridgeTown_Text_MayExplainGoGogglesToVisitor, MSGBOX_DEFAULT
+	goto LavaridgeTown_EventScript_RivalExit
+	end
+
+LavaridgeTown_EventScript_BrendanHelpsVisitor::
+	checkitem ITEM_GO_GOGGLES
+	goto_if_eq VAR_RESULT, TRUE, LavaridgeTown_EventScript_BrendanRecognizeVisitorGoGoggles
+	msgbox LavaridgeTown_Text_BrendanHelpVisitor, MSGBOX_DEFAULT
+	additem ITEM_GO_GOGGLES
+	goto_if_eq VAR_RESULT, FALSE, LavaridgeTown_EventScript_GoGogglesBagFull
+	setvar VAR_0x8000, ITEM_GO_GOGGLES
+	setvar VAR_0x8001, 1
+	setvar VAR_0x8007, TRUE
+	call EventScript_ObtainItemMessage
+	setflag FLAG_RECEIVED_GO_GOGGLES
+	msgbox LavaridgeTown_Text_BrendanExplainGoGogglesToVisitor, MSGBOX_DEFAULT
+	goto LavaridgeTown_EventScript_RivalExit
+	end
+
+LavaridgeTown_EventScript_BrendanRecognizeVisitorGoGoggles::
+	setflag FLAG_RECEIVED_GO_GOGGLES
+	msgbox LavaridgeTown_Text_BrendanRecognizeSurveyGoGoggles, MSGBOX_DEFAULT
+	msgbox LavaridgeTown_Text_BrendanExplainGoGogglesToVisitor, MSGBOX_DEFAULT
+	goto LavaridgeTown_EventScript_RivalExit
+	end
+
 LavaridgeTown_EventScript_GoGogglesBagFull::
 	msgbox LavaridgeTown_Text_GoGogglesBagFull, MSGBOX_DEFAULT
 	closemessage
 	removeobject LOCALID_LAVARIDGE_RIVAL
-	setvar VAR_LAVARIDGE_TOWN_STATE, 3
+	setvar VAR_LAVARIDGE_TOWN_STATE, 4
 	clearflag FLAG_HIDE_MAP_NAME_POPUP
 	savebgm MUS_DUMMY
 	fadedefaultbgm
@@ -397,6 +444,33 @@ LavaridgeTown_Text_BrendanExplainGoGogglesChallengeDad:
 	.string "the GYM LEADER of PETALBURG.\p"
 	.string "Unlike you, {PLAYER}, that man looks like\n"
 	.string "he really is tough.\p"
+	.string "See you around!$"
+
+LavaridgeTown_Text_MayHelpVisitor:
+	.string "MAY: You beat FLANNERY, didn't you?\n"
+	.string "That's amazing!\p"
+	.string "I guess it would be okay for you to\n"
+	.string "have this.$"
+
+LavaridgeTown_Text_MayExplainGoGogglesToVisitor:
+	.string "MAY: With those GO-GOGGLES, you'll\n"
+	.string "have no trouble getting through the\l"
+	.string "desert near ROUTE 111.\p"
+	.string "See you again!$"
+
+LavaridgeTown_Text_BrendanHelpVisitor:
+	.string "BRENDAN: You beat FLANNERY, huh?\n"
+	.string "Not bad.\p"
+	.string "All right, then.\n"
+	.string "You may as well have this.$"
+
+LavaridgeTown_Text_BrendanExplainGoGogglesToVisitor:
+	.string "BRENDAN: Keep those with you if you're\n"
+	.string "planning on going into that desert near\l"
+	.string "ROUTE 111.\p"
+	.string "There should be some POKéMON that\n"
+	.string "are exclusively desert-dwellers.\l"
+	.string "You might look around for those.\p"
 	.string "See you around!$"
 
 LavaridgeTown_Text_GoGogglesBagFull:

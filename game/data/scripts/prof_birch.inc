@@ -1,5 +1,22 @@
+@ BIRCH's opening is over once he has given the POKéDEX, or for a visitor once he has been rescued
+ProfBirch_EventScript_CheckOpeningOver::
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	goto_if_eq VAR_RESULT, FALSE, ProfBirch_EventScript_CheckRescued
+	goto_if_unset FLAG_RECEIVED_POKEDEX_FROM_BIRCH, ProfBirch_EventScript_OpeningNotOver
+	return
+
+ProfBirch_EventScript_CheckRescued::
+	setvar VAR_RESULT, TRUE
+	goto_if_unset FLAG_RESCUED_BIRCH, ProfBirch_EventScript_OpeningNotOver
+	return
+
+ProfBirch_EventScript_OpeningNotOver::
+	setvar VAR_RESULT, FALSE
+	return
+
 ProfBirch_EventScript_UpdateLocation::
-	goto_if_eq VAR_PETALBURG_GYM_STATE, 0, Common_EventScript_NopReturn
+	call ProfBirch_EventScript_CheckOpeningOver
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_NopReturn
 	goto_if_set FLAG_SYS_GAME_CLEAR, ProfBirch_EventScript_MoveToLab
 	call_if_eq VAR_BIRCH_STATE, 0, ProfBirch_EventScript_MoveToLab
 	call_if_eq VAR_BIRCH_STATE, 1, ProfBirch_EventScript_MoveToLab

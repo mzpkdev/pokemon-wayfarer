@@ -107,9 +107,9 @@ starter slot still determines the region's rival branch.
 
 ### Visiting another starting region
 
-A Johto starter visiting Hoenn keeps the existing visitor version of Birch's
-rescue: use the current party, choose a local starter branch, and optionally
-accept the selected Hoenn starter. Do not run the truck or household setup.
+A Johto or Kanto starter visiting Hoenn rescues Birch with their current party.
+He thanks them and rates their Pokédex, with no Hoenn starter and no gift, as
+Elm treats a visitor to Johto. Do not run the truck or household setup.
 
 The revised [Johto story design](johto-independent-story-beats.md#who-plays-which-story)
 supersedes the next paragraph once it is implemented. Visitors then receive no

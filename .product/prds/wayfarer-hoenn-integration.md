@@ -120,14 +120,14 @@ The player reaches Littleroot and Route 101 through Hoenn's open settlement
 network. Birch's adapted rescue uses a Pokémon from the existing party instead
 of forcing Emerald's starter-selection bag.
 
-After the rescue, the player selects Treecko, Torchic, or Mudkip for Hoenn's
-local rival branches. Birch offers the selected Pokémon as an optional gift,
-which may be accepted immediately or left with him. The choice and gift state
-remain separate from the HNS starter and Silver's party selection.
+After the rescue, Birch thanks the player and rates their Pokédex. A visitor
+gets no Treecko, Torchic, or Mudkip and no gift from him, matching Elm's and
+Oak's visitors. Those three Pokémon stay part of the Hoenn-origin opening.
 
-Canceling the local starter choice postpones only rival-dependent Hoenn story.
-Open exploration remains available. Once the choice is committed, it cannot be
-changed, but accepting the gift is not required to continue the campaign.
+Brendan's and May's rivalry belongs to Hoenn-origin players. A visitor never
+battles them. The gifts their scenes carry, the Itemfinder, HM Fly, and the
+Go-Goggles, reach a visitor in short scenes with no battle, independently of
+Birch. Open exploration remains available throughout.
 
 ### Open exploration and authored content
 

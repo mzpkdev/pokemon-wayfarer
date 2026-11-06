@@ -979,6 +979,11 @@ describe.sequential("Wayfarer League Circuit", () => {
       player: { position: { map: "hoenn-league-lobby", x: 9, y: 3 } },
       party: [{ species: "lapras", level: 100, moves: ["surf"] }],
       circuit: { badges: { hoenn: 8 } },
+      // The Space Center is won and Steven is home, still owing HM Dive.
+      story: {
+        vars: { hoennStevensHouseState: 1 },
+        flags: { hoennHideStevensHouseSteven: false },
+      },
     })
     const rating = (await game.state.read()).circuit.trainerRating
     await acceptInvitation(game, "hoenn")
@@ -1091,6 +1096,31 @@ describe.sequential("Wayfarer League Circuit", () => {
     await expect(game.state.read()).resolves.toMatchObject({
       circuit: { trainerRating: completedRating, clears: { hoenn: true }, run: { active: false } },
     })
+
+    // The win leaves Steven's Dive owed. He stands at home with his letter and Beldum still away.
+    await expect(game.story.var("hoennStevensHouseState")).resolves.toBe(1)
+    await game.player.warp("mossdeep-city", 19, 11, "up")
+    await game.wait.forReady()
+    await game.player.move("up")
+    await game.wait.until(
+      (state) => state.map.name === "mossdeep-stevens-house" && state.dialogueOpen,
+      "Steven's Dive scene",
+    )
+    expect(
+      (await game.state.read()).objects.some((object) => object.localId === 2 && object.visible),
+    ).toBe(false)
+    await game.wait.until(
+      async (state) => {
+        if (state.ready && !state.scriptActive && !state.controlsLocked) return true
+        await game.controls.press("a")
+        await game.wait.frames(20)
+        return false
+      },
+      "Steven's Dive scene ended",
+      3_600,
+    )
+    await expect(game.story.flag("hoennDiveAuthorized")).resolves.toBe(true)
+    await expect(game.story.var("hoennStevensHouseState")).resolves.toBe(2)
   }, 600_000)
 
   it("clears a lost attempt before save/load and admits a fresh retry", async () => {

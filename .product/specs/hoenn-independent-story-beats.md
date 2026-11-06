@@ -78,8 +78,8 @@ and HM Fly, among others.
 
 **Hoenn starter.** A player has a Hoenn starter once `VAR_HOENN_STARTER_CHOICE`
 holds Treecko, Torchic, or Mudkip. Hoenn-origin players have one from their
-opening. Visitors have one only after Birch's rescue and the choice in his
-lab, as the [content specification](wayfarer-hoenn-content-port.md) defines.
+opening. Visitors never have one: Birch gives them no starter, as the
+[content specification](wayfarer-hoenn-content-port.md) defines.
 
 **Legendary threshold.** The later Rayquaza, Groudon, and Kyogre captures use
 the one constant Johto's legendaries use, TR 55 (`WAYFARER_LEGENDARY_TR` in
@@ -246,45 +246,77 @@ both are compiled in with this work.
 - A waiting Wally scene never blocks the Mauville Gym, Wattson's request, or
   Victory Road.
 
+### Birch's opening and his rating
+
+Birch's opening is over when he has given the Pokédex, for a Hoenn-origin
+player, or when he has been rescued, for a visitor. A visitor's rescue uses
+their own party. In his lab he thanks them and rates their Pokédex, and that is
+the whole scene: no starter, no gift, no rival. This matches Elm's and Oak's
+visitors. A visitor who somehow reaches him with no Pokédex is handed one first,
+so there is something to rate.
+
+- `ProfBirch_EventScript_CheckOpeningOver` is the one test, and it derives the
+  answer from the origin and those two facts, so saves need no new state.
+- His rating and his place follow that test. Petalburg Gym and Wally play no
+  part.
+- He stays in his lab. The clock advances a different copy of
+  `VAR_BIRCH_STATE`, and this design leaves that alone.
+- A Hoenn-origin player can ask for the rating right after the Pokédex, in the
+  same visit.
+- Birch's Treecko, Torchic, and Mudkip stay for a Hoenn-origin player. His
+  Johto starters for a completed Hoenn Pokédex are a late reward for every
+  origin and are not part of the opening.
+
 ### Brendan and May
 
-A player without a Hoenn starter does not meet Brendan or May. Every scene
-below waits, and plays once the player has a starter and meets its other
-conditions.
+Their rivalry belongs to Hoenn-origin players, as Blue's and Silver's belong to
+their own. For those players nothing here changes.
 
-| Chapter | Kind | Waiting behavior |
+A visitor never battles them, never advances a rival chapter, and is never told
+of a past meeting. No rival scene reads the Hoenn starter for a visitor or
+depends on Birch. Where a scene carries a gift, the visitor gets a short scene
+once, with no battle. The rival introduces themself the first time, by name and
+as Professor Birch's child, hands the gift over, and leaves. A later scene skips
+the introduction.
+
+| Scene | Hoenn origin | Visitor |
 | --- | --- | --- |
-| Route 103 | Talk | Already waits. |
-| Oldale and the lab handoff | Follow the Route 103 win | No change. |
-| Rustboro and the Route 104 fallback | Triggers, optional battle | The triggers do nothing; the rival is not shown. |
-| Route 110 | Forced triggers; the Itemfinder | The triggers do nothing; the rival is not shown. |
-| Route 119 | Forced trigger; HM Fly | The trigger does nothing. |
-| Lavaridge | Frame script after Flannery; the Go-Goggles | The scene does not start and the rival is not placed. The desert survey gives this player the Go-Goggles. |
-| Lilycove | Talk | The rival is not shown. |
+| Route 103 | Talk, battle | The rival is not shown. |
+| Oldale and the lab handoff | Follow the Route 103 win | They never play. |
+| Rustboro and the Route 104 fallback | Triggers, optional battle | The rival is not shown; the triggers do nothing. |
+| Route 110 | Forced trigger, battle, the Itemfinder | The trigger plays once with no battle and gives the Itemfinder. |
+| Route 119 | Forced trigger, battle, HM Fly, then Scott | The trigger plays once with no battle and gives HM Fly. Scott does not walk on. |
+| Lavaridge | After Flannery, the Go-Goggles | Plays after Flannery with no battle, with the visitor's lines. |
+| Lilycove | Talk, optional battle | The rival is not shown. |
+| National Dex scene | The rival is present | The rival is not shown; Birch's lines do not change. |
+| Their mother | Says they went to Route 103 | Says they are too busy to notice the visit. |
 
-- A waiting trigger returns before it locks the player and leaves its own
-  state untouched, so it fires on a later crossing.
-- Lavaridge's scene is a frame script on `VAR_LAVARIDGE_TOWN_STATE` 1, which
-  Flannery's defeat set in Emerald. A frame script that returns without changing its
-  state runs again every frame and freezes the player. So the town must not
-  sit at state 1 without a starter: Flannery's defeat and a full Bag park the
-  scene at state 4. The transition script places the rival only when the scene
-  is armed.
-- The scene is staged for a player standing at the Gym door or the Pokémon
-  Center's front door, and has no other layout. Arm a parked scene only when a
-  player with a starter walks out of one of those two doors, so it plays where
-  it is staged. The Pokémon Center's back exit does not arm it.
+- `WayfarerIsHoennOrigin` is the test. `FLAG_MET_HOENN_RIVAL_AS_VISITOR`
+  remembers the introduction.
+- A visitor who already holds the Itemfinder or HM Fly gets no scene there, and
+  the introduction moves to the next one. These are the same items Johto gives.
+  With no room for the gift the scene waits for a later visit.
+- Scott's Route 119 line says the player just beat the rival, so he stays away
+  from a visitor. The meeting still raises `VAR_SCOTT_STATE`, so his top reward
+  stays reachable, including for a visitor who skips the scene by holding Fly.
+- **Triggers must not run a special and end.** The engine treats that as a
+  started script, and because the player's step has not finished it runs again
+  every frame, which freezes the player. So a trigger reads a flag that the
+  map's transition script set, and that script makes the origin check:
+  `FLAG_HIDE_ROUTE_110_RIVAL`, `FLAG_HIDE_RUSTBORO_CITY_RIVAL` (read by Route
+  104 too), and Route 119's `FLAG_TEMP_1`.
+- Lavaridge's scene is a frame script on `VAR_LAVARIDGE_TOWN_STATE` 1, staged for
+  a player at the Gym door or the Pokémon Center's front door. It has no other
+  layout. Flannery's defeat and a full Bag park it at state 4, and walking out
+  of one of those two doors arms it, so leaving the Gym after Flannery plays it
+  at once. The Pokémon Center's back exit, the road, and Fly do not arm it.
 - No rival scene blocks a road, the Weather Institute, the Devon errands, or
-  Flannery's Gym while it waits.
-- The Itemfinder and HM Fly stay rewards of their scenes.
-- The same guard applies to every other reader of `VAR_HOENN_STARTER_CHOICE`
-  that has no branch for a missing starter, such as the Mauville Game Corner
-  doll. No reader may freeze a player or default to a starter.
-- Rustboro and Route 104 stay missable as in Emerald: sailing with Briney
-  before meeting the rival there skips that scene.
-- Chapters key on the starter, not on the Route 103 battle. A player who takes
-  a starter and skips Route 103 hears lines that assume that meeting. This is
-  accepted.
+  Flannery's Gym.
+- The Mauville Game Corner girl's spare doll is the player's Hoenn starter, so a
+  visitor never gets it. The doll stays a coin prize. No reader of
+  `VAR_HOENN_STARTER_CHOICE` may freeze a player or default to a starter.
+- Rustboro and Route 104 stay missable for a Hoenn-origin player as in Emerald:
+  sailing with Briney before meeting the rival there skips that scene.
 
 ### Mt. Pyre and Magma Hideout
 
@@ -353,6 +385,12 @@ leave Hoenn between their steps.
 - Seafloor Cavern's story starts only when both branches are done: Aqua has
   escaped in the submarine (`FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE`), and the
   player has Steven's Dive (`FLAG_RECEIVED_HM_DIVE`).
+- The Hall of Fame must not overwrite a pending Dive. It writes
+  `VAR_STEVENS_HOUSE_STATE` only at 0; states 1 and 3 still owe the HM. So a
+  Hoenn League win between the Space Center and Steven's house loses nothing.
+- As a result Steven can be home after a League win. His letter says he has
+  left, so the letter and the Beldum stay out of sight while he is home and
+  appear once he has gone, in Seafloor Cavern.
 - That flag is also Hoenn's Dive authorization, and only Steven sets it. A
   player therefore cannot reach the cavern without the Mossdeep branch, and
   the state the guard exists for is "Steven's Dive, but Aqua has not escaped".
@@ -402,7 +440,8 @@ captures do. "TR 55" here means `WAYFARER_LEGENDARY_TR`: 55 on today's scale and
   as today. Interacting with it below TR 55 gives a not-ready line and leaves
   it there. At TR 55 the battle starts.
 - **Groudon and Kyogre.** The Weather Institute scientist reports abnormal
-  weather once the crisis is resolved and the player has TR 55. Remove the
+  weather once the crisis is resolved and the player has TR 55. He is the only
+  source of the report, so these two also need the Institute rescued. Remove the
   `FLAG_SYS_GAME_CLEAR` check from the scientist and from the 1F hint: no Hall
   of Fame in any region is needed, and none is enough. Below the threshold the
   scientist keeps the line he has when there is no abnormal weather. The
@@ -467,12 +506,17 @@ Mechanical checks extend the existing script and journey tests. Cover:
 - **Wally:** visit Mauville and Victory Road before the tutorial; Wally is
   absent and nothing is blocked. Reach Victory Road with and without the
   Mauville win.
-- **Rivals:** as a visitor with no starter, cross the Rustboro, Route 104,
-  Route 110, and Route 119 triggers, beat Flannery and walk out into
-  Lavaridge, and visit Lilycove. The player keeps control and meets no rival.
-  Take a starter and return; each scene plays and pays once. For Lavaridge,
-  enter from Route 112 and then leave the Pokémon Center; the scene plays at
-  that door. Use the Game Corner doll without a starter.
+- **Rivals:** as a visitor who never met Birch, collect Fly on Route 119, the
+  Go-Goggles at Lavaridge, and the Itemfinder on Route 110, in that order. No
+  battle, one introduction, nothing freezes. Cross the Rustboro and Route 104
+  triggers and visit Route 103 and Lilycove: no rival, and the player walks on.
+  Repeat holding the Itemfinder and Fly: no scene, and Scott's count still
+  rises. Play the National Dex scene as a visitor: no rival. As a Hoenn-origin
+  player, the Route 110 and 119 battles still play.
+- **Birch:** a visitor is thanked and rated right after the rescue with no
+  starter offered; a Hoenn-origin player is rated right after the Pokédex. Never
+  enter Petalburg Gym.
+- **Steven:** win the Hoenn League at Steven's-house state 1, then collect Dive.
 - **Mt. Pyre:** climb to the summit before Mt. Chimney. No Aqua, no theft,
   the old lady speaks of orbs still in her care, and access is ordinary.
   Finish Mt. Chimney and return; the theft plays. Cross Route 121 before

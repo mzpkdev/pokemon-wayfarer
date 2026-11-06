@@ -11,10 +11,11 @@ LilycoveCity_OnTransition:
 	call_if_unset FLAG_MET_RIVAL_LILYCOVE, LilycoveCity_EventScript_ShowOrHideRival
 	end
 
-@ The rival shops here until their battle is won or the HALL OF FAME sends them home, but not for a
-@ player without BIRCH's starter
+@ The rival shops here until their battle is won or the HALL OF FAME sends them home, but only for a
+@ player who started in HOENN
 LilycoveCity_EventScript_ShowOrHideRival::
-	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, LilycoveCity_EventScript_HideRival
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	goto_if_eq VAR_RESULT, FALSE, LilycoveCity_EventScript_HideRival
 	goto_if_set FLAG_SYS_GAME_CLEAR, Common_EventScript_NopReturn
 	clearflag FLAG_HIDE_LILYCOVE_CITY_RIVAL
 	return
@@ -220,7 +221,6 @@ LilycoveCity_EventScript_AquaGrunt4::
 	end
 
 LilycoveCity_EventScript_Rival::
-	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, WayfarerHoennVisitor_EventScript_RivalWaitsForStarter
 	lock
 	faceplayer
 	checkplayergender
