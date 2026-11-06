@@ -193,6 +193,7 @@ export const maps = {
   "dragons-den-cavern": { mapGroup: 24, mapNum: 31 },
   "test-map-1": { mapGroup: 30, mapNum: 27 },
   "petalburg-city": { mapGroup: 31, mapNum: 0 },
+  "petalburg-wallys-house": { mapGroup: 39, mapNum: 0 },
   "petalburg-gym": { mapGroup: 39, mapNum: 1 },
   "mauville-city": { mapGroup: 31, mapNum: 2 },
   "mauville-gym": { mapGroup: 41, mapNum: 0 },

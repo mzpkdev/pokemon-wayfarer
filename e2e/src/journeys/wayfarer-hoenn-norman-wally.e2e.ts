@@ -81,6 +81,47 @@ const leaveThrough = async (
   await game.wait.frames(60)
 }
 
+/** Wally's catching tutorial, then NORMAN at the back of his Gym, through Wally's father's thanks. */
+const tutorialThenNorman = async (game: GameSession): Promise<void> => {
+    await game.player.warp("petalburg-gym", 4, 108, "up")
+    await game.wait.forReady()
+    await game.player.interact()
+    await playSceneUntil(
+      game,
+      async () => (await game.story.var("hoennPetalburgGymState")) === 6,
+      "The tutorial did not finish",
+    )
+
+    // The Gym reloaded around the player: its rooms stand open and the guide is in.
+    await expectFreeAt(game, "petalburg-gym", 4, 108)
+    await expect(game.story.flag("hidePetalburgGymGreeter")).resolves.toBe(false)
+    await stepOpening(game, "up")
+    await stepOpening(game, "up")
+
+    // NORMAN waits at the back of the Gym, not at the entrance where he gave the tutorial.
+    await game.player.warp("petalburg-gym", 4, 3, "up")
+    await game.wait.forReady()
+    const atTheBack = await game.state.read()
+    expect(atTheBack.objects.find((object) => object.localId === norman)?.y).toBe(2)
+    await game.player.interact()
+    await advanceOpeningUntil(game, (s) => s.dialogueOpen, "Norman did not answer")
+    expect(await game.dialogue.text()).not.toContain("BADGES")
+    await playSceneUntil(
+      game,
+      async () => (await game.story.var("hoennPetalburgCityState")) >= 5,
+      "Norman's win and Wally's father did not finish",
+    )
+    await expect(game.state.read()).resolves.toMatchObject({ circuit: { badges: { hoenn: 1 } } })
+
+  // WALLY is still ahead in Mauville, so his mother has no reason to fear he ran away.
+  await game.player.warp("petalburg-wallys-house", 7, 6, "up")
+  await game.wait.forReady()
+  await game.player.interact()
+  await advanceOpeningUntil(game, (s) => s.dialogueOpen, "Wally's mother did not answer")
+  expect(await game.dialogue.text()).toContain("really happy")
+  await playSceneUntil(game, async () => true, "Wally's mother did not finish")
+}
+
 describe.sequential("Wayfarer Hoenn Norman, Wally and the Lavaridge rival", () => {
   let game: GameSession
 
@@ -128,35 +169,7 @@ describe.sequential("Wayfarer Hoenn Norman, Wally and the Lavaridge rival", () =
     "readies the Gym from the tutorial, and Norman battles with no Hoenn badge",
     { timeout: 300_000 },
     async () => {
-      await game.player.warp("petalburg-gym", 4, 108, "up")
-      await game.wait.forReady()
-      await game.player.interact()
-      await playSceneUntil(
-        game,
-        async () => (await game.story.var("hoennPetalburgGymState")) === 6,
-        "The tutorial did not finish",
-      )
-
-      // The Gym reloaded around the player: its rooms stand open and the guide is in.
-      await expectFreeAt(game, "petalburg-gym", 4, 108)
-      await expect(game.story.flag("hidePetalburgGymGreeter")).resolves.toBe(false)
-      await stepOpening(game, "up")
-      await stepOpening(game, "up")
-
-      // NORMAN waits at the back of the Gym, not at the entrance where he gave the tutorial.
-      await game.player.warp("petalburg-gym", 4, 3, "up")
-      await game.wait.forReady()
-      const atTheBack = await game.state.read()
-      expect(atTheBack.objects.find((object) => object.localId === norman)?.y).toBe(2)
-      await game.player.interact()
-      await advanceOpeningUntil(game, (s) => s.dialogueOpen, "Norman did not answer")
-      expect(await game.dialogue.text()).not.toContain("BADGES")
-      await playSceneUntil(
-        game,
-        async () => (await game.story.var("hoennPetalburgCityState")) >= 5,
-        "Norman's win and Wally's father did not finish",
-      )
-      await expect(game.state.read()).resolves.toMatchObject({ circuit: { badges: { hoenn: 1 } } })
+      await tutorialThenNorman(game)
 
       // Mr. Briney keeps sailing and Wattson stays in his Gym: Norman's win is only Norman's.
       await expect(game.story.flag("hoennHideRoute104BrineyBoat")).resolves.toBe(false)
@@ -265,5 +278,16 @@ describe.sequential("Wayfarer Hoenn Norman, Wally and the Lavaridge rival", () =
     )
     await expect(game.inventory.count("goGoggles")).resolves.toBe(1)
     await expect(game.story.flag("hoennReceivedGoGoggles")).resolves.toBe(true)
+  })
+
+  it("gives a Hoenn native the same road to Norman", { timeout: 300_000 }, async () => {
+    await game.arrange({
+      checkpoint: "hoenn-before-rescue",
+      player: { facing: "up", position: { map: "petalburg-gym", x: 4, y: 108 } },
+      story: { flags: { disableEncounters: true, disableTrainers: true } },
+      party: [{ species: "salamence", level: 100 }],
+      determinism: { textSpeed: "instant" },
+    })
+    await tutorialThenNorman(game)
   })
 })

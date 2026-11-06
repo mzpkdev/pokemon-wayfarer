@@ -62,6 +62,12 @@ class NormanTests(unittest.TestCase):
             clear.index("call EventScript_HideMrBriney"),
         )
 
+    def test_wallys_mother_says_he_left_only_once_he_has(self):
+        mother = label_body(script("PetalburgCity_WallysHouse"), "PetalburgCity_WallysHouse_EventScript_WallysMom")
+        self.assertNotIn("FLAG_RECEIVED_HM_SURF", mother)
+        self.assertIn("goto_if_unset FLAG_DEFEATED_WALLY_MAUVILLE", mother)
+        self.assertIn("goto_if_set FLAG_DEFEATED_LAVARIDGE_GYM", mother)
+
     def test_juan_counts_no_badges(self):
         source = script("SootopolisCity_Gym_1F")
         self.assertNotIn("FLAG_BADGE06_GET", source)
