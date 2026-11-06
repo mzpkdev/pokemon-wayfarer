@@ -84,7 +84,9 @@ PokéNav tutorial, and the rival:
   `FLAG_HIDE_SLATEPORT_CITY_TEAM_AQUA` (`:18`). That flag hides the Aqua queue
   outside the museum, whose first two grunts stand on (30,27) and (31,27), the
   only tiles that reach the museum door. Until a player talks to Dock, the
-  museum cannot be entered.
+  museum cannot be entered. Only his default branch sets the flag: his script
+  first branches on `FLAG_SYS_GAME_CLEAR` (`:6`) and `FLAG_BADGE07_GET` (`:7`,
+  the "MR. BRINEY's joined us" line), and both return before it.
 - The harbor hides its patrons, including the ferry attendant, on entry at
   harbor state 1 (`maps/SlateportCity_Harbor/scripts.inc:22`,
   `FLAG_HIDE_SLATEPORT_CITY_HARBOR_PATRONS`), and `src/wayfarer_ferry.c:408–411`
@@ -184,7 +186,8 @@ PokéNav tutorial, and the rival:
   (`maps/MauvilleCity_Gym/scripts.inc:103`) and Norman's defeat
   (`maps/PetalburgCity_Gym/scripts.inc:571`).
 - After a full Bag in the badge scene, TM Shock Wave is claimable only from
-  the Gym's Wattson (`maps/MauvilleCity_Gym/scripts.inc:81`).
+  the Gym's Wattson (`maps/MauvilleCity_Gym/scripts.inc:81`). The badge scene
+  calls the relocation (`:103`) before it gives the TM (`:112`).
 - The street Wattson gives the Basement Key and, once
   `VAR_NEW_MAUVILLE_STATE` is 2, TM Thunderbolt
   (`maps/MauvilleCity/scripts.inc:413–444`). New Mauville's door checks only
@@ -210,7 +213,8 @@ PokéNav tutorial, and the rival:
   It is the only setter of `FLAG_PETALBURG_MART_EXPANDED_ITEMS` and the only
   thing that shows the Gym guide. Below state 6 the Gym's room doors are
   locked and Norman stands at the entrance
-  (`maps/PetalburgCity_Gym/scripts.inc:40,970,998`).
+  (`maps/PetalburgCity_Gym/scripts.inc:9,40,970,998`). In Wayfarer nothing
+  reads states 3 to 5.
 - Lines that count badges: `NormanIntro` and `VisitorNormanIntro` ("So, you
   did get four GYM BADGES", `:1490`, `:1885`; the visitor one adds "as I
   promised"), and the advice lines.
@@ -239,6 +243,11 @@ commits a choice (`maps/LittlerootTown_ProfessorBirchsLab/scripts.inc:126–141`
 | Route 119 (`maps/Route119/scripts.inc:34–150`) | Trigger at (25,31) while `VAR_ROUTE119_STATE` is 0. Forced; the rival is added by script. Gives HM Fly. | The starter. |
 | Lavaridge (`maps/LavaridgeTown/scripts.inc:57–141`) | A frame script at `VAR_LAVARIDGE_TOWN_STATE` 1, set by Flannery's defeat; the transition script places the rival at that state. Gives the Go-Goggles. | Nothing. |
 | Lilycove (`maps/LilycoveCity/scripts.inc:209–371`) | Talk; visible from the start. | The starter. |
+
+Lavaridge's scene has two layouts: for a player at the Pokémon Center door,
+and otherwise for a player at the Gym door
+(`maps/LavaridgeTown/scripts.inc:39–50,182–209,253–260`). Its transition
+script sets states 2 and 3 back to 1 (`:9–10,20–31`).
 
 Route 110, Route 119, Rustboro, Route 104, and Lilycove each end in a
 `switch VAR_HOENN_STARTER_CHOICE` with no default case. On the E2E ROM, a

@@ -119,14 +119,19 @@ other twelve do. Scott's meetings may then happen in any order.
 - The deliveries complete in either order, and neither needs the other. From
   Dewford, Briney offers Slateport once the Letter is delivered or the player
   holds the Parts.
-- Dock mentions the Devon Goods only to a player who holds the Parts. Talking
-  to him still sends Team Aqua's queue away from the museum door for every
-  player: today that talk is the only thing that clears the queue
-  (`FLAG_HIDE_SLATEPORT_CITY_TEAM_AQUA`), and the queue stands on the only
-  tiles that reach the door. The queue is also gone once the harbor scene has
-  played.
+- Dock mentions the Devon Goods only to a player who holds the Parts.
+- Talking to Dock sends Team Aqua's queue away from the museum door
+  (`FLAG_HIDE_SLATEPORT_CITY_TEAM_AQUA`) for every player and on every branch
+  of his script. Today only his default branch does, and the queue stands on
+  the only tiles that reach the door, so a player with the Mind Badge or a
+  Kanto or Johto Hall of Fame who talks to him first never opens the museum.
+  Hide the queue before his script branches. The queue is also gone once the
+  harbor scene has played.
+- Dock's Mind Badge line, that Mr. Briney has joined the shipyard, goes with
+  the shipyard cameo (see [Rustboro theft and Peeko](#rustboro-theft-and-peeko)).
 - Ordinary access to the museum, the shipyard, the harbor, Granite Cave, and
-  transport stays open at every step.
+  transport stays open at every step. The one exception is Slateport's ferry
+  berth while the harbor scene is waiting to play, described below.
 
 **Stern.** Stern stands in one place at a time:
 
@@ -195,10 +200,14 @@ Lavaridge's shared Go-Goggles check. No change.
   claimed, he is outside in Mauville City with the New Mauville request, as in
   Emerald. Norman plays no part: remove the `FLAG_DEFEATED_PETALBURG_GYM`
   condition from the relocation and the relocation call from Norman's defeat.
+- Where he stands is decided only on entering Mauville City and on entering
+  the Gym, from those three facts. Remove the relocation call from the badge
+  scene: it runs before TM Shock Wave is given, and he must not vanish in
+  front of the player.
 - A full Bag in the badge scene leaves TM Shock Wave with the Gym's Wattson.
   He does not step outside while it is owed.
-- Once TM Thunderbolt is claimed he is back in the Gym for good. No entry
-  check may move him outside again.
+- Once TM Thunderbolt is claimed he is back in the Gym for good, including for
+  a player who walks straight from the street into the Gym.
 - The Basement Key, New Mauville's door and generator, TM Thunderbolt, his
   return to the Gym, and his rematch stay as they are.
 - His first badge battle is never out of reach, since he leaves the Gym only
@@ -209,12 +218,14 @@ Lavaridge's shared Go-Goggles check. No change.
 - Norman accepts the challenge once Wally's catching tutorial is done. Remove
   the four-Hoenn-badge condition and the advice lines that send the player to
   other Gyms.
-- The end of the tutorial readies the Gym for battle. Today
-  `Common_EventScript_ReadyPetalburgGymForBattle` runs only when four other
-  Gyms have raised `VAR_PETALBURG_GYM_STATE` to 6. It is the only thing that
-  unlocks the Gym's rooms and trainers, puts Norman at the back, shows the Gym
-  guide, and expands Petalburg Mart's stock. Run it at the end of the
-  tutorial, and remove the other Gyms' increments.
+- The end of the tutorial readies the Gym for battle. Today the Gym is ready
+  only when four other Gyms have raised `VAR_PETALBURG_GYM_STATE` to 6. At
+  that state the Gym opens its rooms and puts Norman at the back, and the same
+  moment runs `Common_EventScript_ReadyPetalburgGymForBattle`, which shows the
+  Gym guide and expands Petalburg Mart's stock. At the end of the tutorial,
+  set the state to 6 and call that script, and remove the other Gyms'
+  increments. The rooms open on the player's next entry, since the Gym's load
+  script has already run for this visit.
 - No Norman line counts or asks for badges. `NormanIntro` and
   `VisitorNormanIntro` open without "four GYM BADGES" and, for the visitor,
   without "as I promised".
@@ -251,9 +262,13 @@ conditions.
 - Lavaridge's scene is a frame script on `VAR_LAVARIDGE_TOWN_STATE` 1, which
   Flannery's defeat sets. A frame script that returns without changing its
   state runs again every frame and freezes the player. So the town must not
-  sit at state 1 without a starter: park the scene at another value, and arm
-  it on entering Lavaridge once the player has a starter. The transition
-  script places the rival only when the scene is armed.
+  sit at state 1 without a starter: park the scene at another value that the
+  transition script does not reset. The transition script places the rival
+  only when the scene is armed.
+- The scene is staged for a player standing at the Gym door or the Pokémon
+  Center door, and has no other layout. Arm a parked scene only when a player
+  with a starter walks out of one of those two doors, so it plays where it is
+  staged.
 - No rival scene blocks a road, the Weather Institute, the Devon errands, or
   Flannery's Gym while it waits.
 - The Itemfinder and HM Fly stay rewards of their scenes.
@@ -410,14 +425,16 @@ Mechanical checks extend the existing script and journey tests. Cover:
   them. Deliver the Letter and the Parts in both orders, with travel and a
   save and reload between. Each delivery pays once.
 - **Museum door:** as a player with no Parts, talk to Dock. The Aqua queue
-  leaves and the museum can be entered.
+  leaves and the museum can be entered. Repeat with the Mind Badge, and with a
+  Kanto Hall of Fame, before the first talk.
 - **Late Parts:** finish Magma Hideout and the harbor scene first, then hand
   the Parts to Stern at the harbor. No confrontation plays, Scott's count
   includes the museum meeting, and harbor progress does not regress. Stern is
   never in two places.
 - **Harbor:** win the Mind Badge before Magma Hideout, then play the harbor
   scene. The attendant and the ferry berth return when the scene ends. Do the
-  same without the Mind Badge.
+  same without the Mind Badge. Sail toward Slateport while the scene is
+  waiting.
 - **Briney:** beat Norman in the middle of the Peeko rescue and before either
   delivery, and win the Mind Badge. Briney still sails and is in one place.
 - **Weather Institute:** clear it before and after the Mt. Pyre theft and
@@ -437,8 +454,9 @@ Mechanical checks extend the existing script and journey tests. Cover:
 - **Rivals:** as a visitor with no starter, cross the Rustboro, Route 104,
   Route 110, and Route 119 triggers, beat Flannery and walk out into
   Lavaridge, and visit Lilycove. The player keeps control and meets no rival.
-  Take a starter and return; each scene plays and pays once. Use the Game
-  Corner doll without a starter.
+  Take a starter and return; each scene plays and pays once. For Lavaridge,
+  enter from Route 112 and then leave the Pokémon Center; the scene plays at
+  that door. Use the Game Corner doll without a starter.
 - **Mt. Pyre:** climb to the summit before Mt. Chimney. No Aqua, no theft,
   the old lady speaks of orbs still in her care, and access is ordinary.
   Finish Mt. Chimney and return; the theft plays.
