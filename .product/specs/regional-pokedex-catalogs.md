@@ -3,6 +3,11 @@
 PRD: [Regional and expanding National Pokédex](../prds/regional-national-pokedex.md)
 Implemented: Yes
 
+Superseded in part: [Home Pokédex lists](home-pokedex-lists.md) replaces the
+three catalogs with two home lists, makes the National facade cover every
+enabled species, and retires the extension grants. This document stays the
+record of today's build until that work lands.
+
 ## Scope
 
 This specification depends on

@@ -540,7 +540,9 @@ status above. Emulator acceptance is recorded separately from source audits.
 - Stock profile initialization selects the matching initial Pokédex catalog
   after the shared reset: Johto for New Bark, Hoenn for Littleroot, and Kanto
   for Pallet. Later professors, travel, and Continue preserve catalog selection
-  and extensions.
+  and extensions. Once [Home Pokédex lists](home-pokedex-lists.md) lands, the
+  Johto and Kanto values both select the Kanto–Johto home list and Hoenn the
+  Hoenn home list.
   This supersedes the earlier unconditional Johto default for playable starts
   in the regional Pokédex specification.
 - Shared defaults and the explicitly HNS-sourced baseline run before profile
