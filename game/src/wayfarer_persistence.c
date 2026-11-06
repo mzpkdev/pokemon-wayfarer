@@ -769,6 +769,22 @@ u16 WayfarerPowerPlant_IsZapdosEligible(void)
         && GetTrainerRating() >= WAYFARER_BIRD_CAPTURE_TR;
 }
 
+// Rayquaza at Sky Pillar and the Weather Institute's abnormal-weather reports, which alone open
+// Terra and Marine Cave: the crisis resolved, plus the legendary threshold. No Hall of Fame counts.
+u16 WayfarerHoenn_IsLateLegendaryReady(void)
+{
+    return VarGet(WAYFARER_HOENN_SKY_PILLAR_STATE_VAR) >= 2
+        && GetTrainerRating() >= WAYFARER_LEGENDARY_TR;
+}
+
+// Team Aqua may name Mt. Pyre only while it leads somewhere: Team Magma's move on the summit
+// follows Mt. Chimney, and once the orbs are taken the plan is over.
+u16 WayfarerHoenn_IsMtPyreLead(void)
+{
+    return FlagGet(WAYFARER_HOENN_MT_CHIMNEY_DONE_FLAG)
+        && !FlagGet(WAYFARER_HOENN_MT_PYRE_ORB_FLAG);
+}
+
 void WayfarerGrantKantoBadge15(void)
 {
     if (GetBadgeStateForRegion(REGION_KANTO, 6))
