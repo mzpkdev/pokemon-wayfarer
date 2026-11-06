@@ -1502,4 +1502,79 @@ TEST("Wayfarer friendship state rides in SaveBlock3 and an impossible first-win 
     EXPECT(WayfarerPersistentStateIsValid());
 }
 
+static u16 MusicAt(u16 mapId)
+{
+    struct WarpData warp = {.mapGroup = MAP_GROUP(mapId), .mapNum = MAP_NUM(mapId), .warpId = WARP_ID_NONE};
+
+    return GetLocationMusic(&warp);
+}
+
+#define HOENN_WEATHER_CTRL_FLAG HOENN_FLAG_ID(0x88A)
+
+TEST("Wayfarer Hoenn's storm music follows the crisis and stays on Hoenn's own routes")
+{
+    struct WarpData sameNumberElsewhere = {.mapGroup = 0, .mapNum = MAP_NUM(MAP_LILYCOVE_CITY), .warpId = WARP_ID_NONE};
+
+    WayfarerInitPersistentState();
+    FlagClear(HOENN_WEATHER_CTRL_FLAG);
+    VarSet(HOENN_VAR_ID(VAR_SOOTOPOLIS_CITY_STATE), 0);
+    EXPECT_EQ(MusicAt(MAP_LILYCOVE_CITY), MUS_LILYCOVE);
+
+    FlagSet(HOENN_WEATHER_CTRL_FLAG);
+    EXPECT_EQ(MusicAt(MAP_LILYCOVE_CITY), MUS_ABNORMAL_WEATHER);
+    EXPECT_EQ(MusicAt(MAP_ROUTE124), MUS_ABNORMAL_WEATHER);
+    EXPECT_NE(GetLocationMusic(&sameNumberElsewhere), MUS_ABNORMAL_WEATHER);
+
+    // The storm reaches the far western routes once the Sky Pillar is open.
+    EXPECT_NE(MusicAt(MAP_ROUTE129), MUS_ABNORMAL_WEATHER);
+    VarSet(HOENN_VAR_ID(VAR_SOOTOPOLIS_CITY_STATE), 4);
+    EXPECT_EQ(MusicAt(MAP_ROUTE129), MUS_ABNORMAL_WEATHER);
+
+    FlagClear(HOENN_WEATHER_CTRL_FLAG);
+    EXPECT_EQ(MusicAt(MAP_LILYCOVE_CITY), MUS_LILYCOVE);
+    VarSet(HOENN_VAR_ID(VAR_SOOTOPOLIS_CITY_STATE), 0);
+}
+
+TEST("Wayfarer Sootopolis falls silent only for Rayquaza's arrival")
+{
+    WayfarerInitPersistentState();
+    FlagClear(HOENN_WEATHER_CTRL_FLAG);
+    VarSet(HOENN_VAR_ID(VAR_SKY_PILLAR_STATE), 0);
+    EXPECT_EQ(MusicAt(MAP_SOOTOPOLIS_CITY), MUS_SOOTOPOLIS);
+    VarSet(HOENN_VAR_ID(VAR_SKY_PILLAR_STATE), 1);
+    EXPECT_EQ(MusicAt(MAP_SOOTOPOLIS_CITY), MUS_NONE);
+    VarSet(HOENN_VAR_ID(VAR_SKY_PILLAR_STATE), 2);
+    EXPECT_EQ(MusicAt(MAP_SOOTOPOLIS_CITY), MUS_SOOTOPOLIS);
+    VarSet(HOENN_VAR_ID(VAR_SKY_PILLAR_STATE), 0);
+}
+
+TEST("Wayfarer the Space Center's invasion theme follows Mossdeep, not Kanto's Clefairy Doll")
+{
+    u16 calm = MusicAt(MAP_MOSSDEEP_CITY_SPACE_CENTER_1F);
+
+    WayfarerInitPersistentState();
+    VarSet(HOENN_VAR_ID(VAR_MOSSDEEP_CITY_STATE), 0);
+    VarSet(VAR_CLEFAIRY_DOLL_STATE, 1);
+    EXPECT_EQ(MusicAt(MAP_MOSSDEEP_CITY_SPACE_CENTER_1F), calm);
+    VarSet(VAR_CLEFAIRY_DOLL_STATE, 0);
+
+    VarSet(HOENN_VAR_ID(VAR_MOSSDEEP_CITY_STATE), 1);
+    EXPECT_EQ(MusicAt(MAP_MOSSDEEP_CITY_SPACE_CENTER_1F), MUS_ENCOUNTER_MAGMA);
+    EXPECT_EQ(MusicAt(MAP_MOSSDEEP_CITY_SPACE_CENTER_2F), MUS_ENCOUNTER_MAGMA);
+    VarSet(HOENN_VAR_ID(VAR_MOSSDEEP_CITY_STATE), 3);
+    EXPECT_EQ(MusicAt(MAP_MOSSDEEP_CITY_SPACE_CENTER_1F), calm);
+    VarSet(HOENN_VAR_ID(VAR_MOSSDEEP_CITY_STATE), 0);
+}
+
+TEST("Wayfarer the Weather Institute's tense theme ends with the occupation")
+{
+    WayfarerInitPersistentState();
+    VarSet(HOENN_VAR_ID(VAR_WEATHER_INSTITUTE_STATE), 0);
+    EXPECT_EQ(MusicAt(MAP_ROUTE119_WEATHER_INSTITUTE_1F), MUS_MT_CHIMNEY);
+    EXPECT_EQ(MusicAt(MAP_ROUTE119_WEATHER_INSTITUTE_2F), MUS_MT_CHIMNEY);
+    VarSet(HOENN_VAR_ID(VAR_WEATHER_INSTITUTE_STATE), 1);
+    EXPECT_NE(MusicAt(MAP_ROUTE119_WEATHER_INSTITUTE_1F), MUS_MT_CHIMNEY);
+    VarSet(HOENN_VAR_ID(VAR_WEATHER_INSTITUTE_STATE), 0);
+}
+
 #endif

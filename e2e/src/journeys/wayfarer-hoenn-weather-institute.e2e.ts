@@ -10,6 +10,10 @@ const READY_TR = 120 // WAYFARER_LEGENDARY_TR on the v0 scale the Wayfarer build
 const CHANGING_WEATHER = "ridiculous to think"
 const REPORT = "I track weather patterns"
 const NO_ROOM = "no more room"
+const MARINE_CAVE_LOCATIONS_START = 9
+const MUS_MT_CHIMNEY = 406
+const MUS_ENCOUNTER_MAGMA = 441
+const MUS_ABNORMAL_WEATHER = 443
 
 const instituteShelly = 3
 const instituteScientist = 5
@@ -25,6 +29,7 @@ const arrange = (
   y: number,
   facing: "up" | "down" | "left" | "right",
   story: Story,
+  party: NonNullable<Arrange["party"]> = [{ species: "salamence", level: 100 }],
 ): Promise<void> =>
   game.arrange({
     checkpoint: "hoenn-before-rescue",
@@ -33,7 +38,7 @@ const arrange = (
       flags: { disableEncounters: true, disableTrainers: true, ...story.flags },
       vars: story.vars,
     },
-    party: [{ species: "salamence", level: 100 }],
+    party,
     determinism: { textSpeed: "instant", rngSeed: 1 },
   })
 
@@ -285,6 +290,106 @@ describe.sequential("Wayfarer Hoenn Weather Institute and late legendaries", () 
     await game.wait.forMap(route)
     await game.wait.forReady()
     expect((await game.state.read()).player).toMatchObject({ x, y: y + 1 })
+  })
+
+  it("reaches Kyogre by diving where the scientist reports rain", { timeout: 240_000 }, async () => {
+    // Groudon beaten, so the report can only be rain. Each row is the dark water a player dives at,
+    // then the tile below that dive's underwater warp, which is a swim away from where they land.
+    const dives: [GameMap, number, number, GameMap, number, number][] = [
+      ["route-105", 11, 29, "underwater-route-105", 13, 5],
+      ["route-105", 21, 54, "underwater-route-105", 17, 67],
+      ["route-125", 9, 17, "underwater-route-125", 22, 11],
+      ["route-125", 54, 19, "underwater-route-125", 45, 31],
+      ["route-127", 58, 10, "underwater-route-127", 57, 6],
+      ["route-127", 62, 31, "underwater-route-127", 67, 39],
+      ["route-129", 17, 15, "underwater-route-129", 26, 4],
+      ["route-129", 43, 20, "underwater-route-129", 32, 22],
+    ]
+    await arrange(
+      game,
+      "weather-institute-2f",
+      2,
+      3,
+      "up",
+      {
+        flags: { ...cleared, hoennDefeatedGroudon: true, hoennDiveAuthorized: true },
+        vars: { ...afterCrisis, hoennWeatherInstituteState: 2, trainerRating: READY_TR },
+      },
+      [{ species: "lapras", level: 100, moves: ["dive", "surf"] }],
+    )
+    expect(await talk(game, "the scientist's report")).toContain("heavy rainfall")
+
+    const location = await game.story.var("hoennAbnormalWeatherLocation")
+    const [route, x, y, underwater, swimX, swimY] = dives[location - MARINE_CAVE_LOCATIONS_START]!
+    const pressAUntil = async (map: GameMap) => {
+      for (let step = 0; step < 12 && (await game.state.read()).map.name !== map; step++) {
+        await game.controls.press("a")
+        await game.wait.frames(60)
+      }
+      await game.wait.forMap(map)
+      await game.wait.forReady()
+    }
+
+    await game.player.warp(route, x, y, "up")
+    await game.wait.forReady()
+    await pressAUntil(underwater)
+
+    await game.player.warp(underwater, swimX, swimY, "up")
+    await game.wait.forReady()
+    await game.player.move("up")
+    await game.wait.forMap("underwater-marine-cave")
+    await game.wait.forReady()
+    // The arrival tile is the door, which can't be surfaced from.
+    await game.player.move("up")
+    // B asks to surface; a press right after the step is ignored, so it may take more than one.
+    for (let press = 0; press < 6; press++) {
+      await game.controls.press("b")
+      await game.wait.frames(40)
+      if ((await game.state.read()).dialogue.fullText.includes("Light is filtering")) break
+    }
+    await pressAUntil("marine-cave-entrance")
+
+    await game.player.warp("marine-cave-entrance", 14, 2, "up")
+    await game.wait.forReady()
+    await game.player.move("up")
+    await game.wait.forMap("marine-cave-end")
+    await game.wait.forReady()
+
+    await game.player.warp("marine-cave-end", 9, 27, "up")
+    await game.wait.forReady()
+    await game.player.move("up")
+    await readScene(game, (state) => state.battle.active, "Kyogre's battle")
+    expect((await game.state.read()).battle.enemy?.species).toBe("kyogre")
+    await flee(game)
+    await readScene(game, (state) => !state.battle.active && !state.dialogueOpen, "the flight")
+    await expect(game.story.flag("hoennDefeatedKyogre")).resolves.toBe(false)
+    await expect(game.story.var("hoennAbnormalWeatherLocation")).resolves.toBe(location)
+  })
+
+  it("plays the themes the story calls for", { timeout: 180_000 }, async () => {
+    const themeAt = async (map: GameMap, x: number, y: number, story: Story) => {
+      await arrange(game, map, x, y, "down", story)
+      await game.wait.forReady()
+      return game.story.mapMusic()
+    }
+    const instituteAt = (state: number) =>
+      themeAt("weather-institute-1f", 2, 12, {
+        flags: cleared,
+        vars: { hoennWeatherInstituteState: state },
+      })
+    const spaceCenter = (vars: Story["vars"]) => themeAt("mossdeep-space-center-1f", 7, 8, { vars })
+    const lilycove = (hoennWeatherCtrl: boolean) =>
+      themeAt("lilycove-city", 27, 7, { flags: { hoennWeatherCtrl } })
+
+    expect(await instituteAt(0)).toBe(MUS_MT_CHIMNEY)
+    expect(await instituteAt(2)).not.toBe(MUS_MT_CHIMNEY)
+
+    expect(await lilycove(true)).toBe(MUS_ABNORMAL_WEATHER)
+    expect(await lilycove(false)).not.toBe(MUS_ABNORMAL_WEATHER)
+
+    expect(await spaceCenter({ hoennMossdeepCityState: 1 })).toBe(MUS_ENCOUNTER_MAGMA)
+    expect(await spaceCenter({ hoennMossdeepCityState: 3 })).not.toBe(MUS_ENCOUNTER_MAGMA)
+    expect(await spaceCenter({ clefairyDollState: 1 })).not.toBe(MUS_ENCOUNTER_MAGMA)
   })
 
   it("keeps Groudon in its cave after the player flees", { timeout: 120_000 }, async () => {
