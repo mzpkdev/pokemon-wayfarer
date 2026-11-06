@@ -9,7 +9,8 @@ import {
 import { rideAquaFromVermilionToSlateport } from "../playbooks/wayfarer-ports"
 
 // Birch rates the Pokédex once the Petalburg Gym has been visited. The script he shares with
-// Elm's old lab used to answer with Elm's errand to Mr. Pokémon instead.
+// Elm's old lab used to answer with Elm's errand to Mr. Pokémon instead. He never offers to
+// register on the phone, which has no contact for him.
 
 /** Reads on with B, which never starts a new talk, until the field is free again. */
 const closeTalk = async (game: GameSession): Promise<void> => {
@@ -34,13 +35,8 @@ const expectBirchRatesPokedex = async (game: GameSession): Promise<void> => {
   await game.player.warp("birch-lab", 6, 5, "up")
   await game.wait.forReady()
 
-  let line = await talkToBirch(game)
-  // With the Pokégear, Birch's first talk in his lab is his own phone registration.
-  if (line.startsWith("PROF. BIRCH: Oh,")) {
-    await closeTalk(game)
-    line = await talkToBirch(game)
-  }
-  expect(line).toContain("PROF. BIRCH: Ah,")
+  // His first words are the rating question, not Emerald's offer to register on the phone.
+  expect(await talkToBirch(game)).toContain("PROF. BIRCH: Ah,")
 
   // A reads on to the question and answers yes: he counts the Pokédex, then rates it.
   await advanceOpeningUntil(
@@ -59,6 +55,7 @@ const expectBirchRatesPokedex = async (game: GameSession): Promise<void> => {
     map: { name: "birch-lab" },
     player: { x: 6, y: 5 },
   })
+  await expect(game.story.flag("hoennBirchRegistered")).resolves.toBe(false)
 }
 
 describe("Wayfarer Hoenn: Birch's Pokédex rating", () => {
@@ -71,6 +68,12 @@ describe("Wayfarer Hoenn: Birch's Pokédex rating", () => {
         determinism: { textSpeed: "instant" },
       })
       await receiveBirchStarter(game, 1)
+      // The starter comes with the Pokégear. Emerald's Birch then registers himself on the phone,
+      // which has no Birch here: before the Gym he only says where the rival went.
+      await game.player.warp("birch-lab", 6, 5, "up")
+      await game.wait.forReady()
+      expect(await talkToBirch(game)).toContain("Gone home")
+      await closeTalk(game)
       await expectBirchRatesPokedex(game)
     } finally {
       await game.close()
