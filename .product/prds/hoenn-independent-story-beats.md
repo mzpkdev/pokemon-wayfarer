@@ -1,7 +1,7 @@
 # Hoenn independent story beats
 
 Status: Agreed product design, revised 2026-11-06 with the owner's decisions on
-the five questions the draft left open. Not implemented.
+the five questions the draft left open. Implemented.
 Specification: [Hoenn independent story beats](../specs/hoenn-independent-story-beats.md)
 
 ## Intent
