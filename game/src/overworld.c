@@ -1359,7 +1359,7 @@ static bool16 NoMusicInSootopolisWithLegendaries(struct WarpData *warp)
 
 static bool16 IsInfiltratedWeatherInstitute(struct WarpData *warp)
 {
-    if (VarGet(VAR_WEATHER_INSTITUTE_STATE))
+    if (VarGet(HOENN_VAR_ID(VAR_WEATHER_INSTITUTE_STATE)))
         return FALSE;
     else if (warp->mapGroup != MAP_GROUP(MAP_ROUTE119_WEATHER_INSTITUTE_1F))
         return FALSE;
