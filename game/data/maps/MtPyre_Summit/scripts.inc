@@ -3,8 +3,21 @@ MtPyre_Summit_MapScripts::
 	.byte 0
 
 MtPyre_Summit_OnTransition:
+	call_if_eq VAR_MT_PYRE_STATE, 0, MtPyre_Summit_EventScript_SetAquaPresence
 	call_if_eq VAR_MT_PYRE_STATE, 2, MtPyre_Summit_EventScript_SetArchieMaxiePositions
 	end
+
+@ Team Aqua comes for the orb only after Mt. Chimney. Derived here so that it holds in any order.
+MtPyre_Summit_EventScript_SetAquaPresence::
+	goto_if_set FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY, MtPyre_Summit_EventScript_ShowAqua
+	setflag FLAG_HIDE_MT_PYRE_SUMMIT_ARCHIE
+	setflag FLAG_HIDE_MT_PYRE_SUMMIT_TEAM_AQUA
+	return
+
+MtPyre_Summit_EventScript_ShowAqua::
+	clearflag FLAG_HIDE_MT_PYRE_SUMMIT_ARCHIE
+	clearflag FLAG_HIDE_MT_PYRE_SUMMIT_TEAM_AQUA
+	return
 
 MtPyre_Summit_EventScript_SetArchieMaxiePositions::
 	setobjectxyperm LOCALID_MT_PYRE_SUMMIT_MAXIE, 23, 6
@@ -12,21 +25,27 @@ MtPyre_Summit_EventScript_SetArchieMaxiePositions::
 	end
 
 MtPyre_Summit_EventScript_TeamAquaTrigger0::
+	goto_if_unset FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY, MtPyre_Summit_EventScript_TheftNotYet
 	lockall
 	setvar VAR_0x8008, 0
 	goto MtPyre_Summit_EventScript_TeamAquaExits
 	end
 
 MtPyre_Summit_EventScript_TeamAquaTrigger1::
+	goto_if_unset FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY, MtPyre_Summit_EventScript_TheftNotYet
 	lockall
 	setvar VAR_0x8008, 1
 	goto MtPyre_Summit_EventScript_TeamAquaExits
 	end
 
 MtPyre_Summit_EventScript_TeamAquaTrigger2::
+	goto_if_unset FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY, MtPyre_Summit_EventScript_TheftNotYet
 	lockall
 	setvar VAR_0x8008, 2
 	goto MtPyre_Summit_EventScript_TeamAquaExits
+	end
+
+MtPyre_Summit_EventScript_TheftNotYet::
 	end
 
 MtPyre_Summit_EventScript_TeamAquaExits::
@@ -57,9 +76,10 @@ MtPyre_Summit_EventScript_TeamAquaExits::
 	call_if_eq VAR_0x8008, 1, MtPyre_Summit_EventScript_OldLadyApproachPlayer1
 	call_if_eq VAR_0x8008, 2, MtPyre_Summit_EventScript_OldLadyApproachPlayer2
 	msgbox MtPyre_Summit_Text_BothOrbsTakenMagmaLeftThis, MSGBOX_DEFAULT
-	giveitem ITEM_MAGMA_EMBLEM
 	setflag FLAG_RECEIVED_RED_OR_BLUE_ORB
 	setflag FLAG_HIDE_JAGGED_PASS_MAGMA_GUARD
+	giveitem ITEM_MAGMA_EMBLEM
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
 	releaseall
 	end
 
@@ -154,10 +174,27 @@ MtPyre_Summit_EventScript_OldManNewTale::
 MtPyre_Summit_EventScript_OldLady::
 	lock
 	faceplayer
+	goto_if_unset FLAG_RECEIVED_RED_OR_BLUE_ORB, MtPyre_Summit_EventScript_OldLadyBeforeTheft
+	checkitem ITEM_MAGMA_EMBLEM
+	goto_if_eq VAR_RESULT, FALSE, MtPyre_Summit_EventScript_OldLadyGiveEmblem
 	goto_if_set FLAG_RETURNED_RED_OR_BLUE_ORB, MtPyre_Summit_EventScript_OldLadyAfterOrbsReturned
 	call_if_ge VAR_MT_PYRE_STATE, 3, MtPyre_Summit_EventScript_OldLadyOrbsReturned
 	goto_if_set FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN, MtPyre_Summit_EventScript_OldLadyLegendariesAwake
 	msgbox MtPyre_Summit_Text_OrbsHaveBeenTaken, MSGBOX_DEFAULT
+	release
+	end
+
+MtPyre_Summit_EventScript_OldLadyBeforeTheft::
+	msgbox MtPyre_Summit_Text_OrbsInOurCare, MSGBOX_DEFAULT
+	release
+	end
+
+@ The emblem is what the Jagged Pass wall checks, and nothing takes it away again, so holding it
+@ is its receipt. A full Bag at the theft leaves it with her.
+MtPyre_Summit_EventScript_OldLadyGiveEmblem::
+	msgbox MtPyre_Summit_Text_MagmaLeftThisBehind, MSGBOX_DEFAULT
+	giveitem ITEM_MAGMA_EMBLEM
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
 	release
 	end
 
@@ -508,6 +545,18 @@ MtPyre_Summit_Text_BothOrbsTakenMagmaLeftThis:
 	.string "behind.\p"
 	.string "I couldn't imagine what exactly it\n"
 	.string "could be.\p"
+	.string "I would like you to have it.\n"
+	.string "Perhaps it will be useful in some way.$"
+
+MtPyre_Summit_Text_OrbsInOurCare:
+	.string "My husband and I look after the\n"
+	.string "BLUE ORB and the RED ORB.\p"
+	.string "They must never be apart…\n"
+	.string "So here they stay, in our care.$"
+
+MtPyre_Summit_Text_MagmaLeftThisBehind:
+	.string "Oh, yes. TEAM MAGMA left this behind\n"
+	.string "in their haste.\p"
 	.string "I would like you to have it.\n"
 	.string "Perhaps it will be useful in some way.$"
 

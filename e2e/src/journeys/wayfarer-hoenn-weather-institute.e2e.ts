@@ -129,7 +129,7 @@ describe.sequential("Wayfarer Hoenn Weather Institute and late legendaries", () 
 
     // After the theft the plan has been carried out.
     await arrange(game, "weather-institute-2f", 5, 6, "left", {
-      flags: { hoennMtChimneyDone: true, hoennMtPyreOrbTaken: true },
+      flags: { hoennMtChimneyDone: true, hoennReceivedOrb: true },
     })
     scene = await clearInstitute(game)
     expect(scene).toContain("pull out")
@@ -143,7 +143,7 @@ describe.sequential("Wayfarer Hoenn Weather Institute and late legendaries", () 
     },
     async () => {
       await arrange(game, "weather-institute-2f", 5, 6, "left", {
-        flags: { hoennMtChimneyDone: true, hoennMtPyreOrbTaken: true },
+        flags: { hoennMtChimneyDone: true, hoennReceivedOrb: true },
         vars: { ...afterCrisis, trainerRating: READY_TR },
       })
       expect(objectAt(await game.state.read(), instituteScientist)).toMatchObject({ x: 1, y: 6 })

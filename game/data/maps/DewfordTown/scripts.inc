@@ -43,7 +43,13 @@ DewfordTown_EventScript_PublicFerrySailingPresentationToSlateport::
 DewfordTown_EventScript_Briney::
 	lock
 	faceplayer
-	goto_if_unset FLAG_DELIVERED_STEVEN_LETTER, DewfordTown_EventScript_ReturnToPetalburgPrompt
+	goto_if_set FLAG_DELIVERED_STEVEN_LETTER, DewfordTown_EventScript_WhereAreWeBound
+	checkitem ITEM_DEVON_PARTS
+	goto_if_eq VAR_RESULT, FALSE, DewfordTown_EventScript_ReturnToPetalburgPrompt
+	goto DewfordTown_EventScript_WhereAreWeBound
+	end
+
+DewfordTown_EventScript_WhereAreWeBound::
 	message DewfordTown_Text_WhereAreWeBound
 	waitmessage
 	multichoicedefault 21, 6, MULTI_BRINEY_ON_DEWFORD, 2, FALSE
