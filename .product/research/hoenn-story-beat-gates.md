@@ -58,7 +58,10 @@ PokéNav tutorial, and the rival:
   is set only at Rustboro state 6 (`maps/RustboroCity/scripts.inc:27–33`).
 - The employee's and grunt's street lines do not mention Roxanne or a badge.
   `RustboroCity_Text_HelpMeIWasRobbed` (`maps/RustboroCity/scripts.inc` ~1100)
-  recalls help "in PETALBURG WOODS". The Woods flags were not traced.
+  recalls help "in PETALBURG WOODS". The Woods scene's own state is
+  `VAR_PETALBURG_WOODS_STATE`, 1 from its end (`maps/PetalburgWoods/scripts.inc:111`).
+  Route 116's Devon employee has the same recall
+  (`maps/Route116/scripts.inc:49`, text ~378).
 - Rusturf Tunnel uses `VAR_RUSTURF_TUNNEL_STATE`, and Route 116 uses
   `VAR_ROUTE116_STATE` and the stolen and recovered flags. Neither reads the
   Rustboro state.
@@ -113,7 +116,9 @@ PokéNav tutorial, and the rival:
   Slateport only after the Letter is delivered (`maps/DewfordTown/scripts.inc:46`).
   On Route 109 he offers only Dewford until the Goods are delivered
   (`maps/Route109/scripts.inc:298`). By land or ferry the deliveries already
-  work in either order.
+  work in either order. At his house, an undelivered Letter makes him name the
+  package too, even when it was delivered by land
+  (`maps/Route104_MrBrineysHouse/scripts.inc:26`, text ~130).
 - Norman's win calls `EventScript_HideMrBriney`
   (`maps/PetalburgCity_Gym/scripts.inc:569`, defined at `event_scripts.s:1436`),
   which hides Briney everywhere. It is that script's only caller. The Mossdeep
@@ -343,7 +348,6 @@ comes after others.
 
 ## Not covered
 
-- The Petalburg Woods flags behind the employee's recognition line.
 - Magma Hideout below 4F, Seafloor Cavern rooms 1 to 8, the Cave of Origin
   interiors, and the Route 128 scene's lines.
 - The Lilycove rival's battle texts and the PokéNav match-call data beyond the

@@ -366,6 +366,8 @@ leave Hoenn between their steps.
 | Speaker | Line today | Variant |
 | --- | --- | --- |
 | Devon employee, Rustboro street | Recalls the player's help "in PETALBURG WOODS". | Without the Woods scene: drop the recall. |
+| Devon employee, Route 116 | Recalls the player's help "in PETALBURG WOODS". | Without the Woods scene: drop the recall. |
+| Mr. Briney, his house | "You have a LETTER bound for DEWFORD and a package for SLATEPORT", and "You're to deliver a LETTER to DEWFORD and a package to SLATEPORT." | He names only what is still to deliver. |
 | Archie, Meteor Falls | "Didn't I see you before? At SLATEPORT's MUSEUM?" | Without the museum confrontation: drop the recall. |
 | Archie, Oceanic Museum | Speaks as on a first meeting. | If Meteor Falls came first: confirm the lines still read true, and add a short recall only if they do not. |
 | Stern, Slateport street | "Oh! {PLAYER}! You're looking great!… our last seafloor exploration". | Parts undelivered and not yet met: a first-meeting line. |

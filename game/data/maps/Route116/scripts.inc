@@ -47,9 +47,19 @@ Route116_EventScript_DevonEmployee::
 	lock
 	faceplayer
 	goto_if_set FLAG_MET_DEVON_EMPLOYEE, Route116_EventScript_TryGiveRepeatBallAgain
+	call_if_ne VAR_PETALBURG_WOODS_STATE, 0, Route116_EventScript_ThankForWoodsAndPackage
+	call_if_eq VAR_PETALBURG_WOODS_STATE, 0, Route116_EventScript_ThankForPackage
 	msgbox Route116_Text_ThankYouTokenOfAppreciation, MSGBOX_DEFAULT
 	goto Route116_EventScript_GiveRepeatBall
 	end
+
+Route116_EventScript_ThankForWoodsAndPackage::
+	msgbox Route116_Text_YouHelpedInWoodsAndGotPackageBack, MSGBOX_DEFAULT
+	return
+
+Route116_EventScript_ThankForPackage::
+	msgbox Route116_Text_YouGotPackageBack, MSGBOX_DEFAULT
+	return
 
 Route116_EventScript_GiveRepeatBall::
 	setflag FLAG_MET_DEVON_EMPLOYEE
@@ -379,12 +389,20 @@ Route116_Text_GoonHightailedItOutOfTunnel:
 	.string "That goofy goon hightailed it out of\n"
 	.string "the tunnel! I can go back to digging!$"
 
-Route116_Text_ThankYouTokenOfAppreciation:
+Route116_Text_YouHelpedInWoodsAndGotPackageBack:
 	.string "Oh! It's you!\p"
 	.string "You're that person who not only helped\n"
 	.string "me in PETALBURG WOODS, but also got\l"
 	.string "back my stolen package and then even\l"
-	.string "graciously delivered it to SLATEPORT!\p"
+	.string "graciously delivered it to SLATEPORT!$"
+
+Route116_Text_YouGotPackageBack:
+	.string "Oh! It's you!\p"
+	.string "You're that person who got back my\n"
+	.string "stolen package and then even\l"
+	.string "graciously delivered it to SLATEPORT!$"
+
+Route116_Text_ThankYouTokenOfAppreciation:
 	.string "CAPT. STERN informed us that the\n"
 	.string "package arrived, too!\p"
 	.string "I thank you very, very much!\p"

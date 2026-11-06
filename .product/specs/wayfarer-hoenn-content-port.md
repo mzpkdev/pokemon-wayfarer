@@ -297,6 +297,13 @@ adapted Wayfarer introduction, including:
 - all eight Hoenn Gyms;
 - Victory Road, the Elite Four, the Champion, and the Hall of Fame.
 
+The Devon errands don't follow the Gyms. The Rustboro theft starts at its
+street scene with no badge, and Steven and Stern each take a delivery only
+from a player who holds its item, in either order. After the harbor scene,
+Stern takes the Parts at the harbor. The
+[Hoenn independent story beats](hoenn-independent-story-beats.md) specification
+holds the rules.
+
 The central villain story follows the
 [Hoenn independent story beats](hoenn-independent-story-beats.md), not Emerald's
 badge order. Mt. Pyre's theft waits for Mt. Chimney. After Magma Hideout, the

@@ -31,10 +31,31 @@ Route104_MrBrineysHouse_EventScript_Briney::
 Route104_MrBrineysHouse_EventScript_SailingIntro::
 	setflag FLAG_MR_BRINEY_SAILING_INTRO
 	msgbox Route104_MrBrineysHouse_Text_WaitUpPeeko, MSGBOX_DEFAULT
+	msgbox Route104_MrBrineysHouse_Text_ItsYouWantToSail, MSGBOX_DEFAULT
+	call Route104_MrBrineysHouse_EventScript_NameDeliveries
 	msgbox Route104_MrBrineysHouse_Text_ItsYouLetsSailToDewford, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, Route104_MrBrineysHouse_EventScript_DeclineDeliverySailing
 	goto Route104_MrBrineysHouse_EventScript_SailToDewford
 	end
+
+@ He names only what is still to deliver: either delivery can come before this first talk.
+Route104_MrBrineysHouse_EventScript_NameDeliveries::
+	goto_if_set FLAG_DELIVERED_STEVEN_LETTER, Route104_MrBrineysHouse_EventScript_NamePackage
+	goto_if_set FLAG_DELIVERED_DEVON_GOODS, Route104_MrBrineysHouse_EventScript_NameLetter
+	msgbox Route104_MrBrineysHouse_Text_LetterAndPackage, MSGBOX_DEFAULT
+	return
+
+Route104_MrBrineysHouse_EventScript_NameLetter::
+	msgbox Route104_MrBrineysHouse_Text_LetterForDewford, MSGBOX_DEFAULT
+	return
+
+Route104_MrBrineysHouse_EventScript_NamePackage::
+	goto_if_set FLAG_DELIVERED_DEVON_GOODS, Route104_MrBrineysHouse_EventScript_NameNothing
+	msgbox Route104_MrBrineysHouse_Text_PackageForSlateport, MSGBOX_DEFAULT
+	return
+
+Route104_MrBrineysHouse_EventScript_NameNothing::
+	return
 
 Route104_MrBrineysHouse_EventScript_WhereAreWeBound::
 	message Route104_MrBrineysHouse_Text_WhereAreWeBound
@@ -47,7 +68,14 @@ Route104_MrBrineysHouse_EventScript_WhereAreWeBound::
 	end
 
 Route104_MrBrineysHouse_EventScript_SailBothDeliveries::
+	goto_if_set FLAG_DELIVERED_DEVON_GOODS, Route104_MrBrineysHouse_EventScript_SailDeliverLetter
 	msgbox Route104_MrBrineysHouse_Text_NeedToMakeDeliveriesSailToDewford, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, Route104_MrBrineysHouse_EventScript_DeclineDeliverySailing
+	goto Route104_MrBrineysHouse_EventScript_SailToDewford
+	end
+
+Route104_MrBrineysHouse_EventScript_SailDeliverLetter::
+	msgbox Route104_MrBrineysHouse_Text_NeedToDeliverLetterSailToDewford, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, Route104_MrBrineysHouse_EventScript_DeclineDeliverySailing
 	goto Route104_MrBrineysHouse_EventScript_SailToDewford
 	end
@@ -98,15 +126,27 @@ Route104_MrBrineysHouse_Text_WaitUpPeeko:
 	.string "MR. BRINEY: Hold on, lass!\n"
 	.string "Wait up, PEEKO!$"
 
-Route104_MrBrineysHouse_Text_ItsYouLetsSailToDewford:
+Route104_MrBrineysHouse_Text_ItsYouWantToSail:
 	.string "Hm? You're {PLAYER}{KUN}!\n"
 	.string "You saved my darling PEEKO!\l"
 	.string "We owe so much to you!\p"
 	.string "What's that?\n"
 	.string "You want to sail with me?\p"
-	.string "Hmhm…\p"
+	.string "Hmhm…$"
+
+Route104_MrBrineysHouse_Text_LetterAndPackage:
 	.string "You have a LETTER bound for DEWFORD\n"
-	.string "and a package for SLATEPORT, then?\p"
+	.string "and a package for SLATEPORT, then?$"
+
+Route104_MrBrineysHouse_Text_LetterForDewford:
+	.string "You have a LETTER bound for DEWFORD,\n"
+	.string "then?$"
+
+Route104_MrBrineysHouse_Text_PackageForSlateport:
+	.string "You have a package bound for\n"
+	.string "SLATEPORT, then?$"
+
+Route104_MrBrineysHouse_Text_ItsYouLetsSailToDewford:
 	.string "Quite the busy life you must lead!\p"
 	.string "But, certainly, what you're asking is\n"
 	.string "no problem at all.\p"
@@ -132,6 +172,15 @@ Route104_MrBrineysHouse_Text_NeedToMakeDeliveriesSailToDewford:
 	.string "What you need me to do is no problem\n"
 	.string "at all--I'm the man for the job!\p"
 	.string "First, we'll set sail for DEWFORD.$"
+
+Route104_MrBrineysHouse_Text_NeedToDeliverLetterSailToDewford:
+	.string "MR. BRINEY: Ahoy!\n"
+	.string "I know exactly what you want to say!\p"
+	.string "You're to deliver a LETTER to STEVEN\n"
+	.string "in DEWFORD.\p"
+	.string "What you need me to do is no problem\n"
+	.string "at all--I'm the man for the job!\p"
+	.string "We'll set sail for DEWFORD.$"
 
 Route104_MrBrineysHouse_Text_NeedToDeliverPackageSailToDewford:
 	.string "MR. BRINEY: Ahoy!\n"
