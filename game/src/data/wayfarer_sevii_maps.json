@@ -18186,7 +18186,7 @@
   "baseline": {
     "projection_sha256": "47b97c6d5911ed1d19029ef858c9a26d6f62c170901ca508221234a69d098095",
     "wild_encounters_sha256": "a2264a3346ae5ac0a37cdc22169a1455b2a51a9b7b626f3090504d84eaabb0b7",
-    "event_island_baseline_sha256": "1a490fcd61aef136a8513e881ad6c957e47d2f600c27d259627d91bbba67d3f2"
+    "event_island_baseline_sha256": "22711dada7a2cf7f711f644995504920d7fd0012ddf2db9ca167c6eb8e554973"
   },
   "content_domains": {
     "exploration": {
@@ -19830,7 +19830,7 @@
           "label": "Common_EventScript_OutOfCenterPartyHeal",
           "kind": "script_symbol",
           "path": "data/event_scripts.s",
-          "sha256": "9e89c0645ae91b22344e340d904a0081add68909d77e69e6c6da779359f6d2b8",
+          "sha256": "7158ef1d0f80efe1fcf062a3d5cbfa9e5f597f05a0d6fdfdf54230abb08485dd",
           "allowed_insertion": {
             "after": "\t.include \"data/maps/RocketHideout_Elevator_Frlg/scripts.inc\"\n",
             "text": "\t.include \"data/maps/ViridianCity_Gym_Frlg/scripts.inc\"\n"

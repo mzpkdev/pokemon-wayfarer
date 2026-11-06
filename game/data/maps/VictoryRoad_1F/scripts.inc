@@ -5,7 +5,15 @@ VictoryRoad_1F_MapScripts::
 VictoryRoad_1F_OnTransition:
 	call_if_eq VAR_VICTORY_ROAD_1F_STATE, 1, VictoryRoad_1F_EventScript_SetEntranceWallyPos1
 	call_if_eq VAR_VICTORY_ROAD_1F_STATE, 2, VictoryRoad_1F_EventScript_SetEntranceWallyPos2
+	call_if_set FLAG_IS_CHAMPION, VictoryRoad_1F_EventScript_PlaceExitWally
 	end
+
+@ The Hall of Fame sends WALLY to the exit, but a Trainer who never took him catching has not met him
+VictoryRoad_1F_EventScript_PlaceExitWally::
+	setflag FLAG_HIDE_VICTORY_ROAD_EXIT_WALLY
+	goto_if_lt VAR_PETALBURG_GYM_STATE, 6, Common_EventScript_NopReturn
+	clearflag FLAG_HIDE_VICTORY_ROAD_EXIT_WALLY
+	return
 
 VictoryRoad_1F_EventScript_SetEntranceWallyPos1::
 	setobjectxyperm LOCALID_VICTORY_ROAD_ENTRANCE_WALLY, 2, 24
@@ -18,6 +26,7 @@ VictoryRoad_1F_EventScript_SetEntranceWallyPos2::
 	return
 
 VictoryRoad_1F_EventScript_WallyBattleTrigger1::
+	goto_if_lt VAR_PETALBURG_GYM_STATE, 6, VictoryRoad_1F_EventScript_WallyNotHere
 	lockall
 	setvar VAR_0x8008, 1
 	addobject LOCALID_VICTORY_ROAD_ENTRANCE_WALLY
@@ -27,6 +36,7 @@ VictoryRoad_1F_EventScript_WallyBattleTrigger1::
 	end
 
 VictoryRoad_1F_EventScript_WallyBattleTrigger2::
+	goto_if_lt VAR_PETALBURG_GYM_STATE, 6, VictoryRoad_1F_EventScript_WallyNotHere
 	lockall
 	setvar VAR_0x8008, 2
 	addobject LOCALID_VICTORY_ROAD_ENTRANCE_WALLY
@@ -35,10 +45,20 @@ VictoryRoad_1F_EventScript_WallyBattleTrigger2::
 	goto VictoryRoad_1F_EventScript_WallyEntranceBattle
 	end
 
+@ WALLY has no reason to be here before the catching tutorial; the trigger stays armed for later
+VictoryRoad_1F_EventScript_WallyNotHere::
+	end
+
 VictoryRoad_1F_EventScript_WallyEntranceBattle::
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterDown
 	waitmovement 0
+	goto_if_unset FLAG_DEFEATED_WALLY_MAUVILLE, VictoryRoad_1F_EventScript_WallyFirstChallenge
 	msgbox VictoryRoad_1F_Text_WallyNotGoingToLoseAnymore, MSGBOX_DEFAULT
+	goto VictoryRoad_1F_EventScript_BattleEntranceWally
+
+VictoryRoad_1F_EventScript_WallyFirstChallenge::
+	msgbox VictoryRoad_1F_Text_WallyFirstChallenge, MSGBOX_DEFAULT
+VictoryRoad_1F_EventScript_BattleEntranceWally::
 	trainerbattle_no_intro TRAINER_WALLY_VR_1, VictoryRoad_1F_Text_WallyEntranceDefeat
 	msgbox VictoryRoad_1F_Text_WallyPostEntranceBattle, MSGBOX_DEFAULT
 	clearflag FLAG_HIDE_VICTORY_ROAD_ENTRANCE_WALLY
@@ -126,6 +146,15 @@ VictoryRoad_1F_Text_WallyNotGoingToLoseAnymore:
 	.string "{PLAYER}, losing to you that time\n"
 	.string "made me stronger!\p"
 	.string "But I'm not going to lose anymore!\p"
+	.string "I'm going to win! For the POKéMON who\n"
+	.string "gave me courage and strength!\p"
+	.string "Okay… Here I come!$"
+
+VictoryRoad_1F_Text_WallyFirstChallenge:
+	.string "WALLY: Hi! {PLAYER}!\p"
+	.string "I bet you're surprised to see me here!\p"
+	.string "I made it all the way here, and it's\n"
+	.string "all thanks to you!\p"
 	.string "I'm going to win! For the POKéMON who\n"
 	.string "gave me courage and strength!\p"
 	.string "Okay… Here I come!$"

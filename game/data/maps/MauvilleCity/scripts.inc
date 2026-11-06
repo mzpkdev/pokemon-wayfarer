@@ -2,20 +2,27 @@ MauvilleCity_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, MauvilleCity_OnTransition
 	.byte 0
 
-MauvilleCity_OnTransition:
+MauvilleCity_OnTransition::
 	setflag FLAG_VISITED_MAUVILLE_CITY
 	clearflag FLAG_FORCE_MIRAGE_TOWER_VISIBLE
 	clearflag FLAG_HIDE_SLATEPORT_MUSEUM_POPULATION
 	setflag FLAG_SYS_TV_START
 	clearflag FLAG_MAUVILLE_GYM_BARRIERS_STATE
 	setvar VAR_MAUVILLE_GYM_STATE, 0
-	call_if_set FLAG_GOT_TM_THUNDERBOLT_FROM_WATTSON, MauvilleCity_EventScript_MoveWattsonBackToGym
+	call MauvilleCity_Gym_EventScript_PlaceWattson
+	call_if_unset FLAG_DEFEATED_WALLY_MAUVILLE, MauvilleCity_EventScript_PlaceWally
 	end
 
-MauvilleCity_EventScript_MoveWattsonBackToGym::
-	clearflag FLAG_HIDE_MAUVILLE_GYM_WATTSON
-	setflag FLAG_HIDE_MAUVILLE_CITY_WATTSON
-	setflag FLAG_WATTSON_REMATCH_AVAILABLE
+@ WALLY's lines recall the catching tutorial, so he and his uncle come to town only after it
+MauvilleCity_EventScript_PlaceWally::
+	goto_if_ge VAR_PETALBURG_GYM_STATE, 6, MauvilleCity_EventScript_ShowWally
+	setflag FLAG_HIDE_MAUVILLE_CITY_WALLY
+	setflag FLAG_HIDE_MAUVILLE_CITY_WALLYS_UNCLE
+	return
+
+MauvilleCity_EventScript_ShowWally::
+	clearflag FLAG_HIDE_MAUVILLE_CITY_WALLY
+	clearflag FLAG_HIDE_MAUVILLE_CITY_WALLYS_UNCLE
 	return
 
 MauvilleCity_EventScript_Boy::
@@ -153,7 +160,7 @@ MauvilleCity_EventScript_WallyAndUncleExitEast::
 MauvilleCity_EventScript_DefeatedWally::
 	removeobject LOCALID_MAUVILLE_WALLY
 	removeobject LOCALID_MAUVILLE_WALLYS_UNCLE
-	clearflag FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY
+	call_if_unset FLAG_DEFEATED_LAVARIDGE_GYM, MauvilleCity_EventScript_ShowVerdanturfWally
 	clearflag FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLYS_UNCLE
 	setflag FLAG_DEFEATED_WALLY_MAUVILLE
 	setvar VAR_WALLY_CALL_STEP_COUNTER, 0
@@ -170,6 +177,11 @@ MauvilleCity_EventScript_DefeatedWally::
 	removeobject LOCALID_MAUVILLE_SCOTT
 	releaseall
 	end
+
+@ FLANNERY's defeat is when WALLY slips off from VERDANTURF, and his uncle says so from then on
+MauvilleCity_EventScript_ShowVerdanturfWally::
+	clearflag FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY
+	return
 
 MauvilleCity_EventScript_ScottApproachPlayerNorth::
 	addobject LOCALID_MAUVILLE_SCOTT

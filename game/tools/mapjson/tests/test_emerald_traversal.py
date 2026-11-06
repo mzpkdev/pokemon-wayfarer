@@ -294,8 +294,8 @@ class EmeraldTraversalContractTests(unittest.TestCase):
         failed = label_body(lavaridge, "LavaridgeTown_EventScript_GoGogglesBagFull")
         self.assertNotIn("FLAG_RECEIVED_GO_GOGGLES", failed)
         self.assertIn("setvar VAR_LAVARIDGE_TOWN_STATE, 3", failed)
-        reset = label_body(lavaridge, "LavaridgeTown_EventScript_ResetPendingGoGoggles")
-        self.assertIn("setvar VAR_LAVARIDGE_TOWN_STATE, 1", reset)
+        waits = label_body(lavaridge, "LavaridgeTown_EventScript_RivalSceneWaits")
+        self.assertIn("setvar VAR_LAVARIDGE_TOWN_STATE, 4", waits)
 
     def test_route120_routes_every_outcome_through_one_transaction(self):
         source = read("data/maps/Route120/scripts.inc")

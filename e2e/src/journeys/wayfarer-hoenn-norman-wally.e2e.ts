@@ -1,0 +1,269 @@
+import { beforeAll, describe, expect, it } from "webanvil/test"
+
+import { type GameMap, GameSession, type StoryFlag } from "../harness/game-session"
+import { type GameState } from "../harness/game-session/features/state"
+import { advanceOpeningUntil, stepOpening } from "../playbooks/regional-opening"
+import { rideAquaFromVermilionToSlateport } from "../playbooks/wayfarer-ports"
+
+// Norman, Wally, and the Lavaridge rival in an order Emerald never allowed: a visitor with no Hoenn
+// badge and no Birch's starter walks into the Gym at Petalburg first.
+
+const norman = 1
+const mauvilleWally = 6
+const lavaridgeRival = 8
+const lavaridgeRivalOnBike = 7
+
+const sees = (state: GameState, localId: number): boolean =>
+  state.objects.some((object) => object.localId === localId && object.visible)
+
+const expectFreeAt = async (game: GameSession, map: GameMap, x: number, y: number) => {
+  await game.wait.frames(60)
+  const state = await game.state.read()
+  expect(state).toMatchObject({
+    ready: true,
+    controlsLocked: false,
+    scriptActive: false,
+    dialogueOpen: false,
+    map: { name: map },
+    player: { x, y },
+  })
+  expect(state.battle.active).toBe(false)
+}
+
+/** Reads a scene through with A until `done`, then until the field is free again. */
+const playSceneUntil = async (
+  game: GameSession,
+  done: () => Promise<boolean>,
+  description: string,
+): Promise<void> => {
+  let won = false
+  for (let attempt = 0; attempt < 240; attempt++) {
+    await game.wait.frames(45)
+    const state = await game.state.read()
+    // The ready bit can report true between two pages, so the scene's own state decides.
+    if (state.ready && !state.scriptActive && !state.controlsLocked && (await done())) return
+    if (!state.battle.active) won = false
+    if (state.battle.ui === "action-menu" && !won) {
+      await game.battle.win()
+      won = true
+    } else await game.controls.press("a")
+  }
+  throw new Error(`${description}: ${JSON.stringify(await game.state.read())}`)
+}
+
+/** Talks to what stands ahead of a tile, reading on until the story flag is set. */
+const talkFrom = async (
+  game: GameSession,
+  map: GameMap,
+  x: number,
+  y: number,
+  facing: "up" | "down" | "left" | "right",
+  flag: StoryFlag,
+): Promise<void> => {
+  await game.player.warp(map, x, y, facing)
+  await game.wait.forReady()
+  await game.player.interact()
+  await playSceneUntil(game, () => game.story.flag(flag), `(${x},${y}) did not set ${flag}`)
+}
+
+/** Steps through a door and returns on the far side of its warp. */
+const leaveThrough = async (
+  game: GameSession,
+  from: GameMap,
+  x: number,
+  y: number,
+  to: GameMap,
+): Promise<void> => {
+  await game.player.warp(from, x, y, "down")
+  await game.wait.forReady()
+  await stepOpening(game, "down")
+  await game.wait.forMap(to)
+  await game.wait.frames(60)
+}
+
+describe.sequential("Wayfarer Hoenn Norman, Wally and the Lavaridge rival", () => {
+  let game: GameSession
+
+  beforeAll(async () => {
+    game = await GameSession.launch()
+    return () => game.close()
+  })
+
+  it(
+    "keeps Wally away and every road open until the catching tutorial",
+    { timeout: 300_000 },
+    async () => {
+      await game.arrange({
+        checkpoint: "new-bark-after-intro",
+        player: { facing: "down", position: { map: "vermilion-port-inside", x: 8, y: 9 } },
+        story: {
+          vars: { ssAquaState: 8 },
+          flags: { disableEncounters: true, disableTrainers: true },
+        },
+        bag: { items: { ssTicket: 1 } },
+        party: [{ species: "salamence", level: 100, moves: ["tackle"] }],
+        determinism: { textSpeed: "instant" },
+      })
+      await rideAquaFromVermilionToSlateport(game)
+
+      // Mauville: WALLY would stand on (8,6), the only tile below the Gym door.
+      await game.player.warp("mauville-city", 8, 8, "up")
+      await game.wait.forReady()
+      expect(sees(await game.state.read(), mauvilleWally)).toBe(false)
+      await stepOpening(game, "up")
+      await stepOpening(game, "up")
+      await stepOpening(game, "up")
+      await game.wait.forMap("mauville-gym")
+
+      // Victory Road: the triggers at (2-3,23) do nothing and stay armed.
+      await game.player.warp("victory-road-1f", 2, 24, "up")
+      await game.wait.forReady()
+      await stepOpening(game, "up")
+      await expectFreeAt(game, "victory-road-1f", 2, 23)
+      await expect(game.story.var("hoennVictoryRoad1fState")).resolves.toBe(0)
+    },
+  )
+
+  it(
+    "readies the Gym from the tutorial, and Norman battles with no Hoenn badge",
+    { timeout: 300_000 },
+    async () => {
+      await game.player.warp("petalburg-gym", 4, 108, "up")
+      await game.wait.forReady()
+      await game.player.interact()
+      await playSceneUntil(
+        game,
+        async () => (await game.story.var("hoennPetalburgGymState")) === 6,
+        "The tutorial did not finish",
+      )
+
+      // The Gym reloaded around the player: its rooms stand open and the guide is in.
+      await expectFreeAt(game, "petalburg-gym", 4, 108)
+      await expect(game.story.flag("hidePetalburgGymGreeter")).resolves.toBe(false)
+      await stepOpening(game, "up")
+      await stepOpening(game, "up")
+
+      // NORMAN waits at the back of the Gym, not at the entrance where he gave the tutorial.
+      await game.player.warp("petalburg-gym", 4, 3, "up")
+      await game.wait.forReady()
+      const atTheBack = await game.state.read()
+      expect(atTheBack.objects.find((object) => object.localId === norman)?.y).toBe(2)
+      await game.player.interact()
+      await advanceOpeningUntil(game, (s) => s.dialogueOpen, "Norman did not answer")
+      expect(await game.dialogue.text()).not.toContain("BADGES")
+      await playSceneUntil(
+        game,
+        async () => (await game.story.var("hoennPetalburgCityState")) >= 5,
+        "Norman's win and Wally's father did not finish",
+      )
+      await expect(game.state.read()).resolves.toMatchObject({ circuit: { badges: { hoenn: 1 } } })
+
+      // Mr. Briney keeps sailing and Wattson stays in his Gym: Norman's win is only Norman's.
+      await expect(game.story.flag("hoennHideRoute104BrineyBoat")).resolves.toBe(false)
+      await expect(game.story.flag("hideMauvilleGymWattson")).resolves.toBe(false)
+      await expect(game.story.flag("hideMauvilleCityWattson")).resolves.toBe(true)
+    },
+  )
+
+  it("brings Wally back, and Victory Road recalls no win that never happened", async () => {
+    await game.player.warp("mauville-city", 8, 8, "up")
+    await game.wait.forReady()
+    expect(sees(await game.state.read(), mauvilleWally)).toBe(true)
+    await expect(game.story.flag("hoennDefeatedWallyMauville")).resolves.toBe(false)
+
+    await game.player.warp("victory-road-1f", 2, 24, "up")
+    await game.wait.forReady()
+    await stepOpening(game, "up")
+    await advanceOpeningUntil(game, (s) => s.dialogueOpen, "Wally did not come")
+    const seen: string[] = []
+    await advanceOpeningUntil(
+      game,
+      (s) => {
+        seen.push(s.dialogue.fullText)
+        return s.battle.active
+      },
+      "Wally did not battle",
+    )
+    expect(seen.join(" ")).toContain("Here I come")
+    expect(seen.join(" ")).not.toContain("losing to you")
+    await game.battle.win()
+    await playSceneUntil(
+      game,
+      async () => (await game.story.var("hoennVictoryRoad1fState")) === 1,
+      "Wally's scene did not finish",
+    )
+  })
+
+  it(
+    "parks the Lavaridge scene without a starter, and the survey still gives the Go-Goggles",
+    { timeout: 300_000 },
+    async () => {
+      // Flannery's defeat parks the scene. Neither front door starts it for a player with no starter.
+      await game.story.setVar("hoennLavaridgeTownState", 4)
+      await leaveThrough(game, "lavaridge-pokemon-center", 7, 8, "lavaridge-town")
+      await expectFreeAt(game, "lavaridge-town", 9, 7)
+      await leaveThrough(game, "lavaridge-gym-1f", 13, 18, "lavaridge-town")
+      await expectFreeAt(game, "lavaridge-town", 5, 16)
+      const parked = await game.state.read()
+      expect(sees(parked, lavaridgeRival) || sees(parked, lavaridgeRivalOnBike)).toBe(false)
+      await expect(game.story.var("hoennLavaridgeTownState")).resolves.toBe(4)
+
+      // The survey on Route 111 needs no badge and no starter.
+      await talkFrom(game, "route-111", 13, 63, "right", "hoennDesertSurveyStarted")
+      await talkFrom(game, "route-111", 6, 71, "up", "hoennDesertSurveyStake1")
+      await talkFrom(game, "route-111", 14, 89, "up", "hoennDesertSurveyStake2")
+      await talkFrom(game, "route-111", 15, 116, "up", "hoennDesertSurveyStake3")
+      await talkFrom(game, "route-111", 13, 63, "right", "hoennReceivedGoGoggles")
+      await expect(game.inventory.count("goGoggles")).resolves.toBe(1)
+      await expect(game.story.flag("hoennReceivedGoGoggles")).resolves.toBe(true)
+
+      // With a starter, the road and the back exit still leave the scene parked: it has no layout there.
+      await game.story.setVar("hoennStarterChoice", 1)
+      await game.player.warp("lavaridge-town", 9, 12, "down")
+      await game.wait.forReady()
+      await expectFreeAt(game, "lavaridge-town", 9, 12)
+      await game.player.warp("lavaridge-pokemon-center", 2, 2, "up")
+      await game.wait.forReady()
+      await stepOpening(game, "up")
+      await game.wait.forMap("lavaridge-town")
+      await expect(game.story.var("hoennLavaridgeTownState")).resolves.toBe(4)
+
+      // The Pokemon Center's front door plays it, with no second pair of Go-Goggles.
+      await game.player.warp("lavaridge-pokemon-center", 7, 8, "down")
+      await game.wait.forReady()
+      await stepOpening(game, "down")
+      await playSceneUntil(
+        game,
+        async () => (await game.story.var("hoennLavaridgeTownState")) === 2,
+        "The rival's scene did not finish at the Pokemon Center door",
+      )
+      await expect(game.inventory.count("goGoggles")).resolves.toBe(1)
+
+      // It plays once.
+      await leaveThrough(game, "lavaridge-gym-1f", 13, 18, "lavaridge-town")
+      await expectFreeAt(game, "lavaridge-town", 5, 16)
+      await expect(game.story.var("hoennLavaridgeTownState")).resolves.toBe(2)
+    },
+  )
+
+  it("gives the Go-Goggles at the Gym door to a player who has none", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { facing: "down", position: { map: "lavaridge-gym-1f", x: 13, y: 18 } },
+      story: {
+        vars: { hoennLavaridgeTownState: 4, hoennStarterChoice: 1 },
+        flags: { disableEncounters: true, disableTrainers: true },
+      },
+      party: [{ species: "salamence", level: 60 }],
+      determinism: { textSpeed: "instant" },
+    })
+    await stepOpening(game, "down")
+    await playSceneUntil(
+      game,
+      async () => (await game.story.var("hoennLavaridgeTownState")) === 2,
+      "The rival's scene did not finish at the Gym door",
+    )
+    await expect(game.inventory.count("goGoggles")).resolves.toBe(1)
+    await expect(game.story.flag("hoennReceivedGoGoggles")).resolves.toBe(true)
+  })
+})

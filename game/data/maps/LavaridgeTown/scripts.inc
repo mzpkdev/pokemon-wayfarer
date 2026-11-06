@@ -5,10 +5,9 @@ LavaridgeTown_MapScripts::
 
 LavaridgeTown_OnTransition:
 	setflag FLAG_VISITED_LAVARIDGE_TOWN
-#if !IS_FRLG && !IS_HNS
-	call_if_eq VAR_LAVARIDGE_TOWN_STATE, 3, LavaridgeTown_EventScript_ResetPendingGoGoggles
+	call_if_eq VAR_LAVARIDGE_TOWN_STATE, 3, LavaridgeTown_EventScript_RivalSceneWaits
 	call_if_eq VAR_LAVARIDGE_TOWN_STATE, 2, LavaridgeTown_EventScript_ReconcileGoGoggles
-#endif
+	call_if_eq VAR_LAVARIDGE_TOWN_STATE, 4, LavaridgeTown_EventScript_TryArmRivalScene
 	call_if_set FLAG_WHITEOUT_TO_LAVARIDGE, LavaridgeTown_EventScript_ClearLavaridgeWhiteOut
 	call_if_set FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY, LavaridgeTown_EventScript_ShowMtChimneyTrainers
 	call Common_EventScript_SetupRivalGfxId
@@ -17,21 +16,35 @@ LavaridgeTown_OnTransition:
 	call_if_eq VAR_LAVARIDGE_TOWN_STATE, 1, LavaridgeTown_EventScript_HideMapNamePopup
 	end
 
-#if !IS_FRLG && !IS_HNS
-LavaridgeTown_EventScript_ResetPendingGoGoggles::
-	setvar VAR_LAVARIDGE_TOWN_STATE, 1
-	return
-
 LavaridgeTown_EventScript_ReconcileGoGoggles::
 	checkitem ITEM_GO_GOGGLES
-	goto_if_eq VAR_RESULT, FALSE, LavaridgeTown_EventScript_ReopenGoGogglesHandoff
+	goto_if_eq VAR_RESULT, FALSE, LavaridgeTown_EventScript_RivalSceneWaits
 	setflag FLAG_RECEIVED_GO_GOGGLES
 	return
 
-LavaridgeTown_EventScript_ReopenGoGogglesHandoff::
+@ The rival's scene is staged for a player at the GYM door or the POKéMON CENTER's front door, and
+@ needs the starter BIRCH gave. It waits at state 4 until such a player walks out of either door:
+@ the frame script runs at state 1, so the town must never sit there without the scene to play.
+LavaridgeTown_EventScript_RivalSceneWaits::
+	setvar VAR_LAVARIDGE_TOWN_STATE, 4
+	return
+
+LavaridgeTown_EventScript_TryArmRivalScene::
+	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, Common_EventScript_NopReturn
+	getplayerxy VAR_0x8004, VAR_0x8005
+	call_if_eq VAR_0x8004, 5, LavaridgeTown_EventScript_ArmAtGymDoor
+	call_if_eq VAR_0x8004, 9, LavaridgeTown_EventScript_ArmAtPokemonCenterDoor
+	return
+
+LavaridgeTown_EventScript_ArmAtGymDoor::
+	goto_if_ne VAR_0x8005, 15, Common_EventScript_NopReturn
 	setvar VAR_LAVARIDGE_TOWN_STATE, 1
 	return
-#endif
+
+LavaridgeTown_EventScript_ArmAtPokemonCenterDoor::
+	goto_if_ne VAR_0x8005, 6, Common_EventScript_NopReturn
+	setvar VAR_LAVARIDGE_TOWN_STATE, 1
+	return
 
 LavaridgeTown_EventScript_ClearLavaridgeWhiteOut::
 	clearflag FLAG_WHITEOUT_TO_LAVARIDGE
@@ -78,48 +91,35 @@ LavaridgeTown_EventScript_RivalGiveGoGoggles::
 	end
 
 LavaridgeTown_EventScript_MayGiveGoGoggles::
-#if !IS_FRLG && !IS_HNS
 	checkitem ITEM_GO_GOGGLES
 	goto_if_eq VAR_RESULT, TRUE, LavaridgeTown_EventScript_MayRecognizeGoGoggles
-#endif
 	msgbox LavaridgeTown_Text_MayNiceBadgesTakeThis, MSGBOX_DEFAULT
-#if !IS_FRLG && !IS_HNS
 	additem ITEM_GO_GOGGLES
 	goto_if_eq VAR_RESULT, FALSE, LavaridgeTown_EventScript_GoGogglesBagFull
 	setvar VAR_0x8000, ITEM_GO_GOGGLES
 	setvar VAR_0x8001, 1
 	setvar VAR_0x8007, TRUE
 	call EventScript_ObtainItemMessage
-#else
-	giveitem ITEM_GO_GOGGLES
-#endif
 	setflag FLAG_RECEIVED_GO_GOGGLES
 	msgbox LavaridgeTown_Text_MayExplainGoGogglesChallengeDad, MSGBOX_DEFAULT
 	goto LavaridgeTown_EventScript_RivalExit
 	end
 
 LavaridgeTown_EventScript_BrendanGiveGoGoggles::
-#if !IS_FRLG && !IS_HNS
 	checkitem ITEM_GO_GOGGLES
 	goto_if_eq VAR_RESULT, TRUE, LavaridgeTown_EventScript_BrendanRecognizeGoGoggles
-#endif
 	msgbox LavaridgeTown_Text_BrendanNiceBadgesTakeThis, MSGBOX_DEFAULT
-#if !IS_FRLG && !IS_HNS
 	additem ITEM_GO_GOGGLES
 	goto_if_eq VAR_RESULT, FALSE, LavaridgeTown_EventScript_GoGogglesBagFull
 	setvar VAR_0x8000, ITEM_GO_GOGGLES
 	setvar VAR_0x8001, 1
 	setvar VAR_0x8007, TRUE
 	call EventScript_ObtainItemMessage
-#else
-	giveitem ITEM_GO_GOGGLES
-#endif
 	setflag FLAG_RECEIVED_GO_GOGGLES
 	msgbox LavaridgeTown_Text_BrendanExplainGoGogglesChallengeDad, MSGBOX_DEFAULT
 	goto LavaridgeTown_EventScript_RivalExit
 	end
 
-#if !IS_FRLG && !IS_HNS
 LavaridgeTown_EventScript_MayRecognizeGoGoggles::
 	setflag FLAG_RECEIVED_GO_GOGGLES
 	msgbox LavaridgeTown_Text_MayRecognizeSurveyGoGoggles, MSGBOX_DEFAULT
@@ -144,7 +144,6 @@ LavaridgeTown_EventScript_GoGogglesBagFull::
 	fadedefaultbgm
 	releaseall
 	end
-#endif
 
 LavaridgeTown_EventScript_RivalExit::
 	closemessage
@@ -356,12 +355,10 @@ LavaridgeTown_Text_MayNiceBadgesTakeThis:
 	.string "I guess it would be okay for you to\n"
 	.string "have this.$"
 
-#if !IS_FRLG && !IS_HNS
 LavaridgeTown_Text_MayRecognizeSurveyGoGoggles:
 	.string "MAY: Oh! The ROUTE 111 surveyor\n"
 	.string "already gave you GO-GOGGLES.\p"
 	.string "Then you don't need another pair.$"
-#endif
 
 LavaridgeTown_Text_MayExplainGoGogglesChallengeDad:
 	.string "MAY: With those GO-GOGGLES, you'll\n"
@@ -372,23 +369,21 @@ LavaridgeTown_Text_MayExplainGoGogglesChallengeDad:
 	.string "You're trying hard because you don't\n"
 	.string "want to lose to me, I bet!\p"
 	.string "{PLAYER}{KUN}, I think I should challenge\n"
-	.string "your dad in PETALBURG GYM.\p"
+	.string "NORMAN in PETALBURG GYM.\p"
 	.string "See you again!$"
 
 LavaridgeTown_Text_BrendanNiceBadgesTakeThis:
 	.string "BRENDAN: {PLAYER}, hey, it's been a while.\n"
 	.string "How's it going?\p"
 	.string "Hmm…\n"
-	.string "That's a decent collection of BADGES.\p"
+	.string "You beat FLANNERY, huh? Not bad.\p"
 	.string "All right, then.\n"
 	.string "You may as well have this.$"
 
-#if !IS_FRLG && !IS_HNS
 LavaridgeTown_Text_BrendanRecognizeSurveyGoGoggles:
 	.string "BRENDAN: Oh! The ROUTE 111 surveyor\n"
 	.string "already gave you GO-GOGGLES.\p"
 	.string "Then you don't need another pair.$"
-#endif
 
 LavaridgeTown_Text_BrendanExplainGoGogglesChallengeDad:
 	.string "BRENDAN: Keep those with you if you're\n"
@@ -400,16 +395,14 @@ LavaridgeTown_Text_BrendanExplainGoGogglesChallengeDad:
 	.string "As for me…\n"
 	.string "I'm considering challenging NORMAN,\l"
 	.string "the GYM LEADER of PETALBURG.\p"
-	.string "Unlike you, {PLAYER}, your dad looks like\n"
+	.string "Unlike you, {PLAYER}, that man looks like\n"
 	.string "he really is tough.\p"
 	.string "See you around!$"
 
-#if !IS_FRLG && !IS_HNS
 LavaridgeTown_Text_GoGogglesBagFull:
 	.string "Your KEY ITEMS pocket is full.\p"
 	.string "I'll hold on to these GO-GOGGLES.\n"
 	.string "Come back after making room.$"
-#endif
 
 LavaridgeTown_Text_HaveEggWillYouTakeIt:
 	.string "I have here an EGG.\p"

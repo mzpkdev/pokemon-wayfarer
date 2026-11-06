@@ -294,8 +294,8 @@ item event, or NPC state cannot satisfy a Hoenn campaign check by numeric
 coincidence.
 
 Hoenn has eight badge results. Gym scripts award and check the corresponding
-Hoenn badge. Hoenn-local checks such as Norman's availability count only Hoenn
-badges. Entering the Hoenn League instead uses the global twenty-four-badge
+Hoenn badge. No Hoenn story check counts badges: Norman battles once Wally's
+catching tutorial is done, with no badge. Entering the Hoenn League instead uses the global twenty-four-badge
 circuit and requires the shared Indigo and Sevii Masters Challenge wins. Trainer
 cards or badge displays that show regional progress identify the region. The
 separate circuit summary shows the global total and stage results.
@@ -303,10 +303,10 @@ separate circuit summary shows the global total and stage results.
 Today's [circuit contract](wayfarer-interregional-league-circuit.md) requires
 all eight Hoenn badges to remain obtainable with no league wins while
 preserving coherent regional quests, including Juan's weather storyline.
-The [Norman victory script](../../game/data/maps/PetalburgCity_Gym/scripts.inc)
-now calls the [Wattson relocation helper](../../game/data/maps/MauvilleCity_Gym/scripts.inc),
-which requires both Norman's defeat and the Dynamo Badge. An undefeated Wattson
-therefore remains in his Gym, and relocation is independent of award order.
+The [Wattson placement helper](../../game/data/maps/MauvilleCity_Gym/scripts.inc)
+runs on entering Mauville City and his Gym. He steps outside once the Dynamo
+Badge is won and TM Shock Wave taken, and returns for good once TM Thunderbolt
+is claimed. Norman plays no part, and the order of badges does not matter.
 These source checks establish the implemented branch, not campaign playtest
 acceptance. The v0 per-leader TR changes singles Gym strength
 without adding a league-win prerequisite or changing badge ownership.

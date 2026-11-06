@@ -164,7 +164,6 @@ Route111_EventScript_ReceivedBerry::
 	release
 	end
 
-#if !IS_FRLG && !IS_HNS
 Route111_EventScript_DesertSurveyor::
 	lock
 	faceplayer
@@ -283,13 +282,6 @@ Route111_EventScript_DesertSurveyStake3Recorded::
 Route111_EventScript_DesertSurveyStakeNotStarted::
 	msgbox Route111_Text_DesertSurveyStakeNotStarted, MSGBOX_SIGN
 	end
-#else
-Route111_EventScript_DesertSurveyor::
-Route111_EventScript_DesertSurveyStake1::
-Route111_EventScript_DesertSurveyStake2::
-Route111_EventScript_DesertSurveyStake3::
-	end
-#endif
 
 @ Unused
 Route111_EventScript_ViciousSandstormTriggerUp::
@@ -846,7 +838,6 @@ Route111_Text_TrainerHillSign:
 	.string "“Scale the heights, you hot-blooded\n"
 	.string "TRAINERS!”$"
 
-#if !IS_FRLG && !IS_HNS
 Route111_Text_DesertSurveyOffer:
 	.string "I'm charting the winds around the\n"
 	.string "ROUTE 111 desert.\p"
@@ -927,4 +918,3 @@ Route111_Text_DesertSurveyStake3RecordedNow:
 Route111_Text_DesertSurveyStake3AlreadyRecorded:
 	.string "WEATHER STAKE No. 3\p"
 	.string "The reading is already recorded.$"
-#endif

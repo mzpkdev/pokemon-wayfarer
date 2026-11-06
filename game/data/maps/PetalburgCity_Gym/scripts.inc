@@ -38,7 +38,9 @@ PetalburgCity_Gym_EventScript_UnlockAllDoors::
 PetalburgCity_Gym_OnTransition:
 	call_if_eq VAR_PETALBURG_GYM_STATE, 1, PetalburgCity_Gym_EventScript_MoveWallyToEntrance
 	call_if_lt VAR_PETALBURG_GYM_STATE, 6, PetalburgCity_Gym_EventScript_MoveNormanToEntrance
+	goto_if_unset FLAG_DEFEATED_PETALBURG_GYM, PetalburgCity_Gym_EventScript_NormanWaitsAtBack
 	call_if_set FLAG_SYS_GAME_CLEAR, PetalburgCity_Gym_EventScript_CheckNormanForRematch
+PetalburgCity_Gym_EventScript_NormanWaitsAtBack::
 	end
 
 PetalburgCity_Gym_EventScript_MoveWallyToEntrance::
@@ -108,7 +110,12 @@ PetalburgCity_Gym_EventScript_ShowDadGoCollectBadgesNative::
 #if IS_WAYFARER
 PetalburgCity_Gym_EventScript_ShowDadGoCollectBadgesDone::
 #endif
-	setvar VAR_PETALBURG_GYM_STATE, 2
+	@ The tutorial readies the Gym. Reloading it opens the rooms and sends NORMAN to the back,
+	@ where the rest of the Gym's scenes stage him.
+	setvar VAR_PETALBURG_GYM_STATE, 6
+	call Common_EventScript_ReadyPetalburgGymForBattle
+	warp MAP_PETALBURG_CITY_GYM, 4, 108
+	waitstate
 	releaseall
 	end
 
@@ -123,28 +130,9 @@ PetalburgCity_Gym_EventScript_Norman::
 	vsseeker_rematchid TRAINER_NORMAN_1
 	lock
 	faceplayer
-#if IS_WAYFARER
-	goto_if_lt VAR_PETALBURG_GYM_STATE, 2, PetalburgCity_Gym_EventScript_NormanBeginTutorial
+	goto_if_eq VAR_PETALBURG_GYM_STATE, 6, PetalburgCity_Gym_EventScript_NormanBattle
 	goto_if_eq VAR_PETALBURG_GYM_STATE, 7, PetalburgCity_Gym_EventScript_NormanPostBattle
 	goto_if_eq VAR_PETALBURG_GYM_STATE, 8, PetalburgCity_Gym_EventScript_NormanRematch
-	specialvar VAR_RESULT, WayfarerGetHoennBadgeCountForScript
-	switch VAR_RESULT
-	case 0, PetalburgCity_Gym_EventScript_NormanNoBadges
-	case 1, PetalburgCity_Gym_EventScript_NormanOneBadge
-	case 2, PetalburgCity_Gym_EventScript_NormanTwoBadges
-	case 3, PetalburgCity_Gym_EventScript_NormanThreeBadges
-	goto PetalburgCity_Gym_EventScript_NormanBattle
-#else
-	switch VAR_PETALBURG_GYM_STATE
-	case 2, PetalburgCity_Gym_EventScript_NormanNoBadges
-	case 3, PetalburgCity_Gym_EventScript_NormanOneBadge
-	case 4, PetalburgCity_Gym_EventScript_NormanTwoBadges
-	case 5, PetalburgCity_Gym_EventScript_NormanThreeBadges
-	case 6, PetalburgCity_Gym_EventScript_NormanBattle
-	case 7, PetalburgCity_Gym_EventScript_NormanPostBattle
-	case 8, PetalburgCity_Gym_EventScript_NormanRematch
-#endif
-PetalburgCity_Gym_EventScript_NormanBeginTutorial::
 #if IS_WAYFARER
 	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
 	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowDadYoureHereWithYourPokemonNative
@@ -375,66 +363,6 @@ PetalburgCity_Gym_EventScript_WallyFaceDown::
 	waitmovement 0
 	return
 
-PetalburgCity_Gym_EventScript_NormanNoBadges::
-#if IS_WAYFARER
-	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
-	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowNormanGoToRustboroNative
-	msgbox PetalburgCity_Gym_Text_VisitorNormanGoToRustboro, MSGBOX_DEFAULT
-	goto PetalburgCity_Gym_EventScript_ShowNormanGoToRustboroDone
-PetalburgCity_Gym_EventScript_ShowNormanGoToRustboroNative::
-#endif
-	msgbox PetalburgCity_Gym_Text_NormanGoToRustboro, MSGBOX_DEFAULT
-#if IS_WAYFARER
-PetalburgCity_Gym_EventScript_ShowNormanGoToRustboroDone::
-#endif
-	release
-	end
-
-PetalburgCity_Gym_EventScript_NormanOneBadge::
-#if IS_WAYFARER
-	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
-	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowNormanGoToDewfordNative
-	msgbox PetalburgCity_Gym_Text_VisitorNormanGoToDewford, MSGBOX_DEFAULT
-	goto PetalburgCity_Gym_EventScript_ShowNormanGoToDewfordDone
-PetalburgCity_Gym_EventScript_ShowNormanGoToDewfordNative::
-#endif
-	msgbox PetalburgCity_Gym_Text_NormanGoToDewford, MSGBOX_DEFAULT
-#if IS_WAYFARER
-PetalburgCity_Gym_EventScript_ShowNormanGoToDewfordDone::
-#endif
-	release
-	end
-
-PetalburgCity_Gym_EventScript_NormanTwoBadges::
-#if IS_WAYFARER
-	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
-	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowYouHaveGottenStrongerNative
-	msgbox PetalburgCity_Gym_Text_VisitorYouHaveGottenStronger, MSGBOX_DEFAULT
-	goto PetalburgCity_Gym_EventScript_ShowYouHaveGottenStrongerDone
-PetalburgCity_Gym_EventScript_ShowYouHaveGottenStrongerNative::
-#endif
-	msgbox PetalburgCity_Gym_Text_YouHaveGottenStronger, MSGBOX_DEFAULT
-#if IS_WAYFARER
-PetalburgCity_Gym_EventScript_ShowYouHaveGottenStrongerDone::
-#endif
-	release
-	end
-
-PetalburgCity_Gym_EventScript_NormanThreeBadges::
-#if IS_WAYFARER
-	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
-	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowYouHaveGottenStrongerAgainNative
-	msgbox PetalburgCity_Gym_Text_VisitorYouHaveGottenStronger, MSGBOX_DEFAULT
-	goto PetalburgCity_Gym_EventScript_ShowYouHaveGottenStrongerAgainDone
-PetalburgCity_Gym_EventScript_ShowYouHaveGottenStrongerAgainNative::
-#endif
-	msgbox PetalburgCity_Gym_Text_YouHaveGottenStronger, MSGBOX_DEFAULT
-#if IS_WAYFARER
-PetalburgCity_Gym_EventScript_ShowYouHaveGottenStrongerAgainDone::
-#endif
-	release
-	end
-
 PetalburgCity_Gym_EventScript_NormanFaceDoorSouth::
 	return
 
@@ -566,13 +494,6 @@ PetalburgCity_Gym_EventScript_ShowExplainBalanceBadgeTakeThisDone::
 	setvar VAR_PETALBURG_GYM_STATE, 7
 	setflag FLAG_BADGE05_GET
 	special ResetHealLocationFromDewford
-	call EventScript_HideMrBriney
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	call MauvilleCity_Gym_EventScript_TryRelocateWattson
-#else
-	setflag FLAG_HIDE_MAUVILLE_GYM_WATTSON
-	clearflag FLAG_HIDE_MAUVILLE_CITY_WATTSON
-#endif
 	setvar VAR_0x8008, 5
 	call Common_EventScript_SetGymTrainers
 	clearflag FLAG_HIDE_DEWFORD_HALL_SLUDGE_BOMB_MAN
@@ -1448,50 +1369,18 @@ PetalburgCity_Gym_Text_WallyThankYouBye:
 PetalburgCity_Gym_Text_DadGoCollectBadges:
 	.string "DAD: Now…\p"
 	.string "{PLAYER}, if you want to become a\n"
-	.string "strong TRAINER, here's my advice.\p"
-	.string "Head for RUSTBORO CITY beyond this\n"
-	.string "town.\p"
-	.string "There, you should challenge\n"
-	.string "the GYM LEADER, ROXANNE.\p"
-	.string "After her, go on to other POKéMON\n"
-	.string "GYMS and defeat their LEADERS.\p"
-	.string "Collect BADGES from them,\n"
-	.string "understood?\p"
-	.string "Of course, I'm a GYM LEADER, too.\n"
-	.string "We'll battle one day, {PLAYER}.\p"
-	.string "But that's only after you become\n"
-	.string "stronger.$"
-
-PetalburgCity_Gym_Text_NormanGoToRustboro:
-	.string "DAD: Hm? Aren't you going to the\n"
-	.string "POKéMON GYM in RUSTBORO CITY?\p"
-	.string "There's no challenge for me to\n"
-	.string "battle a greenhorn TRAINER.\p"
-	.string "{PLAYER}, I want you to challenge me\n"
-	.string "when you become a lot stronger.\p"
-	.string "I'll battle you, {PLAYER}, when you\n"
-	.string "can show me four GYM BADGES, okay?$"
-
-PetalburgCity_Gym_Text_NormanGoToDewford:
-	.string "DAD: I see… So, you've beaten\n"
-	.string "the GYM LEADER in RUSTBORO CITY.\p"
-	.string "But there are many more TRAINERS\n"
-	.string "who are stronger than you, {PLAYER}.\p"
-	.string "Across the sea in DEWFORD TOWN is a\n"
-	.string "GYM LEADER named BRAWLY.\p"
-	.string "You should go challenge him.$"
-
-PetalburgCity_Gym_Text_YouHaveGottenStronger:
-	.string "DAD: Hm… {PLAYER}, you have gotten\n"
-	.string "stronger.\p"
-	.string "I can tell by the number of BADGES\n"
-	.string "that you've earned.$"
+	.string "strong TRAINER, there's no better\l"
+	.string "teacher than a real battle.\p"
+	.string "I'm a GYM LEADER, after all.\n"
+	.string "My GYM is open to you, {PLAYER}.\p"
+	.string "Come and challenge me whenever\n"
+	.string "you're ready.$"
 
 PetalburgCity_Gym_Text_NormanIntro:
 	.string "DAD: Hm…\n"
-	.string "So, you did get four GYM BADGES.\p"
-	.string "Fine, as I promised, we will have\n"
-	.string "a POKéMON battle.\p"
+	.string "So, you've made it through my GYM.\p"
+	.string "Fine, we will have a\n"
+	.string "POKéMON battle.\p"
 	.string "{PLAYER}…\p"
 	.string "I'm so happy that I can have\n"
 	.string "a real battle with my own child.\p"
@@ -1884,9 +1773,9 @@ PetalburgCity_Gym_Text_VisitorDadYoureHereWithYourPokemon:
 
 PetalburgCity_Gym_Text_VisitorNormanIntro:
 	.string "NORMAN: Hm…\n"
-	.string "So, you did get four GYM BADGES.\p"
-	.string "Fine, as I promised, we will have\n"
-	.string "a POKéMON battle.\p"
+	.string "So, you've made it through my GYM.\p"
+	.string "Fine, we will have a\n"
+	.string "POKéMON battle.\p"
 	.string "{PLAYER}…\p"
 	.string "I'm looking forward to seeing\n"
 	.string "how much you've grown!\p"
@@ -1957,44 +1846,12 @@ PetalburgCity_Gym_Text_VisitorDadSoDidItWorkOut:
 PetalburgCity_Gym_Text_VisitorDadGoCollectBadges:
 	.string "NORMAN: Now…\p"
 	.string "{PLAYER}, if you want to become a\n"
-	.string "strong TRAINER, here's my advice.\p"
-	.string "Head for RUSTBORO CITY beyond this\n"
-	.string "town.\p"
-	.string "There, you should challenge\n"
-	.string "the GYM LEADER, ROXANNE.\p"
-	.string "After her, go on to other POKéMON\n"
-	.string "GYMS and defeat their LEADERS.\p"
-	.string "Collect BADGES from them,\n"
-	.string "understood?\p"
-	.string "Of course, I'm a GYM LEADER, too.\n"
-	.string "We'll battle one day, {PLAYER}.\p"
-	.string "But that's only after you become\n"
-	.string "stronger.$"
-
-PetalburgCity_Gym_Text_VisitorNormanGoToRustboro:
-	.string "NORMAN: Hm? Aren't you going to the\n"
-	.string "POKéMON GYM in RUSTBORO CITY?\p"
-	.string "There's no challenge for me to\n"
-	.string "battle a greenhorn TRAINER.\p"
-	.string "{PLAYER}, I want you to challenge me\n"
-	.string "when you become a lot stronger.\p"
-	.string "I'll battle you, {PLAYER}, when you\n"
-	.string "can show me four GYM BADGES, okay?$"
-
-PetalburgCity_Gym_Text_VisitorNormanGoToDewford:
-	.string "NORMAN: I see… So, you've beaten\n"
-	.string "the GYM LEADER in RUSTBORO CITY.\p"
-	.string "But there are many more TRAINERS\n"
-	.string "who are stronger than you, {PLAYER}.\p"
-	.string "Across the sea in DEWFORD TOWN is a\n"
-	.string "GYM LEADER named BRAWLY.\p"
-	.string "You should go challenge him.$"
-
-PetalburgCity_Gym_Text_VisitorYouHaveGottenStronger:
-	.string "NORMAN: Hm… {PLAYER}, you have gotten\n"
-	.string "stronger.\p"
-	.string "I can tell by the number of BADGES\n"
-	.string "that you've earned.$"
+	.string "strong TRAINER, there's no better\l"
+	.string "teacher than a real battle.\p"
+	.string "I'm a GYM LEADER, after all.\n"
+	.string "My GYM is open to you, {PLAYER}.\p"
+	.string "Come and challenge me whenever\n"
+	.string "you're ready.$"
 
 PetalburgCity_Gym_Text_VisitorReceivedBalanceBadge:
 	.string "{PLAYER} received the BALANCE BADGE\n"
