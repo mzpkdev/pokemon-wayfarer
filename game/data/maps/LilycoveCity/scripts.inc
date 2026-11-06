@@ -8,7 +8,20 @@ LilycoveCity_OnTransition:
 	setflag FLAG_HIDE_LILYCOVE_CONTEST_HALL_REPORTER
 	call_if_set FLAG_SYS_WEATHER_CTRL, Common_EventScript_SetAbnormalWeather
 	call Common_EventScript_SetupRivalGfxId
+	call_if_unset FLAG_MET_RIVAL_LILYCOVE, LilycoveCity_EventScript_ShowOrHideRival
 	end
+
+@ The rival shops here until their battle is won or the HALL OF FAME sends them home, but not for a
+@ player without BIRCH's starter
+LilycoveCity_EventScript_ShowOrHideRival::
+	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, LilycoveCity_EventScript_HideRival
+	goto_if_set FLAG_SYS_GAME_CLEAR, Common_EventScript_NopReturn
+	clearflag FLAG_HIDE_LILYCOVE_CITY_RIVAL
+	return
+
+LilycoveCity_EventScript_HideRival::
+	setflag FLAG_HIDE_LILYCOVE_CITY_RIVAL
+	return
 
 LilycoveCity_EventScript_BerryGentleman::
 	lock
@@ -207,6 +220,7 @@ LilycoveCity_EventScript_AquaGrunt4::
 	end
 
 LilycoveCity_EventScript_Rival::
+	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, WayfarerHoennVisitor_EventScript_RivalWaitsForStarter
 	lock
 	faceplayer
 	checkplayergender
