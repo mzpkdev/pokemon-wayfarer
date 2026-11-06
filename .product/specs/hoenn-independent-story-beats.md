@@ -266,9 +266,9 @@ conditions.
   transition script does not reset. The transition script places the rival
   only when the scene is armed.
 - The scene is staged for a player standing at the Gym door or the Pokémon
-  Center door, and has no other layout. Arm a parked scene only when a player
-  with a starter walks out of one of those two doors, so it plays where it is
-  staged.
+  Center's front door, and has no other layout. Arm a parked scene only when a
+  player with a starter walks out of one of those two doors, so it plays where
+  it is staged. The Pokémon Center's back exit does not arm it.
 - No rival scene blocks a road, the Weather Institute, the Devon errands, or
   Flannery's Gym while it waits.
 - The Itemfinder and HM Fly stay rewards of their scenes.
