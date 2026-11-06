@@ -2,6 +2,8 @@ SeafloorCavern_Room9_MapScripts::
 	.byte 0
 
 SeafloorCavern_Room9_EventScript_ArchieAwakenKyogre::
+	goto_if_unset FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE, SeafloorCavern_Room9_EventScript_NotYet
+	goto_if_unset FLAG_RECEIVED_HM_DIVE, SeafloorCavern_Room9_EventScript_NotYet
 	lockall
 	setvar VAR_0x8004, LOCALID_SEAFLOOR_CAVERN_ARCHIE
 	setvar VAR_0x8005, LOCALID_SEAFLOOR_CAVERN_MAXIE
@@ -141,6 +143,9 @@ SeafloorCavern_Room9_EventScript_ArchieAwakenKyogre::
 	warp MAP_ROUTE128, 38, 22
 	waitstate
 	releaseall
+	end
+
+SeafloorCavern_Room9_EventScript_NotYet::
 	end
 
 SeafloorCavern_Room9_Movement_ArchieApproachPlayer:
