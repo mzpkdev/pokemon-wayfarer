@@ -147,6 +147,7 @@ class SourceBoundaryTests(unittest.TestCase):
             counts[relative_path] = counts.get(relative_path, 0) + 1
 
         self.assertEqual(counts, {
+            "LavaridgeTown/scripts.inc": 1,
             "LilycoveCity/scripts.inc": 4,
             "LittlerootTown_ProfessorBirchsLab/scripts.inc": 6,
             "MauvilleCity_GameCorner/scripts.inc": 2,
