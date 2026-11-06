@@ -14,6 +14,7 @@ const MARINE_CAVE_LOCATIONS_START = 9
 const MUS_MT_CHIMNEY = 406
 const MUS_ENCOUNTER_MAGMA = 441
 const MUS_ABNORMAL_WEATHER = 443
+const MUS_HG_SURF = 565
 
 const instituteShelly = 3
 const instituteScientist = 5
@@ -72,6 +73,16 @@ const talk = async (game: GameSession, description: string): Promise<string> => 
   await game.player.interact()
   await game.dialogue.waitForOpen()
   return readScene(game, (state) => !state.dialogueOpen, description)
+}
+
+/** B asks to surface; a press right after a step is ignored, so it may take more than one. */
+const surface = async (game: GameSession): Promise<void> => {
+  for (let press = 0; press < 6; press++) {
+    await game.controls.press("b")
+    await game.wait.frames(40)
+    if ((await game.state.read()).dialogue.fullText.includes("Light is filtering")) return
+  }
+  throw new Error("no prompt to surface")
 }
 
 const CASTFORM_EXPLAINED = "changes shape according"
@@ -341,12 +352,7 @@ describe.sequential("Wayfarer Hoenn Weather Institute and late legendaries", () 
     await game.wait.forReady()
     // The arrival tile is the door, which can't be surfaced from.
     await game.player.move("up")
-    // B asks to surface; a press right after the step is ignored, so it may take more than one.
-    for (let press = 0; press < 6; press++) {
-      await game.controls.press("b")
-      await game.wait.frames(40)
-      if ((await game.state.read()).dialogue.fullText.includes("Light is filtering")) break
-    }
+    await surface(game)
     await pressAUntil("marine-cave-entrance")
 
     await game.player.warp("marine-cave-entrance", 14, 2, "up")
@@ -390,6 +396,34 @@ describe.sequential("Wayfarer Hoenn Weather Institute and late legendaries", () 
     expect(await spaceCenter({ hoennMossdeepCityState: 1 })).toBe(MUS_ENCOUNTER_MAGMA)
     expect(await spaceCenter({ hoennMossdeepCityState: 3 })).not.toBe(MUS_ENCOUNTER_MAGMA)
     expect(await spaceCenter({ clefairyDollState: 1 })).not.toBe(MUS_ENCOUNTER_MAGMA)
+  })
+
+  it("carries the Surf theme across Rayquaza's departure", { timeout: 240_000 }, async () => {
+    await arrange(
+      game,
+      "underwater-sootopolis",
+      9,
+      6,
+      "up",
+      {
+        flags: { hoennDiveAuthorized: true, hoennWeatherCtrl: true },
+        vars: { hoennSootopolisCityState: 5, hoennSkyPillarState: 1 },
+      },
+      [{ species: "lapras", level: 100, moves: ["dive", "surf"] }],
+    )
+    await surface(game)
+
+    // Every theme the scene moves through, so a song change or a fade at the warp shows up.
+    const themes: number[] = []
+    for (let tick = 0; tick < 400; tick++) {
+      if (tick < 12) await game.controls.press("a")
+      await game.wait.frames(10)
+      const theme = await game.story.mapMusic()
+      if (theme !== themes.at(-1)) themes.push(theme)
+      if ((await game.story.var("hoennSkyPillarState")) === 3) break
+    }
+    await expect(game.story.var("hoennSkyPillarState")).resolves.toBe(3)
+    expect(themes.slice(themes.indexOf(MUS_HG_SURF))).toEqual([MUS_HG_SURF])
   })
 
   it("keeps Groudon in its cave after the player flees", { timeout: 120_000 }, async () => {

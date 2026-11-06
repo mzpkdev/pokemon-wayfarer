@@ -229,6 +229,7 @@ export const maps = {
   "underwater-route-127": { mapGroup: 31, mapNum: 52 },
   "underwater-route-129": { mapGroup: 31, mapNum: 54 },
   "underwater-marine-cave": { mapGroup: 55, mapNum: 101 },
+  "underwater-sootopolis": { mapGroup: 55, mapNum: 5 },
   "marine-cave-entrance": { mapGroup: 55, mapNum: 102 },
   "marine-cave-end": { mapGroup: 55, mapNum: 103 },
   "mossdeep-space-center-1f": { mapGroup: 45, mapNum: 9 },

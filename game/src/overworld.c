@@ -1572,7 +1572,7 @@ void TryFadeOutOldMapMusic(void)
     u16 warpMusic = GetWarpDestinationMusic();
     if (FlagGet(FLAG_DONT_TRANSITION_MUSIC) != TRUE && warpMusic != GetCurrentMapMusic())
     {
-        if ((currentMusic == MUS_SURF
+        if ((currentMusic == MUS_HG_SURF
             && VarGet(HOENN_VAR_ID(VAR_SKY_PILLAR_STATE)) == 2
             && gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_SOOTOPOLIS_CITY)
             && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SOOTOPOLIS_CITY)
