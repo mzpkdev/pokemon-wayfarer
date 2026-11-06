@@ -1312,11 +1312,14 @@ static u8 UNUSED GetObjectEventLoadFlag(void)
     return sObjectEventLoadFlag;
 }
 
+// FLAG_SYS_WEATHER_CTRL is 0 in the C build; Hoenn's scripts set it in their own bank.
+#define HOENN_WEATHER_CTRL_FLAG HOENN_FLAG_ID(0x88A)
+
 static bool16 ShouldLegendaryMusicPlayAtLocation(struct WarpData *warp)
 {
-    if (!FlagGet(FLAG_SYS_WEATHER_CTRL))
+    if (!FlagGet(HOENN_WEATHER_CTRL_FLAG))
         return FALSE;
-    if (warp->mapGroup == 0)
+    if (warp->mapGroup == MAP_GROUP(MAP_LILYCOVE_CITY))
     {
         switch (warp->mapNum)
         {
@@ -1331,7 +1334,7 @@ static bool16 ShouldLegendaryMusicPlayAtLocation(struct WarpData *warp)
         case MAP_NUM(MAP_ROUTE128):
             return TRUE;
         default:
-            if (VarGet(VAR_SOOTOPOLIS_CITY_STATE) < 4)
+            if (VarGet(HOENN_VAR_ID(VAR_SOOTOPOLIS_CITY_STATE)) < 4)
                 return FALSE;
             switch (warp->mapNum)
             {
@@ -1347,7 +1350,7 @@ static bool16 ShouldLegendaryMusicPlayAtLocation(struct WarpData *warp)
 
 static bool16 NoMusicInSootopolisWithLegendaries(struct WarpData *warp)
 {
-    if (VarGet(VAR_SKY_PILLAR_STATE) != 1)
+    if (VarGet(HOENN_VAR_ID(VAR_SKY_PILLAR_STATE)) != 1)
         return FALSE;
     else if (warp->mapGroup != MAP_GROUP(MAP_SOOTOPOLIS_CITY))
         return FALSE;
@@ -1372,9 +1375,9 @@ static bool16 IsInfiltratedWeatherInstitute(struct WarpData *warp)
 
 static bool16 IsInfiltratedSpaceCenter(struct WarpData *warp)
 {
-    if (VarGet(VAR_MOSSDEEP_CITY_STATE) == 0)
+    if (VarGet(HOENN_VAR_ID(VAR_MOSSDEEP_CITY_STATE)) == 0)
         return FALSE;
-    else if (VarGet(VAR_MOSSDEEP_CITY_STATE) > 2)
+    else if (VarGet(HOENN_VAR_ID(VAR_MOSSDEEP_CITY_STATE)) > 2)
         return FALSE;
     else if (warp->mapGroup != MAP_GROUP(MAP_MOSSDEEP_CITY_SPACE_CENTER_1F))
         return FALSE;
@@ -1569,8 +1572,8 @@ void TryFadeOutOldMapMusic(void)
     u16 warpMusic = GetWarpDestinationMusic();
     if (FlagGet(FLAG_DONT_TRANSITION_MUSIC) != TRUE && warpMusic != GetCurrentMapMusic())
     {
-        if ((currentMusic == MUS_SURF
-            && VarGet(VAR_SKY_PILLAR_STATE) == 2
+        if ((currentMusic == MUS_HG_SURF
+            && VarGet(HOENN_VAR_ID(VAR_SKY_PILLAR_STATE)) == 2
             && gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_SOOTOPOLIS_CITY)
             && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SOOTOPOLIS_CITY)
             && sWarpDestination.mapGroup == MAP_GROUP(MAP_SOOTOPOLIS_CITY)

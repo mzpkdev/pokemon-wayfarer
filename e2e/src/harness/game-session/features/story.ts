@@ -14,6 +14,8 @@ export type StoryApi = {
   setFlag: (name: StoryFlag, value: boolean) => Promise<void>
   var: (name: StoryVar) => Promise<number>
   setVar: (name: StoryVar, value: number) => Promise<void>
+  /** The map theme the ROM has chosen, so a journey can check music without listening to it. */
+  mapMusic: () => Promise<number>
 }
 
 // Hoenn (0x7000) and coast (0xf000) vars live outside the plain save-bank var
@@ -24,6 +26,7 @@ const isScriptOnlyVarId = (id: number): boolean => {
 }
 
 export const createStoryApi = (runtime: SessionRuntime, mailbox: MailboxApi): StoryApi => ({
+  mapMusic: () => runtime.readUint16(runtime.address("sCurrentMapMusic")),
   flag: async (name) => {
     const id = storyFlags[name]
     if (id < 0x6000) {
