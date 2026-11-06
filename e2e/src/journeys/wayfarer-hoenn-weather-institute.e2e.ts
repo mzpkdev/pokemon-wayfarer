@@ -14,6 +14,7 @@ const MARINE_CAVE_LOCATIONS_START = 9
 const MUS_MT_CHIMNEY = 406
 const MUS_ENCOUNTER_MAGMA = 441
 const MUS_ABNORMAL_WEATHER = 443
+const MUS_SURF = 365
 const MUS_HG_SURF = 565
 
 const instituteShelly = 3
@@ -423,6 +424,7 @@ describe.sequential("Wayfarer Hoenn Weather Institute and late legendaries", () 
       if ((await game.story.var("hoennSkyPillarState")) === 3) break
     }
     await expect(game.story.var("hoennSkyPillarState")).resolves.toBe(3)
+    expect(themes).not.toContain(MUS_SURF)
     expect(themes.slice(themes.indexOf(MUS_HG_SURF))).toEqual([MUS_HG_SURF])
   })
 
