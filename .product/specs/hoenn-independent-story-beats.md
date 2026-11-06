@@ -1,7 +1,7 @@
 # Hoenn independent story beats
 
 PRD: [Hoenn independent story beats](../prds/hoenn-independent-story-beats.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 
