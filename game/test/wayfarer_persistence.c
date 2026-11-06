@@ -23,6 +23,7 @@
 #include "wayfarer_kanto_opening.h"
 #include "wayfarer_ss_anne.h"
 #include "test/test.h"
+#include "test/overworld_script.h"
 #include "wayfarer_world.h"
 #include "gba/flash_internal.h"
 #include "agb_flash.h"
@@ -112,6 +113,72 @@ TEST("Abnormal weather ends on its own route after 1000 steps")
 
     EXPECT(AbnormalWeatherHasExpired());
     EXPECT_EQ(VarGet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_STEP_COUNTER)), 0);
+}
+
+TEST("Abnormal weather lapses quietly away from its route")
+{
+    VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION), ABNORMAL_WEATHER_ROUTE_114_NORTH);
+    VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_STEP_COUNTER), 999);
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_NEW_BARK_TOWN_HNS);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_NEW_BARK_TOWN_HNS);
+
+    EXPECT(!AbnormalWeatherHasExpired());
+    EXPECT_EQ(VarGet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION)), ABNORMAL_WEATHER_NONE);
+    EXPECT_EQ(VarGet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_STEP_COUNTER)), 0);
+}
+
+TEST("Abnormal weather outlasting the player in a cave ends on the way out")
+{
+    VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION), ABNORMAL_WEATHER_ROUTE_114_NORTH);
+    VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_STEP_COUNTER), 999);
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_TERRA_CAVE_END);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_TERRA_CAVE_END);
+
+    EXPECT(!AbnormalWeatherHasExpired());
+    EXPECT_EQ(VarGet(HOENN_VAR_ID(VAR_SHOULD_END_ABNORMAL_WEATHER)), 1);
+    EXPECT_EQ(VarGet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION)), ABNORMAL_WEATHER_ROUTE_114_NORTH);
+}
+
+TEST("A whiteout clears abnormal weather that was due to end")
+{
+    VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION), ABNORMAL_WEATHER_ROUTE_114_NORTH);
+    VarSet(HOENN_VAR_ID(VAR_SHOULD_END_ABNORMAL_WEATHER), 1);
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_TERRA_CAVE_END);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_TERRA_CAVE_END);
+    ZeroPlayerPartyMons();
+    CreateMon(&gPlayerParty[0], SPECIES_WOBBUFFET, 5, 0, OTID_STRUCT_PLAYER_ID);
+    CalculatePlayerPartyCount();
+
+    DoWhiteOut();
+
+    EXPECT_EQ(VarGet(HOENN_VAR_ID(VAR_SHOULD_END_ABNORMAL_WEATHER)), 0);
+    EXPECT_EQ(VarGet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION)), ABNORMAL_WEATHER_NONE);
+}
+
+TEST("Kyogre's rain reaches Marine Cave's own scripts and ends like Groudon's drought")
+{
+    VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION), ABNORMAL_WEATHER_ROUTE_105_NORTH);
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_UNDERWATER_ROUTE105);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_UNDERWATER_ROUTE105);
+
+    RUN_OVERWORLD_SCRIPT(
+        call AbnormalWeather_Underwater_SetupEscapeWarp;
+    );
+
+    EXPECT_EQ(gSaveBlock1Ptr->escapeWarp.mapGroup, MAP_GROUP(MAP_ROUTE105));
+    EXPECT_EQ(gSaveBlock1Ptr->escapeWarp.mapNum, MAP_NUM(MAP_ROUTE105));
+    EXPECT_EQ(gSaveBlock1Ptr->escapeWarp.x, 11);
+    EXPECT_EQ(gSaveBlock1Ptr->escapeWarp.y, 29);
+
+    VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_STEP_COUNTER), 999);
+    EXPECT(!AbnormalWeatherHasExpired());
+    EXPECT_EQ(VarGet(HOENN_VAR_ID(VAR_SHOULD_END_ABNORMAL_WEATHER)), 1);
+
+    VarSet(HOENN_VAR_ID(VAR_SHOULD_END_ABNORMAL_WEATHER), 0);
+    VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_STEP_COUNTER), 999);
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_ROUTE105);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_ROUTE105);
+    EXPECT(AbnormalWeatherHasExpired());
 }
 
 TEST("Wayfarer new-game state hides Blue until the Anne visitor scene")

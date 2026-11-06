@@ -9,6 +9,7 @@ import { type GameState } from "../harness/game-session/features/state"
 const READY_TR = 120 // WAYFARER_LEGENDARY_TR on the v0 scale the Wayfarer build runs on.
 const CHANGING_WEATHER = "ridiculous to think"
 const REPORT = "I track weather patterns"
+const NO_ROOM = "no more room"
 
 const instituteShelly = 3
 const instituteScientist = 5
@@ -170,6 +171,33 @@ describe.sequential("Wayfarer Hoenn Weather Institute and late legendaries", () 
     },
   )
 
+  it("keeps Castform claimable once after a full party and box", { timeout: 180_000 }, async () => {
+    await arrange(game, "weather-institute-2f", 5, 6, "left", {})
+    await game.storage.arrangeCapacity("full")
+
+    await game.player.interact()
+    await readScene(game, (state) => state.battle.active, "Shelly's battle")
+    await game.battle.win()
+    await readScene(
+      game,
+      (state, transcript) => !state.dialogueOpen && transcript.includes(NO_ROOM),
+      "the full handoff",
+    )
+    await expect(game.story.flag("hoennReceivedCastform")).resolves.toBe(false)
+    await expect(game.story.var("hoennWeatherInstituteState")).resolves.toBe(1)
+    await game.saveAndReload()
+
+    // A freed slot makes the same scientist hand it over, and only once.
+    await game.storage.arrangeCapacity("one-pc-slot-free")
+    await game.player.interact()
+    await game.dialogue.waitForOpen()
+    await readScene(game, castformExplained, "the claim after making room")
+    await expect(game.story.flag("hoennReceivedCastform")).resolves.toBe(true)
+    expect((await game.storage.slot(0, 0)).mon).not.toBeNull()
+    expect((await game.state.read()).party).toHaveLength(6)
+    expect(await talk(game, "the scientist afterwards")).toContain(CHANGING_WEATHER)
+  })
+
   it(
     "reports abnormal weather on the crisis and the rating, never a Hall of Fame",
     {
@@ -241,6 +269,29 @@ describe.sequential("Wayfarer Hoenn Weather Institute and late legendaries", () 
     await game.wait.forMap(route)
     await game.wait.forReady()
     expect((await game.state.read()).player).toMatchObject({ x, y: y + 1 })
+  })
+
+  it("keeps Groudon in its cave after the player flees", { timeout: 120_000 }, async () => {
+    const meetGroudon = async () => {
+      await game.player.move("up")
+      await readScene(game, (state) => state.battle.active, "Groudon's battle")
+      expect((await game.state.read()).battle.enemy?.species).toBe("groudon")
+    }
+
+    await arrange(game, "terra-cave-end", 17, 27, "up", {
+      vars: { ...afterCrisis, hoennAbnormalWeatherLocation: 1, trainerRating: READY_TR },
+    })
+    await meetGroudon()
+    await flee(game)
+    await readScene(game, (state) => !state.battle.active && !state.dialogueOpen, "the flight")
+    await expect(game.story.flag("hoennDefeatedGroudon")).resolves.toBe(false)
+    await expect(game.story.var("hoennAbnormalWeatherLocation")).resolves.toBe(1)
+
+    await game.player.warp("terra-cave-end", 17, 27, "up")
+    await game.wait.forReady()
+    await meetGroudon()
+    await flee(game)
+    await readScene(game, (state) => !state.battle.active && !state.dialogueOpen, "the flight")
   })
 
   it(
