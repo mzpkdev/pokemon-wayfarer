@@ -297,6 +297,13 @@ adapted Wayfarer introduction, including:
 - all eight Hoenn Gyms;
 - Victory Road, the Elite Four, the Champion, and the Hall of Fame.
 
+The Devon errands don't follow the Gyms. The Rustboro theft starts at its
+street scene with no badge, and Steven and Stern each take a delivery only
+from a player who holds its item, in either order. After the harbor scene,
+Stern takes the Parts at the harbor. The
+[Hoenn independent story beats](hoenn-independent-story-beats.md) specification
+holds the rules.
+
 Hoenn story scripts use only Hoenn variables and flags for Hoenn progress. A
 Johto or Kanto badge, Champion result, global game-clear flag, Trainer defeat,
 item event, or NPC state cannot satisfy a Hoenn campaign check by numeric

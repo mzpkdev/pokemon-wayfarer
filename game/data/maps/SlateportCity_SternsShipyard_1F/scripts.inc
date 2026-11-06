@@ -3,9 +3,11 @@ SlateportCity_SternsShipyard_1F_MapScripts::
 
 SlateportCity_SternsShipyard_1F_EventScript_Dock::
 	lockall
+	setflag FLAG_HIDE_SLATEPORT_CITY_TEAM_AQUA
 	goto_if_set FLAG_SYS_GAME_CLEAR, SlateportCity_SternsShipyard_1F_EventScript_FerryReady
-	goto_if_set FLAG_BADGE07_GET, SlateportCity_SternsShipyard_1F_EventScript_BrineyJoined
 	goto_if_set FLAG_DELIVERED_DEVON_GOODS, SlateportCity_SternsShipyard_1F_EventScript_NeedVeteran
+	checkitem ITEM_DEVON_PARTS
+	goto_if_eq VAR_RESULT, FALSE, SlateportCity_SternsShipyard_1F_EventScript_NoGoods
 	goto_if_set FLAG_DOCK_REJECTED_DEVON_GOODS, SlateportCity_SternsShipyard_1F_EventScript_GoFindStern
 	msgbox SlateportCity_SternsShipyard_1F_Text_CantMakeHeadsOrTails, MSGBOX_DEFAULT
 	applymovement LOCALID_DOCK, Common_Movement_FacePlayer
@@ -15,7 +17,17 @@ SlateportCity_SternsShipyard_1F_EventScript_Dock::
 	applymovement LOCALID_DOCK, Common_Movement_FaceOriginalDirection
 	waitmovement 0
 	setflag FLAG_DOCK_REJECTED_DEVON_GOODS
-	setflag FLAG_HIDE_SLATEPORT_CITY_TEAM_AQUA
+	releaseall
+	end
+
+SlateportCity_SternsShipyard_1F_EventScript_NoGoods::
+	msgbox SlateportCity_SternsShipyard_1F_Text_CantMakeHeadsOrTails, MSGBOX_DEFAULT
+	applymovement LOCALID_DOCK, Common_Movement_FacePlayer
+	waitmovement 0
+	msgbox SlateportCity_SternsShipyard_1F_Text_MeetDock, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_DOCK, Common_Movement_FaceOriginalDirection
+	waitmovement 0
 	releaseall
 	end
 
@@ -23,13 +35,6 @@ SlateportCity_SternsShipyard_1F_EventScript_FerryReady::
 	applymovement LOCALID_DOCK, Common_Movement_FacePlayer
 	waitmovement 0
 	msgbox SlateportCity_SternsShipyard_1F_Text_FerryIsReady, MSGBOX_DEFAULT
-	releaseall
-	end
-
-SlateportCity_SternsShipyard_1F_EventScript_BrineyJoined::
-	applymovement LOCALID_DOCK, Common_Movement_FacePlayer
-	waitmovement 0
-	msgbox SlateportCity_SternsShipyard_1F_Text_BrineyJoinedUs, MSGBOX_DEFAULT
 	releaseall
 	end
 
@@ -58,10 +63,6 @@ SlateportCity_SternsShipyard_1F_EventScript_Scientist2::
 	msgbox SlateportCity_SternsShipyard_1F_Text_GetSeasickEasily, MSGBOX_NPC
 	end
 
-SlateportCity_SternsShipyard_1F_EventScript_Briney::
-	msgbox SlateportCity_SternsShipyard_1F_Text_DecidedToHelpDock, MSGBOX_NPC
-	end
-
 SlateportCity_SternsShipyard_1F_Text_CantMakeHeadsOrTails:
 	.string "Umm… If this goes here, and that\n"
 	.string "goes over there…\p"
@@ -69,6 +70,14 @@ SlateportCity_SternsShipyard_1F_Text_CantMakeHeadsOrTails:
 	.string "And what about that doohickey?\p"
 	.string "Aaargh! I can't make heads or tails\n"
 	.string "of this!$"
+
+SlateportCity_SternsShipyard_1F_Text_MeetDock:
+	.string "Hm?\n"
+	.string "Hi, I'm DOCK.\p"
+	.string "CAPT. STERN commissioned me to\n"
+	.string "design a ferry.\p"
+	.string "If you're looking for him, he went off\n"
+	.string "somewhere. He said he had work to do.$"
 
 SlateportCity_SternsShipyard_1F_Text_MeetDockDeliverToStern:
 	.string "Hm?\n"
@@ -97,12 +106,6 @@ SlateportCity_SternsShipyard_1F_Text_CouldUseAdviceFromVeteran:
 	.string "I really could use advice from a veteran\n"
 	.string "who knows the seas…$"
 
-SlateportCity_SternsShipyard_1F_Text_BrineyJoinedUs:
-	.string "DOCK: Hi! MR. BRINEY's joined us to\n"
-	.string "lend us his help.\p"
-	.string "Thanks to the veteran sailor, the\n"
-	.string "ferry is steadily coming together.$"
-
 SlateportCity_SternsShipyard_1F_Text_FerryIsReady:
 	.string "DOCK: The ferry is finally ready!\p"
 	.string "The new S.S. TIDAL is truly a marvel\n"
@@ -111,21 +114,6 @@ SlateportCity_SternsShipyard_1F_Text_FerryIsReady:
 	.string "make something even better.\p"
 	.string "You know, there's never an end to\n"
 	.string "technology's march.$"
-
-SlateportCity_SternsShipyard_1F_Text_DecidedToHelpDock:
-	.string "MR. BRINEY: Ah, {PLAYER}{KUN}!\n"
-	.string "It's been too long!\p"
-	.string "Aye, since I met you, this old sea dog's\n"
-	.string "been feeling frisky!\p"
-	.string "So I've decided to help DOCK make\n"
-	.string "a ferry.\p"
-	.string "Aye, after all, a ferry would be able\n"
-	.string "to carry a lot of people.\p"
-	.string "But, you know, that DOCK is really\n"
-	.string "something special.\p"
-	.string "With his knack for technology and\n"
-	.string "my experience, I'm sure that we can\l"
-	.string "build one great ship, aye!$"
 
 SlateportCity_SternsShipyard_1F_Text_SeaIsLikeLivingThing:
 	.string "The seasons, the weather, where\n"
