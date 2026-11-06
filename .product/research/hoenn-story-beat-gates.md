@@ -287,7 +287,7 @@ girl has the same hole.
 - Route 121's three Aqua grunts are visible from the start and stand at (30,8),
   (30,7), and (31,7), which fills the passage south at y=7. Triggers at
   (25,5–8) play "We're to move out to MT. PYRE!" and remove them
-  (`maps/Route121/scripts.inc:15–33`), with no story gate.
+  (`maps/Route121/scripts.inc:16–33`), with no story gate.
 - The Mossdeep sailor's line, keyed only on `FLAG_RECEIVED_HM_DIVE`, says
   someone beat Team Aqua (`maps/MossdeepCity/scripts.inc:348`).
 - The Seafloor Cavern grunt says Team Magma was spotted near Mossdeep

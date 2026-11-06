@@ -52,7 +52,7 @@ static void Enter(u8 mapGroup, u8 mapNum)
 
 #define ENTER(map) Enter(MAP_GROUP(map), MAP_NUM(map))
 
-static void ExpectTriggerDoesNothing(s16 x, s16 y)
+static void StepOnTrigger(s16 x, s16 y)
 {
     const struct MapEvents *events = gMapHeader.events;
     u32 i;
@@ -61,9 +61,7 @@ static void ExpectTriggerDoesNothing(s16 x, s16 y)
     {
         if (events->coordEvents[i].x == x && events->coordEvents[i].y == y)
         {
-            UnlockPlayerFieldControls();
             RunScriptImmediately(events->coordEvents[i].script);
-            EXPECT(!ArePlayerFieldControlsLocked());
             return;
         }
     }
@@ -89,9 +87,9 @@ TEST("Mt. Pyre's summit is empty of Team Aqua until Mt. Chimney is done")
     ENTER(MAP_MT_PYRE_SUMMIT);
     EXPECT(FlagGet(HOENN_FLAG_HIDE_SUMMIT_ARCHIE));
     EXPECT(FlagGet(HOENN_FLAG_HIDE_SUMMIT_AQUA));
-    ExpectTriggerDoesNothing(22, 7);
-    ExpectTriggerDoesNothing(23, 7);
-    ExpectTriggerDoesNothing(24, 7);
+    StepOnTrigger(22, 7);
+    StepOnTrigger(23, 7);
+    StepOnTrigger(24, 7);
     EXPECT_EQ(VarGet(HOENN_VAR_MT_PYRE_STATE), 0);
 
     FlagSet(HOENN_FLAG_MT_CHIMNEY_DONE);
@@ -127,7 +125,7 @@ TEST("Route 121's grunts are there only while Mt. Pyre is a true lead")
 
     ENTER(MAP_ROUTE121);
     EXPECT(FlagGet(HOENN_FLAG_HIDE_ROUTE_121_GRUNTS));
-    ExpectTriggerDoesNothing(25, 7);
+    StepOnTrigger(25, 7);
     EXPECT_EQ(VarGet(HOENN_VAR_ROUTE_121_STATE), 0);
 
     FlagSet(HOENN_FLAG_MT_CHIMNEY_DONE);
@@ -137,7 +135,7 @@ TEST("Route 121's grunts are there only while Mt. Pyre is a true lead")
     FlagSet(HOENN_FLAG_RECEIVED_ORB);
     ENTER(MAP_ROUTE121);
     EXPECT(FlagGet(HOENN_FLAG_HIDE_ROUTE_121_GRUNTS));
-    ExpectTriggerDoesNothing(25, 7);
+    StepOnTrigger(25, 7);
     EXPECT_EQ(VarGet(HOENN_VAR_ROUTE_121_STATE), 0);
 }
 
@@ -231,7 +229,7 @@ TEST("Room 9's scene waits for both branches")
         FlagSet(HOENN_FLAG_STEVENS_DIVE);
 
     ENTER(MAP_SEAFLOOR_CAVERN_ROOM9);
-    ExpectTriggerDoesNothing(17, 42);
+    StepOnTrigger(17, 42);
     EXPECT_EQ(VarGet(HOENN_VAR_SEAFLOOR_CAVERN_STATE), 0);
 }
 

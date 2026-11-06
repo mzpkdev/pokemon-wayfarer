@@ -6,8 +6,8 @@ Route121_OnTransition:
 	call_if_eq VAR_ROUTE121_STATE, 0, Route121_EventScript_SetAquaPresence
 	end
 
-@ The grunts are here only while Mt. Pyre is a true lead. They fill the passage south, so they must
-@ not stand around silently before their scene.
+@ The grunts are here only while Mt. Pyre is a true lead. They fill the passage south, so they stay
+@ hidden whenever their scene can't play.
 Route121_EventScript_SetAquaPresence::
 	setflag FLAG_HIDE_ROUTE_121_TEAM_AQUA_GRUNTS
 	goto_if_unset FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY, Common_EventScript_NopReturn
