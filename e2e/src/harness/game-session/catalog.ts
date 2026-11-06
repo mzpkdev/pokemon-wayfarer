@@ -554,6 +554,8 @@ export const storyVars = {
   blackthornCityState: 0x4056,
   hoennStarterChoice: 0x7023,
   hoennAbnormalWeatherLocation: 0x7037,
+  hoennAbnormalWeatherSteps: 0x7038,
+  hoennAbnormalWeatherShouldEnd: 0x7039,
   hoennWeatherInstituteState: 0x70b3,
   hoennSkyPillarState: 0x70ca,
   hoennSkyPillarCryDone: 0x70d7,

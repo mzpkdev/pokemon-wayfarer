@@ -232,9 +232,9 @@ describe.sequential("Wayfarer Hoenn Weather Institute and late legendaries", () 
 
     expect(await hint({ hoennGameClear: true }, READY_TR - 1)).toContain("loves rain")
     expect(await hint({}, READY_TR)).toContain("droughts and\nheavy rain")
-    expect(await hint({ hoennDefeatedKyogre: true, hoennDefeatedGroudon: true }, READY_TR)).toContain(
-      "loves rain",
-    )
+    expect(
+      await hint({ hoennDefeatedKyogre: true, hoennDefeatedGroudon: true }, READY_TR),
+    ).toContain("loves rain")
   })
 
   it("opens Terra Cave from the scientist's report", { timeout: 180_000 }, async () => {
@@ -293,6 +293,44 @@ describe.sequential("Wayfarer Hoenn Weather Institute and late legendaries", () 
     await flee(game)
     await readScene(game, (state) => !state.battle.active && !state.dialogueOpen, "the flight")
   })
+
+  it(
+    "ends the weather on its route, and for a player leaving the cave",
+    {
+      timeout: 120_000,
+    },
+    async () => {
+      const readEnding = async () => {
+        await readScene(game, (state) => !state.dialogueOpen, "the weather's end")
+        expect((await game.state.read()).dialogue.fullText).toContain("appears to\nhave subsided")
+        await expect(game.story.var("hoennAbnormalWeatherLocation")).resolves.toBe(0)
+        await expect(game.story.var("hoennAbnormalWeatherShouldEnd")).resolves.toBe(0)
+      }
+
+      // The event's last step, taken on the road below the entrance at (7,4).
+      await arrange(game, "route-114", 7, 6, "up", {
+        vars: { hoennAbnormalWeatherLocation: 1, hoennAbnormalWeatherSteps: 999 },
+      })
+      await game.player.move("up")
+      await readEnding()
+
+      // The entrance is a wall again.
+      await game.player.move("up")
+      await game.wait.frames(60)
+      expect(await game.state.read()).toMatchObject({
+        map: { name: "route-114" },
+        player: { x: 7, y: 5 },
+      })
+
+      // Marked to end while the player was inside: the route clears it once they are back.
+      await arrange(game, "route-114", 7, 9, "up", {
+        vars: { hoennAbnormalWeatherLocation: 1 },
+      })
+      await game.story.setVar("hoennAbnormalWeatherShouldEnd", 1)
+      await game.wait.frames(60)
+      await readEnding()
+    },
+  )
 
   it(
     "leaves Rayquaza at the top of Sky Pillar until the player is ready",

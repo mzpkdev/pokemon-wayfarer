@@ -127,7 +127,7 @@ TEST("Abnormal weather lapses quietly away from its route")
     EXPECT_EQ(VarGet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_STEP_COUNTER)), 0);
 }
 
-TEST("Abnormal weather outlasting the player in a cave ends on the way out")
+TEST("Abnormal weather outlasting the player in a cave waits for them to leave")
 {
     VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION), ABNORMAL_WEATHER_ROUTE_114_NORTH);
     VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_STEP_COUNTER), 999);
@@ -155,7 +155,7 @@ TEST("A whiteout clears abnormal weather that was due to end")
     EXPECT_EQ(VarGet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION)), ABNORMAL_WEATHER_NONE);
 }
 
-TEST("Kyogre's rain reaches Marine Cave's own scripts and ends like Groudon's drought")
+TEST("Kyogre's rain reaches the underwater route's escape warp and ends like Groudon's drought")
 {
     VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION), ABNORMAL_WEATHER_ROUTE_105_NORTH);
     gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_UNDERWATER_ROUTE105);
