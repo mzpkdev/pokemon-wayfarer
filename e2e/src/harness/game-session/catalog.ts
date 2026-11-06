@@ -555,6 +555,8 @@ export const storyVars = {
   hoennRoute110State: 0x7069,
   hoennRoute119State: 0x7072,
   hoennScottState: 0x70d1,
+  // Past 0 once the Petalburg Gym has been visited: Birch rates the Pokédex from then on.
+  hoennPetalburgGymState: 0x7085,
   vermilionCityState: 0x408f,
   violetCityState: 0x4091,
   trainerRating: 0x40f7,
