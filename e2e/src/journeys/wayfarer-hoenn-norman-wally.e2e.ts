@@ -10,6 +10,7 @@ import { rideAquaFromVermilionToSlateport } from "../playbooks/wayfarer-ports"
 
 const norman = 1
 const mauvilleWally = 6
+const mauvilleScott = 11
 const lavaridgeRival = 8
 const lavaridgeRivalOnBike = 7
 
@@ -35,11 +36,13 @@ const playSceneUntil = async (
   game: GameSession,
   done: () => Promise<boolean>,
   description: string,
+  watch?: (state: GameState) => void,
 ): Promise<void> => {
   let won = false
   for (let attempt = 0; attempt < 240; attempt++) {
     await game.wait.frames(45)
     const state = await game.state.read()
+    watch?.(state)
     // The ready bit can report true between two pages, so the scene's own state decides.
     if (state.ready && !state.scriptActive && !state.controlsLocked && (await done())) return
     if (!state.battle.active) won = false
@@ -49,6 +52,32 @@ const playSceneUntil = async (
     } else await game.controls.press("a")
   }
   throw new Error(`${description}: ${JSON.stringify(await game.state.read())}`)
+}
+
+/** Beats Wally from one side of him. Scott then walks up to wherever that left the player. */
+const beatWallyFrom = async (
+  game: GameSession,
+  x: number,
+  y: number,
+  facing: "up" | "right",
+): Promise<void> => {
+  await game.player.warp("mauville-city", x, y, facing)
+  await game.wait.forReady()
+  await game.player.interact()
+  let scottGap: number | undefined
+  await playSceneUntil(
+    game,
+    () => game.story.flag("hoennDefeatedWallyMauville"),
+    "Wally's Mauville scene did not finish",
+    (state) => {
+      const scott = state.objects.find((object) => object.localId === mauvilleScott)
+      if (scott?.visible && state.dialogueOpen) {
+        scottGap = Math.abs(scott.x - state.player.x) + Math.abs(scott.y - state.player.y)
+      }
+    },
+  )
+  expect(scottGap).toBe(1)
+  await expectFreeAt(game, "mauville-city", x, y)
 }
 
 /** Talks to what stands ahead of a tile, reading on until the story flag is set. */
@@ -147,7 +176,7 @@ describe.sequential("Wayfarer Hoenn Norman, Wally and the Lavaridge rival", () =
       })
       await rideAquaFromVermilionToSlateport(game)
 
-      // Mauville: WALLY would stand on (8,6), the only tile below the Gym door.
+      // Mauville: WALLY and his uncle stay away, and the door above (8,6) is open.
       await game.player.warp("mauville-city", 8, 8, "up")
       await game.wait.forReady()
       expect(sees(await game.state.read(), mauvilleWally)).toBe(false)
@@ -184,6 +213,12 @@ describe.sequential("Wayfarer Hoenn Norman, Wally and the Lavaridge rival", () =
     expect(sees(await game.state.read(), mauvilleWally)).toBe(true)
     await expect(game.story.flag("hoennDefeatedWallyMauville")).resolves.toBe(false)
 
+    // He waits beside the door now, so the Gym stays open before his battle.
+    await stepOpening(game, "up")
+    await stepOpening(game, "up")
+    await stepOpening(game, "up")
+    await game.wait.forMap("mauville-gym")
+
     await game.player.warp("victory-road-1f", 2, 24, "up")
     await game.wait.forReady()
     await stepOpening(game, "up")
@@ -205,6 +240,10 @@ describe.sequential("Wayfarer Hoenn Norman, Wally and the Lavaridge rival", () =
       async () => (await game.story.var("hoennVictoryRoad1fState")) === 1,
       "Wally's scene did not finish",
     )
+  })
+
+  it("plays Wally's Mauville scene from below him", { timeout: 300_000 }, async () => {
+    await beatWallyFrom(game, 9, 7, "up")
   })
 
   it(
@@ -289,5 +328,18 @@ describe.sequential("Wayfarer Hoenn Norman, Wally and the Lavaridge rival", () =
       determinism: { textSpeed: "instant" },
     })
     await tutorialThenNorman(game)
+  })
+
+  // A new Hoenn game of its own: the Hoenn bank's Wally flag cannot be cleared to replay him.
+  it("plays Wally's Mauville scene from his left", { timeout: 300_000 }, async () => {
+    await game.arrange({
+      checkpoint: "hoenn-before-rescue",
+      player: { facing: "up", position: { map: "mauville-city", x: 8, y: 8 } },
+      story: { flags: { disableEncounters: true, disableTrainers: true } },
+      party: [{ species: "salamence", level: 100, moves: ["tackle"] }],
+      determinism: { textSpeed: "instant" },
+    })
+    await game.story.setVar("hoennPetalburgGymState", 6)
+    await beatWallyFrom(game, 8, 6, "right")
   })
 })

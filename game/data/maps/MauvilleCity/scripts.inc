@@ -14,6 +14,7 @@ MauvilleCity_OnTransition::
 	end
 
 @ WALLY's lines recall the catching tutorial, so he and his uncle come to town only after it
+@ They wait beside the Gym door, never on the tile below it, and Scott's walk matches that spot
 MauvilleCity_EventScript_PlaceWally::
 	goto_if_ge VAR_PETALBURG_GYM_STATE, 6, MauvilleCity_EventScript_ShowWally
 	setflag FLAG_HIDE_MAUVILLE_CITY_WALLY
@@ -190,7 +191,7 @@ MauvilleCity_EventScript_ScottApproachPlayerNorth::
 	return
 
 MauvilleCity_EventScript_ScottApproachPlayerEast::
-	setobjectxyperm LOCALID_MAUVILLE_SCOTT, 12, 13
+	setobjectxyperm LOCALID_MAUVILLE_SCOTT, 13, 13
 	addobject LOCALID_MAUVILLE_SCOTT
 	applymovement LOCALID_MAUVILLE_SCOTT, MauvilleCity_Movement_ScottApproachPlayerEast
 	waitmovement 0

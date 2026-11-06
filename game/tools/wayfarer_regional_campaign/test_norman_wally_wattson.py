@@ -90,6 +90,18 @@ class WallyTests(unittest.TestCase):
         self.assertIn("setflag FLAG_HIDE_MAUVILLE_CITY_WALLY\n", place)
         self.assertIn("setflag FLAG_HIDE_MAUVILLE_CITY_WALLYS_UNCLE", place)
 
+    def test_waiting_wally_leaves_the_tile_below_the_gym_door_free(self):
+        mauville = json.loads((GAME / "data/maps/MauvilleCity/map.json").read_text())
+        door = next(warp for warp in mauville["warp_events"] if warp["dest_map"] == "MAP_MAUVILLE_CITY_GYM")
+        below_door = (door["x"], door["y"] + 1)
+        waiting = {
+            object_event["local_id"]: (object_event["x"], object_event["y"])
+            for object_event in mauville["object_events"]
+            if object_event.get("local_id") in ("LOCALID_MAUVILLE_WALLY", "LOCALID_MAUVILLE_WALLYS_UNCLE")
+        }
+        self.assertEqual(len(waiting), 2)
+        self.assertNotIn(below_door, waiting.values())
+
     def test_wally_stays_out_of_verdanturf_once_flannery_is_beaten(self):
         source = script("MauvilleCity")
         self.assertIn(
