@@ -6,7 +6,7 @@ Route119_WeatherInstitute_2F_OnTransition:
 	call_if_eq VAR_WEATHER_INSTITUTE_STATE, 0, Route119_WeatherInstitute_2F_EventScript_ShowTeamAqua
 	call_if_eq VAR_WEATHER_INSTITUTE_STATE, 0, Route119_WeatherInstitute_2F_EventScript_SetScientistPosAquaHere
 	call_if_eq VAR_WEATHER_INSTITUTE_STATE, 1, Route119_WeatherInstitute_2F_EventScript_SetScientistPosAquaGone
-	call_if_set FLAG_SYS_GAME_CLEAR, Route119_WeatherInstitute_2F_EventScript_SetScientistPosGameClear
+	call_if_ne VAR_WEATHER_INSTITUTE_STATE, 0, Route119_WeatherInstitute_2F_EventScript_TrySetScientistPosAtMonitor
 	end
 
 Route119_WeatherInstitute_2F_EventScript_ShowTeamAqua::
@@ -23,7 +23,13 @@ Route119_WeatherInstitute_2F_EventScript_SetScientistPosAquaGone::
 	setobjectmovementtype LOCALID_WEATHER_INSTITUTE_2F_SCIENTIST, MOVEMENT_TYPE_FACE_RIGHT
 	return
 
-Route119_WeatherInstitute_2F_EventScript_SetScientistPosGameClear::
+@ He leaves his monitor no earlier than the occupation's end: its scene walks him up to the player.
+Route119_WeatherInstitute_2F_EventScript_TrySetScientistPosAtMonitor::
+	specialvar VAR_RESULT, WayfarerHoenn_IsLateLegendaryReady
+	call_if_eq VAR_RESULT, TRUE, Route119_WeatherInstitute_2F_EventScript_SetScientistPosAtMonitor
+	return
+
+Route119_WeatherInstitute_2F_EventScript_SetScientistPosAtMonitor::
 	setobjectxyperm LOCALID_WEATHER_INSTITUTE_2F_SCIENTIST, 2, 2
 	setobjectmovementtype LOCALID_WEATHER_INSTITUTE_2F_SCIENTIST, MOVEMENT_TYPE_FACE_UP
 	return
@@ -55,14 +61,17 @@ Route119_WeatherInstitute_2F_EventScript_ShellyDefeated::
 	applymovement LOCALID_WEATHER_INSTITUTE_2F_GRUNT_3, Route119_WeatherInstitute_2F_Movement_GruntApproachShelly
 	applymovement LOCALID_PLAYER, Route119_WeatherInstitute_2F_Movement_ShovePlayerOutOfWay
 	waitmovement 0
-	msgbox Route119_WeatherInstitute_2F_Text_TeamMagmaJustPassedBy, MSGBOX_DEFAULT
+	specialvar VAR_RESULT, WayfarerHoenn_IsMtPyreLead
+	call_if_eq VAR_RESULT, TRUE, Route119_WeatherInstitute_2F_EventScript_GruntReportsMagma
+	call_if_eq VAR_RESULT, FALSE, Route119_WeatherInstitute_2F_EventScript_GruntReportsWithdrawal
 	closemessage
 	playse SE_PIN
 	applymovement LOCALID_WEATHER_INSTITUTE_2F_SHELLY, Common_Movement_ExclamationMark
 	waitmovement 0
 	applymovement LOCALID_WEATHER_INSTITUTE_2F_SHELLY, Common_Movement_Delay48
 	waitmovement 0
-	msgbox Route119_WeatherInstitute_2F_Text_WeHaveToHurryToMtPyre, MSGBOX_DEFAULT
+	call_if_eq VAR_RESULT, TRUE, Route119_WeatherInstitute_2F_EventScript_ShellyHurriesToMtPyre
+	call_if_eq VAR_RESULT, FALSE, Route119_WeatherInstitute_2F_EventScript_ShellyWithdraws
 	closemessage
 	setvar VAR_WEATHER_INSTITUTE_STATE, 1
 	clearflag FLAG_HIDE_WEATHER_INSTITUTE_2F_WORKERS
@@ -83,6 +92,22 @@ Route119_WeatherInstitute_2F_EventScript_ShellyDefeated::
 	copyobjectxytoperm LOCALID_WEATHER_INSTITUTE_2F_SCIENTIST
 	goto Route119_WeatherInstitute_2F_EventScript_ReceiveCastform
 	end
+
+Route119_WeatherInstitute_2F_EventScript_GruntReportsMagma::
+	msgbox Route119_WeatherInstitute_2F_Text_TeamMagmaJustPassedBy, MSGBOX_DEFAULT
+	return
+
+Route119_WeatherInstitute_2F_EventScript_GruntReportsWithdrawal::
+	msgbox Route119_WeatherInstitute_2F_Text_OrderToPullOut, MSGBOX_DEFAULT
+	return
+
+Route119_WeatherInstitute_2F_EventScript_ShellyHurriesToMtPyre::
+	msgbox Route119_WeatherInstitute_2F_Text_WeHaveToHurryToMtPyre, MSGBOX_DEFAULT
+	return
+
+Route119_WeatherInstitute_2F_EventScript_ShellyWithdraws::
+	msgbox Route119_WeatherInstitute_2F_Text_ShellyPullsOut, MSGBOX_DEFAULT
+	return
 
 Route119_WeatherInstitute_2F_EventScript_ReceiveCastform::
 	msgbox Route119_WeatherInstitute_2F_Text_ThanksPleaseTakePokemon, MSGBOX_DEFAULT
@@ -130,7 +155,8 @@ Route119_WeatherInstitute_2F_EventScript_ExplainCastform::
 	end
 
 Route119_WeatherInstitute_2F_EventScript_ScientistMentionWeather::
-	goto_if_set FLAG_SYS_GAME_CLEAR, Route119_WeatherInstitute_2F_EventScript_TryStartAbnormalWeather
+	specialvar VAR_RESULT, WayfarerHoenn_IsLateLegendaryReady
+	goto_if_eq VAR_RESULT, TRUE, Route119_WeatherInstitute_2F_EventScript_TryStartAbnormalWeather
 	msgbox Route119_WeatherInstitute_2F_Text_ChangingWeatherRidiculous, MSGBOX_DEFAULT
 	release
 	end
@@ -281,6 +307,18 @@ Route119_WeatherInstitute_2F_Text_WeHaveToHurryToMtPyre:
 	.string "We have to hurry to MT. PYRE, too!\p"
 	.string "Ahahahaha!\n"
 	.string "TEAM MAGMA, just you wait!$"
+
+Route119_WeatherInstitute_2F_Text_OrderToPullOut:
+	.string "We have a situation here!\p"
+	.string "Word just came from the BOSS.\n"
+	.string "We're ordered to pull out at once!$"
+
+Route119_WeatherInstitute_2F_Text_ShellyPullsOut:
+	.string "What?!\p"
+	.string "We're to leave without that POKéMON?\n"
+	.string "Fine! Orders are orders.\p"
+	.string "Ahahahaha!\n"
+	.string "Don't get cocky, kiddy!$"
 
 Route119_WeatherInstitute_2F_Text_ThanksPleaseTakePokemon:
 	.string "Thanks!\n"

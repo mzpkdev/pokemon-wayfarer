@@ -50,7 +50,7 @@ LilycoveCity_EventScript_Man3::
 LilycoveCity_EventScript_Girl::
 	lock
 	faceplayer
-	goto_if_set FLAG_BADGE07_GET, LilycoveCity_EventScript_GirlAquaGone
+	goto_if_set FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE, LilycoveCity_EventScript_GirlAquaGone
 	msgbox LilycoveCity_Text_StrangeCaveInCove, MSGBOX_DEFAULT
 	release
 	end
@@ -105,7 +105,7 @@ LilycoveCity_EventScript_ExpertF::
 LilycoveCity_EventScript_ExpertM2::
 	lock
 	faceplayer
-	goto_if_set FLAG_BADGE07_GET, LilycoveCity_EventScript_ExpertM2AquaGone
+	goto_if_set FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE, LilycoveCity_EventScript_ExpertM2AquaGone
 	msgbox LilycoveCity_Text_TeamAquaRenovatedCavern, MSGBOX_DEFAULT
 	release
 	end

@@ -851,6 +851,10 @@ describe.sequential("Wayfarer League Circuit", () => {
     await game.battle.win()
     await finishVictoryScript(game, "Wattson badge and relocation")
     await expect(game.state.read()).resolves.toMatchObject({ circuit: { badges: { hoenn: 3 } } })
+    // He does not vanish in front of the player: walking out decides where he stands.
+    await expect(game.story.flag("hideMauvilleGymWattson")).resolves.toBe(false)
+    await game.player.warp("mauville-city", 8, 7)
+    await game.wait.forMap("mauville-city")
     await expect(game.story.flag("hideMauvilleGymWattson")).resolves.toBe(true)
     await expect(game.story.flag("hideMauvilleCityWattson")).resolves.toBe(false)
   })

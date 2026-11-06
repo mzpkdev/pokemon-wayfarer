@@ -1,6 +1,29 @@
 MauvilleCity_Gym_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, MauvilleCity_Gym_OnLoad
+	map_script MAP_SCRIPT_ON_TRANSITION, MauvilleCity_Gym_OnTransition
 	.byte 0
+
+MauvilleCity_Gym_OnTransition::
+	call MauvilleCity_Gym_EventScript_PlaceWattson
+	end
+
+@ WATTSON waits outside with his New Mauville request while he holds nothing for the player: the
+@ DYNAMO BADGE is won, TM SHOCK WAVE taken, and TM THUNDERBOLT not yet claimed. Only entering the
+@ Gym or the city decides, so he never vanishes in front of the player.
+MauvilleCity_Gym_EventScript_PlaceWattson::
+	goto_if_unset FLAG_BADGE03_GET, MauvilleCity_Gym_EventScript_PlaceWattsonInGym
+	goto_if_unset FLAG_RECEIVED_TM_SHOCK_WAVE, MauvilleCity_Gym_EventScript_PlaceWattsonInGym
+	goto_if_set FLAG_GOT_TM_THUNDERBOLT_FROM_WATTSON, MauvilleCity_Gym_EventScript_ReturnWattsonToGym
+	setflag FLAG_HIDE_MAUVILLE_GYM_WATTSON
+	clearflag FLAG_HIDE_MAUVILLE_CITY_WATTSON
+	return
+
+MauvilleCity_Gym_EventScript_ReturnWattsonToGym::
+	setflag FLAG_WATTSON_REMATCH_AVAILABLE
+MauvilleCity_Gym_EventScript_PlaceWattsonInGym::
+	clearflag FLAG_HIDE_MAUVILLE_GYM_WATTSON
+	setflag FLAG_HIDE_MAUVILLE_CITY_WATTSON
+	return
 
 MauvilleCity_Gym_OnLoad:
 	goto_if_set FLAG_DEFEATED_MAUVILLE_GYM, MauvilleCity_Gym_EventScript_DeactivatePuzzle
@@ -99,11 +122,6 @@ MauvilleCity_Gym_EventScript_WattsonDefeated::
 	clearflag FLAG_HIDE_VERDANTURF_TOWN_SCOTT
 	setflag FLAG_DEFEATED_MAUVILLE_GYM
 	setflag FLAG_BADGE03_GET
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	call MauvilleCity_Gym_EventScript_TryRelocateWattson
-#endif
-	addvar VAR_PETALBURG_GYM_STATE, 1
-	call_if_eq VAR_PETALBURG_GYM_STATE, 6, Common_EventScript_ReadyPetalburgGymForBattle
 	setvar VAR_0x8008, 3
 	call Common_EventScript_SetGymTrainers
 	special MauvilleGymDeactivatePuzzle
@@ -120,18 +138,6 @@ MauvilleCity_Gym_EventScript_WattsonDefeated::
 	setflag FLAG_ENABLE_WATTSON_MATCH_CALL
 	release
 	end
-
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-@ Wattson moves to New Mauville only after both relevant Gym victories,
-@ regardless of which badge was earned last.
-MauvilleCity_Gym_EventScript_TryRelocateWattson::
-	goto_if_unset FLAG_DEFEATED_PETALBURG_GYM, MauvilleCity_Gym_EventScript_RelocationDone
-	goto_if_unset FLAG_BADGE03_GET, MauvilleCity_Gym_EventScript_RelocationDone
-	setflag FLAG_HIDE_MAUVILLE_GYM_WATTSON
-	clearflag FLAG_HIDE_MAUVILLE_CITY_WATTSON
-MauvilleCity_Gym_EventScript_RelocationDone::
-	return
-#endif
 
 MauvilleCity_Gym_EventScript_GiveShockWave2::
 	giveitem ITEM_TM_SHOCK_WAVE

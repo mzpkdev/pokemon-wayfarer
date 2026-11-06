@@ -1057,25 +1057,22 @@ class HnsTraversalContractTest(unittest.TestCase):
             "the Goldenrod scout must ask before starting the takeover; nothing else arms it",
         )
 
-        wattson = self.scripts.block("MauvilleCity_Gym_EventScript_TryRelocateWattson")
+        wattson = self.scripts.block("MauvilleCity_Gym_EventScript_PlaceWattson")
         self.assertOrderedText(
             wattson,
             [
-                "goto_if_unset FLAG_DEFEATED_PETALBURG_GYM",
                 "goto_if_unset FLAG_BADGE03_GET",
+                "goto_if_unset FLAG_RECEIVED_TM_SHOCK_WAVE",
                 "setflag FLAG_HIDE_MAUVILLE_GYM_WATTSON",
                 "clearflag FLAG_HIDE_MAUVILLE_CITY_WATTSON",
             ],
-            "Wattson must remain in his Gym until Norman and Dynamo are both complete",
+            "Wattson must remain in his Gym until the Dynamo Badge is won and TM Shock Wave taken",
         )
-        for label in (
-            "MauvilleCity_Gym_EventScript_WattsonDefeated",
-            "PetalburgCity_Gym_EventScript_NormanBattle",
-        ):
+        for label in ("MauvilleCity_Gym_OnTransition", "MauvilleCity_OnTransition"):
             self.assertIn(
-                "call MauvilleCity_Gym_EventScript_TryRelocateWattson",
+                "call MauvilleCity_Gym_EventScript_PlaceWattson",
                 self.scripts.reachable_text(label),
-                f"{label} must reach the shared Wattson relocation check after victory",
+                f"{label} must reach the shared Wattson placement",
             )
 
         whitney = self.scripts.block("GoldenrodCity_Gym_EventScript_Whitney")

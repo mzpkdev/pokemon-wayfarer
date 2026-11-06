@@ -178,6 +178,10 @@ PokéNav tutorial, and the rival:
   or story gate. It and the Lavaridge handoff
   (`maps/LavaridgeTown/scripts.inc:22–32,82–131`) both check the Go-Goggles
   item and `FLAG_RECEIVED_GO_GOGGLES`, so the reward is given once.
+  Correction: at this audit both sat behind `#if !IS_FRLG && !IS_HNS`, which
+  is false in the Wayfarer build (`IS_HNS` is 1). The surveyor and his stakes
+  had an empty script, and Lavaridge used a plain `giveitem` with no item
+  check. The Norman and Wally work compiled both into Wayfarer.
 
 ## Wattson and New Mauville
 
@@ -252,7 +256,8 @@ commits a choice (`maps/LittlerootTown_ProfessorBirchsLab/scripts.inc:126–141`
 Lavaridge's scene has two layouts: for a player at the Pokémon Center door,
 and otherwise for a player at the Gym door
 (`maps/LavaridgeTown/scripts.inc:39–50,182–209,253–260`). Its transition
-script sets states 2 and 3 back to 1 (`:9–10,20–31`).
+script set states 2 and 3 back to 1 (`:9–10,20–31`) only outside Wayfarer,
+behind the same guard as the survey.
 
 Route 110, Route 119, Rustboro, Route 104, and Lilycove each end in a
 `switch VAR_HOENN_STARTER_CHOICE` with no default case. On the E2E ROM, a
@@ -289,6 +294,15 @@ girl has the same hole.
   and the triggers keep a player from reaching her before the theft.
 - The Aqua Hideout entrance guard says the boss is on his way to Mt. Pyre
   (`maps/AquaHideout_1F/scripts.inc:28,81–89`).
+- Route 121's three Aqua grunts are visible from the start and stand at (30,8),
+  (30,7), and (31,7), which fills the passage south at y=7. Triggers at
+  (25,5–8) play "We're to move out to MT. PYRE!" and remove them
+  (`maps/Route121/scripts.inc:16–33`), with no story gate.
+- The Mossdeep sailor's line, keyed only on `FLAG_RECEIVED_HM_DIVE`, says
+  someone beat Team Aqua (`maps/MossdeepCity/scripts.inc:348`).
+- The Seafloor Cavern grunt says Team Magma was spotted near Mossdeep
+  (`maps/SeafloorCavern_Entrance/scripts.inc:70–71`), though Dive is available
+  only after the Space Center.
 - Lilycove's lines about the hideout's fall branch on `FLAG_BADGE07_GET`
   (`maps/LilycoveCity_CoveLilyMotel_1F/scripts.inc:7`,
   `maps/LilycoveCity/scripts.inc:40,95`,

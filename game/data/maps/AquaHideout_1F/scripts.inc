@@ -26,6 +26,12 @@ AquaHideout_1F_EventScript_HideoutEntranceGrunt2::
 	faceplayer
 	goto_if_set FLAG_GROUDON_AWAKENED_MAGMA_HIDEOUT, AquaHideout_1F_EventScript_SlateportHint2
 	goto_if_set FLAG_RECEIVED_RED_OR_BLUE_ORB, AquaHideout_1F_EventScript_MagmaHideoutHint2
+	goto_if_set FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY, AquaHideout_1F_EventScript_MtPyreHint
+	msgbox AquaHideout_1F_Text_BossIsAway, MSGBOX_DEFAULT
+	release
+	end
+
+AquaHideout_1F_EventScript_MtPyreHint::
 	msgbox AquaHideout_1F_Text_BossIsOnRoute122, MSGBOX_DEFAULT
 	release
 	end
@@ -73,6 +79,15 @@ AquaHideout_1F_Text_BossWentToJackASubmarine:
 	.string "TEAM AQUA?\p"
 	.string "Our BOSS isn't here!\n"
 	.string "He's gone off to jack a submarine!\p"
+	.string "… …\n"
+	.string "Where did he go?\p"
+	.string "Wahaha! Do you really think I'd tell\n"
+	.string "you something that crucial?$"
+
+AquaHideout_1F_Text_BossIsAway:
+	.string "What? What? What do you want with \n"
+	.string "TEAM AQUA?\p"
+	.string "Our BOSS isn't here!\p"
 	.string "… …\n"
 	.string "Where did he go?\p"
 	.string "Wahaha! Do you really think I'd tell\n"

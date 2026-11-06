@@ -1,10 +1,21 @@
 SeafloorCavern_Entrance_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, SeafloorCavern_Entrance_OnResume
+	map_script MAP_SCRIPT_ON_TRANSITION, SeafloorCavern_Entrance_OnTransition
 	.byte 0
 
 SeafloorCavern_Entrance_OnResume:
 	setdivewarp MAP_UNDERWATER_SEAFLOOR_CAVERN, 6, 5
 	setescapewarp MAP_UNDERWATER_SEAFLOOR_CAVERN, 6, 5
+	end
+
+@ The grunt holds the only tile to the door until both branches are done.
+SeafloorCavern_Entrance_OnTransition:
+	goto_if_unset FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE, SeafloorCavern_Entrance_EventScript_KeepGrunt
+	goto_if_unset FLAG_RECEIVED_HM_DIVE, SeafloorCavern_Entrance_EventScript_KeepGrunt
+	setflag FLAG_HIDE_SEAFLOOR_CAVERN_ENTRANCE_AQUA_GRUNT
+	end
+
+SeafloorCavern_Entrance_EventScript_KeepGrunt::
 	end
 
 SeafloorCavern_Entrance_EventScript_Grunt::
@@ -23,7 +34,7 @@ SeafloorCavern_Entrance_EventScript_Grunt::
 	delay 30
 	setvar VAR_HAS_TALKED_TO_SEAFLOOR_CAVERN_ENTRANCE_GRUNT, 1
 	copyobjectxytoperm LOCALID_SEAFLOOR_CAVERN_ENTRANCE_GRUNT
-	msgbox SeafloorCavern_Entrance_Text_HearMagmaNearMossdeep, MSGBOX_DEFAULT
+	msgbox SeafloorCavern_Entrance_Text_DoorStaysShut, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_SEAFLOOR_CAVERN_ENTRANCE_GRUNT, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
@@ -34,7 +45,7 @@ SeafloorCavern_Entrance_EventScript_GruntSpeechShort::
 	call_if_eq VAR_FACING, DIR_WEST, SeafloorCavern_Entrance_EventScript_GruntFacePlayerWest
 	call_if_eq VAR_FACING, DIR_EAST, SeafloorCavern_Entrance_EventScript_GruntFacePlayerEast
 	call_if_eq VAR_FACING, DIR_NORTH, SeafloorCavern_Entrance_EventScript_GruntFacePlayerNorth
-	msgbox SeafloorCavern_Entrance_Text_HearMagmaNearMossdeepShort, MSGBOX_DEFAULT
+	msgbox SeafloorCavern_Entrance_Text_DoorStaysShutShort, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_SEAFLOOR_CAVERN_ENTRANCE_GRUNT, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
@@ -56,7 +67,7 @@ SeafloorCavern_Entrance_EventScript_GruntFacePlayerNorth::
 	waitmovement 0
 	return
 
-SeafloorCavern_Entrance_Text_HearMagmaNearMossdeep:
+SeafloorCavern_Entrance_Text_DoorStaysShut:
 	.string "Hey!\n"
 	.string "I remember your face!\p"
 	.string "If you're here, it must mean that\n"
@@ -67,20 +78,16 @@ SeafloorCavern_Entrance_Text_HearMagmaNearMossdeep:
 	.string "a trillion years!\p"
 	.string "You're a perfect fit for the likes of\n"
 	.string "TEAM MAGMA!\p"
-	.string "Speaking of TEAM MAGMA, I hear they\n"
-	.string "were spotted near MOSSDEEP.\p"
-	.string "That bunch of goons, they sure don't\n"
-	.string "look good near the sea!$"
+	.string "This door stays shut until the word\n"
+	.string "comes from our HIDEOUT in LILYCOVE!$"
 
-SeafloorCavern_Entrance_Text_HearMagmaNearMossdeepShort:
+SeafloorCavern_Entrance_Text_DoorStaysShutShort:
 	.string "A punk like you, do you really think\n"
 	.string "you can take on TEAM AQUA?\p"
 	.string "I'd say you're too early by about\n"
 	.string "a trillion years!\p"
 	.string "You're a perfect fit for the likes of\n"
 	.string "TEAM MAGMA!\p"
-	.string "Speaking of TEAM MAGMA, I hear they\n"
-	.string "were spotted near MOSSDEEP.\p"
-	.string "That bunch of goons, they sure don't\n"
-	.string "look good near the sea!$"
+	.string "This door stays shut until the word\n"
+	.string "comes from our HIDEOUT in LILYCOVE!$"
 

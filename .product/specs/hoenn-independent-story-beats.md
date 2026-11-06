@@ -106,7 +106,9 @@ other twelve do. Scott's meetings may then happen in any order.
 - The employee's robbery line recalls the player's help in Petalburg Woods.
   Trace the Woods scene's state. Without that scene, he asks for help with no
   recall.
-- Mr. Briney keeps sailing for the whole game. Norman's defeat no longer
+- Mr. Briney keeps sailing until the Hoenn Hall of Fame, which puts him on the
+  S.S. Tidal as in Emerald and retires him from sailing at the same moment
+  (`EventScript_HideMrBriney`). Norman's defeat no longer
   hides him, and Tate & Liza's defeat no longer shows the second Briney in
   Stern's shipyard. That shipyard cameo is dropped: it is the price of Briney
   never standing in two places and never retiring in the middle of an errand.
@@ -189,9 +191,10 @@ badge first loses the berth for good.
 
 ### Steven and Kecleon, and the desert survey
 
-Both already meet the design. Keep the Route 120 scene's early and late
-greetings and its Kecleon recovery, and keep the desert survey's and
-Lavaridge's shared Go-Goggles check. No change.
+Both meet the design. Keep the Route 120 scene's early and late greetings and
+its Kecleon recovery, and keep the desert survey's and Lavaridge's shared
+Go-Goggles check. The survey and that check were compiled out of Wayfarer, so
+both are compiled in with this work.
 
 ### Wattson and New Mauville
 
@@ -223,9 +226,11 @@ Lavaridge's shared Go-Goggles check. No change.
   that state the Gym opens its rooms and puts Norman at the back, and the same
   moment runs `Common_EventScript_ReadyPetalburgGymForBattle`, which shows the
   Gym guide and expands Petalburg Mart's stock. At the end of the tutorial,
-  set the state to 6 and call that script, and remove the other Gyms'
-  increments. The rooms open on the player's next entry, since the Gym's load
-  script has already run for this visit.
+  set the state to 6, call that script, and reload the Gym around the player,
+  since its load script has already run for this visit. The rooms open and
+  Norman stands at the back: left at the entrance he would battle there, and
+  his victory scene is staged for the back room. Remove the other Gyms'
+  increments.
 - No Norman line counts or asks for badges. `NormanIntro` and
   `VisitorNormanIntro` open without "four GYM BADGES" and, for the visitor,
   without "as I promised".
@@ -260,11 +265,11 @@ conditions.
 - A waiting trigger returns before it locks the player and leaves its own
   state untouched, so it fires on a later crossing.
 - Lavaridge's scene is a frame script on `VAR_LAVARIDGE_TOWN_STATE` 1, which
-  Flannery's defeat sets. A frame script that returns without changing its
+  Flannery's defeat set in Emerald. A frame script that returns without changing its
   state runs again every frame and freezes the player. So the town must not
-  sit at state 1 without a starter: park the scene at another value that the
-  transition script does not reset. The transition script places the rival
-  only when the scene is armed.
+  sit at state 1 without a starter: Flannery's defeat and a full Bag park the
+  scene at state 4. The transition script places the rival only when the scene
+  is armed.
 - The scene is staged for a player standing at the Gym door or the Pokémon
   Center's front door, and has no other layout. Arm a parked scene only when a
   player with a starter walks out of one of those two doors, so it plays where
@@ -299,6 +304,11 @@ conditions.
   or the Weather Institute.
 - The later return of the orbs (`VAR_MT_PYRE_STATE` 2, set in Sootopolis) is
   unchanged.
+- Route 121's Aqua grunts and their "move out" scene are there only while
+  Mt. Pyre is a true lead (see [Weather Institute](#weather-institute)). They
+  fill the passage south, so entering the route hides them otherwise. Before
+  Mt. Chimney their trigger does nothing and keeps its state, so the scene can
+  play later. After the theft they are gone without it.
 
 ### The two branches
 
@@ -370,7 +380,10 @@ leave Hoenn between their steps.
 | Stern, late Parts delivery | The museum confrontation and "now we can prepare for the expedition". | After the harbor scene: he thanks the player and takes the Parts, with no expedition line. |
 | Aqua grunt and Shelly, Weather Institute | "A TEAM MAGMA mob… headed for MT. PYRE!", "We have to hurry to MT. PYRE, too!" | Before Mt. Chimney or after the Mt. Pyre theft: the order came to pull out. |
 | Aqua Hideout entrance guard | The boss is "on his way to MT. PYRE". | Before Mt. Chimney or after the theft: the boss is away. |
+| Aqua grunts, Route 121 | "We're to move out to MT. PYRE!" | Before Mt. Chimney or after the theft: no line; the grunts are absent. |
 | Old lady, Mt. Pyre summit | "The BLUE ORB and RED ORB taken by those sinister men…" | Before the theft: the orbs are still in her care. |
+| Sailor, Mossdeep City | "someone came along and wiped the floor with them!" | Before Aqua's escape: drop the recall. |
+| Aqua grunt, Seafloor Cavern entrance | "I hear they were spotted near MOSSDEEP." | He is met only after Steven's Dive: the door stays shut until word comes from the Lilycove hideout. |
 | Lilycove motel, city, and Pokémon Center | Team Aqua's hideout was busted; they are gone for good. Keyed on the Mind Badge. | Keyed on Aqua's escape. |
 | Juan, after his battle | "There remains but one BADGE… FORTREE". | Badge-neutral. |
 | Norman, intro | "So, you did get four GYM BADGES." | Badge-neutral. |
@@ -382,7 +395,8 @@ always precede them.
 ### Legendary captures
 
 The crisis, Rayquaza's awakening, and Juan need no Trainer Rating. The later
-captures do.
+captures do. "TR 55" here means `WAYFARER_LEGENDARY_TR`: 55 on today's scale and
+120 on the v0 scale that Wayfarer runs.
 
 - **Rayquaza.** It waits at the top of Sky Pillar once the crisis is resolved,
   as today. Interacting with it below TR 55 gives a not-ready line and leaves
@@ -461,7 +475,8 @@ Mechanical checks extend the existing script and journey tests. Cover:
   that door. Use the Game Corner doll without a starter.
 - **Mt. Pyre:** climb to the summit before Mt. Chimney. No Aqua, no theft,
   the old lady speaks of orbs still in her care, and access is ordinary.
-  Finish Mt. Chimney and return; the theft plays.
+  Finish Mt. Chimney and return; the theft plays. Cross Route 121 before
+  Mt. Chimney, while it is a true lead, and after the theft.
 - **Branches:** after Magma Hideout, finish Aqua Hideout before Mossdeep, then
   the reverse. Win Tate & Liza's badge before Magma Hideout, between the
   branches, and last. Aqua Hideout stays completable in every order and

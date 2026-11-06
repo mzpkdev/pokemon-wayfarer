@@ -219,7 +219,7 @@ class EmeraldTraversalContractTests(unittest.TestCase):
             "clearflag FLAG_HIDE_MT_CHIMNEY_TEAM_MAGMA",
         )
 
-    def test_survey_flags_are_emerald_only_and_keep_cross_build_meanings(self):
+    def test_survey_flags_are_live_and_keep_cross_build_meanings(self):
         emerald = read("include/constants/flags.h")
         for name, value in (
             ("FLAG_ROUTE_111_DESERT_SURVEY_STARTED", "0x264"),
@@ -248,8 +248,8 @@ class EmeraldTraversalContractTests(unittest.TestCase):
             self.assertRegex(hns, rf"#define\s+{name}\s+{value}\b")
 
         survey = read("data/maps/Route111/scripts.inc")
-        self.assertIn("#if !IS_FRLG && !IS_HNS", survey)
-        self.assertIn("#else\nRoute111_EventScript_DesertSurveyor::", survey)
+        self.assertNotIn("#if !IS_FRLG && !IS_HNS", survey)
+        self.assertIn("Route111_EventScript_DesertSurveyor::", survey)
 
     def test_survey_and_lavaridge_deliver_go_goggles_before_commit(self):
         route111 = read("data/maps/Route111/scripts.inc")
@@ -294,8 +294,8 @@ class EmeraldTraversalContractTests(unittest.TestCase):
         failed = label_body(lavaridge, "LavaridgeTown_EventScript_GoGogglesBagFull")
         self.assertNotIn("FLAG_RECEIVED_GO_GOGGLES", failed)
         self.assertIn("setvar VAR_LAVARIDGE_TOWN_STATE, 3", failed)
-        reset = label_body(lavaridge, "LavaridgeTown_EventScript_ResetPendingGoGoggles")
-        self.assertIn("setvar VAR_LAVARIDGE_TOWN_STATE, 1", reset)
+        waits = label_body(lavaridge, "LavaridgeTown_EventScript_RivalSceneWaits")
+        self.assertIn("setvar VAR_LAVARIDGE_TOWN_STATE, 4", waits)
 
     def test_route120_routes_every_outcome_through_one_transaction(self):
         source = read("data/maps/Route120/scripts.inc")

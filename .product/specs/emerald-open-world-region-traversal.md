@@ -153,8 +153,8 @@ Repurpose Emerald's unused saved flags `0x264` through `0x267` as the survey
 started flag and the three stake flags. Their names become Route 111 survey
 constants in Emerald's `flags.h`. Do not add or move saved flag storage. The
 FireRed/LeafGreen and HNS flag tables keep their existing meanings at the same
-numeric addresses; Emerald survey scripts are compiled only into the Emerald
-map set and never reference those build-specific names.
+numeric addresses. Wayfarer banks Emerald's flags separately, so its survey
+state is `0x6264` through `0x6267`, in the Hoenn bank, and uses no new storage.
 
 The survey proceeds as follows:
 
