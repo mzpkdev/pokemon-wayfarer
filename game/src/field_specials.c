@@ -3657,28 +3657,32 @@ bool8 IsDestinationBoxFull(void)
     return FALSE;
 }
 
+// Abnormal weather belongs to Hoenn: its route and cave scripts read Hoenn's bank, not the engine's.
+#define HOENN_DEFEATED_KYOGRE_FLAG  HOENN_FLAG_ID(0x1BE) // Emerald's FLAG_DEFEATED_KYOGRE
+#define HOENN_DEFEATED_GROUDON_FLAG HOENN_FLAG_ID(0x1BF) // Emerald's FLAG_DEFEATED_GROUDON
+
 void CreateAbnormalWeatherEvent(void)
 {
     u16 randomValue = Random();
-    VarSet(VAR_ABNORMAL_WEATHER_STEP_COUNTER, 0);
+    VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_STEP_COUNTER), 0);
 
-    if (FlagGet(FLAG_DEFEATED_KYOGRE) == TRUE)
+    if (FlagGet(HOENN_DEFEATED_KYOGRE_FLAG) == TRUE)
     {
-        VarSet(VAR_ABNORMAL_WEATHER_LOCATION, (randomValue % TERRA_CAVE_LOCATIONS) + TERRA_CAVE_LOCATIONS_START);
+        VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION), (randomValue % TERRA_CAVE_LOCATIONS) + TERRA_CAVE_LOCATIONS_START);
     }
-    else if (FlagGet(FLAG_DEFEATED_GROUDON) == TRUE)
+    else if (FlagGet(HOENN_DEFEATED_GROUDON_FLAG) == TRUE)
     {
-        VarSet(VAR_ABNORMAL_WEATHER_LOCATION, (randomValue % MARINE_CAVE_LOCATIONS) + MARINE_CAVE_LOCATIONS_START);
+        VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION), (randomValue % MARINE_CAVE_LOCATIONS) + MARINE_CAVE_LOCATIONS_START);
     }
     else if ((randomValue & 1) == 0)
     {
         randomValue = Random();
-        VarSet(VAR_ABNORMAL_WEATHER_LOCATION, (randomValue % TERRA_CAVE_LOCATIONS) + TERRA_CAVE_LOCATIONS_START);
+        VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION), (randomValue % TERRA_CAVE_LOCATIONS) + TERRA_CAVE_LOCATIONS_START);
     }
     else
     {
         randomValue = Random();
-        VarSet(VAR_ABNORMAL_WEATHER_LOCATION, (randomValue % MARINE_CAVE_LOCATIONS) + MARINE_CAVE_LOCATIONS_START);
+        VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION), (randomValue % MARINE_CAVE_LOCATIONS) + MARINE_CAVE_LOCATIONS_START);
     }
 }
 
@@ -3705,7 +3709,7 @@ bool32 GetAbnormalWeatherMapNameAndType(void)
         MAP_NUM(MAP_ROUTE129)
     };
 
-    u16 abnormalWeather = VarGet(VAR_ABNORMAL_WEATHER_LOCATION);
+    u16 abnormalWeather = VarGet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION));
 
     GetMapName(gStringVar1, sAbnormalWeatherMapNumbers[abnormalWeather - 1], 0);
 
@@ -3738,15 +3742,15 @@ bool8 AbnormalWeatherHasExpired(void)
         MAP_NUM(MAP_ROUTE129)
     };
 
-    u16 steps = VarGet(VAR_ABNORMAL_WEATHER_STEP_COUNTER);
-    u16 abnormalWeather = VarGet(VAR_ABNORMAL_WEATHER_LOCATION);
+    u16 steps = VarGet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_STEP_COUNTER));
+    u16 abnormalWeather = VarGet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION));
 
     if (abnormalWeather == ABNORMAL_WEATHER_NONE)
         return FALSE;
 
     if (++steps > 999)
     {
-        VarSet(VAR_ABNORMAL_WEATHER_STEP_COUNTER, 0);
+        VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_STEP_COUNTER), 0);
         if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_UNDERWATER_MARINE_CAVE))
         {
             switch (gSaveBlock1Ptr->location.mapNum)
@@ -3756,7 +3760,7 @@ bool8 AbnormalWeatherHasExpired(void)
             case MAP_NUM(MAP_MARINE_CAVE_END):
             case MAP_NUM(MAP_TERRA_CAVE_ENTRANCE):
             case MAP_NUM(MAP_TERRA_CAVE_END):
-                VarSet(VAR_SHOULD_END_ABNORMAL_WEATHER, 1);
+                VarSet(HOENN_VAR_ID(VAR_SHOULD_END_ABNORMAL_WEATHER), 1);
                 return FALSE;
             default:
                 break;
@@ -3771,7 +3775,7 @@ bool8 AbnormalWeatherHasExpired(void)
             case MAP_NUM(MAP_UNDERWATER_ROUTE129):
             case MAP_NUM(MAP_UNDERWATER_ROUTE105):
             case MAP_NUM(MAP_UNDERWATER_ROUTE125):
-                VarSet(VAR_SHOULD_END_ABNORMAL_WEATHER, 1);
+                VarSet(HOENN_VAR_ID(VAR_SHOULD_END_ABNORMAL_WEATHER), 1);
                 return FALSE;
             default:
                 break;
@@ -3779,19 +3783,19 @@ bool8 AbnormalWeatherHasExpired(void)
         }
 
         if (gSaveBlock1Ptr->location.mapNum == sAbnormalWeatherMapNumbers[abnormalWeather - 1] &&
-            gSaveBlock1Ptr->location.mapGroup == 0)
+            gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_ROUTE114))
         {
             return TRUE;
         }
         else
         {
-            VarSet(VAR_ABNORMAL_WEATHER_LOCATION, ABNORMAL_WEATHER_NONE);
+            VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION), ABNORMAL_WEATHER_NONE);
             return FALSE;
         }
     }
     else
     {
-        VarSet(VAR_ABNORMAL_WEATHER_STEP_COUNTER, steps);
+        VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_STEP_COUNTER), steps);
         return FALSE;
     }
 }

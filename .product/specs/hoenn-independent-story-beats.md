@@ -304,6 +304,11 @@ conditions.
   or the Weather Institute.
 - The later return of the orbs (`VAR_MT_PYRE_STATE` 2, set in Sootopolis) is
   unchanged.
+- Route 121's Aqua grunts and their "move out" scene are there only while
+  Mt. Pyre is a true lead (see [Weather Institute](#weather-institute)). They
+  fill the passage south, so entering the route hides them otherwise. Before
+  Mt. Chimney their trigger does nothing and keeps its state, so the scene can
+  play later. After the theft they are gone without it.
 
 ### The two branches
 
@@ -366,6 +371,8 @@ leave Hoenn between their steps.
 | Speaker | Line today | Variant |
 | --- | --- | --- |
 | Devon employee, Rustboro street | Recalls the player's help "in PETALBURG WOODS". | Without the Woods scene: drop the recall. |
+| Devon employee, Route 116 | Recalls the player's help "in PETALBURG WOODS". | Without the Woods scene: drop the recall. |
+| Mr. Briney, his house | "You have a LETTER bound for DEWFORD and a package for SLATEPORT", and "You're to deliver a LETTER to DEWFORD and a package to SLATEPORT." | He names only what is still to deliver. |
 | Archie, Meteor Falls | "Didn't I see you before? At SLATEPORT's MUSEUM?" | Without the museum confrontation: drop the recall. |
 | Archie, Oceanic Museum | Speaks as on a first meeting. | If Meteor Falls came first: confirm the lines still read true, and add a short recall only if they do not. |
 | Stern, Slateport street | "Oh! {PLAYER}! You're looking great!… our last seafloor exploration". | Parts undelivered and not yet met: a first-meeting line. |
@@ -373,7 +380,10 @@ leave Hoenn between their steps.
 | Stern, late Parts delivery | The museum confrontation and "now we can prepare for the expedition". | After the harbor scene: he thanks the player and takes the Parts, with no expedition line. |
 | Aqua grunt and Shelly, Weather Institute | "A TEAM MAGMA mob… headed for MT. PYRE!", "We have to hurry to MT. PYRE, too!" | Before Mt. Chimney or after the Mt. Pyre theft: the order came to pull out. |
 | Aqua Hideout entrance guard | The boss is "on his way to MT. PYRE". | Before Mt. Chimney or after the theft: the boss is away. |
+| Aqua grunts, Route 121 | "We're to move out to MT. PYRE!" | Before Mt. Chimney or after the theft: no line; the grunts are absent. |
 | Old lady, Mt. Pyre summit | "The BLUE ORB and RED ORB taken by those sinister men…" | Before the theft: the orbs are still in her care. |
+| Sailor, Mossdeep City | "someone came along and wiped the floor with them!" | Before Aqua's escape: drop the recall. |
+| Aqua grunt, Seafloor Cavern entrance | "I hear they were spotted near MOSSDEEP." | He is met only after Steven's Dive: the door stays shut until word comes from the Lilycove hideout. |
 | Lilycove motel, city, and Pokémon Center | Team Aqua's hideout was busted; they are gone for good. Keyed on the Mind Badge. | Keyed on Aqua's escape. |
 | Juan, after his battle | "There remains but one BADGE… FORTREE". | Badge-neutral. |
 | Norman, intro | "So, you did get four GYM BADGES." | Badge-neutral. |
@@ -385,7 +395,8 @@ always precede them.
 ### Legendary captures
 
 The crisis, Rayquaza's awakening, and Juan need no Trainer Rating. The later
-captures do.
+captures do. "TR 55" here means `WAYFARER_LEGENDARY_TR`: 55 on today's scale and
+120 on the v0 scale that Wayfarer runs.
 
 - **Rayquaza.** It waits at the top of Sky Pillar once the crisis is resolved,
   as today. Interacting with it below TR 55 gives a not-ready line and leaves
@@ -464,7 +475,8 @@ Mechanical checks extend the existing script and journey tests. Cover:
   that door. Use the Game Corner doll without a starter.
 - **Mt. Pyre:** climb to the summit before Mt. Chimney. No Aqua, no theft,
   the old lady speaks of orbs still in her care, and access is ordinary.
-  Finish Mt. Chimney and return; the theft plays.
+  Finish Mt. Chimney and return; the theft plays. Cross Route 121 before
+  Mt. Chimney, while it is a true lead, and after the theft.
 - **Branches:** after Magma Hideout, finish Aqua Hideout before Mossdeep, then
   the reverse. Win Tate & Liza's badge before Magma Hideout, between the
   branches, and last. Aqua Hideout stays completable in every order and

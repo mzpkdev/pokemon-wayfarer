@@ -62,7 +62,9 @@ MeteorFalls_1F_1R_EventScript_MagmaStealsMeteoriteScene::
 	removeobject LOCALID_METEOR_FALLS_MAGMA_GRUNT_2
 	applymovement LOCALID_METEOR_FALLS_ARCHIE, MeteorFalls_1F_1R_Movement_ArchieApproachPlayer
 	waitmovement 0
-	msgbox MeteorFalls_1F_1R_Text_ArchieSeenYouBefore, MSGBOX_DEFAULT
+	call_if_set FLAG_DELIVERED_DEVON_GOODS, MeteorFalls_1F_1R_EventScript_ArchieRecallMuseum
+	call_if_unset FLAG_DELIVERED_DEVON_GOODS, MeteorFalls_1F_1R_EventScript_ArchieFirstMeeting
+	msgbox MeteorFalls_1F_1R_Text_ArchieMagmaAreFanatics, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_METEOR_FALLS_AQUA_GRUNT_1, MeteorFalls_1F_1R_Movement_AquaGrunt1ApproachArchie
 	applymovement LOCALID_METEOR_FALLS_AQUA_GRUNT_2, MeteorFalls_1F_1R_Movement_AquaGrunt2ApproachArchie
@@ -91,6 +93,16 @@ MeteorFalls_1F_1R_EventScript_MagmaStealsMeteoriteScene::
 	setvar VAR_METEOR_FALLS_STATE, 1
 	releaseall
 	end
+
+@ This scene always comes before Magma Hideout, and the only delivery without the museum's
+@ confrontation comes after it, so the delivery here proves that Archie met the player there.
+MeteorFalls_1F_1R_EventScript_ArchieRecallMuseum::
+	msgbox MeteorFalls_1F_1R_Text_ArchieSeenYouBefore, MSGBOX_DEFAULT
+	return
+
+MeteorFalls_1F_1R_EventScript_ArchieFirstMeeting::
+	msgbox MeteorFalls_1F_1R_Text_ArchieWhoAreYou, MSGBOX_DEFAULT
+	return
 
 MeteorFalls_1F_1R_Movement_MagmaGruntApproachPlayer:
 	walk_right
@@ -267,7 +279,17 @@ MeteorFalls_1F_1R_Text_ArchieSeenYouBefore:
 	.string "At the time, I thought you were one\n"
 	.string "of TEAM MAGMA's goons.\p"
 	.string "Humph…\n"
-	.string "You're one odd kid.\p"
+	.string "You're one odd kid.$"
+
+MeteorFalls_1F_1R_Text_ArchieWhoAreYou:
+	.string "ARCHIE: And who might you be?\p"
+	.string "Ah, so your name is {PLAYER}.\p"
+	.string "At first, I thought you were one of\n"
+	.string "TEAM MAGMA's goons.\p"
+	.string "Humph…\n"
+	.string "You're one odd kid.$"
+
+MeteorFalls_1F_1R_Text_ArchieMagmaAreFanatics:
 	.string "TEAM MAGMA is a dangerous group of\n"
 	.string "total fanatics.\p"
 	.string "They engage in destruction, claiming\n"

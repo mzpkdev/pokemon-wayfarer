@@ -299,6 +299,8 @@ RusturfTunnel_EventScript_Peeko::
 RusturfTunnel_EventScript_Grunt::
 	lock
 	faceplayer
+	checkitemspace ITEM_DEVON_PARTS
+	goto_if_eq VAR_RESULT, FALSE, RusturfTunnel_EventScript_GruntBagFull
 	playbgm MUS_ENCOUNTER_AQUA, FALSE
 	msgbox RusturfTunnel_Text_GruntIntro, MSGBOX_DEFAULT
 	trainerbattle_no_intro TRAINER_GRUNT_RUSTURF_TUNNEL, RusturfTunnel_Text_GruntDefeat
@@ -337,6 +339,12 @@ RusturfTunnel_EventScript_Grunt::
 	setvar VAR_RUSTBORO_CITY_STATE, 4
 	setvar VAR_BRINEY_HOUSE_STATE, 1
 	setflag FLAG_HIDE_ROUTE_116_MR_BRINEY
+	release
+	end
+
+@ The fight waits for room in the Bag: the grunt hands the Parts over at its end, and they are never given again.
+RusturfTunnel_EventScript_GruntBagFull::
+	msgbox RusturfTunnel_Text_GruntBagFull, MSGBOX_DEFAULT
 	release
 	end
 
@@ -424,6 +432,11 @@ RusturfTunnel_Text_ComeAndGetSome:
 
 RusturfTunnel_Text_Peeko:
 	.string "PEEKO: Pii pihyoh!$"
+
+RusturfTunnel_Text_GruntBagFull:
+	.string "Hah! Look at that bulging BAG!\p"
+	.string "Where would you even put these GOODS?\n"
+	.string "Go clear it out, then come at me!$"
 
 RusturfTunnel_Text_GruntIntro:
 	.string "Grah, keelhaul it all!\p"

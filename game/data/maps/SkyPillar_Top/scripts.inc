@@ -42,6 +42,8 @@ SkyPillar_Top_EventScript_RayquazaFaceDown::
 
 SkyPillar_Top_EventScript_Rayquaza::
 	lockall
+	specialvar VAR_RESULT, WayfarerHoenn_IsLateLegendaryReady
+	goto_if_eq VAR_RESULT, FALSE, SkyPillar_Top_EventScript_RayquazaNotReady
 	waitse
 	playmoncry SPECIES_RAYQUAZA, CRY_MODE_ENCOUNTER
 	delay 40
@@ -56,6 +58,11 @@ SkyPillar_Top_EventScript_Rayquaza::
 	goto_if_eq VAR_RESULT, B_OUTCOME_RAN, SkyPillar_Top_EventScript_RanFromRayquaza
 	goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, SkyPillar_Top_EventScript_RanFromRayquaza
 	setflag FLAG_DEFEATED_RAYQUAZA
+	releaseall
+	end
+
+SkyPillar_Top_EventScript_RayquazaNotReady::
+	msgbox SkyPillar_Top_Text_RayquazaNotReady, MSGBOX_DEFAULT
 	releaseall
 	end
 
@@ -180,4 +187,9 @@ SkyPillar_Top_Movement_CameraPanDown:
 
 SkyPillar_Top_Text_RayquazaFlewOff:
 	.string "The awakened RAYQUAZA flew off…$"
+
+SkyPillar_Top_Text_RayquazaNotReady:
+	.string "RAYQUAZA watches you warily.\p"
+	.string "You need more experience before\n"
+	.string "you can challenge it.$"
 

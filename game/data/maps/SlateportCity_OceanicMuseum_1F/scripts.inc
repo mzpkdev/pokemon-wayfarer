@@ -80,7 +80,12 @@ SlateportCity_OceanicMuseum_1F_EventScript_MuseumGrunt4::
 	end
 
 SlateportCity_OceanicMuseum_1F_EventScript_MuseumGrunt5::
+	goto_if_unset FLAG_RECOVERED_DEVON_GOODS, SlateportCity_OceanicMuseum_1F_EventScript_MuseumGrunt5Waiting
 	msgbox SlateportCity_OceanicMuseum_1F_Text_RustboroBungled, MSGBOX_NPC
+	end
+
+SlateportCity_OceanicMuseum_1F_EventScript_MuseumGrunt5Waiting::
+	msgbox SlateportCity_OceanicMuseum_1F_Text_OrdersAreOrders, MSGBOX_NPC
 	end
 
 SlateportCity_OceanicMuseum_1F_EventScript_MuseumGrunt6::
@@ -142,6 +147,7 @@ SlateportCity_OceanicMuseum_1F_EventScript_MuseumPatron4::
 SlateportCity_OceanicMuseum_1F_EventScript_FamiliarGrunt::
 	lock
 	faceplayer
+	goto_if_unset FLAG_RECOVERED_DEVON_GOODS, SlateportCity_OceanicMuseum_1F_EventScript_FamiliarGruntStranger
 	delay 8
 	playse SE_PIN
 	applymovement LOCALID_OCEANIC_MUSEUM_FAMILIAR_GRUNT, Common_Movement_ExclamationMark
@@ -158,6 +164,11 @@ SlateportCity_OceanicMuseum_1F_EventScript_FamiliarGrunt::
 	goto_if_eq VAR_FACING, DIR_SOUTH, SlateportCity_OceanicMuseum_1F_EventScript_FamiliarGruntExitSouth
 	goto_if_eq VAR_FACING, DIR_WEST, SlateportCity_OceanicMuseum_1F_EventScript_FamiliarGruntExitWestEast
 	goto_if_eq VAR_FACING, DIR_EAST, SlateportCity_OceanicMuseum_1F_EventScript_FamiliarGruntExitWestEast
+	end
+
+SlateportCity_OceanicMuseum_1F_EventScript_FamiliarGruntStranger::
+	msgbox SlateportCity_OceanicMuseum_1F_Text_WhatAreYouLookingAt, MSGBOX_DEFAULT
+	release
 	end
 
 SlateportCity_OceanicMuseum_1F_EventScript_FamiliarGruntExitNorth::
@@ -257,6 +268,10 @@ SlateportCity_OceanicMuseum_1F_Text_CanLearnForNefariousDeeds:
 	.string "What I learn here, I can put to use on\n"
 	.string "nefarious deeds…$"
 
+SlateportCity_OceanicMuseum_1F_Text_OrdersAreOrders:
+	.string "Why are we hanging around a MUSEUM?\n"
+	.string "Don't ask me! Orders are orders!$"
+
 SlateportCity_OceanicMuseum_1F_Text_RustboroBungled:
 	.string "If our goons didn't bungle things\n"
 	.string "in RUSTBORO, we wouldn't be here!$"
@@ -285,6 +300,10 @@ SlateportCity_OceanicMuseum_1F_Text_WantSeaPokemon:
 	.string "I want a sea POKéMON.\p"
 	.string "I think it would feel cool and nice\n"
 	.string "to hug.$"
+
+SlateportCity_OceanicMuseum_1F_Text_WhatAreYouLookingAt:
+	.string "What are you looking at?\n"
+	.string "Quit staring and go see the exhibits!$"
 
 SlateportCity_OceanicMuseum_1F_Text_RememberMeTakeThis:
 	.string "Aiyeeeh!\n"

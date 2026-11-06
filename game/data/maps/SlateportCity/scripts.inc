@@ -244,7 +244,7 @@ SlateportCity_EventScript_Man1SternInterview::
 SlateportCity_EventScript_Woman1::
 	lock
 	faceplayer
-	goto_if_set FLAG_DOCK_REJECTED_DEVON_GOODS, SlateportCity_EventScript_Woman1AquaGone
+	goto_if_set FLAG_HIDE_SLATEPORT_CITY_TEAM_AQUA, SlateportCity_EventScript_Woman1AquaGone
 	msgbox SlateportCity_Text_WhatsLongLineOverThere, MSGBOX_DEFAULT
 	release
 	end
@@ -563,7 +563,9 @@ SlateportCity_EventScript_CaptStern::
 	msgbox SlateportCity_Text_SternWhewFirstInterview, MSGBOX_DEFAULT
 	applymovement LOCALID_SLATEPORT_CAPT_STERN, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
-	msgbox SlateportCity_Text_OhPlayerWeMadeDiscovery, MSGBOX_DEFAULT
+	call_if_set FLAG_DELIVERED_DEVON_GOODS, SlateportCity_EventScript_SternGreetsAcquaintance
+	call_if_unset FLAG_DELIVERED_DEVON_GOODS, SlateportCity_EventScript_SternGreetsStranger
+	msgbox SlateportCity_Text_WeMadeDiscovery, MSGBOX_DEFAULT
 	playbgm MUS_ENCOUNTER_AQUA, FALSE
 	msgbox SlateportCity_Text_AquaWillAssumeControlOfSubmarine, MSGBOX_DEFAULT
 	applymovement LOCALID_SLATEPORT_COOK, Common_Movement_WalkInPlaceFasterLeft
@@ -598,6 +600,14 @@ SlateportCity_EventScript_CaptStern::
 	waitstate
 	releaseall
 	end
+
+SlateportCity_EventScript_SternGreetsAcquaintance::
+	msgbox SlateportCity_Text_OhPlayerLookingGreat, MSGBOX_DEFAULT
+	return
+
+SlateportCity_EventScript_SternGreetsStranger::
+	msgbox SlateportCity_Text_OhYoureThatTrainer, MSGBOX_DEFAULT
+	return
 
 SlateportCity_Movement_OldWomanConcern:
 	delay_16
@@ -1161,9 +1171,15 @@ SlateportCity_Text_SternWhewFirstInterview:
 	.string "That was my first time to be filmed for\n"
 	.string "TV. That was nerve-wracking.$"
 
-SlateportCity_Text_OhPlayerWeMadeDiscovery:
+SlateportCity_Text_OhPlayerLookingGreat:
 	.string "Oh! {PLAYER}{KUN}!\n"
-	.string "You're looking great!\p"
+	.string "You're looking great!$"
+
+SlateportCity_Text_OhYoureThatTrainer:
+	.string "Oh! {PLAYER}{KUN}, isn't it?\n"
+	.string "I've heard about you around town.$"
+
+SlateportCity_Text_WeMadeDiscovery:
 	.string "We made a huge discovery on our last\n"
 	.string "seafloor exploration.\p"
 	.string "We found an underwater cavern on\n"

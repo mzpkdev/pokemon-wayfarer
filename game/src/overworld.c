@@ -513,10 +513,10 @@ static void Overworld_ResetStateAfterWhiteOut(void)
         Overworld_ResetBattleFlagsAndVars();
     // If you were defeated by Kyogre/Groudon and the step counter has
     // maxed out, end the abnormal weather.
-    if (VarGet(VAR_SHOULD_END_ABNORMAL_WEATHER) == 1)
+    if (VarGet(HOENN_VAR_ID(VAR_SHOULD_END_ABNORMAL_WEATHER)) == 1)
     {
-        VarSet(VAR_SHOULD_END_ABNORMAL_WEATHER, 0);
-        VarSet(VAR_ABNORMAL_WEATHER_LOCATION, ABNORMAL_WEATHER_NONE);
+        VarSet(HOENN_VAR_ID(VAR_SHOULD_END_ABNORMAL_WEATHER), 0);
+        VarSet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION), ABNORMAL_WEATHER_NONE);
     }
     FollowerNPC_TryRemoveFollowerOnWhiteOut();
 }
@@ -1359,7 +1359,7 @@ static bool16 NoMusicInSootopolisWithLegendaries(struct WarpData *warp)
 
 static bool16 IsInfiltratedWeatherInstitute(struct WarpData *warp)
 {
-    if (VarGet(VAR_WEATHER_INSTITUTE_STATE))
+    if (VarGet(HOENN_VAR_ID(VAR_WEATHER_INSTITUTE_STATE)))
         return FALSE;
     else if (warp->mapGroup != MAP_GROUP(MAP_ROUTE119_WEATHER_INSTITUTE_1F))
         return FALSE;

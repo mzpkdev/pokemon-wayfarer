@@ -9,7 +9,22 @@ MossdeepCity_OnTransition:
 	clearflag FLAG_MOSSDEEP_GYM_SWITCH_3
 	clearflag FLAG_MOSSDEEP_GYM_SWITCH_4
 	call_if_set FLAG_SYS_WEATHER_CTRL, Common_EventScript_SetAbnormalWeather
+	call_if_eq VAR_MOSSDEEP_CITY_STATE, 0, MossdeepCity_EventScript_TryStartInvasion
 	end
+
+@ The invasion needs the Mind Badge and Groudon awake, in either order. State 0 means that it has
+@ never started, so this arms it once.
+MossdeepCity_EventScript_TryStartInvasion::
+	goto_if_unset FLAG_BADGE07_GET, Common_EventScript_NopReturn
+	goto_if_unset FLAG_GROUDON_AWAKENED_MAGMA_HIDEOUT, Common_EventScript_NopReturn
+	clearflag FLAG_HIDE_MOSSDEEP_CITY_TEAM_MAGMA
+	clearflag FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_1F_TEAM_MAGMA
+	clearflag FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_2F_TEAM_MAGMA
+	clearflag FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_2F_STEVEN
+	setvar VAR_MOSSDEEP_CITY_STATE, 1
+	setflag FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_1F_STEVEN
+	setvar VAR_MOSSDEEP_SPACE_CENTER_STATE, 1
+	return
 
 MossdeepCity_EventScript_PokefanF::
 	lock
@@ -28,7 +43,13 @@ MossdeepCity_EventScript_Sailor::
 	lock
 	faceplayer
 	goto_if_set FLAG_RECEIVED_HM_DIVE, MossdeepCity_EventScript_SailorMagmaGone
+	goto_if_set FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE, MossdeepCity_EventScript_SailorAquaGone
 	msgbox MossdeepCity_Text_MossdeepTargetedByMagma, MSGBOX_DEFAULT
+	release
+	end
+
+MossdeepCity_EventScript_SailorAquaGone::
+	msgbox MossdeepCity_Text_AquaBeatenMossdeepTargeted, MSGBOX_DEFAULT
 	release
 	end
 
@@ -342,6 +363,14 @@ MossdeepCity_Text_SpaceCenterLaunchingRockets:
 	.string "launching huge rockets.$"
 
 MossdeepCity_Text_MossdeepTargetedByMagma:
+	.string "I heard from a SAILOR buddy that\n"
+	.string "TEAM AQUA set up shop in LILYCOVE.\p"
+	.string "But MOSSDEEP here's been targeted\n"
+	.string "by that TEAM MAGMA.\p"
+	.string "If you want to know what they're up to,\n"
+	.string "go visit the SPACE CENTER.$"
+
+MossdeepCity_Text_AquaBeatenMossdeepTargeted:
 	.string "I heard from a SAILOR buddy that\n"
 	.string "TEAM AQUA set up shop in LILYCOVE.\p"
 	.string "I also heard that someone came along\n"
