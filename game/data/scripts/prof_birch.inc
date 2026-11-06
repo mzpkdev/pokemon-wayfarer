@@ -35,7 +35,10 @@ ProfBirch_EventScript_MoveToRoute103::
 ProfBirch_EventScript_RatePokedexOrRegister::
 	lock
 	faceplayer
-#if IS_HNS
+#if IS_WAYFARER
+	@ Only BIRCH in Hoenn runs this script: ELM rates the POKéDEX over the phone. The phone has no
+	@ BIRCH to register, so he goes straight to the rating.
+#elif IS_HNS
 	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 3, ProfBirch_EventScript_GoFindMrPokemon
 	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 4, ProfBirch_EventScript_Robbery
 #else
@@ -43,7 +46,7 @@ ProfBirch_EventScript_RatePokedexOrRegister::
 	goto_if_unset FLAG_ENABLE_PROF_BIRCH_MATCH_CALL, EventScript_RegisterProfBirch
 #endif
 
-#if IS_HNS
+#if IS_HNS && !IS_WAYFARER
 ProfBirch_EventScript_GoFindMrPokemon::
 	msgbox gElmDexRatingText_GoFindMrPokemon, MSGBOX_DEFAULT
 	release

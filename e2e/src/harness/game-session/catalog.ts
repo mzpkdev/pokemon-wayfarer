@@ -813,6 +813,8 @@ export const storyFlags = {
   billSsTicketSettled: 0x4b4,
   trainerOnlyEnabled: 0x0b,
   hoennDiveAuthorized: 0x607b,
+  // Emerald's FLAG_ENABLE_PROF_BIRCH_MATCH_CALL in the Hoenn bank.
+  hoennBirchRegistered: 0x6119,
   hoennReceivedCastform: 0x6097,
   hoennDefeatedKyogre: 0x61be,
   hoennDefeatedGroudon: 0x61bf,
