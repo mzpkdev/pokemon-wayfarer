@@ -37,9 +37,9 @@ writes cross adventures:
 | Write today | Problem |
 | --- | --- |
 | Roxanne's defeat sets `VAR_RUSTBORO_CITY_STATE` to 1 | It is the only start of the Rustboro theft, and it would rewind a theft already under way. |
-| Briney's sail and the Route 104 rival set `VAR_RUSTBORO_CITY_STATE` to 8 | They would end a theft that has not started. |
+| Rustboro's, Dewford's, Mauville's, and Lavaridge's defeats each raise `VAR_PETALBURG_GYM_STATE` | Petalburg Gym is readied for battle only when the count reaches 6. |
 | Norman's defeat hides Mr. Briney and relocates Wattson | Both belong to other adventures. |
-| Tate & Liza's defeat starts the Space Center invasion and hides the Aqua Hideout cast | The first needs Magma Hideout; the second strands the Aqua branch. |
+| Tate & Liza's defeat starts the Space Center invasion, hides the Aqua Hideout cast, reopens Slateport's harbor, and shows Mr. Briney in the shipyard | The first needs Magma Hideout, the second strands the Aqua branch, the third belongs to the harbor scene, and the fourth puts Briney in two places. |
 | Steven's Dive scene removes the Seafloor Cavern guard | Seafloor needs the Aqua branch too. |
 | Petalburg's Scott meeting sets `VAR_SCOTT_STATE` to 1 | It resets the count when it is not the first meeting. |
 
@@ -94,10 +94,10 @@ other twelve do. Scott's meetings may then happen in any order.
   plays the first time the player crosses its five tiles while the theft has
   not started. Roxanne's badge neither starts it nor is needed for it. Remove
   the Gym's write of `VAR_RUSTBORO_CITY_STATE`.
-- The scene plays once. Beating Roxanne, sailing with Briney, and the Route
-  104 rival scene never start it, replay it, end it, or rewind it. Guard the
-  two writers that jump the Rustboro state to 8, or key the theft on its own
-  state.
+- The scene plays once, and beating Roxanne at any point never starts it,
+  replays it, or rewinds it. Nothing reads Rustboro state 0 today, and the two
+  writers that jump the state to 8 (Briney's sail and the Route 104 rival)
+  cannot run before state 6, so keying the five triggers on state 0 is enough.
 - The scene shows the employee, the grunt, Peeko, and Briney as it does today,
   including for visitors, whose baseline hides them.
 - From there the adventure keeps its order: the employee's request, the
@@ -106,8 +106,10 @@ other twelve do. Scott's meetings may then happen in any order.
 - The employee's robbery line recalls the player's help in Petalburg Woods.
   Trace the Woods scene's state. Without that scene, he asks for help with no
   recall.
-- Norman's defeat no longer hides Mr. Briney. Briney keeps sailing while the
-  Peeko rescue or either delivery is unfinished.
+- Mr. Briney keeps sailing for the whole game. Norman's defeat no longer
+  hides him, and Tate & Liza's defeat no longer shows the second Briney in
+  Stern's shipyard. That shipyard cameo is dropped: it is the price of Briney
+  never standing in two places and never retiring in the middle of an errand.
 
 ### Devon deliveries
 
@@ -117,7 +119,12 @@ other twelve do. Scott's meetings may then happen in any order.
 - The deliveries complete in either order, and neither needs the other. From
   Dewford, Briney offers Slateport once the Letter is delivered or the player
   holds the Parts.
-- Dock mentions the Devon Goods only to a player who holds the Parts.
+- Dock mentions the Devon Goods only to a player who holds the Parts. Talking
+  to him still sends Team Aqua's queue away from the museum door for every
+  player: today that talk is the only thing that clears the queue
+  (`FLAG_HIDE_SLATEPORT_CITY_TEAM_AQUA`), and the queue stands on the only
+  tiles that reach the door. The queue is also gone once the harbor scene has
+  played.
 - Ordinary access to the museum, the shipyard, the harbor, Granite Cave, and
   transport stays open at every step.
 
@@ -129,12 +136,24 @@ other twelve do. Scott's meetings may then happen in any order.
 | Magma Hideout done, harbor scene not yet played | The Slateport street, then the harbor, as today. The museum Stern is hidden. | Waits for the harbor scene. |
 | Harbor scene played | The harbor. | A plain handover: Stern takes the Parts with a short line. There are no grunts and no Archie. |
 
-The plain handover sets everything the museum delivery sets, so Scott's
-meeting outside the museum and every later reader of `FLAG_DELIVERED_DEVON_GOODS`
-behave the same, and it hides the museum's grunts. Stern stays reachable while
-the Parts are undelivered: no later scene may hide him from a player who still
-holds them. Completing the harbor scene never removes the Parts or their
-delivery.
+The plain handover sets what the museum delivery sets, so every later reader
+of `FLAG_DELIVERED_DEVON_GOODS` behaves the same, and it hides the museum's
+grunts. One thing differs: Scott's meeting outside the museum is staged at the
+museum door and does not play after a harbor handover. Count it toward
+`VAR_SCOTT_STATE`, register his call, and mark it done, so nothing waits on
+it. Stern stays at the harbor after the harbor scene, as today, and no later
+scene may hide him from a player who still holds the Parts. Completing the
+harbor scene never removes the Parts or their delivery.
+
+The street Stern greets the player as an old acquaintance back from an
+expedition. When the Parts are undelivered and the two have not met, he opens
+with a first-meeting line.
+
+**The harbor.** The harbor's patrons, its ferry attendant, and Slateport's
+ferry berth are closed only while the harbor scene is waiting to play (harbor
+state 1). They return when the scene ends. Tate & Liza's defeat no longer
+reopens them: today it is the only thing that does, so a player who wins that
+badge first loses the berth for good.
 
 ### Meteor Falls and Mt. Chimney
 
@@ -154,10 +173,12 @@ delivery.
 - The occupation stays available from the first visit until the player clears
   it, in any order with every other adventure. Castform's handoff stays as it
   is.
-- Once the Mt. Pyre theft has happened (`FLAG_RECEIVED_RED_OR_BLUE_ORB`), the
-  grunt's and Shelly's Mt. Pyre lines become a withdraw variant: the order
-  came to pull out, and Shelly leaves without naming Mt. Pyre or Team Magma's
-  plans.
+- The grunt's and Shelly's Mt. Pyre lines play only while they are a true
+  lead: Mt. Chimney is done and the Mt. Pyre theft has not happened. Before
+  Mt. Chimney the summit is empty, and after the theft
+  (`FLAG_RECEIVED_RED_OR_BLUE_ORB`) the plan is carried out. In both cases
+  they use a withdraw variant: the order came to pull out, and Shelly leaves
+  without naming Mt. Pyre or Team Magma's plans.
 - The Route 119 rival scene has its own condition (see
   [Brendan and May](#brendan-and-may)).
 
@@ -169,12 +190,15 @@ Lavaridge's shared Go-Goggles check. No change.
 
 ### Wattson and New Mauville
 
-- Wattson stays in his Gym until the player holds the Dynamo Badge. After
-  that, he is outside in Mauville City with the New Mauville request, as in
+- Wattson stays in his Gym until the player holds the Dynamo Badge and has
+  taken TM Shock Wave from him. After that, and until TM Thunderbolt is
+  claimed, he is outside in Mauville City with the New Mauville request, as in
   Emerald. Norman plays no part: remove the `FLAG_DEFEATED_PETALBURG_GYM`
   condition from the relocation and the relocation call from Norman's defeat.
-- The move never happens under the player's eyes. Apply it when the player
-  enters Mauville City or the Gym, not inside the badge scene.
+- A full Bag in the badge scene leaves TM Shock Wave with the Gym's Wattson.
+  He does not step outside while it is owed.
+- Once TM Thunderbolt is claimed he is back in the Gym for good. No entry
+  check may move him outside again.
 - The Basement Key, New Mauville's door and generator, TM Thunderbolt, his
   return to the Gym, and his rematch stay as they are.
 - His first badge battle is never out of reach, since he leaves the Gym only
@@ -185,12 +209,20 @@ Lavaridge's shared Go-Goggles check. No change.
 - Norman accepts the challenge once Wally's catching tutorial is done. Remove
   the four-Hoenn-badge condition and the advice lines that send the player to
   other Gyms.
+- The end of the tutorial readies the Gym for battle. Today
+  `Common_EventScript_ReadyPetalburgGymForBattle` runs only when four other
+  Gyms have raised `VAR_PETALBURG_GYM_STATE` to 6. It is the only thing that
+  unlocks the Gym's rooms and trainers, puts Norman at the back, shows the Gym
+  guide, and expands Petalburg Mart's stock. Run it at the end of the
+  tutorial, and remove the other Gyms' increments.
 - No Norman line counts or asks for badges. `NormanIntro` and
   `VisitorNormanIntro` open without "four GYM BADGES" and, for the visitor,
   without "as I promised".
 - The tutorial and the west-entrance redirect that leads to it stay. The
   native and visitor variants stay as the regional-origin design selects them.
 - No other Gym's defeat changes Petalburg Gym's state.
+- Juan's line after his battle counts the badges left ("There remains but one
+  BADGE… FORTREE"). Make it badge-neutral.
 - Wally's Mauville battle is offered only after the Petalburg tutorial, since
   his lines recall it. Verdanturf keeps its Mauville prerequisite. On Victory
   Road, Wally appears only after the tutorial, and his "losing to you that
@@ -211,11 +243,17 @@ conditions.
 | Rustboro and the Route 104 fallback | Triggers, optional battle | The triggers do nothing; the rival is not shown. |
 | Route 110 | Forced triggers; the Itemfinder | The triggers do nothing; the rival is not shown. |
 | Route 119 | Forced trigger; HM Fly | The trigger does nothing. |
-| Lavaridge | After Flannery; the Go-Goggles | The scene does not start. The desert survey gives this player the Go-Goggles. |
+| Lavaridge | Frame script after Flannery; the Go-Goggles | The scene does not start and the rival is not placed. The desert survey gives this player the Go-Goggles. |
 | Lilycove | Talk | The rival is not shown. |
 
 - A waiting trigger returns before it locks the player and leaves its own
   state untouched, so it fires on a later crossing.
+- Lavaridge's scene is a frame script on `VAR_LAVARIDGE_TOWN_STATE` 1, which
+  Flannery's defeat sets. A frame script that returns without changing its
+  state runs again every frame and freezes the player. So the town must not
+  sit at state 1 without a starter: park the scene at another value, and arm
+  it on entering Lavaridge once the player has a starter. The transition
+  script places the rival only when the scene is armed.
 - No rival scene blocks a road, the Weather Institute, the Devon errands, or
   Flannery's Gym while it waits.
 - The Itemfinder and HM Fly stay rewards of their scenes.
@@ -232,8 +270,12 @@ conditions.
 
 - The Mt. Pyre theft starts only after Mt. Chimney
   (`FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY`). Until then Archie and his grunts are
-  not on the summit, its three triggers do nothing, and the old couple's lines
-  describe orbs that are still there. The rest of Mt. Pyre is open as usual.
+  not on the summit and its three triggers do nothing. The rest of Mt. Pyre is
+  open as usual.
+- With Archie gone the player can reach the old couple before the theft, which
+  today they cannot. The old lady's line at that state already mourns the
+  stolen orbs. Before the theft she speaks of the orbs she and her husband
+  guard.
 - Derive this on entering the summit. The baseline never hides Archie and the
   grunts, so the summit must hide them before Mt. Chimney and show them after
   it, until the theft has played.
@@ -253,42 +295,51 @@ leave Hoenn between their steps.
 
 - The Slateport street and harbor scenes start after Magma Hideout, as today.
 - Aqua Hideout stays fully playable until Matt's battle is won. Only Aqua's
-  own escape (`FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE`) removes its grunts and
-  Matt. Tate & Liza's defeat no longer sets `FLAG_HIDE_AQUA_HIDEOUT_GRUNTS`.
-- The harbor Stern's lines follow the story, not the seventh badge.
+  own escape removes its grunts and Matt: the escape scene sets
+  `FLAG_HIDE_AQUA_HIDEOUT_GRUNTS`, and Tate & Liza's defeat no longer does.
+- Lines that tell of the hideout's fall follow Aqua's escape
+  (`FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE`), not the seventh badge: the harbor
+  Stern's, and the Lilycove lines in the motel, the city, and the Pokémon
+  Center.
+- The hideout's entrance guard sends the player to Mt. Pyre only while that is
+  a true lead (see [Weather Institute](#weather-institute)). Otherwise he says
+  only that the boss is away.
 
 **Mossdeep and the Space Center.**
 
 - Tate & Liza's Gym is always open, and its win awards the badge.
 - The Space Center invasion starts only when the player holds the Mind Badge
   and Groudon has woken (`FLAG_GROUDON_AWAKENED_MAGMA_HIDEOUT`), in either
-  order. Check both on entering Mossdeep City. A player who wins the Gym first
-  finds Mossdeep quiet, and the invasion begins on their first visit after
-  Magma Hideout.
+  order. Check both on entering Mossdeep City, and only while the invasion has
+  never started (`VAR_MOSSDEEP_CITY_STATE` 0), so it starts once. A player who
+  wins the Gym first finds Mossdeep quiet, and the invasion begins on their
+  first visit after Magma Hideout.
+- Everything the Gym's defeat writes for the invasion moves to that check: the
+  city and Space Center states, the Magma objects, and Steven's placement.
 - From there the invasion, Steven's tag battle, and Steven's house keep their
   order and what they set. HM Dive and Hoenn's Dive authorization still come
   from Steven. Nothing in the branch checks Aqua Hideout.
 - `FLAG_DEFEATED_MAGMA_SPACE_CENTER` is cleared by a later call, so nothing
-  uses it to mean the branch is done. Use the receipt of Steven's Dive.
+  uses it to mean the branch is done. Use the receipt of Steven's Dive,
+  `FLAG_RECEIVED_HM_DIVE`.
 
 ### Seafloor Cavern and the weather crisis
 
 - Seafloor Cavern's story starts only when both branches are done: Aqua has
-  escaped in the submarine, and the player has Steven's Dive.
-- The Aqua grunt in front of the cavern door stays until both are true. Check
-  both on entering the cavern entrance. Steven's Dive scene no longer removes
-  him. His line holds in every state and names nothing that has not happened.
-  Confirm that he blocks the door; if he does not, close the door another way
-  with existing objects.
+  escaped in the submarine (`FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE`), and the
+  player has Steven's Dive (`FLAG_RECEIVED_HM_DIVE`).
+- That flag is also Hoenn's Dive authorization, and only Steven sets it. A
+  player therefore cannot reach the cavern without the Mossdeep branch, and
+  the state the guard exists for is "Steven's Dive, but Aqua has not escaped".
+- The Aqua grunt in front of the cavern door stays until both are true. He
+  stands on the only tile that reaches the door. Check both on entering the
+  cavern entrance. Steven's Dive scene no longer removes him.
 - Room 9's scene checks the same two conditions before it starts.
-- The ability to Dive proves nothing. No story check reads the HM, the
-  authorization, or the player's position.
 - From Room 9 on, the story keeps its order: Route 128, Sootopolis, the Cave
   of Origin, the Sky Pillar awakening, and the return to Sootopolis.
 - No step requires catching a legendary Pokémon or a Trainer Rating.
 - Juan's Gym opens when the crisis is resolved, as today, with no other badge
-  condition. Read the `FLAG_BADGE06_GET` branch in his script and remove it if
-  it gates the battle.
+  condition.
 
 ### Dialogue variants
 
@@ -297,12 +348,16 @@ leave Hoenn between their steps.
 | Devon employee, Rustboro street | Recalls the player's help "in PETALBURG WOODS". | Without the Woods scene: drop the recall. |
 | Archie, Meteor Falls | "Didn't I see you before? At SLATEPORT's MUSEUM?" | Without the museum confrontation: drop the recall. |
 | Archie, Oceanic Museum | Speaks as on a first meeting. | If Meteor Falls came first: confirm the lines still read true, and add a short recall only if they do not. |
+| Stern, Slateport street | "Oh! {PLAYER}! You're looking great!… our last seafloor exploration". | Parts undelivered and not yet met: a first-meeting line. |
 | Stern, Slateport harbor | "The same thugs" tried to rob the museum. | Without the museum confrontation: a neutral line about the thieves. |
 | Stern, late Parts delivery | The museum confrontation and "now we can prepare for the expedition". | After the harbor scene: he thanks the player and takes the Parts, with no expedition line. |
-| Aqua grunt and Shelly, Weather Institute | "A TEAM MAGMA mob… headed for MT. PYRE!", "We have to hurry to MT. PYRE, too!" | After the Mt. Pyre theft: the order came to pull out. |
+| Aqua grunt and Shelly, Weather Institute | "A TEAM MAGMA mob… headed for MT. PYRE!", "We have to hurry to MT. PYRE, too!" | Before Mt. Chimney or after the Mt. Pyre theft: the order came to pull out. |
+| Aqua Hideout entrance guard | The boss is "on his way to MT. PYRE". | Before Mt. Chimney or after the theft: the boss is away. |
+| Old lady, Mt. Pyre summit | "The BLUE ORB and RED ORB taken by those sinister men…" | Before the theft: the orbs are still in her care. |
+| Lilycove motel, city, and Pokémon Center | Team Aqua's hideout was busted; they are gone for good. Keyed on the Mind Badge. | Keyed on Aqua's escape. |
+| Juan, after his battle | "There remains but one BADGE… FORTREE". | Badge-neutral. |
 | Norman, intro | "So, you did get four GYM BADGES." | Badge-neutral. |
 | Wally, Victory Road | "Losing to you that time…" | Without the Mauville win: drop the recall. |
-| Seafloor Cavern entrance grunt | His guard line. | True in every state. |
 
 Maxie's Space Center lines need no variant: Mt. Chimney and Magma Hideout
 always precede them.
@@ -354,36 +409,48 @@ Mechanical checks extend the existing script and journey tests. Cover:
 - **Deliveries:** visit Stern and Steven without their items, then return with
   them. Deliver the Letter and the Parts in both orders, with travel and a
   save and reload between. Each delivery pays once.
+- **Museum door:** as a player with no Parts, talk to Dock. The Aqua queue
+  leaves and the museum can be entered.
 - **Late Parts:** finish Magma Hideout and the harbor scene first, then hand
-  the Parts to Stern at the harbor. No confrontation plays, Scott's museum
-  meeting still happens, and harbor progress does not regress. Stern is never
-  in two places.
+  the Parts to Stern at the harbor. No confrontation plays, Scott's count
+  includes the museum meeting, and harbor progress does not regress. Stern is
+  never in two places.
+- **Harbor:** win the Mind Badge before Magma Hideout, then play the harbor
+  scene. The attendant and the ferry berth return when the scene ends. Do the
+  same without the Mind Badge.
 - **Briney:** beat Norman in the middle of the Peeko rescue and before either
-  delivery. Briney still sails.
+  delivery, and win the Mind Badge. Briney still sails and is in one place.
 - **Weather Institute:** clear it before and after the Mt. Pyre theft and
   after the crisis. The right variant plays, and Castform is claimable once,
   including after a full party and box.
 - **Wattson:** win the Dynamo Badge with and without Norman's badge. Wattson
-  is in the Gym before the badge and outside after it. Finish New Mauville and
-  claim TM Thunderbolt once. He returns to the Gym.
+  is in the Gym before the badge and outside after it. Win it with a full Bag;
+  he stays in the Gym until TM Shock Wave is taken. Finish New Mauville and
+  claim TM Thunderbolt once. He returns to the Gym and stays there on every
+  later visit.
 - **Norman:** finish the tutorial and battle Norman with zero Hoenn badges, as
-  a native and as a visitor. No line mentions four badges.
+  a native and as a visitor. The Gym's rooms are open, its trainers are there,
+  the Gym guide is present, and no line mentions four badges.
 - **Wally:** visit Mauville and Victory Road before the tutorial; Wally is
   absent and nothing is blocked. Reach Victory Road with and without the
   Mauville win.
 - **Rivals:** as a visitor with no starter, cross the Rustboro, Route 104,
-  Route 110, and Route 119 triggers, beat Flannery, and visit Lilycove. The
-  player keeps control and meets no rival. Take a starter and return; each
-  scene plays and pays once. Use the Game Corner doll without a starter.
-- **Mt. Pyre:** climb to the summit before Mt. Chimney. No Aqua, no theft, and
-  ordinary access. Finish Mt. Chimney and return; the theft plays.
+  Route 110, and Route 119 triggers, beat Flannery and walk out into
+  Lavaridge, and visit Lilycove. The player keeps control and meets no rival.
+  Take a starter and return; each scene plays and pays once. Use the Game
+  Corner doll without a starter.
+- **Mt. Pyre:** climb to the summit before Mt. Chimney. No Aqua, no theft,
+  the old lady speaks of orbs still in her care, and access is ordinary.
+  Finish Mt. Chimney and return; the theft plays.
 - **Branches:** after Magma Hideout, finish Aqua Hideout before Mossdeep, then
   the reverse. Win Tate & Liza's badge before Magma Hideout, between the
-  branches, and last. Aqua Hideout stays completable in every order, and the
-  Space Center never starts before Groudon wakes.
-- **Seafloor:** reach the cavern entrance with neither branch, with only the
-  Aqua branch, with only Steven's Dive, and with both. Only both opens it.
-  Reach it by Dive from another source.
+  branches, and last. Aqua Hideout stays completable in every order and
+  empties after Matt's battle. The Space Center never starts before Groudon
+  wakes, starts once, and never replays.
+- **Seafloor:** reach the cavern entrance with Steven's Dive and Aqua not yet
+  escaped; the guard blocks the door. Finish Aqua Hideout and return; it is
+  open. The states without Steven's Dive cannot be reached in play; cover them
+  from arranged state only.
 - **Crisis:** finish it and beat Juan below TR 55. Rayquaza's awakening awards
   and requires no capture.
 - **Captures:** below and at TR 55, try Rayquaza at Sky Pillar and the Weather

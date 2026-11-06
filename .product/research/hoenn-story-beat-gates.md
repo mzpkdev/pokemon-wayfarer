@@ -53,7 +53,9 @@ PokéNav tutorial, and the rival:
   never writes `VAR_RUSTBORO_CITY_STATE`, so a player who never beats Roxanne
   never sees the theft.
 - Nothing reads state 0. Deleting the Gym's write leaves no reader of state 1.
-  The two writers that jump to 8 would disarm a theft keyed on state 0.
+  The two writers that jump to 8 cannot run before state 6: Briney appears at
+  his house only through Mr. Stone or after a sail, and `VAR_ROUTE104_STATE` 1
+  is set only at Rustboro state 6 (`maps/RustboroCity/scripts.inc:27–33`).
 - The employee's and grunt's street lines do not mention Roxanne or a badge.
   `RustboroCity_Text_HelpMeIWasRobbed` (`maps/RustboroCity/scripts.inc` ~1100)
   recalls help "in PETALBURG WOODS". The Woods flags were not traced.
@@ -73,12 +75,28 @@ PokéNav tutorial, and the rival:
   only where they are given and handed over.
   `Common_EventScript_PlayerHandedOverTheItem` (`event_scripts.s:1565`) plays
   the handover and runs `removeitem`, which does nothing for a missing item.
-  Both men are visible from the start, and the museum lets a player in without
-  the fee (`maps/SlateportCity_OceanicMuseum_1F/scripts.inc:46–59`). A player
-  can complete either delivery and take its rewards with no item.
+  Both men are visible from the start, and the museum's desk lets a player in
+  without the fee (`maps/SlateportCity_OceanicMuseum_1F/scripts.inc:46–59`). A
+  player can complete either delivery and take its rewards with no item.
 - Dock (`maps/SlateportCity_SternsShipyard_1F/scripts.inc:4–20`) sends the
   player to Stern and sets `FLAG_DOCK_REJECTED_DEVON_GOODS` without checking
-  the item.
+  the item. His talk is also the only setter of
+  `FLAG_HIDE_SLATEPORT_CITY_TEAM_AQUA` (`:18`). That flag hides the Aqua queue
+  outside the museum, whose first two grunts stand on (30,27) and (31,27), the
+  only tiles that reach the museum door. Until a player talks to Dock, the
+  museum cannot be entered.
+- The harbor hides its patrons, including the ferry attendant, on entry at
+  harbor state 1 (`maps/SlateportCity_Harbor/scripts.inc:22`,
+  `FLAG_HIDE_SLATEPORT_CITY_HARBOR_PATRONS`), and `src/wayfarer_ferry.c:408–411`
+  closes Slateport's berth while that flag is set. Only the Mossdeep Gym win
+  clears it (`maps/MossdeepCity_Gym/scripts.inc:84`).
+- After the harbor scene Stern stays at the harbor, and nothing later hides
+  him. The street Stern's greeting assumes an earlier meeting and a finished
+  expedition (`maps/SlateportCity/scripts.inc:1164–1172`).
+- Scott's meeting outside the museum is staged at the museum door with fixed
+  movements (`maps/SlateportCity/scripts.inc:31–47,95–103`) and is where his
+  match call is registered (`:75`). Wattson's defeat sets
+  `VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE` to 3 (`maps/MauvilleCity_Gym/scripts.inc:98`).
 - Stern is three objects with separate hide flags: museum 2F (visible from the
   start, removed at delivery), the Slateport street (shown by
   `maps/MagmaHideout_4F/scripts.inc:60`), and the harbor (shown by
@@ -95,8 +113,10 @@ PokéNav tutorial, and the rival:
   (`maps/Route109/scripts.inc:298`). By land or ferry the deliveries already
   work in either order.
 - Norman's win calls `EventScript_HideMrBriney`
-  (`maps/PetalburgCity_Gym/scripts.inc` ~585, defined at `event_scripts.s:1436`),
-  which hides Briney everywhere.
+  (`maps/PetalburgCity_Gym/scripts.inc:569`, defined at `event_scripts.s:1436`),
+  which hides Briney everywhere. It is that script's only caller. The Mossdeep
+  Gym win shows a second Briney in Stern's shipyard
+  (`maps/MossdeepCity_Gym/scripts.inc:80`).
 - The Route 110 and Route 119 Aqua travel barriers are already open in
   Wayfarer (`scripts/wayfarer_hoenn_entry.inc:35,89`; the
   [traversal specification](../specs/emerald-open-world-region-traversal.md)).
@@ -125,7 +145,10 @@ PokéNav tutorial, and the rival:
 - At Meteor Falls, Archie recalls the museum
   (`maps/MeteorFalls_1F_1R/scripts.inc:263–276`).
 - The Route 112 Magma grunts are hidden only by the Meteor Falls scene
-  (`:86`). Whether they still block the cable car was not checked.
+  (`:86`). They do not block the cable car: they stand at (24–25,31), and the
+  path to its door is open.
+- The Meteor Falls trigger sits on the only route to the stairs, so Mt.
+  Chimney cannot be finished without it.
 
 ## Weather Institute
 
@@ -157,9 +180,11 @@ PokéNav tutorial, and the rival:
 - `MauvilleCity_Gym_EventScript_TryRelocateWattson`
   (`maps/MauvilleCity_Gym/scripts.inc:101–110`) needs both
   `FLAG_DEFEATED_PETALBURG_GYM` and `FLAG_BADGE03_GET`. It hides the Gym
-  Wattson and shows the street one. Both Gyms call it
-  (`maps/MauvilleCity_Gym/scripts.inc:97–98`,
-  `maps/PetalburgCity_Gym/scripts.inc:570–571`).
+  Wattson and shows the street one. Both Gyms call it: Wattson's badge scene
+  (`maps/MauvilleCity_Gym/scripts.inc:103`) and Norman's defeat
+  (`maps/PetalburgCity_Gym/scripts.inc:571`).
+- After a full Bag in the badge scene, TM Shock Wave is claimable only from
+  the Gym's Wattson (`maps/MauvilleCity_Gym/scripts.inc:81`).
 - The street Wattson gives the Basement Key and, once
   `VAR_NEW_MAUVILLE_STATE` is 2, TM Thunderbolt
   (`maps/MauvilleCity/scripts.inc:413–444`). New Mauville's door checks only
@@ -177,6 +202,15 @@ PokéNav tutorial, and the rival:
   to the Gym until it is done.
 - After it, `WayfarerGetHoennBadgeCountForScript` sends zero to three badges
   to advice lines and four or more to the battle (`:130–136`, `:528`).
+- `Common_EventScript_ReadyPetalburgGymForBattle` (`event_scripts.s:1313`)
+  runs only when `VAR_PETALBURG_GYM_STATE` reaches 6. The Rustboro, Dewford,
+  Mauville, and Lavaridge Gym defeats each raise it by one
+  (`maps/RustboroCity_Gym/scripts.inc:28`, `maps/DewfordTown_Gym/scripts.inc:159`,
+  `maps/MauvilleCity_Gym/scripts.inc:105`, `maps/LavaridgeTown_Gym_1F/scripts.inc:70`).
+  It is the only setter of `FLAG_PETALBURG_MART_EXPANDED_ITEMS` and the only
+  thing that shows the Gym guide. Below state 6 the Gym's room doors are
+  locked and Norman stands at the entrance
+  (`maps/PetalburgCity_Gym/scripts.inc:40,970,998`).
 - Lines that count badges: `NormanIntro` and `VisitorNormanIntro` ("So, you
   did get four GYM BADGES", `:1490`, `:1885`; the visitor one adds "as I
   promised"), and the advice lines.
@@ -203,7 +237,7 @@ commits a choice (`maps/LittlerootTown_ProfessorBirchsLab/scripts.inc:126–141`
 | Route 104 fallback (`maps/Route104/scripts.inc:137–166`) | `VAR_ROUTE104_STATE` 1. | The starter. |
 | Route 110 (`maps/Route110/scripts.inc:356–480`) | Triggers at (33–34,56) while `VAR_ROUTE110_STATE` is 0. Forced. Gives the Itemfinder. | The starter. |
 | Route 119 (`maps/Route119/scripts.inc:34–150`) | Trigger at (25,31) while `VAR_ROUTE119_STATE` is 0. Forced; the rival is added by script. Gives HM Fly. | The starter. |
-| Lavaridge (`maps/LavaridgeTown/scripts.inc:61–141`) | `VAR_LAVARIDGE_TOWN_STATE` 1, set by Flannery's defeat. Gives the Go-Goggles. | Nothing. |
+| Lavaridge (`maps/LavaridgeTown/scripts.inc:57–141`) | A frame script at `VAR_LAVARIDGE_TOWN_STATE` 1, set by Flannery's defeat; the transition script places the rival at that state. Gives the Go-Goggles. | Nothing. |
 | Lilycove (`maps/LilycoveCity/scripts.inc:209–371`) | Talk; visible from the start. | The starter. |
 
 Route 110, Route 119, Rustboro, Route 104, and Lilycove each end in a
@@ -232,17 +266,34 @@ girl has the same hole.
   Matt's battle makes the Aqua branch impossible to finish.
 - The Space Center checks neither hideout. It can run before Groudon wakes,
   where Maxie's motive ("With GROUDON gone…") is untrue.
-- Nothing at Seafloor Cavern checks the Aqua Hideout. Whether the entrance
-  grunt physically blocks the door was inferred from his position.
+- Nothing at Seafloor Cavern checks the Aqua Hideout. The entrance grunt
+  blocks the door: it can be entered only from the tile he stands on.
+- Aqua's escape does not set `FLAG_HIDE_AQUA_HIDEOUT_GRUNTS`
+  (`maps/AquaHideout_B2F/scripts.inc:49–50`); only the Mossdeep Gym win does.
+- At the Mt. Pyre summit, the old lady's line at state 0 already speaks of the
+  stolen orbs (`maps/MtPyre_Summit/scripts.inc:154–162`, text `:514`). Archie
+  and the triggers keep a player from reaching her before the theft.
+- The Aqua Hideout entrance guard says the boss is on his way to Mt. Pyre
+  (`maps/AquaHideout_1F/scripts.inc:28,81–89`).
+- Lilycove's lines about the hideout's fall branch on `FLAG_BADGE07_GET`
+  (`maps/LilycoveCity_CoveLilyMotel_1F/scripts.inc:7`,
+  `maps/LilycoveCity/scripts.inc:40,95`,
+  `maps/LilycoveCity_PokemonCenter_1F/scripts.inc:41`).
 - `FLAG_DEFEATED_MAGMA_SPACE_CENTER` is cleared by a later rival call
   (`maps/MossdeepCity_SpaceCenter_2F/scripts.inc:330`), so it cannot mark the
   Space Center as done.
 - The harbor Stern's dialogue checks `FLAG_BADGE07_GET` before the escape flag
   (`maps/SlateportCity_Harbor/scripts.inc:335`).
-- Juan's script has a branch on `FLAG_BADGE06_GET`
-  (`maps/SootopolisCity_Gym_1F/scripts.inc:87`). What it selects was not read.
-- Whether Steven's `AuthorizeDive` label sets the persistence-layer Dive
-  authorization was not confirmed.
+- Juan's branch on `FLAG_BADGE06_GET`
+  (`maps/SootopolisCity_Gym_1F/scripts.inc:87,140,274–279`) does not gate his
+  battle. It selects a line after it: "There remains but one BADGE… FORTREE".
+- Hoenn's Dive authorization is `FLAG_RECEIVED_HM_DIVE` itself
+  (`include/wayfarer_persistence.h:23–25`, read at
+  `src/wayfarer_persistence.c:531–532`), and only Steven sets it
+  (`maps/MossdeepCity_StevensHouse/scripts.inc:86–88`). Dive cannot be used on
+  a Hoenn map before his scene.
+- `VAR_MOSSDEEP_CITY_STATE` ends at 3 when the Space Center is done
+  (`maps/MossdeepCity_SpaceCenter_2F/scripts.inc:270`).
 
 ## Legendary captures
 
