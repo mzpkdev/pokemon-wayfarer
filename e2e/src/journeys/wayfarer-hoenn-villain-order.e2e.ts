@@ -13,6 +13,7 @@ const summitArchie = 2
 const mossdeepMaxie = 14
 const hideoutMatt = 1
 const seafloorGrunt = 1
+const route121Grunt = 13
 
 const sees = (state: GameState, localId: number): boolean =>
   state.objects.some((object) => object.localId === localId && object.visible)
@@ -205,6 +206,39 @@ describe.sequential("Wayfarer Hoenn villain story order", () => {
       hoennReceivedOrb: true,
     })
     expect(await listen(game)).not.toContain("MT. PYRE")
+  })
+
+  it("moves Route 121's grunts out only while Mt. Pyre is a true lead", async () => {
+    // Before Mt. Chimney they are not there: the passage is open and the trigger waits.
+    await arrangeAt(game, "route-121", 24, 7, "right")
+    expect(sees(await game.state.read(), route121Grunt)).toBe(false)
+    for (let step = 0; step < 6; step++) await stepOpening(game, "right")
+    await game.wait.frames(60)
+    await expectFree(game)
+    await expect(game.story.var("hoennRoute121State")).resolves.toBe(0)
+
+    // After the theft they are simply gone.
+    await arrangeAt(game, "route-121", 24, 7, "right", {
+      hoennMtChimneyDone: true,
+      hoennReceivedOrb: true,
+    })
+    expect(sees(await game.state.read(), route121Grunt)).toBe(false)
+    await stepOpening(game, "right")
+    await game.wait.frames(60)
+    await expectFree(game)
+    await expect(game.story.var("hoennRoute121State")).resolves.toBe(0)
+
+    // While it is true, they announce it and leave.
+    await arrangeAt(game, "route-121", 24, 7, "right", { hoennMtChimneyDone: true })
+    expect(sees(await game.state.read(), route121Grunt)).toBe(true)
+    await game.player.move("right")
+    await game.wait.until((state) => state.dialogueOpen, "the grunts' order")
+    expect(await game.dialogue.text()).toContain("MT. PYRE")
+    await playSceneUntil(
+      game,
+      async () => (await game.story.var("hoennRoute121State")) === 1,
+      "The grunts did not move out",
+    )
   })
 
   it("has Archie recall the museum only after the museum", { timeout: 180_000 }, async () => {

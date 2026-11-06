@@ -284,6 +284,15 @@ girl has the same hole.
   and the triggers keep a player from reaching her before the theft.
 - The Aqua Hideout entrance guard says the boss is on his way to Mt. Pyre
   (`maps/AquaHideout_1F/scripts.inc:28,81–89`).
+- Route 121's three Aqua grunts are visible from the start and stand at (30,8),
+  (30,7), and (31,7), which fills the passage south at y=7. Triggers at
+  (25,5–8) play "We're to move out to MT. PYRE!" and remove them
+  (`maps/Route121/scripts.inc:15–33`), with no story gate.
+- The Mossdeep sailor's line, keyed only on `FLAG_RECEIVED_HM_DIVE`, says
+  someone beat Team Aqua (`maps/MossdeepCity/scripts.inc:348`).
+- The Seafloor Cavern grunt says Team Magma was spotted near Mossdeep
+  (`maps/SeafloorCavern_Entrance/scripts.inc:70–71`), though Dive is available
+  only after the Space Center.
 - Lilycove's lines about the hideout's fall branch on `FLAG_BADGE07_GET`
   (`maps/LilycoveCity_CoveLilyMotel_1F/scripts.inc:7`,
   `maps/LilycoveCity/scripts.inc:40,95`,

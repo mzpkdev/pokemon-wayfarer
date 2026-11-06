@@ -1,5 +1,19 @@
 Route121_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, Route121_OnTransition
 	.byte 0
+
+Route121_OnTransition:
+	call_if_eq VAR_ROUTE121_STATE, 0, Route121_EventScript_SetAquaPresence
+	end
+
+@ The grunts are here only while Mt. Pyre is a true lead. They fill the passage south, so they must
+@ not stand around silently before their scene.
+Route121_EventScript_SetAquaPresence::
+	setflag FLAG_HIDE_ROUTE_121_TEAM_AQUA_GRUNTS
+	goto_if_unset FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY, Common_EventScript_NopReturn
+	goto_if_set FLAG_RECEIVED_RED_OR_BLUE_ORB, Common_EventScript_NopReturn
+	clearflag FLAG_HIDE_ROUTE_121_TEAM_AQUA_GRUNTS
+	return
 
 Route121_EventScript_Woman::
 	msgbox Route121_Text_AheadLoomsMtPyre, MSGBOX_NPC
@@ -14,6 +28,7 @@ Route121_EventScript_SafariZoneSign::
 	end
 
 Route121_EventScript_AquaGruntsMoveOut::
+	goto_if_set FLAG_HIDE_ROUTE_121_TEAM_AQUA_GRUNTS, Route121_EventScript_GruntsAbsent
 	lockall
 	playbgm MUS_ENCOUNTER_AQUA, FALSE
 	applymovement LOCALID_ROUTE121_GRUNT_2, Common_Movement_WalkInPlaceRight
@@ -30,6 +45,9 @@ Route121_EventScript_AquaGruntsMoveOut::
 	removeobject LOCALID_ROUTE121_GRUNT_3
 	setvar VAR_ROUTE121_STATE, 1
 	releaseall
+	end
+
+Route121_EventScript_GruntsAbsent::
 	end
 
 Route121_Movement_Grunt1Exit:

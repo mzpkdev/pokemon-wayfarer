@@ -25,7 +25,10 @@
 #define HOENN_FLAG_HIDE_SUMMIT_ARCHIE      HOENN_FLAG_ID(0x394)
 #define HOENN_FLAG_HIDE_SUMMIT_AQUA        HOENN_FLAG_ID(0x395)
 #define HOENN_FLAG_HIDE_SEAFLOOR_GRUNT     HOENN_FLAG_ID(0x3AD)
+#define HOENN_FLAG_HIDE_ROUTE_121_GRUNTS   HOENN_FLAG_ID(0x392)
+#define HOENN_FLAG_RECEIVED_ORB            HOENN_FLAG_ID(0x0D4)
 #define HOENN_VAR_MOSSDEEP_CITY_STATE      HOENN_VAR_ID(0x405D)
+#define HOENN_VAR_ROUTE_121_STATE          HOENN_VAR_ID(0x4074)
 #define HOENN_VAR_MOSSDEEP_CENTER_STATE    HOENN_VAR_ID(0x409F)
 #define HOENN_VAR_SEAFLOOR_CAVERN_STATE    HOENN_VAR_ID(0x40A2)
 #define HOENN_VAR_MT_PYRE_STATE            HOENN_VAR_ID(0x40B9)
@@ -58,6 +61,7 @@ static void ExpectTriggerDoesNothing(s16 x, s16 y)
     {
         if (events->coordEvents[i].x == x && events->coordEvents[i].y == y)
         {
+            UnlockPlayerFieldControls();
             RunScriptImmediately(events->coordEvents[i].script);
             EXPECT(!ArePlayerFieldControlsLocked());
             return;
@@ -115,6 +119,37 @@ TEST("Mt. Pyre's summit leaves Team Aqua alone once the theft has played")
     ENTER(MAP_MT_PYRE_SUMMIT);
     EXPECT(!FlagGet(HOENN_FLAG_HIDE_SUMMIT_ARCHIE));
     EXPECT(FlagGet(HOENN_FLAG_HIDE_SUMMIT_AQUA));
+}
+
+TEST("Route 121's grunts are there only while Mt. Pyre is a true lead")
+{
+    StartHoenn();
+
+    ENTER(MAP_ROUTE121);
+    EXPECT(FlagGet(HOENN_FLAG_HIDE_ROUTE_121_GRUNTS));
+    ExpectTriggerDoesNothing(25, 7);
+    EXPECT_EQ(VarGet(HOENN_VAR_ROUTE_121_STATE), 0);
+
+    FlagSet(HOENN_FLAG_MT_CHIMNEY_DONE);
+    ENTER(MAP_ROUTE121);
+    EXPECT(!FlagGet(HOENN_FLAG_HIDE_ROUTE_121_GRUNTS));
+
+    FlagSet(HOENN_FLAG_RECEIVED_ORB);
+    ENTER(MAP_ROUTE121);
+    EXPECT(FlagGet(HOENN_FLAG_HIDE_ROUTE_121_GRUNTS));
+    ExpectTriggerDoesNothing(25, 7);
+    EXPECT_EQ(VarGet(HOENN_VAR_ROUTE_121_STATE), 0);
+}
+
+TEST("Route 121 stays clear once the grunts have moved out")
+{
+    StartHoenn();
+    FlagSet(HOENN_FLAG_MT_CHIMNEY_DONE);
+    VarSet(HOENN_VAR_ROUTE_121_STATE, 1);
+    FlagSet(HOENN_FLAG_HIDE_ROUTE_121_GRUNTS);
+
+    ENTER(MAP_ROUTE121);
+    EXPECT(FlagGet(HOENN_FLAG_HIDE_ROUTE_121_GRUNTS));
 }
 
 TEST("Mossdeep stays quiet until the player holds the Mind Badge and Groudon is awake")
