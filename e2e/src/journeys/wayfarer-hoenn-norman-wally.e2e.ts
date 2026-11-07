@@ -11,6 +11,7 @@ import { rideAquaFromVermilionToSlateport } from "../playbooks/wayfarer-ports"
 const norman = 1
 const mauvilleWally = 6
 const mauvilleScott = 11
+const verdanturfWally = 1
 
 const sees = (state: GameState, localId: number): boolean =>
   state.objects.some((object) => object.localId === localId && object.visible)
@@ -329,5 +330,49 @@ describe.sequential("Wayfarer Hoenn Norman, Wally and the Lavaridge rival", () =
     })
     await game.story.setVar("hoennPetalburgGymState", 6)
     await beatWallyFrom(game, 8, 6, "right")
+  })
+
+  // FLANNERY first: Wally still comes to Verdanturf, and slips off only once he has said his piece.
+  it("keeps Wally's Verdanturf talk when Flannery was beaten first", { timeout: 300_000 }, async () => {
+    await game.arrange({
+      checkpoint: "hoenn-before-rescue",
+      player: { facing: "up", position: { map: "mauville-city", x: 9, y: 7 } },
+      story: { flags: { disableEncounters: true, disableTrainers: true, defeatedLavaridgeGym: true } },
+      party: [{ species: "salamence", level: 100, moves: ["tackle"] }],
+      determinism: { textSpeed: "instant" },
+    })
+    await game.story.setVar("hoennPetalburgGymState", 6)
+    await beatWallyFrom(game, 9, 7, "up")
+    await expect(game.story.flag("hideVerdanturfWandasHouseWally")).resolves.toBe(false)
+
+    // His uncle points next door while Wally is there, not to a boy who slipped off.
+    await game.player.warp("verdanturf-wandas-house", 7, 3, "up")
+    await game.wait.forReady()
+    expect(sees(await game.state.read(), verdanturfWally)).toBe(true)
+    await game.player.interact()
+    await game.wait.until((state) => state.dialogueOpen, "Wally's uncle's line")
+    expect(await game.dialogue.text()).toContain("next door")
+    await playSceneUntil(game, async () => true, "Wally's uncle did not finish")
+
+    // He wanders a step either way once the house loads, so try again if he stepped aside first.
+    for (let attempt = 0; attempt < 5 && !(await game.story.flag("hoennWallySpeech")); attempt++) {
+      await game.player.warp("verdanturf-wandas-house", 14, 6, "up")
+      await game.wait.forReady()
+      await game.player.interact()
+      await game.wait.frames(30)
+      if (!(await game.state.read()).dialogueOpen) continue
+      await playSceneUntil(game, () => game.story.flag("hoennWallySpeech"), "Wally's speech did not finish")
+    }
+    await expect(game.story.flag("hoennWallySpeech")).resolves.toBe(true)
+    await expect(game.story.flag("hideVerdanturfWandasHouseWally")).resolves.toBe(true)
+
+    // Back in the house, he has gone, and his uncle says so.
+    await game.player.warp("verdanturf-wandas-house", 7, 3, "up")
+    await game.wait.forReady()
+    expect(sees(await game.state.read(), verdanturfWally)).toBe(false)
+    await game.player.interact()
+    await game.wait.until((state) => state.dialogueOpen, "Wally's uncle's line")
+    expect(await game.dialogue.text()).toContain("slipped off")
+    await playSceneUntil(game, async () => true, "Wally's uncle did not finish")
   })
 })

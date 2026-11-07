@@ -161,7 +161,7 @@ MauvilleCity_EventScript_WallyAndUncleExitEast::
 MauvilleCity_EventScript_DefeatedWally::
 	removeobject LOCALID_MAUVILLE_WALLY
 	removeobject LOCALID_MAUVILLE_WALLYS_UNCLE
-	call_if_unset FLAG_DEFEATED_LAVARIDGE_GYM, MauvilleCity_EventScript_ShowVerdanturfWally
+	clearflag FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY
 	clearflag FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLYS_UNCLE
 	setflag FLAG_DEFEATED_WALLY_MAUVILLE
 	setvar VAR_WALLY_CALL_STEP_COUNTER, 0
@@ -178,11 +178,6 @@ MauvilleCity_EventScript_DefeatedWally::
 	removeobject LOCALID_MAUVILLE_SCOTT
 	releaseall
 	end
-
-@ FLANNERY's defeat is when WALLY slips off from VERDANTURF, and his uncle says so from then on
-MauvilleCity_EventScript_ShowVerdanturfWally::
-	clearflag FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY
-	return
 
 MauvilleCity_EventScript_ScottApproachPlayerNorth::
 	addobject LOCALID_MAUVILLE_SCOTT
