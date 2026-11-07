@@ -93,6 +93,14 @@ TEST("Scott's Fortree and Frontier calls ring only once he is registered")
     // Neither rings indoors.
     gMapHeader.mapType = MAP_TYPE_INDOOR;
     VarSet(HOENN_VAR_ID(0x40F3), 20);
+    VarSet(HOENN_VAR_ID(0x40F5), 20);
     EXPECT(!ShouldDoScottFortreeCall());
+    EXPECT(!ShouldDoScottBattleFrontierCall());
+
+    // The invitation says he waits aboard the S.S. TIDAL: once met there, it never rings.
+    gMapHeader.mapType = MAP_TYPE_ROUTE;
+    VarSet(HOENN_VAR_ID(0x40D4), 1);
+    for (step = 0; step < 20; step++)
+        EXPECT(!ShouldDoScottBattleFrontierCall());
     gMapHeader = header;
 }

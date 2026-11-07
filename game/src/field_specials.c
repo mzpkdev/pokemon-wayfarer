@@ -469,6 +469,7 @@ bool32 ShouldDoWallyCall(void)
 #define SCOTT_FORTREE_CALL_STEP_COUNTER   HOENN_VAR_ID(0x40F3) // VAR_SCOTT_FORTREE_CALL_STEP_COUNTER
 #define SCOTT_FRONTIER_CALL_FLAG          HOENN_FLAG_ID(0x072) // FLAG_SCOTT_CALL_BATTLE_FRONTIER
 #define SCOTT_FRONTIER_CALL_STEP_COUNTER  HOENN_VAR_ID(0x40F5) // VAR_SCOTT_BF_CALL_STEP_COUNTER
+#define SCOTT_TIDAL_MEETING_STATE         HOENN_VAR_ID(0x40D4) // VAR_SS_TIDAL_SCOTT_STATE: 0 until met aboard
 
 bool32 ShouldDoScottFortreeCall(void)
 {
@@ -497,7 +498,8 @@ bool32 ShouldDoScottFortreeCall(void)
 
 bool32 ShouldDoScottBattleFrontierCall(void)
 {
-    if (FlagGet(SCOTT_FRONTIER_CALL_FLAG) && FlagGet(SCOTT_REGISTERED_FLAG))
+    // His invitation says he is waiting aboard the S.S. TIDAL, so it rings only before that meeting.
+    if (FlagGet(SCOTT_FRONTIER_CALL_FLAG) && FlagGet(SCOTT_REGISTERED_FLAG) && VarGet(SCOTT_TIDAL_MEETING_STATE) == 0)
     {
         switch (gMapHeader.mapType)
         {
