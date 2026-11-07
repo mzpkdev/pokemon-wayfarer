@@ -257,10 +257,13 @@ so there is something to rate.
 
 - `ProfBirch_EventScript_CheckOpeningOver` is the one test, and it derives the
   answer from the origin and those two facts, so saves need no new state.
-- His rating and his place follow that test. Petalburg Gym and Wally play no
-  part.
-- He stays in his lab. The clock advances a different copy of
-  `VAR_BIRCH_STATE`, and this design leaves that alone.
+- His rating and his place follow that test, and a Hoenn League win also puts
+  him in his lab, so the National Dex and Johto starter scenes have him even for
+  a visitor who never rescued him. Petalburg Gym and Wally play no part.
+- He doesn't roam: the clock advances a different copy of `VAR_BIRCH_STATE`, and
+  this design leaves that alone. His Route 110 registration scene is a separate
+  beat that this design doesn't change, and it still talks as if the player
+  knows him and the rival.
 - A Hoenn-origin player can ask for the rating right after the Pokédex, in the
   same visit.
 - Birch's Treecko, Torchic, and Mudkip stay for a Hoenn-origin player. His
@@ -288,7 +291,7 @@ the introduction.
 | Route 119 | Forced trigger, battle, HM Fly, then Scott | The trigger plays once with no battle and gives HM Fly. Scott does not walk on. |
 | Lavaridge | After Flannery, the Go-Goggles | Plays after Flannery with no battle, with the visitor's lines. |
 | Lilycove | Talk, optional battle | The rival is not shown. |
-| National Dex scene | The rival is present | The rival is not shown; Birch's lines do not change. |
+| National Dex scene | The rival is present | The rival is not shown. Birch's lines do not change, including those that mention a Pokédex he gave and the rival's help. |
 | Their mother | Says they went to Route 103 | Says they are too busy to notice the visit. |
 
 - `WayfarerIsHoennOrigin` is the test. `FLAG_MET_HOENN_RIVAL_AS_VISITOR`

@@ -145,6 +145,16 @@ describe("Wayfarer Hoenn: Birch's Pokédex rating", () => {
         await game.player.warp("birch-lab", 6, 5, "up")
         await game.wait.forReady()
         await expectBirchRatesPokedex(game)
+
+        // A completed Pokédex finds the player at his desk: they stay there for the Johto starters.
+        await game.story.setVar("hoennDexUpgradeState", 4)
+        await game.wait.until((state) => state.dialogueOpen, "Birch's Johto starter offer")
+        await closeTalk(game)
+        await expect(game.story.var("hoennDexUpgradeState")).resolves.toBe(5)
+        expect(await game.state.read()).toMatchObject({
+          map: { name: "birch-lab" },
+          player: { x: 6, y: 5 },
+        })
       } finally {
         await game.close()
       }

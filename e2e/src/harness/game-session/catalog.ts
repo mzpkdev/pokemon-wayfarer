@@ -834,6 +834,8 @@ export const storyFlags = {
   hoennMetRivalAsVisitor: 0x6022,
   hoennRescuedBirch: 0x6052,
   hoennHideStevensHouseSteven: 0x63c7,
+  hoennHideBirchLabBirch: 0x62d1,
+  hoennHideBirchLabRival: 0x6379,
   hoennHideStevensHouseBeldum: 0x63c8,
   // Emerald's FLAG_ENABLE_PROF_BIRCH_MATCH_CALL in the Hoenn bank.
   hoennBirchRegistered: 0x6119,

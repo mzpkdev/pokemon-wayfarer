@@ -22,6 +22,7 @@ const rustboroRival = 14
 const lilycoveRival = 17
 const route119Scott = 43
 const littlerootRival = 7
+const birchLabBirch = 2
 const birchLabRival = 3
 
 const sees = (state: GameState, localId: number): boolean =>
@@ -73,7 +74,8 @@ const playSceneUntil = async (
     if (!allowBattle) expect(state.battle.active).toBe(false)
     if (!said.endsWith(state.dialogue.fullText)) said += ` ${state.dialogue.fullText}`
     // The ready bit can report true between two pages, so the scene's own state decides.
-    if (state.ready && !state.scriptActive && !state.controlsLocked && (await done())) return said.slice(before.length)
+    if (state.ready && !state.scriptActive && !state.controlsLocked && (await done()))
+      return said.slice(before.length)
     await game.controls.press("a")
   }
   throw new Error(`${description}: ${JSON.stringify(await game.state.read())}`)
@@ -243,6 +245,20 @@ describe.sequential("Wayfarer Hoenn rival scenes for a visitor", () => {
     expect(said).not.toContain("MAY:")
     expect(said).not.toContain("BRENDAN:")
     expect(await game.state.read()).toMatchObject({ map: { name: "birch-lab" } })
+    expect(sees(await game.state.read(), birchLabRival)).toBe(false)
+
+    // A League win keeps Birch in his lab for the scenes after this one, rescued or not.
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { facing: "up", position: { map: "birch-lab", x: 6, y: 8 } },
+      story: {
+        vars: { hoennDexUpgradeState: 3 },
+        flags: { hoennGameClear: true, hoennHideBirchLabBirch: true, hoennHideBirchLabRival: true },
+      },
+      party: [{ species: "salamence", level: 60 }],
+      determinism: { textSpeed: "instant" },
+    })
+    expect(sees(await game.state.read(), birchLabBirch)).toBe(true)
     expect(sees(await game.state.read(), birchLabRival)).toBe(false)
   })
 
