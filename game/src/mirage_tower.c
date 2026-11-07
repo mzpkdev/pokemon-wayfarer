@@ -2,6 +2,7 @@
 #include "malloc.h"
 #include "bg.h"
 #include "event_data.h"
+#include "wayfarer_persistence.h"
 #include "event_object_movement.h"
 #include "field_camera.h"
 #include "field_effect.h"
@@ -257,7 +258,7 @@ bool8 IsMirageTowerVisible(void)
 {
     if (!(gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_ROUTE111) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_ROUTE111)))
         return FALSE;
-    return FlagGet(FLAG_MIRAGE_TOWER_VISIBLE);
+    return FlagGet(WAYFARER_HOENN_MIRAGE_TOWER_VISIBLE_FLAG);
 }
 
 static void UpdateMirageTowerPulseBlend(u8 taskId)
@@ -280,7 +281,7 @@ void TryStartMirageTowerPulseBlendEffect(void)
 
     if (gSaveBlock1Ptr->location.mapGroup != MAP_GROUP(MAP_ROUTE111)
      || gSaveBlock1Ptr->location.mapNum != MAP_NUM(MAP_ROUTE111)
-     || !FlagGet(FLAG_MIRAGE_TOWER_VISIBLE))
+     || !FlagGet(WAYFARER_HOENN_MIRAGE_TOWER_VISIBLE_FLAG))
         return;
 
     sMirageTowerPulseBlend = AllocZeroed(sizeof(*sMirageTowerPulseBlend));
@@ -294,7 +295,7 @@ void ClearMirageTowerPulseBlendEffect(void)
 {
     if (gSaveBlock1Ptr->location.mapGroup != MAP_GROUP(MAP_ROUTE111)
      || gSaveBlock1Ptr->location.mapNum   != MAP_NUM(MAP_ROUTE111)
-     || !FlagGet(FLAG_MIRAGE_TOWER_VISIBLE)
+     || !FlagGet(WAYFARER_HOENN_MIRAGE_TOWER_VISIBLE_FLAG)
      || sMirageTowerPulseBlend == NULL)
         return;
 
@@ -311,26 +312,26 @@ void SetMirageTowerVisibility(void)
     u16 rand;
     bool8 visible;
 
-    if (VarGet(VAR_MIRAGE_TOWER_STATE))
+    if (VarGet(WAYFARER_HOENN_MIRAGE_TOWER_STATE_VAR))
     {
         // Mirage Tower event has already been completed, hide it
-        FlagClear(FLAG_MIRAGE_TOWER_VISIBLE);
+        FlagClear(WAYFARER_HOENN_MIRAGE_TOWER_VISIBLE_FLAG);
         return;
     }
 
     rand = Random();
     visible = rand & 1;
-    if (FlagGet(FLAG_FORCE_MIRAGE_TOWER_VISIBLE) == TRUE)
+    if (FlagGet(WAYFARER_HOENN_MIRAGE_TOWER_FORCE_FLAG) == TRUE)
         visible = TRUE;
 
     if (visible)
     {
-        FlagSet(FLAG_MIRAGE_TOWER_VISIBLE);
+        FlagSet(WAYFARER_HOENN_MIRAGE_TOWER_VISIBLE_FLAG);
         TryStartMirageTowerPulseBlendEffect();
         return;
     }
 
-    FlagClear(FLAG_MIRAGE_TOWER_VISIBLE);
+    FlagClear(WAYFARER_HOENN_MIRAGE_TOWER_VISIBLE_FLAG);
 }
 
 void StartPlayerDescendMirageTower(void)

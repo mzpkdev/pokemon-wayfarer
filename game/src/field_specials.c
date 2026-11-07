@@ -1582,18 +1582,18 @@ bool8 Special_AreLeadMonEVsMaxedOut(void)
 
 u8 TryUpdateRusturfTunnelState(void)
 {
-    if (!FlagGet(FLAG_RUSTURF_TUNNEL_OPENED)
+    if (!FlagGet(WAYFARER_HOENN_RUSTURF_TUNNEL_OPENED_FLAG)
         && gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_RUSTURF_TUNNEL)
         && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_RUSTURF_TUNNEL))
     {
-        if (FlagGet(FLAG_HIDE_RUSTURF_TUNNEL_ROCK_1))
+        if (FlagGet(WAYFARER_HOENN_RUSTURF_ROCK_1_HIDDEN_FLAG))
         {
-            VarSet(VAR_RUSTURF_TUNNEL_STATE, 4);
+            VarSet(WAYFARER_HOENN_RUSTURF_TUNNEL_STATE_VAR, 4);
             return TRUE;
         }
-        else if (FlagGet(FLAG_HIDE_RUSTURF_TUNNEL_ROCK_2))
+        else if (FlagGet(WAYFARER_HOENN_RUSTURF_ROCK_2_HIDDEN_FLAG))
         {
-            VarSet(VAR_RUSTURF_TUNNEL_STATE, 5);
+            VarSet(WAYFARER_HOENN_RUSTURF_TUNNEL_STATE_VAR, 5);
             return TRUE;
         }
     }
@@ -1602,7 +1602,7 @@ u8 TryUpdateRusturfTunnelState(void)
 
 void SetShoalItemFlag(u16 unused)
 {
-    FlagSet(FLAG_SYS_SHOAL_ITEM);
+    FlagSet(WAYFARER_HOENN_SHOAL_ITEM_FLAG);
 }
 
 void LoadWallyZigzagoon(void)
