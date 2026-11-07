@@ -1,5 +1,11 @@
 # Regional and expanding National Pokédex
 
+Status: Implemented as the record of today. Revised on 2026-11-07 by
+[Home Pokédex lists and the National upgrade](home-pokedex-lists.md), which
+replaces the three regional catalogs with two home lists, makes National mode
+show every species, and retires the per-region extension grants. The
+extension mechanism and "Initial integration" below describe today's build.
+
 ## Intent
 
 Wayfarer needs one Pokédex that can describe the Pokémon the player can pursue
