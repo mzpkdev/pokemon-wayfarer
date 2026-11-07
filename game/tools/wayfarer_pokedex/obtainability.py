@@ -247,13 +247,18 @@ def drop_false_blocks(text):
 
 
 FILE_MARK = 'WAYFARER_POKEDEX_AUDIT_FILE'
+# The config headers event_scripts.s includes whose macros script `#if`s test (league events, the league
+# circuit, TR marts, the randomizer). constants/global.h, which cpp() always reads, brings the rest. The
+# constants headers (species, items, vars, flags) stay out so their names are not expanded to numbers.
+SCRIPT_CONFIG = ('-include', 'config/league_circuit.h', '-include', 'config/wayfarer_marts.h',
+                 '-include', 'config/randomizer.h')
 
 
 def script_files(owners, root=ROOT):
     """{relative path: text} of the Wayfarer script assembly's playable files, as the build sees them:
     event_scripts.s through cpp with its gas `.if IS_FRLG` blocks dropped, and each included file's own
     `#if` branches evaluated (the build inlines includes before cpp)."""
-    assembly = drop_false_blocks(cpp(read(root / 'data/event_scripts.s'), root, includes=False))
+    assembly = drop_false_blocks(cpp(read(root / 'data/event_scripts.s'), root, includes=False, extra=SCRIPT_CONFIG))
     chosen = []
     for relative in re.findall(r'^\s*\.include\s+"(data/[^"]+\.inc)"', assembly, re.M):
         owner = re.match(r'data/maps/([^/]+)/scripts\.inc$', relative)
@@ -263,9 +268,9 @@ def script_files(owners, root=ROOT):
             chosen.append(relative)
     # One cpp run over every file; species and item constants stay names because no constants header is read.
     joined = '\n'.join(f'{FILE_MARK} {relative}\n' + re.sub(r'@.*', '', read(root / relative)) for relative in chosen)
-    processed = cpp(joined, root, includes=False, extra=('-x', 'assembler-with-cpp'))
+    processed = cpp(joined, root, includes=False, extra=SCRIPT_CONFIG + ('-x', 'assembler-with-cpp'))
     files = {}
-    for chunk in processed.split(FILE_MARK + ' ')[1:]:
+    for chunk in processed.split(FILE_MARK + ' ')[1:]:  # [0] is the headers' own C text
         relative, _, body = chunk.partition('\n')
         files[relative.strip()] = body
     if len(files) < 500 or set(files) != set(chosen):

@@ -126,6 +126,10 @@ class Rules(unittest.TestCase):
         self.assertNotIn('data/maps/PowerPlant_Frlg/scripts.inc', AUDIT.files)
         self.assertNotIn('SPECIES_ZAPDOS', AUDIT.files['data/maps/Route10_hns/scripts.inc'])
 
+    def test_config_gated_script_blocks_are_live(self):
+        # `#if WAYFARER_LEAGUE_EVENTS` (config/league_circuit.h) guards live league scripts.
+        self.assertIn('LeagueEvent_EventScript', AUDIT.files['data/scripts/league_circuit.inc'])
+
     def test_debug_scripts_and_dead_maps_are_not_sources(self):
         self.assertNotIn('data/scripts/debug.inc', AUDIT.files)
         self.assertFalse(any('CeladonCity_GameCorner_PrizeRoom_Frlg' in where
