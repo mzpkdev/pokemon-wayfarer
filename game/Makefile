@@ -1048,6 +1048,17 @@ ifeq ($(BUILD_NAME),wayfarer)
 check: wayfarer-sevii-content-audit
 endif
 
+# Every enabled species is obtainable or dexNotRequired (.product/specs/home-pokedex-lists.md, "Obtainability").
+# Reads the compiled Wayfarer map list, so it needs the mapjson outputs.
+.PHONY: wayfarer-pokedex-audit
+wayfarer-pokedex-audit: $(MAPS_DIR)/groups.inc $(INCLUDECONSTS_OUTDIR)/map_groups.h
+	PYTHONDONTWRITEBYTECODE=1 python3 -I -m unittest discover -s tools/wayfarer_pokedex -p 'test_*.py' -q
+	PYTHONDONTWRITEBYTECODE=1 python3 -I tools/wayfarer_pokedex/obtainability.py --check
+
+ifeq ($(BUILD_NAME),wayfarer)
+check: wayfarer-pokedex-audit
+endif
+
 # Symbol file (`make syms`)
 $(SYM): $(ELF)
 	$(OBJDUMP) -t $< | sort -u | grep -E "^0[2389]" | $(PERL) -p -e 's/^(\w{8}) (\w).{6} \S+\t(\w{8}) (\S+)$$/\1 \2 \3 \4/g' > $@
