@@ -3055,11 +3055,13 @@ static void SpriteCB_SeenOwnInfo(struct Sprite *sprite)
         DestroySprite(sprite);
 }
 
+// The label beside the counters prints the land's name alone: the full title
+// ("KANTO-JOHTO DEX") runs past the counters into the Pokémon frame.
 static void PrintActiveRegionLabel(u8 y)
 {
     static const u8 color[] = { TEXT_COLOR_TRANSPARENT, TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_LIGHT_GRAY };
 
-    AddTextPrinterParameterized4(0, FONT_SMALL, 4, y, 0, 0, color, TEXT_SKIP_DRAW, Dex_GetActiveRegionTitle());
+    AddTextPrinterParameterized4(0, FONT_SMALL, 4, y, 0, 0, color, TEXT_SKIP_DRAW, Dex_GetActiveRegionName());
 }
 
 void SpriteCB_MoveMonForInfoScreen(struct Sprite *sprite)

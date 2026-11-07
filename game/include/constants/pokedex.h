@@ -1166,7 +1166,7 @@ enum NationalDexOrder
 
 // Home Pokédex lists. A species is on a home list when its evolutionary
 // family (traced through standard-form evolutions) has a member of one of the
-// list's home generations; see .product/specs/home-pokedex-lists.md. Each list
+// list's home generations (see the Home Pokédex lists specification). Each list
 // holds its home generations in National order, then the families' members
 // from other generations in National order. test/pokedex_catalog.c re-derives
 // both lists from the species data.
