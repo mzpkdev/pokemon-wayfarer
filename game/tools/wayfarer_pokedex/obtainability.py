@@ -222,18 +222,54 @@ def load_world(root=ROOT):
     return maps, owners
 
 
+def drop_false_blocks(text):
+    """Drop gas `.if`/`.else` branches whose numeric condition (after cpp) is false; an unknown one is kept."""
+    out, stack, active = [], [], True
+    for line in text.splitlines():
+        head = re.match(r'\s*\.(if|else|endif)\b\s*(.*)$', line)
+        if head is None:
+            if active:
+                out.append(line)
+            continue
+        kind, condition = head.groups()
+        if kind == 'if':
+            value = None
+            if re.fullmatch(r'[\d\s()]+', condition):  # IS_FRLG and friends are plain numbers after cpp
+                value = bool(eval(condition, {'__builtins__': {}}, {}))
+            stack.append((active, value))
+            active = active and value is not False
+        elif kind == 'else' and stack:
+            enclosing, value = stack[-1]
+            active = enclosing and value is not True
+        elif kind == 'endif' and stack:
+            active = stack.pop()[0]
+    return '\n'.join(out)
+
+
+FILE_MARK = 'WAYFARER_POKEDEX_AUDIT_FILE'
+
+
 def script_files(owners, root=ROOT):
-    """{relative path: text} of the Wayfarer script assembly's playable files."""
-    assembly = cpp(read(root / 'data/event_scripts.s'), root, includes=False)
-    files = {}
+    """{relative path: text} of the Wayfarer script assembly's playable files, as the build sees them:
+    event_scripts.s through cpp with its gas `.if IS_FRLG` blocks dropped, and each included file's own
+    `#if` branches evaluated (the build inlines includes before cpp)."""
+    assembly = drop_false_blocks(cpp(read(root / 'data/event_scripts.s'), root, includes=False))
+    chosen = []
     for relative in re.findall(r'^\s*\.include\s+"(data/[^"]+\.inc)"', assembly, re.M):
         owner = re.match(r'data/maps/([^/]+)/scripts\.inc$', relative)
         if relative in NOT_PLAYABLE_SCRIPTS or (owner and owner.group(1) not in owners):
             continue
-        if (root / relative).is_file():
-            files[relative] = re.sub(r'@.*', '', read(root / relative))
-    if len(files) < 500:
-        raise AuditError(f'only {len(files)} playable script files found in data/event_scripts.s')
+        if (root / relative).is_file() and relative not in chosen:
+            chosen.append(relative)
+    # One cpp run over every file; species and item constants stay names because no constants header is read.
+    joined = '\n'.join(f'{FILE_MARK} {relative}\n' + re.sub(r'@.*', '', read(root / relative)) for relative in chosen)
+    processed = cpp(joined, root, includes=False, extra=('-x', 'assembler-with-cpp'))
+    files = {}
+    for chunk in processed.split(FILE_MARK + ' ')[1:]:
+        relative, _, body = chunk.partition('\n')
+        files[relative.strip()] = body
+    if len(files) < 500 or set(files) != set(chosen):
+        raise AuditError(f'only {len(files)} of {len(chosen)} playable script files survived preprocessing')
     return files
 
 
@@ -398,7 +434,7 @@ class Audit:
         if item in self.items:
             return True
         # A wild Pokémon's held item comes with it when caught.
-        return any(item in self.species[s]['items'] for s in self.obtained)
+        return any(item in self.species[s]['items'] for s in self.sources['wild'])
 
     def can_learn(self, name, move):
         """By level-up or as an egg move; else a move a TM or tutor may teach (assumed in the world)."""

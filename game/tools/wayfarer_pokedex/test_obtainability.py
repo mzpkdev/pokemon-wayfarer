@@ -67,6 +67,13 @@ class Stranding(unittest.TestCase):
         self.assertTrue(any('NATIONAL_DEX_TROPIUS (SPECIES_TROPIUS) is unobtainable but the Pokédex requires it' in line
                             for line in found), found)
 
+    def test_a_legendary_with_one_live_script_is_guarded(self):
+        # Zapdos's FRLG Power Plant and its `#if !IS_WAYFARER` Route 10 script are dead in this build.
+        self.assertEqual(AUDIT.sources['script']['SPECIES_ZAPDOS'], ['seteventmon data/scripts/wayfarer_power_plant.inc'])
+        stranded = without_source(AUDIT, 'SPECIES_ZAPDOS', kinds=('script',))
+        self.assertTrue(any(line.startswith('NATIONAL_DEX_ZAPDOS is no longer obtainable')
+                            for line in O.problems(stranded, record())))
+
     def test_a_species_with_other_sources_survives(self):
         # Kecleon is wild on Routes 118-120 and also a scripted encounter.
         stranded = without_source(AUDIT, 'SPECIES_KECLEON', kinds=('script',))
@@ -110,6 +117,14 @@ class Rules(unittest.TestCase):
         text = 'Start::\n\tlock\nNext::\n\tgivemon SPECIES_EEVEE, 5\n\tend\n'
         live = ''.join(text[a:b] for a, b in O.live_offsets(text, {'Start'}))
         self.assertIn('SPECIES_EEVEE', live)
+
+    def test_false_gas_blocks_are_dropped(self):
+        text = '\n'.join(['a', '.if 0', 'frlg', '.else', 'other', '.endif', '.if 1', 'hns', '.endif', '.if SYMBOL', 'kept', '.endif'])
+        self.assertEqual(O.drop_false_blocks(text).split(), ['a', 'other', 'hns', 'kept'])
+
+    def test_frlg_only_scripts_are_not_read(self):
+        self.assertNotIn('data/maps/PowerPlant_Frlg/scripts.inc', AUDIT.files)
+        self.assertNotIn('SPECIES_ZAPDOS', AUDIT.files['data/maps/Route10_hns/scripts.inc'])
 
     def test_debug_scripts_and_dead_maps_are_not_sources(self):
         self.assertNotIn('data/scripts/debug.inc', AUDIT.files)

@@ -34,10 +34,10 @@ Each is a separate check in the tool.
 | Source | What counts |
 | --- | --- |
 | Wild | Every species in `src/data/wild_encounters_v2/{kanto,johto,hoenn,alola,sevii,safari,sinjoh}.json`, day and night, all methods. This covers the Safari Zones and the three Bug-Catching Contest days. Every table's map must be compiled. |
-| Scripts | `givemon`, `giveegg`, `setwildbattle` (both species of a double), `setwildbattleshiny` and `seteventmon` in the Wayfarer script assembly (`data/event_scripts.s` after cpp). They must be on compiled maps and under a label something references. `givemon VAR_x` counts every species that `setvar VAR_x, SPECIES_*` names in the same file (Game Corner prizes, fossil revival). |
+| Scripts | `givemon`, `giveegg`, `setwildbattle` (both species of a double), `setwildbattleshiny` and `seteventmon` in the Wayfarer script assembly, read as the build sees it: `data/event_scripts.s` through cpp with its gas `.if IS_FRLG` block dropped, and each included file's own `#if` branches evaluated. They must be on compiled maps and under a label something references. `givemon VAR_x` counts every species that `setvar VAR_x, SPECIES_*` names in the same file (Game Corner prizes, fossil revival). |
 | Roamers | `TryAddRoamer` in the `src/roamer.c` function that a compiled script calls as a special (Raikou and Entei from Burned Tower; Latias or Latios from `InitKantoRoamers`). |
 | In-game trades | Entries of `src/data/trade.h` that a compiled script names, counted only once the Pokémon they ask for is obtainable. |
-| Evolution | Every `.evolutions` row of an obtainable species. Items must be handed out somewhere: map item balls and hidden items, `giveitem`/`finditem`/marts, the daily world item slots and pools, or a wild species' held item. A map section, map or region condition must belong to a compiled map. A move condition must be learnable (level-up, egg move, or a teachable listed in `all_learnables.json`). Trade evolutions, trade-partner and script-trigger evolutions do not count. |
+| Evolution | Every `.evolutions` row of an obtainable species. Items must be handed out somewhere: map item balls and hidden items, `giveitem`/`finditem`/marts, the daily world item slots and pools, or a held item of a species caught in the wild. A map section, map or region condition must belong to a compiled map. A move condition must be learnable (level-up, egg move, or a teachable listed in `all_learnables.json`). Trade evolutions, trade-partner and script-trigger evolutions do not count. |
 | Breeding | An obtainable parent outside the Undiscovered egg group lays its first stage, form included. Genderless and male-only parents need Ditto, which is wild. The Day Care's region turns a foreign regional form into its own, and the Nidoran and Volbeat/Illumise gender swaps and the Manaphy-to-Phione rule apply (`DetermineEggSpeciesAndParentSlots`). The three compiled Day Cares are Route 34, Route 117 and Four Island. |
 
 Not counted: link trades with a second cartridge, the randomizer, `data/scripts/debug.inc`, and assembled
@@ -48,8 +48,11 @@ Two unreferenced test labels that hand out five Pokémon at once (`Route25_Bills
 ### Build branches
 
 Every C and script source is read through cpp with `POKEMON_WAYFARER` and `POKEMON_HNS` defined, so
-`IS_WAYFARER` and `IS_HNS` are true and `IS_FRLG` is false, as in the ROM. The live branches that
-matter:
+`IS_WAYFARER` and `IS_HNS` are true and `IS_FRLG` is false, as in the ROM. That drops the FRLG-only
+block of `event_scripts.s` (the FRLG Power Plant, Mt. Ember, Seafoam B4F and Cinnabar Lab copies, among
+others) and branches such as Route 10's `#if !IS_WAYFARER` Zapdos. Wayfarer's own replacements
+(`wayfarer_power_plant.inc`, `wayfarer_seafoam.inc`, `wayfarer_cinnabar_full_scripts.inc`) are read
+instead. The live branches that matter:
 
 - `src/roamer.c`: the `IS_HNS` branch. `InitRoamer` adds Raikou and Entei; `InitKantoRoamers` adds Latias
   or Latios, whichever the player picked. `SouthernIsland_Interior_hns` then shows the other one, so both
@@ -167,8 +170,11 @@ which caps what one player can hold, not what the world offers.
   islands (Birth, Navel, Faraway and Southern Island) are either mythical or also offered by an HNS map
   (Lugia, Ho-Oh, Latias and Latios).
 - A move condition passes when the move is a teachable listed in `all_learnables.json`. The tool assumes
-  the TM or tutor exists. No result depends on this today: every move condition used is learned by
-  level-up or as an egg move.
+  the TM or tutor exists. No result depends on this today. The only such case is Dipplin's Dragon Cheer,
+  and Hydrapple is also reached by Shiny Stone (sold in the Mahogany shop).
+- These required species have exactly one live source, so a playtest of it is worthwhile: Mewtwo
+  (CeruleanCave_B2F_hns), Suicune (Route25_hns), Groudon (TerraCave_End), Kyogre (MarineCave_End), and
+  Raikou and Entei (`special InitRoamer` from BurnedTower_B1F_hns).
 - One-time statics count as a source. A legendary knocked out without being caught is a player choice,
   not a missing source.
 - The Route 101 rescue battle counts as a Zigzagoon source, though it cannot be caught there. Zigzagoon is
