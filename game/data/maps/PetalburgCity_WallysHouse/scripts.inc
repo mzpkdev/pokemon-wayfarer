@@ -56,13 +56,14 @@ PetalburgCity_WallysHouse_EventScript_WallysMom::
 	lock
 	faceplayer
 	goto_if_unset FLAG_DEFEATED_WALLY_MAUVILLE, PetalburgCity_WallysHouse_EventScript_WallyStillNearby
-	goto_if_set FLAG_DEFEATED_LAVARIDGE_GYM, PetalburgCity_WallysHouse_EventScript_WallyLeftVerdanturf
+	goto_if_set FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY, PetalburgCity_WallysHouse_EventScript_WallyLeftVerdanturf
 PetalburgCity_WallysHouse_EventScript_WallyStillNearby::
 	msgbox PetalburgCity_WallysHouse_Text_WallyWasReallyHappy, MSGBOX_DEFAULT
 	release
 	end
 
-@ WALLY slips off from VERDANTURF after his MAUVILLE battle and FLANNERY's defeat, whichever is last
+@ WALLY has left VERDANTURF once he is no longer there: after FLANNERY's defeat, his speech when she
+@ fell first, or his VICTORY ROAD battle
 PetalburgCity_WallysHouse_EventScript_WallyLeftVerdanturf::
 	msgbox PetalburgCity_WallysHouse_Text_WallyLeftWithoutTelling, MSGBOX_DEFAULT
 	release

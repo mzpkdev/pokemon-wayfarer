@@ -1,5 +1,6 @@
 #include "global.h"
 #include "event_data.h"
+#include "wayfarer_persistence.h"
 #include "event_object_movement.h"
 #include "field_camera.h"
 #include "field_effect.h"
@@ -61,7 +62,7 @@ static void DoBrailleRegisteelEffect(void);
 
 bool8 ShouldDoBrailleDigEffect(void)
 {
-    if (!FlagGet(FLAG_SYS_BRAILLE_DIG)
+    if (!FlagGet(WAYFARER_HOENN_BRAILLE_DIG_FLAG)
      && (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_SEALED_CHAMBER_OUTER_ROOM)
      && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SEALED_CHAMBER_OUTER_ROOM)))
     {
@@ -86,7 +87,7 @@ void DoBrailleDigEffect(void)
     MapGridSetMetatileIdAt(11 + MAP_OFFSET, 2 + MAP_OFFSET, METATILE_Cave_SealedChamberEntrance_BottomRight | MAPGRID_IMPASSABLE);
     DrawWholeMapView();
     PlaySE(SE_BANG);
-    FlagSet(FLAG_SYS_BRAILLE_DIG);
+    FlagSet(WAYFARER_HOENN_BRAILLE_DIG_FLAG);
 }
 
 bool8 CheckRelicanthWailord(void)
@@ -166,7 +167,7 @@ static void Task_SealedChamberShakingEffect(u8 taskId)
 
 bool8 ShouldDoBrailleRegirockEffect(void)
 {
-    if (!FlagGet(FLAG_SYS_REGIROCK_PUZZLE_COMPLETED)
+    if (!FlagGet(WAYFARER_HOENN_REGIROCK_DONE_FLAG)
         && gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_DESERT_RUINS)
         && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_DESERT_RUINS))
     {
@@ -212,14 +213,14 @@ static void DoBrailleRegirockEffect(void)
     MapGridSetMetatileIdAt(9 + MAP_OFFSET, 20 + MAP_OFFSET, METATILE_Cave_SealedChamberEntrance_BottomRight | MAPGRID_IMPASSABLE);
     DrawWholeMapView();
     PlaySE(SE_BANG);
-    FlagSet(FLAG_SYS_REGIROCK_PUZZLE_COMPLETED);
+    FlagSet(WAYFARER_HOENN_REGIROCK_DONE_FLAG);
     UnlockPlayerFieldControls();
     UnfreezeObjectEvents();
 }
 
 bool8 ShouldDoBrailleRegisteelEffect(void)
 {
-    if (!FlagGet(FLAG_SYS_REGISTEEL_PUZZLE_COMPLETED) && (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_ANCIENT_TOMB) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_ANCIENT_TOMB)))
+    if (!FlagGet(WAYFARER_HOENN_REGISTEEL_DONE_FLAG) && (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_ANCIENT_TOMB) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_ANCIENT_TOMB)))
     {
         if (gSaveBlock1Ptr->pos.x == 8 && gSaveBlock1Ptr->pos.y == 25)
         {
@@ -252,7 +253,7 @@ static void DoBrailleRegisteelEffect(void)
     MapGridSetMetatileIdAt(9 + MAP_OFFSET, 20 + MAP_OFFSET, METATILE_Cave_SealedChamberEntrance_BottomRight | MAPGRID_IMPASSABLE);
     DrawWholeMapView();
     PlaySE(SE_BANG);
-    FlagSet(FLAG_SYS_REGISTEEL_PUZZLE_COMPLETED);
+    FlagSet(WAYFARER_HOENN_REGISTEEL_DONE_FLAG);
     UnlockPlayerFieldControls();
     UnfreezeObjectEvents();
 }
@@ -289,7 +290,7 @@ bool8 ShouldDoBrailleRegicePuzzle(void)
     if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_ISLAND_CAVE)
         && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_ISLAND_CAVE))
     {
-        if (FlagGet(FLAG_SYS_BRAILLE_REGICE_COMPLETED))
+        if (FlagGet(WAYFARER_HOENN_REGICE_DONE_FLAG))
             return FALSE;
         // Set when the player interacts with the braille message
         if (FlagGet(FLAG_TEMP_REGICE_PUZZLE_STARTED) == FALSE)
@@ -307,25 +308,25 @@ bool8 ShouldDoBrailleRegicePuzzle(void)
                 // Player is standing on a correct space, set the corresponding bit
                 if (i < 16)
                 {
-                    u16 val = VarGet(VAR_REGICE_STEPS_1);
+                    u16 val = VarGet(WAYFARER_HOENN_REGICE_STEPS_1_VAR);
                     val |= 1 << i;
-                    VarSet(VAR_REGICE_STEPS_1, val);
+                    VarSet(WAYFARER_HOENN_REGICE_STEPS_1_VAR, val);
                 }
                 else if (i < 32)
                 {
-                    u16 val = VarGet(VAR_REGICE_STEPS_2);
+                    u16 val = VarGet(WAYFARER_HOENN_REGICE_STEPS_2_VAR);
                     val |= 1 << (i - 16);
-                    VarSet(VAR_REGICE_STEPS_2, val);
+                    VarSet(WAYFARER_HOENN_REGICE_STEPS_2_VAR, val);
                 }
                 else
                 {
-                    u16 val = VarGet(VAR_REGICE_STEPS_3);
+                    u16 val = VarGet(WAYFARER_HOENN_REGICE_STEPS_3_VAR);
                     val |= 1 << (i - 32);
-                    VarSet(VAR_REGICE_STEPS_3, val);
+                    VarSet(WAYFARER_HOENN_REGICE_STEPS_3_VAR, val);
                 }
 
                 // Make sure a full lap has been completed. There are 36 steps in a lap, so 16+16+4 bits to check across the 3 vars.
-                if (VarGet(VAR_REGICE_STEPS_1) != 0xFFFF || VarGet(VAR_REGICE_STEPS_2) != 0xFFFF || VarGet(VAR_REGICE_STEPS_3) != 0xF)
+                if (VarGet(WAYFARER_HOENN_REGICE_STEPS_1_VAR) != 0xFFFF || VarGet(WAYFARER_HOENN_REGICE_STEPS_2_VAR) != 0xFFFF || VarGet(WAYFARER_HOENN_REGICE_STEPS_3_VAR) != 0xF)
                     return FALSE;
 
                 // A lap has been completed, the puzzle is complete when the player returns to the braille message.

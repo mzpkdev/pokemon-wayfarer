@@ -66,7 +66,7 @@ class NormanTests(unittest.TestCase):
         mother = label_body(script("PetalburgCity_WallysHouse"), "PetalburgCity_WallysHouse_EventScript_WallysMom")
         self.assertNotIn("FLAG_RECEIVED_HM_SURF", mother)
         self.assertIn("goto_if_unset FLAG_DEFEATED_WALLY_MAUVILLE", mother)
-        self.assertIn("goto_if_set FLAG_DEFEATED_LAVARIDGE_GYM", mother)
+        self.assertIn("goto_if_set FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY", mother)
 
     def test_juan_counts_no_badges(self):
         source = script("SootopolisCity_Gym_1F")
@@ -102,12 +102,27 @@ class WallyTests(unittest.TestCase):
         self.assertEqual(len(waiting), 2)
         self.assertNotIn(below_door, waiting.values())
 
-    def test_wally_stays_out_of_verdanturf_once_flannery_is_beaten(self):
-        source = script("MauvilleCity")
+    def test_wally_reaches_verdanturf_and_leaves_after_his_speech_once_flannery_is_beaten(self):
+        mauville = label_body(script("MauvilleCity"), "MauvilleCity_EventScript_DefeatedWally")
         self.assertIn(
-            "call_if_unset FLAG_DEFEATED_LAVARIDGE_GYM, MauvilleCity_EventScript_ShowVerdanturfWally",
-            label_body(source, "MauvilleCity_EventScript_DefeatedWally"),
+            "call_if_unset FLAG_DEFEATED_WALLY_VICTORY_ROAD, MauvilleCity_EventScript_ShowVerdanturfWally", mauville
         )
+        self.assertNotIn("FLAG_DEFEATED_LAVARIDGE_GYM", mauville)
+        victory = label_body(script("VictoryRoad_1F"), "VictoryRoad_1F_EventScript_BattleEntranceWally")
+        self.assertIn("setflag FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY", victory)
+        house = script("VerdanturfTown_WandasHouse")
+        wally = label_body(house, "VerdanturfTown_WandasHouse_EventScript_Wally")
+        self.assertLess(
+            wally.index("setflag FLAG_WALLY_SPEECH"),
+            wally.index("call_if_set FLAG_DEFEATED_LAVARIDGE_GYM, VerdanturfTown_WandasHouse_EventScript_WallySlipsOff"),
+        )
+        # While he is still in the house, nobody says he has gone.
+        for talker in ("WallysUncle", "Wanda", "WallysAunt"):
+            body = label_body(house, f"VerdanturfTown_WandasHouse_EventScript_{talker}")
+            self.assertLess(
+                body.index("goto_if_unset FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY"),
+                body.index("FLAG_DEFEATED_LAVARIDGE_GYM"),
+            )
 
     def test_victory_road_waits_for_the_tutorial_and_recalls_only_a_real_win(self):
         source = script("VictoryRoad_1F")

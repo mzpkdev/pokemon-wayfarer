@@ -95,7 +95,8 @@ SlateportCity_OceanicMuseum_2F_EventScript_CaptStern::
 	setflag FLAG_DELIVERED_DEVON_GOODS
 	clearflag FLAG_HIDE_ROUTE_116_DEVON_EMPLOYEE
 	setflag FLAG_HIDE_RUSTBORO_CITY_DEVON_CORP_3F_EMPLOYEE
-	setvar VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 1
+	call_if_eq VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 0, SlateportCity_OceanicMuseum_2F_EventScript_QueueScottScene
+	call_if_ge VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 2, SlateportCity_OceanicMuseum_2F_EventScript_CountScottMeeting
 	fadescreen FADE_FROM_BLACK
 	release
 	end
@@ -115,6 +116,17 @@ SlateportCity_OceanicMuseum_2F_EventScript_ArchieRecallsPlayer::
 
 SlateportCity_OceanicMuseum_2F_EventScript_ReadyRegisterBirch::
 	setvar VAR_REGISTER_BIRCH_STATE, 1
+	return
+
+SlateportCity_OceanicMuseum_2F_EventScript_QueueScottScene::
+	setvar VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 1
+	return
+
+@ Wattson's badge already sent Scott on to Verdanturf, so his meeting at the museum door cannot play.
+@ Count it and register his call, as the harbor handover does, and leave the state where it is.
+SlateportCity_OceanicMuseum_2F_EventScript_CountScottMeeting::
+	addvar VAR_SCOTT_STATE, 1
+	setflag FLAG_ENABLE_SCOTT_MATCH_CALL
 	return
 
 SlateportCity_OceanicMuseum_2F_EventScript_PlayerFaceGrunts::

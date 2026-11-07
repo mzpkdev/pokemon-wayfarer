@@ -1,6 +1,7 @@
 #include "global.h"
 #include "time_events.h"
 #include "event_data.h"
+#include "wayfarer_persistence.h"
 #include "field_weather.h"
 #include "pokemon.h"
 #include "random.h"
@@ -86,14 +87,14 @@ void UpdateShoalTideFlag(void)
         RtcCalcLocalTime();
         if (tide[gLocalTime.hours])
         {
-            FlagSet(FLAG_SYS_SHOAL_TIDE);
+            FlagSet(WAYFARER_HOENN_SHOAL_TIDE_FLAG);
 #if IS_HNS
             FlagSet(FLAG_SYS_LAKE_OF_RAGE_TIDE);
 #endif
         }
         else
         {
-            FlagClear(FLAG_SYS_SHOAL_TIDE);
+            FlagClear(WAYFARER_HOENN_SHOAL_TIDE_FLAG);
 #if IS_HNS
             FlagClear(FLAG_SYS_LAKE_OF_RAGE_TIDE);
 #endif
