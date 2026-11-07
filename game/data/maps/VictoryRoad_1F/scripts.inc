@@ -64,6 +64,8 @@ VictoryRoad_1F_EventScript_BattleEntranceWally::
 	clearflag FLAG_HIDE_VICTORY_ROAD_ENTRANCE_WALLY
 	copyobjectxytoperm LOCALID_VICTORY_ROAD_ENTRANCE_WALLY
 	setflag FLAG_DEFEATED_WALLY_VICTORY_ROAD
+	@ He has moved on from VERDANTURF, whichever of his chapters came first.
+	setflag FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY
 	copyvar VAR_VICTORY_ROAD_1F_STATE, VAR_0x8008
 	releaseall
 	end
