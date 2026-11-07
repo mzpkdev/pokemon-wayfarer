@@ -1,7 +1,7 @@
 # Home Pokédex lists
 
 PRD: [Home Pokédex lists and the National upgrade](../prds/home-pokedex-lists.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 
