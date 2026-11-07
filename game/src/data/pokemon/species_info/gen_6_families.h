@@ -4561,6 +4561,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
 #if P_FAMILY_TYRUNT
     [SPECIES_TYRUNT] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 58,
         .baseAttack    = 89,
         .baseDefense   = 77,
@@ -4631,6 +4632,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
 
     [SPECIES_TYRANTRUM] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 82,
         .baseAttack    = 121,
         .baseDefense   = 119,
@@ -4699,6 +4701,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
 #if P_FAMILY_AMAURA
     [SPECIES_AMAURA] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 77,
         .baseAttack    = 59,
         .baseDefense   = 50,
@@ -4775,6 +4778,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
 
     [SPECIES_AURORUS] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 123,
         .baseAttack    = 77,
         .baseDefense   = 72,
@@ -6645,6 +6649,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
 #if P_FAMILY_XERNEAS
     [SPECIES_XERNEAS_NEUTRAL] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 126,
         .baseAttack    = 131,
         .baseDefense   = 95,
@@ -6709,6 +6714,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
 
     [SPECIES_XERNEAS_ACTIVE] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 126,
         .baseAttack    = 131,
         .baseDefense   = 95,
@@ -6775,6 +6781,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
 #if P_FAMILY_YVELTAL
     [SPECIES_YVELTAL] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 126,
         .baseAttack    = 131,
         .baseDefense   = 95,
@@ -6849,6 +6856,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
 #if P_FAMILY_ZYGARDE
     [SPECIES_ZYGARDE_50] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 108,
         .baseAttack    = 100,
         .baseDefense   = 121,
@@ -6914,6 +6922,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
 
     [SPECIES_ZYGARDE_50_POWER_CONSTRUCT] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 108,
         .baseAttack    = 100,
         .baseDefense   = 121,
@@ -6979,6 +6988,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
 
     [SPECIES_ZYGARDE_10_AURA_BREAK] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 54,
         .baseAttack    = 100,
         .baseDefense   = 71,
@@ -7044,6 +7054,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
 
     [SPECIES_ZYGARDE_10_POWER_CONSTRUCT] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 54,
         .baseAttack    = 100,
         .baseDefense   = 71,
@@ -7109,6 +7120,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
 
     [SPECIES_ZYGARDE_COMPLETE] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 216,
         .baseAttack    = 100,
         .baseDefense   = 121,

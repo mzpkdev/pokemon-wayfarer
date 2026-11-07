@@ -1,0 +1,1128 @@
+{
+ "version": 1,
+ "enabledEntries": 968,
+ "unobtainable": [
+  {
+   "nat": "NATIONAL_DEX_TURTWIG",
+   "species": "SPECIES_TURTWIG",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_GROTLE",
+   "species": "SPECIES_GROTLE",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_TORTERRA",
+   "species": "SPECIES_TORTERRA",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_CHIMCHAR",
+   "species": "SPECIES_CHIMCHAR",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_MONFERNO",
+   "species": "SPECIES_MONFERNO",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_INFERNAPE",
+   "species": "SPECIES_INFERNAPE",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_PIPLUP",
+   "species": "SPECIES_PIPLUP",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_PRINPLUP",
+   "species": "SPECIES_PRINPLUP",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_EMPOLEON",
+   "species": "SPECIES_EMPOLEON",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_STARLY",
+   "species": "SPECIES_STARLY",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_STARAVIA",
+   "species": "SPECIES_STARAVIA",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_STARAPTOR",
+   "species": "SPECIES_STARAPTOR",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_BIDOOF",
+   "species": "SPECIES_BIDOOF",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_BIBAREL",
+   "species": "SPECIES_BIBAREL",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_KRICKETOT",
+   "species": "SPECIES_KRICKETOT",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_KRICKETUNE",
+   "species": "SPECIES_KRICKETUNE",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_SHINX",
+   "species": "SPECIES_SHINX",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_LUXIO",
+   "species": "SPECIES_LUXIO",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_LUXRAY",
+   "species": "SPECIES_LUXRAY",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_CRANIDOS",
+   "species": "SPECIES_CRANIDOS",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_RAMPARDOS",
+   "species": "SPECIES_RAMPARDOS",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_SHIELDON",
+   "species": "SPECIES_SHIELDON",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_BASTIODON",
+   "species": "SPECIES_BASTIODON",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_BURMY",
+   "species": "SPECIES_BURMY_PLANT",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_WORMADAM",
+   "species": "SPECIES_WORMADAM_PLANT",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_MOTHIM",
+   "species": "SPECIES_MOTHIM_PLANT",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_COMBEE",
+   "species": "SPECIES_COMBEE",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_VESPIQUEN",
+   "species": "SPECIES_VESPIQUEN",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_PACHIRISU",
+   "species": "SPECIES_PACHIRISU",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_CHERUBI",
+   "species": "SPECIES_CHERUBI",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_CHERRIM",
+   "species": "SPECIES_CHERRIM_OVERCAST",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_BUNEARY",
+   "species": "SPECIES_BUNEARY",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_LOPUNNY",
+   "species": "SPECIES_LOPUNNY",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_GLAMEOW",
+   "species": "SPECIES_GLAMEOW",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_PURUGLY",
+   "species": "SPECIES_PURUGLY",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_STUNKY",
+   "species": "SPECIES_STUNKY",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_SKUNTANK",
+   "species": "SPECIES_SKUNTANK",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_CHATOT",
+   "species": "SPECIES_CHATOT",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_SPIRITOMB",
+   "species": "SPECIES_SPIRITOMB",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_GIBLE",
+   "species": "SPECIES_GIBLE",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_GABITE",
+   "species": "SPECIES_GABITE",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_GARCHOMP",
+   "species": "SPECIES_GARCHOMP",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_HIPPOPOTAS",
+   "species": "SPECIES_HIPPOPOTAS",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_HIPPOWDON",
+   "species": "SPECIES_HIPPOWDON",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_SKORUPI",
+   "species": "SPECIES_SKORUPI",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_DRAPION",
+   "species": "SPECIES_DRAPION",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_CARNIVINE",
+   "species": "SPECIES_CARNIVINE",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_ROTOM",
+   "species": "SPECIES_ROTOM",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_UXIE",
+   "species": "SPECIES_UXIE",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_MESPRIT",
+   "species": "SPECIES_MESPRIT",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_AZELF",
+   "species": "SPECIES_AZELF",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_DIALGA",
+   "species": "SPECIES_DIALGA",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_PALKIA",
+   "species": "SPECIES_PALKIA",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_HEATRAN",
+   "species": "SPECIES_HEATRAN",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_GIRATINA",
+   "species": "SPECIES_GIRATINA_ALTERED",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_CRESSELIA",
+   "species": "SPECIES_CRESSELIA",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_PHIONE",
+   "species": "SPECIES_PHIONE",
+   "mythical": true,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_MANAPHY",
+   "species": "SPECIES_MANAPHY",
+   "mythical": true,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_DARKRAI",
+   "species": "SPECIES_DARKRAI",
+   "mythical": true,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_SHAYMIN",
+   "species": "SPECIES_SHAYMIN_LAND",
+   "mythical": true,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_ARCEUS",
+   "species": "SPECIES_ARCEUS_NORMAL",
+   "mythical": true,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_VICTINI",
+   "species": "SPECIES_VICTINI",
+   "mythical": true,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_TIRTOUGA",
+   "species": "SPECIES_TIRTOUGA",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_CARRACOSTA",
+   "species": "SPECIES_CARRACOSTA",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_ARCHEN",
+   "species": "SPECIES_ARCHEN",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_ARCHEOPS",
+   "species": "SPECIES_ARCHEOPS",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_COBALION",
+   "species": "SPECIES_COBALION",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_TERRAKION",
+   "species": "SPECIES_TERRAKION",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_VIRIZION",
+   "species": "SPECIES_VIRIZION",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_TORNADUS",
+   "species": "SPECIES_TORNADUS_INCARNATE",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_THUNDURUS",
+   "species": "SPECIES_THUNDURUS_INCARNATE",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_RESHIRAM",
+   "species": "SPECIES_RESHIRAM",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_ZEKROM",
+   "species": "SPECIES_ZEKROM",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_LANDORUS",
+   "species": "SPECIES_LANDORUS_INCARNATE",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_KYUREM",
+   "species": "SPECIES_KYUREM",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_KELDEO",
+   "species": "SPECIES_KELDEO_ORDINARY",
+   "mythical": true,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_MELOETTA",
+   "species": "SPECIES_MELOETTA_ARIA",
+   "mythical": true,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_GENESECT",
+   "species": "SPECIES_GENESECT",
+   "mythical": true,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_TYRUNT",
+   "species": "SPECIES_TYRUNT",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_TYRANTRUM",
+   "species": "SPECIES_TYRANTRUM",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_AMAURA",
+   "species": "SPECIES_AMAURA",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_AURORUS",
+   "species": "SPECIES_AURORUS",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_XERNEAS",
+   "species": "SPECIES_XERNEAS_NEUTRAL",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_YVELTAL",
+   "species": "SPECIES_YVELTAL",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_ZYGARDE",
+   "species": "SPECIES_ZYGARDE_50",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_DIANCIE",
+   "species": "SPECIES_DIANCIE",
+   "mythical": true,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_HOOPA",
+   "species": "SPECIES_HOOPA_CONFINED",
+   "mythical": true,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_VOLCANION",
+   "species": "SPECIES_VOLCANION",
+   "mythical": true,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_TYPE_NULL",
+   "species": "SPECIES_TYPE_NULL",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_SILVALLY",
+   "species": "SPECIES_SILVALLY_NORMAL",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_COSMOG",
+   "species": "SPECIES_COSMOG",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_COSMOEM",
+   "species": "SPECIES_COSMOEM",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_SOLGALEO",
+   "species": "SPECIES_SOLGALEO",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_LUNALA",
+   "species": "SPECIES_LUNALA",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_NIHILEGO",
+   "species": "SPECIES_NIHILEGO",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_BUZZWOLE",
+   "species": "SPECIES_BUZZWOLE",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_PHEROMOSA",
+   "species": "SPECIES_PHEROMOSA",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_XURKITREE",
+   "species": "SPECIES_XURKITREE",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_CELESTEELA",
+   "species": "SPECIES_CELESTEELA",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_KARTANA",
+   "species": "SPECIES_KARTANA",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_GUZZLORD",
+   "species": "SPECIES_GUZZLORD",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_NECROZMA",
+   "species": "SPECIES_NECROZMA",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_MAGEARNA",
+   "species": "SPECIES_MAGEARNA",
+   "mythical": true,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_MARSHADOW",
+   "species": "SPECIES_MARSHADOW",
+   "mythical": true,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_POIPOLE",
+   "species": "SPECIES_POIPOLE",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_NAGANADEL",
+   "species": "SPECIES_NAGANADEL",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_STAKATAKA",
+   "species": "SPECIES_STAKATAKA",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_BLACEPHALON",
+   "species": "SPECIES_BLACEPHALON",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_ZERAORA",
+   "species": "SPECIES_ZERAORA",
+   "mythical": true,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_MELTAN",
+   "species": "SPECIES_MELTAN",
+   "mythical": true,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_MELMETAL",
+   "species": "SPECIES_MELMETAL",
+   "mythical": true,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_DRACOZOLT",
+   "species": "SPECIES_DRACOZOLT",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_ARCTOZOLT",
+   "species": "SPECIES_ARCTOZOLT",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_DRACOVISH",
+   "species": "SPECIES_DRACOVISH",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_ARCTOVISH",
+   "species": "SPECIES_ARCTOVISH",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_ZACIAN",
+   "species": "SPECIES_ZACIAN_HERO",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_ZAMAZENTA",
+   "species": "SPECIES_ZAMAZENTA_HERO",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_ETERNATUS",
+   "species": "SPECIES_ETERNATUS",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_KUBFU",
+   "species": "SPECIES_KUBFU",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_URSHIFU",
+   "species": "SPECIES_URSHIFU_SINGLE_STRIKE",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_ZARUDE",
+   "species": "SPECIES_ZARUDE",
+   "mythical": true,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_GLASTRIER",
+   "species": "SPECIES_GLASTRIER",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_SPECTRIER",
+   "species": "SPECIES_SPECTRIER",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_CALYREX",
+   "species": "SPECIES_CALYREX",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_ENAMORUS",
+   "species": "SPECIES_ENAMORUS_INCARNATE",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_ARTICUNO_GALAR",
+   "species": "SPECIES_ARTICUNO_GALAR",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_ZAPDOS_GALAR",
+   "species": "SPECIES_ZAPDOS_GALAR",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  },
+  {
+   "nat": "NATIONAL_DEX_MOLTRES_GALAR",
+   "species": "SPECIES_MOLTRES_GALAR",
+   "mythical": false,
+   "reason": "no wild, static, gift, trade or family source"
+  }
+ ],
+ "excusedButObtainable": [
+  {
+   "nat": "NATIONAL_DEX_REGIROCK",
+   "species": "SPECIES_REGIROCK"
+  },
+  {
+   "nat": "NATIONAL_DEX_REGICE",
+   "species": "SPECIES_REGICE"
+  },
+  {
+   "nat": "NATIONAL_DEX_REGISTEEL",
+   "species": "SPECIES_REGISTEEL"
+  },
+  {
+   "nat": "NATIONAL_DEX_BUIZEL",
+   "species": "SPECIES_BUIZEL"
+  },
+  {
+   "nat": "NATIONAL_DEX_FLOATZEL",
+   "species": "SPECIES_FLOATZEL"
+  },
+  {
+   "nat": "NATIONAL_DEX_SHELLOS",
+   "species": "SPECIES_SHELLOS_WEST"
+  },
+  {
+   "nat": "NATIONAL_DEX_GASTRODON",
+   "species": "SPECIES_GASTRODON_WEST"
+  },
+  {
+   "nat": "NATIONAL_DEX_DRIFLOON",
+   "species": "SPECIES_DRIFLOON"
+  },
+  {
+   "nat": "NATIONAL_DEX_DRIFBLIM",
+   "species": "SPECIES_DRIFBLIM"
+  },
+  {
+   "nat": "NATIONAL_DEX_BRONZOR",
+   "species": "SPECIES_BRONZOR"
+  },
+  {
+   "nat": "NATIONAL_DEX_BRONZONG",
+   "species": "SPECIES_BRONZONG"
+  },
+  {
+   "nat": "NATIONAL_DEX_RIOLU",
+   "species": "SPECIES_RIOLU"
+  },
+  {
+   "nat": "NATIONAL_DEX_LUCARIO",
+   "species": "SPECIES_LUCARIO"
+  },
+  {
+   "nat": "NATIONAL_DEX_CROAGUNK",
+   "species": "SPECIES_CROAGUNK"
+  },
+  {
+   "nat": "NATIONAL_DEX_TOXICROAK",
+   "species": "SPECIES_TOXICROAK"
+  },
+  {
+   "nat": "NATIONAL_DEX_FINNEON",
+   "species": "SPECIES_FINNEON"
+  },
+  {
+   "nat": "NATIONAL_DEX_LUMINEON",
+   "species": "SPECIES_LUMINEON"
+  },
+  {
+   "nat": "NATIONAL_DEX_SNOVER",
+   "species": "SPECIES_SNOVER"
+  },
+  {
+   "nat": "NATIONAL_DEX_ABOMASNOW",
+   "species": "SPECIES_ABOMASNOW"
+  },
+  {
+   "nat": "NATIONAL_DEX_REGIGIGAS",
+   "species": "SPECIES_REGIGIGAS"
+  },
+  {
+   "nat": "NATIONAL_DEX_NOIBAT",
+   "species": "SPECIES_NOIBAT"
+  },
+  {
+   "nat": "NATIONAL_DEX_NOIVERN",
+   "species": "SPECIES_NOIVERN"
+  },
+  {
+   "nat": "NATIONAL_DEX_TAPU_KOKO",
+   "species": "SPECIES_TAPU_KOKO"
+  },
+  {
+   "nat": "NATIONAL_DEX_TAPU_LELE",
+   "species": "SPECIES_TAPU_LELE"
+  },
+  {
+   "nat": "NATIONAL_DEX_TAPU_BULU",
+   "species": "SPECIES_TAPU_BULU"
+  },
+  {
+   "nat": "NATIONAL_DEX_TAPU_FINI",
+   "species": "SPECIES_TAPU_FINI"
+  },
+  {
+   "nat": "NATIONAL_DEX_OBSTAGOON",
+   "species": "SPECIES_OBSTAGOON"
+  },
+  {
+   "nat": "NATIONAL_DEX_PERRSERKER",
+   "species": "SPECIES_PERRSERKER"
+  },
+  {
+   "nat": "NATIONAL_DEX_CURSOLA",
+   "species": "SPECIES_CURSOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_SIRFETCHD",
+   "species": "SPECIES_SIRFETCHD"
+  },
+  {
+   "nat": "NATIONAL_DEX_MR_RIME",
+   "species": "SPECIES_MR_RIME"
+  },
+  {
+   "nat": "NATIONAL_DEX_REGIELEKI",
+   "species": "SPECIES_REGIELEKI"
+  },
+  {
+   "nat": "NATIONAL_DEX_REGIDRAGO",
+   "species": "SPECIES_REGIDRAGO"
+  },
+  {
+   "nat": "NATIONAL_DEX_SNEASLER",
+   "species": "SPECIES_SNEASLER"
+  },
+  {
+   "nat": "NATIONAL_DEX_OVERQWIL",
+   "species": "SPECIES_OVERQWIL"
+  },
+  {
+   "nat": "NATIONAL_DEX_CLODSIRE",
+   "species": "SPECIES_CLODSIRE"
+  },
+  {
+   "nat": "NATIONAL_DEX_RATTATA_ALOLA",
+   "species": "SPECIES_RATTATA_ALOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_RATICATE_ALOLA",
+   "species": "SPECIES_RATICATE_ALOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_RAICHU_ALOLA",
+   "species": "SPECIES_RAICHU_ALOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_SANDSHREW_ALOLA",
+   "species": "SPECIES_SANDSHREW_ALOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_SANDSLASH_ALOLA",
+   "species": "SPECIES_SANDSLASH_ALOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_VULPIX_ALOLA",
+   "species": "SPECIES_VULPIX_ALOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_NINETALES_ALOLA",
+   "species": "SPECIES_NINETALES_ALOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_DIGLETT_ALOLA",
+   "species": "SPECIES_DIGLETT_ALOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_DUGTRIO_ALOLA",
+   "species": "SPECIES_DUGTRIO_ALOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_MEOWTH_ALOLA",
+   "species": "SPECIES_MEOWTH_ALOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_PERSIAN_ALOLA",
+   "species": "SPECIES_PERSIAN_ALOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_GEODUDE_ALOLA",
+   "species": "SPECIES_GEODUDE_ALOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_GRAVELER_ALOLA",
+   "species": "SPECIES_GRAVELER_ALOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_GOLEM_ALOLA",
+   "species": "SPECIES_GOLEM_ALOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_GRIMER_ALOLA",
+   "species": "SPECIES_GRIMER_ALOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_MUK_ALOLA",
+   "species": "SPECIES_MUK_ALOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_EXEGGUTOR_ALOLA",
+   "species": "SPECIES_EXEGGUTOR_ALOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_MAROWAK_ALOLA",
+   "species": "SPECIES_MAROWAK_ALOLA"
+  },
+  {
+   "nat": "NATIONAL_DEX_MEOWTH_GALAR",
+   "species": "SPECIES_MEOWTH_GALAR"
+  },
+  {
+   "nat": "NATIONAL_DEX_PONYTA_GALAR",
+   "species": "SPECIES_PONYTA_GALAR"
+  },
+  {
+   "nat": "NATIONAL_DEX_RAPIDASH_GALAR",
+   "species": "SPECIES_RAPIDASH_GALAR"
+  },
+  {
+   "nat": "NATIONAL_DEX_SLOWPOKE_GALAR",
+   "species": "SPECIES_SLOWPOKE_GALAR"
+  },
+  {
+   "nat": "NATIONAL_DEX_SLOWBRO_GALAR",
+   "species": "SPECIES_SLOWBRO_GALAR"
+  },
+  {
+   "nat": "NATIONAL_DEX_SLOWKING_GALAR",
+   "species": "SPECIES_SLOWKING_GALAR"
+  },
+  {
+   "nat": "NATIONAL_DEX_FARFETCHD_GALAR",
+   "species": "SPECIES_FARFETCHD_GALAR"
+  },
+  {
+   "nat": "NATIONAL_DEX_WEEZING_GALAR",
+   "species": "SPECIES_WEEZING_GALAR"
+  },
+  {
+   "nat": "NATIONAL_DEX_MR_MIME_GALAR",
+   "species": "SPECIES_MR_MIME_GALAR"
+  },
+  {
+   "nat": "NATIONAL_DEX_CORSOLA_GALAR",
+   "species": "SPECIES_CORSOLA_GALAR"
+  },
+  {
+   "nat": "NATIONAL_DEX_ZIGZAGOON_GALAR",
+   "species": "SPECIES_ZIGZAGOON_GALAR"
+  },
+  {
+   "nat": "NATIONAL_DEX_LINOONE_GALAR",
+   "species": "SPECIES_LINOONE_GALAR"
+  },
+  {
+   "nat": "NATIONAL_DEX_DARUMAKA_GALAR",
+   "species": "SPECIES_DARUMAKA_GALAR"
+  },
+  {
+   "nat": "NATIONAL_DEX_DARMANITAN_GALAR",
+   "species": "SPECIES_DARMANITAN_GALAR_STANDARD"
+  },
+  {
+   "nat": "NATIONAL_DEX_YAMASK_GALAR",
+   "species": "SPECIES_YAMASK_GALAR"
+  },
+  {
+   "nat": "NATIONAL_DEX_STUNFISK_GALAR",
+   "species": "SPECIES_STUNFISK_GALAR"
+  },
+  {
+   "nat": "NATIONAL_DEX_GROWLITHE_HISUI",
+   "species": "SPECIES_GROWLITHE_HISUI"
+  },
+  {
+   "nat": "NATIONAL_DEX_ARCANINE_HISUI",
+   "species": "SPECIES_ARCANINE_HISUI"
+  },
+  {
+   "nat": "NATIONAL_DEX_VOLTORB_HISUI",
+   "species": "SPECIES_VOLTORB_HISUI"
+  },
+  {
+   "nat": "NATIONAL_DEX_ELECTRODE_HISUI",
+   "species": "SPECIES_ELECTRODE_HISUI"
+  },
+  {
+   "nat": "NATIONAL_DEX_TYPHLOSION_HISUI",
+   "species": "SPECIES_TYPHLOSION_HISUI"
+  },
+  {
+   "nat": "NATIONAL_DEX_QWILFISH_HISUI",
+   "species": "SPECIES_QWILFISH_HISUI"
+  },
+  {
+   "nat": "NATIONAL_DEX_SNEASEL_HISUI",
+   "species": "SPECIES_SNEASEL_HISUI"
+  },
+  {
+   "nat": "NATIONAL_DEX_SAMUROTT_HISUI",
+   "species": "SPECIES_SAMUROTT_HISUI"
+  },
+  {
+   "nat": "NATIONAL_DEX_LILLIGANT_HISUI",
+   "species": "SPECIES_LILLIGANT_HISUI"
+  },
+  {
+   "nat": "NATIONAL_DEX_ZORUA_HISUI",
+   "species": "SPECIES_ZORUA_HISUI"
+  },
+  {
+   "nat": "NATIONAL_DEX_ZOROARK_HISUI",
+   "species": "SPECIES_ZOROARK_HISUI"
+  },
+  {
+   "nat": "NATIONAL_DEX_BRAVIARY_HISUI",
+   "species": "SPECIES_BRAVIARY_HISUI"
+  },
+  {
+   "nat": "NATIONAL_DEX_SLIGGOO_HISUI",
+   "species": "SPECIES_SLIGGOO_HISUI"
+  },
+  {
+   "nat": "NATIONAL_DEX_GOODRA_HISUI",
+   "species": "SPECIES_GOODRA_HISUI"
+  },
+  {
+   "nat": "NATIONAL_DEX_AVALUGG_HISUI",
+   "species": "SPECIES_AVALUGG_HISUI"
+  },
+  {
+   "nat": "NATIONAL_DEX_DECIDUEYE_HISUI",
+   "species": "SPECIES_DECIDUEYE_HISUI"
+  },
+  {
+   "nat": "NATIONAL_DEX_TAUROS_PALDEA",
+   "species": "SPECIES_TAUROS_PALDEA_COMBAT"
+  },
+  {
+   "nat": "NATIONAL_DEX_WOOPER_PALDEA",
+   "species": "SPECIES_WOOPER_PALDEA"
+  }
+ ]
+}
