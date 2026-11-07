@@ -82,6 +82,7 @@ MrPokemonHouse_EventScript_AfterDex:
 	end
 
 MrPokemonHouse_EventScript_GiveNatDexRandomizer::
+	goto_if_set FLAG_SYS_NATIONAL_DEX, Common_EventScript_NopReturn
 	setflag FLAG_SYS_NATIONAL_DEX
 	special EnableNationalPokedex
 	return

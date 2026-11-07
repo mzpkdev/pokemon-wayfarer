@@ -36,8 +36,13 @@ An evolution reached only from a regional form (Obstagoon, Perrserker,
 Sirfetch'd, Mr. Rime, Cursola, Runerigus, Kleavor, Wyrdeer, Ursaluna,
 Basculegion, Sneasler, Overqwil) is not part of the family and is National-only,
 because those forms live in Sevii and Sinjoh and a home list must be
-completable at home. Only enabled species are listed; a family member whose
-species is disabled in this build is left out.
+completable at home. An evolution whose method exists only in Sinjoh is
+excluded too: Kleavor, Wyrdeer, and Ursaluna evolve from standard Scyther,
+Stantler, and Ursaring, but their item or move is Sinjoh's. Only enabled
+species are listed; a family member whose species is disabled in this build is
+left out. Built from this build's species data, the Kanto–Johto list holds 279
+species (251 of Gen I and II, then 28 from other generations) and the Hoenn
+list 302 (291 of Gen III and V, then 11).
 
 **Order.** The home generations' species first, in National order, then the
 family members from other generations, in National order. The Kanto–Johto list
@@ -175,8 +180,15 @@ counts changes:
   (`Dex_HasCompletedRegionalVisibleEntries`) as well, and the flag stays the
   one-time marker that the completion line was heard. The National rating's
   wording bands (`game/src/birch_pc.c:203-224`, which run to 475) are
-  stretched in proportion to the enabled species count, with "complete" at the
-  required count.
+  stretched in proportion to the National list's required count (the species
+  it needs once `dexNotRequired` and mythical species are left out), against
+  the 493 the bands were written for, with "complete" at the required count.
+  The home-list bands, which run to 275 and name counts ("You've reached
+  200!"), stretch the same way against 280 when a home list needs more than
+  280 species, and never shrink. Oak's in-person rating for a Pallet origin
+  (`GetProfOaksRatingMessageByCount`) keeps its fixed bands, which name counts
+  and match his aides' gifts, and says "complete" at the home list's required
+  count instead of the fixed Kanto count.
 
 ### Who gives the upgrade
 
@@ -200,7 +212,11 @@ counts changes:
   and happens on the next lab talk instead; Birch's thanks gives one to a
   traveller who has none before upgrading it.
 - Every upgrade site is idempotent through `FLAG_SYS_NATIONAL_DEX`, and none
-  of them reads or writes the extension mask.
+  of them reads or writes the extension mask. Hoenn map scripts read the
+  upgrade through `DexScript_HasNationalUpgrade` and the Pokédex through
+  `WayfarerHasSharedPokedex`; the system flags are Hoenn-bank copies there.
+- Oak's welcome notes a held upgrade with a short line when Elm came first;
+  Elm, who keeps no record of the first talk, says nothing when it is held.
 - New text: Elm's and Oak's first-meeting upgrade lines, and a short
   acknowledgement for each existing site that may find the upgrade held.
 

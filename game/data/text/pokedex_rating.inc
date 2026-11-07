@@ -353,10 +353,10 @@ gJohtoDexRatingText_LessThanMaxDex::
 	.string "You're ready to turn professional!$"
 
 gJohtoDexRatingText_Complete::
-	.string "Wow!\n"
-	.string "That is a complete {STR_VAR_3} POKéDEX!\p"
-	.string "Thanks to you, {PLAYER}, the {STR_VAR_3}\n"
-	.string "POKéDEX is complete!\p"
+	.string "Wow! That is a complete\n"
+	.string "{STR_VAR_3} POKéDEX!\p"
+	.string "Thanks to you, {PLAYER}, the\n"
+	.string "{STR_VAR_3} POKéDEX is complete!\p"
 	.string "Wow...\n"
 	.string "You've done an incredible job!$"
 

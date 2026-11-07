@@ -919,13 +919,15 @@ TEST("Ferry: a request is met by a Pokemon from the start region's Pokedex or on
     GiveParty(SPECIES_CHIKORITA, 10);
     gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_NEW_BARK;
     EXPECT(Ferry_RequestMet(FERRY_REQ_REGION, 0));
+    // Kanto and Johto share one home list.
     gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_PALLET;
-    EXPECT(!Ferry_RequestMet(FERRY_REQ_REGION, 0));
+    EXPECT(Ferry_RequestMet(FERRY_REQ_REGION, 0));
     gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_LITTLEROOT;
     EXPECT(!Ferry_RequestMet(FERRY_REQ_REGION, 0));
     GiveParty(SPECIES_TREECKO, 10);
     EXPECT(Ferry_RequestMet(FERRY_REQ_REGION, 0));
     gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_PALLET;
+    EXPECT(!Ferry_RequestMet(FERRY_REQ_REGION, 0));
     GiveParty(SPECIES_PIKACHU, 10);
     EXPECT(Ferry_RequestMet(FERRY_REQ_REGION, 0));
 

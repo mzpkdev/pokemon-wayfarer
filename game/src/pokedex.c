@@ -3055,11 +3055,13 @@ static void SpriteCB_SeenOwnInfo(struct Sprite *sprite)
         DestroySprite(sprite);
 }
 
+// The label beside the counters prints the land's name alone: the full title
+// ("KANTO-JOHTO DEX") runs past the counters into the Pokémon frame.
 static void PrintActiveRegionLabel(u8 y)
 {
     static const u8 color[] = { TEXT_COLOR_TRANSPARENT, TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_LIGHT_GRAY };
 
-    AddTextPrinterParameterized4(0, FONT_SMALL, 4, y, 0, 0, color, TEXT_SKIP_DRAW, Dex_GetActiveRegionTitle());
+    AddTextPrinterParameterized4(0, FONT_SMALL, 4, y, 0, 0, color, TEXT_SKIP_DRAW, Dex_GetActiveRegionName());
 }
 
 void SpriteCB_MoveMonForInfoScreen(struct Sprite *sprite)
@@ -4566,13 +4568,12 @@ struct DexCatalog
     const u8 *description;
 };
 
-// The catalog rows deliberately refer to the existing authored source tables
-// through Dex_RegionEntryToNational. Kanto and Johto stop before their legacy
-// terminal zero; Hoenn's table already contains only valid entries.
+// The home lists. Kanto and Johto are one land: both stored region values
+// describe the Kanto–Johto home list and share its table, name, and title.
 static const struct DexCatalog sDexCatalogs[DEX_REGION_COUNT] =
 {
-    [DEX_REGION_KANTO] = { DEX_REGION_KANTO, KANTO_DEX_COUNT - 1, gText_DexKantoTitle, gText_DexKantoDescription },
-    [DEX_REGION_JOHTO] = { DEX_REGION_JOHTO, JOHTO_DEX_COUNT - 1, gText_DexJohtoTitle, gText_DexJohtoDescription },
+    [DEX_REGION_KANTO] = { DEX_REGION_KANTO, KANTO_JOHTO_DEX_COUNT - 1, gText_DexKantoJohtoTitle, gText_DexKantoJohtoDescription },
+    [DEX_REGION_JOHTO] = { DEX_REGION_JOHTO, KANTO_JOHTO_DEX_COUNT - 1, gText_DexKantoJohtoTitle, gText_DexKantoJohtoDescription },
     [DEX_REGION_HOENN] = { DEX_REGION_HOENN, HOENN_DEX_COUNT - 1, gText_DexHoennTitle, gText_DexHoennDescription },
 };
 
@@ -4585,16 +4586,40 @@ static const struct DexCatalog *GetDexCatalog(enum DexRegionId region)
     return &sDexCatalogs[region];
 }
 
-static bool8 IsCatalogEntryVisible(const struct DexCatalog *catalog, enum NationalDexOrder id)
+static bool8 IsDexEntryRequired(u16 species)
 {
+    return !(gSpeciesInfo[species].dexNotRequired || (gSpeciesInfo[species].isMythical && !gSpeciesInfo[species].dexForceRequired));
+}
+
+static u16 GetCatalogProgress(enum DexRegionId region, u8 flagCase)
+{
+    const struct DexCatalog *catalog = GetDexCatalog(region);
+    u16 localEntry;
+    u16 count = 0;
+
+    if (catalog == NULL || (flagCase != FLAG_GET_SEEN && flagCase != FLAG_GET_CAUGHT))
+        return 0;
+    for (localEntry = 1; localEntry <= catalog->entryCount; localEntry++)
+        if (GetSetPokedexFlag(Dex_RegionEntryToNational(region, localEntry), flagCase))
+            count++;
+    return count;
+}
+
+static bool8 HasCompletedCatalog(enum DexRegionId region)
+{
+    const struct DexCatalog *catalog = GetDexCatalog(region);
     u16 localEntry;
 
-    if (catalog == NULL || !Dex_IsValidNationalId(id))
+    if (catalog == NULL)
         return FALSE;
     for (localEntry = 1; localEntry <= catalog->entryCount; localEntry++)
-        if (Dex_RegionEntryToNational(catalog->region, localEntry) == id)
-            return TRUE;
-    return FALSE;
+    {
+        enum NationalDexOrder id = Dex_RegionEntryToNational(region, localEntry);
+        u16 species = NationalPokedexNumToSpecies(id);
+        if (species == SPECIES_NONE || (IsDexEntryRequired(species) && !GetSetPokedexFlag(id, FLAG_GET_CAUGHT)))
+            return FALSE;
+    }
+    return TRUE;
 }
 
 bool8 Dex_IsValidNationalId(enum NationalDexOrder id)
@@ -4653,46 +4678,26 @@ bool8 Dex_IsRegionalEntryVisible(enum NationalDexOrder id)
 
 u16 Dex_GetRegionalVisibleProgress(u8 flagCase)
 {
-    u16 localEntry;
-    u16 count = 0;
-
-    if (flagCase != FLAG_GET_SEEN && flagCase != FLAG_GET_CAUGHT)
-        return 0;
-    for (localEntry = 1; localEntry <= Dex_GetActiveRegionalEntryCount(); localEntry++)
-        if (GetSetPokedexFlag(Dex_RegionalEntryToNational(localEntry), flagCase))
-            count++;
-    return count;
+    return GetCatalogProgress(Dex_GetActiveRegion(), flagCase);
 }
 
 bool8 Dex_HasCompletedRegionalVisibleEntries(void)
 {
-    u16 localEntry;
-
-    if (Dex_GetActiveRegionalEntryCount() == 0)
-        return FALSE;
-    for (localEntry = 1; localEntry <= Dex_GetActiveRegionalEntryCount(); localEntry++)
-    {
-        enum NationalDexOrder id = Dex_RegionalEntryToNational(localEntry);
-        u16 species = NationalPokedexNumToSpecies(id);
-        if (species == SPECIES_NONE || (!(gSpeciesInfo[species].dexNotRequired || (gSpeciesInfo[species].isMythical && !gSpeciesInfo[species].dexForceRequired)) && !GetSetPokedexFlag(id, FLAG_GET_CAUGHT)))
-            return FALSE;
-    }
-    return TRUE;
+    return HasCompletedCatalog(Dex_GetActiveRegion());
 }
 
+// The National upgrade shows every species, so the per-region extensions are
+// retired. Old saves keep their mask bits; nothing reads or writes them.
 bool8 Dex_HasNationalExtension(enum DexRegionId region)
 {
     if (GetDexCatalog(region) == NULL)
         return FALSE;
-    return (gSaveBlock2Ptr->pokedex.nationalExtensionMask & (1u << region)) != 0;
+    return Dex_HasNationalUpgrade();
 }
 
 bool8 Dex_GrantNationalExtension(enum DexRegionId region)
 {
-    if (GetDexCatalog(region) == NULL)
-        return FALSE;
-    gSaveBlock2Ptr->pokedex.nationalExtensionMask |= (1u << region);
-    return TRUE;
+    return GetDexCatalog(region) != NULL;
 }
 
 u32 Dex_GetNationalExtensionMask(void)
@@ -4716,9 +4721,8 @@ const u8 *Dex_GetActiveRegionName(void)
     switch (Dex_GetActiveRegion())
     {
     case DEX_REGION_KANTO:
-        return gText_Kanto;
     case DEX_REGION_JOHTO:
-        return gText_Johto;
+        return gText_KantoJohto;
     case DEX_REGION_HOENN:
         return gText_Hoenn;
     default:
@@ -4738,22 +4742,14 @@ const u8 *Dex_GetActiveRegionDescription(void)
     return catalog == NULL ? gText_DexEmptyString : catalog->description;
 }
 
+// National mode shows every species enabled in this build. NATIONAL_DEX_COUNT
+// also spans disabled numbers (Gen IX), which stay out of the list and out of
+// completion.
 bool8 Dex_IsNationalEntryVisible(enum NationalDexOrder id)
 {
-    enum DexRegionId region;
-    const struct DexCatalog *catalog;
-
-    if (!Dex_IsValidNationalId(id))
+    if (!Dex_IsValidNationalId(id) || Dex_GetActiveRegion() == DEX_REGION_NONE)
         return FALSE;
-    catalog = GetDexCatalog(Dex_GetActiveRegion());
-    if (catalog == NULL)
-        return FALSE;
-    if (IsCatalogEntryVisible(catalog, id))
-        return TRUE;
-    for (region = DEX_REGION_KANTO; region < DEX_REGION_COUNT; region++)
-        if (Dex_HasNationalExtension(region) && IsCatalogEntryVisible(GetDexCatalog(region), id))
-            return TRUE;
-    return FALSE;
+    return IsSpeciesEnabled(NationalPokedexNumToSpecies(id));
 }
 
 u16 Dex_GetNationalVisibleEntryCount(void)
@@ -4761,8 +4757,6 @@ u16 Dex_GetNationalVisibleEntryCount(void)
     enum NationalDexOrder id;
     u16 count = 0;
 
-    if (Dex_GetActiveRegion() == DEX_REGION_NONE)
-        return 0;
     for (id = 1; id <= NATIONAL_DEX_COUNT; id++)
         if (Dex_IsNationalEntryVisible(id))
             count++;
@@ -4812,39 +4806,22 @@ bool8 Dex_HasCompletedNationalVisibleEntries(void)
 
     for (id = Dex_GetFirstVisibleNationalEntry(); id != NATIONAL_DEX_NONE; id = Dex_GetNextVisibleNationalEntry(id))
     {
-        u16 species = NationalPokedexNumToSpecies(id);
-        if (species == SPECIES_NONE)
-            return FALSE;
-        if (!(gSpeciesInfo[species].dexNotRequired || (gSpeciesInfo[species].isMythical && !gSpeciesInfo[species].dexForceRequired))
-         && !GetSetPokedexFlag(id, FLAG_GET_CAUGHT))
+        if (IsDexEntryRequired(NationalPokedexNumToSpecies(id)) && !GetSetPokedexFlag(id, FLAG_GET_CAUGHT))
             return FALSE;
     }
     return TRUE;
 }
 
+// Critical captures use the home list only, before and after the upgrade, so
+// travelling never lowers the odds.
 bool8 Dex_GetCriticalCaptureProgress(u16 *caughtCount, u16 *visibleCount)
 {
     if (caughtCount == NULL || visibleCount == NULL)
         return FALSE;
 
-    *caughtCount = 0;
-    *visibleCount = 0;
-    if (Dex_GetActiveRegion() == DEX_REGION_NONE)
-        return FALSE;
-
-    if (Dex_HasNationalUpgrade())
-    {
-        *visibleCount = Dex_GetNationalVisibleEntryCount();
-        *caughtCount = Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT);
-    }
-    else
-    {
-        *visibleCount = Dex_GetActiveRegionalEntryCount();
-        *caughtCount = Dex_GetRegionalVisibleProgress(FLAG_GET_CAUGHT);
-    }
-    if (*visibleCount == 0)
-        return FALSE;
-    return TRUE;
+    *visibleCount = Dex_GetActiveRegionalEntryCount();
+    *caughtCount = Dex_GetRegionalVisibleProgress(FLAG_GET_CAUGHT);
+    return *visibleCount != 0;
 }
 
 u32 GetRegionalPokedexCount(u8 caseID)
@@ -4854,68 +4831,17 @@ u32 GetRegionalPokedexCount(u8 caseID)
 
 u16 GetHoennPokedexCount(u8 caseID)
 {
-    u16 count = 0;
-    u16 i;
-
-    for (i = 0; i < HOENN_DEX_COUNT - 1; i++)
-    {
-        switch (caseID)
-        {
-        case FLAG_GET_SEEN:
-            if (GetSetPokedexFlag(HoennToNationalOrder(i + 1), FLAG_GET_SEEN))
-                count++;
-            break;
-        case FLAG_GET_CAUGHT:
-            if (GetSetPokedexFlag(HoennToNationalOrder(i + 1), FLAG_GET_CAUGHT))
-                count++;
-            break;
-        }
-    }
-    return count;
+    return GetCatalogProgress(DEX_REGION_HOENN, caseID);
 }
 
 u16 GetKantoPokedexCount(u8 caseID)
 {
-    u16 count = 0;
-    u16 i;
-
-    for (i = 0; i < KANTO_DEX_COUNT - 1; i++)
-    {
-        switch (caseID)
-        {
-        case FLAG_GET_SEEN:
-            if (GetSetPokedexFlag(KantoToNationalOrder(i + 1), FLAG_GET_SEEN))
-                count++;
-            break;
-        case FLAG_GET_CAUGHT:
-            if (GetSetPokedexFlag(KantoToNationalOrder(i + 1), FLAG_GET_CAUGHT))
-                count++;
-            break;
-        }
-    }
-    return count;
+    return GetCatalogProgress(DEX_REGION_KANTO, caseID);
 }
 
 u16 GetJohtoPokedexCount(u8 caseID)
 {
-    u16 count = 0;
-    u16 i;
-
-    for (i = 0; i < JOHTO_DEX_COUNT - 1; i++)
-    {
-        switch (caseID)
-        {
-        case FLAG_GET_SEEN:
-            if (GetSetPokedexFlag(JohtoToNationalOrder(i + 1), FLAG_GET_SEEN))
-                count++;
-            break;
-        case FLAG_GET_CAUGHT:
-            if (GetSetPokedexFlag(JohtoToNationalOrder(i + 1), FLAG_GET_CAUGHT))
-                count++;
-            break;
-        }
-    }
-    return count;
+    return GetCatalogProgress(DEX_REGION_JOHTO, caseID);
 }
 
 bool16 HasAllRegionalMons(void)
@@ -4925,45 +4851,17 @@ bool16 HasAllRegionalMons(void)
 
 bool16 HasAllHoennMons(void)
 {
-    u32 i, j, k;
-
-    for (i = 0; i < HOENN_DEX_COUNT - 1; i++)
-    {
-        j = HoennToNationalOrder(i + 1);
-        k = NationalPokedexNumToSpecies(j);
-        if (!(gSpeciesInfo[k].dexNotRequired || (gSpeciesInfo[k].isMythical && !gSpeciesInfo[k].dexForceRequired)) && !GetSetPokedexFlag(j, FLAG_GET_CAUGHT))
-            return FALSE;
-    }
-    return TRUE;
+    return HasCompletedCatalog(DEX_REGION_HOENN);
 }
 
 bool16 HasAllKantoMons(void)
 {
-    u32 i, j, k;
-
-    // -1 excludes Mew
-    for (i = 0; i < KANTO_DEX_COUNT - 1; i++)
-    {
-        j = KantoToNationalOrder(i + 1);
-        k = NationalPokedexNumToSpecies(j);
-        if (!(gSpeciesInfo[k].dexNotRequired || (gSpeciesInfo[k].isMythical && !gSpeciesInfo[k].dexForceRequired)) && !GetSetPokedexFlag(j, FLAG_GET_CAUGHT))
-            return FALSE;
-    }
-    return TRUE;
+    return HasCompletedCatalog(DEX_REGION_KANTO);
 }
 
 bool16 HasAllJohotoMons(void)
 {
-    u32 i, j, k;
-
-    for (i = 0; i < JOHTO_DEX_COUNT - 1; i++)
-    {
-        j = JohtoToNationalOrder(i + 1);
-        k = NationalPokedexNumToSpecies(j);
-        if (!(gSpeciesInfo[k].dexNotRequired || (gSpeciesInfo[k].isMythical && !gSpeciesInfo[k].dexForceRequired)) && !GetSetPokedexFlag(j, FLAG_GET_CAUGHT))
-            return FALSE;
-    }
-    return TRUE;
+    return HasCompletedCatalog(DEX_REGION_JOHTO);
 }
 
 bool16 HasAllMons(void)

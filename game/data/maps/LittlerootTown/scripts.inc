@@ -208,7 +208,7 @@ LittlerootTown_EventScript_BeginDexUpgradeScene::
 	applymovement LOCALID_LITTLEROOT_BIRCH, Common_Movement_ExclamationMark
 	waitmovement 0
 	delay 80
-	msgbox LittlerootTown_Text_BirchSomethingToShowYouAtLab, MSGBOX_DEFAULT
+	call LittlerootTown_EventScript_BirchCallToLab
 	closemessage
 	clearflag FLAG_HIDE_LITTLEROOT_TOWN_RIVAL
 	clearflag FLAG_HIDE_LITTLEROOT_TOWN_BIRCH
@@ -218,6 +218,18 @@ LittlerootTown_EventScript_BeginDexUpgradeScene::
 	waitstate
 	releaseall
 	end
+
+@ With the NATIONAL Mode already held, BIRCH has no upgrade to show. HOENN's FLAG_SYS_NATIONAL_DEX
+@ is its own copy, so the upgrade is read through the special.
+LittlerootTown_EventScript_BirchCallToLab::
+	special DexScript_HasNationalUpgrade
+	goto_if_eq VAR_RESULT, TRUE, LittlerootTown_EventScript_BirchComeToLab
+	msgbox LittlerootTown_Text_BirchSomethingToShowYouAtLab, MSGBOX_DEFAULT
+	return
+
+LittlerootTown_EventScript_BirchComeToLab::
+	msgbox LittlerootTown_Text_BirchComeToLab, MSGBOX_DEFAULT
+	return
 
 LittlerootTown_OnWarp:
 	map_script_2 VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 1, LittlerootTown_EventScript_SetRivalBirchPosForDexUpgrade
@@ -1021,4 +1033,12 @@ LittlerootTown_Text_BirchSomethingToShowYouAtLab:
 	.string "I gave you?\p"
 	.string "I have something to show you.\n"
 	.string "Let's go to my LAB.$"
+
+LittlerootTown_Text_BirchComeToLab:
+	.string "PROF. BIRCH: Well, well, {PLAYER}{KUN}!\n"
+	.string "That was good work out there!\p"
+	.string "I knew there was something special\n"
+	.string "about you when I first saw you,\l"
+	.string "but I never expected this.\p"
+	.string "Come on, let's go to my LAB.$"
 

@@ -63,6 +63,8 @@ TEST("Pallet origin has stable profile bedroom recovery catalog and isolated fre
     EXPECT_EQ(WayfarerKanto_GetPhase(), PALLET_OPENING_HOME);
     EXPECT_EQ(WayfarerKanto_GetStarterSlot(), KANTO_STARTER_SLOT_NONE);
     EXPECT_EQ(Dex_GetActiveRegion(), DEX_REGION_KANTO);
+    EXPECT_EQ(Dex_GetActiveRegionalEntryCount(), KANTO_JOHTO_DEX_COUNT - 1);
+    EXPECT_EQ(Dex_RegionalEntryToNational(1), NATIONAL_DEX_BULBASAUR);
     EXPECT_EQ(WayfarerGetInitialRecoveryDestination(), HEAL_LOCATION_PALLET_HOME_WAYFARER);
     EXPECT_EQ(GetHealLocationIndexByWarpData(&gSaveBlock1Ptr->lastHealLocation), HEAL_LOCATION_PALLET_HOME_WAYFARER);
     EXPECT(IsLastHealLocationPlayerHouse());

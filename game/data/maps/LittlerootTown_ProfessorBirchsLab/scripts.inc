@@ -126,12 +126,33 @@ LittlerootTown_ProfessorBirchsLab_EventScript_GiveStarterEvent::
 	clearflag FLAG_HIDE_ROUTE_101_BOY
 	setflag FLAG_ADVENTURE_STARTED
 	setvar VAR_BIRCH_LAB_STATE, 5
+	call LittlerootTown_ProfessorBirchsLab_EventScript_TryUpgradeVisitorPokedex
 	goto ProfBirch_EventScript_AskRatePokedex
 	end
 
 LittlerootTown_ProfessorBirchsLab_EventScript_VisitorReceivePokedex::
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_VisitorTakePokedex, MSGBOX_DEFAULT
 	call LittlerootTown_ProfessorBirchsLab_EventScript_ReceivePokedex
+	return
+
+@ BIRCH is the first professor a traveller from KANTO or JOHTO meets in HOENN, so he gives the
+@ NATIONAL Mode in his thanks for the rescue, or at the next talk for a save already past it.
+@ In HOENN scripts the FLAG_SYS_* names are HOENN's own copies, so the shared POKéDEX and its
+@ upgrade are read through specials.
+LittlerootTown_ProfessorBirchsLab_EventScript_TryUpgradeVisitorPokedex::
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	goto_if_eq VAR_RESULT, TRUE, Common_EventScript_NopReturn
+	goto_if_unset FLAG_RESCUED_BIRCH, Common_EventScript_NopReturn
+	specialvar VAR_RESULT, WayfarerHasSharedPokedex
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_NopReturn
+	special DexScript_HasNationalUpgrade
+	goto_if_eq VAR_RESULT, TRUE, Common_EventScript_NopReturn
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_VisitorUpgradePokedex, MSGBOX_DEFAULT
+	playfanfare MUS_OBTAIN_ITEM
+	message LittlerootTown_ProfessorBirchsLab_Text_PokedexUpgradedToNational
+	waitmessage
+	waitfanfare
+	special EnableNationalPokedex
 	return
 #endif
 
@@ -196,6 +217,8 @@ LittlerootTown_ProfessorBirchsLab_Movement_PlayerEnterLabForPokedex:
 LittlerootTown_ProfessorBirchsLab_EventScript_UpgradeToNationalDex::
 	lockall
 	delay 30
+	special DexScript_HasNationalUpgrade
+	goto_if_eq VAR_RESULT, TRUE, LittlerootTown_ProfessorBirchsLab_EventScript_NationalDexAlreadyHeld
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_OtherRegionsUpgradeToNational, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_BIRCHS_LAB_BIRCH, LittlerootTown_ProfessorBirchsLab_Movement_BirchRetrievePokedexes
@@ -227,6 +250,7 @@ LittlerootTown_ProfessorBirchsLab_EventScript_UpgradeToNationalDex::
 	waitfanfare
 	setflag FLAG_SYS_NATIONAL_DEX
 	special EnableNationalPokedex
+LittlerootTown_ProfessorBirchsLab_EventScript_AfterNationalDexUpgrade:
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_GrassyPatchWaiting2, MSGBOX_DEFAULT
 	closemessage
 	setflag FLAG_HIDE_LITTLEROOT_TOWN_BIRCH
@@ -236,6 +260,13 @@ LittlerootTown_ProfessorBirchsLab_EventScript_UpgradeToNationalDex::
 	setflag FLAG_SCOTT_CALL_BATTLE_FRONTIER
 	releaseall
 	end
+
+@ A POKéDEX upgraded already, by BIRCH for a traveller or by ELM or OAK for a HOENN TRAINER,
+@ is not upgraded again; BIRCH stays at his desk and the rest of the scene plays as usual.
+@ HOENN's FLAG_SYS_NATIONAL_DEX is its own copy, so the upgrade is read through the special.
+LittlerootTown_ProfessorBirchsLab_EventScript_NationalDexAlreadyHeld::
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_NationalDexAlreadyHeld, MSGBOX_DEFAULT
+	goto LittlerootTown_ProfessorBirchsLab_EventScript_AfterNationalDexUpgrade
 
 LittlerootTown_ProfessorBirchsLab_EventScript_RivalFacesBirch::
 	applymovement LOCALID_BIRCHS_LAB_RIVAL, Common_Movement_WalkInPlaceFasterUp
@@ -519,6 +550,9 @@ LittlerootTown_ProfessorBirchsLab_EventScript_Birch::
 #endif
 	lock
 	faceplayer
+#if IS_WAYFARER
+	call LittlerootTown_ProfessorBirchsLab_EventScript_TryUpgradeVisitorPokedex
+#endif
 	goto_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 5, LittlerootTown_ProfessorBirchsLab_EventScript_CanHaveAnyOneOfRarePokemon
 	goto_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 2, LittlerootTown_ProfessorBirchsLab_EventScript_GrassyPatchWaiting
 	@ Wayfarer's phone has no BIRCH to show, so there he does not offer to register and the flag
@@ -905,6 +939,11 @@ LittlerootTown_ProfessorBirchsLab_Text_PokedexUpgradedToNational:
 	.string "{PLAYER}'s POKéDEX was upgraded\n"
 	.string "to the NATIONAL Mode!$"
 
+LittlerootTown_ProfessorBirchsLab_Text_NationalDexAlreadyHeld:
+	.string "PROF. BIRCH: And your POKéDEX is in\n"
+	.string "the NATIONAL Mode already, I see.\p"
+	.string "Splendid! You've been busy!$"
+
 LittlerootTown_ProfessorBirchsLab_Text_GrassyPatchWaiting2:
 	.string "PROF. BIRCH: But listen.\n"
 	.string "You've become the CHAMPION,\l"
@@ -1054,6 +1093,11 @@ LittlerootTown_ProfessorBirchsLab_Text_VisitorThanks:
 LittlerootTown_ProfessorBirchsLab_Text_VisitorTakePokedex:
 	.string "PROF. BIRCH: You're traveling without\n"
 	.string "a POKéDEX? Then take this one!$"
+
+LittlerootTown_ProfessorBirchsLab_Text_VisitorUpgradePokedex:
+	.string "PROF. BIRCH: You've come a long way,\n"
+	.string "so your POKéDEX should keep up!\p"
+	.string "Here, let me upgrade it.$"
 #endif
 
 #if IS_WAYFARER

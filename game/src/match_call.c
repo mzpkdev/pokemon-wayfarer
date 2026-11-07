@@ -2588,7 +2588,9 @@ void BufferPokedexRatingForMatchCall(u8 *destStr)
     }
 
 #if IS_HNS
-    bool8 hasAckJohtoDex = FlagGet(FLAG_SYS_ACK_COMPLETE_JOHTO_DEX);
+    // The flag records that the completion line was heard; an old save may hold it from a
+    // shorter home list, so the National rating also waits for the home list to be complete.
+    bool8 hasAckJohtoDex = FlagGet(FLAG_SYS_ACK_COMPLETE_JOHTO_DEX) && Dex_HasCompletedRegionalVisibleEntries();
     if (!hasAckJohtoDex || !IsNationalPokedexEnabled())
     {
 #endif
