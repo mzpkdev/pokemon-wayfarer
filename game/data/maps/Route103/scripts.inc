@@ -6,7 +6,14 @@ Route103_MapScripts::
 Route103_OnTransition:
 	call Common_EventScript_SetupRivalGfxId
 	call ProfBirch_EventScript_UpdateLocation
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	call_if_eq VAR_RESULT, FALSE, Route103_EventScript_HideRival
 	end
+
+@ The rival waits here only for a player who started in HOENN
+Route103_EventScript_HideRival::
+	setflag FLAG_HIDE_ROUTE_103_RIVAL
+	return
 
 Route103_OnLoad:
 	call_if_set FLAG_SYS_GAME_CLEAR, Route103_EventScript_OpenAlteringCave
@@ -18,22 +25,11 @@ Route103_EventScript_OpenAlteringCave::
 	return
 
 Route103_EventScript_Rival::
-#if IS_WAYFARER
-	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, Route103_EventScript_LocalStarterRequired
-#endif
 	lockall
 	checkplayergender
 	goto_if_eq VAR_RESULT, MALE, Route103_EventScript_RivalMay
 	goto_if_eq VAR_RESULT, FEMALE, Route103_EventScript_RivalBrendan
 	end
-
-#if IS_WAYFARER
-Route103_EventScript_LocalStarterRequired::
-	lockall
-	msgbox Route103_Text_LocalStarterRequired, MSGBOX_DEFAULT
-	releaseall
-	end
-#endif
 
 Route103_EventScript_RivalMay::
 	msgbox Route103_Text_MayRoute103Pokemon, MSGBOX_DEFAULT
@@ -361,10 +357,3 @@ Route103_Text_ShortcutToOldale:
 Route103_Text_RouteSign:
 	.string "ROUTE 103\n"
 	.string "{DOWN_ARROW} OLDALE TOWN$"
-
-#if IS_WAYFARER
-Route103_Text_LocalStarterRequired:
-	.string "BIRCH's assistant is still busy.\p"
-	.string "I should choose my local partner at\n"
-	.string "the LAB before coming back.$"
-#endif

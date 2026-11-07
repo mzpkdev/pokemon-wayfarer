@@ -16,10 +16,28 @@ Route119_EventScript_TryRemoveKecleon::
 Route119_OnTransition:
 	call Common_EventScript_SetupRivalGfxId
 	call Common_EventScript_SetupRivalOnBikeGfxId
+	call_if_eq VAR_ROUTE119_STATE, 0, Route119_EventScript_CheckVisitorGift
 	call_if_eq VAR_WEATHER_INSTITUTE_STATE, 0, Route119_EventScript_HideBridgeAquaGrunts
 	call_if_eq VAR_WEATHER_INSTITUTE_STATE, 1, Route119_EventScript_MoveInstituteWorkersDownstairs
 	special SetRoute119Weather
 	end
+
+@ A visitor meets the rival here only for the gift, so not while they already hold one or have no room
+@ for it. A visitor who holds it passes this meeting for good, and SCOTT still counts it.
+Route119_EventScript_CheckVisitorGift::
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	goto_if_eq VAR_RESULT, TRUE, Common_EventScript_NopReturn
+	checkitem ITEM_HM_FLY
+	goto_if_eq VAR_RESULT, TRUE, Route119_EventScript_VisitorHasFly
+	checkitemspace ITEM_HM_FLY
+	goto_if_eq VAR_RESULT, TRUE, Common_EventScript_NopReturn
+	setflag FLAG_TEMP_1
+	return
+
+Route119_EventScript_VisitorHasFly::
+	setvar VAR_ROUTE119_STATE, 1
+	addvar VAR_SCOTT_STATE, 1
+	return
 
 Route119_EventScript_HideBridgeAquaGrunts::
 	setflag FLAG_HIDE_ROUTE_119_TEAM_AQUA
@@ -42,7 +60,7 @@ Route119_EventScript_RivalTrigger2::
 	end
 
 Route119_EventScript_RivalEncounter::
-	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, WayfarerHoennVisitor_EventScript_RivalWaitsForStarter
+	goto_if_set FLAG_TEMP_1, WayfarerHoennVisitor_EventScript_NoRivalScene
 	lockall
 	addobject LOCALID_ROUTE119_RIVAL_ON_BIKE
 	checkplayergender
@@ -59,6 +77,8 @@ Route119_EventScript_RivalEncounter::
 	removeobject LOCALID_ROUTE119_RIVAL_ON_BIKE
 	addobject LOCALID_ROUTE119_RIVAL
 	delay 30
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	goto_if_eq VAR_RESULT, FALSE, Route119_EventScript_VisitorScene
 	checkplayergender
 	goto_if_eq VAR_RESULT, MALE, Route119_EventScript_BattleMay
 	goto_if_eq VAR_RESULT, FEMALE, Route119_EventScript_BattleBrendan
@@ -133,6 +153,23 @@ Route119_EventScript_DefeatedBrendan::
 	goto Route119_EventScript_RivalExitScottArrive
 	end
 
+Route119_EventScript_VisitorScene::
+	call WayfarerHoennVisitor_EventScript_RivalGreets
+	checkplayergender
+	goto_if_eq VAR_RESULT, FEMALE, Route119_EventScript_BrendanHelpsVisitor
+	msgbox Route119_Text_MayHelpVisitor, MSGBOX_DEFAULT
+	call Route119_EventScript_GiveFlyHM
+	msgbox Route119_Text_MayExplainFlyToVisitor, MSGBOX_DEFAULT
+	goto Route119_EventScript_RivalExitScottArrive
+	end
+
+Route119_EventScript_BrendanHelpsVisitor::
+	msgbox Route119_Text_BrendanHelpVisitor, MSGBOX_DEFAULT
+	call Route119_EventScript_GiveFlyHM
+	msgbox Route119_Text_BrendanExplainFly, MSGBOX_DEFAULT
+	goto Route119_EventScript_RivalExitScottArrive
+	end
+
 Route119_EventScript_GiveFlyHM::
 	giveitem ITEM_HM_FLY
 	setflag FLAG_RECEIVED_HM_FLY
@@ -151,6 +188,8 @@ Route119_EventScript_RivalExitScottArrive::
 	setvar VAR_ROUTE119_STATE, 1
 	savebgm MUS_DUMMY
 	fadedefaultbgm
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	goto_if_eq VAR_RESULT, FALSE, Route119_EventScript_VisitorSkipsScott
 	delay 60
 	call_if_eq VAR_TEMP_1, 1, Route119_EventScript_SetScottPos1
 	call_if_eq VAR_TEMP_1, 2, Route119_EventScript_SetScottPos2
@@ -163,6 +202,13 @@ Route119_EventScript_RivalExitScottArrive::
 	call_if_eq VAR_TEMP_1, 1, Route119_EventScript_ScottExit1
 	call_if_eq VAR_TEMP_1, 2, Route119_EventScript_ScottExit2
 	removeobject LOCALID_ROUTE119_SCOTT
+	releaseall
+	end
+
+@ SCOTT's line says the player just beat this TRAINER, so he stays away from a visitor, but the meeting
+@ still counts toward his reward at the BATTLE FRONTIER.
+Route119_EventScript_VisitorSkipsScott::
+	addvar VAR_SCOTT_STATE, 1
 	releaseall
 	end
 
@@ -539,6 +585,23 @@ Route119_Text_BrendanExplainFly:
 	.string "A compatible POKéMON can use FLY\l"
 	.string "right away.\p"
 	.string "Anyway, I have to move along.$"
+
+Route119_Text_MayHelpVisitor:
+	.string "MAY: Here!\n"
+	.string "I have a present for you.$"
+
+Route119_Text_MayExplainFlyToVisitor:
+	.string "MAY: Use FLY, and your POKéMON will\n"
+	.string "instantly carry you to any town you've\l"
+	.string "already visited.\p"
+	.string "Keep this HM in your BAG.\n"
+	.string "A compatible POKéMON can use FLY\l"
+	.string "right away.\p"
+	.string "Well, let's meet again somewhere!$"
+
+Route119_Text_BrendanHelpVisitor:
+	.string "BRENDAN: You're covering a lot of\n"
+	.string "ground. Here, try this out.$"
 
 Route119_Text_ScottWayToGoBeSeeingYou:
 	.string "SCOTT: Hahahah!\n"

@@ -793,6 +793,7 @@ gSpecials::
     def_special WayfarerCanReceiveSlateportTicket
     def_special WayfarerCanUseAquaMaidenVoyage
     def_special WayfarerIsJohtoOrigin
+    def_special WayfarerIsHoennOrigin
     def_special WayfarerGetOriginStarterSlot
     def_special WayfarerJohtoSilverAvailable
     def_special WayfarerJohtoKimonoMissing

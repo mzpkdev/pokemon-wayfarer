@@ -11,8 +11,6 @@ import { rideAquaFromVermilionToSlateport } from "../playbooks/wayfarer-ports"
 const norman = 1
 const mauvilleWally = 6
 const mauvilleScott = 11
-const lavaridgeRival = 8
-const lavaridgeRivalOnBike = 7
 
 const sees = (state: GameState, localId: number): boolean =>
   state.objects.some((object) => object.localId === localId && object.visible)
@@ -247,20 +245,11 @@ describe.sequential("Wayfarer Hoenn Norman, Wally and the Lavaridge rival", () =
   })
 
   it(
-    "parks the Lavaridge scene without a starter, and the survey still gives the Go-Goggles",
+    "lets the survey give the Go-Goggles first, and the rival's scene waits for a front door",
     { timeout: 300_000 },
     async () => {
-      // Flannery's defeat parks the scene. Neither front door starts it for a player with no starter.
+      // Flannery's defeat parks the scene until a front door. The survey on Route 111 needs no badge.
       await game.story.setVar("hoennLavaridgeTownState", 4)
-      await leaveThrough(game, "lavaridge-pokemon-center", 7, 8, "lavaridge-town")
-      await expectFreeAt(game, "lavaridge-town", 9, 7)
-      await leaveThrough(game, "lavaridge-gym-1f", 13, 18, "lavaridge-town")
-      await expectFreeAt(game, "lavaridge-town", 5, 16)
-      const parked = await game.state.read()
-      expect(sees(parked, lavaridgeRival) || sees(parked, lavaridgeRivalOnBike)).toBe(false)
-      await expect(game.story.var("hoennLavaridgeTownState")).resolves.toBe(4)
-
-      // The survey on Route 111 needs no badge and no starter.
       await talkFrom(game, "route-111", 13, 63, "right", "hoennDesertSurveyStarted")
       await talkFrom(game, "route-111", 6, 71, "up", "hoennDesertSurveyStake1")
       await talkFrom(game, "route-111", 14, 89, "up", "hoennDesertSurveyStake2")
@@ -269,8 +258,7 @@ describe.sequential("Wayfarer Hoenn Norman, Wally and the Lavaridge rival", () =
       await expect(game.inventory.count("goGoggles")).resolves.toBe(1)
       await expect(game.story.flag("hoennReceivedGoGoggles")).resolves.toBe(true)
 
-      // With a starter, the road and the back exit still leave the scene parked: it has no layout there.
-      await game.story.setVar("hoennStarterChoice", 1)
+      // The road and the back exit leave the scene parked: it has no layout there.
       await game.player.warp("lavaridge-town", 9, 12, "down")
       await game.wait.forReady()
       await expectFreeAt(game, "lavaridge-town", 9, 12)
@@ -303,7 +291,7 @@ describe.sequential("Wayfarer Hoenn Norman, Wally and the Lavaridge rival", () =
       checkpoint: "new-bark-after-intro",
       player: { facing: "down", position: { map: "lavaridge-gym-1f", x: 13, y: 18 } },
       story: {
-        vars: { hoennLavaridgeTownState: 4, hoennStarterChoice: 1 },
+        vars: { hoennLavaridgeTownState: 4 },
         flags: { disableEncounters: true, disableTrainers: true },
       },
       party: [{ species: "salamence", level: 60 }],

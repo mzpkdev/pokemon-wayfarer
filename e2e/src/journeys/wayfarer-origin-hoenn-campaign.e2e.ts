@@ -106,7 +106,7 @@ describe.sequential("Wayfarer Hoenn native and visitor campaign handoffs", () =>
     }
   })
 
-  it("rescues Birch with the Johto party and preserves a declined local choice for a later gift", async () => {
+  it("rescues Birch with the Johto party and leaves with no Hoenn starter", async () => {
     const game = await GameSession.launch()
     try {
       await game.arrange({
@@ -166,77 +166,24 @@ describe.sequential("Wayfarer Hoenn native and visitor campaign handoffs", () =>
       await advanceOpeningUntil(
         game,
         (state) => state.dialogue.text.includes("You handled"),
-        "Birch did not offer the visitor choice",
+        "Birch did not thank the visitor",
       )
-      await game.wait.frames(60)
-      await game.controls.press("a")
-      await game.wait.frames(45)
-      await game.controls.press("a")
-      await game.wait.frames(45)
-      await game.controls.press("down")
-      await game.controls.press("a")
+      // A visitor's rescue ends in thanks and a rating: no starter, no gift, no rival.
       await advanceOpeningUntil(
         game,
-        (state) => state.dialogue.text.includes("will guide"),
-        "Birch did not offer the chosen gift",
-      )
-      await game.wait.frames(45)
-      await game.controls.press("a")
-      await game.wait.frames(45)
-      await game.controls.press("b")
-      await finishOpeningDialogue(game)
-      expect((await game.state.read()).origin).toMatchObject({
-        johtoChoice: 1,
-        hoennChoice: 1,
-        hoennReceived: false,
-      })
-      expect((await game.state.read()).party).toHaveLength(1)
-      await game.saveAndReload()
-      await game.player.warp("route-103", 10, 4, "up")
-      await game.player.interact()
-      await advanceOpeningUntil(
-        game,
-        (state) => state.battle.active,
-        "Declined gift did not unlock the local rival",
-      )
-      expect((await game.state.read()).battle.enemy?.species).toBe("mudkip")
-      await game.battle.win()
-      await finishOpeningDialogue(game)
-      await game.player.warp("littleroot-town", 7, 17, "up")
-      await game.player.move("up")
-      await advanceOpeningUntil(
-        game,
-        (state) => state.origin.pokedex,
-        "Visitor did not receive the shared Dex",
+        (state) => state.dialogue.text.startsWith("Look for POK"),
+        "Birch did not rate the visitor's Pokédex",
       )
       await finishOpeningDialogue(game)
-      expect((await game.state.read()).origin.hoennReceived).toBe(false)
-      await game.saveAndReload()
-      await game.player.warp("birch-lab", 6, 5, "up")
-      await game.player.interact()
-      await advanceOpeningUntil(
-        game,
-        (state) => state.origin.hoennReceived,
-        "Birch did not retry the optional gift",
-      )
-      await advanceOpeningUntil(
-        game,
-        (state) => state.ready,
-        "Optional gift nickname did not close",
-        "b",
-      )
-      expect((await game.state.read()).party.map((mon) => mon.species)).toEqual([
-        "cyndaquil",
-        "torchic",
-      ])
       expect((await game.state.read()).origin).toMatchObject({
         id: 1,
         johtoChoice: 1,
-        hoennChoice: 1,
+        hoennChoice: 65535,
+        hoennReceived: false,
       })
+      expect((await game.state.read()).party.map((mon) => mon.species)).toEqual(["cyndaquil"])
       await game.saveAndReload()
-      expect((await game.state.read()).party).toHaveLength(2)
-      expect((await game.state.read()).origin.pokedex).toBe(true)
+      expect((await game.state.read()).party).toHaveLength(1)
       await game.player.warp("route-103", 10, 4, "up")
       await game.player.interact()
       await game.wait.frames(90)

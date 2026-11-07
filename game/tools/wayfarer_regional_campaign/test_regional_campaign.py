@@ -55,22 +55,19 @@ class WayfarerRegionalCampaignTests(unittest.TestCase):
         self.assertNotIn("special ChooseStarter", route[wayfarer:standalone])
         self.assertIn("special ChooseStarter", route[standalone:])
 
-    def test_local_starter_choice_and_delivery_commit_separately(self):
+    def test_visitor_gets_thanks_and_a_rating_and_no_starter(self):
         lab = (GAME / "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.inc").read_text()
         choice = lab.index("LittlerootTown_ProfessorBirchsLab_EventScript_GiveStarterEvent::")
         native = lab.index("LittlerootTown_ProfessorBirchsLab_EventScript_AcknowledgeNativeStarter::", choice)
-        wayfarer = lab[choice:native]
-        self.assertIn("MULTI_HOENN_STARTERS", wayfarer)
-        self.assertIn("setvar VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_TREECKO", wayfarer)
-        self.assertIn("case MULTI_B_PRESSED", wayfarer)
-        self.assertIn("goto_if_eq VAR_RESULT, MON_CANT_GIVE", wayfarer)
-        self.assertLess(
-            wayfarer.index("goto_if_eq VAR_RESULT, MON_CANT_GIVE"),
-            wayfarer.index("setflag FLAG_HOENN_STARTER_RECEIVED"),
-        )
-        self.assertIn("goto_if_unset FLAG_HOENN_STARTER_RECEIVED", lab)
+        visitor = lab[choice:native]
+        self.assertIn("LittlerootTown_ProfessorBirchsLab_Text_VisitorThanks", visitor)
+        self.assertIn("goto ProfBirch_EventScript_AskRatePokedex", visitor)
+        self.assertNotIn("MULTI_HOENN_STARTERS", lab)
+        self.assertNotIn("SPECIES_TREECKO", lab)
+        self.assertNotIn("VAR_HOENN_STARTER_CHOICE", lab)
+        self.assertNotIn("FLAG_HOENN_STARTER_RECEIVED", lab)
 
-    def test_route_103_rival_waits_for_a_committed_local_starter_choice(self):
+    def test_route_103_rival_belongs_to_the_hoenn_origin(self):
         persistence = (GAME / "src/wayfarer_persistence.c").read_text()
         lab = (GAME / "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.inc").read_text()
         route = (GAME / "data/maps/Route103/scripts.inc").read_text()
@@ -78,19 +75,16 @@ class WayfarerRegionalCampaignTests(unittest.TestCase):
             "FlagSet(HOENN_FLAG_ID(WAYFARER_HOENN_HIDE_ROUTE_103_RIVAL_FLAG));",
             persistence,
         )
-        self.assertEqual(lab.count("clearflag FLAG_HIDE_ROUTE_103_RIVAL"), 4)
+        self.assertEqual(lab.count("clearflag FLAG_HIDE_ROUTE_103_RIVAL"), 1)
         native = lab.split("LittlerootTown_ProfessorBirchsLab_EventScript_AcknowledgeNativeStarter::", 1)[1]
         native = native.split("LittlerootTown_ProfessorBirchsLab_EventScript_NicknameStarter::", 1)[0]
         self.assertIn("clearflag FLAG_HIDE_ROUTE_103_RIVAL", native)
         self.assertNotIn("givemon", native)
         self.assertIn("special WayfarerGrantSharedEquipment", native)
-        self.assertIn(
-            "goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, Route103_EventScript_LocalStarterRequired",
-            route,
-        )
         self.assertRegex(
             route,
-            r"Route103_EventScript_LocalStarterRequired::\s+lockall\s+msgbox .*?\s+releaseall\s+end",
+            r"specialvar VAR_RESULT, WayfarerIsHoennOrigin\s+"
+            r"call_if_eq VAR_RESULT, FALSE, Route103_EventScript_HideRival",
         )
 
     def test_native_rescue_commits_after_delivery_and_keeps_loss_continuation(self):

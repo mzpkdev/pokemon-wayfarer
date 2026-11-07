@@ -710,7 +710,7 @@ MauvilleCity_GameCorner_EventScript_Girl::
 	lock
 	faceplayer
 	goto_if_set FLAG_RECEIVED_STARTER_DOLL, MauvilleCity_GameCorner_EventScript_ReceivedStarterDoll
-	@ Wayfarer: her spare DOLL is the starter the player took from BIRCH, so she keeps it until there is one
+	@ Wayfarer: her spare DOLL is the starter the player took from BIRCH, so a visitor, who took none, never gets it
 	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, MauvilleCity_GameCorner_EventScript_ReceivedStarterDoll
 	msgbox MauvilleCity_GameCorner_Text_GotTwoOfSameDollWantOne, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, MauvilleCity_GameCorner_EventScript_DeclineStarterDoll

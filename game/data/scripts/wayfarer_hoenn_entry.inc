@@ -183,8 +183,51 @@ WayfarerHoennVisitor_EventScript_InitializeArrival::
     setflag FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_TRUCK
     end
 
-@ BRENDAN's and MAY's teams answer the starter taken from BIRCH, which a visitor may not have. Their
-@ scenes jump here before they start, leaving their progress untouched, so each one plays on a later
-@ visit once the starter is chosen.
-WayfarerHoennVisitor_EventScript_RivalWaitsForStarter::
+@ BRENDAN's and MAY's rivalry belongs to a player who started in HOENN. A trigger jumps here when the
+@ rival isn't there for this player. It must get here on a flag alone: a trigger that runs a special
+@ and changes nothing runs again every frame and freezes the player. So the map's transition script
+@ makes the origin check and leaves its answer in a flag.
+WayfarerHoennVisitor_EventScript_NoRivalScene::
 	end
+
+@ A scene with a gift plays for a visitor without a battle. The first one, whichever it is, introduces
+@ the rival.
+WayfarerHoennVisitor_EventScript_RivalGreets::
+	checkplayergender
+	goto_if_eq VAR_RESULT, FEMALE, WayfarerHoennVisitor_EventScript_BrendanGreets
+	goto_if_set FLAG_MET_HOENN_RIVAL_AS_VISITOR, WayfarerHoennVisitor_EventScript_MayGreetsAgain
+	msgbox WayfarerHoennVisitor_Text_MayIntro, MSGBOX_DEFAULT
+	setflag FLAG_MET_HOENN_RIVAL_AS_VISITOR
+	return
+
+WayfarerHoennVisitor_EventScript_MayGreetsAgain::
+	msgbox WayfarerHoennVisitor_Text_MayAgain, MSGBOX_DEFAULT
+	return
+
+WayfarerHoennVisitor_EventScript_BrendanGreets::
+	goto_if_set FLAG_MET_HOENN_RIVAL_AS_VISITOR, WayfarerHoennVisitor_EventScript_BrendanGreetsAgain
+	msgbox WayfarerHoennVisitor_Text_BrendanIntro, MSGBOX_DEFAULT
+	setflag FLAG_MET_HOENN_RIVAL_AS_VISITOR
+	return
+
+WayfarerHoennVisitor_EventScript_BrendanGreetsAgain::
+	msgbox WayfarerHoennVisitor_Text_BrendanAgain, MSGBOX_DEFAULT
+	return
+
+WayfarerHoennVisitor_Text_MayIntro:
+	.string "MAY: Hi there!\n"
+	.string "You're not from around here, are you?\p"
+	.string "I'm MAY. PROF. BIRCH in LITTLEROOT\n"
+	.string "is my dad.$"
+
+WayfarerHoennVisitor_Text_MayAgain:
+	.string "MAY: Oh, hi! It's you again!$"
+
+WayfarerHoennVisitor_Text_BrendanIntro:
+	.string "BRENDAN: Hey.\n"
+	.string "You're not from around here, huh?\p"
+	.string "I'm BRENDAN. PROF. BIRCH in\n"
+	.string "LITTLEROOT is my dad.$"
+
+WayfarerHoennVisitor_Text_BrendanAgain:
+	.string "BRENDAN: Hey. You again.$"

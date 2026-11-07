@@ -341,41 +341,9 @@ class VisitorScripts(unittest.TestCase):
             self.assertNotIn(CHOSEN, path.read_text(), path.parent.name)
 
 
-class HoennDeferredStarterScripts(unittest.TestCase):
+class HoennVisitorBirchScripts(unittest.TestCase):
     lab = 'LittlerootTown_ProfessorBirchsLab'
     prefix = 'LittlerootTown_ProfessorBirchsLab_EventScript_'
-
-    def test_gift_retry_keeps_committed_choice_campaign_and_rival_visibility(self):
-        for slot in range(3):
-            for state in (3, 4, 5):
-                for answer, delivery in ((0, 0), (1, 0), (1, 1), (1, 2)):
-                    with self.subTest(slot=slot, state=state, answer=answer, delivery=delivery):
-                        script = Script(self.lab, answers=[answer], delivery=delivery)
-                        script.vars.update(VAR_HOENN_STARTER_CHOICE=slot, VAR_BIRCH_LAB_STATE=state,
-                                           VAR_LITTLEROOT_RIVAL_STATE=4, VAR_LITTLEROOT_TOWN_STATE=4)
-                        script.flags.update(['FLAG_RESCUED_BIRCH', 'FLAG_HIDE_ROUTE_103_RIVAL',
-                                             'FLAG_RECEIVED_POKEDEX_FROM_BIRCH', 'FLAG_HIDE_ROUTE_101_BOY'])
-                        script.run(self.prefix + 'Birch')
-                        self.assertEqual(script.vars['VAR_HOENN_STARTER_CHOICE'], slot)
-                        self.assertEqual(script.vars['VAR_BIRCH_LAB_STATE'], state)
-                        self.assertEqual(script.vars['VAR_LITTLEROOT_RIVAL_STATE'], 4)
-                        self.assertEqual(script.vars['VAR_LITTLEROOT_TOWN_STATE'], 4)
-                        self.assertIn('FLAG_HIDE_ROUTE_103_RIVAL', script.flags)
-                        self.assertIn('FLAG_HIDE_ROUTE_101_BOY', script.flags)
-                        given = answer == 1 and delivery != 2
-                        self.assertEqual('FLAG_HOENN_STARTER_RECEIVED' in script.flags, given)
-                        self.assertEqual(len(script.grants), int(given))
-
-    def test_initial_choice_still_starts_local_campaign_when_gift_declined(self):
-        for slot, name in enumerate(('Treecko', 'Torchic', 'Mudkip')):
-            script = Script(self.lab, answers=[0])
-            script.vars['VAR_BIRCH_LAB_STATE'] = 2
-            script.flags.add('FLAG_HIDE_ROUTE_103_RIVAL')
-            script.run(self.prefix + 'Choose' + name)
-            self.assertEqual(script.vars['VAR_HOENN_STARTER_CHOICE'], slot)
-            self.assertEqual(script.vars['VAR_BIRCH_LAB_STATE'], 3)
-            self.assertNotIn('FLAG_HIDE_ROUTE_103_RIVAL', script.flags)
-            self.assertEqual(script.grants, [])
 
     def test_authored_birch_never_enters_stock_pending_gift(self):
         for entry in ('Birch', 'GiveStarterEvent'):
