@@ -78,6 +78,8 @@ TEST("Wayfarer new origins initialize independent regional state and recovery")
             NewGameInitData();
             EXPECT_EQ(WayfarerGetStartingOriginId(), origin);
             EXPECT_EQ(Dex_GetActiveRegion(), origin == ORIGIN_LITTLEROOT ? DEX_REGION_HOENN : DEX_REGION_JOHTO);
+            EXPECT_EQ(Dex_GetActiveRegionalEntryCount(), origin == ORIGIN_LITTLEROOT ? HOENN_DEX_COUNT - 1 : KANTO_JOHTO_DEX_COUNT - 1);
+            EXPECT_EQ(Dex_RegionalEntryToNational(1), origin == ORIGIN_LITTLEROOT ? NATIONAL_DEX_TREECKO : NATIONAL_DEX_BULBASAUR);
             EXPECT(WayfarerPersistentStateIsValid());
             EXPECT_EQ((u32)gSaveBlock3Ptr->challengeSettings.tx_Mode_Mints, 1);
             EXPECT_EQ(gPlayerPartyCount, 0);

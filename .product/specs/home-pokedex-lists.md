@@ -36,8 +36,13 @@ An evolution reached only from a regional form (Obstagoon, Perrserker,
 Sirfetch'd, Mr. Rime, Cursola, Runerigus, Kleavor, Wyrdeer, Ursaluna,
 Basculegion, Sneasler, Overqwil) is not part of the family and is National-only,
 because those forms live in Sevii and Sinjoh and a home list must be
-completable at home. Only enabled species are listed; a family member whose
-species is disabled in this build is left out.
+completable at home. An evolution whose method exists only in Sinjoh is
+excluded too: Kleavor, Wyrdeer, and Ursaluna evolve from standard Scyther,
+Stantler, and Ursaring, but their item or move is Sinjoh's. Only enabled
+species are listed; a family member whose species is disabled in this build is
+left out. Built from this build's species data, the Kanto–Johto list holds 279
+species (251 of Gen I and II, then 28 from other generations) and the Hoenn
+list 302 (291 of Gen III and V, then 11).
 
 **Order.** The home generations' species first, in National order, then the
 family members from other generations, in National order. The Kanto–Johto list
