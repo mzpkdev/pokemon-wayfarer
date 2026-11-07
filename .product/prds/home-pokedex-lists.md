@@ -1,6 +1,7 @@
 # Home Pokédex lists and the National upgrade
 
-Status: Agreed product design, 2026-11-07. Not implemented. It revises
+Status: Agreed product design, 2026-11-07. Implemented in #220, #221 and
+#222. It revises
 [Regional and expanding National Pokédex](regional-national-pokedex.md): the
 three original regional lists become two home lists matched to Wayfarer's
 lands, the National upgrade shows every species, and the professors give that
