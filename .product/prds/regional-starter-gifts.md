@@ -2,8 +2,9 @@
 
 Status: Draft product design, 2026-11-07, for the owner's review. Not implemented.
 It revises the starter gifts in [Johto, Hoenn, and Kanto starting regions](wayfarer-regional-start-choice.md),
-[Johto independent story beats](johto-independent-story-beats.md#who-plays-which-story)
-and [Hoenn independent story beats](hoenn-independent-story-beats.md).
+[Johto independent story beats](johto-independent-story-beats.md#who-plays-which-story),
+[Hoenn independent story beats](hoenn-independent-story-beats.md) and the Hoenn-list
+reward in [Home Pokédex lists](home-pokedex-lists.md#completion-and-rewards).
 
 ## Intent
 
@@ -80,7 +81,8 @@ league or Hall of Fame condition beyond what its own quest already has.
 
 ### Steven no longer gives starters
 
-Steven's Treecko, Torchic or Mudkip gift in the Silph Co. lobby is removed.
+Steven's Treecko, Torchic or Mudkip gift in the Silph Co. lobby is removed, and
+Steven leaves the lobby.
 HeartGold and SoulSilver held it back until Red was beaten; Heart & Soul kept
 the gift and dropped the condition, so it became the easiest starter in the
 game and a second Hoenn starter for Littleroot players. Birch's gift replaces it.
@@ -107,9 +109,12 @@ game and a second Hoenn starter for Littleroot players. Birch's gift replaces it
   starter gift once they hatch an Egg.
 - **Hoenn visitors.** Birch's rescue scene still thanks a visitor and rates
   their Pokédex with no gift. His starter gift comes later, after Norman.
-- **Birch's Hoenn-list reward.** Birch's lab currently offers a Johto starter
-  for completing the Hoenn list. Elm now gives the Johto trio, so that reward
-  needs a new prize (see Open questions).
+- **Birch's old Johto-starter reward is removed.** Heart & Soul has Birch offer
+  a Johto starter for completing the Hoenn list. Under this design each trio
+  comes only from its own land's gifter, so Elm gives the Johto trio and Birch
+  gives only the Hoenn trio. Completing the Hoenn list keeps Birch's Pokédex
+  rating but no longer earns a starter. This revises the Hoenn reward named in
+  [Home Pokédex lists](home-pokedex-lists.md#completion-and-rewards).
 - **Pokédex.** A gift starter records as seen and caught like any received
   Pokémon.
 - **Randomizer.** Gift starters follow the existing "starter and gift
@@ -124,6 +129,9 @@ Norman, Baoba's challenge and Celio's repair sit mid-game; Blue and the level-60
 Melemele totem come late. A dedicated traveller ends with seven starters from
 seven trios, in addition to the opening one.
 
+Every gift starter arrives at level 5, as today's gifts do. A late gift is a
+fresh partner to raise, not an instant team member.
+
 ## Presentation
 
 Each gifter offers the trio the way Birch and Steven do today: the three Poké
@@ -137,21 +145,9 @@ nickname prompt. The thanks line names what you did ("You beat my grandson!",
   handout?
 - Do players notice the gifters without a hint, or does each land need one line
   of foreshadowing (an aide, a sign, a phone call)?
-- Is a level-5 starter welcome late in the game, after Blue or the totem, or
-  does it feel too weak to use?
+- Do players raise a level-5 gift that arrives late, after Blue or the totem,
+  or leave it in the PC?
 - Does Cozmo's explanation for having Unova Pokémon read naturally?
-
-## Open questions
-
-1. **Oak's requirement.** Blue is no longer the Viridian Gym Leader. Is "any
-   win against Blue" right, or should it be the Saffron Dojo battle only (after
-   the first Indigo win), or Giovanni at the Viridian Gym?
-2. **Birch's Hoenn-list reward.** What replaces the Johto starter Birch gives
-   for completing the Hoenn list?
-3. **Gift level.** Level 5 like today's gifts, or the place's wild level so a
-   late gift is usable at once?
-4. **Steven in the Silph Co. lobby.** Does he stay with ordinary dialogue, or
-   leave the lobby?
 
 ## References
 
@@ -161,4 +157,5 @@ nickname prompt. The thanks line names what you did ("You beat my grandson!",
 - [Sevii independent story beats](sevii-independent-story-beats.md)
 - [Notable trainers](notable-trainers.md) and [Notable haunts](notable-haunts.md), for Blue
 - [Kanto Viridian finale](../specs/frlg-kanto-viridian-finale.md), which removed Blue from the Viridian Gym
+- [Home Pokédex lists](home-pokedex-lists.md#completion-and-rewards), whose Hoenn-list reward this revises
 - [Pokédex obtainability audit](../research/pokedex-obtainability.md)
