@@ -8,11 +8,10 @@
 // dexNotRequired, or mythical without dexForceRequired; every other entry must be obtainable.
 // tools/wayfarer_pokedex/obtainability.py decides what a Wayfarer player can obtain and records the
 // entries it cannot place in obtainability.json; `--write` refreshes the table below from that record,
-// and its test fails when the two differ.
+// and its test fails when the two differ. The test ROM enables every species (config/test.h), so the
+// release ROM's enabled-entry count is pinned by the Python test, not here.
 
 #if IS_WAYFARER
-#define OBTAINABILITY_ENABLED_ENTRIES 968
-
 static const enum NationalDexOrder sUnobtainableEntries[] =
 {
     // BEGIN obtainability.json
@@ -165,19 +164,5 @@ TEST("Pokédex completion never requires a species the world does not offer")
         EXPECT(IsSpeciesEnabled(species));
         EXPECT(!IsRequiredForCompletion(species));
     }
-}
-
-TEST("Pokédex obtainability record covers the enabled National entries")
-{
-    u32 id, enabled = 0;
-
-    for (id = 1; id <= NATIONAL_DEX_COUNT; id++)
-    {
-        u16 species = NationalPokedexNumToSpecies(id);
-
-        if (species != SPECIES_NONE && IsSpeciesEnabled(species))
-            enabled++;
-    }
-    EXPECT_EQ(enabled, OBTAINABILITY_ENABLED_ENTRIES);
 }
 #endif

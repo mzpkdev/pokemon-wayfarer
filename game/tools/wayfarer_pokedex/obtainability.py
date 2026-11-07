@@ -605,7 +605,7 @@ def problems(audit, document):
 
 
 def c_table(document):
-    """The C test's table body: the recorded unobtainable entries and the enabled entry count."""
+    """The C test's table body: the recorded unobtainable entries."""
     rows = [f"    {row['nat']}," for row in document['unobtainable']]
     return '\n'.join([C_BEGIN, *rows, C_END])
 
@@ -616,8 +616,7 @@ def c_test_drift(document, path=C_TEST):
     if C_BEGIN not in text or C_END not in text:
         return f'{path.name} has no recorded table markers'
     current = text[text.index(C_BEGIN):text.index(C_END) + len(C_END)]
-    count = re.search(r'#define\s+OBTAINABILITY_ENABLED_ENTRIES\s+(\d+)', text)
-    if current != c_table(document) or not count or int(count.group(1)) != document['enabledEntries']:
+    if current != c_table(document):
         return f'{path.name} does not match obtainability.json: re-record with --write'
     return None
 
@@ -625,7 +624,6 @@ def c_test_drift(document, path=C_TEST):
 def write_c_test(document, path=C_TEST):
     text = read(path)
     text = text[:text.index(C_BEGIN)] + c_table(document) + text[text.index(C_END) + len(C_END):]
-    text = re.sub(r'(#define\s+OBTAINABILITY_ENABLED_ENTRIES\s+)\d+', lambda m: m.group(1) + str(document['enabledEntries']), text)
     path.write_text(text)
 
 
