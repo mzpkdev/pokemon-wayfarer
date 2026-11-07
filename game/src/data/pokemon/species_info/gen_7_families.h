@@ -4456,6 +4456,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
 #if P_FAMILY_TYPE_NULL
     [SPECIES_TYPE_NULL] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 95,
         .baseAttack    = 95,
         .baseDefense   = 95,
@@ -4522,6 +4523,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
 
 #define SILVALLY_SPECIES_INFO(type, _palette)                                       \
     {                                                                               \
+        .dexNotRequired = TRUE,                                                     \
         .baseHP        = 95,                                                        \
         .baseAttack    = 95,                                                        \
         .baseDefense   = 95,                                                        \
@@ -6073,6 +6075,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
 #if P_FAMILY_COSMOG
     [SPECIES_COSMOG] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 43,
         .baseAttack    = 29,
         .baseDefense   = 31,
@@ -6142,6 +6145,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
 
     [SPECIES_COSMOEM] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 43,
         .baseAttack    = 29,
         .baseDefense   = 131,
@@ -6213,6 +6217,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
 
     [SPECIES_SOLGALEO] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 137,
         .baseAttack    = 137,
         .baseDefense   = 107,
@@ -6279,6 +6284,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
 
     [SPECIES_LUNALA] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 137,
         .baseAttack    = 113,
         .baseDefense   = 89,
@@ -6348,6 +6354,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
 #if P_FAMILY_NIHILEGO
     [SPECIES_NIHILEGO] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 109,
         .baseAttack    = 53,
         .baseDefense   = 47,
@@ -6416,6 +6423,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
 #if P_FAMILY_BUZZWOLE
     [SPECIES_BUZZWOLE] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 107,
         .baseAttack    = 139,
         .baseDefense   = 139,
@@ -6484,6 +6492,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
 #if P_FAMILY_PHEROMOSA
     [SPECIES_PHEROMOSA] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 71,
         .baseAttack    = 137,
         .baseDefense   = 37,
@@ -6551,6 +6560,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
 #if P_FAMILY_XURKITREE
     [SPECIES_XURKITREE] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 83,
         .baseAttack    = 89,
         .baseDefense   = 71,
@@ -6618,6 +6628,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
 #if P_FAMILY_CELESTEELA
     [SPECIES_CELESTEELA] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 97,
         .baseAttack    = 101,
         .baseDefense   = 103,
@@ -6687,6 +6698,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
 #if P_FAMILY_KARTANA
     [SPECIES_KARTANA] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 59,
         .baseAttack    = 181,
         .baseDefense   = 131,
@@ -6755,6 +6767,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
 #if P_FAMILY_GUZZLORD
     [SPECIES_GUZZLORD] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 223,
         .baseAttack    = 101,
         .baseDefense   = 53,
@@ -6822,6 +6835,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
 #if P_FAMILY_NECROZMA
     [SPECIES_NECROZMA] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 97,
         .baseAttack    = 107,
         .baseDefense   = 101,
@@ -7454,6 +7468,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
 #if P_FAMILY_POIPOLE
     [SPECIES_POIPOLE] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 67,
         .baseAttack    = 73,
         .baseDefense   = 67,
@@ -7520,6 +7535,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
 
     [SPECIES_NAGANADEL] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 73,
         .baseAttack    = 73,
         .baseDefense   = 73,
@@ -7587,6 +7603,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
 #if P_FAMILY_STAKATAKA
     [SPECIES_STAKATAKA] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 61,
         .baseAttack    = 131,
         .baseDefense   = 211,
@@ -7654,6 +7671,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
 #if P_FAMILY_BLACEPHALON
     [SPECIES_BLACEPHALON] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 53,
         .baseAttack    = 127,
         .baseDefense   = 53,
