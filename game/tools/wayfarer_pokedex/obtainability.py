@@ -18,10 +18,8 @@ Reads every way the Wayfarer build hands out a Pokémon and closes over evolutio
 
 Link trades with a second cartridge, the randomizer and debug scripts do not count.
 
-A pick-one gift counts as a source for every species it offers. The Johto and Hoenn starter trios are
-such gifts (Elm or Birch's bag, plus Birch's reward or Silph Co.), so no single player gets all three of a
-trio; that is an open owner decision recorded in .product/research/pokedex-obtainability.md, and it is
-deliberately not modelled here so the recorded result does not change when it is settled.
+A pick-one gift counts as a source for every species it offers. The starter trios are such gifts, and
+every starter line is also reached by breeding its wild final stage.
 
 The National Pokédex entries the tool cannot place, and why, are recorded in obtainability.json.
 `--check` fails when the result or the species data's dexNotRequired flags drift from it, and

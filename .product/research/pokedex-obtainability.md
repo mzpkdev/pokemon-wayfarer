@@ -59,7 +59,7 @@ instead. The live branches that matter:
   are obtainable.
 - `src/data/trade.h`: the non-FireRed branch of the Nidoran trades. Their FRLG maps are deselected anyway.
 - `src/starter_choose.c`: the `IS_WAYFARER` starter tables. Birch's bag holds the Hoenn trio, and Elm uses
-  `GetJohtoStarterPokemon` (see the open decision below).
+  `GetJohtoStarterPokemon` (see Starters below).
 - Species data: `config/pokemon.h` selects the Gen VII level-up learnsets, and P_GEN_9_POKEMON is off.
   Gen IX evolutions of older families (Kingambit, Dudunsparce, Farigiraf, Annihilape, Clodsire,
   Archaludon, Dipplin, Hydrapple) stay enabled through their families.
@@ -131,22 +131,18 @@ and the Gen III Regis to the Hoenn list.
 - Every regional form entry: 18 Alolan, 16 Galarian (plus the three birds above, which are unobtainable),
   16 Hisuian, and Paldean Tauros (Melemele trades) and Wooper.
 
-## Open decision: the starter trios are pick-one gifts
+## Starters
 
-The tool counts a pick-one gift as a source for each species it offers. The starters are such gifts:
+Every starter trio is a pick-one gift. For Johto it is Elm's pick (Johto origin only) and Birch's reward
+pick (`LittlerootTown_ProfessorBirchsLab`). For Hoenn it is Birch's bag pick (Hoenn origin only) and
+Silph Co.'s pick. None of that limits completion, because every starter line's final stage is wild:
 
-| Trio | Sources | Most a player can hold |
-| --- | --- | --- |
-| Chikorita, Cyndaquil, Totodile lines | Elm's pick (Johto origin only, `NewBarkTown_Lab_hns`), plus Birch's reward pick (`LittlerootTown_ProfessorBirchsLab`, one of three, `VAR_DEX_UPGRADE_JOHTO_STARTER_STATE`) | 2 |
-| Treecko, Torchic, Mudkip lines | Birch's bag pick (Hoenn origin only, `battle_setup.c`), plus Silph Co.'s pick (`SaffronCity_SilphCo_hns`, one of three, `FLAG_GOT_HOENN_STARTER`) | 2 |
-| Bulbasaur, Charmander, Squirtle lines | Final stages are wild; breed down | 3 |
+- Venusaur's line through Ivysaur, plus Charizard and Blastoise, in Kanto
+- Meganium, Typhlosion and Feraligatr in Johto
+- Sceptile, Blaziken and Swampert in Hoenn
 
-Without a second cartridge nobody completes the Hoenn list, so Birch's Johto-starter reward is never
-earned. That caps every player at one Johto starter, so the Kanto–Johto diploma is out of reach as well.
-A static flag cannot excuse "the two you did not pick". The owner decides between handing out the
-remaining starters (Birch's lab and Silph Co.), placing starters in the world, or excusing all eighteen
-starter-line species. Until then the record treats each starter as obtainable, so settling the decision
-does not change it.
+A Day Care egg from any of them gives the first stage. The tool proves this: with every starter gift
+removed, all nine Johto and Hoenn starter species stay obtainable through breeding.
 
 ## Required counts
 
@@ -160,8 +156,7 @@ entries are National only. The core list implementation is authoritative if its 
 | Hoenn | 303 | 6 | 16 (the Gen III Regis, the 13 Gen V species) | 281 | 0 |
 | National | 968 | 17 | 203 | 748 | 0 |
 
-"Required but unobtainable" counts species with no source at all. It ignores the starter decision above,
-which caps what one player can hold, not what the world offers.
+"Required but unobtainable" counts species with no source at all.
 
 ## Assumptions and limits
 

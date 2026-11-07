@@ -74,6 +74,14 @@ class Stranding(unittest.TestCase):
         self.assertTrue(any(line.startswith('NATIONAL_DEX_ZAPDOS is no longer obtainable')
                             for line in O.problems(stranded, record())))
 
+    def test_every_starter_breeds_from_its_wild_final_stage(self):
+        # The starter gifts are pick-one; completion relies on the wild final stages and the Day Care.
+        starters = ['SPECIES_' + name for name in ('BULBASAUR CHARMANDER SQUIRTLE CHIKORITA CYNDAQUIL TOTODILE '
+                                                    'TREECKO TORCHIC MUDKIP').split()]
+        stranded = without_source(AUDIT, *starters, kinds=('script',))
+        for name in starters:
+            self.assertTrue(stranded.how.get(name, '').startswith('breed:'), name)
+
     def test_a_species_with_other_sources_survives(self):
         # Kecleon is wild on Routes 118-120 and also a scripted encounter.
         stranded = without_source(AUDIT, 'SPECIES_KECLEON', kinds=('script',))
