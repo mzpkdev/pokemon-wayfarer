@@ -219,7 +219,9 @@ LittlerootTown_ProfessorBirchsLab_EventScript_UpgradeToNationalDex::
 	delay 30
 	special DexScript_HasNationalUpgrade
 	goto_if_eq VAR_RESULT, TRUE, LittlerootTown_ProfessorBirchsLab_EventScript_NationalDexAlreadyHeld
-	msgbox LittlerootTown_ProfessorBirchsLab_Text_OtherRegionsUpgradeToNational, MSGBOX_DEFAULT
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	call_if_eq VAR_RESULT, TRUE, LittlerootTown_ProfessorBirchsLab_EventScript_OtherRegionsUpgradeToNational
+	call_if_eq VAR_RESULT, FALSE, LittlerootTown_ProfessorBirchsLab_EventScript_VisitorOtherRegionsUpgradeToNational
 	closemessage
 	applymovement LOCALID_BIRCHS_LAB_BIRCH, LittlerootTown_ProfessorBirchsLab_Movement_BirchRetrievePokedexes
 	waitmovement 0
@@ -260,6 +262,18 @@ LittlerootTown_ProfessorBirchsLab_EventScript_AfterNationalDexUpgrade:
 	setflag FLAG_SCOTT_CALL_BATTLE_FRONTIER
 	releaseall
 	end
+
+LittlerootTown_ProfessorBirchsLab_EventScript_OtherRegionsUpgradeToNational::
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_OtherRegionsUpgradeToNational, MSGBOX_DEFAULT
+	return
+
+@ A traveller from KANTO or JOHTO who never rescued BIRCH meets him here: no rival helped, and the
+@ POKéDEX came from home. One who somehow has none is handed one first, so there is one to upgrade.
+LittlerootTown_ProfessorBirchsLab_EventScript_VisitorOtherRegionsUpgradeToNational::
+	specialvar VAR_RESULT, WayfarerHasSharedPokedex
+	call_if_eq VAR_RESULT, FALSE, LittlerootTown_ProfessorBirchsLab_EventScript_VisitorReceivePokedex
+	msgbox LittlerootTown_ProfessorBirchsLab_Text_VisitorOtherRegionsUpgradeToNational, MSGBOX_DEFAULT
+	return
 
 @ A POKéDEX upgraded already, by BIRCH for a traveller or by ELM or OAK for a HOENN TRAINER,
 @ is not upgraded again; BIRCH stays at his desk and the rest of the scene plays as usual.
@@ -917,6 +931,18 @@ LittlerootTown_ProfessorBirchsLab_Text_OtherRegionsUpgradeToNational:
 	.string "me to upgrade your POKéDEX to\l"
 	.string "the NATIONAL Mode.\p"
 	.string "Here, let me see your POKéDEX units.$"
+
+LittlerootTown_ProfessorBirchsLab_Text_VisitorOtherRegionsUpgradeToNational:
+	.string "PROF. BIRCH: Now…\p"
+	.string "It appears that in the HOENN region,\n"
+	.string "there are also POKéMON from other\l"
+	.string "regions.\p"
+	.string "You've come all the way from one,\n"
+	.string "so you know that better than anyone.\p"
+	.string "That's why I think it's necessary for\n"
+	.string "me to upgrade your POKéDEX to\l"
+	.string "the NATIONAL Mode.\p"
+	.string "Here, let me see your POKéDEX.$"
 
 LittlerootTown_ProfessorBirchsLab_Text_MayUpgradeSoCool:
 	.string "MAY: Eheheh!\p"
