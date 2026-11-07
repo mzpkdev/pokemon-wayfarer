@@ -15,6 +15,7 @@
 #if IS_HNS
 #include "constants/flags_hns.h"
 #endif
+#include "constants/wayfarer_persistence.h"
 
 
 // NPC below means non-trainer character (no rematch or check page)
@@ -375,14 +376,24 @@ static const struct MatchCallWally sWallyMatchCallHeader =
     .locationData = sWallyLocationData
 };
 
+// SCOTT is HOENN's: the Slateport scenes that register him and every story step his calls follow
+// are written by HOENN map scripts, so they are read from HOENN's bank by their Emerald ids.
+#define SCOTT_FLAG_REGISTERED         HOENN_FLAG_ID(0x0D7) // FLAG_ENABLE_SCOTT_MATCH_CALL
+#define SCOTT_FLAG_MT_CHIMNEY         HOENN_FLAG_ID(0x08B) // FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY
+#define SCOTT_FLAG_CASTFORM           HOENN_FLAG_ID(0x097) // FLAG_RECEIVED_CASTFORM
+#define SCOTT_FLAG_ORB                HOENN_FLAG_ID(0x0D4) // FLAG_RECEIVED_RED_OR_BLUE_ORB
+#define SCOTT_FLAG_AQUA_ESCAPED       HOENN_FLAG_ID(0x070) // FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE
+#define SCOTT_FLAG_SOOTOPOLIS_GYM     HOENN_FLAG_ID(0x4F7) // FLAG_DEFEATED_SOOTOPOLIS_GYM
+#define SCOTT_FLAG_HOENN_GAME_CLEAR   HOENN_FLAG_ID(0x864) // FLAG_SYS_GAME_CLEAR: HOENN's own League win
+
 static const match_call_text_data_t sScottTextScripts[] = {
-    { MatchCall_Text_Scott1, ALWAYS_AVAILABLE,                    NO_FLAG_TO_SET },
-    { MatchCall_Text_Scott2, FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY,  NO_FLAG_TO_SET },
-    { MatchCall_Text_Scott3, FLAG_RECEIVED_CASTFORM,              NO_FLAG_TO_SET },
-    { MatchCall_Text_Scott4, FLAG_RECEIVED_RED_OR_BLUE_ORB,       NO_FLAG_TO_SET },
-    { MatchCall_Text_Scott5, FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE, NO_FLAG_TO_SET },
-    { MatchCall_Text_Scott6, FLAG_DEFEATED_BLACKTHORN_GYM,        NO_FLAG_TO_SET },
-    { MatchCall_Text_Scott7, FLAG_SYS_GAME_CLEAR,                 NO_FLAG_TO_SET },
+    { MatchCall_Text_Scott1, ALWAYS_AVAILABLE,            NO_FLAG_TO_SET },
+    { MatchCall_Text_Scott2, SCOTT_FLAG_MT_CHIMNEY,       NO_FLAG_TO_SET },
+    { MatchCall_Text_Scott3, SCOTT_FLAG_CASTFORM,         NO_FLAG_TO_SET },
+    { MatchCall_Text_Scott4, SCOTT_FLAG_ORB,              NO_FLAG_TO_SET },
+    { MatchCall_Text_Scott5, SCOTT_FLAG_AQUA_ESCAPED,     NO_FLAG_TO_SET },
+    { MatchCall_Text_Scott6, SCOTT_FLAG_SOOTOPOLIS_GYM,   NO_FLAG_TO_SET },
+    { MatchCall_Text_Scott7, SCOTT_FLAG_HOENN_GAME_CLEAR, NO_FLAG_TO_SET },
     MATCH_CALL_TEXT_END
 };
 
@@ -390,7 +401,7 @@ static const struct MatchCallStructNPC sScottMatchCallHeader =
 {
     .type = MC_TYPE_NPC,
     .mapSec = MAPSEC_NONE,
-    .flag = FLAG_ENABLE_SCOTT_MATCH_CALL,
+    .flag = SCOTT_FLAG_REGISTERED,
     .desc = COMPOUND_STRING("ELUSIVE EYES"),
     .name = COMPOUND_STRING("SCOTT"),
     .textData = sScottTextScripts

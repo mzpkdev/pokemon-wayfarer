@@ -461,9 +461,18 @@ bool32 ShouldDoWallyCall(void)
     return TRUE;
 }
 
+// SCOTT's two calls are armed by HOENN map scripts (Winona's badge, Birch's Hall of Fame scene), so their
+// flags and step counters live in HOENN's bank. He calls only once he is on the Pokégear; until then the
+// call waits.
+#define SCOTT_REGISTERED_FLAG             HOENN_FLAG_ID(0x0D7) // FLAG_ENABLE_SCOTT_MATCH_CALL
+#define SCOTT_FORTREE_CALL_FLAG           HOENN_FLAG_ID(0x08A) // FLAG_SCOTT_CALL_FORTREE_GYM
+#define SCOTT_FORTREE_CALL_STEP_COUNTER   HOENN_VAR_ID(0x40F3) // VAR_SCOTT_FORTREE_CALL_STEP_COUNTER
+#define SCOTT_FRONTIER_CALL_FLAG          HOENN_FLAG_ID(0x072) // FLAG_SCOTT_CALL_BATTLE_FRONTIER
+#define SCOTT_FRONTIER_CALL_STEP_COUNTER  HOENN_VAR_ID(0x40F5) // VAR_SCOTT_BF_CALL_STEP_COUNTER
+
 bool32 ShouldDoScottFortreeCall(void)
 {
-    if (FlagGet(FLAG_SCOTT_CALL_FORTREE_GYM))
+    if (FlagGet(SCOTT_FORTREE_CALL_FLAG) && FlagGet(SCOTT_REGISTERED_FLAG))
     {
         switch (gMapHeader.mapType)
         {
@@ -471,7 +480,7 @@ bool32 ShouldDoScottFortreeCall(void)
         case MAP_TYPE_CITY:
         case MAP_TYPE_ROUTE:
         case MAP_TYPE_OCEAN_ROUTE:
-            if (++(*GetVarPointer(VAR_SCOTT_FORTREE_CALL_STEP_COUNTER)) < 10)
+            if (++(*GetVarPointer(SCOTT_FORTREE_CALL_STEP_COUNTER)) < 10)
                 return FALSE;
             break;
         default:
@@ -488,7 +497,7 @@ bool32 ShouldDoScottFortreeCall(void)
 
 bool32 ShouldDoScottBattleFrontierCall(void)
 {
-    if (FlagGet(FLAG_SCOTT_CALL_BATTLE_FRONTIER))
+    if (FlagGet(SCOTT_FRONTIER_CALL_FLAG) && FlagGet(SCOTT_REGISTERED_FLAG))
     {
         switch (gMapHeader.mapType)
         {
@@ -496,7 +505,7 @@ bool32 ShouldDoScottBattleFrontierCall(void)
         case MAP_TYPE_CITY:
         case MAP_TYPE_ROUTE:
         case MAP_TYPE_OCEAN_ROUTE:
-            if (++(*GetVarPointer(VAR_SCOTT_BF_CALL_STEP_COUNTER)) < 10)
+            if (++(*GetVarPointer(SCOTT_FRONTIER_CALL_STEP_COUNTER)) < 10)
                 return FALSE;
             break;
         default:
