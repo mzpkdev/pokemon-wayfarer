@@ -164,6 +164,13 @@ class Deliveries(unittest.TestCase):
         self.assertEqual(delivered.get(OUTSIDE_MUSEUM), 1)
         self.assertLessEqual(DELIVERY_FLAGS, delivered.flags)
 
+    def test_a_delivery_after_wattson_counts_scott_without_replaying_his_door_scene(self):
+        delivered = play('SlateportCity_OceanicMuseum_2F', self.MUSEUM_STERN, items=[PARTS],
+                         vars={OUTSIDE_MUSEUM: 3, SCOTT: 2})
+        self.assertEqual(delivered.get(OUTSIDE_MUSEUM), 3)
+        self.assertEqual(delivered.get(SCOTT), 3)
+        self.assertIn('FLAG_ENABLE_SCOTT_MATCH_CALL', delivered.flags)
+
     def test_either_delivery_can_come_first(self):
         for order in permutations(('letter', 'parts')):
             flags = set()
