@@ -22,7 +22,7 @@ that person, so a starter becomes a memento of something you did in that land.
 
 ### One gifter per land
 
-| Land | Gifter | Trio | Earned by |
+| Land | Gifter | Pick one of | Earned by |
 | --- | --- | --- | --- |
 | Kanto | Professor Oak, Pallet lab | Bulbasaur, Charmander, Squirtle | Beating his grandson Blue in any battle |
 | Johto | Professor Elm, New Bark lab | Chikorita, Cyndaquil, Totodile | Hatching an Egg and showing it to him |
@@ -32,8 +32,8 @@ that person, so a starter becomes a memento of something you did in that land.
 | Alola | Samson Oak, Melemele Isle | Rowlet, Litten, Popplio | Defeating the Melemele totem |
 | Sevii (Galar) | Celio, One Island | Grookey, Scorbunny, Sobble | Repairing his Network Machine |
 
-Each gifter offers a choice of one Pokémon from the trio, once per game. The
-offer waits until it is taken: a player who declines, or has no room, can come
+Each gifter lets you pick one of their three starters, once per game; you
+never receive all three. The offer waits until it is taken: a player who declines, or has no room, can come
 back later.
 
 ### Who receives which gift
@@ -48,7 +48,7 @@ professor who gave it does not give a second one from the same trio:
 Every other gift is open to every origin. Kanto and Johto are one land with two
 professors, so a Pallet player can earn Elm's gift and a New Bark player can
 earn Oak's. Hoenn's Cozmo is a separate gifter, so a Littleroot player can earn
-the Unova trio as well. Each player can end with one starter from every trio.
+a Unova starter as well. Each player can end with one starter from every trio.
 
 ### The requirements
 
@@ -71,7 +71,7 @@ the Unova trio as well. Each player can end with one starter from every trio.
   the Safari Zone is "thriving", he adds the Kalos starter to his thanks.
 - **Samson Oak: defeat the totem.** Melemele's totem battle (Totem Alolan
   Raticate, or Totem Leafeon by day) already involves Samson Oak. Win it and he
-  offers the Alola trio.
+  offers a choice of Rowlet, Litten or Popplio.
 - **Celio: repair the Network Machine.** The Sevii gem investigation ends when
   Celio has both the Ruby and the Sapphire. His thanks for the finished repair
   now include the Galar starter.
@@ -111,8 +111,8 @@ game and a second Hoenn starter for Littleroot players. Birch's gift replaces it
   their Pokédex with no gift. His starter gift comes later, after Norman.
 - **Birch's old Johto-starter reward is removed.** Heart & Soul has Birch offer
   a Johto starter for completing the Hoenn list. Under this design each trio
-  comes only from its own land's gifter, so Elm gives the Johto trio and Birch
-  gives only the Hoenn trio. Completing the Hoenn list keeps Birch's Pokédex
+  comes only from its own land's gifter, so Elm gives a Johto starter and Birch
+  gives only a Hoenn starter. Completing the Hoenn list keeps Birch's Pokédex
   rating but no longer earns a starter. This revises the Hoenn reward named in
   [Home Pokédex lists](home-pokedex-lists.md#completion-and-rewards).
 - **Pokédex.** A gift starter records as seen and caught like any received
@@ -126,15 +126,15 @@ game and a second Hoenn starter for Littleroot players. Birch's gift replaces it
 
 The gifts spread across the game. Cozmo's Meteorite and Elm's Egg come early;
 Norman, Baoba's challenge and Celio's repair sit mid-game; Blue and the level-60
-Melemele totem come late. A dedicated traveller ends with seven starters from
-seven trios, in addition to the opening one.
+Melemele totem come late. A dedicated traveller ends with one starter
+from each of the seven trios: the opening one plus six gifts.
 
 Every gift starter arrives at level 5, as today's gifts do. A late gift is a
 fresh partner to raise, not an instant team member.
 
 ## Presentation
 
-Each gifter offers the trio the way Birch and Steven do today: the three Poké
+Each gifter offers the choice the way Birch and Steven do today: the three Poké
 Balls or a short choice, the Pokémon's picture and cry, a confirmation, and the
 nickname prompt. The thanks line names what you did ("You beat my grandson!",
 "The SAFARI ZONE is thriving!").
