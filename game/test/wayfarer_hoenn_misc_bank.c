@@ -203,4 +203,23 @@ TEST("Hoenn misc bank: the Town Map names a landmark once its Hoenn flag is set"
     FlagClear(LANDMARK_TRAINER_HILL);
 }
 
+// The Johto player's room in New Bark keeps the engine FLAG_DECORATION_* ids on its decoration objects,
+// while HOENN's player room and secret bases carry the Hoenn copies (Emerald 0xAE..0xBB).
+TEST("Hoenn misc bank: decoration flags follow the map: engine ids in New Bark, Hoenn's in Littleroot")
+{
+    struct WarpData saved = gSaveBlock1Ptr->location;
+
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_2F_HNS);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_2F_HNS);
+    EXPECT_EQ(WayfarerDecorationFlag(0), FLAG_DECORATION_1);
+    EXPECT_EQ(WayfarerDecorationFlag(13), FLAG_DECORATION_14);
+
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F);
+    EXPECT_EQ(WayfarerDecorationFlag(0), HOENN_FLAG_ID(0xAE));
+    EXPECT_EQ(WayfarerDecorationFlag(13), HOENN_FLAG_ID(0xBB));
+
+    gSaveBlock1Ptr->location = saved;
+}
+
 #endif // IS_WAYFARER

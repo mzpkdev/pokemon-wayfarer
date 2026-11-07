@@ -613,7 +613,7 @@ void InitSecretBaseDecorationSprites(void)
         {
             for (objectEventId = 0; objectEventId < gMapHeader.events->objectEventCount; objectEventId++)
             {
-                if (gMapHeader.events->objectEvents[objectEventId].flagId == WAYFARER_HOENN_DECORATION_1_FLAG + gSpecialVar_0x8004)
+                if (gMapHeader.events->objectEvents[objectEventId].flagId == WayfarerDecorationFlag(gSpecialVar_0x8004))
                     break;
             }
 
@@ -629,7 +629,7 @@ void InitSecretBaseDecorationSprites(void)
                 gSpecialVar_Result = VAR_OBJ_GFX_ID_0 + (gMapHeader.events->objectEvents[objectEventId].graphicsId - OBJ_EVENT_GFX_VAR_0);
                 VarSet(gSpecialVar_Result, gDecorations[decorations[i]].tiles[0]);
                 gSpecialVar_Result = gMapHeader.events->objectEvents[objectEventId].localId;
-                FlagClear(WAYFARER_HOENN_DECORATION_1_FLAG + gSpecialVar_0x8004);
+                FlagClear(WayfarerDecorationFlag(gSpecialVar_0x8004));
                 TrySpawnObjectEvent(gSpecialVar_Result, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
                 TryMoveObjectEventToMapCoords(gSpecialVar_Result, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, gSpecialVar_0x8006, gSpecialVar_0x8007);
                 TryOverrideObjectEventTemplateCoords(gSpecialVar_Result, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
@@ -667,7 +667,7 @@ void HideSecretBaseDecorationSprites(void)
     for (objectEventId = 0; objectEventId < gMapHeader.events->objectEventCount; objectEventId++)
     {
         flag = gMapHeader.events->objectEvents[objectEventId].flagId;
-        if (flag >= WAYFARER_HOENN_DECORATION_1_FLAG && flag <= WAYFARER_HOENN_DECORATION_14_FLAG)
+        if (flag >= WayfarerDecorationFlag(0) && flag <= WayfarerDecorationFlag(FLAG_DECORATION_14 - FLAG_DECORATION_1))
         {
             RemoveObjectEventByLocalIdAndMap(
                 gMapHeader.events->objectEvents[objectEventId].localId,

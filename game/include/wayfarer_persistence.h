@@ -45,6 +45,9 @@ void WayfarerSetSavedCurrentRegion(enum Region region);
 // FLAG_DECORATION_1..14: the object events of the secret base maps carry these Hoenn copies as their flags.
 #define WAYFARER_HOENN_DECORATION_1_FLAG       HOENN_FLAG_ID(0xAE)
 #define WAYFARER_HOENN_DECORATION_14_FLAG      HOENN_FLAG_ID(0xBB)
+// The decoration object flags of the current map: HOENN's player room and secret bases carry the Hoenn
+// copies, while the Johto player's room in New Bark carries the engine FLAG_DECORATION_* ids.
+u16 WayfarerDecorationFlag(u8 index);
 // FLAG_LANDMARK_*: the Hoenn scripts set these on entering the place.
 #define WAYFARER_HOENN_LANDMARK_FLOWER_SHOP_FLAG        WAYFARER_HOENN_SYS_FLAG(0x3C)
 #define WAYFARER_HOENN_LANDMARK_MR_BRINEY_HOUSE_FLAG    WAYFARER_HOENN_SYS_FLAG(0x3D)
