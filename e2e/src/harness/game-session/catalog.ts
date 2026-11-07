@@ -618,6 +618,8 @@ export const storyVars = {
   hoennDexUpgradeState: 0x70d3,
   hoennVictoryRoad1fState: 0x70c3,
   hoennScottState: 0x70d1,
+  // Emerald's VAR_SCOTT_BF_CALL_STEP_COUNTER in the Hoenn bank: steps until Scott's Frontier call.
+  hoennScottFrontierCallSteps: 0x70f5,
   vermilionCityState: 0x408f,
   violetCityState: 0x4091,
   trainerRating: 0x40f7,
@@ -833,6 +835,12 @@ export const storyFlags = {
   hoennDiveAuthorized: 0x607b,
   hoennMetRivalAsVisitor: 0x6022,
   hoennRescuedBirch: 0x6052,
+  // Emerald's FLAG_SCOTT_CALL_BATTLE_FRONTIER in the Hoenn bank: Scott's Frontier call is armed.
+  hoennScottFrontierCall: 0x6072,
+  // FLAG_SYS_POKEDEX_GET and FLAG_SYS_NATIONAL_DEX: the shared Pokédex and its National upgrade.
+  pokedex: 0x891,
+  nationalDex: 0x894,
+  hideOlivinePortOak: 0x081,
   hoennHideStevensHouseSteven: 0x63c7,
   hoennHideBirchLabBirch: 0x62d1,
   hoennHideBirchLabRival: 0x6379,

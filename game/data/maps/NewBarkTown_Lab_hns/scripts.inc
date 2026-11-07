@@ -481,6 +481,11 @@ NewBarkTown_Lab_EventScript_ElmState5::
 NewBarkTown_Lab_EventScript_ElmMasterBall::
 	lock
 	faceplayer
+	call NewBarkTown_Lab_EventScript_GiveMasterBall
+	release
+	end
+
+NewBarkTown_Lab_EventScript_GiveMasterBall::
 	msgbox NewBarkTown_Lab_Text_ElmGiveMasterBall1, MSGBOX_DEFAULT
 	giveitem ITEM_MASTER_BALL
 	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_EventScript_ElmMasterBallBagFull
@@ -491,8 +496,7 @@ NewBarkTown_Lab_EventScript_ElmMasterBall::
 	specialvar VAR_RESULT, WayfarerJohtoKimonoTrialAvailable
 	call_if_eq VAR_RESULT, TRUE, NewBarkTown_Lab_EventScript_ElmTellsKimonoGirls
 	closemessage
-	release
-	end
+	return
 
 NewBarkTown_Lab_EventScript_ElmTellsKimonoGirls::
 	delay 20
@@ -506,8 +510,7 @@ NewBarkTown_Lab_EventScript_ElmTellsKimonoGirls::
 NewBarkTown_Lab_EventScript_ElmMasterBallBagFull::
 	call Common_EventScript_BagIsFull
 	closemessage
-	release
-	end
+	return
 
 NewBarkTown_Lab_EventScript_ElmKimono::
 	lock
@@ -526,13 +529,17 @@ NewBarkTown_Lab_EventScript_ElmLeague::
 	end
 
 NewBarkTown_Lab_EventScript_ElmSSTicket::
+	call NewBarkTown_Lab_EventScript_GiveSSTicket
+	release
+	end
+
+NewBarkTown_Lab_EventScript_GiveSSTicket::
 	msgbox NewBarkTown_Lab_Text_ElmGiveTicket1, MSGBOX_DEFAULT
 	msgbox NewBarkTown_Lab_Text_ElmGiveTicket2, MSGBOX_DEFAULT
 	closemessage
 	setflag FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED
 	clearflag FLAG_HIDE_OLIVINE_PORT_OAK
-	release
-	end
+	return
 
 NewBarkTown_Lab_EventScript_TriggerAideGiveBalls::
 	lock
@@ -1083,17 +1090,38 @@ NewBarkTown_Lab_EventScript_AuthoredEnd::
 @ Visitors (every origin but New Bark) get an ordinary professor: no errand, starter or gift,
 @ and no lab or town state is written by this conversation. Elm's Master Ball and S.S. ticket
 @ are the exceptions: they follow their own owed and received flags, as for the Johto origin.
+@ Elm is the first professor a HOENN TRAINER may meet in JOHTO, so whichever branch ran, the talk
+@ ends with the NATIONAL Mode for one who has a POKéDEX and lacks it; the flag is the record.
 NewBarkTown_Lab_EventScript_VisitorElm::
 	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_OWED, NewBarkTown_Lab_EventScript_VisitorElmNoBall
 	goto_if_set FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_RECEIVED, NewBarkTown_Lab_EventScript_VisitorElmNoBall
 	msgbox NewBarkTown_Lab_Text_VisitorElmIntroduces, MSGBOX_DEFAULT
-	goto NewBarkTown_Lab_EventScript_ElmMasterBall
+	call NewBarkTown_Lab_EventScript_GiveMasterBall
+	goto NewBarkTown_Lab_EventScript_VisitorElmEnd
 NewBarkTown_Lab_EventScript_VisitorElmNoBall::
 	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_OWED, NewBarkTown_Lab_EventScript_VisitorElmNoTicket
-	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED, NewBarkTown_Lab_EventScript_ElmSSTicket
+	goto_if_set FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED, NewBarkTown_Lab_EventScript_VisitorElmNoTicket
+	call NewBarkTown_Lab_EventScript_GiveSSTicket
+	goto NewBarkTown_Lab_EventScript_VisitorElmEnd
 NewBarkTown_Lab_EventScript_VisitorElmNoTicket::
 	msgbox NewBarkTown_Lab_Text_VisitorElm, MSGBOX_DEFAULT
+NewBarkTown_Lab_EventScript_VisitorElmEnd:
+	call NewBarkTown_Lab_EventScript_TryUpgradeVisitorPokedex
 	goto NewBarkTown_Lab_EventScript_ReleaseEnd
+
+NewBarkTown_Lab_EventScript_TryUpgradeVisitorPokedex::
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_NopReturn
+	goto_if_unset FLAG_SYS_POKEDEX_GET, Common_EventScript_NopReturn
+	goto_if_set FLAG_SYS_NATIONAL_DEX, Common_EventScript_NopReturn
+	msgbox NewBarkTown_Lab_Text_ElmUpgradePokedex, MSGBOX_DEFAULT
+	playfanfare MUS_OBTAIN_ITEM
+	message NewBarkTown_Lab_Text_PokedexUpgradedToNational
+	waitmessage
+	waitfanfare
+	setflag FLAG_SYS_NATIONAL_DEX
+	special EnableNationalPokedex
+	return
 
 NewBarkTown_Lab_EventScript_NativeStorageFull::
 	clearflag FLAG_JOHTO_STARTER_CHOICE_COMMITTED
@@ -1114,6 +1142,13 @@ NewBarkTown_Lab_Text_VisitorElm:
 	.string "I study how POKéMON evolve and\n"
 	.string "hatch. Every trainer I meet adds\l"
 	.string "something to my research.$"
+NewBarkTown_Lab_Text_ElmUpgradePokedex:
+	.string "ELM: Is that a POKéDEX from HOENN?\n"
+	.string "It can't show JOHTO's POKéMON yet!\p"
+	.string "Here, I'll add the NATIONAL Mode.$"
+NewBarkTown_Lab_Text_PokedexUpgradedToNational:
+	.string "{PLAYER}'s POKéDEX was upgraded\n"
+	.string "to the NATIONAL Mode!$"
 NewBarkTown_Lab_Text_NativeStorageFull:
 	.string "Your party and PC are full.\n"
 	.string "I'll look after your POKéMON.\p"
