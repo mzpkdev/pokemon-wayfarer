@@ -21,7 +21,7 @@ The result is computed and pinned by `game/tools/wayfarer_pokedex/`:
 - `make BUILD=wayfarer check` runs both through `wayfarer-pokedex-audit`. The
   tool needs the Wayfarer map outputs (`data/maps/groups.inc`), which the target
   builds first; standalone, run `make BUILD=wayfarer generated` once. A full
-  pass takes about six seconds.
+  pass takes about 15 seconds.
 
 The audit reads source data. It does not claim an emulator walkthrough: a
 source counts when its map is compiled into the Wayfarer ROM and its script
@@ -33,7 +33,7 @@ Each is a separate check in the tool.
 
 | Source | What counts |
 | --- | --- |
-| Wild | Every species in `src/data/wild_encounters_v2/{kanto,johto,hoenn,alola,sevii,safari,sinjoh}.json`, day and night, all methods. This covers the Safari Zones and the three Bug-Catching Contest days. Every table's map must be compiled. |
+| Wild | Every species in `src/data/wild_encounters_v2/{kanto,johto,hoenn,alola,sevii,safari,sinjoh}.json`, day and night, all methods. This covers the Safari Zones and the three Bug-Catching Contest days. A slot is a stage cap: at a low Trainer Rating its level, Old/Good Rod shift included, steps it down to earlier stages, which count too. The tool uses the generator's reference model, `tools/wild_encounters/v2/hm_model.py`, over TR 0–160. Every table's map must be compiled. |
 | Scripts | `givemon`, `giveegg`, `setwildbattle` (both species of a double), `setwildbattleshiny` and `seteventmon` in the Wayfarer script assembly, read as the build sees it: `data/event_scripts.s` through cpp with its gas `.if IS_FRLG` block dropped, and each included file's own `#if` branches evaluated with the config the build reads (league events, the league circuit, TR marts, the randomizer). They must be on compiled maps and under a label something references. `givemon VAR_x` counts every species that `setvar VAR_x, SPECIES_*` names in the same file (Game Corner prizes, fossil revival). |
 | Roamers | `TryAddRoamer` in the `src/roamer.c` function that a compiled script calls as a special (Raikou and Entei from Burned Tower; Latias or Latios from `InitKantoRoamers`). |
 | In-game trades | Entries of `src/data/trade.h` that a compiled script names, counted only once the Pokémon they ask for is obtainable. |
@@ -133,16 +133,24 @@ and the Gen III Regis to the Hoenn list.
 
 ## Starters
 
-Every starter trio is a pick-one gift. For Johto it is Elm's pick (Johto origin only) and Birch's reward
-pick (`LittlerootTown_ProfessorBirchsLab`). For Hoenn it is Birch's bag pick (Hoenn origin only) and
-Silph Co.'s pick. None of that limits completion, because every starter line's final stage is wild:
+Every starter trio is a pick-one gift: Oak (Pallet origin), Elm (New Bark origin), Birch's bag
+(Littleroot origin), Steven at Silph Co. (anyone) and Birch's Hoenn-list reward (anyone). None of that
+limits completion, because each Gen I–III and V–VIII starter line's final stage is a wild slot. At a low
+Trainer Rating those slots step down to the earlier stages, so the basic forms are wild too:
 
-- Venusaur's line through Ivysaur, plus Charizard and Blastoise, in Kanto
-- Meganium, Typhlosion and Feraligatr in Johto
-- Sceptile, Blaziken and Swampert in Hoenn
+| Line | Final-stage slot (example) | Basic form wild up to about |
+| --- | --- | --- |
+| Bulbasaur, Charmander, Squirtle | Route 21 North, Route 3, Pallet Town (Road) | TR 54 |
+| Chikorita, Cyndaquil, Totodile | Route 29, Route 46, Route 30 (Road) | TR 54, 49, 58 |
+| Treecko, Torchic, Mudkip | Routes 101, 112, 102 (Road) | TR 54 |
+| Snivy, Tepig, Oshawott | Route 116, Route 111, Slateport (Road) | TR 56 |
+| Chespin, Fennekin, Froakie | Safari Zones (Wilds) | TR 43 |
+| Rowlet, Litten, Popplio | Melemele (Road), Akala (Wilds), Melemele (Road) | TR 56, 45, 56 |
+| Grookey, Scorbunny, Sobble | Berry Forest (Wilds), Kindle Road, One Island (Road) | TR 43, 54, 54 |
 
-A Day Care egg from any of them gives the first stage. The tool proves this: with every starter gift
-removed, all nine Johto and Hoenn starter species stay obtainable through breeding.
+Past those ratings, a Day Care egg from the wild final stage still gives the basic form. The test
+`test_every_starter_is_obtainable_without_gifts` removes every starter gift and checks that all 21 basic
+forms stay wild. Gen IV's starters have no source and stay excused.
 
 ## Required counts
 

@@ -4,7 +4,9 @@
 Reads every way the Wayfarer build hands out a Pokémon and closes over evolution and breeding:
 
   wild      the wild encounters v2 tables (src/data/wild_encounters_v2/*.json): every region, the
-            Safari Zones and the Bug-Catching Contest days, Rock Smash/Headbutt, Surf and fishing
+            Safari Zones and the Bug-Catching Contest days, Rock Smash/Headbutt, Surf and fishing. A slot
+            is a stage cap: at a low Trainer Rating its level steps it down to earlier stages (the
+            generator's reference model, tools/wild_encounters/v2/hm_model.py), so those count too
   script    givemon / giveegg / setwildbattle / seteventmon in the Wayfarer script assembly, on
             maps the Wayfarer build compiles (statics, legendaries, gifts, fossils, starters,
             Game Corner prizes; a `givemon VAR_x` takes every species `setvar VAR_x, SPECIES_*`
@@ -281,18 +283,42 @@ def add(found, species, source):
     found.setdefault(species, []).append(source)
 
 
+def wild_level_model(root=ROOT):
+    """The wild generator's reference model (tools/wild_encounters/v2/hm_model.py): a slot's species
+    is a stage cap, and the place's Trainer Rating level steps it down to an earlier stage."""
+    path = str(root / 'tools/wild_encounters/v2')
+    if path not in sys.path:
+        sys.path.insert(0, path)
+    import hm_model  # noqa: E402  (reads the v2 data next to it)
+    return hm_model
+
+
 def wild_sources(maps, aliases, root=ROOT):
+    """Every species a v2 table slot can produce at any Trainer Rating (0-160): the slot's own species
+    and, below its evolution level, the earlier stages it steps down to (both stages of the keep mix).
+    Fishing also covers the Old and Good Rod's lower levels."""
+    model = wild_level_model(root)
+    outcomes = {}
     found = {}
     for region in REGION_FILES:
         for key, tables in json.loads(read(root / f'src/data/wild_encounters_v2/{region}.json')).items():
             map_id = key.split(':')[0]
             if map_id not in maps:
                 raise AuditError(f'{region}.json: {key} is not a compiled Wayfarer map')
+            place_region = model.META[key]['region']
+            levels = {model.place_level(key, tr) for tr in range(0, 161)}
             for method, table in tables.items():
                 if not isinstance(table, dict):
                     continue
-                for name in {s for time in ('day', 'night') for s in table.get(time, ()) if s != 'NONE'}:
-                    add(found, canonical('SPECIES_' + name, aliases), f'wild {key} {method}')
+                shifts = tuple(model.ROD_SHIFT.values()) if method == 'fish' else (0,)
+                for cap in {s for time in ('day', 'night') for s in table.get(time, ()) if s != 'NONE'}:
+                    add(found, canonical('SPECIES_' + cap, aliases), f'wild {key} {method}')
+                    for level in {max(1, level + shift) for level in levels for shift in shifts}:
+                        memo = (cap, level, place_region)
+                        if memo not in outcomes:
+                            outcomes[memo] = {name for name, _, chance in model.slot_dist(cap, level, place_region) if chance > 0}
+                        for name in outcomes[memo] - {cap}:
+                            add(found, canonical('SPECIES_' + name, aliases), f'wild {key} {method} as a low-level {cap}')
     return found
 
 

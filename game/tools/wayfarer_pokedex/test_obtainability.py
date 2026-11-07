@@ -74,13 +74,18 @@ class Stranding(unittest.TestCase):
         self.assertTrue(any(line.startswith('NATIONAL_DEX_ZAPDOS is no longer obtainable')
                             for line in O.problems(stranded, record())))
 
-    def test_every_starter_breeds_from_its_wild_final_stage(self):
-        # The starter gifts are pick-one; completion relies on the wild final stages and the Day Care.
+    def test_every_starter_is_obtainable_without_gifts(self):
+        # The starter gifts are pick-one; at a low Trainer Rating the wild final-stage slots step
+        # down to the basic forms, and the Day Care breeds them anyway.
         starters = ['SPECIES_' + name for name in ('BULBASAUR CHARMANDER SQUIRTLE CHIKORITA CYNDAQUIL TOTODILE '
-                                                    'TREECKO TORCHIC MUDKIP').split()]
+                                                    'TREECKO TORCHIC MUDKIP SNIVY TEPIG OSHAWOTT CHESPIN FENNEKIN '
+                                                    'FROAKIE ROWLET LITTEN POPPLIO GROOKEY SCORBUNNY SOBBLE').split()]
         stranded = without_source(AUDIT, *starters, kinds=('script',))
         for name in starters:
-            self.assertTrue(stranded.how.get(name, '').startswith('breed:'), name)
+            self.assertTrue(stranded.how.get(name, '').startswith('wild:'), name)
+
+    def test_low_trainer_rating_steps_a_slot_down(self):
+        self.assertIn('wild MAP_ROUTE29_HNS land as a low-level MEGANIUM', AUDIT.sources['wild']['SPECIES_CHIKORITA'])
 
     def test_a_species_with_other_sources_survives(self):
         # Kecleon is wild on Routes 118-120 and also a scripted encounter.
@@ -103,14 +108,16 @@ class Rules(unittest.TestCase):
         self.assertIn('cannot learn', AUDIT.blocked(evolution, 'SPECIES_PIDGEY'))
 
     def test_day_care_gender_swaps(self):
-        # Only Nidorina/Nidorino are wild; Nidorina cannot breed, Nidorino with Ditto lays either Nidoran.
-        self.assertTrue(AUDIT.how['SPECIES_NIDORAN_F'].startswith('breed:'))
-        self.assertTrue(AUDIT.how['SPECIES_NIDORAN_M'].startswith('breed:'))
+        # Nidorina cannot breed; Nidorino with Ditto lays either Nidoran (P_NIDORAN_M_DITTO_BREED).
+        self.assertEqual(AUDIT.egg_forms['SPECIES_NIDORINO'] & {'SPECIES_NIDORAN_F', 'SPECIES_NIDORAN_M'},
+                         {'SPECIES_NIDORAN_F', 'SPECIES_NIDORAN_M'})
+        self.assertFalse(AUDIT.breedable('SPECIES_NIDORINA'))
 
     def test_trade_needs_the_requested_pokemon(self):
-        # Goldenrod's Machop trade asks for a Drowzee.
-        self.assertTrue(AUDIT.how['SPECIES_MACHOP'].startswith('trade:'))
-        stranded = without_source(AUDIT, 'SPECIES_DROWZEE', 'SPECIES_HYPNO')
+        # Goldenrod's Machop trade asks for a Drowzee; take away Machop's wild slots to see it.
+        traded = without_source(AUDIT, 'SPECIES_MACHOP', kinds=('wild',))
+        self.assertTrue(traded.how['SPECIES_MACHOP'].startswith('trade:'))
+        stranded = without_source(AUDIT, 'SPECIES_MACHOP', 'SPECIES_DROWZEE', 'SPECIES_HYPNO', kinds=('wild',))
         self.assertFalse('SPECIES_DROWZEE' in stranded.obtained)
         self.assertFalse(stranded.how.get('SPECIES_MACHOP', '').startswith('trade:'))
 
