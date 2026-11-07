@@ -1,6 +1,7 @@
 #include "global.h"
 #include "pokenav.h"
 #include "event_data.h"
+#include "wayfarer_persistence.h"
 #include "main.h"
 #include "sound.h"
 #include "constants/songs.h"
@@ -141,7 +142,7 @@ static u8 GetPokenavMainMenuType(void)
     {
         menuType = POKENAV_MENU_TYPE_UNLOCK_MC;
 
-        if (FlagGet(FLAG_SYS_RIBBON_GET))
+        if (FlagGet(FLAG_SYS_RIBBON_GET) || FlagGet(WAYFARER_HOENN_RIBBON_GET_FLAG))
             menuType = POKENAV_MENU_TYPE_UNLOCK_MC_RIBBONS;
     }
 

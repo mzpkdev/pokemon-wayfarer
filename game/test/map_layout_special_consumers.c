@@ -8,6 +8,7 @@
 #include "overworld.h"
 #include "save.h"
 #include "secret_base.h"
+#include "wayfarer_persistence.h"
 #include "trainer_hill.h"
 #include "test/test.h"
 #include "constants/map_groups.h"
@@ -289,7 +290,7 @@ TEST("Map layout special consumers preserve Secret Base appearance across saved 
     gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_SECRET_BASE_RED_CAVE1);
     memset(&gSaveBlock1Ptr->secretBases[1], 0, sizeof(gSaveBlock1Ptr->secretBases[1]));
     gSaveBlock1Ptr->secretBases[1].secretBaseId = 1;
-    VarSet(VAR_CURRENT_SECRET_BASE, 1);
+    VarSet(HOENN_VAR_ID(0x4054), 1); // VAR_CURRENT_SECRET_BASE, in the Hoenn bank
 
     Test_MapLayoutResetHooks();
     Test_MapLayoutUseRawOracle(TRUE);

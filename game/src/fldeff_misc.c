@@ -14,6 +14,7 @@
 #include "fldeff_misc.h"
 #include "secret_base.h"
 #include "event_data.h"
+#include "wayfarer_persistence.h"
 #include "event_scripts.h"
 #include "event_object_movement.h"
 #include "metatile_behavior.h"
@@ -838,7 +839,7 @@ void DoSecretBasePCTurnOffEffect(void)
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
     PlaySE(SE_PC_OFF);
 
-    if (!VarGet(VAR_CURRENT_SECRET_BASE))
+    if (!VarGet(WAYFARER_HOENN_CURRENT_SECRET_BASE_VAR))
         MapGridSetMetatileIdAt(x, y, METATILE_SecretBase_PC | MAPGRID_IMPASSABLE);
     else
         MapGridSetMetatileIdAt(x, y, METATILE_SecretBase_RegisterPC | MAPGRID_IMPASSABLE);
@@ -1134,7 +1135,7 @@ void InteractWithShieldOrTVDecoration(void)
 
         gSpecialVar_Result = 0;
 
-        if (!VarGet(VAR_CURRENT_SECRET_BASE))
+        if (!VarGet(WAYFARER_HOENN_CURRENT_SECRET_BASE_VAR))
             return;
 
         VarSet(VAR_SECRET_BASE_LOW_TV_FLAGS, VarGet(VAR_SECRET_BASE_LOW_TV_FLAGS) | SECRET_BASE_USED_GOLD_SHIELD);
@@ -1145,7 +1146,7 @@ void InteractWithShieldOrTVDecoration(void)
 
         gSpecialVar_Result = 0;
 
-        if (!VarGet(VAR_CURRENT_SECRET_BASE))
+        if (!VarGet(WAYFARER_HOENN_CURRENT_SECRET_BASE_VAR))
             return;
 
         VarSet(VAR_SECRET_BASE_LOW_TV_FLAGS, VarGet(VAR_SECRET_BASE_LOW_TV_FLAGS) | SECRET_BASE_USED_SILVER_SHIELD);
@@ -1153,7 +1154,7 @@ void InteractWithShieldOrTVDecoration(void)
     case METATILE_SecretBase_TV:
         gSpecialVar_Result = 1;
 
-        if (!VarGet(VAR_CURRENT_SECRET_BASE))
+        if (!VarGet(WAYFARER_HOENN_CURRENT_SECRET_BASE_VAR))
             return;
 
         VarSet(VAR_SECRET_BASE_LOW_TV_FLAGS, VarGet(VAR_SECRET_BASE_LOW_TV_FLAGS) | SECRET_BASE_USED_TV);
@@ -1161,7 +1162,7 @@ void InteractWithShieldOrTVDecoration(void)
     case METATILE_SecretBase_RoundTV:
         gSpecialVar_Result = 2;
 
-        if (!VarGet(VAR_CURRENT_SECRET_BASE))
+        if (!VarGet(WAYFARER_HOENN_CURRENT_SECRET_BASE_VAR))
             return;
 
         VarSet(VAR_SECRET_BASE_LOW_TV_FLAGS, VarGet(VAR_SECRET_BASE_LOW_TV_FLAGS) | SECRET_BASE_USED_TV);
@@ -1169,7 +1170,7 @@ void InteractWithShieldOrTVDecoration(void)
     case METATILE_SecretBase_CuteTV:
         gSpecialVar_Result = 3;
 
-        if (!VarGet(VAR_CURRENT_SECRET_BASE))
+        if (!VarGet(WAYFARER_HOENN_CURRENT_SECRET_BASE_VAR))
             return;
 
         VarSet(VAR_SECRET_BASE_LOW_TV_FLAGS, VarGet(VAR_SECRET_BASE_LOW_TV_FLAGS) | SECRET_BASE_USED_TV);

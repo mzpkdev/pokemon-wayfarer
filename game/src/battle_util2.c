@@ -8,6 +8,7 @@
 #include "trainer_tower.h"
 #include "party_menu.h"
 #include "event_data.h"
+#include "wayfarer_persistence.h"
 #include "constants/abilities.h"
 #include "random.h"
 #include "battle_scripts.h"
@@ -49,7 +50,7 @@ void AllocateBattleResources(void)
 
     if (gBattleTypeFlags & BATTLE_TYPE_SECRET_BASE)
     {
-        u16 currSecretBaseId = VarGet(VAR_CURRENT_SECRET_BASE);
+        u16 currSecretBaseId = VarGet(WAYFARER_HOENN_CURRENT_SECRET_BASE_VAR);
         CreateSecretBaseEnemyParty(&gSaveBlock1Ptr->secretBases[currSecretBaseId]);
     }
 }

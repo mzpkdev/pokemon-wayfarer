@@ -330,9 +330,9 @@ void UpdateCyclingRoadState(void)
     if (gLastUsedWarp.mapNum == MAP_NUM(MAP_ROUTE110_SEASIDE_CYCLING_ROAD_NORTH_ENTRANCE) && gLastUsedWarp.mapGroup == MAP_GROUP(MAP_ROUTE110_SEASIDE_CYCLING_ROAD_NORTH_ENTRANCE))
         return;
 
-    if (VarGet(VAR_CYCLING_CHALLENGE_STATE) == 2 || VarGet(VAR_CYCLING_CHALLENGE_STATE) == 3)
+    if (VarGet(WAYFARER_HOENN_CYCLING_CHALLENGE_VAR) == 2 || VarGet(WAYFARER_HOENN_CYCLING_CHALLENGE_VAR) == 3)
     {
-        VarSet(VAR_CYCLING_CHALLENGE_STATE, 0);
+        VarSet(WAYFARER_HOENN_CYCLING_CHALLENGE_VAR, 0);
         Overworld_SetSavedMusic(MUS_DUMMY);
     }
 }
@@ -1965,7 +1965,7 @@ void SetDeptStoreFloor(void)
         deptStoreFloor = DEPT_STORE_FLOORNUM_1F;
         break;
     }
-    VarSet(VAR_DEPT_STORE_FLOOR, deptStoreFloor);
+    VarSet(WAYFARER_HOENN_DEPT_STORE_FLOOR_VAR, deptStoreFloor);
 }
 
 u16 GetDeptStoreDefaultFloorChoice(void)
