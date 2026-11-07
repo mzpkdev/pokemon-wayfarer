@@ -7,8 +7,19 @@ VerdanturfTown_WandasHouse_EventScript_Wally::
 	goto_if_set FLAG_WALLY_SPEECH, VerdanturfTown_WandasHouse_EventScript_WallyShortSpeech
 	msgbox VerdanturfTown_WandasHouse_Text_StrongerSpeech, MSGBOX_DEFAULT
 	setflag FLAG_WALLY_SPEECH
+	call_if_set FLAG_DEFEATED_LAVARIDGE_GYM, VerdanturfTown_WandasHouse_EventScript_WallySlipsOff
 	release
 	end
+
+@ FLANNERY's defeat is when WALLY slips off from VERDANTURF. When she fell before his Mauville battle, he
+@ still comes here, and slips off once he has said his piece.
+VerdanturfTown_WandasHouse_EventScript_WallySlipsOff::
+	closemessage
+	fadescreen FADE_TO_BLACK
+	removeobject VAR_LAST_TALKED
+	setflag FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY
+	fadescreen FADE_FROM_BLACK
+	return
 
 VerdanturfTown_WandasHouse_EventScript_WallyShortSpeech::
 	msgbox VerdanturfTown_WandasHouse_Text_StrongerSpeechShort, MSGBOX_DEFAULT
@@ -18,8 +29,10 @@ VerdanturfTown_WandasHouse_EventScript_WallyShortSpeech::
 VerdanturfTown_WandasHouse_EventScript_WallysUncle::
 	lock
 	faceplayer
+	goto_if_unset FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY, VerdanturfTown_WandasHouse_EventScript_WallysUncleNextDoor
 	goto_if_set FLAG_DEFEATED_WALLY_VICTORY_ROAD, VerdanturfTown_WandasHouse_EventScript_WallysUncleEverGrande
 	goto_if_set FLAG_DEFEATED_LAVARIDGE_GYM, VerdanturfTown_WandasHouse_EventScript_WallysUncleSlippedOff
+VerdanturfTown_WandasHouse_EventScript_WallysUncleNextDoor::
 	msgbox VerdanturfTown_WandasHouse_Text_WallysNextDoor, MSGBOX_DEFAULT
 	release
 	end
@@ -41,6 +54,7 @@ VerdanturfTown_WandasHouse_EventScript_WandasBoyfriend::
 VerdanturfTown_WandasHouse_EventScript_Wanda::
 	lock
 	faceplayer
+	goto_if_unset FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY, VerdanturfTown_WandasHouse_EventScript_MeetWanda
 	goto_if_set FLAG_DEFEATED_LAVARIDGE_GYM, VerdanturfTown_WandasHouse_EventScript_WandaDontWorry
 	goto_if_set FLAG_DEFEATED_WALLY_MAUVILLE, VerdanturfTown_WandasHouse_EventScript_MeetWanda
 	msgbox VerdanturfTown_WandasHouse_Text_DontWorryAboutWally, MSGBOX_DEFAULT
@@ -60,8 +74,10 @@ VerdanturfTown_WandasHouse_EventScript_WandaDontWorry::
 VerdanturfTown_WandasHouse_EventScript_WallysAunt::
 	lock
 	faceplayer
+	goto_if_unset FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY, VerdanturfTown_WandasHouse_EventScript_WallysAuntWallyHere
 	goto_if_set FLAG_DEFEATED_WALLY_VICTORY_ROAD, VerdanturfTown_WandasHouse_EventScript_WallysAuntEverGrande
 	goto_if_set FLAG_DEFEATED_LAVARIDGE_GYM, VerdanturfTown_WandasHouse_EventScript_WallysAuntAnythingHappened
+VerdanturfTown_WandasHouse_EventScript_WallysAuntWallyHere::
 	goto_if_set FLAG_RUSTURF_TUNNEL_OPENED, VerdanturfTown_WandasHouse_EventScript_WallysAuntTunnelOpen
 	msgbox VerdanturfTown_WandasHouse_Text_DaughtersBoyfriendDriven, MSGBOX_DEFAULT
 	release

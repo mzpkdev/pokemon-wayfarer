@@ -254,6 +254,40 @@ describe.sequential("Wayfarer Hoenn Devon errands", () => {
     await expect(game.story.var("hoennSlateportHarborState")).resolves.toBe(2)
   })
 
+  it("keeps Scott in Verdanturf when Wattson's badge came before the museum delivery", { timeout: 300_000 }, async () => {
+    await arrange({ map: "slateport-oceanic-museum-2f", x: 14, y: 6 }, "left", {
+      vars: { hoennSlateportOutsideMuseumState: 3, hoennScottState: 2 },
+      bag: { items: { devonParts: 1 } },
+    })
+    await game.player.interact()
+    let winning = false
+    for (let attempt = 0; attempt < 200; attempt++) {
+      await game.wait.frames(45)
+      const state = await game.state.read()
+      if (state.ready && !state.scriptActive && !state.controlsLocked && !state.battle.active) {
+        if (await game.story.flag("hoennDeliveredDevonGoods")) break
+      }
+      if (!state.battle.active) winning = false
+      if (state.battle.ui === "action-menu" && !winning) {
+        winning = true
+        await game.battle.win()
+      } else await game.controls.press("a")
+    }
+    await expect(game.story.flag("hoennDeliveredDevonGoods")).resolves.toBe(true)
+
+    // The door meeting cannot play any more, so it is counted once and the street stays quiet.
+    await expect(game.story.var("hoennSlateportOutsideMuseumState")).resolves.toBe(3)
+    await expect(game.story.var("hoennScottState")).resolves.toBe(3)
+    await game.player.warp("slateport-oceanic-museum-1f", 9, 7, "down")
+    await game.wait.forReady()
+    // Onto the exit mat, then out through it.
+    await stepOpening(game, "down")
+    await stepOpening(game, "down")
+    await game.wait.forMap("slateport-city")
+    await expectFree(game)
+    await expect(game.story.var("hoennScottState")).resolves.toBe(3)
+  })
+
   it("pays each delivery once in either order, across a save and travel", { timeout: 300_000 }, async () => {
     const giveTheLetter = async () => {
       await game.player.warp("granite-cave-stevens-room", 7, 9, "up")
