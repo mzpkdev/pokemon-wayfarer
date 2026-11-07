@@ -1,0 +1,168 @@
+#include "global.h"
+#include "pokemon.h"
+#include "test/test.h"
+#include "constants/pokedex.h"
+
+// Spec: .product/specs/home-pokedex-lists.md, "Obtainability". The Pokédex completion checks (the
+// home-list diploma and Birch's Johto starter, the National Shiny Charm) skip a species that is
+// dexNotRequired, or mythical without dexForceRequired; every other entry must be obtainable.
+// tools/wayfarer_pokedex/obtainability.py decides what a Wayfarer player can obtain and records the
+// entries it cannot place in obtainability.json; `--write` refreshes the table below from that record,
+// and its test fails when the two differ. The test ROM enables every species (config/test.h), so the
+// release ROM's enabled-entry count is pinned by the Python test, not here.
+
+#if IS_WAYFARER
+static const enum NationalDexOrder sUnobtainableEntries[] =
+{
+    // BEGIN obtainability.json
+    NATIONAL_DEX_TURTWIG,
+    NATIONAL_DEX_GROTLE,
+    NATIONAL_DEX_TORTERRA,
+    NATIONAL_DEX_CHIMCHAR,
+    NATIONAL_DEX_MONFERNO,
+    NATIONAL_DEX_INFERNAPE,
+    NATIONAL_DEX_PIPLUP,
+    NATIONAL_DEX_PRINPLUP,
+    NATIONAL_DEX_EMPOLEON,
+    NATIONAL_DEX_STARLY,
+    NATIONAL_DEX_STARAVIA,
+    NATIONAL_DEX_STARAPTOR,
+    NATIONAL_DEX_BIDOOF,
+    NATIONAL_DEX_BIBAREL,
+    NATIONAL_DEX_KRICKETOT,
+    NATIONAL_DEX_KRICKETUNE,
+    NATIONAL_DEX_SHINX,
+    NATIONAL_DEX_LUXIO,
+    NATIONAL_DEX_LUXRAY,
+    NATIONAL_DEX_CRANIDOS,
+    NATIONAL_DEX_RAMPARDOS,
+    NATIONAL_DEX_SHIELDON,
+    NATIONAL_DEX_BASTIODON,
+    NATIONAL_DEX_BURMY,
+    NATIONAL_DEX_WORMADAM,
+    NATIONAL_DEX_MOTHIM,
+    NATIONAL_DEX_COMBEE,
+    NATIONAL_DEX_VESPIQUEN,
+    NATIONAL_DEX_PACHIRISU,
+    NATIONAL_DEX_CHERUBI,
+    NATIONAL_DEX_CHERRIM,
+    NATIONAL_DEX_BUNEARY,
+    NATIONAL_DEX_LOPUNNY,
+    NATIONAL_DEX_GLAMEOW,
+    NATIONAL_DEX_PURUGLY,
+    NATIONAL_DEX_STUNKY,
+    NATIONAL_DEX_SKUNTANK,
+    NATIONAL_DEX_CHATOT,
+    NATIONAL_DEX_SPIRITOMB,
+    NATIONAL_DEX_GIBLE,
+    NATIONAL_DEX_GABITE,
+    NATIONAL_DEX_GARCHOMP,
+    NATIONAL_DEX_HIPPOPOTAS,
+    NATIONAL_DEX_HIPPOWDON,
+    NATIONAL_DEX_SKORUPI,
+    NATIONAL_DEX_DRAPION,
+    NATIONAL_DEX_CARNIVINE,
+    NATIONAL_DEX_ROTOM,
+    NATIONAL_DEX_UXIE,
+    NATIONAL_DEX_MESPRIT,
+    NATIONAL_DEX_AZELF,
+    NATIONAL_DEX_DIALGA,
+    NATIONAL_DEX_PALKIA,
+    NATIONAL_DEX_HEATRAN,
+    NATIONAL_DEX_GIRATINA,
+    NATIONAL_DEX_CRESSELIA,
+    NATIONAL_DEX_PHIONE,
+    NATIONAL_DEX_MANAPHY,
+    NATIONAL_DEX_DARKRAI,
+    NATIONAL_DEX_SHAYMIN,
+    NATIONAL_DEX_ARCEUS,
+    NATIONAL_DEX_VICTINI,
+    NATIONAL_DEX_TIRTOUGA,
+    NATIONAL_DEX_CARRACOSTA,
+    NATIONAL_DEX_ARCHEN,
+    NATIONAL_DEX_ARCHEOPS,
+    NATIONAL_DEX_COBALION,
+    NATIONAL_DEX_TERRAKION,
+    NATIONAL_DEX_VIRIZION,
+    NATIONAL_DEX_TORNADUS,
+    NATIONAL_DEX_THUNDURUS,
+    NATIONAL_DEX_RESHIRAM,
+    NATIONAL_DEX_ZEKROM,
+    NATIONAL_DEX_LANDORUS,
+    NATIONAL_DEX_KYUREM,
+    NATIONAL_DEX_KELDEO,
+    NATIONAL_DEX_MELOETTA,
+    NATIONAL_DEX_GENESECT,
+    NATIONAL_DEX_TYRUNT,
+    NATIONAL_DEX_TYRANTRUM,
+    NATIONAL_DEX_AMAURA,
+    NATIONAL_DEX_AURORUS,
+    NATIONAL_DEX_XERNEAS,
+    NATIONAL_DEX_YVELTAL,
+    NATIONAL_DEX_ZYGARDE,
+    NATIONAL_DEX_DIANCIE,
+    NATIONAL_DEX_HOOPA,
+    NATIONAL_DEX_VOLCANION,
+    NATIONAL_DEX_TYPE_NULL,
+    NATIONAL_DEX_SILVALLY,
+    NATIONAL_DEX_COSMOG,
+    NATIONAL_DEX_COSMOEM,
+    NATIONAL_DEX_SOLGALEO,
+    NATIONAL_DEX_LUNALA,
+    NATIONAL_DEX_NIHILEGO,
+    NATIONAL_DEX_BUZZWOLE,
+    NATIONAL_DEX_PHEROMOSA,
+    NATIONAL_DEX_XURKITREE,
+    NATIONAL_DEX_CELESTEELA,
+    NATIONAL_DEX_KARTANA,
+    NATIONAL_DEX_GUZZLORD,
+    NATIONAL_DEX_NECROZMA,
+    NATIONAL_DEX_MAGEARNA,
+    NATIONAL_DEX_MARSHADOW,
+    NATIONAL_DEX_POIPOLE,
+    NATIONAL_DEX_NAGANADEL,
+    NATIONAL_DEX_STAKATAKA,
+    NATIONAL_DEX_BLACEPHALON,
+    NATIONAL_DEX_ZERAORA,
+    NATIONAL_DEX_MELTAN,
+    NATIONAL_DEX_MELMETAL,
+    NATIONAL_DEX_DRACOZOLT,
+    NATIONAL_DEX_ARCTOZOLT,
+    NATIONAL_DEX_DRACOVISH,
+    NATIONAL_DEX_ARCTOVISH,
+    NATIONAL_DEX_ZACIAN,
+    NATIONAL_DEX_ZAMAZENTA,
+    NATIONAL_DEX_ETERNATUS,
+    NATIONAL_DEX_KUBFU,
+    NATIONAL_DEX_URSHIFU,
+    NATIONAL_DEX_ZARUDE,
+    NATIONAL_DEX_GLASTRIER,
+    NATIONAL_DEX_SPECTRIER,
+    NATIONAL_DEX_CALYREX,
+    NATIONAL_DEX_ENAMORUS,
+    NATIONAL_DEX_ARTICUNO_GALAR,
+    NATIONAL_DEX_ZAPDOS_GALAR,
+    NATIONAL_DEX_MOLTRES_GALAR,
+    // END obtainability.json
+};
+
+static bool32 IsRequiredForCompletion(u16 species)
+{
+    return !(gSpeciesInfo[species].dexNotRequired
+          || (gSpeciesInfo[species].isMythical && !gSpeciesInfo[species].dexForceRequired));
+}
+
+TEST("Pokédex completion never requires a species the world does not offer")
+{
+    u32 i;
+
+    for (i = 0; i < ARRAY_COUNT(sUnobtainableEntries); i++)
+    {
+        u16 species = NationalPokedexNumToSpecies(sUnobtainableEntries[i]);
+
+        EXPECT_NE(species, SPECIES_NONE);
+        EXPECT(IsSpeciesEnabled(species));
+        EXPECT(!IsRequiredForCompletion(species));
+    }
+}
+#endif

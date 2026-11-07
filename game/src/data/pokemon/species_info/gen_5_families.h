@@ -6317,6 +6317,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 #if P_FAMILY_TIRTOUGA
     [SPECIES_TIRTOUGA] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 54,
         .baseAttack    = 78,
         .baseDefense   = 103,
@@ -6387,6 +6388,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 
     [SPECIES_CARRACOSTA] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 74,
         .baseAttack    = 108,
         .baseDefense   = 133,
@@ -6463,6 +6465,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 #if P_FAMILY_ARCHEN
     [SPECIES_ARCHEN] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 55,
         .baseAttack    = 112,
         .baseDefense   = 45,
@@ -6533,6 +6536,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 
     [SPECIES_ARCHEOPS] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 75,
         .baseAttack    = 140,
         .baseDefense   = 65,
@@ -12725,6 +12729,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 #if P_FAMILY_COBALION
     [SPECIES_COBALION] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 91,
         .baseAttack    = 90,
         .baseDefense   = 129,
@@ -12796,6 +12801,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 #if P_FAMILY_TERRAKION
     [SPECIES_TERRAKION] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 91,
         .baseAttack    = 129,
         .baseDefense   = 90,
@@ -12871,6 +12877,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 #if P_FAMILY_VIRIZION
     [SPECIES_VIRIZION] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 91,
         .baseAttack    = 90,
         .baseDefense   = 72,
@@ -12941,6 +12948,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 #if P_FAMILY_TORNADUS
     [SPECIES_TORNADUS_INCARNATE] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 79,
         .baseAttack    = 115,
         .baseDefense   = 70,
@@ -13032,6 +13040,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 
     [SPECIES_TORNADUS_THERIAN] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 79,
         .baseAttack    = 100,
         .baseDefense   = 80,
@@ -13108,6 +13117,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 #if P_FAMILY_THUNDURUS
     [SPECIES_THUNDURUS_INCARNATE] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 79,
         .baseAttack    = 115,
         .baseDefense   = 70,
@@ -13199,6 +13209,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 
     [SPECIES_THUNDURUS_THERIAN] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 79,
         .baseAttack    = 105,
         .baseDefense   = 70,
@@ -13287,6 +13298,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 #if P_FAMILY_RESHIRAM
     [SPECIES_RESHIRAM] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 100,
         .baseAttack    = 120,
         .baseDefense   = 100,
@@ -13358,6 +13370,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 #if P_FAMILY_ZEKROM
     [SPECIES_ZEKROM] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 100,
         .baseAttack    = 150,
         .baseDefense   = 120,
@@ -13429,6 +13442,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 #if P_FAMILY_LANDORUS
     [SPECIES_LANDORUS_INCARNATE] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 89,
         .baseAttack    = 125,
         .baseDefense   = 90,
@@ -13520,6 +13534,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 
     [SPECIES_LANDORUS_THERIAN] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 89,
         .baseAttack    = 145,
         .baseDefense   = 90,
@@ -13596,6 +13611,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
 #if P_FAMILY_KYUREM
     [SPECIES_KYUREM] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 125,
         .baseAttack    = 130,
         .baseDefense   = 90,
