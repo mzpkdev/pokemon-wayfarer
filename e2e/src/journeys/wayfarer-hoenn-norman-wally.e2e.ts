@@ -365,6 +365,8 @@ describe.sequential("Wayfarer Hoenn Norman, Wally and the Lavaridge rival", () =
     }
     await expect(game.story.flag("hoennWallySpeech")).resolves.toBe(true)
     await expect(game.story.flag("hideVerdanturfWandasHouseWally")).resolves.toBe(true)
+    // He leaves the room at once, not on the next visit.
+    expect(sees(await game.state.read(), verdanturfWally)).toBe(false)
 
     // Back in the house, he has gone, and his uncle says so.
     await game.player.warp("verdanturf-wandas-house", 7, 3, "up")

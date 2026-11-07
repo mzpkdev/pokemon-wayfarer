@@ -14,7 +14,11 @@ VerdanturfTown_WandasHouse_EventScript_Wally::
 @ FLANNERY's defeat is when WALLY slips off from VERDANTURF. When she fell before his Mauville battle, he
 @ still comes here, and slips off once he has said his piece.
 VerdanturfTown_WandasHouse_EventScript_WallySlipsOff::
+	closemessage
+	fadescreen FADE_TO_BLACK
+	removeobject VAR_LAST_TALKED
 	setflag FLAG_HIDE_VERDANTURF_TOWN_WANDAS_HOUSE_WALLY
+	fadescreen FADE_FROM_BLACK
 	return
 
 VerdanturfTown_WandasHouse_EventScript_WallyShortSpeech::
