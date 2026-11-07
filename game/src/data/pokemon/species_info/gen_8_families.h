@@ -6193,6 +6193,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_DRACOZOLT
     [SPECIES_DRACOZOLT] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 90,
         .baseAttack    = 100,
         .baseDefense   = 90,
@@ -6258,6 +6259,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_ARCTOZOLT
     [SPECIES_ARCTOZOLT] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 90,
         .baseAttack    = 100,
         .baseDefense   = 90,
@@ -6322,6 +6324,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_DRACOVISH
     [SPECIES_DRACOVISH] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 90,
         .baseAttack    = 90,
         .baseDefense   = 100,
@@ -6387,6 +6390,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_ARCTOVISH
     [SPECIES_ARCTOVISH] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 90,
         .baseAttack    = 90,
         .baseDefense   = 100,
@@ -6849,6 +6853,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_ZACIAN
     [SPECIES_ZACIAN_HERO] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 92,
         .baseAttack    = P_UPDATED_STATS >= GEN_9 ? 120 : 130,
         .baseDefense   = 115,
@@ -6916,6 +6921,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 
     [SPECIES_ZACIAN_CROWNED] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 92,
         .baseAttack    = P_UPDATED_STATS >= GEN_9 ? 150 : 170,
         .baseDefense   = 115,
@@ -6987,6 +6993,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_ZAMAZENTA
     [SPECIES_ZAMAZENTA_HERO] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 92,
         .baseAttack    = P_UPDATED_STATS >= GEN_9 ? 120 : 130,
         .baseDefense   = 115,
@@ -7055,6 +7062,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 
     [SPECIES_ZAMAZENTA_CROWNED] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 92,
         .baseAttack    = P_UPDATED_STATS >= GEN_9 ? 120 : 130,
         .baseDefense   = P_UPDATED_STATS >= GEN_9 ? 140 : 145,
@@ -7126,6 +7134,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_ETERNATUS
     [SPECIES_ETERNATUS] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 140,
         .baseAttack    = 85,
         .baseDefense   = 95,
@@ -7194,6 +7203,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 
     [SPECIES_ETERNATUS_ETERNAMAX] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 255,
         .baseAttack    = 115,
         .baseDefense   = 250,
@@ -7256,6 +7266,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_KUBFU
     [SPECIES_KUBFU] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 60,
         .baseAttack    = 90,
         .baseDefense   = 60,
@@ -7326,6 +7337,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 
     [SPECIES_URSHIFU_SINGLE_STRIKE] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 100,
         .baseAttack    = 130,
         .baseDefense   = 100,
@@ -7456,6 +7468,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 
     [SPECIES_URSHIFU_RAPID_STRIKE] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 100,
         .baseAttack    = 130,
         .baseDefense   = 100,
@@ -7865,6 +7878,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_GLASTRIER
     [SPECIES_GLASTRIER] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 100,
         .baseAttack    = 145,
         .baseDefense   = 130,
@@ -7931,6 +7945,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_SPECTRIER
     [SPECIES_SPECTRIER] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 100,
         .baseAttack    = 65,
         .baseDefense   = 60,
@@ -7998,6 +8013,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_CALYREX
     [SPECIES_CALYREX] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 100,
         .baseAttack    = 80,
         .baseDefense   = 80,
@@ -8207,6 +8223,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_ENAMORUS
     [SPECIES_ENAMORUS_INCARNATE] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 74,
         .baseAttack    = 115,
         .baseDefense   = 70,
@@ -8275,6 +8292,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 
     [SPECIES_ENAMORUS_THERIAN] =
     {
+        .dexNotRequired = TRUE,
         .baseHP        = 74,
         .baseAttack    = 115,
         .baseDefense   = 110,
