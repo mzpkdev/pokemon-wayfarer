@@ -260,10 +260,12 @@ so there is something to rate.
 - His rating and his place follow that test, and a Hoenn League win also puts
   him in his lab, so the National Dex and Johto starter scenes have him even for
   a visitor who never rescued him. Petalburg Gym and Wally play no part.
-- He doesn't roam: the clock advances a different copy of `VAR_BIRCH_STATE`, and
-  this design leaves that alone. His Route 110 registration scene is a separate
-  beat that this design doesn't change, and it still talks as if the player
-  knows him and the rival.
+- Once his opening is over he roams as in Emerald (lab, Route 101, Route 103 by
+  day): the clock advances Hoenn's copy of `VAR_BIRCH_STATE`. Before it is over,
+  after a Hoenn League win, and while a rescued visitor's thanks is still
+  waiting in the lab (`VAR_BIRCH_LAB_STATE` 2), he stays in his lab. His Route
+  110 registration scene is a separate beat that this design doesn't change, and
+  it still talks as if the player knows him and the rival.
 - A Hoenn-origin player can ask for the rating right after the Pokédex, in the
   same visit.
 - Birch's Treecko, Torchic, and Mudkip stay for a Hoenn-origin player. His

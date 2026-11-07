@@ -8,6 +8,7 @@
 #include "rtc.h"
 #include "script.h"
 #include "task.h"
+#include "wayfarer_persistence.h"
 
 static u32 GetMirageRnd(void)
 {
@@ -117,12 +118,12 @@ void WaitWeather(void)
 
 void InitBirchState(void)
 {
-    *GetVarPointer(VAR_BIRCH_STATE) = 0;
+    *GetVarPointer(HOENN_VAR_ID(VAR_BIRCH_STATE)) = 0;
 }
 
 void UpdateBirchState(u16 days)
 {
-    u16 *state = GetVarPointer(VAR_BIRCH_STATE);
+    u16 *state = GetVarPointer(HOENN_VAR_ID(VAR_BIRCH_STATE));
     *state += days;
     *state %= 7;
 }

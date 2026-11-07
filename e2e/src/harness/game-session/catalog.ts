@@ -613,6 +613,8 @@ export const storyVars = {
   hoennRoute110State: 0x7069,
   hoennRoute119State: 0x7072,
   hoennPetalburgGymState: 0x7085,
+  // Emerald's VAR_BIRCH_STATE in the Hoenn bank: the day of Birch's weekly round (lab, Route 101, Route 103).
+  hoennBirchState: 0x7049,
   hoennBirchLabState: 0x7084,
   hoennStevensHouseState: 0x70c6,
   hoennDexUpgradeState: 0x70d3,
