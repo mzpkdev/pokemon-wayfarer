@@ -237,6 +237,11 @@ describe.sequential("Wayfarer Hoenn rival scenes for a visitor", () => {
       "Birch's National Dex scene",
     )
     expect(sees(await game.state.read(), littlerootRival)).toBe(false)
+    // His call in town: a Johto starter who never rescued him neither met him nor got his POKéDEX.
+    const call = (await game.state.read()).dialogue.fullText
+    expect(call).toContain("from another region")
+    expect(call).not.toContain("I gave you")
+    expect(call).not.toContain("first saw you")
     const said = await playSceneUntil(
       game,
       async () => (await game.story.var("hoennDexUpgradeState")) === 2,
@@ -244,6 +249,11 @@ describe.sequential("Wayfarer Hoenn rival scenes for a visitor", () => {
     )
     expect(said).not.toContain("MAY:")
     expect(said).not.toContain("BRENDAN:")
+    // In the lab: no rival helped, and one with no POKéDEX is handed one before the upgrade.
+    expect(said).toContain("take this one")
+    expect(said).toContain("come all the way")
+    expect(said).not.toContain("Thanks to your help")
+    expect(said).toContain("upgraded")
     expect(await game.state.read()).toMatchObject({ map: { name: "birch-lab" } })
     expect(sees(await game.state.read(), birchLabRival)).toBe(false)
 
