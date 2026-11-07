@@ -120,11 +120,18 @@ PalletTown_Lab_EventScript_Oak::
 	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
 	goto_if_eq VAR_RESULT, TRUE, PalletTown_Lab_EventScript_KantoOak
 #endif
+#if IS_WAYFARER
+	@ A HOENN TRAINER who had no POKéDEX at the welcome gets the NATIONAL Mode at a later talk
+	call_if_ne VAR_PALLETTOWN_LABSTATE, 0, PalletTown_Lab_EventScript_TryUpgradeVisitorPokedex
+#endif
 	goto_if_eq VAR_PALLETTOWN_LABSTATE, 1, PalletTown_Lab_EventScript_OakBadgeCheck
 	goto_if_eq VAR_PALLETTOWN_LABSTATE, 2, PalletTown_Lab_EventScript_OakDex
 	msgbox PalletTown_Lab_Text_OakWelcomeKanto, MSGBOX_DEFAULT
 	msgbox PalletTown_Lab_Text_OakLabGoodbye, MSGBOX_DEFAULT
 	setvar VAR_PALLETTOWN_LABSTATE, 1
+#if IS_WAYFARER
+	call PalletTown_Lab_EventScript_WelcomeUpgradeVisitorPokedex
+#endif
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 	specialvar VAR_RESULT, WayfarerGetKantoBadgeCountForScript
 	goto_if_ge VAR_RESULT, 8, PalletTown_Lab_EventScript_Oak16Badges
@@ -1033,9 +1040,33 @@ PalletTown_Lab_EventScript_KantoRightPoster::
 PalletTown_Lab_EventScript_OakGiveNatDex_ForPlaytesters::
 	setflag FLAG_SYS_NATIONAL_DEX
 	special EnableNationalPokedex
-	setvar VAR_0x8004, 1 @ DEX_REGION_KANTO
-	special DexScript_GrantNationalExtension
 	return
+
+#if IS_WAYFARER
+@ Oak, like Elm, is the first professor a HOENN TRAINER may meet in the other land: his welcome
+@ ends with the NATIONAL Mode, or notes that the POKéDEX has it already.
+PalletTown_Lab_EventScript_WelcomeUpgradeVisitorPokedex::
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_NopReturn
+	goto_if_unset FLAG_SYS_POKEDEX_GET, Common_EventScript_NopReturn
+	goto_if_unset FLAG_SYS_NATIONAL_DEX, PalletTown_Lab_EventScript_TryUpgradeVisitorPokedex
+	msgbox PalletTown_Lab_Text_OakNationalDexAlreadyHeld, MSGBOX_DEFAULT
+	return
+
+PalletTown_Lab_EventScript_TryUpgradeVisitorPokedex::
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_NopReturn
+	goto_if_unset FLAG_SYS_POKEDEX_GET, Common_EventScript_NopReturn
+	goto_if_set FLAG_SYS_NATIONAL_DEX, Common_EventScript_NopReturn
+	msgbox PalletTown_Lab_Text_OakUpgradePokedex, MSGBOX_DEFAULT
+	playfanfare MUS_OBTAIN_ITEM
+	message PalletTown_Lab_Text_PokedexUpgradedToNational
+	waitmessage
+	waitfanfare
+	setflag FLAG_SYS_NATIONAL_DEX
+	special EnableNationalPokedex
+	return
+#endif
 
 PalletTown_Lab_EventScript_OakBadgeCheck::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
@@ -1431,6 +1462,23 @@ PalletTown_Lab_Text_OakWelcomeKanto:
 PalletTown_Lab_Text_OakLabGoodbye:
 	.string "If you're in the area, I hope you\n"
 	.string "come visit again.$"
+
+#if IS_WAYFARER
+PalletTown_Lab_Text_OakUpgradePokedex:
+	.string "OAK: Oh, before you go! A POKéDEX\n"
+	.string "from HOENN won't know KANTO's\l"
+	.string "POKéMON.\p"
+	.string "Let me upgrade it with the\n"
+	.string "NATIONAL MODE.$"
+
+PalletTown_Lab_Text_PokedexUpgradedToNational:
+	.string "{PLAYER}'s POKéDEX was upgraded\n"
+	.string "with the NATIONAL MODE!$"
+
+PalletTown_Lab_Text_OakNationalDexAlreadyHeld:
+	.string "OAK: And your POKéDEX has the\n"
+	.string "NATIONAL MODE already. Splendid!$"
+#endif
 
 PalletTown_Lab_Text_OakOpenMtSilver:
 	.string "OAK: Wow! That's excellent!\p"

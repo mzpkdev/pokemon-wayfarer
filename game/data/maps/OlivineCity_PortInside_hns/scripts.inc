@@ -10,6 +10,7 @@ OlivineCity_PortInside_EventScript_Oak::
 	delay 55
 	waitmovement LOCALID_OLIVINEPORT_OAK
 	turnobject LOCALID_OLIVINEPORT_OAK, DIR_NORTH
+	goto_if_set FLAG_SYS_NATIONAL_DEX, OlivineCity_PortInside_EventScript_NationalDexAlreadyHeld
 	msgbox OlivineCity_PortInside_Text_Nationaldex1, MSGBOX_DEFAULT
 	closemessage
 	applymovement2 LOCALID_OLIVINEPORT_OAK, OlivineCity_PortInside_Movement_OakFixDex
@@ -21,6 +22,7 @@ OlivineCity_PortInside_EventScript_Oak::
 	message OlivineCity_PortInside_Text_Nationaldex2
 	waitfanfare
 	delay 50
+OlivineCity_PortInside_EventScript_OakLeave:
 	msgbox OlivineCity_PortInside_Text_Nationaldex3, MSGBOX_DEFAULT
 	closemessage
 	playse SE_PIN
@@ -40,6 +42,11 @@ OlivineCity_PortInside_EventScript_Oak::
 	waitse
 	release
 	end
+
+@ A POKéDEX upgraded already is not upgraded again
+OlivineCity_PortInside_EventScript_NationalDexAlreadyHeld::
+	msgbox OlivineCity_PortInside_Text_NationalDexAlreadyHeld, MSGBOX_DEFAULT
+	goto OlivineCity_PortInside_EventScript_OakLeave
 
 OlivineCity_PortInside_Movement_OakFixDex:
 	walk_in_place_up
@@ -75,6 +82,10 @@ OlivineCity_PortInside_Text_Nationaldex1:
 OlivineCity_PortInside_Text_Nationaldex2:
 	.string "{PLAYER}'s POKéDEX was upgraded\n"
 	.string "with the NATIONAL MODE!$"
+OlivineCity_PortInside_Text_NationalDexAlreadyHeld:
+	.string "PROF.OAK: Hello, {PLAYER}!\n"
+	.string "Your POKéDEX has the NATIONAL\l"
+	.string "MODE already, I see. Good!$"
 OlivineCity_PortInside_Text_Nationaldex3:
 	.string "PROF.OAK: It won't be easy to\n"
 	.string "complete the NATIONAL POKéDEX...\p"
