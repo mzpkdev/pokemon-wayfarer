@@ -9,6 +9,7 @@
 #include "mail.h"
 #include "pokemon_storage_system.h"
 #include "event_data.h"
+#include "wayfarer_persistence.h"
 #include "random.h"
 #include "main.h"
 #include "egg_hatch.h"
@@ -590,6 +591,22 @@ static s32 GetParentToInheritNature(struct DayCare *daycare)
     return Random() & 1 ? slot : -1;
 }
 
+// The day care is one shared storage, but Route 117's day care man (Hoenn) reads the Hoenn copy of the
+// pending-egg flag while the others read the engine copy, so both copies follow the egg.
+static void SetPendingDaycareEggFlags(bool8 pending)
+{
+    if (pending)
+    {
+        FlagSet(FLAG_PENDING_DAYCARE_EGG);
+        FlagSet(WAYFARER_HOENN_PENDING_DAYCARE_EGG_FLAG);
+    }
+    else
+    {
+        FlagClear(FLAG_PENDING_DAYCARE_EGG);
+        FlagClear(WAYFARER_HOENN_PENDING_DAYCARE_EGG_FLAG);
+    }
+}
+
 static void _TriggerPendingDaycareEgg(struct DayCare *daycare)
 {
     s32 parent;
@@ -622,14 +639,14 @@ static void _TriggerPendingDaycareEgg(struct DayCare *daycare)
         daycare->offspringPersonality = personality;
     }
 
-    FlagSet(FLAG_PENDING_DAYCARE_EGG);
+    SetPendingDaycareEggFlags(TRUE);
 }
 
 // Functionally unused
 static void _TriggerPendingDaycareMaleEgg(struct DayCare *daycare)
 {
     daycare->offspringPersonality = (Random()) | (EGG_GENDER_MALE);
-    FlagSet(FLAG_PENDING_DAYCARE_EGG);
+    SetPendingDaycareEggFlags(TRUE);
 }
 
 void TriggerPendingDaycareEgg(void)
@@ -973,6 +990,7 @@ static void BuildEggMoveset(struct Pokemon *egg, struct BoxPokemon *father, stru
 
 static void RemoveEggFromDayCare(struct DayCare *daycare)
 {
+    SetPendingDaycareEggFlags(FALSE);
     daycare->offspringPersonality = 0;
     daycare->stepCounter = 0;
 }

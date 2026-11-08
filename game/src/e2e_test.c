@@ -952,7 +952,7 @@ static bool32 ApplyOverrides(void)
         base->decorationPositions[0] = (4 << 4) | 4;
         base->decorations[1] = DECOR_PICHU_DOLL;
         base->decorationPositions[1] = (6 << 4) | 4;
-        VarSet(VAR_CURRENT_SECRET_BASE, 1);
+        VarSet(WAYFARER_HOENN_CURRENT_SECRET_BASE_VAR, 1);
     }
     ResetObservations();
 
@@ -1365,7 +1365,7 @@ static u8 CountSurfBlobs(void)
 
 static void RecordSecretBaseState(void)
 {
-    u16 baseIndex = VarGet(VAR_CURRENT_SECRET_BASE);
+    u16 baseIndex = VarGet(WAYFARER_HOENN_CURRENT_SECRET_BASE_VAR);
     const struct SecretBase *base;
     u32 fingerprint = 2166136261;
     u32 i;

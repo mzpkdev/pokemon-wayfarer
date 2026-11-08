@@ -504,6 +504,11 @@ bool8 WayfarerIsMapHoennSource(s16 mapGroup, s16 mapNum)
     return IsWayfarerMapHoennSource(mapGroup, mapNum);
 }
 
+u16 WayfarerDecorationFlag(u8 index)
+{
+    return (WayfarerIsCurrentMapHoennSource() ? WAYFARER_HOENN_DECORATION_1_FLAG : FLAG_DECORATION_1) + index;
+}
+
 bool8 WayfarerIsCurrentMapHoennSource(void)
 {
     return IsWayfarerMapHoennSource(gSaveBlock1Ptr->location.mapGroup,

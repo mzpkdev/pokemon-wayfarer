@@ -4,6 +4,7 @@
 #include "decoration.h"
 #include "decoration_inventory.h"
 #include "event_data.h"
+#include "wayfarer_persistence.h"
 #include "event_object_movement.h"
 #include "event_scripts.h"
 #include "field_camera.h"
@@ -1320,12 +1321,12 @@ void SetDecoration(void)
 
     for (i = 0; i < NUM_DECORATION_FLAGS; i++)
     {
-        if (FlagGet(FLAG_DECORATION_1 + i) == TRUE)
+        if (FlagGet(WayfarerDecorationFlag(i)) == TRUE)
         {
-            FlagClear(FLAG_DECORATION_1 + i);
+            FlagClear(WayfarerDecorationFlag(i));
             for (j = 0; j < gMapHeader.events->objectEventCount; j++)
             {
-                if (gMapHeader.events->objectEvents[j].flagId == FLAG_DECORATION_1 + i)
+                if (gMapHeader.events->objectEvents[j].flagId == WayfarerDecorationFlag(i))
                     break;
             }
 
@@ -1687,7 +1688,7 @@ static bool8 CanPlaceDecoration(u8 taskId, const struct Decoration *decoration)
     {
         for (i = 0; i < NUM_DECORATION_FLAGS; i++)
         {
-            if (FlagGet(FLAG_DECORATION_1 + i) == TRUE)
+            if (FlagGet(WayfarerDecorationFlag(i)) == TRUE)
                 return TRUE;
         }
         return FALSE;
@@ -2415,7 +2416,7 @@ enum MapLayoutLoadError Test_ApplyDecoration(s16 posX, s16 posY, u16 decoration)
         sTestSavedSpecialVar8007 = gSpecialVar_0x8007;
         sTestSavedSpecialResult = gSpecialVar_Result;
         sTestSavedGraphicsVar = VarGet(VAR_OBJ_GFX_ID_0);
-        sTestSavedDecorationFlag = FlagGet(FLAG_DECORATION_1);
+        sTestSavedDecorationFlag = FlagGet(WayfarerDecorationFlag(0));
         sTestSavedTask = gTasks[0];
         memcpy(sTestSavedObjectEvents, gObjectEvents, sizeof(sTestSavedObjectEvents));
         memcpy(sTestSavedObjectEventTemplates, gSaveBlock1Ptr->objectEventTemplates,
@@ -2440,7 +2441,7 @@ enum MapLayoutLoadError Test_ApplyDecoration(s16 posX, s16 posY, u16 decoration)
         sCurDecorMapX = posX;
         sCurDecorMapY = posY;
         LoadObjEventTemplatesFromHeader();
-        FlagSet(FLAG_DECORATION_1);
+        FlagSet(WayfarerDecorationFlag(0));
         SetDecoration();
         sTestSpriteDecorationActive = TRUE;
         if (TryGetObjectEventIdByLocalIdAndMap(gSpecialVar_0x8005,
@@ -2488,7 +2489,7 @@ enum MapLayoutLoadError Test_RemoveDecoration(s16 posX, s16 posY, u16 decoration
         if (!sTestSpriteDecorationActive)
             return MAP_LAYOUT_LOAD_BAD_VIEW_LIFETIME;
         sDecorRearrangementDataBuffer[0].idx = 0;
-        sDecorRearrangementDataBuffer[0].flagId = FLAG_DECORATION_1;
+        sDecorRearrangementDataBuffer[0].flagId = WayfarerDecorationFlag(0);
         sCurDecorSelectedInRearrangement = 1;
         gSpecialVar_0x8004 = 0;
         PutAwayDecorationIteration();
@@ -2525,9 +2526,9 @@ enum MapLayoutLoadError Test_RemoveDecoration(s16 posX, s16 posY, u16 decoration
         memcpy(sPlayerRoomItemsIndicesBuffer, sTestSavedPlayerRoomItemIndices,
                sizeof(sTestSavedPlayerRoomItemIndices));
         if (sTestSavedDecorationFlag)
-            FlagSet(FLAG_DECORATION_1);
+            FlagSet(WayfarerDecorationFlag(0));
         else
-            FlagClear(FLAG_DECORATION_1);
+            FlagClear(WayfarerDecorationFlag(0));
         sTestSpriteDecorationActive = FALSE;
         return error;
     }

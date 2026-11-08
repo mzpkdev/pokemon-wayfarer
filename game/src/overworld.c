@@ -429,10 +429,17 @@ void DoWhiteOut(void)
     WarpIntoMap();
 }
 
+// Kanto's Cycling Road keeps its flag in the engine bank; Hoenn's entrances set their own copy.
+static void ClearCyclingRoadFlags(void)
+{
+    FlagClear(FLAG_SYS_CYCLING_ROAD);
+    FlagClear(WAYFARER_HOENN_CYCLING_ROAD_FLAG);
+}
+
 void Overworld_ResetStateAfterFly(void)
 {
     ResetInitialPlayerAvatarState();
-    FlagClear(FLAG_SYS_CYCLING_ROAD);
+    ClearCyclingRoadFlags();
     FlagClear(FLAG_SYS_CRUISE_MODE);
     FlagClear(FLAG_SYS_SAFARI_MODE);
 #if IS_FRLG
@@ -445,7 +452,7 @@ void Overworld_ResetStateAfterFly(void)
 void Overworld_ResetStateAfterTeleport(void)
 {
     ResetInitialPlayerAvatarState();
-    FlagClear(FLAG_SYS_CYCLING_ROAD);
+    ClearCyclingRoadFlags();
     FlagClear(FLAG_SYS_CRUISE_MODE);
     FlagClear(FLAG_SYS_SAFARI_MODE);
 #if IS_FRLG
@@ -464,7 +471,7 @@ void Overworld_ResetStateAfterTeleport(void)
 void Overworld_ResetStateAfterDigEscRope(void)
 {
     ResetInitialPlayerAvatarState();
-    FlagClear(FLAG_SYS_CYCLING_ROAD);
+    ClearCyclingRoadFlags();
     FlagClear(FLAG_SYS_CRUISE_MODE);
     FlagClear(FLAG_SYS_SAFARI_MODE);
 #if IS_FRLG
@@ -501,7 +508,7 @@ void Overworld_ResetBattleFlagsAndVars(void)
 static void Overworld_ResetStateAfterWhiteOut(void)
 {
     ResetInitialPlayerAvatarState();
-    FlagClear(FLAG_SYS_CYCLING_ROAD);
+    ClearCyclingRoadFlags();
     FlagClear(FLAG_SYS_CRUISE_MODE);
     FlagClear(FLAG_SYS_SAFARI_MODE);
 #if IS_FRLG
