@@ -18,6 +18,8 @@ ProfBirch_EventScript_UpdateLocation::
 	goto_if_set FLAG_SYS_GAME_CLEAR, ProfBirch_EventScript_MoveToLab
 	call ProfBirch_EventScript_CheckOpeningOver
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_NopReturn
+	@ A rescued visitor who has not yet been thanked keeps him in the lab, where that scene plays
+	goto_if_eq VAR_BIRCH_LAB_STATE, 2, ProfBirch_EventScript_MoveToLab
 	call_if_eq VAR_BIRCH_STATE, 0, ProfBirch_EventScript_MoveToLab
 	call_if_eq VAR_BIRCH_STATE, 1, ProfBirch_EventScript_MoveToLab
 	call_if_eq VAR_BIRCH_STATE, 2, ProfBirch_EventScript_MoveToRoute101

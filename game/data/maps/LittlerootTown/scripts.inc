@@ -222,6 +222,8 @@ LittlerootTown_EventScript_BeginDexUpgradeScene::
 @ With the NATIONAL Mode already held, BIRCH has no upgrade to show. HOENN's FLAG_SYS_NATIONAL_DEX
 @ is its own copy, so the upgrade is read through the special.
 LittlerootTown_EventScript_BirchCallToLab::
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	goto_if_eq VAR_RESULT, FALSE, LittlerootTown_EventScript_BirchCallVisitorToLab
 	special DexScript_HasNationalUpgrade
 	goto_if_eq VAR_RESULT, TRUE, LittlerootTown_EventScript_BirchComeToLab
 	msgbox LittlerootTown_Text_BirchSomethingToShowYouAtLab, MSGBOX_DEFAULT
@@ -229,6 +231,11 @@ LittlerootTown_EventScript_BirchCallToLab::
 
 LittlerootTown_EventScript_BirchComeToLab::
 	msgbox LittlerootTown_Text_BirchComeToLab, MSGBOX_DEFAULT
+	return
+
+@ A traveller from KANTO or JOHTO may never have met BIRCH, and his POKéDEX came from home.
+LittlerootTown_EventScript_BirchCallVisitorToLab::
+	msgbox LittlerootTown_Text_BirchCallVisitorToLab, MSGBOX_DEFAULT
 	return
 
 LittlerootTown_OnWarp:
@@ -1040,5 +1047,13 @@ LittlerootTown_Text_BirchComeToLab:
 	.string "I knew there was something special\n"
 	.string "about you when I first saw you,\l"
 	.string "but I never expected this.\p"
+	.string "Come on, let's go to my LAB.$"
+
+LittlerootTown_Text_BirchCallVisitorToLab:
+	.string "PROF. BIRCH: Well, well, {PLAYER}{KUN}!\n"
+	.string "That was good work out there!\p"
+	.string "A TRAINER from another region,\n"
+	.string "HOENN's new CHAMPION!\l"
+	.string "Who would have expected it?\p"
 	.string "Come on, let's go to my LAB.$"
 

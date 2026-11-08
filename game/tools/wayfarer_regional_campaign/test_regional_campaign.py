@@ -67,6 +67,23 @@ class WayfarerRegionalCampaignTests(unittest.TestCase):
         self.assertNotIn("VAR_HOENN_STARTER_CHOICE", lab)
         self.assertNotIn("FLAG_HOENN_STARTER_RECEIVED", lab)
 
+    def test_birch_roams_by_the_hoenn_copy_of_his_state_once_his_opening_is_over(self):
+        clock = (GAME / "src/time_events.c").read_text()
+        self.assertNotIn("GetVarPointer(VAR_BIRCH_STATE)", clock)
+        self.assertEqual(clock.count("GetVarPointer(HOENN_VAR_ID(VAR_BIRCH_STATE))"), 2)
+
+        script = (GAME / "data/scripts/prof_birch.inc").read_text()
+        update = script.split("ProfBirch_EventScript_UpdateLocation::", 1)[1]
+        update = update.split("ProfBirch_EventScript_MoveToLab::", 1)[0]
+        order = [
+            "goto_if_set FLAG_SYS_GAME_CLEAR, ProfBirch_EventScript_MoveToLab",
+            "call ProfBirch_EventScript_CheckOpeningOver",
+            "goto_if_eq VAR_RESULT, FALSE, Common_EventScript_NopReturn",
+            "goto_if_eq VAR_BIRCH_LAB_STATE, 2, ProfBirch_EventScript_MoveToLab",
+            "call_if_eq VAR_BIRCH_STATE, 2, ProfBirch_EventScript_MoveToRoute101",
+        ]
+        self.assertEqual([update.index(line) for line in order], sorted(update.index(line) for line in order))
+
     def test_route_103_rival_belongs_to_the_hoenn_origin(self):
         persistence = (GAME / "src/wayfarer_persistence.c").read_text()
         lab = (GAME / "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.inc").read_text()
