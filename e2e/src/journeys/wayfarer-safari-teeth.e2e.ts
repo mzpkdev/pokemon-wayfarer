@@ -3,11 +3,15 @@ import { beforeEach, describe, expect, it } from "webanvil/test"
 
 import { GameSession, type Direction, type GameMap } from "../harness/game-session"
 
-const settle = async (game: GameSession, map: GameMap): Promise<void> => {
+const settle = async (
+  game: GameSession,
+  map: GameMap,
+  done: () => Promise<boolean> = async () => true,
+): Promise<void> => {
   for (let attempt = 0; attempt < 120; attempt++) {
     await game.wait.frames(20)
     const state = await game.state.read()
-    if (state.ready && state.map.name === map) return
+    if (state.ready && state.map.name === map && (await done())) return
     await game.controls.press("a")
   }
   throw new Error(`Safari interaction did not settle: ${JSON.stringify(await game.state.read())}`)
@@ -70,7 +74,8 @@ const exitSafari = async (game: GameSession): Promise<void> => {
   await game.controls.press("down")
   await game.wait.frames(20)
   await game.controls.press("down")
-  await settle(game, "fuchsia-safari-entrance")
+  // The entrance's exit prompt starts a frame after the warp lands, so wait for the exit itself.
+  await settle(game, "fuchsia-safari-entrance", async () => (await game.story.var("safariSession")) === 1)
   expect(await game.story.flag("inKantoSafari")).toBe(false)
   expect(await game.story.var("safariSession")).toBe(1)
   expect((await game.state.read()).player).toMatchObject({ x: 5, y: 7 })
