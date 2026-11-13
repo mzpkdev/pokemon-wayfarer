@@ -16,10 +16,11 @@ LittlerootTown_ProfessorBirchsLab_MapScripts::
 
 	@ State descriptions for VAR_BIRCH_LAB_STATE
 	@ 1: Never occurs
-	@ 2: Chose starter (a visitor: rescued BIRCH)
+	@ 2: Chose starter
 	@ 3: Received starter in lab
 	@ 4: Defeated rival on Route 103
-	@ 5: Received pokedex (a visitor: BIRCH thanked them)
+	@ 5: Received pokedex (a visitor: BIRCH thanked them for the visit)
+	@ A visitor stays at 0 until that thanks: they arrive after the rescue and never choose a starter.
 
 LittlerootTown_ProfessorBirchsLab_OnTransition:
 	call Common_EventScript_SetupRivalGfxId
@@ -118,8 +119,12 @@ LittlerootTown_ProfessorBirchsLab_EventScript_GiveStarterEvent::
     setvar VAR_0x8004, ORIGIN_SCENE_HOENN_RESCUE
     specialvar VAR_RESULT, WayfarerDispatchOriginScene
     goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, LittlerootTown_ProfessorBirchsLab_EventScript_AuthoredStarter
-    goto_if_eq VAR_RESULT, ORIGIN_SCENE_NATIVE, LittlerootTown_ProfessorBirchsLab_EventScript_AcknowledgeNativeStarter
-	lockall
+    goto LittlerootTown_ProfessorBirchsLab_EventScript_AcknowledgeNativeStarter
+
+@ A traveller from KANTO or JOHTO arrives after the rescue and meets BIRCH here. At the first talk he
+@ thanks them for the visit, hands over a POKéDEX if they have none, upgrades it and rates it. He
+@ offers no starter.
+LittlerootTown_ProfessorBirchsLab_EventScript_VisitorThanks::
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_VisitorThanks, MSGBOX_DEFAULT
 	specialvar VAR_RESULT, WayfarerHasSharedPokedex
 	call_if_eq VAR_RESULT, FALSE, LittlerootTown_ProfessorBirchsLab_EventScript_VisitorReceivePokedex
@@ -136,7 +141,7 @@ LittlerootTown_ProfessorBirchsLab_EventScript_VisitorReceivePokedex::
 	return
 
 @ BIRCH is the first professor a traveller from KANTO or JOHTO meets in HOENN, so he gives the
-@ NATIONAL Mode in his thanks for the rescue, or at the next talk for a save already past it.
+@ NATIONAL Mode in his thanks for the visit, or at the next talk for a save already past it.
 @ In HOENN scripts the FLAG_SYS_* names are HOENN's own copies, so the shared POKéDEX and its
 @ upgrade are read through specials.
 LittlerootTown_ProfessorBirchsLab_EventScript_TryUpgradeVisitorPokedex::
@@ -267,8 +272,8 @@ LittlerootTown_ProfessorBirchsLab_EventScript_OtherRegionsUpgradeToNational::
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_OtherRegionsUpgradeToNational, MSGBOX_DEFAULT
 	return
 
-@ A traveller from KANTO or JOHTO who never rescued BIRCH meets him here: no rival helped, and the
-@ POKéDEX came from home. One who somehow has none is handed one first, so there is one to upgrade.
+@ A traveller from KANTO or JOHTO meets BIRCH here: no rival helped, and the POKéDEX came from
+@ home. One who somehow has none is handed one first, so there is one to upgrade.
 LittlerootTown_ProfessorBirchsLab_EventScript_VisitorOtherRegionsUpgradeToNational::
 	specialvar VAR_RESULT, WayfarerHasSharedPokedex
 	call_if_eq VAR_RESULT, FALSE, LittlerootTown_ProfessorBirchsLab_EventScript_VisitorReceivePokedex
@@ -339,7 +344,7 @@ LittlerootTown_ProfessorBirchsLab_Movement_BirchReturnPokedex:
 
 LittlerootTown_ProfessorBirchsLab_EventScript_ChooseJohtoStarter::
 	lockall
-	@ A visitor who rescues BIRCH only after completing the POKéDEX is at his desk already
+	@ A player who is at his desk already stays there
 	getplayerxy VAR_0x8004, VAR_0x8005
 	call_if_ne VAR_0x8005, 5, LittlerootTown_ProfessorBirchsLab_EventScript_PlayerEnterLabForJohtoStarter
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_CompletedDexChoosePokemon, MSGBOX_DEFAULT
@@ -366,6 +371,8 @@ LittlerootTown_ProfessorBirchsLab_EventScript_Aide::
 	lock
 	faceplayer
 	goto_if_ge VAR_BIRCH_LAB_STATE, 3, LittlerootTown_ProfessorBirchsLab_EventScript_AideReceivedStarter
+	@ A visitor finds BIRCH back from the field when they arrive, before he has thanked them
+	goto_if_set FLAG_RESCUED_BIRCH, LittlerootTown_ProfessorBirchsLab_EventScript_AideReceivedStarter
 	goto_if_set FLAG_BIRCH_AIDE_MET, LittlerootTown_ProfessorBirchsLab_EventScript_AideAlreadyMet
 	msgbox LittlerootTown_ProfessorBirchsLab_Text_BirchAwayOnFieldwork, MSGBOX_DEFAULT
 	setflag FLAG_BIRCH_AIDE_MET
@@ -565,6 +572,8 @@ LittlerootTown_ProfessorBirchsLab_EventScript_Birch::
 	lock
 	faceplayer
 #if IS_WAYFARER
+	call ProfBirch_EventScript_CheckVisitorAwaitsThanks
+	goto_if_eq VAR_RESULT, TRUE, LittlerootTown_ProfessorBirchsLab_EventScript_VisitorThanks
 	call LittlerootTown_ProfessorBirchsLab_EventScript_TryUpgradeVisitorPokedex
 #endif
 	goto_if_eq VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 5, LittlerootTown_ProfessorBirchsLab_EventScript_CanHaveAnyOneOfRarePokemon
@@ -1112,9 +1121,11 @@ LittlerootTown_ProfessorBirchsLab_Text_ScottAboardSSTidalCall:
 
 #if IS_WAYFARER
 LittlerootTown_ProfessorBirchsLab_Text_VisitorThanks:
-	.string "PROF. BIRCH: You handled that rescue\n"
-	.string "like an experienced TRAINER!\p"
-	.string "Thank you, {PLAYER}{KUN}.$"
+	.string "PROF. BIRCH: Oh, a visitor!\n"
+	.string "Welcome to HOENN! I'm BIRCH.\p"
+	.string "A TRAINER who travels this far to\n"
+	.string "see POKéMON is always welcome here.\p"
+	.string "Thank you for stopping by my LAB!$"
 
 LittlerootTown_ProfessorBirchsLab_Text_VisitorTakePokedex:
 	.string "PROF. BIRCH: You're traveling without\n"

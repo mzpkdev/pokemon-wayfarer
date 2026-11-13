@@ -143,6 +143,55 @@ export const receiveBirchStarter = async (
   await finishOpeningDialogue(game)
 }
 
+// Route 101's rescue scene: Birch, his bag and the Zigzagoon chasing him.
+const route101RescueObjects = [2, 3, 4]
+
+/**
+ * A visitor arrives after Birch's rescue, which belongs to a player who started in Hoenn: the
+ * route's trigger starts nothing, and none of the scene's objects are there.
+ */
+export const walkRoute101AsVisitor = async (game: GameSession): Promise<void> => {
+  await game.player.warp("route-101", 9, 19, "right")
+  await game.wait.forReady()
+  await game.player.move("right")
+  await game.wait.frames(90)
+  const state = await game.state.read()
+  const scene = state.objects.filter(
+    (object) => route101RescueObjects.includes(object.localId) && object.visible,
+  )
+  if (
+    !state.ready ||
+    state.scriptActive ||
+    state.dialogueOpen ||
+    state.player.x !== 10 ||
+    state.player.y !== 19 ||
+    scene.length > 0
+  ) {
+    throw new Error(`Route 101 started a rescue for a visitor: ${JSON.stringify(state)}`)
+  }
+}
+
+/**
+ * A visitor meets Birch in his lab. The first talk thanks the traveller for the visit, then rates the
+ * Pokédex (handing one over first when they have none). He offers no starter.
+ */
+export const meetBirchAsVisitor = async (game: GameSession): Promise<void> => {
+  await game.player.warp("birch-lab", 6, 5, "up")
+  await game.wait.forReady()
+  await game.player.interact()
+  await advanceOpeningUntil(
+    game,
+    (state) => state.dialogue.text.includes("Oh, a visitor"),
+    "Birch did not thank the visitor",
+  )
+  await advanceOpeningUntil(
+    game,
+    (state) => state.dialogue.text.startsWith("Look for POK"),
+    "Birch did not rate the visitor's Pokédex",
+  )
+  await finishOpeningDialogue(game)
+}
+
 export const walkOpeningTo = async (game: GameSession, x: number, y: number): Promise<void> => {
   for (let attempt = 0; attempt < 100; attempt++) {
     const state = await game.state.read()

@@ -1,4 +1,5 @@
-@ BIRCH's opening is over once he has given the POKéDEX, or for a visitor once he has been rescued
+@ BIRCH's opening is over once he has given a player who started in HOENN the POKéDEX. A visitor
+@ arrives after the Route 101 rescue, which their arrival marks done, so theirs is over from the start.
 ProfBirch_EventScript_CheckOpeningOver::
 	specialvar VAR_RESULT, WayfarerIsHoennOrigin
 	goto_if_eq VAR_RESULT, FALSE, ProfBirch_EventScript_CheckRescued
@@ -14,12 +15,23 @@ ProfBirch_EventScript_OpeningNotOver::
 	setvar VAR_RESULT, FALSE
 	return
 
+@ A traveller from KANTO or JOHTO is thanked for the visit at their first talk with BIRCH in his LAB
+ProfBirch_EventScript_CheckVisitorAwaitsThanks::
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	goto_if_eq VAR_RESULT, TRUE, ProfBirch_EventScript_NoVisitorThanks
+	setvar VAR_RESULT, TRUE
+	goto_if_ne VAR_BIRCH_LAB_STATE, 5, Common_EventScript_NopReturn
+ProfBirch_EventScript_NoVisitorThanks:
+	setvar VAR_RESULT, FALSE
+	return
+
 ProfBirch_EventScript_UpdateLocation::
 	goto_if_set FLAG_SYS_GAME_CLEAR, ProfBirch_EventScript_MoveToLab
 	call ProfBirch_EventScript_CheckOpeningOver
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_NopReturn
-	@ A rescued visitor who has not yet been thanked keeps him in the lab, where that scene plays
-	goto_if_eq VAR_BIRCH_LAB_STATE, 2, ProfBirch_EventScript_MoveToLab
+	@ A visitor who has not yet been thanked keeps him in the lab, where that scene plays
+	call ProfBirch_EventScript_CheckVisitorAwaitsThanks
+	goto_if_eq VAR_RESULT, TRUE, ProfBirch_EventScript_MoveToLab
 	call_if_eq VAR_BIRCH_STATE, 0, ProfBirch_EventScript_MoveToLab
 	call_if_eq VAR_BIRCH_STATE, 1, ProfBirch_EventScript_MoveToLab
 	call_if_eq VAR_BIRCH_STATE, 2, ProfBirch_EventScript_MoveToRoute101
