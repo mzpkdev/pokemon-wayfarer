@@ -4,13 +4,15 @@ import { GameSession } from "../harness/game-session"
 import {
   advanceOpeningUntil,
   finishOpeningDialogue,
+  meetBirchAsVisitor,
   receiveBirchStarter,
+  walkRoute101AsVisitor,
 } from "../playbooks/regional-opening"
 import { rideAquaFromVermilionToSlateport } from "../playbooks/wayfarer-ports"
 
 // Birch makes his weekly round once his opening is over: the lab on days 0, 1, 6, Route 101 on
 // days 2, 3, and Route 103 on days 4, 5. The clock advances the Hoenn copy of his state. Until the
-// opening is over, a rescued visitor's thanks is still waiting, or a Hoenn League win, he stays in
+// opening is over, while a visitor's thanks is still waiting, or after a Hoenn League win, he stays in
 // his lab, and no order of play shows two Birches.
 
 const labBirch = 2
@@ -79,7 +81,7 @@ describe("Wayfarer Hoenn: Birch's weekly round", () => {
           await expectBirchOnlyAt(game, place, day)
         }
 
-        // A Hoenn League win brings him home for good, even for a visitor who never rescued him.
+        // A Hoenn League win brings him home for good, even for a visitor he never thanked.
         await game.arrange({
           checkpoint: "new-bark-after-intro",
           player: { facing: "up", position: { map: "birch-lab", x: 6, y: 8 } },
@@ -97,7 +99,7 @@ describe("Wayfarer Hoenn: Birch's weekly round", () => {
   )
 
   it(
-    "keeps a visitor's Birch in one place: no second Birch before the rescue, the lab for his thanks",
+    "keeps a visitor's Birch in his lab until he thanks them, with no rescue on Route 101",
     { timeout: 600_000 },
     async () => {
       const game = await GameSession.launch()
@@ -115,64 +117,21 @@ describe("Wayfarer Hoenn: Birch's weekly round", () => {
         })
         await rideAquaFromVermilionToSlateport(game)
 
-        // Wally's tutorial is done and the week has come round to Route 101, but nobody has
-        // rescued him: the rescue scene's Birch is the only one on the route.
+        // Wally's tutorial is done and the week has come round to Route 101, but Birch has not yet
+        // thanked the visitor: he waits in his lab, and the route has no rescue scene.
         await game.story.setVar("hoennPetalburgGymState", 1)
+        for (const day of [0, 2, 4]) await expectBirchOnlyAt(game, "lab", day)
         await game.story.setVar("hoennBirchState", 2)
-        expect(await birchesAt(game, "route-101")).toEqual([])
-        expect(await birchesAt(game, "lab")).toEqual([])
+        await walkRoute101AsVisitor(game)
 
-        await game.player.warp("route-101", 9, 19, "right")
-        await game.wait.forReady()
-        await game.player.move("right")
-        await finishOpeningDialogue(game)
-        await game.player.warp("route-101", 7, 15, "up")
-        await game.player.interact()
-        await advanceOpeningUntil(
-          game,
-          (state) => state.battle.ui === "action-menu",
-          "The visitor's rescue battle did not start",
-        )
-        await game.battle.win()
-        // The thanks plays in the lab with Birch there, on a day he would be on Route 101.
-        await advanceOpeningUntil(
-          game,
-          (state) => state.dialogue.text.includes("You handled"),
-          "Birch did not thank the visitor",
-        )
-        const lab = (await game.state.read()).objects
-        expect(lab.some((object) => object.localId === labBirch && object.visible)).toBe(true)
-        await advanceOpeningUntil(
-          game,
-          (state) => state.dialogue.text.startsWith("Look for POK"),
-          "Birch did not rate the Pokédex",
-        )
-        await finishOpeningDialogue(game)
+        // The thanks plays at the first talk in the lab, on a day he would be on Route 101.
+        await meetBirchAsVisitor(game)
+        await expect(game.story.var("hoennBirchLabState")).resolves.toBe(5)
 
         // Thanked: the weekly round starts.
         await expectBirchOnlyAt(game, "route-101", 2)
         await expectBirchOnlyAt(game, "route-103", 4)
         await expectBirchOnlyAt(game, "lab", 6)
-
-        // A thanks still waiting (a save made at the rescue) finds him in the lab on a Route 101 day.
-        // The thanks starts as the lab loads, so the arrange never sees a free field: it stalls on
-        // the open dialogue, which is the scene this case waits for.
-        const arranged = game.arrange({
-          checkpoint: "new-bark-after-intro",
-          player: { facing: "up", position: { map: "birch-lab", x: 6, y: 5 } },
-          story: {
-            vars: { hoennBirchState: 2, hoennBirchLabState: 2 },
-            flags: { hoennRescuedBirch: true },
-          },
-          determinism: { textSpeed: "instant" },
-        })
-        await arranged.catch(() => undefined)
-        await game.wait.until((state) => state.dialogueOpen, "Birch's thanks")
-        expect(
-          (await game.state.read()).objects.some(
-            (object) => object.localId === labBirch && object.visible,
-          ),
-        ).toBe(true)
       } finally {
         await game.close()
       }

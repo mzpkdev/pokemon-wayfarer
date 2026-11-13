@@ -118,7 +118,9 @@ describe.sequential("Wayfarer Hoenn rival scenes for a visitor", () => {
         hoennChoice: NO_STARTER,
         hoennReceived: false,
       })
-      await expect(game.story.flag("hoennRescuedBirch")).resolves.toBe(false)
+      // A visitor arrives after Birch's rescue, which belongs to a Hoenn-origin player.
+      await expect(game.story.flag("hoennRescuedBirch")).resolves.toBe(true)
+      await expect(game.story.var("hoennBirchLabState")).resolves.toBe(0)
 
       // Route 119 first: the rival rides in, introduces themself, and hands over Fly. Scott stays away.
       await game.player.warp("route-119", 25, 33, "up")
@@ -237,7 +239,7 @@ describe.sequential("Wayfarer Hoenn rival scenes for a visitor", () => {
       "Birch's National Dex scene",
     )
     expect(sees(await game.state.read(), littlerootRival)).toBe(false)
-    // His call in town: a Johto starter who never rescued him neither met him nor got his POKéDEX.
+    // His call in town: a Johto starter who never talked to him neither met him nor got his POKéDEX.
     const call = (await game.state.read()).dialogue.fullText
     expect(call).toContain("from another region")
     expect(call).not.toContain("I gave you")
@@ -257,7 +259,7 @@ describe.sequential("Wayfarer Hoenn rival scenes for a visitor", () => {
     expect(await game.state.read()).toMatchObject({ map: { name: "birch-lab" } })
     expect(sees(await game.state.read(), birchLabRival)).toBe(false)
 
-    // A League win keeps Birch in his lab for the scenes after this one, rescued or not.
+    // A League win keeps Birch in his lab for the scenes after this one, thanked or not.
     await game.arrange({
       checkpoint: "new-bark-after-intro",
       player: { facing: "up", position: { map: "birch-lab", x: 6, y: 8 } },

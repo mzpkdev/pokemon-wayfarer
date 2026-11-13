@@ -5,12 +5,13 @@ import {
   advanceOpeningUntil,
   finishOpeningDialogue,
   receiveBirchStarter,
+  walkRoute101AsVisitor,
 } from "../playbooks/regional-opening"
 import { rideAquaFromVermilionToSlateport } from "../playbooks/wayfarer-ports"
 
 // Birch rates the Pokédex once his own opening is over: for a Hoenn-origin player once he has given
-// the Pokédex, for a visitor once he has been rescued. The Petalburg Gym plays no part. He never
-// offers to register on the phone, which has no contact for him.
+// the Pokédex, for a visitor from the first talk in his lab, where he thanks them for the visit. The
+// Petalburg Gym plays no part. He never offers to register on the phone, which has no contact for him.
 
 /** Reads on with B, which never starts a new talk, until the field is free again. */
 const closeTalk = async (game: GameSession): Promise<void> => {
@@ -93,14 +94,14 @@ describe("Wayfarer Hoenn: Birch's Pokédex rating", () => {
   })
 
   it(
-    "thanks and rates a visitor right after the rescue, and gives no starter",
+    "thanks and rates a visitor at the first talk in his lab, and gives no starter",
     {
       timeout: 300_000,
     },
     async () => {
       const game = await GameSession.launch()
       try {
-        // A Johto start that sails to Slateport, then the visitor's rescue.
+        // A Johto start that sails to Slateport: Route 101 has no rescue, and Birch is in his lab.
         await game.arrange({
           checkpoint: "new-bark-after-intro",
           player: { facing: "down", position: { map: "vermilion-port-inside", x: 8, y: 9 } },
@@ -113,23 +114,15 @@ describe("Wayfarer Hoenn: Birch's Pokédex rating", () => {
           determinism: { textSpeed: "instant" },
         })
         await rideAquaFromVermilionToSlateport(game)
-        await game.player.warp("route-101", 9, 19, "right")
+        await walkRoute101AsVisitor(game)
+
+        // Entering the lab plays nothing: the thanks waits for the talk.
+        await game.player.warp("birch-lab", 6, 5, "up")
         await game.wait.forReady()
-        await game.player.move("right")
-        await finishOpeningDialogue(game)
-        await game.player.warp("route-101", 7, 15, "up")
-        await game.player.interact()
-        await advanceOpeningUntil(
-          game,
-          (state) => state.battle.ui === "action-menu",
-          "The visitor's rescue battle did not start",
-        )
-        await game.battle.win()
-        await advanceOpeningUntil(
-          game,
-          (state) => state.dialogue.text.includes("You handled"),
-          "Birch did not thank the visitor",
-        )
+        await game.wait.frames(60)
+        expect(await game.state.read()).toMatchObject({ ready: true, dialogueOpen: false })
+        await expect(game.story.var("hoennBirchLabState")).resolves.toBe(0)
+        expect(await talkToBirch(game)).toContain("Oh, a visitor")
         await readRating(game)
         expect(await game.state.read()).toMatchObject({
           map: { name: "birch-lab" },

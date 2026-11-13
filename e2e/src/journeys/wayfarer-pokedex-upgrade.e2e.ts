@@ -6,12 +6,13 @@ import {
   advanceOpeningUntil,
   finishOpeningDialogue,
   receiveBirchStarter,
+  walkRoute101AsVisitor,
 } from "../playbooks/regional-opening"
 import { playThroughNewGameIntro } from "../playbooks/new-game-intro"
 import { rideAquaFromVermilionToSlateport } from "../playbooks/wayfarer-ports"
 
 // The National upgrade comes from the first professor a traveller meets in the other land: Birch
-// after the Route 101 rescue for a Kanto or Johto origin, Elm or Oak on the first lab talk for a
+// on the first talk in his lab for a Kanto or Johto origin, Elm or Oak on the first lab talk for a
 // Hoenn origin. Each land's own professor still upgrades a player who never leaves home, and a
 // professor who finds the upgrade held says so and does not upgrade again.
 
@@ -150,7 +151,7 @@ const playHallOfFameScene = async (game: GameSession): Promise<string> => {
 
 describe("Wayfarer Pokédex: the professors' National upgrade", () => {
   it(
-    "Birch upgrades a Johto traveller after the rescue, showing the Hoenn Pokémon they caught",
+    "Birch upgrades a Johto traveller at their first talk, showing the Hoenn Pokémon they caught",
     { timeout: 420_000 },
     async () => {
       const game = await GameSession.launch()
@@ -170,24 +171,10 @@ describe("Wayfarer Pokédex: the professors' National upgrade", () => {
         await catchWild(game, "treecko")
         await expect(game.story.flag("nationalDex")).resolves.toBe(false)
 
-        await game.player.warp("route-101", 9, 19, "right")
-        await game.wait.forReady()
-        await game.player.move("right")
-        await finishOpeningDialogue(game)
-        await game.player.warp("route-101", 7, 15, "up")
-        await game.player.interact()
-        await advanceOpeningUntil(
-          game,
-          (state) => state.battle.ui === "action-menu",
-          "The rescue battle did not start",
-        )
-        await game.battle.win()
-        await advanceOpeningUntil(
-          game,
-          (state) => state.dialogue.text.includes("You handled"),
-          "Birch did not thank the traveller",
-        )
-        const thanks = await readThrough(game, "Birch's thanks did not finish")
+        // No rescue: Birch is in his lab, and the first talk is his thanks for the visit.
+        await walkRoute101AsVisitor(game)
+        const thanks = await talkToBirch(game)
+        expect(thanks).toContain("Oh, a visitor")
         expect(thanks).toContain("come a long way")
         expect(thanks).toContain(UPGRADED)
         await expect(game.story.flag("nationalDex")).resolves.toBe(true)
@@ -208,7 +195,7 @@ describe("Wayfarer Pokédex: the professors' National upgrade", () => {
     },
   )
 
-  it("Birch upgrades a traveller whose save is past the rescue at the next talk", async () => {
+  it("Birch upgrades a traveller whose save is past his thanks at the next talk", async () => {
     const game = await GameSession.launch()
     try {
       await game.arrange({
