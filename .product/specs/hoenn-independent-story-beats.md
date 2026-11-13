@@ -78,7 +78,8 @@ and HM Fly, among others.
 
 **Hoenn starter.** A player has a Hoenn starter once `VAR_HOENN_STARTER_CHOICE`
 holds Treecko, Torchic, or Mudkip. Hoenn-origin players have one from their
-opening. Visitors never have one: Birch gives them no starter, as the
+opening. Visitors never have one: they never play Birch's Route 101 rescue,
+and Birch gives them no starter, as the
 [content specification](wayfarer-hoenn-content-port.md) defines.
 
 **Legendary threshold.** The later Rayquaza, Groudon, and Kyogre captures use
@@ -249,24 +250,32 @@ both are compiled in with this work.
 ### Birch's opening and his rating
 
 Birch's opening is over when he has given the Pokédex, for a Hoenn-origin
-player, or when he has been rescued, for a visitor. A visitor's rescue uses
-their own party. In his lab he thanks them and rates their Pokédex, and that is
-the whole scene: no starter, no gift, no rival. This matches Elm's and Oak's
+player. The Route 101 rescue belongs to that player alone. A visitor arrives
+after it: the first Hoenn arrival
+(`WayfarerHoennVisitor_EventScript_InitializeArrival`) sets `FLAG_RESCUED_BIRCH`
+and `VAR_ROUTE101_STATE` 3 and hides the scene's Birch, bag, and Zigzagoon, so
+Route 101 has no triggers or chase and a visitor's opening is over from the
+start. Birch waits in his lab. At the first talk there he thanks the visitor for
+the visit and rates their Pokédex, and that is the whole scene: no starter, no
+gift, no rival. Entering the lab plays nothing. This matches Elm's and Oak's
 visitors. A visitor who somehow reaches him with no Pokédex is handed one first,
 so there is something to rate.
 
 - `ProfBirch_EventScript_CheckOpeningOver` is the one test, and it derives the
-  answer from the origin and those two facts, so saves need no new state.
+  answer from the origin, the Pokédex, and `FLAG_RESCUED_BIRCH`, so saves need
+  no new state. `ProfBirch_EventScript_CheckVisitorAwaitsThanks` tells a visitor
+  not yet thanked (`VAR_BIRCH_LAB_STATE` below 5) apart, for the talk and for his
+  place.
 - His rating and his place follow that test, and a Hoenn League win also puts
   him in his lab, so the National Dex and Johto starter scenes have him even for
-  a visitor who never rescued him. Petalburg Gym and Wally play no part in the
+  a visitor he has not yet thanked. Petalburg Gym and Wally play no part in the
   test.
 - Once his opening is over he roams as in Emerald (lab, Route 101, Route 103 by
   day): the clock advances Hoenn's copy of `VAR_BIRCH_STATE`, and Petalburg
   Gym's `InitBirchState` restarts his week in the lab. Before the opening is
   over the clock does not move him; the opening's own scenes place him. After a
-  Hoenn League win, and while a rescued visitor's thanks is still waiting in the
-  lab (`VAR_BIRCH_LAB_STATE` 2), he stays in his lab. His Route
+  Hoenn League win, and while a visitor's thanks is still waiting
+  (`VAR_BIRCH_LAB_STATE` below 5), he stays in his lab. His Route
   110 registration scene is a separate beat that this design doesn't change, and
   it still talks as if the player knows him and the rival.
 - A Hoenn-origin player can ask for the rating right after the Pokédex, in the
@@ -521,9 +530,10 @@ Mechanical checks extend the existing script and journey tests. Cover:
   Repeat holding the Itemfinder and Fly: no scene, and Scott's count still
   rises. Play the National Dex scene as a visitor: no rival. As a Hoenn-origin
   player, the Route 110 and 119 battles still play.
-- **Birch:** a visitor is thanked and rated right after the rescue with no
-  starter offered; a Hoenn-origin player is rated right after the Pokédex. Never
-  enter Petalburg Gym.
+- **Birch:** as a visitor, walk Route 101: no rescue starts, and Birch is in his
+  lab. Enter the lab: nothing plays. Talk to him: he thanks you for the visit and
+  rates your Pokédex with no starter offered. A Hoenn-origin player still
+  rescues him and is rated right after the Pokédex. Never enter Petalburg Gym.
 - **Steven:** win the Hoenn League at Steven's-house state 1, then collect Dive.
 - **Mt. Pyre:** climb to the summit before Mt. Chimney. No Aqua, no theft,
   the old lady speaks of orbs still in her care, and access is ordinary.

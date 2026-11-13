@@ -220,26 +220,14 @@ Route101_EventScript_BirchsBag::
     setvar VAR_0x8004, ORIGIN_SCENE_HOENN_RESCUE
     specialvar VAR_RESULT, WayfarerDispatchOriginScene
     goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, Route101_EventScript_AuthoredRescue
+    @ A visitor arrives after the rescue, so the bag is there only for a player who started in HOENN
+    goto_if_ne VAR_RESULT, ORIGIN_SCENE_NATIVE, Route101_EventScript_NoVisitorRescue
 #endif
 	lock
 	faceplayer
-#if IS_WAYFARER
-    goto_if_eq VAR_RESULT, ORIGIN_SCENE_NATIVE, Route101_EventScript_NativeBirchRescue
+#if !IS_WAYFARER
 	setflag FLAG_SYS_POKEMON_GET
-	setwildbattle SPECIES_ZIGZAGOON, 2
-	dowildbattle
-	specialvar VAR_RESULT, GetBattleOutcome
-	goto_if_ne VAR_RESULT, B_OUTCOME_WON, Route101_EventScript_BirchRescueNotCompleted
-	setflag FLAG_RESCUED_BIRCH
-	removeobject LOCALID_ROUTE101_ZIGZAGOON
-	setobjectxy LOCALID_PLAYER, 6, 13
-	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
-	waitmovement 0
-#else
-	setflag FLAG_SYS_POKEMON_GET
-	goto Route101_EventScript_NativeBirchRescue
 #endif
-	goto Route101_EventScript_BirchRescueAcknowledged
 
 Route101_EventScript_NativeBirchRescue::
 #if !IS_WAYFARER
@@ -276,12 +264,6 @@ Route101_EventScript_BirchRescueAcknowledged::
 	waitstate
 	release
 	end
-
-#if IS_WAYFARER
-Route101_EventScript_BirchRescueNotCompleted::
-	release
-	end
-#endif
 
 Route101_EventScript_HideMayInBedroom::
 	setflag FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_RIVAL_BEDROOM
@@ -337,6 +319,7 @@ Route101_Text_RouteSign:
 
 #if IS_WAYFARER
 Route101_EventScript_AuthoredRescue::
+Route101_EventScript_NoVisitorRescue::
     end
 #endif
 

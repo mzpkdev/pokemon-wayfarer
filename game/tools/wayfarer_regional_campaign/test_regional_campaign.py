@@ -45,23 +45,46 @@ class WayfarerRegionalCampaignTests(unittest.TestCase):
         )
         self.assertGreater(standalone_gate, league.index("#else", wayfarer_gate))
 
-    def test_wayfarer_route_101_uses_the_existing_party(self):
+    def test_route_101_rescue_belongs_to_the_hoenn_origin(self):
         route = (GAME / "data/maps/Route101/scripts.inc").read_text()
         start = route.index("Route101_EventScript_BirchsBag::")
         wayfarer = route.index("#if IS_WAYFARER", start)
-        standalone = route.index("#else", wayfarer)
-        self.assertIn("setwildbattle SPECIES_ZIGZAGOON, 2", route[wayfarer:standalone])
-        self.assertIn("dowildbattle", route[wayfarer:standalone])
-        self.assertNotIn("special ChooseStarter", route[wayfarer:standalone])
-        self.assertIn("special ChooseStarter", route[standalone:])
+        native = route.index("Route101_EventScript_NativeBirchRescue::", wayfarer)
+        bag = route[wayfarer:native]
+        self.assertIn("goto_if_ne VAR_RESULT, ORIGIN_SCENE_NATIVE, Route101_EventScript_NoVisitorRescue", bag)
+        self.assertNotIn("dowildbattle", route)
+        self.assertIn("special ChooseStarter", route[native:])
+
+        # A visitor arrives with the rescue behind them: no triggers, no chase, Birch in his lab.
+        entry = (GAME / "data/scripts/wayfarer_hoenn_entry.inc").read_text()
+        arrival = entry.split("WayfarerHoennVisitor_EventScript_InitializeArrival::", 1)[1]
+        arrival = arrival.split("\n\n", 1)[0]
+        for line in (
+            "setvar VAR_ROUTE101_STATE, 3",
+            "setflag FLAG_RESCUED_BIRCH",
+            "setflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE",
+            "setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON",
+            "setflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG",
+            "clearflag FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_BIRCH",
+        ):
+            self.assertIn(line, arrival)
+        self.assertNotIn("VAR_BIRCH_LAB_STATE", arrival)
 
     def test_visitor_gets_thanks_and_a_rating_and_no_starter(self):
         lab = (GAME / "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.inc").read_text()
         choice = lab.index("LittlerootTown_ProfessorBirchsLab_EventScript_GiveStarterEvent::")
         native = lab.index("LittlerootTown_ProfessorBirchsLab_EventScript_AcknowledgeNativeStarter::", choice)
-        visitor = lab[choice:native]
-        self.assertIn("LittlerootTown_ProfessorBirchsLab_Text_VisitorThanks", visitor)
-        self.assertIn("goto ProfBirch_EventScript_AskRatePokedex", visitor)
+        self.assertNotIn("msgbox", lab[choice:lab.index("LittlerootTown_ProfessorBirchsLab_EventScript_VisitorThanks::")])
+        thanks = lab.split("LittlerootTown_ProfessorBirchsLab_EventScript_VisitorThanks::", 1)[1]
+        thanks = thanks.split("\n\n", 1)[0]
+        self.assertIn("LittlerootTown_ProfessorBirchsLab_Text_VisitorThanks", thanks)
+        self.assertIn("goto ProfBirch_EventScript_AskRatePokedex", thanks)
+        self.assertLess(native, len(lab))
+        # The thanks plays when the visitor talks to Birch, not on entering the lab.
+        talk = lab.split("LittlerootTown_ProfessorBirchsLab_EventScript_Birch::", 1)[1]
+        talk = talk.split("\n\n", 1)[0]
+        self.assertIn("call ProfBirch_EventScript_CheckVisitorAwaitsThanks", talk)
+        self.assertIn("goto_if_eq VAR_RESULT, TRUE, LittlerootTown_ProfessorBirchsLab_EventScript_VisitorThanks", talk)
         self.assertNotIn("MULTI_HOENN_STARTERS", lab)
         self.assertNotIn("SPECIES_TREECKO", lab)
         self.assertNotIn("VAR_HOENN_STARTER_CHOICE", lab)
@@ -79,7 +102,8 @@ class WayfarerRegionalCampaignTests(unittest.TestCase):
             "goto_if_set FLAG_SYS_GAME_CLEAR, ProfBirch_EventScript_MoveToLab",
             "call ProfBirch_EventScript_CheckOpeningOver",
             "goto_if_eq VAR_RESULT, FALSE, Common_EventScript_NopReturn",
-            "goto_if_eq VAR_BIRCH_LAB_STATE, 2, ProfBirch_EventScript_MoveToLab",
+            "call ProfBirch_EventScript_CheckVisitorAwaitsThanks",
+            "goto_if_eq VAR_RESULT, TRUE, ProfBirch_EventScript_MoveToLab",
             "call_if_eq VAR_BIRCH_STATE, 2, ProfBirch_EventScript_MoveToRoute101",
         ]
         self.assertEqual([update.index(line) for line in order], sorted(update.index(line) for line in order))

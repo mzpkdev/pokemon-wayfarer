@@ -38,7 +38,7 @@ makes the next step available without an unrelated activation errand.
 
 | Adventure | Preserved content | Required independence |
 | --- | --- | --- |
-| Birch's rescue and introduction | Rescue Birch and visit his lab. A Hoenn-origin player keeps their starter and Pokédex opening. A visitor is thanked and has their Pokédex rated, with no starter and no gift. | Other local adventures do not require this opening, and no rival scene depends on it. Birch rates the Pokédex once his own opening is over. |
+| Birch's rescue and introduction | A Hoenn-origin player rescues Birch on Route 101, visits his lab, and keeps their starter and Pokédex opening. The rescue is theirs alone: a visitor arrives after it, finds no scene on Route 101, and meets Birch in his lab, where the first talk thanks them for the visit and rates their Pokédex, with no starter and no gift. | Other local adventures do not require this opening, and no rival scene depends on it. Birch rates the Pokédex once his own opening is over. |
 | Peeko and the stolen Devon Goods | Meet the existing employee and Briney, rescue Peeko, recover the Goods, and receive the existing Devon follow-up. | Remove Roxanne's badge as the theft's activation requirement. Keep the rescue locally introduced and internally ordered. |
 | Devon deliveries | Deliver the Letter to Steven and the Parts to Stern, including the existing museum confrontation. | Retain the actual items and their original acquisition prerequisites. Once both assignments are available, complete the deliveries in either order. Neither delivery requires the other. |
 | Meteor Falls and Mt. Chimney | Discover the meteorite theft, follow it to Mt. Chimney, stop the machine, and recover the meteorite. | Keep this as one ordered adventure, independent of the Devon errands and unrelated Gyms. Preserve the existing return/reward interaction. It comes before the central villain story (see [Connected villain adventures](#connected-villain-adventures)). |
@@ -245,8 +245,9 @@ passing through a region does not complete its adventures.
 - As a visitor who never met Birch, walk Routes 110 and 119 and win at Lavaridge,
   in any order. Each gift arrives in a short scene with no battle, and the rival
   introduces themself once. Visit Route 103, Rustboro, and Lilycove: no rival.
-- As a visitor, rescue Birch. He thanks you and rates your Pokédex, with no
-  starter offered and no Petalburg Gym visit.
+- As a visitor, walk Route 101: no rescue starts. Talk to Birch in his lab. He
+  thanks you for the visit and rates your Pokédex, with no starter offered and
+  no Petalburg Gym visit.
 - Win the Hoenn League with Steven's HM Dive still owed. Dive stays collectable.
 - Complete Norman's local introduction and challenge with fewer than four Hoenn
   badges. Verify dialogue against the player's origin.

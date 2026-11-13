@@ -277,6 +277,9 @@ LittlerootTown_EventScript_Twin::
 	lock
 	faceplayer
 	goto_if_set FLAG_ADVENTURE_STARTED, LittlerootTown_EventScript_GoodLuck
+	@ A visitor never rescued BIRCH: they arrive after it
+	specialvar VAR_RESULT, WayfarerIsHoennOrigin
+	goto_if_eq VAR_RESULT, FALSE, LittlerootTown_EventScript_GoodLuck
 	goto_if_set FLAG_RESCUED_BIRCH, LittlerootTown_EventScript_YouSavedBirch
 	goto_if_ne VAR_LITTLEROOT_TOWN_STATE, 0, LittlerootTown_EventScript_GoSaveBirch
 	msgbox LittlerootTown_Text_IfYouGoInGrassPokemonWillJumpOut, MSGBOX_DEFAULT
