@@ -8,6 +8,7 @@
 #include "league_events.h"
 #include "league_run_helpers.h"
 #include "notable_friendship.h"
+#include "notable_story.h"
 #include "notable_talk.h"
 #include "notable_trainers.h"
 #include "overworld.h"
@@ -22,11 +23,14 @@
 #include "constants/battle_setup.h"
 #include "constants/characters.h"
 #include "constants/flags.h"
+#include "constants/notable_story_beats.h"
 #include "constants/notable_trainers.h"
 #include "constants/opponents.h"
 #include "constants/opponents_hns.h"
 #include "constants/species.h"
 #include "constants/maps.h"
+#include "constants/vars.h"
+#include "constants/wayfarer_persistence.h"
 #include "constants/regions.h"
 #include "constants/wayfarer_indigo_trainers.h"
 #include "constants/wayfarer_kanto_trainers.h"
@@ -495,6 +499,9 @@ TEST("The greeting and the farewell buffer the trainer's own voice lines")
     NotableTalk_BufferFarewellText(NOTABLE_TRAINER_BROCK);
     ExpectBuffered(brock->bye);
 
+    // Playing the greeting introduced them: a new stranger is needed for HEARD.
+    EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_BROCK));
+    memset(gSaveBlock3Ptr->notableFriendship.introduced, 0, sizeof(gSaveBlock3Ptr->notableFriendship.introduced));
     SetTrainerRating(80);
     NotableTalk_BufferGreetingText(NOTABLE_TRAINER_BROCK);
     ExpectBuffered(brock->heard);
@@ -645,6 +652,189 @@ TEST("Every voice line and activity line fits one message box")
         NotableTalk_BufferActivityLineText(line);
         ExpectFitsOneBox(gStringVar4);
     }
+}
+
+// Story continuity (.product/specs/notable-story-continuity.md): acquaintance, story beats, story-away presence.
+
+TEST("An introduced Stranger is greeted AGAIN, whatever the fame, and nothing else changes")
+{
+    ResetFriendship();
+    SetTrainerRating(0);
+    EXPECT(!NotableFriendship_IsIntroduced(NOTABLE_TRAINER_BROCK));
+    EXPECT_EQ(NotableTalk_GetGreeting(NOTABLE_TRAINER_BROCK), NOTABLE_GREETING_MEET);
+    NotableFriendship_MarkIntroduced(NOTABLE_TRAINER_BROCK);
+    EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_BROCK));
+    EXPECT(!NotableFriendship_IsIntroduced(NOTABLE_TRAINER_MISTY));
+    EXPECT_EQ(NotableTalk_GetGreeting(NOTABLE_TRAINER_BROCK), NOTABLE_GREETING_AGAIN);
+    SetTrainerRating(80);
+    EXPECT_EQ(NotableTalk_GetGreeting(NOTABLE_TRAINER_BROCK), NOTABLE_GREETING_AGAIN);
+    // It is not friendship: no points, still a Stranger, and the stages above read as before.
+    EXPECT_EQ(NotableFriendship_GetScore(NOTABLE_TRAINER_BROCK), 0);
+    EXPECT_EQ(NotableFriendship_GetStage(NOTABLE_TRAINER_BROCK), NOTABLE_STAGE_STRANGER);
+    NotableFriendship_AddQuestPoints(NOTABLE_TRAINER_BROCK);
+    NotableFriendship_AddQuestPoints(NOTABLE_TRAINER_BROCK);
+    EXPECT_EQ(NotableTalk_GetGreeting(NOTABLE_TRAINER_BROCK), NOTABLE_GREETING_HELLO);
+    // Unknown characters are never introduced.
+    NotableFriendship_MarkIntroduced(NOTABLE_TRAINER_NONE);
+    NotableFriendship_MarkIntroduced(NOTABLE_TRAINER_COUNT + 1);
+    EXPECT(!NotableFriendship_IsIntroduced(NOTABLE_TRAINER_NONE));
+    EXPECT(!NotableFriendship_IsIntroduced(NOTABLE_TRAINER_COUNT + 1));
+    EXPECT(NotableFriendship_IsValid());
+}
+
+TEST("The first talk still shows MEET, then the trainer is introduced and the next talk shows AGAIN")
+{
+    const struct NotableVoice *brock = &gNotableVoices[NOTABLE_TRAINER_BROCK - 1];
+    ResetFriendship();
+    SetTrainerRating(0);
+    NotableTalk_BufferGreetingText(NOTABLE_TRAINER_BROCK);
+    ExpectBuffered(brock->meet);
+    EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_BROCK));
+    NotableTalk_BufferGreetingText(NOTABLE_TRAINER_BROCK);
+    ExpectBuffered(brock->again);
+    EXPECT_EQ(NotableFriendship_GetScore(NOTABLE_TRAINER_BROCK), 0);
+
+    // The script special marks it too; a farewell and an unknown character do not.
+    NotableFriendship_Reset();
+    NotableTalk_BufferFarewellText(NOTABLE_TRAINER_MISTY);
+    NotableTalk_BufferGreetingText(NOTABLE_TRAINER_NONE);
+    EXPECT(!NotableFriendship_IsIntroduced(NOTABLE_TRAINER_MISTY));
+    gSpecialVar_0x8004 = NOTABLE_TRAINER_MISTY;
+    EXPECT(NotableTalk_BufferGreeting());
+    EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_MISTY));
+}
+
+TEST("The introduced specials read and set the bit for VAR_0x8004")
+{
+    ResetFriendship();
+    gSpecialVar_0x8004 = NOTABLE_TRAINER_LANCE;
+    EXPECT_EQ(NotableStory_IsIntroduced(), FALSE);
+    NotableStory_MarkIntroduced();
+    EXPECT_EQ(NotableStory_IsIntroduced(), TRUE);
+    EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_LANCE));
+    EXPECT_EQ(NotableFriendship_GetScore(NOTABLE_TRAINER_LANCE), 0);
+}
+
+TEST("Any battle against a notable introduces them, lost or won, and a debug battle does not")
+{
+    ResetFriendship();
+    EndSingleBattle(TRAINER_BROCK_HNS, B_OUTCOME_LOST);
+    EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_BROCK));
+    EXPECT_EQ(NotableFriendship_GetScore(NOTABLE_TRAINER_BROCK), 0);
+    EXPECT_EQ(NotableTalk_GetGreeting(NOTABLE_TRAINER_BROCK), NOTABLE_GREETING_AGAIN);
+
+    EndSingleBattle(TRAINER_MISTY_HNS, B_OUTCOME_RAN);
+    EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_MISTY));
+    EXPECT_EQ(NotableFriendship_GetScore(NOTABLE_TRAINER_MISTY), 0);
+
+    gIsDebugBattle = TRUE;
+    EndSingleBattle(TRAINER_ERIKA_HNS, B_OUTCOME_WON);
+    EXPECT(!NotableFriendship_IsIntroduced(NOTABLE_TRAINER_ERIKA));
+
+    // A tag match introduces both opponents; the partner beside the player is an acquaintance, with no points.
+    gBattleTypeFlags = BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TRAINER;
+    gBattleOutcome = B_OUTCOME_LOST;
+    gPartnerTrainerId = TRAINER_LTSURGE_HNS;
+    InitTrainerBattleParameter();
+    TRAINER_BATTLE_PARAM.mode = TRAINER_BATTLE_DOUBLE;
+    TRAINER_BATTLE_PARAM.opponentA = TRAINER_SABRINA_HNS;
+    TRAINER_BATTLE_PARAM.opponentB = TRAINER_JANINE_HNS;
+    Test_EndTrainerBattle();
+    EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_SABRINA));
+    EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_JANINE));
+    EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_LT_SURGE));
+    EXPECT_EQ(NotableFriendship_GetScore(NOTABLE_TRAINER_LT_SURGE), 0);
+
+    // A lost rematch introduces too.
+    gBattleTypeFlags = BATTLE_TYPE_TRAINER;
+    gBattleOutcome = B_OUTCOME_LOST;
+    InitTrainerBattleParameter();
+    TRAINER_BATTLE_PARAM.opponentA = TRAINER_BLAINE_HNS;
+    Test_EndRematchBattle();
+    EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_BLAINE));
+    EXPECT_EQ(NotableFriendship_GetScore(NOTABLE_TRAINER_BLAINE), 0);
+}
+
+TEST("A story beat pays once, introduces, and crossing Friend owes the number")
+{
+    ResetFriendship();
+    gSpecialVar_0x8004 = NOTABLE_STORY_BEAT_STEVEN_GRANITE_LETTER;
+    NotableStory_CompleteBeat();
+    EXPECT_EQ(NotableFriendship_GetScore(NOTABLE_TRAINER_STEVEN), NOTABLE_FRIENDSHIP_STORY_BEAT_POINTS);
+    EXPECT_EQ(NotableFriendship_GetStage(NOTABLE_TRAINER_STEVEN), NOTABLE_STAGE_MET);
+    EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_STEVEN));
+    EXPECT(NotableFriendship_IsStoryBeatDone(NOTABLE_STORY_BEAT_STEVEN_GRANITE_LETTER));
+    EXPECT(!NotableFriendship_HasPendingNumber());
+
+    // Repeats do nothing, and an unknown beat is ignored.
+    NotableStory_CompleteBeat();
+    gSpecialVar_0x8004 = NOTABLE_STORY_BEAT_NONE;
+    NotableStory_CompleteBeat();
+    gSpecialVar_0x8004 = NOTABLE_STORY_BEAT_COUNT + 1;
+    NotableStory_CompleteBeat();
+    EXPECT_EQ(NotableFriendship_GetScore(NOTABLE_TRAINER_STEVEN), NOTABLE_FRIENDSHIP_STORY_BEAT_POINTS);
+
+    // The second beat crosses Friend: the number is owed exactly as for a quest.
+    gSpecialVar_0x8004 = NOTABLE_STORY_BEAT_STEVEN_SPACE_CENTER;
+    NotableStory_CompleteBeat();
+    EXPECT_EQ(NotableFriendship_GetStage(NOTABLE_TRAINER_STEVEN), NOTABLE_STAGE_FRIEND);
+    EXPECT(NotableFriendship_HasPendingNumber());
+    EXPECT(NotableFriendship_IsValid());
+
+    // Tate & Liza keep the score but are owed no number.
+    gSpecialVar_0x8004 = NOTABLE_STORY_BEAT_TATE_LIZA_SPACE_CENTER;
+    NotableStory_CompleteBeat();
+    EXPECT_EQ(NotableFriendship_GetScore(NOTABLE_TRAINER_TATE_LIZA), NOTABLE_FRIENDSHIP_STORY_BEAT_POINTS);
+    EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_TATE_LIZA));
+}
+
+TEST("Each beat belongs to a character, and a character's beats stay below Close")
+{
+    u8 totals[NOTABLE_TRAINER_COUNT + 1] = {0};
+    u32 beat, character;
+
+    for (beat = 1; beat <= NOTABLE_STORY_BEAT_COUNT; beat++)
+    {
+        character = NotableStory_GetBeatCharacter(beat);
+        EXPECT(character >= 1 && character <= NOTABLE_TRAINER_COUNT);
+        totals[character] += NOTABLE_FRIENDSHIP_STORY_BEAT_POINTS;
+    }
+    EXPECT_EQ(NotableStory_GetBeatCharacter(NOTABLE_STORY_BEAT_NONE), NOTABLE_TRAINER_NONE);
+    for (character = 1; character <= NOTABLE_TRAINER_COUNT; character++)
+        EXPECT_LT(totals[character], NOTABLE_FRIENDSHIP_CLOSE);
+}
+
+TEST("A listed story placement keeps its character's walker away while it shows, and no one else's")
+{
+    u32 i;
+    ResetFriendship();
+    FlagSet(HOENN_FLAG_ID(FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_2F_STEVEN));
+    VarSet(HOENN_VAR_ID(VAR_MOSSDEEP_SPACE_CENTER_STATE), 0);
+    VarSet(HOENN_VAR_ID(VAR_SOOTOPOLIS_CITY_STATE), 0);
+    FlagClear(FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS);
+    for (i = 1; i <= NOTABLE_TRAINER_COUNT; i++)
+        EXPECT(!NotableStory_IsAway(i));
+
+    // Steven's Space Center copy: shown from the invasion until the battle.
+    FlagClear(HOENN_FLAG_ID(FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_2F_STEVEN));
+    VarSet(HOENN_VAR_ID(VAR_MOSSDEEP_SPACE_CENTER_STATE), 1);
+    EXPECT(NotableStory_IsAway(NOTABLE_TRAINER_STEVEN));
+    EXPECT(!NotableStory_IsAway(NOTABLE_TRAINER_WALLACE));
+    VarSet(HOENN_VAR_ID(VAR_MOSSDEEP_SPACE_CENTER_STATE), 3);
+    EXPECT(!NotableStory_IsAway(NOTABLE_TRAINER_STEVEN));
+
+    // Wallace through the crisis.
+    VarSet(HOENN_VAR_ID(VAR_SOOTOPOLIS_CITY_STATE), 1);
+    EXPECT(!NotableStory_IsAway(NOTABLE_TRAINER_WALLACE));
+    VarSet(HOENN_VAR_ID(VAR_SOOTOPOLIS_CITY_STATE), 3);
+    EXPECT(NotableStory_IsAway(NOTABLE_TRAINER_WALLACE));
+    VarSet(HOENN_VAR_ID(VAR_SOOTOPOLIS_CITY_STATE), 6);
+    EXPECT(!NotableStory_IsAway(NOTABLE_TRAINER_WALLACE));
+
+    // Giovanni never returns once he has departed.
+    FlagSet(FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS);
+    EXPECT(NotableStory_IsAway(NOTABLE_TRAINER_GIOVANNI));
+    EXPECT(!NotableStory_IsAway(NOTABLE_TRAINER_BLUE));
 }
 
 #endif // IS_WAYFARER

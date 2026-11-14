@@ -55,7 +55,9 @@ bool8 NotableFriendship_IsValid(void)
     }
     // The bits past the last character are padding and stay clear.
     return (state->firstWin[sizeof(state->firstWin) - 1] >> (NOTABLE_FRIENDSHIP_COUNT % 8)) == 0
-        && (state->numberShown[sizeof(state->numberShown) - 1] >> (NOTABLE_FRIENDSHIP_COUNT % 8)) == 0;
+        && (state->numberShown[sizeof(state->numberShown) - 1] >> (NOTABLE_FRIENDSHIP_COUNT % 8)) == 0
+        && (state->introduced[sizeof(state->introduced) - 1] >> (NOTABLE_FRIENDSHIP_COUNT % 8)) == 0
+        && (state->storyBeatDone[sizeof(state->storyBeatDone) - 1] >> (NOTABLE_STORY_BEAT_COUNT % 8)) == 0;
 }
 
 u8 NotableFriendship_GetScore(u8 characterId)
@@ -93,6 +95,42 @@ static void AddPoints(u8 characterId, u8 points)
 void NotableFriendship_AddQuestPoints(u8 characterId)
 {
     AddPoints(characterId, NOTABLE_FRIENDSHIP_QUEST_POINTS);
+}
+
+bool8 NotableFriendship_IsIntroduced(u8 characterId)
+{
+    return IsCharacterId(characterId) && GetBit(gSaveBlock3Ptr->notableFriendship.introduced, characterId);
+}
+
+void NotableFriendship_MarkIntroduced(u8 characterId)
+{
+    if (IsCharacterId(characterId))
+        SetBit(gSaveBlock3Ptr->notableFriendship.introduced, characterId);
+}
+
+void NotableFriendship_MarkTrainerEncountered(u16 trainerId)
+{
+    const struct NotableTrainer *trainer = GetNotableTrainerForEncounter(trainerId);
+
+    if (trainer != NULL)
+        NotableFriendship_MarkIntroduced(trainer->characterId);
+}
+
+bool8 NotableFriendship_CompleteStoryBeat(u8 characterId, u8 beatId)
+{
+    u8 *bits = gSaveBlock3Ptr->notableFriendship.storyBeatDone;
+
+    if (!IsCharacterId(characterId) || beatId < 1 || beatId > NOTABLE_STORY_BEAT_COUNT || GetBit(bits, beatId))
+        return FALSE;
+    SetBit(bits, beatId);
+    AddPoints(characterId, NOTABLE_FRIENDSHIP_STORY_BEAT_POINTS);
+    NotableFriendship_MarkIntroduced(characterId);
+    return TRUE;
+}
+
+bool8 NotableFriendship_IsStoryBeatDone(u8 beatId)
+{
+    return beatId >= 1 && beatId <= NOTABLE_STORY_BEAT_COUNT && GetBit(gSaveBlock3Ptr->notableFriendship.storyBeatDone, beatId);
 }
 
 bool8 NotableFriendship_CountFirstWin(u8 characterId)

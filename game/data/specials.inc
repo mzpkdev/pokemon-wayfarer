@@ -890,4 +890,7 @@ gSpecials::
     def_special NotableTalk_BufferWalkerActivityLine
     def_special NotableFriendship_BufferTrainerName
     def_special NotableFriendship_MarkNumberShown
+    def_special NotableStory_IsIntroduced
+    def_special NotableStory_MarkIntroduced
+    def_special NotableStory_CompleteBeat
 #endif
