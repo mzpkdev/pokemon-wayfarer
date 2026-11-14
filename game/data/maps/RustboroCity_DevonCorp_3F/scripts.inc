@@ -51,6 +51,10 @@ RustboroCity_DevonCorp_3F_EventScript_MeetPresident::
 	msgbox RustboroCity_DevonCorp_3F_Text_MrStoneIHaveFavor, MSGBOX_DEFAULT
 	giveitem ITEM_LETTER
 	call_if_eq VAR_RESULT, FALSE, RustboroCity_DevonCorp_3F_EventScript_NoRoomForLetter
+#if IS_WAYFARER
+	@ FLAG_HAS_MATCH_CALL is the shared Pokégear: a player who holds it gets no second device or tutorial
+	goto_if_set FLAG_HAS_MATCH_CALL, RustboroCity_DevonCorp_3F_EventScript_AlreadyHasPokenav
+#endif
 	msgbox RustboroCity_DevonCorp_3F_Text_MrStoneWantYouToHaveThis, MSGBOX_DEFAULT
 	playfanfare MUS_OBTAIN_ITEM
 	message RustboroCity_DevonCorp_3F_Text_ReceivedPokenav
@@ -60,6 +64,7 @@ RustboroCity_DevonCorp_3F_EventScript_MeetPresident::
 	setflag FLAG_HIDE_RUSTBORO_CITY_POKEMON_SCHOOL_SCOTT
 	msgbox RustboroCity_DevonCorp_3F_Text_MrStoneExplainPokenavRestUp, MSGBOX_DEFAULT
 	closemessage
+RustboroCity_DevonCorp_3F_EventScript_RestUpAndGo::
 	call Common_EventScript_OutOfCenterPartyHeal
 	msgbox RustboroCity_DevonCorp_3F_Text_MrStoneGoWithCautionAndCare, MSGBOX_DEFAULT
 	setflag FLAG_HIDE_ROUTE_116_WANDAS_BOYFRIEND
@@ -70,9 +75,40 @@ RustboroCity_DevonCorp_3F_EventScript_MeetPresident::
 	setvar VAR_BRINEY_LOCATION, 1
 	clearflag FLAG_HIDE_RUSTBORO_CITY_RIVAL
 	setvar VAR_DEVON_CORP_3F_STATE, 1
+#if IS_WAYFARER
+	@ State 6 is the scientist's PokéNav tutorial, which a player who already has the device never needs
+	goto_if_set FLAG_HAS_MATCH_CALL, RustboroCity_DevonCorp_3F_EventScript_SkipPokenavTutorial
+#endif
 	setvar VAR_RUSTBORO_CITY_STATE, 6
 	releaseall
 	end
+
+#if IS_WAYFARER
+RustboroCity_DevonCorp_3F_EventScript_AlreadyHasPokenav::
+	msgbox RustboroCity_DevonCorp_3F_Text_MrStoneAlreadyHasDevice, MSGBOX_DEFAULT
+	setflag FLAG_SYS_POKENAV_GET
+	setflag FLAG_RECEIVED_POKENAV
+	setflag FLAG_ADDED_MATCH_CALL_TO_POKENAV
+	setflag FLAG_HIDE_RUSTBORO_CITY_POKEMON_SCHOOL_SCOTT
+	goto RustboroCity_DevonCorp_3F_EventScript_RestUpAndGo
+
+RustboroCity_DevonCorp_3F_EventScript_SkipPokenavTutorial::
+	setvar VAR_RUSTBORO_CITY_STATE, 7
+	releaseall
+	end
+
+RustboroCity_DevonCorp_3F_Text_MrStoneAlreadyHasDevice:
+	.string "MR. STONE: Now, you should know that\n"
+	.string "I am a great PRESIDENT.\p"
+	.string "I'd planned to give you a POKéNAV, but\n"
+	.string "I see you already carry a fine device.\p"
+	.string "Then take my thanks instead!\p"
+	.string "By the way, I've heard that sinister\n"
+	.string "criminals--MAGMA and AQUA, I believe--\l"
+	.string "have been making trouble far and wide.\p"
+	.string "I think it would be best if you rested\n"
+	.string "up a bit before you go.$"
+#endif
 
 RustboroCity_DevonCorp_3F_EventScript_NoRoomForLetter::
 	msgbox gText_TooBadBagIsFull, MSGBOX_DEFAULT
