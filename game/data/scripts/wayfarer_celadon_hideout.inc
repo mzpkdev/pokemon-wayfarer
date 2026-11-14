@@ -240,6 +240,7 @@ RocketHideout_B4F_EventScript_Giovanni::
 	goto_if_eq VAR_RESULT, FALSE, RocketHideout_B4F_EventScript_GiovanniNoParty
 	lock
 	faceplayer
+	notable_introduce NOTABLE_TRAINER_GIOVANNI, RocketHideout_B4F_Text_GiovanniIntroName
 	message RocketHideout_B4F_Text_GiovanniIntro
 	waitmessage
 	playbgm MUS_RG_ENCOUNTER_ROCKET, 0
@@ -642,14 +643,16 @@ RocketHideout_B3F_Text_Grunt2PostBattle::
 	.string "But you can't run the elevator\n"
 	.string "without the LIFT KEY.$"
 
-RocketHideout_B4F_Text_GiovanniIntro::
+RocketHideout_B4F_Text_GiovanniIntroName::
 	.string "So! I must say, I am impressed you\n"
 	.string "got here.\p"
+	.string "I am the leader, GIOVANNI!$"
+
+RocketHideout_B4F_Text_GiovanniIntro::
 	.string "TEAM ROCKET captures POKéMON from\n"
 	.string "around the world.\p"
 	.string "They're important tools for keeping\n"
 	.string "our criminal enterprise going.\p"
-	.string "I am the leader, GIOVANNI!\p"
 	.string "For your insolence, you will feel a\n"
 	.string "world of pain!$"
 
