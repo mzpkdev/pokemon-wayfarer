@@ -57,7 +57,7 @@ talking never makes a trainer a friend.
 
 The bits live in `struct NotableFriendshipState`, one bit per character
 id: 38 bits, 5 bytes. Prerelease saves need no migration. A bit is never
-cleared. Three things set it:
+cleared. Four things set it:
 
 | Event | When |
 | --- | --- |
@@ -152,7 +152,7 @@ story placement wins over the Gym copy, and both win over the walker.
   *temporary* story placements: the character, the map and local id, and
   the flag or state that shows the copy.
   - While any listed placement is showing, the walker does not spawn
-    anywhere and its record waits.
+    anywhere. Its simulation record keeps moving unseen.
   - This replaces the same-map-only check in `IsStorySuppressed`
     (`wayfarer_walkers.c`) for listed trainers. It also answers the
     [world simulation](notable-world-simulation.md#open-questions) question
