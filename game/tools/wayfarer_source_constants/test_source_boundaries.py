@@ -27,6 +27,12 @@ VAR_OPERAND_RE = re.compile(
 DEFINE_RE = re.compile(r"^#define\s+(FLAG_[A-Za-z0-9_]+|VAR_[A-Za-z0-9_]+|MAPSEC_[A-Za-z0-9_]+)\s+0x([0-9A-F]+)$")
 PAIR_RE = re.compile(r"\{ 0x([0-9A-F]+), 0x([0-9A-F]+) \}, // (FLAG_[A-Za-z0-9_]+|VAR_[A-Za-z0-9_]+)")
 
+# Files that touch ids on purpose rather than as gameplay reads.
+SCANNER_EXEMPT_FILES = {
+    "debug.c": "developer menu pokes any flag or var by name",
+    "e2e_test.c": "test harness seeds and inspects state by name",
+}
+
 
 def load_aliases(path):
     aliases = {}
@@ -179,7 +185,7 @@ class SourceBoundaryTests(unittest.TestCase):
                 if isinstance(flag, str) and flag.startswith("FLAG_"):
                     self.assertIn(flag, self.hoenn)
                     value = self.hoenn[flag]
-                    if value == 0:
+                    if value == 0 or flag in GENERATOR_MODULE.ENGINE_SHARED_STATE:
                         continue
                     self.assertTrue(value <= 0x1F or 0x6000 <= value <= 0x6FFF or value >= 0x4000, flag)
                     checked += 1
@@ -219,14 +225,259 @@ class SourceBoundaryTests(unittest.TestCase):
             value = self.hoenn[flag]
             if value == 0:
                 continue
-            if flag in GENERATOR_MODULE.ENGINE_SHARED_FLAGS:
+            if flag in GENERATOR_MODULE.ENGINE_SHARED_FLAGS or flag in GENERATOR_MODULE.ENGINE_SHARED_STATE:
                 self.assertEqual(value, self.engine[flag], flag)
                 continue
             self.assertTrue(value <= 0x1F or 0x6000 <= value <= 0x6FFF or value >= 0x4000, flag)
         for var in variables:
             self.assertIn(var, self.hoenn)
             value = self.hoenn[var]
+            if GENERATOR_MODULE.OBJ_GFX_VAR_START <= value <= GENERATOR_MODULE.OBJ_GFX_VAR_END:
+                # The engine draws OBJ_EVENT_GFX_VAR_* objects from these ids, so they stay shared.
+                self.assertTrue(var.startswith("VAR_OBJ_GFX_ID_"), var)
+                continue
+            if var in GENERATOR_MODULE.ENGINE_SHARED_STATE:
+                self.assertEqual(value, self.engine[var], var)
+                continue
             self.assertTrue(0x7000 <= value <= 0x70FF or value >= 0x8000, var)
+
+    def hoenn_script_names_that_differ_from_the_engine(self):
+        names = set()
+        for map_dir, _ in self.emerald_maps():
+            script_path = map_dir / "scripts.inc"
+            if script_path.exists():
+                names.update(GENERATOR_MODULE.PERSISTENT_TOKEN_RE.findall(script_path.read_text()))
+        # Shared scripts run on Hoenn maps too; the ones whose ids differ are
+        # exactly the common dispatch table.
+        names.update(self.common_pairs)
+        return {
+            name for name in names
+            if name in self.hoenn and self.hoenn[name] != self.engine.get(name, 0)
+        }
+
+    def c_source_names_outside_hoenn_routing(self):
+        found = {}
+        for path in sorted([*(GAME / "src").glob("*.c"), *(GAME / "include").glob("*.h")]):
+            if path.name in SCANNER_EXEMPT_FILES:
+                continue
+            for number, line in enumerate(path.read_text(errors="replace").splitlines(), 1):
+                line = re.sub(r"//.*", "", line)
+                line = re.sub(r"\b(?:HOENN_(?:FLAG|VAR)_ID)\([^)]*\)", "", line)
+                if re.match(r"\s*#\s*define\s+WAYFARER_HOENN_", line):
+                    continue
+                for name in GENERATOR_MODULE.PERSISTENT_TOKEN_RE.findall(line):
+                    found.setdefault(name, []).append(f"{path.relative_to(GAME)}:{number}")
+        return found
+
+    def test_engine_code_does_not_read_a_hoenn_script_copy_of_its_state(self):
+        # A Hoenn script writing 0x6000/0x7000-bank ids while C reads the engine
+        # id (or the reverse) is a silent mismatch: the puzzle never completes,
+        # the call never rings. Every name in both sets must be shared with the
+        # engine by rule, or be listed here with the reason it is safe.
+        allowed = {
+            # routed by region through a Wayfarer* helper (wayfarer_persistence.c, tv.c); the engine id only serves the non-Hoenn branch
+            "FLAG_SYS_FRONTIER_PASS": "bridged",
+            "FLAG_SYS_PC_LANETTE": "bridged",
+            "FLAG_SYS_TV_HOME": "bridged",
+            "FLAG_SYS_TV_LATIAS_LATIOS": "bridged",
+            "FLAG_SYS_TV_START": "bridged",
+            "FLAG_SYS_TV_WATCH": "bridged",
+            "FLAG_UNLOCKED_TRENDY_SAYINGS": "bridged",
+            # product decision, deliberately left on the raw engine id; Hoenn scripts write their own copy, so these stay unbridged (see #235): Wally/Roxanne/Rival-Rayquaza step calls, Frontier vars, easy-chat and Hall of Fame GAME_CLEAR readers, badge counts for Pokenav/rating, Wattson rematch indicator. Level cap and Hoenn post-game content (contests, Trainer Hill, rematches) now follow Trainer Rating / Hoenn's own clear
+            "FLAG_BADGE01_GET": "product",
+            "FLAG_BADGE02_GET": "product",
+            "FLAG_BADGE03_GET": "product",
+            "FLAG_BADGE04_GET": "product",
+            "FLAG_BADGE05_GET": "product",
+            "FLAG_BADGE06_GET": "product",
+            "FLAG_BADGE07_GET": "product",
+            "FLAG_BADGE08_GET": "product",
+            "FLAG_SYS_GAME_CLEAR": "product",
+            "FLAG_DEFEATED_MAGMA_SPACE_CENTER": "product",
+            "FLAG_ENABLE_FIRST_WALLY_POKENAV_CALL": "product",
+            "FLAG_ENABLE_ROXANNE_FIRST_CALL": "product",
+            "FLAG_IS_CHAMPION": "product",
+            "FLAG_WATTSON_REMATCH_AVAILABLE": "product",
+            "VAR_NUM_BADGES": "product",
+            "VAR_ROXANNE_CALL_STEP_COUNTER": "product",
+            "VAR_WALLY_CALL_STEP_COUNTER": "product",
+            # Battle Frontier is a preservation target only; its facility state is not played in Wayfarer (see #235)
+            "FLAG_CANCEL_BATTLE_ROOM_CHALLENGE": "frontier",
+            "FLAG_CHOSEN_MULTI_BATTLE_NPC_PARTNER": "frontier",
+            "FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_ALT_1": "frontier",
+            "FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_ALT_2": "frontier",
+            "FLAG_HIDE_BATTLE_TOWER_REPORTER": "frontier",
+            "FLAG_LANDMARK_BATTLE_FRONTIER": "frontier",
+            "FLAG_SYS_ARENA_GOLD": "frontier",
+            "FLAG_SYS_ARENA_SILVER": "frontier",
+            "FLAG_SYS_DOME_GOLD": "frontier",
+            "FLAG_SYS_DOME_SILVER": "frontier",
+            "FLAG_SYS_FACTORY_GOLD": "frontier",
+            "FLAG_SYS_FACTORY_SILVER": "frontier",
+            "FLAG_SYS_PALACE_GOLD": "frontier",
+            "FLAG_SYS_PALACE_SILVER": "frontier",
+            "FLAG_SYS_PIKE_GOLD": "frontier",
+            "FLAG_SYS_PIKE_SILVER": "frontier",
+            "FLAG_SYS_PYRAMID_GOLD": "frontier",
+            "FLAG_SYS_PYRAMID_SILVER": "frontier",
+            "FLAG_SYS_TOWER_GOLD": "frontier",
+            "FLAG_SYS_TOWER_SILVER": "frontier",
+            "VAR_BRAVO_TRAINER_BATTLE_TOWER_ON": "frontier",
+            "VAR_FRONTIER_BATTLE_MODE": "frontier",
+            "VAR_FRONTIER_FACILITY": "frontier",
+            "VAR_FRONTIER_GAMBLER_STATE": "frontier",
+            "VAR_FRONTIER_MANIAC_FACILITY": "frontier",
+            "VAR_GOLDENROD_CITY_STATE": "frontier",
+            "VAR_TEMP_CHALLENGE_STATUS": "frontier",
+            "VAR_TEMP_PLAYING_PYRAMID_MUSIC": "frontier",
+            "VAR_TRAINER_HILL_IS_ACTIVE": "frontier",
+            # Pokenav match-call and rematch tables: the HNS contacts read engine ids, the Scott/Hoenn rows already use HOENN_FLAG_ID
+            "FLAG_DEFEATED_DEWFORD_GYM": "matchcall",
+            "FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY": "matchcall",
+            "FLAG_DEFEATED_LAVARIDGE_GYM": "matchcall",
+            "FLAG_DEFEATED_METEOR_FALLS_STEVEN": "matchcall",
+            "FLAG_DEFEATED_MOSSDEEP_GYM": "matchcall",
+            "FLAG_DEFEATED_PETALBURG_GYM": "matchcall",
+            "FLAG_DEFEATED_SOOTOPOLIS_GYM": "matchcall",
+            "FLAG_DELIVERED_DEVON_GOODS": "matchcall",
+            "FLAG_DELIVERED_STEVEN_LETTER": "matchcall",
+            "FLAG_ENABLE_BRAWLY_MATCH_CALL": "matchcall",
+            "FLAG_ENABLE_FLANNERY_MATCH_CALL": "matchcall",
+            "FLAG_ENABLE_JUAN_MATCH_CALL": "matchcall",
+            "FLAG_ENABLE_MOM_MATCH_CALL": "matchcall",
+            "FLAG_ENABLE_NORMAN_MATCH_CALL": "matchcall",
+            "FLAG_ENABLE_PROF_BIRCH_MATCH_CALL": "matchcall",
+            "FLAG_ENABLE_RIVAL_MATCH_CALL": "matchcall",
+            "FLAG_ENABLE_ROXANNE_MATCH_CALL": "matchcall",
+            "FLAG_ENABLE_SCOTT_MATCH_CALL": "matchcall",
+            "FLAG_ENABLE_TATE_AND_LIZA_MATCH_CALL": "matchcall",
+            "FLAG_ENABLE_WALLY_MATCH_CALL": "matchcall",
+            "FLAG_ENABLE_WATTSON_MATCH_CALL": "matchcall",
+            "FLAG_ENABLE_WINONA_MATCH_CALL": "matchcall",
+            "FLAG_GROUDON_AWAKENED_MAGMA_HIDEOUT": "matchcall",
+            "FLAG_HIDE_MAUVILLE_CITY_WALLY": "matchcall",
+            "FLAG_HIDE_SOOTOPOLIS_CITY_RAYQUAZA": "matchcall",
+            "FLAG_HIDE_VICTORY_ROAD_ENTRANCE_WALLY": "matchcall",
+            "FLAG_KYOGRE_ESCAPED_SEAFLOOR_CAVERN": "matchcall",
+            "FLAG_MET_ARCHIE_METEOR_FALLS": "matchcall",
+            "FLAG_MET_TEAM_AQUA_HARBOR": "matchcall",
+            "FLAG_RECEIVED_CASTFORM": "matchcall",
+            "FLAG_RECEIVED_EXP_SHARE": "matchcall",
+            "FLAG_RECEIVED_HM_STRENGTH": "matchcall",
+            "FLAG_RECEIVED_RED_OR_BLUE_ORB": "matchcall",
+            "FLAG_REGISTERED_STEVEN_POKENAV": "matchcall",
+            "FLAG_RUSTURF_TUNNEL_OPENED": "matchcall",
+            "FLAG_TEAM_AQUA_ESCAPED_IN_SUBMARINE": "matchcall",
+            # region map and map-preview visited/landmark state, handled separately from puzzle state
+            "FLAG_LANDMARK_POKEMON_LEAGUE": "map",
+            "FLAG_LANDMARK_SOUTHERN_ISLAND": "map",
+            "FLAG_VISITED_DEWFORD_TOWN": "map",
+            "FLAG_VISITED_EVER_GRANDE_CITY": "map",
+            "FLAG_VISITED_FALLARBOR_TOWN": "map",
+            "FLAG_VISITED_FORTREE_CITY": "map",
+            "FLAG_VISITED_KANTO": "map",
+            "FLAG_VISITED_LAVARIDGE_TOWN": "map",
+            "FLAG_VISITED_LILYCOVE_CITY": "map",
+            "FLAG_VISITED_LITTLEROOT_TOWN": "map",
+            "FLAG_VISITED_MAUVILLE_CITY": "map",
+            "FLAG_VISITED_MOSSDEEP_CITY": "map",
+            "FLAG_VISITED_OLDALE_TOWN": "map",
+            "FLAG_VISITED_PACIFIDLOG_TOWN": "map",
+            "FLAG_VISITED_PETALBURG_CITY": "map",
+            "FLAG_VISITED_RUSTBORO_CITY": "map",
+            "FLAG_VISITED_SLATEPORT_CITY": "map",
+            "FLAG_VISITED_SOOTOPOLIS_CITY": "map",
+            "FLAG_VISITED_VERDANTURF_TOWN": "map",
+            "FLAG_WORLD_MAP_ROCKET_HIDEOUT_B1F": "map",
+            "VAR_ABNORMAL_WEATHER_LOCATION": "map",
+            # scratch the C side owns end to end (ice rows, rotating gates, voltorb flip); ClearTempFieldEventData clears both banks
+            "VAR_TEMP_0": "temp",
+            "VAR_TEMP_1": "temp",
+            "VAR_TEMP_2": "temp",
+            "VAR_TEMP_3": "temp",
+            "VAR_TEMP_4": "temp",
+            "VAR_TEMP_5": "temp",
+            "VAR_TEMP_6": "temp",
+            "VAR_TEMP_7": "temp",
+            "VAR_TEMP_8": "temp",
+            "VAR_TEMP_9": "temp",
+            "VAR_TEMP_A": "temp",
+            "VAR_TEMP_E": "temp",
+            "VAR_TEMP_MIXED_RECORDS": "temp",
+            "VAR_TEMP_RECORD_MIX_GIFT_ITEM": "temp",
+            # pre-existing, outside this fix: engine-wide progress granted by Wayfarer origin code, mystery gift, ticket menus, fan club and similar; listed so new additions stand out
+            "FLAG_ADDED_MATCH_CALL_TO_POKENAV": "other",
+            "FLAG_DECORATION_1": "other",
+            "FLAG_DECORATION_14": "other",
+            "FLAG_DEFEATED_WALLY_VICTORY_ROAD": "other",
+            "FLAG_ENABLE_SHIP_BIRTH_ISLAND": "other",
+            "FLAG_ENABLE_SHIP_FARAWAY_ISLAND": "other",
+            "FLAG_ENABLE_SHIP_NAVEL_ROCK": "other",
+            "FLAG_ENABLE_SHIP_SOUTHERN_ISLAND": "other",
+            "FLAG_HIDE_FANCLUB_BOY": "other",
+            "FLAG_HIDE_FANCLUB_LADY": "other",
+            "FLAG_HIDE_FANCLUB_LITTLE_BOY": "other",
+            "FLAG_HIDE_FANCLUB_OLD_LADY": "other",
+            "FLAG_HIDE_LILYCOVE_CONTEST_HALL_BLEND_MASTER": "other",
+            "FLAG_HIDE_LILYCOVE_FAN_CLUB_INTERVIEWER": "other",
+            "FLAG_MET_SCOTT_ON_SS_TIDAL": "other",
+            "FLAG_MYSTERY_GIFT_DONE": "other",
+            "FLAG_NURSE_UNION_ROOM_REMINDER": "other",
+            "FLAG_PENDING_DAYCARE_EGG": "other",
+            "FLAG_RECEIVED_AURORA_TICKET": "other",
+            "FLAG_RECEIVED_GOOD_ROD": "other",
+            "FLAG_RECEIVED_MYSTIC_TICKET": "other",
+            "FLAG_RECEIVED_OLD_ROD": "other",
+            "FLAG_RECEIVED_OLD_SEA_MAP": "other",
+            "FLAG_RECEIVED_POKEDEX_FROM_BIRCH": "other",
+            "FLAG_RECEIVED_POKENAV": "other",
+            "FLAG_RECEIVED_RUNNING_SHOES": "other",
+            "FLAG_RECEIVED_SUPER_ROD": "other",
+            "FLAG_SET_WALL_CLOCK": "other",
+            "FLAG_SHOWN_AURORA_TICKET": "other",
+            "FLAG_SHOWN_EON_TICKET": "other",
+            "FLAG_SHOWN_MYSTIC_TICKET": "other",
+            "FLAG_SHOWN_OLD_SEA_MAP": "other",
+            "FLAG_SYS_B_DASH": "other",
+            "FLAG_SYS_CHAT_USED": "other",
+            "FLAG_SYS_CYCLING_ROAD": "other",
+            "FLAG_SYS_MYSTERY_EVENT_ENABLE": "other",
+            "FLAG_SYS_MYSTERY_GIFT_ENABLE": "other",
+            "FLAG_SYS_NATIONAL_DEX": "other",
+            "FLAG_SYS_POKEDEX_GET": "other",
+            "FLAG_SYS_POKEMON_GET": "other",
+            "FLAG_SYS_POKENAV_GET": "other",
+            "FLAG_SYS_RIBBON_GET": "other",
+            "FLAG_SYS_USE_STRENGTH": "other",
+            "VAR_CABLE_CLUB_STATE": "other",
+            "VAR_DISTRIBUTE_EON_TICKET": "other",
+            "VAR_ENIGMA_BERRY_AVAILABLE": "other",
+            "VAR_GIFT_PICHU_SLOT": "other",
+            "VAR_LEAGUE_STATE": "other",
+            "VAR_LILYCOVE_FAN_CLUB_STATE": "other",
+            "VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE": "other",
+            "VAR_MASSAGE_COOLDOWN_STEP_COUNTER": "other",
+            "VAR_NEWBARKTOWN_LABSTATE": "other",
+            "VAR_PC_BOX_TO_SEND_MON": "other",
+            "VAR_POKELOT_PRIZE_ITEM": "other",
+            "VAR_SSAQUA_STATE": "other",
+            "VAR_SS_TIDAL_STATE": "other",
+            "VAR_STARTER_MON": "other",
+        }
+        mismatched = self.hoenn_script_names_that_differ_from_the_engine()
+        referenced = self.c_source_names_outside_hoenn_routing()
+        unexplained = sorted(
+            name for name in mismatched & set(referenced)
+            if name not in allowed
+            and name not in GENERATOR_MODULE.ENGINE_SHARED_FLAGS
+            and name not in GENERATOR_MODULE.ENGINE_SHARED_STATE
+        )
+        self.assertEqual(
+            unexplained, [],
+            "\n".join(f"{name}: {', '.join(referenced[name][:3])}" for name in unexplained),
+        )
+        for name in allowed:
+            self.assertIn(name, mismatched & set(referenced), f"stale allow-list entry {name}")
 
     def test_source_boundaries_restore_hns_constants(self):
         source = (GAME / "data" / "event_scripts.s").read_text()

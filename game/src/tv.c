@@ -837,7 +837,7 @@ u8 FindAnyTVShowOnTheAir(void)
 
 void UpdateTVScreensOnMap(int width, int height)
 {
-    FlagSet(FLAG_SYS_TV_WATCH);
+    WayfarerTvWatchSet(TRUE);
     switch (CheckForPlayersHouseNews())
     {
     case PLAYERS_HOUSE_TV_LATI:
@@ -854,9 +854,9 @@ void UpdateTVScreensOnMap(int width, int height)
             // NPC in Lilycove Hotel is always watching TV
             SetTVMetatilesOnMap(width, height, GetTVMetatileId(TRUE));
         }
-        else if (FlagGet(FLAG_SYS_TV_START) && (FindAnyTVShowOnTheAir() != 0xFF || FindAnyPokeNewsOnTheAir() != 0xFF || IsGabbyAndTyShowOnTheAir()))
+        else if (WayfarerTvHasStarted() && (FindAnyTVShowOnTheAir() != 0xFF || FindAnyPokeNewsOnTheAir() != 0xFF || IsGabbyAndTyShowOnTheAir()))
         {
-            FlagClear(FLAG_SYS_TV_WATCH);
+            WayfarerTvWatchSet(FALSE);
             SetTVMetatilesOnMap(width, height, GetTVMetatileId(TRUE));
         }
         break;
@@ -3359,6 +3359,15 @@ u32 GetPlayerIDAsU32(void)
     return READ_OTID_FROM_SAVE;
 }
 
+// Hoenn's player-house TV flags live in Hoenn's bank; the engine ids are 0.
+#if IS_WAYFARER
+#define PLAYERS_HOUSE_TV_LATI_FLAG WAYFARER_HOENN_SYS_FLAG(0x5D) // FLAG_SYS_TV_LATIAS_LATIOS
+#define PLAYERS_HOUSE_TV_HOME_FLAG WAYFARER_HOENN_SYS_FLAG(0x30) // FLAG_SYS_TV_HOME
+#else
+#define PLAYERS_HOUSE_TV_LATI_FLAG FLAG_SYS_TV_LATIAS_LATIOS
+#define PLAYERS_HOUSE_TV_HOME_FLAG FLAG_SYS_TV_HOME
+#endif
+
 u8 CheckForPlayersHouseNews(void)
 {
     // Check if not in Littleroot house map group
@@ -3377,10 +3386,10 @@ u8 CheckForPlayersHouseNews(void)
             return PLAYERS_HOUSE_TV_NONE;
     }
 
-    if (FlagGet(FLAG_SYS_TV_LATIAS_LATIOS) == TRUE)
+    if (FlagGet(PLAYERS_HOUSE_TV_LATI_FLAG) == TRUE)
         return PLAYERS_HOUSE_TV_LATI;
 
-    if (FlagGet(FLAG_SYS_TV_HOME) == TRUE)
+    if (FlagGet(PLAYERS_HOUSE_TV_HOME_FLAG) == TRUE)
         return PLAYERS_HOUSE_TV_MOVIE;
 
     return PLAYERS_HOUSE_TV_LATI;

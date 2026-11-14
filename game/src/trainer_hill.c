@@ -1,4 +1,5 @@
 #include "global.h"
+#include "wayfarer_persistence.h"
 #include "malloc.h"
 #include "battle.h"
 #include "battle_tower.h"
@@ -1259,7 +1260,7 @@ static u16 GetPrizeItemId(void)
     // The below conditional will always be true, because a Trainer Hill challenge can't be entered
     // until the player has entered the Hall of Fame (FLAG_SYS_GAME_CLEAR is set) and because all
     // of the available challenge modes have the full 8 trainers (NUM_TRAINER_HILL_TRAINERS).
-    if (FlagGet(FLAG_SYS_GAME_CLEAR) && sHillData->challenge.numTrainers == NUM_TRAINER_HILL_TRAINERS)
+    if (IsHoennGameClear() && sHillData->challenge.numTrainers == NUM_TRAINER_HILL_TRAINERS)
         i = GetPrizeListId(TRUE);
     else
         i = GetPrizeListId(FALSE);

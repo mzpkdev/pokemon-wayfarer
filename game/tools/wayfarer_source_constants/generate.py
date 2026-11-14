@@ -18,10 +18,32 @@ VAR_START = 0x4000
 VAR_END = 0x40FF
 HOENN_FLAG_NAMESPACE = 0x6000
 HOENN_VAR_NAMESPACE = 0x7000
+# The object graphics vars are read by the engine at their own ids
+# (VarGetObjectEventGraphicsId), so Hoenn scripts that pick a sprite must
+# write those ids, not a Hoenn-bank copy.
+OBJ_GFX_VAR_START = 0x4010
+OBJ_GFX_VAR_END = 0x401F
 # Emerald flags that are the same fact as an engine flag. Hoenn scripts get the
 # engine's id at assembly time, so reading one costs nothing at run time
 # (phone-rematches.md: having the Pokégear is one flag).
 ENGINE_SHARED_FLAGS = frozenset({"FLAG_HAS_MATCH_CALL"})
+# Engine-owned scratch and puzzle state. The C side reads and clears these at
+# the engine's own ids (field_tasks.c, field_specials.c, faraway_island.c,
+# contest_util.c, ClearTempFieldEventData), so the Hoenn scripts that drive them
+# must use those ids too. None of it needs a Hoenn copy: the ids are the same
+# facts, and the HNS maps of Birth/Faraway Island already share the names.
+ENGINE_SHARED_STATE = frozenset({
+    "VAR_ICE_STEP_COUNT",               # Sootopolis Gym, Sky Pillar and cave_hole.inc cracked floors
+    "VAR_ASH_GATHER_COUNT",             # Soot Sack ash gathering
+    "FLAG_SYS_CTRL_OBJ_DELETE",         # cleared by ClearTempFieldEventData on every map load
+    "FLAG_DEOXYS_ROCK_COMPLETE",        # Birth Island triangle puzzle
+    "VAR_DEOXYS_ROCK_LEVEL",
+    "VAR_DEOXYS_ROCK_STEP_COUNT",
+    "VAR_FARAWAY_ISLAND_STEP_COUNTER",  # Faraway Island Mew
+    "FLAG_HIDE_MEW",
+    "FLAG_CAUGHT_MEW",
+    "VAR_CONTEST_HALL_STATE",           # contest_util.c reads it after the contest
+})
 
 MACRO_RE = re.compile(r"^#define\s+([A-Za-z_][A-Za-z0-9_]*)\s+(.+)$")
 IDENT_RE = re.compile(r"\b[A-Za-z_][A-Za-z0-9_]*\b")
@@ -178,13 +200,15 @@ def hoenn_value(name, source_value):
         if FLAG_LOW_START <= source_value <= FLAG_LOW_END or FLAG_HIGH_START <= source_value <= FLAG_HIGH_END:
             return HOENN_FLAG_NAMESPACE | source_value
     elif name.startswith("VAR_") and VAR_START <= source_value <= VAR_END:
+        if OBJ_GFX_VAR_START <= source_value <= OBJ_GFX_VAR_END:
+            return source_value
         return HOENN_VAR_NAMESPACE | (source_value - VAR_START)
     return source_value
 
 
 def source_value_for_hoenn(name, source_value, engine_values):
-    if name in ENGINE_SHARED_FLAGS:
-        if engine_values.get(name) is None:
+    if name in ENGINE_SHARED_FLAGS or name in ENGINE_SHARED_STATE:
+        if not engine_values.get(name):
             raise ValueError(f"{name} is shared with the engine but the engine does not define it")
         return engine_values[name]
     return hoenn_value(name, source_value)

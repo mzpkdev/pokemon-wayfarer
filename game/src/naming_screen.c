@@ -34,6 +34,7 @@
 #include "constants/event_objects.h"
 #include "constants/rgb.h"
 #include "nuzlocke.h"
+#include "wayfarer_persistence.h"
 
 enum {
     INPUT_NONE,
@@ -764,7 +765,7 @@ static UNUSED void DisplaySentToPCMessage(void)
         stringToDisplay = 2;
     }
 
-    if (FlagGet(FLAG_SYS_PC_LANETTE))
+    if (WayfarerPcHasCreatorName())
         stringToDisplay++;
 
     StringExpandPlaceholders(gStringVar4, sTransferredToPCMessages[stringToDisplay]);

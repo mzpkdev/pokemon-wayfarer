@@ -24,12 +24,26 @@ class SourceConstantTests(unittest.TestCase):
         self.assertEqual(GENERATOR.hoenn_value("VAR_LITTLEROOT_TOWN_STATE", 0x4050), 0x7050)
         self.assertEqual(GENERATOR.hoenn_value("VAR_RESULT", 0x800D), 0x800D)
 
+    def test_object_graphics_var_keeps_engine_id(self):
+        # The engine reads these at their own ids to draw OBJ_EVENT_GFX_VAR_* objects.
+        self.assertEqual(GENERATOR.hoenn_value("VAR_OBJ_GFX_ID_0", 0x4010), 0x4010)
+        self.assertEqual(GENERATOR.hoenn_value("VAR_OBJ_GFX_ID_F", 0x401F), 0x401F)
+        self.assertEqual(GENERATOR.hoenn_value("VAR_TEMP_F", 0x400F), 0x700F)
+
     def test_engine_shared_flag_takes_the_engine_id(self):
         engine = {"FLAG_HAS_MATCH_CALL": 0x1F3}
         self.assertEqual(GENERATOR.source_value_for_hoenn("FLAG_HAS_MATCH_CALL", 0x12F, engine), 0x1F3)
         self.assertEqual(GENERATOR.source_value_for_hoenn("FLAG_RESCUED_BIRCH", 0x52, engine), 0x6052)
         with self.assertRaises(ValueError):
             GENERATOR.source_value_for_hoenn("FLAG_HAS_MATCH_CALL", 0x12F, {})
+
+    def test_engine_shared_state_takes_the_engine_id_for_vars_and_flags(self):
+        engine = {"VAR_ICE_STEP_COUNT": 0x4022, "FLAG_SYS_CTRL_OBJ_DELETE": 0x866}
+        self.assertEqual(GENERATOR.source_value_for_hoenn("VAR_ICE_STEP_COUNT", 0x4022, engine), 0x4022)
+        self.assertEqual(GENERATOR.source_value_for_hoenn("FLAG_SYS_CTRL_OBJ_DELETE", 0x8C1, engine), 0x866)
+        # An engine id of 0 means the engine has no such state: sharing it would drop the write.
+        with self.assertRaises(ValueError):
+            GENERATOR.source_value_for_hoenn("VAR_ICE_STEP_COUNT", 0x4022, {"VAR_ICE_STEP_COUNT": 0})
 
     def test_engine_shared_flag_needs_no_common_dispatch(self):
         table, data = GENERATOR.render_common_tables(

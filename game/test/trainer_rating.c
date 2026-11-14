@@ -1,6 +1,7 @@
 #include "global.h"
 #include "config/league_circuit.h"
 #include "config/notable_trainers.h"
+#include "caps.h"
 #include "event_data.h"
 #include "league_circuit.h"
 #include "league_run_helpers.h"
@@ -317,6 +318,35 @@ TEST("Trainer Rating experience reduction grants full experience through the cap
     EXPECT_EQ(ApplyTrainerRatingExperienceReduction(species, capExp, 8), 4);
     EXPECT_EQ(ApplyTrainerRatingExperienceReduction(species, capExp, 1), 1);
     EXPECT_EQ(ApplyTrainerRatingExperienceReduction(species, capExp, 0), 0);
+}
+
+TEST("Level Cap challenge follows Trainer Rating, not Johto or Kanto badge flags")
+{
+    u32 rating;
+
+    gSaveBlock3Ptr->challengeSettings.tx_Challenges_LevelCap = 1;
+    for (rating = 0; rating <= 160; rating += 20)
+    {
+        SetTrainerRating(rating);
+        EXPECT_EQ(GetCurrentLevelCap(), GetTrainerRatingSoftLevelCap());
+    }
+    gSaveBlock3Ptr->challengeSettings.tx_Challenges_LevelCap = 2;
+    SetTrainerRating(40);
+    EXPECT_EQ(GetCurrentLevelCap(), GetTrainerRatingSoftLevelCap());
+    gSaveBlock3Ptr->challengeSettings.tx_Challenges_LevelCap = 0;
+}
+
+TEST("Hoenn post-game reads Hoenn's own clear, not another region's")
+{
+    SetGameClearStateForRegion(REGION_HOENN, FALSE);
+    SetGameClearStateForRegion(REGION_JOHTO, TRUE);
+    EXPECT(FlagGet(FLAG_SYS_GAME_CLEAR));
+    EXPECT(!IsHoennGameClear());
+    SetGameClearStateForRegion(REGION_HOENN, TRUE);
+    EXPECT(IsHoennGameClear());
+    SetGameClearStateForRegion(REGION_JOHTO, FALSE);
+    EXPECT(IsHoennGameClear());
+    SetGameClearStateForRegion(REGION_HOENN, FALSE);
 }
 
 #endif // IS_WAYFARER

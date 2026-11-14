@@ -29,6 +29,7 @@
 #include "task.h"
 #include "text_window.h"
 #include "window.h"
+#include "wayfarer_persistence.h"
 #include "constants/event_objects.h"
 #include "constants/lilycove_lady.h"
 #include "constants/mauville_old_man.h"
@@ -5102,7 +5103,7 @@ static bool8 IsEasyChatGroupUnlocked(u8 groupId)
     switch (groupId)
     {
     case EC_GROUP_TRENDY_SAYING:
-        return FlagGet(FLAG_UNLOCKED_TRENDY_SAYINGS);
+        return WayfarerHasTrendySayings();
     case EC_GROUP_EVENTS:
     case EC_GROUP_MOVE_1:
     case EC_GROUP_MOVE_2:
@@ -5670,7 +5671,7 @@ static void SetUnlockedEasyChatGroups(void)
         sWordData->unlockedGroupIds[sWordData->numUnlockedGroups++] = EC_GROUP_MOVE_2;
     }
 
-    if (FlagGet(FLAG_UNLOCKED_TRENDY_SAYINGS))
+    if (WayfarerHasTrendySayings())
         sWordData->unlockedGroupIds[sWordData->numUnlockedGroups++] = EC_GROUP_TRENDY_SAYING;
 
     if (IsNationalPokedexEnabled())

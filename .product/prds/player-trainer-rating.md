@@ -68,7 +68,9 @@ range, so extra TR still means something.
 ### What your TR drives
 
 - **Your level cap, experience, and obedience.** A higher TR raises your level
-  cap. The cap is soft: Pokémon past it earn less experience and may disobey
+  cap. The cap is soft: Pokémon past it earn less experience and may disobey.
+  The Level Cap challenge option uses this same cap, so it follows TR rather
+  than Johto or Kanto badge flags, and a Hoenn start gets it too
   ([wild encounter and party progression](trainer-rating-wild-encounter-scaling.md)).
 - **Wild encounters**
   ([Wild encounters v2](wild-encounters-v2.md)).

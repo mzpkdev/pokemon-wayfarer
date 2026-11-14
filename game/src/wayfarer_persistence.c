@@ -907,6 +907,15 @@ bool8 GetGameClearStateForRegion(enum Region region)
 #endif
 }
 
+bool8 IsHoennGameClear(void)
+{
+#if IS_WAYFARER
+    return GetGameClearStateForRegion(REGION_HOENN);
+#else
+    return FlagGet(FLAG_SYS_GAME_CLEAR);
+#endif
+}
+
 void SetGameClearStateForRegion(enum Region region, bool8 value)
 {
 #if IS_WAYFARER
@@ -1080,4 +1089,53 @@ void WayfarerHoennTrainerFlagClear(u16 mappedTrainerId)
 #else
     (void)mappedTrainerId;
 #endif
+}
+
+bool8 WayfarerHasTrendySayings(void)
+{
+#if IS_WAYFARER
+    return FlagGet(WAYFARER_HOENN_SYS_FLAG(0x6));
+#else
+    return FlagGet(FLAG_UNLOCKED_TRENDY_SAYINGS);
+#endif
+}
+
+bool8 WayfarerTvHasStarted(void)
+{
+#if IS_WAYFARER
+    return FlagGet(WAYFARER_HOENN_SYS_FLAG(0x32));
+#else
+    return FlagGet(FLAG_SYS_TV_START);
+#endif
+}
+
+bool8 WayfarerHasFrontierPass(void)
+{
+#if IS_WAYFARER
+    return FlagGet(WAYFARER_HOENN_SYS_FLAG(0x72)) || FlagGet(FLAG_SYS_FRONTIER_PASS);
+#else
+    return FlagGet(FLAG_SYS_FRONTIER_PASS);
+#endif
+}
+
+bool8 WayfarerPcHasCreatorName(void)
+{
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+        return FlagGet(WAYFARER_HOENN_SYS_FLAG(0x4B));
+#endif
+    return FlagGet(FLAG_SYS_PC_LANETTE);
+}
+
+void WayfarerTvWatchSet(bool8 set)
+{
+#if IS_WAYFARER
+    u16 flag = WAYFARER_HOENN_SYS_FLAG(0x31);
+#else
+    u16 flag = FLAG_SYS_TV_WATCH;
+#endif
+    if (set)
+        FlagSet(flag);
+    else
+        FlagClear(flag);
 }

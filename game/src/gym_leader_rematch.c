@@ -1,4 +1,5 @@
 #include "global.h"
+#include "wayfarer_persistence.h"
 #include "random.h"
 #include "event_data.h"
 #include "battle_setup.h"
@@ -33,7 +34,7 @@ static const u16 GymLeaderRematches_BeforeNewMauville[] = {
 
 void UpdateGymLeaderRematch(void)
 {
-    if (FlagGet(FLAG_SYS_GAME_CLEAR) && (Random() % 100) <= 30)
+    if (IsHoennGameClear() && (Random() % 100) <= 30)
     {
         if (FlagGet(FLAG_WATTSON_REMATCH_AVAILABLE))
             UpdateGymLeaderRematchFromArray(GymLeaderRematches_AfterNewMauville, ARRAY_COUNT(GymLeaderRematches_AfterNewMauville), 5);
@@ -46,7 +47,7 @@ s32 GetCurrentGymLeaderRematchLevel(void)
 {
     u32 i, j;
     u32 maxLevel = REMATCHES_COUNT;
-    if (!FlagGet(FLAG_SYS_GAME_CLEAR))
+    if (!IsHoennGameClear())
         return 0;
     for (i = REMATCH_SPECIAL_TRAINER_START; i < REMATCH_ELITE_FOUR_ENTRIES; i++)
     {

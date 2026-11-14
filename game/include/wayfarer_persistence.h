@@ -136,6 +136,8 @@ bool8 GetChampionStateForRegion(enum Region region);
 void SetChampionStateForRegion(enum Region region, bool8 value);
 bool8 GetGameClearStateForRegion(enum Region region);
 void SetGameClearStateForRegion(enum Region region, bool8 value);
+// Hoenn's own League clear in Wayfarer; the standalone game clear everywhere else.
+bool8 IsHoennGameClear(void);
 
 bool8 GetRegionVisitedState(enum Region region);
 void SetRegionVisitedState(enum Region region, bool8 value);
@@ -145,5 +147,14 @@ void SetLocationVisitedStateForRegion(enum Region region, u16 flagId, bool8 valu
 bool8 WayfarerHoennTrainerFlagGet(u16 mappedTrainerId);
 void WayfarerHoennTrainerFlagSet(u16 mappedTrainerId);
 void WayfarerHoennTrainerFlagClear(u16 mappedTrainerId);
+
+
+// System flags that only Hoenn's scripts set, read by engine code. The engine id is 0 or means
+// something else, so a Hoenn save keeps them in Hoenn's bank (Emerald SYSTEM_FLAGS + offset).
+bool8 WayfarerHasTrendySayings(void);   // FLAG_UNLOCKED_TRENDY_SAYINGS
+bool8 WayfarerTvHasStarted(void);       // FLAG_SYS_TV_START
+void WayfarerTvWatchSet(bool8 set);     // FLAG_SYS_TV_WATCH
+bool8 WayfarerHasFrontierPass(void);    // FLAG_SYS_FRONTIER_PASS
+bool8 WayfarerPcHasCreatorName(void);   // FLAG_SYS_PC_LANETTE: Lanette in Hoenn, Bill elsewhere
 
 #endif // GUARD_WAYFARER_PERSISTENCE_H
