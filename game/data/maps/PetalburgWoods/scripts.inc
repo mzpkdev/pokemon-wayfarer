@@ -99,12 +99,27 @@ PetalburgWoods_EventScript_BagFull::
 	end
 
 PetalburgWoods_EventScript_DevonResearcherFinish::
+#if IS_WAYFARER
+	@ The foreshadowing of the RUSTBORO theft is moot once the goods were stolen or returned
+	goto_if_set FLAG_DEVON_GOODS_STOLEN, PetalburgWoods_EventScript_DevonResearcherFinishAfterTheft
+	goto_if_set FLAG_RETURNED_DEVON_GOODS, PetalburgWoods_EventScript_DevonResearcherFinishAfterTheft
+#endif
 	msgbox PetalburgWoods_Text_TeamAquaAfterSomethingInRustboro, MSGBOX_DEFAULT
 	applymovement LOCALID_PETALBURG_WOODS_DEVON_EMPLOYEE, PetalburgWoods_Movement_DevonResearcherStartExit
 	waitmovement 0
 	msgbox PetalburgWoods_Text_ICantBeWastingTime, MSGBOX_DEFAULT
 	closemessage
 	return
+
+#if IS_WAYFARER
+PetalburgWoods_EventScript_DevonResearcherFinishAfterTheft::
+	msgbox PetalburgWoods_Text_TeamAquaThugsEverywhere, MSGBOX_DEFAULT
+	applymovement LOCALID_PETALBURG_WOODS_DEVON_EMPLOYEE, PetalburgWoods_Movement_DevonResearcherStartExit
+	waitmovement 0
+	msgbox PetalburgWoods_Text_BackToTheOffice, MSGBOX_DEFAULT
+	closemessage
+	return
+#endif
 
 PetalburgWoods_EventScript_RemoveDevonResearcher::
 	removeobject LOCALID_PETALBURG_WOODS_DEVON_EMPLOYEE
@@ -371,6 +386,16 @@ PetalburgWoods_Text_TeamAquaAfterSomethingInRustboro:
 	.string "Didn't that TEAM AQUA thug say\n"
 	.string "they were after something in\l"
 	.string "RUSTBORO, too?$"
+
+#if IS_WAYFARER
+PetalburgWoods_Text_TeamAquaThugsEverywhere:
+	.string "TEAM AQUA thugs seem to be popping\n"
+	.string "up all over HOENN these days…$"
+
+PetalburgWoods_Text_BackToTheOffice:
+	.string "I'd better get these papers back to\n"
+	.string "the office!$"
+#endif
 
 PetalburgWoods_Text_ICantBeWastingTime:
 	.string "Uh-oh! It's a crisis!\n"
