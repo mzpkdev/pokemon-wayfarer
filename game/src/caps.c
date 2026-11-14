@@ -5,6 +5,8 @@
 #include "pokemon.h"
 #include "trainer_rating.h"
 
+#if !IS_WAYFARER
+// Wayfarer's level cap follows Trainer Rating, not one region's badges.
 static u8 GetCurrentBadgeCount(void)
 {
     u16 i;
@@ -16,6 +18,7 @@ static u8 GetCurrentBadgeCount(void)
     }
     return badgeCount;
 }
+#endif
 
 static const u8 sLevelCapTable_Normal[] =
 {
