@@ -105,7 +105,7 @@ class HistoryClaimTests(unittest.TestCase):
 
     def test_steven_in_meteor_falls_recalls_only_what_happened(self):
         cave = script("MeteorFalls_StevensCave")
-        self.assertIn("call_if_set FLAG_DEFEATED_MAGMA_SPACE_CENTER, MeteorFalls_StevensCave_EventScript_RecallSpaceCenter", cave)
+        self.assertIn("call_if_ge VAR_MOSSDEEP_SPACE_CENTER_STATE, 3, MeteorFalls_StevensCave_EventScript_RecallSpaceCenter", cave)
         self.assertIn("goto_if_set FLAG_DELIVERED_STEVEN_LETTER", label_body(cave, "MeteorFalls_StevensCave_EventScript_MyPredictionCameTrue"))
         self.assertIn("SPACE CENTER", label_body(cave, "MeteorFalls_StevensCave_Text_BattledAtSpaceCenter"))
         # What he says of his own strength rides on the Space Center text, so it is told only with that flag.
@@ -274,8 +274,11 @@ class SceneRunTests(unittest.TestCase):
         known = self.play("MeteorFalls_StevensCave", scene, introduced={steven})
         self.assertEqual(known.messages[:2], ["greeting:" + steven, "MeteorFalls_StevensCave_Text_ImAmazedYouFoundMe"])
         # The Space Center is recalled only by a player who fought beside him there.
-        fought = self.play("MeteorFalls_StevensCave", scene, introduced={steven}, flags={"FLAG_DEFEATED_MAGMA_SPACE_CENTER"})
+        # It is keyed on the invasion's lasting state, not on the flag a later rival call clears.
+        fought = self.play("MeteorFalls_StevensCave", scene, introduced={steven}, vars={"VAR_MOSSDEEP_SPACE_CENTER_STATE": 3})
         self.assertIn("MeteorFalls_StevensCave_Text_BattledAtSpaceCenter", fought.messages)
+        unfinished = self.play("MeteorFalls_StevensCave", scene, introduced={steven}, vars={"VAR_MOSSDEEP_SPACE_CENTER_STATE": 2})
+        self.assertNotIn("MeteorFalls_StevensCave_Text_BattledAtSpaceCenter", unfinished.messages)
         # His cave opens on HOENN's own FLAG_SYS_GAME_CLEAR, so the prediction of a CHAMPION always holds.
         self.assertIn("FLAG_SYS_GAME_CLEAR", (MAPS / "MeteorFalls_1F_1R/scripts.inc").read_text())
 

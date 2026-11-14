@@ -89,10 +89,22 @@ MeteorFalls_1F_1R_EventScript_MagmaStealsMeteoriteScene::
 	setflag FLAG_MET_ARCHIE_METEOR_FALLS
 	clearflag FLAG_HIDE_MT_CHIMNEY_TEAM_AQUA
 	clearflag FLAG_HIDE_MT_CHIMNEY_TEAM_MAGMA
+#if IS_WAYFARER
+	call_if_unset FLAG_HIDE_FALLARBOR_TOWN_BATTLE_TENT_SCOTT, MeteorFalls_1F_1R_EventScript_CountClosedFallarborScott
+#endif
 	setflag FLAG_HIDE_FALLARBOR_TOWN_BATTLE_TENT_SCOTT
 	setvar VAR_METEOR_FALLS_STATE, 1
 	releaseall
 	end
+
+#if IS_WAYFARER
+@ Hiding SCOTT here closes a meeting that the Fiery Path opened and the player has not had yet: count it
+MeteorFalls_1F_1R_EventScript_CountClosedFallarborScott::
+	goto_if_set FLAG_MET_SCOTT_IN_FALLARBOR, Common_EventScript_NopReturn
+	addvar VAR_SCOTT_STATE, 1
+	setflag FLAG_MET_SCOTT_IN_FALLARBOR
+	return
+#endif
 
 @ This scene always comes before Magma Hideout, and the only delivery without the museum's
 @ confrontation comes after it, so the delivery here proves that Archie met the player there.

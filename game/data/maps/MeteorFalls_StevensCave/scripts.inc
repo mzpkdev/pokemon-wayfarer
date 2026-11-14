@@ -14,8 +14,9 @@ MeteorFalls_StevensCave_EventScript_Steven::
 	waitmovement 0
 #if IS_WAYFARER
 	call MeteorFalls_StevensCave_EventScript_Greet
-	@ He only recalls the SPACE CENTER if the player fought beside him there
-	call_if_set FLAG_DEFEATED_MAGMA_SPACE_CENTER, MeteorFalls_StevensCave_EventScript_RecallSpaceCenter
+	@ He only recalls the SPACE CENTER if the player fought beside him there (the later rival call clears
+	@ FLAG_DEFEATED_MAGMA_SPACE_CENTER, so the invasion state is the lasting record)
+	call_if_ge VAR_MOSSDEEP_SPACE_CENTER_STATE, 3, MeteorFalls_StevensCave_EventScript_RecallSpaceCenter
 	msgbox MeteorFalls_StevensCave_Text_ExpectWorst, MSGBOX_DEFAULT
 #else
 	msgbox MeteorFalls_StevensCave_Text_ShouldKnowHowGoodIAmExpectWorst, MSGBOX_DEFAULT

@@ -113,11 +113,28 @@ MauvilleCity_Gym_EventScript_Wattson::
 	release
 	end
 
+#if IS_WAYFARER
+@ State 3 closes SCOTT's Slateport scenes. The tent scene never plays after it, and neither does the museum door
+@ scene if it was still queued (state 1), so each is counted here to keep SCOTT's 13th meeting reachable.
+MauvilleCity_Gym_EventScript_CountClosedSlateportScott::
+	addvar VAR_SCOTT_STATE, 1
+	call_if_eq VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 1, MauvilleCity_Gym_EventScript_CountClosedMuseumDoorScott
+	return
+
+MauvilleCity_Gym_EventScript_CountClosedMuseumDoorScott::
+	addvar VAR_SCOTT_STATE, 1
+	setflag FLAG_ENABLE_SCOTT_MATCH_CALL
+	return
+#endif
+
 MauvilleCity_Gym_EventScript_WattsonDefeated::
 	message MauvilleCity_Gym_Text_ReceivedDynamoBadge
 	waitmessage
 	call Common_EventScript_PlayGymBadgeFanfare
 	msgbox MauvilleCity_Gym_Text_ExplainDynamoBadgeTakeThis, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call_if_lt VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 3, MauvilleCity_Gym_EventScript_CountClosedSlateportScott
+#endif
 	setvar VAR_SLATEPORT_OUTSIDE_MUSEUM_STATE, 3
 	clearflag FLAG_HIDE_VERDANTURF_TOWN_SCOTT
 	setflag FLAG_DEFEATED_MAUVILLE_GYM

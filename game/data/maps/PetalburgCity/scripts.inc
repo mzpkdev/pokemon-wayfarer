@@ -273,7 +273,11 @@ PetalburgCity_EventScript_ShowGymToPlayer::
 	call_if_eq VAR_0x8008, 1, PetalburgCity_EventScript_BoyApproachPlayer1
 	call_if_eq VAR_0x8008, 2, PetalburgCity_EventScript_BoyApproachPlayer2
 	call_if_eq VAR_0x8008, 3, PetalburgCity_EventScript_BoyApproachPlayer3
+#if IS_WAYFARER
+	call PetalburgCity_EventScript_GymBoyGreeting
+#else
 	msgbox PetalburgCity_Text_AreYouRookieTrainer, MSGBOX_DEFAULT
+#endif
 	closemessage
 	call_if_eq VAR_0x8008, 0, PetalburgCity_EventScript_LeadPlayerToGym0
 	call_if_eq VAR_0x8008, 1, PetalburgCity_EventScript_LeadPlayerToGym1
@@ -288,8 +292,35 @@ PetalburgCity_EventScript_ShowGymToPlayer::
 	applymovement LOCALID_GYM_BOY, PetalburgCity_Movement_BoyWalkAway
 	waitmovement 0
 	fadedefaultbgm
+#if IS_WAYFARER
+	@ One walk to the GYM is enough: state 1 ends the redirect without touching the tutorial states (2-5)
+	setvar VAR_PETALBURG_CITY_STATE, 1
+#endif
 	releaseall
 	end
+
+#if IS_WAYFARER
+@ The rookie speech is for a native newcomer with no badge; a visitor or a player who has won a Gym is greeted as experienced
+PetalburgCity_EventScript_GymBoyGreeting::
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, FALSE, PetalburgCity_EventScript_GymBoyGreetingExperienced
+	specialvar VAR_RESULT, WayfarerGetHoennBadgeCountForScript
+	goto_if_ge VAR_RESULT, 1, PetalburgCity_EventScript_GymBoyGreetingExperienced
+	msgbox PetalburgCity_Text_AreYouRookieTrainer, MSGBOX_DEFAULT
+	return
+
+PetalburgCity_EventScript_GymBoyGreetingExperienced::
+	msgbox PetalburgCity_Text_YouLookExperienced, MSGBOX_DEFAULT
+	return
+
+PetalburgCity_Text_YouLookExperienced:
+	.string "Hiya! You look like a TRAINER who\n"
+	.string "has seen a thing or two!\p"
+	.string "Still, do you know what POKéMON\n"
+	.string "TRAINERS do when they reach a town?\p"
+	.string "They first check what kind of GYM\n"
+	.string "is in the town.$"
+#endif
 
 PetalburgCity_EventScript_BoyApproachPlayer0::
 	applymovement LOCALID_GYM_BOY, PetalburgCity_Movement_BoyApproachPlayer0
