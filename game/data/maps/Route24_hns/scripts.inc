@@ -89,6 +89,9 @@ Route24_EventScript_Grunt::
 	delay 20
 	applymovement LOCALID_ROUTE24_GRUNT, Route24_Movement_GruntLeave
 	waitmovement LOCALID_ROUTE24_GRUNT
+	@ He escapes by warp, not on foot: the walk down the bridge ran through the trainers on it.
+	playse SE_WARP_OUT
+	delay 20
 	setflag FLAG_HIDE_CERULEAN_CAPE_ROCKET
 	removeobject LOCALID_ROUTE24_GRUNT
 	setvar VAR_KANTO_ROCKET_STORY_STATE, 5
@@ -106,15 +109,6 @@ Route24_Movement_PlayerSlide:
 
 Route24_Movement_GruntLeave:
 	walk_fast_right
-	walk_fast_down
-	walk_fast_down
-	walk_fast_down
-	walk_fast_down
-	walk_fast_down
-	walk_fast_down
-	walk_fast_down
-	walk_fast_down
-	walk_fast_down
 	step_end
 
 Route24_Text_RocketSeen:
