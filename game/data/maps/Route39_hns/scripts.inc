@@ -40,8 +40,26 @@ Route39_EventScript_LegendaryTrigger::
 
 	turnobject LOCALID_R39_BAOBA DIR_EAST
 	turnobject OBJ_EVENT_ID_PLAYER DIR_WEST
+@ Talking to BAOBA runs the same choice as the shadow strip on the way to ROUTE 38 (a player who
+@ arrives at the farm first, as ZUKI suggests, never crossed it). VAR_TEMP_2 marks the talk so he
+@ leaves on the spot instead of walking the strip's route.
+Route39_EventScript_Baoba::
+	lock
+	faceplayer
+	goto_if_ne VAR_LUGIA_OR_HOOH, 0, Route39_EventScript_BaobaAfter
+	setvar VAR_TEMP_2, 1
+	msgbox Route39_Text_BaobaTalkShadow, MSGBOX_DEFAULT
+	goto Route39_EventScript_ChooseLegendMenu
+
+Route39_EventScript_BaobaAfter::
+	msgbox Route39_Text_BaobaAfter, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
 Route39_EventScript_ChooseLegend::
 	msgbox Route39_Text_ChooseLegend, MSGBOX_DEFAULT
+Route39_EventScript_ChooseLegendMenu::
 	multichoice 20, 8, MULTI_GOLDSILVER, FALSE
 	switch VAR_RESULT
 	case 0, Route39_EventScript_LegendaryTriggerGold
@@ -125,12 +143,30 @@ Route39_EventScript_BaobaIntro::
 	waitfanfare
 	msgbox Route39_Text_WillCall, MSGBOX_DEFAULT
 	closemessage
+	goto_if_eq VAR_TEMP_2, 1, Route39_EventScript_BaobaLeaveFarm
 	applymovement LOCALID_R39_BAOBA, Route39_Movement_BaobaLeave
 	waitmovement 0
+Route39_EventScript_BaobaGone::
 	setflag FLAG_ENABLE_BAOBA_MATCH_CALL
 	removeobject LOCALID_R39_BAOBA
 	release
 	end
+
+Route39_EventScript_BaobaLeaveFarm::
+	playse SE_EXIT
+	goto Route39_EventScript_BaobaGone
+
+Route39_Text_BaobaTalkShadow::
+	.string "BAOBA: Ah, a traveler!\p"
+	.string "A huge shadow just crossed over\n"
+	.string "the ROUTE...\p"
+	.string "Did you get a good look at it?\n"
+	.string "I can't tell what color it was...$"
+
+Route39_Text_BaobaAfter::
+	.string "BAOBA: A SAFARI ZONE in CIANWOOD\n"
+	.string "is a big undertaking. I will call\l"
+	.string "you when it opens!$"
 
 Route39_Text_ChooseLegend::
 	.string "BAOBA: GOOD HEAVENS! Did that\n"
