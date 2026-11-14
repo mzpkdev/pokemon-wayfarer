@@ -721,4 +721,6 @@ WayfarerSevii_Story_Text_SelphyButlerHome::
 	.string "My lady's smile has regained the\n"
 	.string "brilliance of the sun.$"
 WayfarerSevii_Story_Text_SelphyButlerWaiting::
-	.string "Please bring LADY SELPHY home safely.$"
+	.string "My lady wandered off toward LOST\n"
+	.string "CAVE on FIVE ISLAND. Please bring\l"
+	.string "LADY SELPHY home safely.$"

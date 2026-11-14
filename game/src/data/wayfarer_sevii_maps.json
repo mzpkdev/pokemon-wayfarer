@@ -17902,11 +17902,10 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_SelphyButler",
-              "flag": "FLAG_WAYFARER_SEVII_HIDE_RETURNED_SELPHY"
+              "flag": "0"
             },
             "actor_role": "scene_actor",
             "state_reads": [
-              "SEVII_HIDE_RETURNED_SELPHY",
               "SEVII_SELPHY_RETURNED"
             ],
             "state_writes": []
@@ -26245,7 +26244,6 @@
         "initial": 1,
         "lifecycle": "presentation",
         "readers": [
-          "story.selphy.butler",
           "story.selphy.requests"
         ],
         "writers": [
