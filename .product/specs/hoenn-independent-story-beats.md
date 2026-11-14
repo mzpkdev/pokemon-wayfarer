@@ -373,12 +373,18 @@ leave Hoenn between their steps.
 **Mossdeep and the Space Center.**
 
 - Tate & Liza's Gym is always open, and its win awards the badge.
-- The Space Center invasion starts only when the player holds the Mind Badge
-  and Groudon has woken (`FLAG_GROUDON_AWAKENED_MAGMA_HIDEOUT`), in either
-  order. Check both on entering Mossdeep City, and only while the invasion has
-  never started (`VAR_MOSSDEEP_CITY_STATE` 0), so it starts once. A player who
-  wins the Gym first finds Mossdeep quiet, and the invasion begins on their
-  first visit after Magma Hideout.
+- The Space Center invasion starts once Groudon has woken
+  (`FLAG_GROUDON_AWAKENED_MAGMA_HIDEOUT`), without the Mind Badge (owner
+  decision, revised 2026-11-14: "start on Groudon alone"; the earlier
+  badge-plus-Groudon gate left the whole finale behind an unrelated Gym). Check
+  it on entering Mossdeep City, and only while the invasion has never started
+  (`VAR_MOSSDEEP_CITY_STATE` 0), so it starts once. A player who has beaten
+  Tate & Liza first finds nothing different: the invasion begins on their first
+  visit after Magma Hideout. The Gym's win writes no invasion state.
+- Steven stands in one place at a time. Space Center 1F hides its
+  pre-invasion copy (`FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_1F_STEVEN`) on every
+  entry, because the invasion starts on the first Mossdeep visit after Groudon wakes, so
+  that copy would only ever wait for an invasion that may never come.
 - Everything the Gym's defeat writes for the invasion moves to that check: the
   city and Space Center states, the Magma objects, and Steven's placement.
 - From there the invasion, Steven's tag battle, and Steven's house keep their

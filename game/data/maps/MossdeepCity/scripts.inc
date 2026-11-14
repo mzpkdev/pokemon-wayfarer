@@ -12,10 +12,9 @@ MossdeepCity_OnTransition:
 	call_if_eq VAR_MOSSDEEP_CITY_STATE, 0, MossdeepCity_EventScript_TryStartInvasion
 	end
 
-@ The invasion needs the Mind Badge and Groudon awake, in either order. State 0 means that it has
-@ never started, so this arms it once.
+@ The invasion needs only Groudon awake: the Mind Badge does not gate the finale (owner decision, 2026-11-14).
+@ State 0 means that it has never started, so this arms it once.
 MossdeepCity_EventScript_TryStartInvasion::
-	goto_if_unset FLAG_BADGE07_GET, Common_EventScript_NopReturn
 	goto_if_unset FLAG_GROUDON_AWAKENED_MAGMA_HIDEOUT, Common_EventScript_NopReturn
 	clearflag FLAG_HIDE_MOSSDEEP_CITY_TEAM_MAGMA
 	clearflag FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_1F_TEAM_MAGMA

@@ -4,6 +4,11 @@ MossdeepCity_SpaceCenter_1F_MapScripts::
 	.byte 0
 
 MossdeepCity_SpaceCenter_1F_OnTransition:
+#if IS_WAYFARER
+	@ The invasion starts on the first Mossdeep visit once Groudon is awake, so a pre-invasion STEVEN here would
+	@ only wait for an invasion that may never come while he is also in Granite Cave or on Route 120.
+	setflag FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_1F_STEVEN
+#endif
 	goto_if_eq VAR_MOSSDEEP_CITY_STATE, 2, MossdeepCity_SpaceCenter_1F_EventScript_MoveObjectsForTeamMagma
 	end
 

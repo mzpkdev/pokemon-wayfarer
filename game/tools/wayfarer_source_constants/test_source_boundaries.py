@@ -269,6 +269,26 @@ class SourceBoundaryTests(unittest.TestCase):
                     found.setdefault(name, []).append(f"{path.relative_to(GAME)}:{number}")
         return found
 
+    def test_hoenn_id_wrappers_around_names_use_the_emerald_value(self):
+        # HOENN_*_ID(NAME) adds the Hoenn namespace to whatever NAME means in the engine build. A name that
+        # Wayfarer renumbers or zeroes (like the FLAG_HIDE_* flags) silently resolves to the wrong source id,
+        # so the engine value must equal Emerald's.
+        wrapper = re.compile(r"\bHOENN_(?:FLAG|VAR)_ID\(\s*((?:FLAG|VAR)_[A-Za-z0-9_]+)\s*\)")
+        found = {}
+        for directory in ("src", "include", "test"):
+            for path in sorted((GAME / directory).rglob("*")):
+                if path.suffix not in (".c", ".h") or path.name in SCANNER_EXEMPT_FILES:
+                    continue
+                text = re.sub(r"//.*", "", path.read_text(errors="replace"))
+                for name in wrapper.findall(text):
+                    found.setdefault(name, str(path.relative_to(GAME)))
+        self.assertGreater(len(found), 5)
+        cc = shutil.which("cc")
+        emerald = GENERATOR_MODULE.dump_values(cc, GAME / "include", "POKEMON_EMERALD", sorted(found))
+        wayfarer = GENERATOR_MODULE.dump_values(cc, GAME / "include", "POKEMON_HNS", sorted(found))
+        for name, where in sorted(found.items()):
+            self.assertEqual(wayfarer[name], emerald[name], f"{name} in {where}: write the Emerald id instead")
+
     def test_engine_code_does_not_read_a_hoenn_script_copy_of_its_state(self):
         # A Hoenn script writing 0x6000/0x7000-bank ids while C reads the engine
         # id (or the reverse) is a silent mismatch: the puzzle never completes,

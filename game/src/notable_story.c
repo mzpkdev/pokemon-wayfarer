@@ -83,9 +83,8 @@ static const struct StoryPlacement sPlacements[] =
     // (FLAG_HIDE_SOOTOPOLIS_CITY_WALLACE clear). State 6 hides him and ends the crisis.
     { .characterId = NOTABLE_TRAINER_WALLACE, .var = HOENN_VAR_ID(VAR_SOOTOPOLIS_CITY_STATE), .varMin = 2, .varMax = 5 },
     // Steven at the Mossdeep Space Center 2F: his object shows from the invasion (flag cleared) until the battle
-    // (state 3). The 1F copy is left out: it is Emerald's own pre-invasion placement, visible from New Game until
-    // the invasion hides it, so listing it would keep his walker away for most of the game.
-    { .characterId = NOTABLE_TRAINER_STEVEN, .flag = HOENN_FLAG_ID(FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_2F_STEVEN),
+    // (state 3). The 1F copy is never listed: Space Center 1F hides it on entry, as the invasion starts once Groudon is awake.
+    { .characterId = NOTABLE_TRAINER_STEVEN, .flag = HOENN_FLAG_ID(0x35F), // FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_2F_STEVEN
       .var = HOENN_VAR_ID(VAR_MOSSDEEP_SPACE_CENTER_STATE), .varMin = 1, .varMax = 2 },
     // Giovanni leaves Viridian for good: once he has departed, his walker never spawns.
     // Whitney's morning outing to the Goldenrod Radio Tower until the quiz is solved (her Tower copy shows then).

@@ -95,7 +95,7 @@ Hoenn between their steps. Neither branch requires completing the other.
 | --- | --- | --- |
 | Mt. Pyre -> Magma Hideout | The existing Emblem connects the theft to the hideout and Groudon's awakening. | Start the theft only after Mt. Chimney. Before that, Mt. Pyre is open and Team Aqua is not on the summit. Add no other requirement. |
 | Slateport theft -> Aqua Hideout | The stolen submarine leads to the hideout and its escape. | Keep the theft after Magma Hideout. Make the hideout fully playable after the theft without Mossdeep's Gym or Space Center completion. |
-| Mossdeep / Space Center -> Steven's Dive | Maxie's rocket-fuel plan follows his failed control of Groudon; Steven helps defeat it and provides Dive. | Keep Magma Hideout as the story prerequisite. Remove any dependency on completing the Aqua branch. Keep the local Mossdeep Gym/invasion sequence and field-use rules. |
+| Mossdeep / Space Center -> Steven's Dive | Maxie's rocket-fuel plan follows his failed control of Groudon; Steven helps defeat it and provides Dive. | Keep Magma Hideout as the story prerequisite. Remove any dependency on completing the Aqua branch. Keep the local Mossdeep invasion sequence and field-use rules. The invasion starts once Groudon is awake, without the Mind Badge (owner decision, revised 2026-11-14). |
 | Seafloor -> Sootopolis -> Sky Pillar | Following the submarine leads to Kyogre's awakening, the weather crisis, and seeking Rayquaza's help. | Require both completed branches before starting Seafloor's story. Preserve the existing Cave of Origin, Wallace, Sky Pillar, and return-to-Sootopolis sequence. |
 
 Space Center should not be independently available before Magma Hideout. Its
