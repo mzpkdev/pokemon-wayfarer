@@ -161,7 +161,14 @@ WayfarerSevii_Story_HeracrossJudge::
 	special CompareHeracrossSize
 	goto_if_eq VAR_RESULT, 1, WayfarerSevii_Story_HeracrossWrongSpecies
 	goto_if_eq VAR_RESULT, 3, WayfarerSevii_Story_HeracrossNewRecord
-	goto_if_unset FLAG_WAYFARER_SEVII_HERACROSS_REWARD_RECEIVED, WayfarerSevii_Story_HeracrossTryGiveReward
+	goto_if_set FLAG_WAYFARER_SEVII_HERACROSS_REWARD_RECEIVED, WayfarerSevii_Story_HeracrossNotRecord
+	@ The Nest Ball is owed only for a record. A failed delivery leaves the record
+	@ above its 0x8000 default, so a later tied or smaller measurement retries it.
+	copyvar VAR_0x8004, VAR_WAYFARER_SEVII_HERACROSS_SIZE_RECORD
+	goto_if_eq VAR_0x8004, 0x8000, WayfarerSevii_Story_HeracrossNotRecord
+	goto WayfarerSevii_Story_HeracrossTryGiveReward
+
+WayfarerSevii_Story_HeracrossNotRecord::
 	msgbox SixIsland_WaterPath_House1_Text_ItsXInchesYInchesWasBiggest
 	release
 	end

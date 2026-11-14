@@ -18032,7 +18032,8 @@
             },
             "actor_role": "pokemon_showing",
             "state_reads": [
-              "SEVII_HERACROSS_REWARD_RECEIVED"
+              "SEVII_HERACROSS_REWARD_RECEIVED",
+              "SEVII_HERACROSS_SIZE_RECORD"
             ],
             "state_writes": [
               "SEVII_HERACROSS_REWARD_RECEIVED"
@@ -19697,6 +19698,7 @@
         "WayfarerSevii_Story_HeracrossCancel",
         "WayfarerSevii_Story_HeracrossJudge",
         "WayfarerSevii_Story_HeracrossNewRecord",
+        "WayfarerSevii_Story_HeracrossNotRecord",
         "WayfarerSevii_Story_HeracrossRewardFull",
         "WayfarerSevii_Story_HeracrossSizeRecord",
         "WayfarerSevii_Story_HeracrossSizeRecordBlank",
@@ -28528,7 +28530,9 @@
         "storage": "var",
         "slot": 4,
         "initial": 32768,
-        "readers": [],
+        "readers": [
+          "story.local.heracross-judge"
+        ],
         "writers": [],
         "transitions": []
       },
