@@ -115,10 +115,15 @@ route network.
 - **Blocks:** Reception Gate's west branch to Route 28 and Mt. Silver.
 - **Mechanism:** A Black Belt occupies the branch leading to the Route 28 warp.
   Its hide flag is `FLAG_INDIGOJUNCTION_HIDE_SILVER_GUARD`.
-- **Prerequisite:** Reach `VAR_NUM_BADGES >= 16` and then speak to Oak in Pallet
-  Lab. Badge count alone does not move the guard.
-- **Clears:** Oak sets the guard's hide flag and persists the lab state. Blue's
-  Viridian Gym victory supplies Badge 16 and triggers Oak's call.
+- **Prerequisite:** In HNS, reach `VAR_NUM_BADGES >= 16` and then speak to Oak in
+  Pallet Lab. In Wayfarer, eight Kanto badges (`WayfarerGetKantoBadgeCountForScript`)
+  are enough, and a Pallet-origin player reaches the same check through Oak after
+  the opening. Badge count alone does not move the guard.
+- **Clears:** Oak sets the guard's hide flag and persists the lab state. The old
+  HNS claim that Blue's Viridian Gym victory supplies Badge 16 and triggers Oak's
+  call is stale for Wayfarer: the HNS Viridian Gym is excluded, Blue leaves
+  Viridian, and the Giovanni finale supplies the Kanto Earth Badge. Route 27's
+  first steps no longer clear this flag or the Kanto guard flag.
 - **Status:** Mandatory for Mt. Silver, which is an optional late-game area.
 - **Evidence:** `game/data/maps/ReceptionGate_hns/map.json:31-43,95-100`,
   `game/data/maps/PalletTown_Lab_hns/scripts.inc:4-16,23-43,87-114`,
@@ -150,9 +155,9 @@ Evidence: `game/data/maps/ReceptionGate_hns/scripts.inc:31-60`.
   passage.
 - The Power Plant Rocket and Misty chain delays the Cerulean Gym battle, but the
   city and Routes 24 and 25 remain traversable.
-- Blue remains away from Viridian Gym until the player has 15 badges. This
-  delays Badge 16 and Mt. Silver authorization, not entry to Viridian or its
-  surrounding routes.
+- In HNS, Blue stays away from Viridian Gym until the player has 15 badges. In
+  Wayfarer, Blue is not in the Viridian Gym at all, and his Dojo battle unlocks on
+  the first committed Indigo win.
 - Kanto Gym rematches, dojo leaders, Safari content, and legendary encounters
   do not occupy connective paths in the reviewed scripts.
 - Ordinary Cut, Rock Smash, Strength, Surf, and Waterfall terrain was not
