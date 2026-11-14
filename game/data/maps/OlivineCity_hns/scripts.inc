@@ -21,6 +21,9 @@ OlivineCity_OnFrame::
 	.2byte 0
 
 OlivineCity_EventScript_BaobaCall::
+	@ "Sorry to have kept you waiting" answers the Route 39 meeting that registered him
+	@ (FLAG_ENABLE_BAOBA_MATCH_CALL): a player who never met him gets no call, and meets him at the Safari Zone.
+	goto_if_unset FLAG_ENABLE_BAOBA_MATCH_CALL, OlivineCity_EventScript_BaobaCallSkipped
 	lock
 	setspeaker OlivineCity_Text_BaobaName
 	pokenavcall OlivineCity_Text_Baoba
@@ -28,6 +31,10 @@ OlivineCity_EventScript_BaobaCall::
 	delay 30
 	setvar VAR_SAFARI_ZONE_GATE_STATE, 2
 	release
+	end
+
+OlivineCity_EventScript_BaobaCallSkipped::
+	setvar VAR_SAFARI_ZONE_GATE_STATE, 2
 	end
 
 OlivineCity_Text_BaobaName:
