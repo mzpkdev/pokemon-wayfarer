@@ -9,7 +9,9 @@
 #include "data.h"
 #include "league_events.h"
 #include "league_halls.h"
+#include "notable_trainers.h"
 #include "constants/characters.h"
+#include "constants/notable_trainers.h"
 #include "constants/event_objects.h"
 #include "constants/vars.h"
 #endif
@@ -70,6 +72,18 @@ u16 LeagueEvent_BufferRoomName(void)
 
     StringCopy(gStringVar1, GetLeagueEventMemberName(team));
     return team != NULL;
+}
+
+// The notable character hosting the current room (NOTABLE_TRAINER_*), or NOTABLE_TRAINER_NONE for any other host.
+u16 LeagueEvent_GetRoomHostCharacter(void)
+{
+    const struct LeagueSavedTeam *team = GetCurrentLeagueRoomTeam();
+    const struct NotableTrainer *notable;
+
+    if (team == NULL || team->sourceTrainerId >= TRAINERS_COUNT)
+        return NOTABLE_TRAINER_NONE;
+    notable = GetNotableTrainerForEncounter(team->sourceTrainerId);
+    return notable != NULL ? notable->characterId : NOTABLE_TRAINER_NONE;
 }
 
 u16 LeagueEvent_SetRoomGraphics(void)

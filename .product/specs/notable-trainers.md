@@ -193,8 +193,8 @@ nothing else moves a stage.
 
 | Stage | Score at least | Notes |
 | --- | ---: | --- |
-| Stranger | 0 | They don't know the player, however often the player has talked to them. |
-| Met | 10 | The player has beaten them or helped them once. |
+| Stranger | 0 | No recognition earned, however often the player has talked to them. Whether they have been introduced is tracked apart from the score ([acquaintance](notable-story-continuity.md#1-acquaintance)). |
+| Met | 10 | The player has beaten them, helped them, or shared a story beat with them once. |
 | Friend | 20 | They give their phone number. |
 | Close | 60 | The warmest stage. |
 
@@ -209,20 +209,24 @@ Stranger. Events only add weighted points (placeholders):
 | --- | ---: | --- |
 | First win | +10 | Once: the first win over them, in any kind of battle. Later wins add nothing. |
 | Haunt quest completed | +10 | Each completed [quest](notable-haunts.md#quests), at most once per placement. Strangers can take quests too. |
+| Story beat completed | +10 | Once per beat on the [story beat list](notable-story-continuity.md#5-story-beats), when the beat completes. Not on an attempt, a decline or a loss. |
 
-So Met means the player has beaten or helped them once, and Friend takes
-both, or two quests: battles alone never make a friend.
+So Met means the player has beaten, helped or shared a story beat with them
+once, and Friend takes two of those: battles alone never make a friend.
 
 Rules:
 
 - **Points come only from explicit, bounded events.** Nothing passive adds
   any: talks, time, world progress, visits, and repeat wins give nothing.
+  A story beat is not world progress: only the listed beats count, each
+  once.
 - **A first win always counts**, whatever the kind of battle (Gym, rematch,
   story, league, singles or a tag match, where both opponents count). A loss,
   a draw, fleeing, a declined league event, a battle beside the trainer as a
   partner, a One on one, Swap battle, or Handicap quest battle (each
   counts as the quest, win or lose), and debug
-  battles add nothing.
+  battles add nothing. A partner battle inside a story beat adds nothing
+  either; the beat itself pays when it completes.
 - **Consumers read only the stage, never the events or the score.** They are
   the greetings of every talk (at [haunts](notable-haunts.md#talk-flow),
   [spots](notable-spots.md#talk-flow), on the road, and in a leader's

@@ -44,4 +44,6 @@
 #define NOTABLE_TRAINER_WALLACE 37
 #define NOTABLE_TRAINER_STEVEN 38
 
+#include "constants/notable_story_beats.h"
+
 #endif // GUARD_CONSTANTS_NOTABLE_TRAINERS_H

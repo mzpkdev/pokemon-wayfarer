@@ -169,7 +169,7 @@ def all_script_files():
 class Interp:
     """Runs labels from one or more maps against shared variable and flag state."""
 
-    def __init__(self, *maps, vars=None, flags=(), johto=True, answers=1, bag_full=False):
+    def __init__(self, *maps, vars=None, flags=(), johto=True, answers=1, bag_full=False, introduced=None, pallet=False):
         self.lines = []
         self.labels = {}
         for name in maps:
@@ -198,6 +198,12 @@ class Interp:
         self.given = []
         self.pokenav = []
         self.locked = False
+        # Notable trainers the player knows (share one set between runs to play scenes in sequence), and the
+        # story beats paid: notable_introduce is the scene's own text once, the greeting after.
+        self.introduced = set() if introduced is None else introduced
+        self.beats_paid = []
+        self.character = None   # the name last put in VAR_0x8004
+        self.pallet = pallet    # the player is from PALLET TOWN
 
     def get(self, name):
         if name in self.vars:
@@ -246,6 +252,8 @@ class Interp:
                 pc = stack.pop()
             elif command in ('setvar', 'copyvar'):
                 self.set_var(args[0], self.get(args[1]))
+                if args[0] == 'VAR_0x8004':
+                    self.character = args[1]  # the trainer a notable special reads, by name
             elif command == 'setvar_forward':
                 if self.get(args[0]) < self.get(args[1]):
                     self.set_var(args[0], self.get(args[1]))
@@ -270,6 +278,10 @@ class Interp:
                 elif args[1] == 'WayfarerJohtoPewterWingMissing':
                     main = self.vars.get(LUGIA_P if self.vars.get(BRANCH, 0) == 1 else HOOH_P, 0)
                     self.vars[args[0]] = (main != 3) | (2 if self.tr < LEGENDARY_TR else 0)
+                elif args[1] == 'NotableStory_IsIntroduced':
+                    self.vars[args[0]] = int(self.character in self.introduced)
+                elif args[1] == 'WayfarerKanto_IsPalletOrigin':
+                    self.vars[args[0]] = int(self.pallet)
                 else:
                     self.vars[args[0]] = {'WayfarerIsJohtoOrigin': int(self.johto),
                                           # ORIGIN_SCENE_NATIVE (1) for Johto, ORIGIN_SCENE_VISITOR (0) otherwise.
@@ -279,6 +291,15 @@ class Interp:
                 self.messages.append(args[0])
                 if args[-1] == 'MSGBOX_YESNO':
                     self.vars['VAR_RESULT'] = self.answers.pop(0) if self.answers else self.answer
+            elif command == 'notable_introduce':
+                if args[0] in self.introduced:
+                    self.messages.append('greeting:' + args[0])
+                else:
+                    self.messages.append(args[1])
+                    self.introduced.add(args[0])
+            elif command == 'notable_beat':
+                if args[0] not in self.beats_paid:
+                    self.beats_paid.append(args[0])
             elif command in ('lock', 'lockall'):
                 self.locked = True
             elif command in ('release', 'releaseall'):

@@ -249,7 +249,7 @@ Every talk runs three steps:
 
    | Stage | Greeting |
    | --- | --- |
-   | Stranger | `MEET`, or `HEARD` when the player's **fame** reaches them. |
+   | Stranger | `MEET`, or `HEARD` when the player's **fame** reaches them. An [introduced](notable-story-continuity.md#1-acquaintance) Stranger greets with `AGAIN`. |
    | Met | `AGAIN`. |
    | Friend | `HELLO`. |
    | Close | `CLOSE`. |
@@ -297,9 +297,11 @@ Every talk runs three steps:
 3. **Farewell:** `BYE`. A talk that starts a walk ends at `YES` instead;
    the walk's own `BYE` comes at the exit ([walk](#walk-with-me)).
 
-Talking adds no friendship, so a trainer stays a Stranger, greeting with
-`MEET` or `HEARD` on every talk, until the player beats them or completes a
-quest. Strangers get the quest proposal like anyone else, so a first meeting
+Talking adds no friendship, so a trainer stays a Stranger until the player
+beats them, completes a quest, or sees a story beat through with them. A
+Stranger greets with `MEET` or `HEARD` only until they are
+[introduced](notable-story-continuity.md#1-acquaintance), which the first
+greeting does, and with `AGAIN` after that. Strangers get the quest proposal like anyone else, so a first meeting
 introduces the trainer **and** proposes the quest in the same talk. After the quest is completed
 during this placement, every talk is the greeting, `QUIRK`, and `BYE`, until
 the placement changes and the claim bit clears, except a talk a follow-up
@@ -1747,7 +1749,7 @@ The walk ends with no reward and the claim bit clear, and Giovanni is back
 at his standing tile; answering No steps the player back one tile and the walk
 goes on. A whiteout in a tag battle ends the walk the same way, silently:
 the player wakes at the POKéMON Center, and the next talk at the cave is
-`MEET` and the proposal again. Stepping through the Vermilion exit with
+`AGAIN` (he is already introduced) and the proposal again. Stepping through the Vermilion exit with
 Giovanni following completes it:
 
 ```text

@@ -33,7 +33,12 @@ SSAnne_2F_Corridor_EventScript_RivalTrigger::
 	call_if_eq VAR_TEMP_1, 0, SSAnne_2F_Corridor_EventScript_RivalApproachLeft
 	call_if_eq VAR_TEMP_1, 1, SSAnne_2F_Corridor_EventScript_RivalApproachMid
 	call_if_eq VAR_TEMP_1, 2, SSAnne_2F_Corridor_EventScript_RivalApproachRight
-	msgbox SSAnne_2F_Corridor_Text_VisitorIntro
+	@ A player from PALLET TOWN is BLUE's rival and needs no introduction; a visitor from another region does
+	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
+	goto_if_eq VAR_RESULT, TRUE, SSAnne_2F_Corridor_EventScript_RivalGreeting
+	notable_introduce NOTABLE_TRAINER_BLUE, SSAnne_2F_Corridor_Text_VisitorIntro
+	msgbox SSAnne_2F_Corridor_Text_VisitorTip
+SSAnne_2F_Corridor_EventScript_BlueGreeted::
 	setflag FLAG_WAYFARER_SS_ANNE_BLUE_MET
 	setvar VAR_WAYFARER_SS_ANNE_BLUE_SCENE, 1
 	closemessage
@@ -48,6 +53,12 @@ SSAnne_2F_Corridor_EventScript_RivalTrigger::
 SSAnne_2F_Corridor_EventScript_VisitorDone::
 	releaseall
 	end
+
+SSAnne_2F_Corridor_EventScript_RivalGreeting::
+	msgbox SSAnne_2F_Corridor_Text_PalletRivalIntro
+	setvar VAR_0x8004, NOTABLE_TRAINER_BLUE
+	special NotableStory_MarkIntroduced
+	goto SSAnne_2F_Corridor_EventScript_BlueGreeted
 #else
 	textcolor NPC_TEXT_COLOR_MALE
 	playse SE_EXIT
@@ -216,11 +227,23 @@ SSAnne_2F_Corridor_Text_RivalIntro::
 	.string "look hard for them.$"
 
 #if IS_WAYFARER
+@ His first meeting with a visitor; one he already knows gets his greeting instead
 SSAnne_2F_Corridor_Text_VisitorIntro::
-	.string "BLUE: Hey! I'm BLUE. I didn't expect\n"
-	.string "another visiting TRAINER here.\p"
+	.string "BLUE: Hey! I'm BLUE.$"
+
+SSAnne_2F_Corridor_Text_VisitorTip::
+	.string "I didn't expect another visiting\n"
+	.string "TRAINER here.\p"
 	.string "I heard the CAPTAIN knows a useful\n"
 	.string "technique. You should say hello.$"
+
+SSAnne_2F_Corridor_Text_PalletRivalIntro::
+	.string "BLUE: Hey, {PLAYER}!\n"
+	.string "Imagine seeing you here!\p"
+	.string "I heard the CAPTAIN knows a useful\n"
+	.string "technique. Go say hello.\p"
+	.string "Don't get too comfortable, though.\n"
+	.string "I'm still ahead of you!$"
 #endif
 
 SSAnne_2F_Corridor_Text_RivalDefeat::

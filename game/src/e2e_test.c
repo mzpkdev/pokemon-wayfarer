@@ -78,6 +78,7 @@ const u16 gE2EInGameClockOffset = offsetof(struct SaveBlock3, fakeRTC);
 // (nobody reaches Friend until haunts ship): e2e/src/journeys/wayfarer-notable-phone-contacts.e2e.ts.
 const u16 gE2ENotableFriendshipScoreOffset = offsetof(struct SaveBlock3, notableFriendship.score);
 const u16 gE2ENotableNumberShownOffset = offsetof(struct SaveBlock3, notableFriendship.numberShown);
+const u16 gE2ENotableIntroducedOffset = offsetof(struct SaveBlock3, notableFriendship.introduced);
 #endif
 
 STATIC_ASSERT(sizeof(struct E2ETestRequest) == 380, E2ETestRequestSize);

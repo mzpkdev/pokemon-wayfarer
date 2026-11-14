@@ -307,7 +307,18 @@ GoldenrodCity_EventScript_SignGameCorner::
 GoldenrodCity_EventScript_Beauty::
 	lock
 	faceplayer
+#if IS_WAYFARER
+	call RadioTower1F_EventScript_CheckWhitneyAtTower
+	goto_if_eq VAR_RESULT, FALSE, GoldenrodCity_EventScript_BeautyWhitneyInGym
+#endif
 	msgbox GoldenrodCity_Text_Beauty, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+#if IS_WAYFARER
+GoldenrodCity_EventScript_BeautyWhitneyInGym::
+	msgbox GoldenrodCity_Text_BeautyWhitneyInGym, MSGBOX_DEFAULT
 	closemessage
 	release
 	end
@@ -317,6 +328,12 @@ GoldenrodCity_Text_Beauty:
 	.string "Our leader WHITNEY is not here\n"
 	.string "right now. She might be at the\l"
 	.string "RADIO TOWER.$"
+
+GoldenrodCity_Text_BeautyWhitneyInGym:
+	.string "This is the GOLDENROD GYM!\p"
+	.string "Our leader WHITNEY is a bit of a\n"
+	.string "crybaby, but she's tough.$"
+#endif
 
 GoldenrodCity_Text_Woman:
 	.string "I used to train in WHITNEY's GYM,\n"

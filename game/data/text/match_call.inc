@@ -2784,6 +2784,67 @@ MatchCall_Text_Norman9::
 	.string "DAD: …You amaze me, {PLAYER}.\n"
 	.string "How much higher will you soar?$"
 
+@ NORMAN's calls to a player who is not his child (WayfarerUsesNativeHoennHousehold is false): no "DAD", no family
+MatchCall_Text_NormanVisitor1::
+	.string "NORMAN: In RUSTBORO, there's a man\n"
+	.string "that goes by the odd name of\l"
+	.string "the CUTTER.\p"
+	.string "If you're in the area, you should\n"
+	.string "pay him a visit.$"
+
+MatchCall_Text_NormanVisitor2::
+	.string "NORMAN: Hm… Little by little, but also\n"
+	.string "very surely, you're getting\l"
+	.string "tougher, {PLAYER}.\p"
+	.string "I'll have to train harder just to\n"
+	.string "keep up with you.$"
+
+MatchCall_Text_NormanVisitor3::
+	.string "NORMAN: I see…\n"
+	.string "You've collected four GYM BADGES…\p"
+	.string "There's no avoiding it now.\n"
+	.string "We will have our battle.\p"
+	.string "Come anytime.\n"
+	.string "I'll be waiting at the GYM!$"
+
+MatchCall_Text_NormanVisitor4::
+	.string "NORMAN: {PLAYER}! I'm going to remain\n"
+	.string "here and redouble my training.\p"
+	.string "The way of battling is deep\n"
+	.string "and unforgiving!$"
+
+MatchCall_Text_NormanVisitor5::
+	.string "NORMAN: Oh, hi, {PLAYER}!\p"
+	.string "What's that? MAGMA EMBLEM?\n"
+	.string "I don't know what that's about.\p"
+	.string "But with a name like that, it may\n"
+	.string "be somehow linked to a volcano!$"
+
+MatchCall_Text_NormanVisitor6::
+	.string "NORMAN: Hiyah! Haah! Dwah!\p"
+	.string "…Oh? {PLAYER}!\p"
+	.string "You caught me right in the middle\n"
+	.string "of a POKéMON training session!$"
+
+MatchCall_Text_NormanVisitor7::
+	.string "NORMAN: {PLAYER}!\p"
+	.string "Who would've thought you'd become\n"
+	.string "the POKéMON LEAGUE CHAMPION…\p"
+	.string "Okay!\n"
+	.string "I won't be left behind!$"
+
+MatchCall_Text_NormanVisitor8::
+	.string "NORMAN: Hm? {PLAYER}?\n"
+	.string "What good timing!\p"
+	.string "This time, I'm going to challenge\n"
+	.string "you to battle.\p"
+	.string "I'm waiting in the PETALBURG GYM.\n"
+	.string "Accept my challenge anytime!$"
+
+MatchCall_Text_NormanVisitor9::
+	.string "NORMAN: …You amaze me, {PLAYER}.\n"
+	.string "How much higher will you soar?$"
+
 MatchCall_Text_Steven1::
 	.string "STEVEN: Hi, {PLAYER}{KUN}!\p"
 	.string "Have you been to MAUVILLE\n"

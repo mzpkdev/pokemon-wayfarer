@@ -45,7 +45,8 @@ WayfarerIndigo_EventScript_Lorelei::
 #if WAYFARER_LEAGUE_EVENTS
 	call LeagueEvent_EventScript_RoomIntro
 #else
-	msgbox WayfarerIndigo_Text_LoreleiIntro
+	notable_introduce NOTABLE_TRAINER_LORELEI, WayfarerIndigo_Text_LoreleiIntro
+	msgbox WayfarerIndigo_Text_LoreleiIntroRest
 #endif
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
@@ -112,7 +113,8 @@ WayfarerIndigo_EventScript_Bruno::
 #if WAYFARER_LEAGUE_EVENTS
 	call LeagueEvent_EventScript_RoomIntro
 #else
-	msgbox WayfarerIndigo_Text_BrunoIntro
+	notable_introduce NOTABLE_TRAINER_BRUNO, WayfarerIndigo_Text_BrunoIntro
+	msgbox WayfarerIndigo_Text_BrunoIntroRest
 #endif
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
@@ -179,7 +181,8 @@ WayfarerIndigo_EventScript_Agatha::
 #if WAYFARER_LEAGUE_EVENTS
 	call LeagueEvent_EventScript_RoomIntro
 #else
-	msgbox WayfarerIndigo_Text_AgathaIntro
+	notable_introduce NOTABLE_TRAINER_AGATHA, WayfarerIndigo_Text_AgathaIntro
+	msgbox WayfarerIndigo_Text_AgathaIntroRest
 #endif
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
@@ -307,7 +310,8 @@ WayfarerIndigo_EventScript_Lance::
 #if WAYFARER_LEAGUE_EVENTS
 	call LeagueEvent_EventScript_RoomIntro
 #else
-	msgbox WayfarerIndigo_Text_LanceIntro
+	notable_introduce NOTABLE_TRAINER_LANCE, WayfarerIndigo_Text_LanceIntro
+	msgbox WayfarerIndigo_Text_LanceIntroRest
 #endif
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
@@ -368,7 +372,8 @@ WayfarerIndigo_ChampionBattle::
 #if WAYFARER_LEAGUE_EVENTS
 	call LeagueEvent_EventScript_ChampionIntro
 #else
-	msgbox WayfarerIndigo_Text_BlueIntro
+	notable_introduce NOTABLE_TRAINER_BLUE, WayfarerIndigo_Text_BlueIntro
+	msgbox WayfarerIndigo_Text_BlueIntroRest
 #endif
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
@@ -479,36 +484,43 @@ WayfarerIndigo_InvalidRun::
 	releaseall
 	end
 
+@ The room intros below are the no-LEAGUE-EVENTS fallback. Each trainer's first meeting names them; a player
+@ they already know gets their greeting instead, then the Intro rest.
 WayfarerIndigo_Text_LoreleiIntro::
-	.string "I am LORELEI of the ELITE FOUR.\p"
+	.string "I am LORELEI of the ELITE FOUR.$"
+WayfarerIndigo_Text_LoreleiIntroRest::
 	.string "Show me what your POKéMON can do!$"
 WayfarerIndigo_Text_LoreleiWin::
 	.string "Your team has earned this win.$"
 WayfarerIndigo_Text_LoreleiAfter::
 	.string "The next room awaits you.$"
 WayfarerIndigo_Text_BrunoIntro::
-	.string "I am BRUNO of the ELITE FOUR.\p"
+	.string "I am BRUNO of the ELITE FOUR.$"
+WayfarerIndigo_Text_BrunoIntroRest::
 	.string "Let us test our strength!$"
 WayfarerIndigo_Text_BrunoWin::
 	.string "Your strength is undeniable.$"
 WayfarerIndigo_Text_BrunoAfter::
 	.string "Go on to your next challenge.$"
 WayfarerIndigo_Text_AgathaIntro::
-	.string "I am AGATHA of the ELITE FOUR.\p"
+	.string "I am AGATHA of the ELITE FOUR.$"
+WayfarerIndigo_Text_AgathaIntroRest::
 	.string "Let's see how you handle my team!$"
 WayfarerIndigo_Text_AgathaWin::
 	.string "Well fought, child.$"
 WayfarerIndigo_Text_AgathaAfter::
 	.string "LANCE is waiting ahead.$"
 WayfarerIndigo_Text_LanceIntro::
-	.string "I am LANCE of the ELITE FOUR.\p"
+	.string "I am LANCE of the ELITE FOUR.$"
+WayfarerIndigo_Text_LanceIntroRest::
 	.string "Can you defeat my dragons?$"
 WayfarerIndigo_Text_LanceWin::
 	.string "You have surpassed me.$"
 WayfarerIndigo_Text_LanceAfter::
 	.string "BLUE awaits in the final room.$"
 WayfarerIndigo_Text_BlueIntro::
-	.string "I'm BLUE, the INDIGO CHAMPION.\p"
+	.string "I'm BLUE, the INDIGO CHAMPION.$"
+WayfarerIndigo_Text_BlueIntroRest::
 	.string "Show me the team that got you here!$"
 WayfarerIndigo_Text_BlueWin::
 	.string "You won. You really did it.$"

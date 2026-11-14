@@ -13,6 +13,7 @@ WayfarerMasters_EventScript_Will::
 #if WAYFARER_LEAGUE_EVENTS
 	call LeagueEvent_EventScript_RoomOffer
 #else
+	notable_introduce NOTABLE_TRAINER_WILL, WayfarerMasters_Text_WillIntro
 	msgbox WayfarerMasters_Text_Will, MSGBOX_YESNO
 #endif
 	goto_if_eq VAR_RESULT, NO, WayfarerMasters_EventScript_Withdraw
@@ -71,6 +72,7 @@ WayfarerMasters_EventScript_Bruno::
 #if WAYFARER_LEAGUE_EVENTS
 	call LeagueEvent_EventScript_RoomOffer
 #else
+	notable_introduce NOTABLE_TRAINER_BRUNO, WayfarerMasters_Text_BrunoIntro
 	msgbox WayfarerMasters_Text_Bruno, MSGBOX_YESNO
 #endif
 	goto_if_eq VAR_RESULT, NO, WayfarerMasters_EventScript_Withdraw
@@ -100,6 +102,7 @@ WayfarerMasters_EventScript_Karen::
 #if WAYFARER_LEAGUE_EVENTS
 	call LeagueEvent_EventScript_RoomOffer
 #else
+	notable_introduce NOTABLE_TRAINER_KAREN, WayfarerMasters_Text_KarenIntro
 	msgbox WayfarerMasters_Text_Karen, MSGBOX_YESNO
 #endif
 	goto_if_eq VAR_RESULT, NO, WayfarerMasters_EventScript_Withdraw
@@ -192,18 +195,25 @@ WayfarerMasters_EventScript_Withdraw::
 	releaseall
 	end
 
+@ The no-LEAGUE-EVENTS fallback offers. Each MASTER's first meeting names them; one the player already knows
+@ gives their greeting instead.
+WayfarerMasters_Text_WillIntro::
+	.string "I am WILL, an invited MASTER.$"
 WayfarerMasters_Text_Will::
-	.string "I am WILL, an invited MASTER.\p"
 	.string "Ready to face my team?$"
 WayfarerMasters_Text_Koga::
 	.string "KOGA awaits as the next MASTER.\p"
 	.string "Will you face my team?$"
-WayfarerMasters_Text_Bruno::
+WayfarerMasters_Text_BrunoIntro::
 	.string "I am BRUNO, invited to this\n"
-	.string "challenge. Battle me?$"
+	.string "challenge.$"
+WayfarerMasters_Text_Bruno::
+	.string "Battle me?$"
+WayfarerMasters_Text_KarenIntro::
+	.string "I am KAREN.$"
 WayfarerMasters_Text_Karen::
-	.string "I am KAREN. Only skill matters\n"
-	.string "here. Battle me?$"
+	.string "Only skill matters here.\n"
+	.string "Battle me?$"
 WayfarerMasters_Text_Lance::
 	.string "I once held the Champion title.\p"
 	.string "I am the final MASTER. Ready?$"

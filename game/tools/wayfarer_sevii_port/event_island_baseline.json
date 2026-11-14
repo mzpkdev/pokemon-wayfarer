@@ -707,6 +707,11 @@
       "path": "game/data/event_scripts.s",
       "after": "\t.include \"data/text/match_call_hns.inc\"\n",
       "insertion": "#if IS_WAYFARER\n\t.include \"data/text/match_call_hoenn.inc\"\n\t.include \"data/text/match_call_sevii_coast.inc\"\n#endif\n"
+    },
+    {
+      "path": "game/data/event_scripts.s",
+      "after": "\t.include \"constants/constants.inc\"\n",
+      "insertion": "\n@ Notable trainer story continuity (notable-story-continuity.md). Outside Wayfarer there are no notable\n@ trainers: an introduction is just the scene's own text and a beat pays nothing.\n@ notable_introduce: a first meeting plays 'text' (the self-introduction) and marks the trainer introduced; a\n@ trainer the player already knows gives their notable greeting instead. See NotableStory_EventScript_Introduce.\n#if IS_WAYFARER\n\t.macro notable_introduce character:req, text:req\n\tsetvar VAR_0x8004, \\character\n\tloadword 0, \\text\n\tcall NotableStory_EventScript_Introduce\n\t.endm\n\n\t@ Pays a story beat's friendship once (NOTABLE_STORY_BEAT_*), on the beat's completion.\n\t.macro notable_beat beat:req\n\tsetvar VAR_0x8004, \\beat\n\tspecial NotableStory_CompleteBeat\n\t.endm\n#else\n\t.macro notable_introduce character:req, text:req\n\tmsgbox \\text\n\t.endm\n\n\t.macro notable_beat beat:req\n\t.endm\n#endif\n"
     }
   ],
   "allowed_ferry_hooks": [

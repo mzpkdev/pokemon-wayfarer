@@ -510,6 +510,7 @@ RocketHideout_B2F_EventScript_ElectrodeDone::
 	msgbox RocketHideout_B2F_Text_LanceElectrodeDone, MSGBOX_DEFAULT
 	giveitem ITEM_HM_WHIRLPOOL
 	msgbox RocketHideout_B2F_Text_LanceWhirlpool, MSGBOX_DEFAULT
+	notable_beat NOTABLE_STORY_BEAT_LANCE_MAHOGANY_HIDEOUT
 	closemessage
 	turnobject LOCALID_ROCKETHIDEOUT2_LANCE, DIR_SOUTH
 	delay 20

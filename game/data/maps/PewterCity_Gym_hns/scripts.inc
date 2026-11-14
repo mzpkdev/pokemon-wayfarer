@@ -12,7 +12,12 @@ PewterCity_Gym_EventScript_Brock::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_PEWTER_GYM, PewterCity_Gym_EventScript_Brock_Defeated
+#if IS_WAYFARER
+	notable_introduce NOTABLE_TRAINER_BROCK, PewterCity_Gym_Text_Brock_Intro
+	msgbox PewterCity_Gym_Text_Brock_Before, MSGBOX_DEFAULT
+#else
 	msgbox PewterCity_Gym_Text_Brock_Intro, MSGBOX_DEFAULT
+#endif
 	trainerbattle_no_intro TRAINER_BROCK_HNS, PewterCity_Gym_Text_Brock_WinLoss
 	message PewterCity_Gym_Text_ReceivedBoulderBadge
 	waitmessage
@@ -46,9 +51,18 @@ PewterCity_Gym_EventScript_Brock_Defeated::
 
 
 PewterCity_Gym_Text_Brock_Intro:
+#if IS_WAYFARER
+	.string "BROCK: I'm BROCK,\n"
+	.string "the PEWTER GYM LEADER.$"
+
+PewterCity_Gym_Text_Brock_Before:
+	.string "It's not often that we get a real\n"
+	.string "challenger.\p"
+#else
 	.string "BROCK: Wow, it's not often that we get a\n"
 	.string "challenger from JOHTO.\p"
 	.string "I'm BROCK, the PEWTER GYM LEADER.\p"
+#endif
 	.string "I'm an expert on ROCK-type POKéMON.\p"
 	.string "My POKéMON are impervious to most\n"
 	.string "physical attacks. You'll have a hard\l"

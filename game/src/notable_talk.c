@@ -7,6 +7,7 @@
 #include "league_circuit.h"
 #include "league_events.h"
 #include "league_selection.h"
+#include "notable_friendship.h"
 #include "notable_moves.h"
 #include "notable_trainers.h"
 #include "pokemon.h"
@@ -102,6 +103,9 @@ enum NotableGreeting NotableTalk_GetGreeting(u8 characterId)
 {
     enum NotableFriendshipStage stage = NotableFriendship_GetStage(characterId);
 
+    // Someone already introduced is no stranger to meet or hear of: they are met again.
+    if (stage == NOTABLE_STAGE_STRANGER && NotableFriendship_IsIntroduced(characterId))
+        return NOTABLE_GREETING_AGAIN;
     return NotableTalk_GreetingFor(stage, stage == NOTABLE_STAGE_STRANGER && NotableTalk_CharacterIsFamous(characterId));
 }
 
@@ -205,6 +209,9 @@ void NotableTalk_BufferGreetingText(u8 characterId)
         }
     }
     BufferVoice(characterId, text);
+    // Marked after the greeting is chosen, so the first talk still introduces them.
+    if (text != NULL)
+        NotableFriendship_MarkIntroduced(characterId);
 }
 
 void NotableTalk_BufferFarewellText(u8 characterId)

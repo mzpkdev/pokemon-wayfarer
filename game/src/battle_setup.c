@@ -1953,6 +1953,22 @@ static void CountNotableTrainerWins(bool8 wasDebugBattle)
     if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
         NotableFriendship_CountTrainerWin(TRAINER_BATTLE_PARAM.opponentB);
 }
+
+// Every battle against a notable trainer introduces them, won or lost (notable-story-continuity.md#1-acquaintance):
+// Gym, story, rematch and league alike, and the trainer beside the player as a partner too (an acquaintance, not
+// friendship). Debug battles and the Battle Frontier's facilities are left out: their opponents are in the
+// Frontier's own id space, where an id can equal a notable trainer's (Roxanne, Sidney, Norman), as for first wins.
+static void MarkNotableTrainersIntroduced(bool8 wasDebugBattle)
+{
+    if (wasDebugBattle || (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL))
+     || CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || InTrainerHillChallenge() || InBattlePike())
+        return;
+    NotableFriendship_MarkTrainerEncountered(TRAINER_BATTLE_PARAM.opponentA);
+    if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+        NotableFriendship_MarkTrainerEncountered(TRAINER_BATTLE_PARAM.opponentB);
+    if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+        NotableFriendship_MarkTrainerEncountered(gPartnerTrainerId);
+}
 #endif
 
 static void UNUSED SetBattledTrainerFlag(void)
@@ -2322,6 +2338,8 @@ static void CB2_EndTrainerBattle(void)
     {
         u32 eventId = sLeagueEventBattle.eventId;
         sLeagueEventBattle.active = FALSE;
+        if (!gIsDebugBattle)
+            NotableFriendship_MarkTrainerEncountered(sLeagueEventBattle.sourceTrainerId);
         if (gBattleOutcome == B_OUTCOME_WON && GetAcceptedLeagueEventId() == eventId)
         {
             if (!gIsDebugBattle)
@@ -2337,6 +2355,9 @@ static void CB2_EndTrainerBattle(void)
                 EndLeagueRun();
         }
     }
+#endif
+#if IS_WAYFARER
+    MarkNotableTrainersIntroduced(wasDebugBattle);
 #endif
     HandleBattleVariantEndParty();
 
@@ -2446,6 +2467,9 @@ void Test_EndRematchBattle(void)
 
 static void CB2_EndRematchBattle(void)
 {
+#if IS_WAYFARER
+    MarkNotableTrainersIntroduced(FALSE);
+#endif
     if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_SECRET_BASE)
     {
         DowngradeBadPoison();

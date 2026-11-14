@@ -103,8 +103,9 @@ STATIC_ASSERT(LEAGUE_EVENT_LINEUP_SIZE == LEAGUE_LINEUP_SIZE, LeagueEventLineupC
 STATIC_ASSERT(LEAGUE_EVENT_NOTABLE_COUNT == NOTABLE_TRAINER_COUNT, LeagueEventTrainerCount);
 STATIC_ASSERT(sizeof(struct LeagueEventState) <= 256, LeagueEventStateSerializedBudget);
 STATIC_ASSERT(NOTABLE_FRIENDSHIP_COUNT == NOTABLE_TRAINER_COUNT, NotableFriendshipTrainerCount);
-// 38 score bytes, 5 first-win bytes and 5 number-shown bytes: 48, a whole number of words.
-STATIC_ASSERT(sizeof(struct NotableFriendshipState) == 48, NotableFriendshipStateSize);
+// 38 score bytes, 5 first-win, 5 number-shown and 5 introduced bytes, and 2 story-beat bytes: 55, which the
+// build pads to a whole number of words (56).
+STATIC_ASSERT(sizeof(struct NotableFriendshipState) == 56, NotableFriendshipStateSize);
 STATIC_ASSERT(sizeof(struct PokemonStorage) <= 35712, WayfarerPokemonStorageSectorAllocation);
 STATIC_ASSERT(TOTAL_BOXES_COUNT == 13, WayfarerPcBoxCount);
 STATIC_ASSERT(sizeof(struct WayfarerWorldRecord) == 8, WayfarerWorldRecordSize);

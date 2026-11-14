@@ -32,6 +32,7 @@
 #include "metatile_behavior.h"
 #include "overworld.h"
 #include "fake_rtc.h"
+#include "notable_story.h"
 #include "script.h"
 #include "sprite.h"
 #include "wayfarer_ambience.h"
@@ -1056,6 +1057,9 @@ static bool8 IsStorySuppressed(u8 slot)
     bool8 ownGym = trainer->leaderLocalId != 0 && WorldSim_NodeMap(trainer->gymNode) == CurrentMap();
     u8 i;
 
+    // A listed temporary story placement shows anywhere: the walker stays away on every map.
+    if (NotableStory_IsAway(trainer->characterId))
+        return TRUE;
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         const struct ObjectEvent *obj = &gObjectEvents[i];

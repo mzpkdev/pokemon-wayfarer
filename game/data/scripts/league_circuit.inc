@@ -65,23 +65,40 @@ LeagueEvent_EventScript_OfferHallBoard::
 LeagueEvent_EventScript_HallBoardDeclined:
 	return
 
+@ The host introduces themselves once (notable-story-continuity.md#2-introductions): a notable trainer the player
+@ knows gives their greeting in place of "I'm X.", one met here is marked introduced, and any other host, whose
+@ name only the room knows, always says it. The rest of the line follows in each script.
+LeagueEvent_EventScript_IntroduceHost::
+	specialvar VAR_0x8004, LeagueEvent_GetRoomHostCharacter
+	goto_if_eq VAR_0x8004, NOTABLE_TRAINER_NONE, LeagueEvent_EventScript_IntroduceStranger
+	loadword 0, LeagueEvent_Text_ImHost
+	goto NotableStory_EventScript_Introduce
+
+LeagueEvent_EventScript_IntroduceStranger::
+	msgbox LeagueEvent_Text_ImHost
+	return
+
 LeagueEvent_EventScript_RoomIntro::
 	special LeagueEvent_BufferRoomName
+	call LeagueEvent_EventScript_IntroduceHost
 	msgbox LeagueEvent_Text_RoomIntro
 	return
 
 LeagueEvent_EventScript_ChampionIntro::
 	special LeagueEvent_BufferRoomName
+	call LeagueEvent_EventScript_IntroduceHost
 	msgbox LeagueEvent_Text_ChampionIntro
 	return
 
 LeagueEvent_EventScript_RoomOffer::
 	special LeagueEvent_BufferRoomName
+	call LeagueEvent_EventScript_IntroduceHost
 	msgbox LeagueEvent_Text_RoomOffer, MSGBOX_YESNO
 	return
 
 LeagueEvent_EventScript_ChampionOffer::
 	special LeagueEvent_BufferRoomName
+	call LeagueEvent_EventScript_IntroduceHost
 	msgbox LeagueEvent_Text_ChampionOffer, MSGBOX_YESNO
 	return
 
@@ -100,22 +117,21 @@ LeagueEvent_EventScript_MastersAfter::
 	msgbox LeagueEvent_Text_MastersAfter
 	return
 
+LeagueEvent_Text_ImHost::
+	.string "I'm {STR_VAR_1}.$"
+
 LeagueEvent_Text_RoomIntro::
-	.string "I'm {STR_VAR_1}.\p"
 	.string "Your next LEAGUE battle\n"
 	.string "starts now!$"
 
 LeagueEvent_Text_ChampionIntro::
-	.string "I'm {STR_VAR_1}.\p"
 	.string "This is the final round.\n"
 	.string "Let's battle!$"
 
 LeagueEvent_Text_RoomOffer::
-	.string "I'm {STR_VAR_1}.\p"
 	.string "Will you face my team?$"
 
 LeagueEvent_Text_ChampionOffer::
-	.string "I'm {STR_VAR_1}.\p"
 	.string "Final battle! Are you ready?$"
 
 LeagueEvent_Text_RoomWin::

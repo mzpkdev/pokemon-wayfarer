@@ -281,7 +281,8 @@ def generate(data: dict) -> tuple[str, str, str]:
     trainers = sorted(data["trainers"], key=lambda t: t["characterId"])
     ids = ["#ifndef GUARD_CONSTANTS_NOTABLE_TRAINERS_H", "#define GUARD_CONSTANTS_NOTABLE_TRAINERS_H", "", "// Stable v0 character identities; encounter IDs are mapped separately.", "// Plain defines, so event scripts can name a character too.", "", "#define NOTABLE_TRAINER_NONE 0"]
     ids += [f"#define {symbol('NOTABLE_TRAINER_', t['slug'])} {t['characterId']}" for t in trainers]
-    ids += ["", "#endif // GUARD_CONSTANTS_NOTABLE_TRAINERS_H", ""]
+    # The story beats' plain defines ride along, so event_scripts.s (which includes this header) sees them too.
+    ids += ["", "#include \"constants/notable_story_beats.h\"", "", "#endif // GUARD_CONSTANTS_NOTABLE_TRAINERS_H", ""]
     lines = ["// Generated from game/tools/notable_trainers/catalog.json. Do not edit by hand.", ""]
     for t in trainers:
         key = symbol("sNotableMovePool_", t["slug"])

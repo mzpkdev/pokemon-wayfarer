@@ -19,6 +19,7 @@
 #include "constants/apricorn_tree.h"
 #include "constants/berry.h"
 #include "constants/maps.h"
+#include "constants/notable_story_beats.h"
 #include "constants/pokemon.h"
 #include "constants/easy_chat.h"
 #include "constants/trainer_hill.h"
@@ -416,6 +417,11 @@ struct NotableFriendshipState
     // One bit per character: the number handover's line has been shown. A trainer at Friend or above without it
     // is still owed the line, so a save between the crossing and the line keeps it (notable-trainers.md#friendship).
     u8 numberShown[(NOTABLE_FRIENDSHIP_COUNT + 7) / 8];
+    // One bit per character: the player and the trainer know each other's faces (notable-story-continuity.md#1-acquaintance).
+    // Never cleared; it changes neither the score nor the stage.
+    u8 introduced[(NOTABLE_FRIENDSHIP_COUNT + 7) / 8];
+    // One bit per story beat (constants/notable_story_beats.h, id - 1): the beat has paid its points.
+    u8 storyBeatDone[(NOTABLE_STORY_BEAT_COUNT + 7) / 8];
 };
 #endif
 
