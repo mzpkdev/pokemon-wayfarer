@@ -1,5 +1,10 @@
 # Johto story beat gates
 
+> **Historical snapshot.** This is a pre-implementation audit. Nearly every gate it lists (Pryce's
+> Mahogany write, the merchant's road block, the takeover arming, the Silver deferrals, Elm's theater
+> writes, the road setups) was fixed in #179 to #187 and #233. For current behavior read the
+> [Johto independent story beats spec](../specs/johto-independent-story-beats.md).
+
 Static source audit of Wayfarer's HNS Johto story scripts at `2e70a3ef35`
 (2026-11-02), done for the revised
 [Johto independent story beats PRD](../prds/johto-independent-story-beats.md).

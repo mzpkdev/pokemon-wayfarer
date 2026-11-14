@@ -175,8 +175,9 @@ Known cases:
 
 | Trainer | Copies | Change |
 | --- | --- | --- |
-| Whitney | The Radio Tower 1F copy, shown from New Game until the quiz is solved (`FLAG_ENABLE_RADIO`), plus the always-visible Gym copy | The Tower copy becomes a morning outing (`gettimeofday` is `TIME_MORNING`) until the quiz is solved. During it, the Gym copy hides and the Goldenrod Beauty says Whitney may be at the Radio Tower. At other times the Tower copy hides, Whitney is in her Gym, and the Beauty gives a plain Gym line. Once the quiz is solved she is always in the Gym. |
+| Whitney | The Radio Tower 1F copy, shown from New Game until the quiz is solved (`FLAG_ENABLE_RADIO`), plus the always-visible Gym copy | The Tower copy becomes a morning outing (`gettimeofday` is `TIME_MORNING`) until the quiz is solved, except while the Rockets hold the Tower (Goldenrod state 6 to 10), when she stays in her Gym. During it, the Gym copy hides and the Goldenrod Beauty says Whitney may be at the Radio Tower. At other times the Tower copy hides, Whitney is in her Gym, and the Beauty gives a plain Gym line. Once the quiz is solved she is always in the Gym. |
 | Steven, Wallace | Walkers simulated from New Game, while the story places them elsewhere (Wallace inside the Cave of Origin during the Sootopolis crisis; Steven at the Space Center) | Add their temporary story placements to the table. Inferred: not play-tested. |
+| Lance | The Lake of Rage copy (Mahogany state 2-3), the Mahogany shop (4) and the hideout B2F/B3F copies (5-13) | His walker stays away while `VAR_MAHOGANY_TOWN_STATE` is 2 to 13 and returns once the hideout is shut down (14). |
 | Giovanni | His walker keeps Viridian and the Game Corner after `FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS` removes him | After the departure, his walker stops spawning. Inferred: the sim reads no story flags today. |
 
 ### 5. Story beats

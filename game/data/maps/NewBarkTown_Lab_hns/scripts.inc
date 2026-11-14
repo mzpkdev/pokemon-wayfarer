@@ -100,6 +100,9 @@ NewBarkTown_Lab_EventScript_ElmCampaignNoTicket::
 	specialvar VAR_RESULT, WayfarerJohtoKimonoTrialAvailable
 	goto_if_eq VAR_RESULT, TRUE, NewBarkTown_Lab_EventScript_ElmKimono
 	goto_if_lt VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, KIMONO_CEREMONY_RESOLVED, NewBarkTown_Lab_EventScript_ElmCampaignErrand
+	@ The League circuit replaces Elm's post-League call and S.S. ticket: once the player has entered the
+	@ Indigo League, he stops sending them there.
+	goto_if_set FLAG_WAYFARER_JOHTO_INDIGO_ENTERED, NewBarkTown_Lab_EventScript_ElmCampaignErrand
 	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED, NewBarkTown_Lab_EventScript_ElmLeague
 NewBarkTown_Lab_EventScript_ElmCampaignErrand:
 
