@@ -270,6 +270,10 @@ LilycoveCity_PokemonTrainerFanClub_EventScript_PokefanM::
 	goto_if_eq VAR_RESULT, TRUE, LilycoveCity_PokemonTrainerFanClub_EventScript_PokefanMPlayersFan
 	specialvar VAR_RESULT, GetNumFansOfPlayerInTrainerFanClub
 	goto_if_eq VAR_RESULT, (NUM_TRAINER_FAN_CLUB_MEMBERS - 1), LilycoveCity_PokemonTrainerFanClub_EventScript_PokefanMOnlyNonFan
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, FALSE, LilycoveCity_PokemonTrainerFanClub_EventScript_PokefanMLongWayVisitor
+#endif
 	msgbox LilycoveCity_PokemonTrainerFanClub_Text_LongWayToGoComparedToNorman, MSGBOX_DEFAULT
 	release
 	end
@@ -277,11 +281,19 @@ LilycoveCity_PokemonTrainerFanClub_EventScript_PokefanM::
 LilycoveCity_PokemonTrainerFanClub_EventScript_PokefanMPlayersFan::
 	specialvar VAR_RESULT, GetNumFansOfPlayerInTrainerFanClub
 	goto_if_eq VAR_RESULT, 1, LilycoveCity_PokemonTrainerFanClub_EventScript_PokefanMOnlyFan
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, FALSE, LilycoveCity_PokemonTrainerFanClub_EventScript_PokefanMSurpassedVisitor
+#endif
 	msgbox LilycoveCity_PokemonTrainerFanClub_Text_YouveSurpassedYourFather, MSGBOX_DEFAULT
 	release
 	end
 
 LilycoveCity_PokemonTrainerFanClub_EventScript_PokefanMOnlyFan::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, FALSE, LilycoveCity_PokemonTrainerFanClub_EventScript_PokefanMOnlyFanVisitor
+#endif
 	msgbox LilycoveCity_PokemonTrainerFanClub_Text_YourFatherNeverGaveUpSoKeepOnBattling, MSGBOX_DEFAULT
 	release
 	end
@@ -295,6 +307,23 @@ LilycoveCity_PokemonTrainerFanClub_EventScript_PokefanMPlayerNotChampion::
 	msgbox LilycoveCity_PokemonTrainerFanClub_Text_WeDiscussStrongestTrainers, MSGBOX_DEFAULT
 	release
 	end
+
+#if IS_WAYFARER
+LilycoveCity_PokemonTrainerFanClub_EventScript_PokefanMSurpassedVisitor::
+	msgbox LilycoveCity_PokemonTrainerFanClub_Text_YouveSurpassedNorman, MSGBOX_DEFAULT
+	release
+	end
+
+LilycoveCity_PokemonTrainerFanClub_EventScript_PokefanMOnlyFanVisitor::
+	msgbox LilycoveCity_PokemonTrainerFanClub_Text_YouNeverGaveUpSoKeepOnBattling, MSGBOX_DEFAULT
+	release
+	end
+
+LilycoveCity_PokemonTrainerFanClub_EventScript_PokefanMLongWayVisitor::
+	msgbox LilycoveCity_PokemonTrainerFanClub_Text_LongWayToGoComparedToNormanVisitor, MSGBOX_DEFAULT
+	release
+	end
+#endif
 
 LilycoveCity_PokemonTrainerFanClub_EventScript_LittleGirl::
 	lock
@@ -659,6 +688,28 @@ LilycoveCity_PokemonTrainerFanClub_Text_LongWayToGoComparedToNorman:
 	.string "you're strong…\p"
 	.string "You've still got a long way to go\n"
 	.string "compared to your father.$"
+
+#if IS_WAYFARER
+LilycoveCity_PokemonTrainerFanClub_Text_YouveSurpassedNorman:
+	.string "You've surpassed NORMAN, the PETALBURG\n"
+	.string "GYM LEADER, in every regard!\p"
+	.string "I'm telling you, so there's no question\n"
+	.string "about it at all!$"
+
+LilycoveCity_PokemonTrainerFanClub_Text_YouNeverGaveUpSoKeepOnBattling:
+	.string "Even when things turn bleak, you never\n"
+	.string "give up. This I know to be true.\p"
+	.string "You never give up even if you lose!\n"
+	.string "So keep on battling!$"
+
+LilycoveCity_PokemonTrainerFanClub_Text_LongWayToGoComparedToNormanVisitor:
+	.string "NORMAN battled with more power,\n"
+	.string "charisma, and showmanship than you.\p"
+	.string "Even though people may say that\n"
+	.string "you're strong…\p"
+	.string "You've still got a long way to go\n"
+	.string "compared to NORMAN.$"
+#endif
 
 LilycoveCity_PokemonTrainerFanClub_Text_YouAndNormanAreDifferent:
 	.string "You're beginning to get the same\n"

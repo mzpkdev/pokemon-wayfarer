@@ -240,6 +240,10 @@ Route110_TrickHousePuzzle5_EventScript_Mechadoll2Activate::
 	call_if_eq VAR_TEMP_9, 4, Route110_TrickHousePuzzle5_EventScript_MechadollWalkRight4
 	call_if_eq VAR_TEMP_9, 5, Route110_TrickHousePuzzle5_EventScript_MechadollWalkRight5
 	msgbox Route110_TrickHousePuzzle5_Text_Mechadoll2Intro, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	@ Quiz 1 asks about WALLY's borrowed POKéMON, which only a player who has seen his tutorial can answer
+	goto_if_eq VAR_PETALBURG_GYM_STATE, 0, Route110_TrickHousePuzzle5_EventScript_Mechadoll2QuizNoWally
+#endif
 	random 3
 	switch VAR_RESULT
 	case 0, Route110_TrickHousePuzzle5_EventScript_Mechadoll2Quiz1
@@ -327,13 +331,36 @@ Route110_TrickHousePuzzle5_EventScript_Mechadoll1Quiz3::
 	goto Route110_TrickHousePuzzle5_EventScript_IncorrectAnswer
 	end
 
+#if IS_WAYFARER
+Route110_TrickHousePuzzle5_EventScript_Mechadoll2QuizNoWally::
+	random 2
+	switch VAR_RESULT
+	case 0, Route110_TrickHousePuzzle5_EventScript_Mechadoll2Quiz2
+	case 1, Route110_TrickHousePuzzle5_EventScript_Mechadoll2Quiz3
+	end
+#endif
+
 Route110_TrickHousePuzzle5_EventScript_Mechadoll2Quiz1::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, FALSE, Route110_TrickHousePuzzle5_EventScript_Mechadoll2Quiz1Neutral
+#endif
 	msgbox Route110_TrickHousePuzzle5_Text_Mechadoll2Quiz1, MSGBOX_DEFAULT
 	multichoice 0, 0, MULTI_MECHADOLL2_Q1, TRUE
 	switch VAR_RESULT
 	case 1, Route110_TrickHousePuzzle5_EventScript_CorrectAnswer
 	goto Route110_TrickHousePuzzle5_EventScript_IncorrectAnswer
 	end
+
+#if IS_WAYFARER
+Route110_TrickHousePuzzle5_EventScript_Mechadoll2Quiz1Neutral::
+	msgbox Route110_TrickHousePuzzle5_Text_Mechadoll2Quiz1Neutral, MSGBOX_DEFAULT
+	multichoice 0, 0, MULTI_MECHADOLL2_Q1, TRUE
+	switch VAR_RESULT
+	case 1, Route110_TrickHousePuzzle5_EventScript_CorrectAnswer
+	goto Route110_TrickHousePuzzle5_EventScript_IncorrectAnswer
+	end
+#endif
 
 Route110_TrickHousePuzzle5_EventScript_Mechadoll2Quiz2::
 	msgbox Route110_TrickHousePuzzle5_Text_Mechadoll2Quiz2, MSGBOX_DEFAULT
@@ -949,6 +976,13 @@ Route110_TrickHousePuzzle5_Text_Mechadoll2Quiz1:
 	.string "MECHADOLL 2 QUIZ.\p"
 	.string "Which of these POKéMON did WALLY\n"
 	.string "borrow from your father?$"
+
+#if IS_WAYFARER
+Route110_TrickHousePuzzle5_Text_Mechadoll2Quiz1Neutral:
+	.string "MECHADOLL 2 QUIZ.\p"
+	.string "Which of these POKéMON did WALLY\n"
+	.string "borrow from NORMAN?$"
+#endif
 
 Route110_TrickHousePuzzle5_Text_Mechadoll2Quiz2:
 	.string "MECHADOLL 2 QUIZ.\p"
