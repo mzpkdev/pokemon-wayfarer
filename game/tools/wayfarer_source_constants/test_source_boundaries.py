@@ -283,7 +283,7 @@ class SourceBoundaryTests(unittest.TestCase):
             "FLAG_SYS_TV_START": "bridged",
             "FLAG_SYS_TV_WATCH": "bridged",
             "FLAG_UNLOCKED_TRENDY_SAYINGS": "bridged",
-            # product decision, deliberately left on the raw engine id (step-triggered Pokenav calls, level caps/obedience/rating, Wattson rematch)
+            # product decision, deliberately left on the raw engine id; Hoenn scripts write their own copy, so these stay unbridged (see #235): Wally/Roxanne/Rival-Rayquaza step calls, Frontier vars, easy-chat and Hall of Fame GAME_CLEAR readers, badge counts for Pokenav/rating, Wattson rematch indicator. Level cap and Hoenn post-game content (contests, Trainer Hill, rematches) now follow Trainer Rating / Hoenn's own clear
             "FLAG_BADGE01_GET": "product",
             "FLAG_BADGE02_GET": "product",
             "FLAG_BADGE03_GET": "product",
@@ -301,7 +301,7 @@ class SourceBoundaryTests(unittest.TestCase):
             "VAR_NUM_BADGES": "product",
             "VAR_ROXANNE_CALL_STEP_COUNTER": "product",
             "VAR_WALLY_CALL_STEP_COUNTER": "product",
-            # Battle Frontier is a preservation target only; its facility state is not played in Wayfarer
+            # Battle Frontier is a preservation target only; its facility state is not played in Wayfarer (see #235)
             "FLAG_CANCEL_BATTLE_ROOM_CHALLENGE": "frontier",
             "FLAG_CHOSEN_MULTI_BATTLE_NPC_PARTNER": "frontier",
             "FLAG_HIDE_BATTLE_TOWER_MULTI_BATTLE_PARTNER_ALT_1": "frontier",

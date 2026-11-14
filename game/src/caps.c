@@ -3,6 +3,7 @@
 #include "event_data.h"
 #include "caps.h"
 #include "pokemon.h"
+#include "trainer_rating.h"
 
 static u8 GetCurrentBadgeCount(void)
 {
@@ -63,6 +64,12 @@ u32 GetCurrentLevelCap(void)
 
     u8 challengeLevelCap = gSaveBlock3Ptr->challengeSettings.tx_Challenges_LevelCap;
 
+#if IS_WAYFARER
+    // Wayfarer's cap is the same Trainer Rating soft cap obedience uses, so it
+    // follows progress in every region, not just Johto/Kanto badge flags.
+    if (challengeLevelCap != 0)
+        return GetTrainerRatingSoftLevelCap();
+#else
     if (challengeLevelCap != 0)
     {
         u8 badgeCount = GetCurrentBadgeCount();
@@ -85,6 +92,7 @@ u32 GetCurrentLevelCap(void)
         else
             return sLevelCapTable_Hard[badgeCount];
     }
+#endif
 
     u32 i;
 

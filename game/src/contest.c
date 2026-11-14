@@ -1,4 +1,5 @@
 #include "global.h"
+#include "wayfarer_persistence.h"
 #include "gpu_regs.h"
 #include "bg.h"
 #include "malloc.h"
@@ -2924,7 +2925,7 @@ void SetContestants(enum ContestCategories contestType, u8 rank)
 
     TryPutPlayerLast();
 
-    if (FlagGet(FLAG_SYS_GAME_CLEAR) && !(gLinkContestFlags & LINK_CONTEST_FLAG_IS_LINK))
+    if (IsHoennGameClear() && !(gLinkContestFlags & LINK_CONTEST_FLAG_IS_LINK))
         allowPostgameContestants = TRUE;
 
     // Find all suitable opponents

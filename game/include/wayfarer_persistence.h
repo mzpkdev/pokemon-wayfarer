@@ -136,6 +136,8 @@ bool8 GetChampionStateForRegion(enum Region region);
 void SetChampionStateForRegion(enum Region region, bool8 value);
 bool8 GetGameClearStateForRegion(enum Region region);
 void SetGameClearStateForRegion(enum Region region, bool8 value);
+// Hoenn's own League clear in Wayfarer; the standalone game clear everywhere else.
+bool8 IsHoennGameClear(void);
 
 bool8 GetRegionVisitedState(enum Region region);
 void SetRegionVisitedState(enum Region region, bool8 value);

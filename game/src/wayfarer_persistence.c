@@ -907,6 +907,15 @@ bool8 GetGameClearStateForRegion(enum Region region)
 #endif
 }
 
+bool8 IsHoennGameClear(void)
+{
+#if IS_WAYFARER
+    return GetGameClearStateForRegion(REGION_HOENN);
+#else
+    return FlagGet(FLAG_SYS_GAME_CLEAR);
+#endif
+}
+
 void SetGameClearStateForRegion(enum Region region, bool8 value)
 {
 #if IS_WAYFARER
