@@ -163,6 +163,9 @@ VioletCity_EventScript_Rattata::
 VioletCity_EventScript_ElmCall_Trigger::
 	specialvar VAR_RESULT, WayfarerIsJohtoOrigin
 	goto_if_eq VAR_RESULT, FALSE, VioletCity_EventScript_ElmCallSkipped
+	@ The call is about the EGG Elm took from the player: it waits (state stays 3) until the Mystery
+	@ Egg has been handed to Elm, however early Falkner fell.
+	goto_if_lt VAR_NEWBARKTOWN_LABSTATE, 5, VioletCity_EventScript_ElmCallWaiting
 	lock
 	setspeaker VioletCity_Text_ElmName
 	pokenavcall VioletCity_Text_Elm_Call
@@ -172,6 +175,9 @@ VioletCity_EventScript_ElmCall_Trigger::
 	setflag FLAG_HIDE_NEWBARKTOWN_LAB_AIDE
 	setvar_forward VAR_VIOLET_CITY_STATE, 4
 	release
+	end
+
+VioletCity_EventScript_ElmCallWaiting::
 	end
 
 VioletCity_EventScript_ElmCallSkipped::

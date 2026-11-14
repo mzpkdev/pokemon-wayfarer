@@ -103,11 +103,13 @@ NewBarkTown_Lab_EventScript_ElmCampaignNoTicket::
 	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED, NewBarkTown_Lab_EventScript_ElmLeague
 NewBarkTown_Lab_EventScript_ElmCampaignErrand:
 
-	goto_if_unset FLAG_RECEIVED_TOGEPI_EGG, NewBarkTown_Lab_EventScript_Elm_AfterEggCheck
+	goto_if_unset FLAG_RECEIVED_TOGEPI_EGG, NewBarkTown_Lab_EventScript_Elm_ErrandProgress
 	goto_if_set FLAG_SHOWN_ELM_TOGEPI, NewBarkTown_Lab_EventScript_Elm_CallMe
 	call_if_unset FLAG_SHOWN_ELM_TOGEPI, NewBarkTown_Lab_EventScript_Elm_Check_Togepi
-NewBarkTown_Lab_EventScript_Elm_AfterEggCheck:
+	@ "Has that EGG changed any?" asks about the Togepi Egg Elm's aide handed over: only a player who
+	@ holds it hears it, and the errand directions below are never replaced while they are still owed.
 	goto_if_ge VAR_GOLDENROD_CITY_STATE, 1, NewBarkTown_Lab_EventScript_Elm_Check_WhereIsEgg
+NewBarkTown_Lab_EventScript_Elm_ErrandProgress:
 	goto_if_ge VAR_NEWBARKTOWN_LABSTATE, 5, NewBarkTown_Lab_EventScript_ElmState5
 	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 2, CopNewBarkTown_Lab_EventScript_ElmState2
 	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 3, CopNewBarkTown_Lab_EventScript_ElmState2

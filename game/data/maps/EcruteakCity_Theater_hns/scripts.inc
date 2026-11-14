@@ -599,7 +599,8 @@ EcruteakCity_Theater_EventScript_LegendaryCutscene::
 	@ The Mystery Egg's journey is Zuki's memory only for a Johto-origin player whose egg Elm took.
 	specialvar VAR_RESULT, WayfarerIsJohtoOrigin
 	goto_if_eq VAR_RESULT, FALSE, EcruteakCity_Theater_EventScript_ZukiFirstMeeting
-	goto_if_lt VAR_NEWBARKTOWN_LABSTATE, 5, EcruteakCity_Theater_EventScript_ZukiFirstMeeting
+	@ "I met you previously in VIOLET CITY" recalls the Violet Kimono Girl's scene, not the lab.
+	goto_if_ne VAR_VIOLET_CITY_KIMONO_GIRL, 2, EcruteakCity_Theater_EventScript_ZukiFirstMeeting
 	msgbox EcruteakCity_Theater_Text_ZukiMetInVioletEgg, MSGBOX_DEFAULT
 	msgbox EcruteakCity_Theater_Text_ZukiBringBack, MSGBOX_DEFAULT
 	msgbox EcruteakCity_Theater_Text_ZukiEggPassed, MSGBOX_DEFAULT

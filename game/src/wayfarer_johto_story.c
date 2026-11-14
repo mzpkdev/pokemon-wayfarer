@@ -22,6 +22,11 @@ u16 WayfarerJohtoSilverAvailable(void)
 
     if (!WayfarerIsJohtoOrigin())
         return FALSE;
+    // From Sprout Tower on, Silver is the thief whose theft the lab scene tells (lab state 5): none of
+    // his chapters play before the player has run Mr. Pokemon's errand, so a late errand never replays
+    // a "first" theft after his later appearances.
+    if (gSpecialVar_0x8004 >= SILVER_CHAPTER_SPROUT_TOWER && VarGet(VAR_NEWBARKTOWN_LABSTATE) < 5)
+        return FALSE;
     switch (gSpecialVar_0x8004)
     {
     case SILVER_CHAPTER_NEW_BARK:

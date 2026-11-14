@@ -38,6 +38,8 @@ GoldenrodCity_Setup_TakeoverStarted:
 @ A load script cannot show Elm's call, so the setup queues it for the OnFrame
 @ entry. Only Johto-origin players get it.
 GoldenrodCity_Setup_QueueElmCall::
+	@ "Has that EGG hatched yet?" is about the Togepi Egg the player got in Violet City.
+	goto_if_unset FLAG_RECEIVED_TOGEPI_EGG, GoldenrodCity_Setup_NoElmCall
 	specialvar VAR_RESULT, WayfarerIsJohtoOrigin
 	goto_if_eq VAR_RESULT, FALSE, GoldenrodCity_Setup_NoElmCall
 	setvar VAR_TEMP_1, 1
