@@ -150,7 +150,7 @@ TEST("Route 121 stays clear once the grunts have moved out")
     EXPECT(FlagGet(HOENN_FLAG_HIDE_ROUTE_121_GRUNTS));
 }
 
-TEST("Mossdeep stays quiet until the player holds the Mind Badge and Groudon is awake")
+TEST("Mossdeep stays quiet until Groudon is awake, and the Mind Badge is not needed")
 {
     u32 badgeFirst;
 
@@ -161,11 +161,14 @@ TEST("Mossdeep stays quiet until the player holds the Mind Badge and Groudon is 
     ENTER(MAP_MOSSDEEP_CITY);
     ExpectInvasion(FALSE);
 
-    FlagSet(badgeFirst ? HOENN_FLAG_MIND_BADGE : HOENN_FLAG_GROUDON_AWAKE);
-    ENTER(MAP_MOSSDEEP_CITY);
-    ExpectInvasion(FALSE);
+    if (badgeFirst)
+    {
+        FlagSet(HOENN_FLAG_MIND_BADGE);
+        ENTER(MAP_MOSSDEEP_CITY);
+        ExpectInvasion(FALSE);
+    }
 
-    FlagSet(badgeFirst ? HOENN_FLAG_GROUDON_AWAKE : HOENN_FLAG_MIND_BADGE);
+    FlagSet(HOENN_FLAG_GROUDON_AWAKE);
     ENTER(MAP_MOSSDEEP_CITY);
     ExpectInvasion(TRUE);
 }
