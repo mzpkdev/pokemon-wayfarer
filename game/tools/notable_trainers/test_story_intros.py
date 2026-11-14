@@ -11,6 +11,8 @@ import re
 import unittest
 from pathlib import Path
 
+from wayfarer_view import wayfarer_view
+
 GAME = Path(__file__).resolve().parents[2]
 CATALOG = GAME / "tools/notable_trainers/catalog.json"
 SCRIPT_ROOTS = [GAME / "data"]
@@ -88,7 +90,7 @@ def texts(path):
     """(label, text) for every label of a file that is followed by .string lines. Text control codes (\\n, \\p,
     \\l) read as spaces."""
     label, lines = None, []
-    for raw in path.read_text(errors="replace").splitlines():
+    for raw in wayfarer_view(path.read_text(errors="replace")).splitlines():
         match = LABEL.match(raw)
         if match:
             if label and lines:
@@ -108,7 +110,7 @@ def texts(path):
 def introduced_labels():
     labels = set()
     for path in inc_files():
-        body = path.read_text(errors="replace")
+        body = wayfarer_view(path.read_text(errors="replace"))
         labels.update(m.group(2) for m in INTRO.finditer(body))
         labels.update(SHARED_INTRO.findall(body))
     return labels
@@ -117,7 +119,7 @@ def introduced_labels():
 def INTRODUCE_LABELS():
     labels = set()
     for path in inc_files():
-        labels.update(m.group(2) for m in INTRO.finditer(path.read_text(errors="replace")))
+        labels.update(m.group(2) for m in INTRO.finditer(wayfarer_view(path.read_text(errors="replace"))))
     return labels
 
 
@@ -141,7 +143,7 @@ class StoryIntroductionGuard(unittest.TestCase):
         texts_by_label = set(INTRODUCE_LABELS())
         misuse = []
         for path in inc_files():
-            for number, raw in enumerate(path.read_text(errors="replace").splitlines(), 1):
+            for number, raw in enumerate(wayfarer_view(path.read_text(errors="replace")).splitlines(), 1):
                 line = raw.split("@")[0]
                 if re.match(r"^\s*notable_introduce\b", line) or re.match(r"^\s*(\w+)::?\s*$", line):
                     continue
@@ -166,7 +168,7 @@ class StoryIntroductionGuard(unittest.TestCase):
             by_label.update(dict(texts(path)))
         pattern = self_introduction()
         for path in inc_files():
-            for character, label in INTRO.findall(path.read_text(errors="replace")):
+            for character, label in INTRO.findall(wayfarer_view(path.read_text(errors="replace"))):
                 self.assertIn(label, by_label, f"{path.name}: {label} has no text")
                 for match in pattern.finditer(plain(by_label[label])):
                     self.assertIn(character.removeprefix("NOTABLE_TRAINER_").replace("_", " ").split()[0].lower(),

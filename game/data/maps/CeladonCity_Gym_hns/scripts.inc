@@ -6,7 +6,9 @@ CeladonCity_Gym_EventScript_Erika::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_CELADON_GYM, CeladonCity_Gym_EventScript_Erika_Defeated
+#if IS_WAYFARER
 	notable_introduce NOTABLE_TRAINER_ERIKA, CeladonCity_Gym_Text_ErikaName
+#endif
 	msgbox CeladonCity_Gym_Text_ErikaBeforeBattle, MSGBOX_DEFAULT
 	trainerbattle_no_intro TRAINER_ERIKA_HNS, CeladonCity_Gym_Text_ErikaBeaten
 	message CeladonCity_Gym_Text_PlayerReceivedRainbowBadge
@@ -38,15 +40,25 @@ CeladonCity_Gym_EventScript_Erika_Defeated::
 	release
 	end
 
+#if IS_WAYFARER
 CeladonCity_Gym_Text_ErikaName:
+#else
+CeladonCity_Gym_Text_ErikaBeforeBattle:
+#endif
 	.string "ERIKA: Hello… Lovely weather,\n"
 	.string "isn't it? It's so pleasant…\p"
 	.string "…I'm afraid I may doze off…\p"
 	.string "My name is ERIKA. I am the LEADER\n"
+#if IS_WAYFARER
 	.string "of CELADON GYM.$"
 
 CeladonCity_Gym_Text_ErikaBeforeBattle:
 	.string "…Oh? A traveler? How nice…\p"
+#else
+	.string "of CELADON GYM.\p"
+	.string "…Oh? All the way from JOHTO, you\n"
+	.string "say? How nice…\p"
+#endif
 	.string "Oh. I'm sorry, I didn't realize\n"
 	.string "that you wished to challenge me.\p"
 	.string "Very well, but I shall not lose.$"

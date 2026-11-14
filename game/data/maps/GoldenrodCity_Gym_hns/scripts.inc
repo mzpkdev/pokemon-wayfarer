@@ -1,7 +1,6 @@
 GoldenrodCity_Gym_hns_MapScripts::
 #if IS_WAYFARER
 	map_script MAP_SCRIPT_ON_TRANSITION, GoldenrodCity_Gym_OnTransition
-#endif
 	.byte 0
 
 @ WHITNEY is out at the RADIO TOWER on a morning until the QUIZ is solved: her Gym copy hides then
@@ -13,6 +12,9 @@ GoldenrodCity_Gym_OnTransition:
 GoldenrodCity_Gym_EventScript_HideWhitney::
 	setflag FLAG_TEMP_1
 	return
+#else
+	.byte 0
+#endif
 @Carrie, Bridget, Victoria, Samantha, gym guy
 
 
@@ -59,7 +61,9 @@ GoldenrodCity_Gym_EventScript_Whitney::
 	goto_if_eq VAR_WAYFARER_JOHTO_WHITNEY_STATE, 3, GoldenrodCity_Gym_EventScript_WhitneyCrying
 	goto_if_eq VAR_WAYFARER_JOHTO_WHITNEY_STATE, 4, GoldenrodCity_Gym_EventScript_WhitneyBadge
 	goto_if_defeated TRAINER_WHITNEY_1_HNS, GoldenrodCity_Gym_EventScript_WhitneyBadge
+#if IS_WAYFARER
 	notable_introduce NOTABLE_TRAINER_WHITNEY, GoldenrodCity_Gym_Text_WhitneyIntro
+#endif
 	msgbox GoldenrodCity_Gym_Text_WhitneyBefore, MSGBOX_DEFAULT
 	trainerbattle_no_intro TRAINER_WHITNEY_1_HNS, GoldenrodCity_Gym_Text_WhitneyShouldntBeSoSerious
 	msgbox GoldenrodCity_Gym_Text_WhitneyYouMeanie, MSGBOX_DEFAULT
@@ -158,11 +162,16 @@ GoldenrodCity_Gym_Text_GymStatueCertified:
 	.string "WHITNEY'S CERTIFIED TRAINERS:\n"
 	.string "{PLAYER}$"
 
+#if IS_WAYFARER
 @ Her first meeting, in the Gym or at the RADIO TOWER, whichever comes first; later meetings greet instead
 GoldenrodCity_Gym_Text_WhitneyIntro:
     .string "Hi! I'm WHITNEY!$"
 
 GoldenrodCity_Gym_Text_WhitneyBefore:
+#else
+GoldenrodCity_Gym_Text_WhitneyBefore:
+    .string "Hi! I'm WHITNEY!\p"
+#endif
     .string "Everyone was into POKéMON, so I got\n"
     .string "into it too!\p"
     .string "POKéMON are super-cute!\p"

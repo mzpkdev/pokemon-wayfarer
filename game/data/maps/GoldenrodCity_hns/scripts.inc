@@ -316,6 +316,7 @@ GoldenrodCity_EventScript_Beauty::
 	release
 	end
 
+#if IS_WAYFARER
 GoldenrodCity_EventScript_BeautyWhitneyInGym::
 	msgbox GoldenrodCity_Text_BeautyWhitneyInGym, MSGBOX_DEFAULT
 	closemessage
@@ -330,9 +331,9 @@ GoldenrodCity_Text_Beauty:
 
 GoldenrodCity_Text_BeautyWhitneyInGym:
 	.string "This is the GOLDENROD GYM!\p"
-	.string "Our leader WHITNEY is waiting\n"
-	.string "inside. She's a bit of a crybaby,\l"
-	.string "but she's tough.$"
+	.string "Our leader WHITNEY is a bit of a\n"
+	.string "crybaby, but she's tough.$"
+#endif
 
 GoldenrodCity_Text_Woman:
 	.string "I used to train in WHITNEY's GYM,\n"

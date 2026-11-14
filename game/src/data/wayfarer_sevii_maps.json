@@ -20633,6 +20633,8 @@
         "WayfarerSevii_Moltres_Resolved",
         "WayfarerSevii_MtEmberExterior_EndOnLoad",
         "WayfarerSevii_MtEmberExterior_OnLoad",
+        "WayfarerSevii_Rival_KnowsBlue",
+        "WayfarerSevii_Rival_KnowsBlueNotPallet",
         "WayfarerSevii_Rival_NoScene",
         "WayfarerSevii_Rival_NoSceneTalk",
         "WayfarerSevii_RubyLead_EndEnsurePassword",
@@ -20775,6 +20777,18 @@
         },
         {
           "label": "DrawWholeMapView",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "c7a7bbb450ad24f626f120cf2111e4dd53f787410d30854a5407dbcbf0b1a253"
+        },
+        {
+          "label": "NotableStory_IsIntroduced",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "c7a7bbb450ad24f626f120cf2111e4dd53f787410d30854a5407dbcbf0b1a253"
+        },
+        {
+          "label": "WayfarerKanto_IsPalletOrigin",
           "kind": "special",
           "path": "data/specials.inc",
           "sha256": "c7a7bbb450ad24f626f120cf2111e4dd53f787410d30854a5407dbcbf0b1a253"

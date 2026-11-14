@@ -92,6 +92,7 @@ Route104_Text_DadPokenavCall:
 	.string "… … … … … …\n"
 	.string "… … … … … Click!$"
 
+#if IS_WAYFARER
 Route104_Text_NormanPokenavCall:
 	.string "… … … … … …\n"
 	.string "… … … … … Beep!\p"
@@ -112,6 +113,7 @@ Route104_Text_RegisteredNormanInPokenav:
 	.string "Registered NORMAN\n"
 	.string "in the POKéNAV.$"
 
+#endif
 Route104_Text_RegisteredDadInPokenav:
 	.string "Registered DAD NORMAN\n"
 	.string "in the POKéNAV.$"

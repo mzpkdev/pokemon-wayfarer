@@ -757,6 +757,26 @@ TEST("Any battle against a notable introduces them, lost or won, and a debug bat
     EXPECT_EQ(NotableFriendship_GetScore(NOTABLE_TRAINER_BLAINE), 0);
 }
 
+TEST("A Battle Frontier opponent whose id equals a notable trainer's introduces no one")
+{
+    static const u32 sFacilityFlags[] = { BATTLE_TYPE_PYRAMID, BATTLE_TYPE_TRAINER_HILL, BATTLE_TYPE_BATTLE_TOWER };
+    u32 i;
+
+    ResetFriendship();
+    for (i = 0; i < ARRAY_COUNT(sFacilityFlags); i++)
+    {
+        // Frontier ids 160, 270 and 311 are Roxanne, Sidney and Norman's in the notable trainers' id space.
+        gBattleTypeFlags = BATTLE_TYPE_TRAINER | sFacilityFlags[i];
+        gBattleOutcome = B_OUTCOME_WON;
+        InitTrainerBattleParameter();
+        TRAINER_BATTLE_PARAM.opponentA = TRAINER_ROXANNE_1;
+        Test_EndTrainerBattle();
+        EXPECT(!NotableFriendship_IsIntroduced(NOTABLE_TRAINER_ROXANNE));
+    }
+    EndSingleBattle(TRAINER_ROXANNE_1, B_OUTCOME_LOST);
+    EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_ROXANNE));
+}
+
 TEST("A story beat pays once, introduces, and crossing Friend owes the number")
 {
     ResetFriendship();
@@ -782,12 +802,6 @@ TEST("A story beat pays once, introduces, and crossing Friend owes the number")
     EXPECT_EQ(NotableFriendship_GetStage(NOTABLE_TRAINER_STEVEN), NOTABLE_STAGE_FRIEND);
     EXPECT(NotableFriendship_HasPendingNumber());
     EXPECT(NotableFriendship_IsValid());
-
-    // Tate & Liza keep the score but are owed no number.
-    gSpecialVar_0x8004 = NOTABLE_STORY_BEAT_TATE_LIZA_SPACE_CENTER;
-    NotableStory_CompleteBeat();
-    EXPECT_EQ(NotableFriendship_GetScore(NOTABLE_TRAINER_TATE_LIZA), NOTABLE_FRIENDSHIP_STORY_BEAT_POINTS);
-    EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_TATE_LIZA));
 }
 
 extern const u8 RadioTower1F_EventScript_CheckWhitneyAtTower[];

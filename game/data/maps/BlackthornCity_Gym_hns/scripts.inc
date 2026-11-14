@@ -208,8 +208,12 @@ BlackthornGym_EventScript_Clair::
 BlackthornGym_EventScript_ClairOfficialChallenge::
 	goto_if_ge VAR_BLACKTHORN_CITY_STATE, 4, BlackthornGym_EventScript_Clair_Defeated
 	goto_if_eq VAR_BLACKTHORN_CITY_STATE, 2, BlackthornGym_EventScript_ClairDuringChallenge
+#if IS_WAYFARER
 	notable_introduce NOTABLE_TRAINER_CLAIR, BlackthornGym_Text_ClairIntroText
 	msgbox BlackthornGym_Text_ClairBeforeText, MSGBOX_DEFAULT
+#else
+	msgbox BlackthornGym_Text_ClairIntroText, MSGBOX_DEFAULT
+#endif
 	trainerbattle_no_intro TRAINER_CLAIR_1_HNS, BlackthornGym_Text_ClairWinText
 	msgbox BlackthornGym_Text_ClairText_GoToDragonsDen, MSGBOX_DEFAULT
 	setflag FLAG_DEFEATED_BLACKTHORN_GYM
@@ -246,9 +250,13 @@ BlackthornGym_EventScript_ClairAfterLeague::
 	end
 
 BlackthornGym_Text_ClairIntroText:
+#if IS_WAYFARER
     .string "I am CLAIR.$"
 
 BlackthornGym_Text_ClairBeforeText:
+#else
+    .string "I am CLAIR.\p"
+#endif
     .string "The world's best dragon master.\p"
     .string "I can hold my own against even the\n"
     .string "POKéMON LEAGUE's ELITE FOUR.\p"
@@ -293,8 +301,15 @@ BlackthornGym_Text_ClairText_League:
     .string "What's the matter?\p"
     .string "Aren't you headed to the POKéMON\n"
     .string "LEAGUE?\p"
+#if IS_WAYFARER
     .string "It's a long way from here, and the\n"
     .string "route there is very tough.\p"
+#else
+    .string "Don't you know where it is?\p"
+    .string "From here, go to NEW BARK TOWN.\p"
+    .string "Then SURF east. The route there is\n"
+    .string "very tough.\p"
+#endif
     .string "Don't you dare lose at the POKéMON\n"
     .string "LEAGUE!\p"
     .string "If you do, I'll feel even worse\n"

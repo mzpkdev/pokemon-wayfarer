@@ -414,6 +414,8 @@ WayfarerSevii_FourIsland_RivalTryScene::
 	goto_if_set FLAG_WAYFARER_SEVII_RIVAL_SCENE_SEEN, WayfarerSevii_Rival_NoScene
 	specialvar VAR_RESULT, WayfarerSevii_HasAnyLeagueClear
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Rival_NoScene
+	call WayfarerSevii_Rival_KnowsBlue
+	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Rival_NoScene
 	lockall
 	playbgm MUS_RG_ENCOUNTER_RIVAL, 0
 	msgbox WayfarerSevii_Text_FourIslandRivalScene
@@ -425,10 +427,24 @@ WayfarerSevii_FourIsland_RivalTryScene::
 WayfarerSevii_Rival_NoScene:
 	return
 
+@ BLUE only greets a player he knows: one from PALLET TOWN grew up beside him, anyone else has to have met him
+@ somewhere first. VAR_RESULT: TRUE when the scene may play.
+WayfarerSevii_Rival_KnowsBlue::
+	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
+	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Rival_KnowsBlueNotPallet
+	return
+
+WayfarerSevii_Rival_KnowsBlueNotPallet::
+	setvar VAR_0x8004, NOTABLE_TRAINER_BLUE
+	specialvar VAR_RESULT, NotableStory_IsIntroduced
+	return
+
 WayfarerSevii_SixIsland_RivalTryScene::
 	setvar VAR_TEMP_8, 1
 	goto_if_set FLAG_WAYFARER_SEVII_RIVAL_SCENE_SEEN, WayfarerSevii_Rival_NoScene
 	specialvar VAR_RESULT, WayfarerSevii_HasAnyLeagueClear
+	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Rival_NoScene
+	call WayfarerSevii_Rival_KnowsBlue
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Rival_NoScene
 	lockall
 	playbgm MUS_RG_ENCOUNTER_RIVAL, 0

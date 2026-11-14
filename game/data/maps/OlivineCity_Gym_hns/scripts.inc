@@ -222,10 +222,14 @@ OlivineCity_Gym_EventScript_Jasmine::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_OLIVINE_CITY_GYM, OlivineCity_Gym_EventScript_Jasmine_Defeated
+#if IS_WAYFARER
 	@ Her Gym copy only appears once the LIGHTHOUSE medicine is delivered, so the thanks is earned
 	msgbox OlivineCity_Gym_Text_JasmineThanksForLighthouse, MSGBOX_DEFAULT
 	notable_introduce NOTABLE_TRAINER_JASMINE, OlivineCity_Gym_Text_JasmineSteelTypeIntro
 	msgbox OlivineCity_Gym_Text_JasmineSteelType, MSGBOX_DEFAULT
+#else
+	msgbox OlivineCity_Gym_Text_JasmineSteelTypeIntro, MSGBOX_DEFAULT
+#endif
 	goto_if_set FLAG_DEFEATED_CIANWOOD_GYM, OlivineCity_Gym_EventScript_CianwoodCheckMahog
 	goto_if_set FLAG_DEFEATED_MAHOGANY_TOWN_GYM, OlivineCity_Gym_EventScript_MahogCheckCianwood
 	goto OlivineCity_Gym_EventScript_Jasmine_Battle1
@@ -283,6 +287,7 @@ OlivineCity_Gym_EventScript_Jasmine_Defeated::
 	end
 
 
+#if IS_WAYFARER
 OlivineCity_Gym_Text_JasmineThanksForLighthouse:
 	.string "…Thank you for your help at the\n"
 	.string "LIGHTHOUSE…\p"
@@ -293,6 +298,14 @@ OlivineCity_Gym_Text_JasmineSteelTypeIntro:
 	.string "I am JASMINE, a GYM LEADER.$"
 
 OlivineCity_Gym_Text_JasmineSteelType:
+#else
+OlivineCity_Gym_Text_JasmineSteelTypeIntro:
+	.string "…Thank you for your help at the\n"
+	.string "LIGHTHOUSE…\p"
+	.string "But this is different.\n"
+	.string "Please allow me to introduce myself.\p"
+	.string "I am JASMINE, a GYM LEADER.\n"
+#endif
 	.string "I use the STEEL-type.\p"
 	.string "…Do you know about the STEEL-type?\p"
 	.string "It's a type that was only recently\n"

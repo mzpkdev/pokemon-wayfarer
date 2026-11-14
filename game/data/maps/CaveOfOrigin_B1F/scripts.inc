@@ -4,7 +4,9 @@ CaveOfOrigin_B1F_MapScripts::
 CaveOfOrigin_B1F_EventScript_Wallace::
 	lock
 	faceplayer
+#if IS_WAYFARER
 	notable_introduce NOTABLE_TRAINER_WALLACE, CaveOfOrigin_B1F_Text_WallaceIntro
+#endif
 	msgbox CaveOfOrigin_B1F_Text_WallaceStory, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_CAVE_OF_ORIGIN_WALLACE, Common_Movement_WalkInPlaceFasterUp
@@ -60,6 +62,7 @@ CaveOfOrigin_B1F_EventScript_AtSkyPillar::
 	release
 	end
 
+#if IS_WAYFARER
 @ Said to a player WALLACE has not met; one he knows gets his greeting instead
 CaveOfOrigin_B1F_Text_WallaceIntro:
 	.string "Ah, so you are {PLAYER}{KUN}?\n"
@@ -67,6 +70,12 @@ CaveOfOrigin_B1F_Text_WallaceIntro:
 	.string "My name is WALLACE.$"
 
 CaveOfOrigin_B1F_Text_WallaceStory:
+#else
+CaveOfOrigin_B1F_Text_WallaceStory:
+	.string "Ah, so you are {PLAYER}{KUN}?\n"
+	.string "I've heard tales of your exploits.\p"
+	.string "My name is WALLACE.\p"
+#endif
 	.string "I was once the GYM LEADER of\n"
 	.string "SOOTOPOLIS, but something came up.\p"
 	.string "So now, I've entrusted my mentor JUAN\n"

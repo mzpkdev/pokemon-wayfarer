@@ -11,6 +11,8 @@ import re
 import unittest
 from pathlib import Path
 
+from wayfarer_view import wayfarer_view
+
 GAME = Path(__file__).resolve().parents[2]
 MAPS = GAME / "data/maps"
 BEATS = GAME / "include/constants/notable_story_beats.h"
@@ -21,7 +23,7 @@ INTRODUCE = re.compile(r"^\s*notable_introduce\s+(NOTABLE_TRAINER_\w+)\s*,\s*(\w
 
 
 def script(name):
-    return (MAPS / name / "scripts.inc").read_text()
+    return wayfarer_view((MAPS / name / "scripts.inc").read_text())
 
 
 def label_body(text, label):
@@ -106,7 +108,11 @@ class HistoryClaimTests(unittest.TestCase):
         self.assertIn("call_if_set FLAG_DEFEATED_MAGMA_SPACE_CENTER, MeteorFalls_StevensCave_EventScript_RecallSpaceCenter", cave)
         self.assertIn("goto_if_set FLAG_DELIVERED_STEVEN_LETTER", label_body(cave, "MeteorFalls_StevensCave_EventScript_MyPredictionCameTrue"))
         self.assertIn("SPACE CENTER", label_body(cave, "MeteorFalls_StevensCave_Text_BattledAtSpaceCenter"))
-        self.assertNotIn("SPACE CENTER", label_body(cave, "MeteorFalls_StevensCave_Text_ShouldKnowHowGoodIAmExpectWorst"))
+        # What he says of his own strength rides on the Space Center text, so it is told only with that flag.
+        self.assertIn("how good I am", label_body(cave, "MeteorFalls_StevensCave_Text_BattledAtSpaceCenter"))
+        self.assertNotIn("how good I am", label_body(cave, "MeteorFalls_StevensCave_Text_ExpectWorst"))
+        self.assertNotIn("SPACE CENTER", label_body(cave, "MeteorFalls_StevensCave_Text_ExpectWorst"))
+        self.assertIn("MOSSDEEP SPACE CENTER", label_body(cave, "MeteorFalls_StevensCave_Text_BattledAtSpaceCenter"))
         self.assertNotIn("GRANITE", label_body(cave, "MeteorFalls_StevensCave_Text_PredictionFromHearingOfYou"))
 
     def test_steven_at_vermilion_no_longer_calls_himself_the_hoenn_champion(self):
@@ -163,7 +169,10 @@ class BeatTests(unittest.TestCase):
     def test_every_story_beat_is_paid_from_exactly_one_place(self):
         beats = re.findall(r"#define (NOTABLE_STORY_BEAT_\w+)\s+(\d+)", BEATS.read_text())
         names = [name for name, value in beats if name not in ("NOTABLE_STORY_BEAT_NONE", "NOTABLE_STORY_BEAT_COUNT")]
-        self.assertEqual(len(names), 11)
+        count = int(re.search(r"#define NOTABLE_STORY_BEAT_COUNT\s+(\d+)", BEATS.read_text()).group(1))
+        self.assertEqual(len(names), count)
+        self.assertEqual(sorted(int(value) for name, value in beats if name in names), list(range(1, count + 1)))
+        self.assertNotIn("TATE_LIZA", BEATS.read_text())
         sources = [p for p in (GAME / "data").rglob("*.inc")]
         for name in names:
             sites = []
@@ -252,6 +261,70 @@ class SceneRunTests(unittest.TestCase):
         gift = self.play("CianwoodCity_hns", wife, items=set(), flags={"FLAG_BADGE05_GET"})
         self.assertIn("CianwoodCity_Text_ChucksWifeGiveHM", gift.messages)
         self.assertIn("ITEM_HM_FLY", gift.given)
+
+    def test_steven_in_the_cave_greets_a_stranger_without_expecting_them(self):
+        steven = "NOTABLE_TRAINER_STEVEN"
+        scene = "MeteorFalls_StevensCave_EventScript_Steven"
+        stranger = self.play("MeteorFalls_StevensCave", scene)
+        self.assertEqual(stranger.messages[:2], ["MeteorFalls_StevensCave_Text_StevenIntro",
+                                                 "MeteorFalls_StevensCave_Text_RockManiacStranger"])
+        self.assertNotIn("MeteorFalls_StevensCave_Text_ImAmazedYouFoundMe", stranger.messages)
+        self.assertNotIn("MeteorFalls_StevensCave_Text_BattledAtSpaceCenter", stranger.messages)
+        self.assertEqual(stranger.introduced, {steven})
+        known = self.play("MeteorFalls_StevensCave", scene, introduced={steven})
+        self.assertEqual(known.messages[:2], ["greeting:" + steven, "MeteorFalls_StevensCave_Text_ImAmazedYouFoundMe"])
+        # The Space Center is recalled only by a player who fought beside him there.
+        fought = self.play("MeteorFalls_StevensCave", scene, introduced={steven}, flags={"FLAG_DEFEATED_MAGMA_SPACE_CENTER"})
+        self.assertIn("MeteorFalls_StevensCave_Text_BattledAtSpaceCenter", fought.messages)
+        # His cave opens on HOENN's own FLAG_SYS_GAME_CLEAR, so the prediction of a CHAMPION always holds.
+        self.assertIn("FLAG_SYS_GAME_CLEAR", (MAPS / "MeteorFalls_1F_1R/scripts.inc").read_text())
+
+    def test_jasmine_gives_her_name_in_the_lighthouse_so_the_gym_greets(self):
+        jasmine = "NOTABLE_TRAINER_JASMINE"
+        first = self.play("OlivineCity_Lighthouse_hns", "OlivineLighthouse_EventScript_Jasmine")
+        self.assertEqual(first.messages[0], "OlivineLighthouse_Text_JasmineName")
+        self.assertEqual(first.introduced, {jasmine})
+        # The medicine came before she asked: her name comes with the first words she says about AMPHY.
+        medicine = self.play("OlivineCity_Lighthouse_hns", "OlivineLighthouse_EventScript_Jasmine",
+                             vars={"VAR_OLIVINE_CITY_STATE": 4}, flags={"FLAG_WAYFARER_JOHTO_LIGHTHOUSE_MEDICINE_FIRST"})
+        self.assertEqual(medicine.messages[0], "OlivineLighthouse_Text_JasmineName")
+        # Met at the Lighthouse, the Gym greets in place of "allow me to introduce myself".
+        gym = self.play("OlivineCity_Gym_hns", "OlivineCity_Gym_EventScript_Jasmine", introduced=first.introduced)
+        self.assertNotIn("OlivineCity_Gym_Text_JasmineSteelTypeIntro", gym.messages)
+        self.assertIn("greeting:" + jasmine, gym.messages)
+
+    def test_blue_greets_a_player_on_the_islands_only_if_pallet_or_introduced(self):
+        celio = (GAME / "data/scripts/wayfarer_sevii/story/celio_network.inc").read_text()
+        for label in ("WayfarerSevii_FourIsland_RivalTryScene", "WayfarerSevii_SixIsland_RivalTryScene"):
+            body = label_body(celio, label)
+            self.assertLess(body.index("call WayfarerSevii_Rival_KnowsBlue"), body.index("lockall"), label)
+        known = (label_body(celio, "WayfarerSevii_Rival_KnowsBlue")
+                 + label_body(celio, "WayfarerSevii_Rival_KnowsBlueNotPallet"))
+        self.assertIn("WayfarerKanto_IsPalletOrigin", known)
+        self.assertIn("NotableStory_IsIntroduced", known)
+        self.assertIn("NOTABLE_TRAINER_BLUE", known)
+
+    def test_the_non_wayfarer_builds_keep_the_original_scenes(self):
+        for name, label, kept, dropped in (
+            ("Route32_hns", "Route32_Text_BirdKeeperPeter_Seen", "You beat FALKNER?", "TRAINER, aren't you"),
+            ("BlackthornCity_Gym_hns", "BlackthornGym_Text_ClairText_League", "NEW BARK TOWN", "a long way"),
+            ("DragonsDen_Cavern_hns", "DragonsDen_Cavern_Text_ClairWhatsTheMatter", "NEW BARK TOWN", "a long way"),
+            ("VermilionCity_hns", "VermilionCity_Text_StevenIntro", "The Champion from the HOENN region", "For some time"),
+            ("MeteorFalls_StevensCave", "MeteorFalls_StevensCave_Text_ShouldKnowHowGoodIAmExpectWorst",
+             "SOOTOPOLIS SPACE CENTER", "MOSSDEEP"),
+            ("Route25_hns", "Route25_Text_MistyDate", "JOHTO GYM BADGES", "TRAINER, right"),
+            ("PewterCity_Gym_hns", "PewterCity_Gym_Text_Brock_Intro", "challenger from JOHTO", "real"),
+            ("CeladonCity_Gym_hns", "CeladonCity_Gym_Text_ErikaBeforeBattle", "from JOHTO", "A traveler"),
+        ):
+            text = (MAPS / name / "scripts.inc").read_text()
+            original = wayfarer_view(text, wayfarer=False)
+            self.assertIn(kept, label_body(original, label), f"{name}: {label}")
+            self.assertNotIn(dropped, label_body(original, label), f"{name}: {label}")
+        # No notable_introduce, notable special or split intro text survives in the original arm of a shared map.
+        for name in ("Route32_hns", "Route25_hns", "VermilionCity_hns", "MeteorFalls_StevensCave", "GraniteCave_StevensRoom",
+                     "DewfordTown_Gym", "RustboroCity_Gym", "OlivineCity_Gym_hns", "BlackthornCity_Gym_hns"):
+            original = wayfarer_view((MAPS / name / "scripts.inc").read_text(), wayfarer=False)
+            self.assertNotIn("notable_introduce", original, name)
 
     def test_steven_at_granite_cave_does_not_reintroduce_a_known_steven(self):
         steven = "NOTABLE_TRAINER_STEVEN"

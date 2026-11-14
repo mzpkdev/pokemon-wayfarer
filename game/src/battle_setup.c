@@ -1956,10 +1956,12 @@ static void CountNotableTrainerWins(bool8 wasDebugBattle)
 
 // Every battle against a notable trainer introduces them, won or lost (notable-story-continuity.md#1-acquaintance):
 // Gym, story, rematch and league alike, and the trainer beside the player as a partner too (an acquaintance, not
-// friendship). Debug battles are left out, as they are for first wins.
+// friendship). Debug battles and the Battle Frontier's facilities are left out: their opponents are in the
+// Frontier's own id space, where an id can equal a notable trainer's (Roxanne, Sidney, Norman), as for first wins.
 static void MarkNotableTrainersIntroduced(bool8 wasDebugBattle)
 {
-    if (wasDebugBattle)
+    if (wasDebugBattle || (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL))
+     || CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || InTrainerHillChallenge() || InBattlePike())
         return;
     NotableFriendship_MarkTrainerEncountered(TRAINER_BATTLE_PARAM.opponentA);
     if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)

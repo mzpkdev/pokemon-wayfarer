@@ -352,11 +352,13 @@ MossdeepCity_SpaceCenter_1F_Text_MagmaWantsToSpoilMyDream:
 	.string "that dream of mine!\p"
 	.string "I'm not having any of that!$"
 
+#if IS_WAYFARER
 @ He knows the player's name but has not given his own: said once, to a player he has not met
 MossdeepCity_SpaceCenter_1F_Text_StevenIntro:
 	.string "STEVEN: Oh, hello. I'm STEVEN.\p"
 	.string "You must be {PLAYER}{KUN}. I've heard\n"
 	.string "your name around town.$"
+#endif
 
 MossdeepCity_SpaceCenter_1F_Text_StevenMagmaCantBeAllowedToTakeFuel:
 	.string "STEVEN: {PLAYER}{KUN}, have you read that\n"

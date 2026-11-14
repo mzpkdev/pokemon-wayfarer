@@ -453,6 +453,7 @@ Route104_EventScript_SailToDewford::
 	goto_if_unset FLAG_ENABLE_NORMAN_MATCH_CALL, Route104_EventScript_SailToDewfordDadCalls
 	end
 
+#if IS_WAYFARER
 Route104_EventScript_SailToDewfordNormanCalls::
 	pokenavcall Route104_Text_NormanPokenavCall
 	waitmessage
@@ -461,6 +462,7 @@ Route104_EventScript_SailToDewfordNormanCalls::
 	msgbox Route104_Text_RegisteredNormanInPokenav, MSGBOX_DEFAULT
 	goto Route104_EventScript_SailToDewfordCallRegistered
 
+#endif
 Route104_EventScript_SailToDewfordNoCall::
 	applymovement LOCALID_ROUTE104_BOAT, Route104_Movement_SailToDewford
 	applymovement LOCALID_PLAYER, Route104_Movement_SailToDewford
@@ -471,15 +473,19 @@ Route104_EventScript_SailToDewfordDadCalls::
 	applymovement LOCALID_ROUTE104_BOAT, Route104_Movement_SailToDewfordBeforeDadCalls
 	applymovement LOCALID_PLAYER, Route104_Movement_SailToDewfordBeforeDadCalls
 	waitmovement 0
+#if IS_WAYFARER
 	@ NORMAN is "DAD" only to a player who is his child; to a visitor he calls as himself
 	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
 	goto_if_eq VAR_RESULT, FALSE, Route104_EventScript_SailToDewfordNormanCalls
+#endif
 	pokenavcall Route104_Text_DadPokenavCall
 	waitmessage
 	delay 30
 	playfanfare MUS_REGISTER_MATCH_CALL
 	msgbox Route104_Text_RegisteredDadInPokenav, MSGBOX_DEFAULT
+#if IS_WAYFARER
 Route104_EventScript_SailToDewfordCallRegistered::
+#endif
 	waitfanfare
 	closemessage
 	delay 30

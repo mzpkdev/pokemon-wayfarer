@@ -257,6 +257,10 @@ OlivineLighthouse_EventScript_Jasmine::
 	faceplayer
 	goto_if_eq VAR_OLIVINE_CITY_STATE, 3, OlivineLighthouse_EventScript_JasmineGoGetPotion
 	goto_if_eq VAR_OLIVINE_CITY_STATE, 4, OlivineLighthouse_EventScript_JasmineDeliverPotion
+#if IS_WAYFARER
+	@ Her first conversation: she gives her name here, so the Gym's own introduction never repeats it
+	notable_introduce NOTABLE_TRAINER_JASMINE, OlivineLighthouse_Text_JasmineName
+#endif
 	msgbox OlivineLighthouse_Text_JasmineCianwoodPharmacy, MSGBOX_DEFAULT
 	msgbox OlivineLighthouse_Text_JasmineGetMedicine, MSGBOX_DEFAULT
 	closemessage
@@ -293,6 +297,13 @@ OlivineLighthouse_EventScript_AmpharosSick::
 	release
 	end
 
+#if IS_WAYFARER
+@ A player she has not met; one she knows gets her greeting instead
+OlivineLighthouse_Text_JasmineName:
+	.string "JASMINE: …I'm JASMINE. I look after\n"
+	.string "this LIGHTHOUSE.$"
+
+#endif
 OlivineLighthouse_Text_JasmineCianwoodPharmacy:
 	.string "JASMINE: …This POKéMON always kept\n"
 	.string "the sea lit at night.\p"
@@ -373,6 +384,9 @@ OlivineLighthouse_EventScript_JasmineDeliverPotion::
 
 @ The medicine came before Jasmine asked: she explains what is wrong before asking if it will help.
 OlivineLighthouse_EventScript_JasmineAmphyIll::
+#if IS_WAYFARER
+	notable_introduce NOTABLE_TRAINER_JASMINE, OlivineLighthouse_Text_JasmineName
+#endif
 	msgbox OlivineLighthouse_Text_JasmineAmphyIll, MSGBOX_DEFAULT
 	return
 

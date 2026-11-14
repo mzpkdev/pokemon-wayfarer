@@ -295,7 +295,6 @@ MossdeepCity_SpaceCenter_2F_EventScript_DefeatedMaxieTabitha::
 	fadescreen FADE_TO_BLACK
 	setflag FLAG_DEFEATED_MAGMA_SPACE_CENTER
 	notable_beat NOTABLE_STORY_BEAT_STEVEN_SPACE_CENTER
-	notable_beat NOTABLE_STORY_BEAT_TATE_LIZA_SPACE_CENTER
 	setflag FLAG_HIDE_MOSSDEEP_CITY_STEVENS_HOUSE_STEVEN
 	removeobject LOCALID_SPACE_CENTER_2F_STEVEN
 	setflag FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_MAGMA_NOTE
@@ -432,10 +431,12 @@ MossdeepCity_SpaceCenter_2F_Text_MaxieDontInterfere:
 	.string "MAXIE: Clear out of the way!\n"
 	.string "Don't you dare interfere!$"
 
+#if IS_WAYFARER
 @ Said once, to a player he has not met; one he knows gets his greeting instead
 MossdeepCity_SpaceCenter_2F_Text_StevenIntro:
 	.string "STEVEN: I'm STEVEN. You're {PLAYER}{KUN},\n"
 	.string "aren't you?$"
+#endif
 
 MossdeepCity_SpaceCenter_2F_Text_StevenWhyStealRocketFuel:
 	.string "STEVEN: TEAM MAGMA…\p"

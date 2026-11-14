@@ -63,18 +63,26 @@ RadioTower1F_EventScript_Youngster::
 RadioTower1F_EventScript_Whitney::
 	lock
 	faceplayer
+#if IS_WAYFARER
 	notable_introduce NOTABLE_TRAINER_WHITNEY, RadioTower1F_Text_WhitneyIntro
+#endif
 	msgbox RadioTower1F_Text_Whitney1, MSGBOX_DEFAULT
 	closemessage
 	turnobject LOCALID_GOLDENROD_RADIOTOWER_WHITNEY, DIR_SOUTH
 	release
 	end
 
+#if IS_WAYFARER
 RadioTower1F_Text_WhitneyIntro::
 	.string "WHITNEY: Hi!\p"
 	.string "My name is WHITNEY!$"
 
 RadioTower1F_Text_Whitney1::
+#else
+RadioTower1F_Text_Whitney1::
+	.string "WHITNEY: Hi!\p"
+	.string "My name is WHITNEY!\p"
+#endif
 	.string "I heard about the QUIZ to win a\n"
 	.string "RADIO CARD, so I came here to get\l"
 	.string "one...\p"

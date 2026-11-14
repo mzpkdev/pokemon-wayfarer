@@ -18,7 +18,6 @@ static const u8 sBeatCharacters[NOTABLE_STORY_BEAT_COUNT] =
     [NOTABLE_STORY_BEAT_LANCE_MAHOGANY_HIDEOUT - 1] = NOTABLE_TRAINER_LANCE,
     [NOTABLE_STORY_BEAT_STEVEN_GRANITE_LETTER - 1] = NOTABLE_TRAINER_STEVEN,
     [NOTABLE_STORY_BEAT_STEVEN_SPACE_CENTER - 1] = NOTABLE_TRAINER_STEVEN,
-    [NOTABLE_STORY_BEAT_TATE_LIZA_SPACE_CENTER - 1] = NOTABLE_TRAINER_TATE_LIZA,
     [NOTABLE_STORY_BEAT_WALLACE_SOOTOPOLIS - 1] = NOTABLE_TRAINER_WALLACE,
     [NOTABLE_STORY_BEAT_JASMINE_LIGHTHOUSE - 1] = NOTABLE_TRAINER_JASMINE,
     [NOTABLE_STORY_BEAT_CLAIR_DRAGONS_DEN - 1] = NOTABLE_TRAINER_CLAIR,
@@ -84,7 +83,8 @@ static const struct StoryPlacement sPlacements[] =
     // (FLAG_HIDE_SOOTOPOLIS_CITY_WALLACE clear). State 6 hides him and ends the crisis.
     { .characterId = NOTABLE_TRAINER_WALLACE, .var = HOENN_VAR_ID(VAR_SOOTOPOLIS_CITY_STATE), .varMin = 2, .varMax = 5 },
     // Steven at the Mossdeep Space Center 2F: his object shows from the invasion (flag cleared) until the battle
-    // (state 3). The 1F copy is left out: nothing hides it at New Game, so it would keep him away until the invasion.
+    // (state 3). The 1F copy is left out: it is Emerald's own pre-invasion placement, visible from New Game until
+    // the invasion hides it, so listing it would keep his walker away for most of the game.
     { .characterId = NOTABLE_TRAINER_STEVEN, .flag = HOENN_FLAG_ID(FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_2F_STEVEN),
       .var = HOENN_VAR_ID(VAR_MOSSDEEP_SPACE_CENTER_STATE), .varMin = 1, .varMax = 2 },
     // Giovanni leaves Viridian for good: once he has departed, his walker never spawns.
