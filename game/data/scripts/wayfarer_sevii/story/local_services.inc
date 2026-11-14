@@ -836,3 +836,15 @@ WayfarerSevii_Story_Passive_SixIsland_0::
 WayfarerSevii_Story_Passive_SixIsland_1::
 	msgbox SixIsland_Text_ThatWayToWaterPathRuinValley, MSGBOX_NPC
 	end
+
+@ The child asks every visitor where they came from. The FRLG line named PALLET
+@ TOWN for everyone, so this one stays true for any origin.
+WayfarerSevii_Story_PassiveInventory_OneIslandPokemonCenter1F_3::
+	msgbox WayfarerSevii_Story_Text_OneIslandChildStranger, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_Text_OneIslandChildStranger::
+	.string "Oh, you're a stranger here!\n"
+	.string "Hi! Where did you come from?\p"
+	.string "…Is that far? I've never been off\n"
+	.string "the islands, so I can't picture it!$"

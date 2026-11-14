@@ -70,10 +70,6 @@ WayfarerSevii_Story_PassiveInventory_SevenIslandPokemonCenter1F_3::
 	msgbox SevenIsland_PokemonCenter_1F_Text_CheckOutTrainerTower, MSGBOX_NPC
 	end
 
-WayfarerSevii_Story_PassiveInventory_OneIslandPokemonCenter1F_3::
-	msgbox OneIsland_PokemonCenter_1F_Text_CameFromPalletDontKnowIt, MSGBOX_NPC
-	end
-
 WayfarerSevii_Story_PassiveInventory_OneIslandPokemonCenter1F_4::
 	msgbox OneIsland_PokemonCenter_1F_Text_EnormousVolcanoOnIsland, MSGBOX_NPC
 	end

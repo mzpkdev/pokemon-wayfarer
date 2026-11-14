@@ -19665,6 +19665,7 @@
         "WayfarerSevii_Story_BodySlamTutor",
         "WayfarerSevii_Story_BodySlamTutorDeclined",
         "WayfarerSevii_Story_BodySlamTutorTaught",
+        "WayfarerSevii_Story_CanOnlyBeLearnedOnce",
         "WayfarerSevii_Story_CapeBrinkAllAlreadyTaught",
         "WayfarerSevii_Story_CapeBrinkAllTaught",
         "WayfarerSevii_Story_CapeBrinkCheckLead",
@@ -19680,7 +19681,6 @@
         "WayfarerSevii_Story_ChanseyDanceAlreadyDone",
         "WayfarerSevii_Story_ChanseyDanceDeclined",
         "WayfarerSevii_Story_ChanseyDanceMan",
-        "WayfarerSevii_Story_CanOnlyBeLearnedOnce",
         "WayfarerSevii_Story_ChooseMoveTutorMon",
         "WayfarerSevii_Story_DunsparceProspector",
         "WayfarerSevii_Story_DunsparceProspectorComplete",
@@ -19723,6 +19723,7 @@
         "WayfarerSevii_Story_MoveManiacPayTiny",
         "WayfarerSevii_Story_Movement_ChanseyDance",
         "WayfarerSevii_Story_OutcastRocket",
+        "WayfarerSevii_Story_PassiveInventory_OneIslandPokemonCenter1F_3",
         "WayfarerSevii_Story_Passive_FiveIsland_0",
         "WayfarerSevii_Story_Passive_FiveIsland_1",
         "WayfarerSevii_Story_Passive_FourIslandLoreleiComplete",
@@ -19772,6 +19773,7 @@
         "WayfarerSevii_Story_Text_LocalRocketAbandoned",
         "WayfarerSevii_Story_Text_LocalRocketInactive",
         "WayfarerSevii_Story_Text_MoveCanOnlyBeLearnedOnce",
+        "WayfarerSevii_Story_Text_OneIslandChildStranger",
         "WayfarerSevii_Story_Text_TectonixMemorial",
         "WayfarerSevii_Story_Text_TectonixNeedsLemonade",
         "WayfarerSevii_Story_TwoIslandShopItems",
@@ -20890,7 +20892,6 @@
         "WayfarerSevii_Story_PassiveInventory_OneIslandHouse1_1",
         "WayfarerSevii_Story_PassiveInventory_OneIslandHouse2_0",
         "WayfarerSevii_Story_PassiveInventory_OneIslandKindleRoadEmberSpa_2",
-        "WayfarerSevii_Story_PassiveInventory_OneIslandPokemonCenter1F_3",
         "WayfarerSevii_Story_PassiveInventory_OneIslandPokemonCenter1F_4",
         "WayfarerSevii_Story_PassiveInventory_OneIslandPokemonCenter1F_5",
         "WayfarerSevii_Story_PassiveInventory_OneIslandTreasureBeach_1",
@@ -21014,12 +21015,6 @@
           "kind": "script_symbol",
           "path": "data/maps/OneIsland_KindleRoad_EmberSpa_Frlg/scripts.inc",
           "sha256": "e28dba61ff465a387ddc7199013595bf2647aa60d2534da848dc48f890d3d089"
-        },
-        {
-          "label": "OneIsland_PokemonCenter_1F_Text_CameFromPalletDontKnowIt",
-          "kind": "script_symbol",
-          "path": "data/maps/OneIsland_PokemonCenter_1F_Frlg/scripts.inc",
-          "sha256": "df271771c0aa437ead897d4a206a5fc0994396e91cbdd2708b15dacee315419b"
         },
         {
           "label": "OneIsland_PokemonCenter_1F_Text_EnormousVolcanoOnIsland",
