@@ -100,14 +100,19 @@ NewBarkTown_Lab_EventScript_ElmCampaignNoTicket::
 	specialvar VAR_RESULT, WayfarerJohtoKimonoTrialAvailable
 	goto_if_eq VAR_RESULT, TRUE, NewBarkTown_Lab_EventScript_ElmKimono
 	goto_if_lt VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, KIMONO_CEREMONY_RESOLVED, NewBarkTown_Lab_EventScript_ElmCampaignErrand
+	@ The League circuit replaces Elm's post-League call and S.S. ticket: once the player has entered the
+	@ Indigo League, he stops sending them there.
+	goto_if_set FLAG_WAYFARER_JOHTO_INDIGO_ENTERED, NewBarkTown_Lab_EventScript_ElmCampaignErrand
 	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_RECEIVED, NewBarkTown_Lab_EventScript_ElmLeague
 NewBarkTown_Lab_EventScript_ElmCampaignErrand:
 
-	goto_if_unset FLAG_RECEIVED_TOGEPI_EGG, NewBarkTown_Lab_EventScript_Elm_AfterEggCheck
+	goto_if_unset FLAG_RECEIVED_TOGEPI_EGG, NewBarkTown_Lab_EventScript_Elm_ErrandProgress
 	goto_if_set FLAG_SHOWN_ELM_TOGEPI, NewBarkTown_Lab_EventScript_Elm_CallMe
 	call_if_unset FLAG_SHOWN_ELM_TOGEPI, NewBarkTown_Lab_EventScript_Elm_Check_Togepi
-NewBarkTown_Lab_EventScript_Elm_AfterEggCheck:
+	@ "Has that EGG changed any?" asks about the Togepi Egg Elm's aide handed over: only a player who
+	@ holds it hears it, and the errand directions below are never replaced while they are still owed.
 	goto_if_ge VAR_GOLDENROD_CITY_STATE, 1, NewBarkTown_Lab_EventScript_Elm_Check_WhereIsEgg
+NewBarkTown_Lab_EventScript_Elm_ErrandProgress:
 	goto_if_ge VAR_NEWBARKTOWN_LABSTATE, 5, NewBarkTown_Lab_EventScript_ElmState5
 	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 2, CopNewBarkTown_Lab_EventScript_ElmState2
 	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 3, CopNewBarkTown_Lab_EventScript_ElmState2
@@ -487,6 +492,7 @@ NewBarkTown_Lab_EventScript_ElmMasterBall::
 
 NewBarkTown_Lab_EventScript_GiveMasterBall::
 	msgbox NewBarkTown_Lab_Text_ElmGiveMasterBall1, MSGBOX_DEFAULT
+NewBarkTown_Lab_EventScript_GiveMasterBallItem::
 	giveitem ITEM_MASTER_BALL
 	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_EventScript_ElmMasterBallBagFull
 	setflag FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_RECEIVED
@@ -955,6 +961,12 @@ NewBarkTown_Lab_Text_ElmGiveMasterBall1:
 	.string "Take this as a token of my\n"
 	.string "appreciation.$"
 
+NewBarkTown_Lab_Text_VisitorElmGiveMasterBall1:
+	.string "ELM: Word is that you made it\n"
+	.string "through the DRAGON'S DEN, {PLAYER}.\p"
+	.string "Take this as a token of my\n"
+	.string "welcome to JOHTO.$"
+
 NewBarkTown_Lab_Text_ElmGiveMasterBall2:
 	.string "The MASTER BALL is the best!\p"
 	.string "It's the ultimate BALL! It'll\n"
@@ -1096,7 +1108,9 @@ NewBarkTown_Lab_EventScript_VisitorElm::
 	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_OWED, NewBarkTown_Lab_EventScript_VisitorElmNoBall
 	goto_if_set FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_RECEIVED, NewBarkTown_Lab_EventScript_VisitorElmNoBall
 	msgbox NewBarkTown_Lab_Text_VisitorElmIntroduces, MSGBOX_DEFAULT
-	call NewBarkTown_Lab_EventScript_GiveMasterBall
+	@ A visitor did nothing for Elm's research: the gift is not a thank-you for it.
+	msgbox NewBarkTown_Lab_Text_VisitorElmGiveMasterBall1, MSGBOX_DEFAULT
+	call NewBarkTown_Lab_EventScript_GiveMasterBallItem
 	goto NewBarkTown_Lab_EventScript_VisitorElmEnd
 NewBarkTown_Lab_EventScript_VisitorElmNoBall::
 	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_OWED, NewBarkTown_Lab_EventScript_VisitorElmNoTicket

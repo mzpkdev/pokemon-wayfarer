@@ -11,8 +11,19 @@ VioletCity_OnFrame::
 
 VioletCity_OnTransition::
 	call_if_unset FLAG_WAYFARER_JOHTO_SETUP_VIOLET, VioletCity_EventScript_Setup
+	call VioletCity_EventScript_ArmElmCall
 	callnative SetTimeBasedEncounters
 	end
+
+@ Elm's call is about the EGG he took from the player, so it is armed (Violet state 3, which the frame
+@ script below always moves on) only once Falkner has fallen and the Mystery Egg is with Elm (lab state 5).
+@ Whichever comes last, the next Violet load arms it; the frame script never waits.
+VioletCity_EventScript_ArmElmCall::
+	goto_if_ge VAR_VIOLET_CITY_STATE, 3, Common_EventScript_NopReturn
+	goto_if_unset FLAG_DEFEATED_VIOLET_GYM, Common_EventScript_NopReturn
+	goto_if_lt VAR_NEWBARKTOWN_LABSTATE, 5, Common_EventScript_NopReturn
+	setvar_forward VAR_VIOLET_CITY_STATE, 3
+	return
 
 @ First-visit setup, run once from the map load however the player arrives.
 @ New-game defaults (the Togepi Egg, Sprout Tower, Ruins of Alph, trades) are

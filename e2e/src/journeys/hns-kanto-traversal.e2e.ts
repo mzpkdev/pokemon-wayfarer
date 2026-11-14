@@ -172,8 +172,9 @@ const arrangeMtMoonSilver = async (
         kantoRocketStoryState: 4,
         fanClubClefairy: 2,
         ssAquaState: 8,
-        // Silver is shown only once his Victory Road battle has started.
+        // Silver is shown only once his Victory Road battle has started and the lab theft happened.
         silverChapter: 10,
+        newBarkTownLabState: 5,
       },
       flags: {
         hideMtMoonSilver: false,
@@ -276,7 +277,13 @@ describe.sequential("HNS Kanto traversal", () => {
         checkpoint: "new-bark-after-intro",
         player: { facing: "right", position: { map: "mt-moon-cave", x: 8, y: 12 } },
         story: {
-          vars: { pewterCityState: 0, kantoRocketStoryState: 4, ssAquaState: 8, silverChapter: 10 },
+          vars: {
+            pewterCityState: 0,
+            kantoRocketStoryState: 4,
+            ssAquaState: 8,
+            silverChapter: 10,
+            newBarkTownLabState: 5,
+          },
           flags: { hideMtMoonSilver: false, returnedMachinePart: false },
         },
       })
@@ -316,6 +323,26 @@ describe.sequential("HNS Kanto traversal", () => {
         battle: { active: false },
         player: { x: 9, y: 12 },
       })
+    })
+
+    it("hides Silver before the lab theft even after his Victory Road battle started", async () => {
+      await game.arrange({
+        checkpoint: "new-bark-after-intro",
+        player: { facing: "right", position: { map: "mt-moon-cave", x: 8, y: 12 } },
+        story: {
+          vars: {
+            pewterCityState: 0,
+            kantoRocketStoryState: 4,
+            ssAquaState: 8,
+            silverChapter: 10,
+            newBarkTownLabState: 4,
+          },
+          flags: { hideMtMoonSilver: false, returnedMachinePart: false },
+        },
+      })
+
+      await game.wait.forReady()
+      await expect(game.story.flag("hideMtMoonSilver")).resolves.toBe(true)
     })
 
     it("keeps Silver available and local state unchanged after declining", async () => {

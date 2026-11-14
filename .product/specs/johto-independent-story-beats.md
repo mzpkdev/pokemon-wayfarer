@@ -104,7 +104,18 @@ and the visitor starter choice, gift, and storage retry, plus their
 - Elm's calls are Johto-origin only: the Togepi call after Falkner
   (`VioletCity_hns:9,178-188`), the Goldenrod call, the Blackthorn call, and
   the post-League call. The Violet Pokémon Center aide never appears for
-  visitors, so they get no Togepi Egg.
+  visitors, so they get no Togepi Egg. Under the League circuit the post-League
+  call (`VAR_NEWBARK_TOWN_STATE` 6) and the S.S. ticket handoff no longer fire:
+  the circuit's Indigo clear runs in C and never writes that state. The S.S.
+  ferry design and the professors' National upgrade replace them, so Port Oak
+  and the ticket are not owed. Elm stops sending the player to the League once
+  they have entered the Indigo League (`FLAG_WAYFARER_JOHTO_INDIGO_ENTERED`).
+- The egg chain keeps its order. Elm's Violet call and the aide's Togepi Egg wait
+  until the Mystery Egg has been handed to Elm (lab state ≥ 5). Elm's "has that
+  EGG changed any?" line, the Goldenrod "Has that EGG hatched yet?" call (queued
+  by the first Goldenrod load) and the Violet Kimono Girl's egg-route line
+  need the Togepi Egg actually received (`FLAG_RECEIVED_TOGEPI_EGG`). Elm's
+  Mr. Pokémon directions are never replaced while the errand is owed.
 - Silver never appears. Every Silver object and trigger stays hidden or inert,
   and no host adventure waits on him (see [Silver](#silver)). That includes
   the New Bark Silver, which the Hoenn-origin setup reveals today
@@ -128,7 +139,11 @@ specification defines them, including the Togepi Egg.
 
 ### Silver
 
-Silver's scenes exist only for Johto-origin players. Save:
+Silver's scenes exist only for Johto-origin players. From Sprout Tower
+(chapter 3) on, they also need the lab theft to have happened (lab state ≥ 5,
+Mr. Pokémon's errand done): Silver is the thief, so none of those chapters play
+before the player has returned the Mystery Egg. Chapters 1 and 2 do not need it.
+Save:
 
 - the highest battle chapter the player has started;
 - a win flag per battle chapter, set for any of the three starter variants;
@@ -142,7 +157,7 @@ trigger with no battle, or a declined offer does not start it.
 | --- | --- | --- | --- |
 | 1 | New Bark static Silver | No | No battle started |
 | 2 | Cherrygrove (56,10-11) | Yes | Started chapter ≤ 2 and not won |
-| 3 | Sprout Tower 3F | No | Started chapter < 4 |
+| 3 | Sprout Tower 3F | No | Lab theft happened and started chapter < 4 |
 | 4 | Azalea (11,16) | Yes | Started chapter ≤ 4 and not won |
 | 5 | Burned Tower 1F | Yes | Started chapter ≤ 5 and not won |
 | 6 | Olivine (15,28-30) | No | Started chapter < 8 |
@@ -153,6 +168,7 @@ trigger with no battle, or a declined offer does not start it.
 | 11 | Mt. Moon | Yes | Started chapter = 10 or 11, and not won |
 | 12 | Indigo Center | Yes, daily | Mt. Moon battle won, as today |
 
+From chapter 3 on, every row also requires the lab theft (lab state ≥ 5).
 In this table "not won" refers to that chapter's own battle. Each scene also
 keeps its local condition, for example being inside the hideout or the
 occupation. Azalea's battle still follows Bugsy's win, as today; that is
@@ -396,13 +412,13 @@ resolved one. The ceremony variable runs 1 (trial started), 2 (ceremony done),
 
 | Speaker | Callback | Condition |
 | --- | --- | --- |
-| Zuki | Met in Violet; the Mystery Egg passed from Mr. Pokémon to Elm to the player | Johto-origin and the egg was delivered; otherwise a first-meeting greeting |
+| Zuki | Met in Violet; the Mystery Egg passed from Mr. Pokémon to Elm to the player | Johto-origin and the Violet Kimono Girl scene played (`VAR_VIOLET_CITY_KIMONO_GIRL` = 2), which needs the egg handed to Elm and the Togepi Egg received; otherwise a first-meeting greeting |
 | Naoko | Ilex Forest | The Ilex Farfetch'd scene played |
 | Naoko | Slowpoke Well | The Well resolved |
 | Miki | Chased off the theater's Rocket | The Theater Rocket beaten |
 | Sayo | Pushed her off the Ice Path ice | The Ice Path push happened |
 | Sayo | Passed the Elder's test in the Dragon's Den | The Den trial completed |
-| Kuni | The Goldenrod Tunnel and thwarting the Radio Tower | Both are always true here, because the trial requires the Radio Tower |
+| Kuni | The Goldenrod Tunnel and thwarting the Radio Tower | Both are true here: the trial requires the Radio Tower, and the Underground's only east-west corridor (rows 11-12) is covered by the Kimono Girl triggers at (8,11) and (8,12), so no walk can skip the Kimono step (state 7 → 8) |
 
 A line with no true callback falls back to the speaker's challenge without the
 memory.

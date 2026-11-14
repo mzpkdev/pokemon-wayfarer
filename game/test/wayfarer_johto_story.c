@@ -70,6 +70,7 @@ TEST("Silver chapters retire earlier scenes once a later battle has started")
     u32 i, scene;
 
     StartAs(ORIGIN_NEW_BARK);
+    VarSet(VAR_NEWBARKTOWN_LABSTATE, 5); // the lab theft happened
     for (i = 0; i < ARRAY_COUNT(rows); i++)
     {
         VarSet(VAR_WAYFARER_JOHTO_SILVER_CHAPTER, rows[i].started);
@@ -83,6 +84,7 @@ TEST("Silver battle chapters are retired by their own win, and played scenes do 
     u32 chapter;
 
     StartAs(ORIGIN_NEW_BARK);
+    VarSet(VAR_NEWBARKTOWN_LABSTATE, 5); // the lab theft happened
     VarSet(VAR_WAYFARER_JOHTO_SILVER_CHAPTER, SILVER_CHAPTER_VICTORY_ROAD);
     for (chapter = SILVER_CHAPTER_CHERRYGROVE; chapter <= SILVER_CHAPTER_MT_MOON; chapter++)
     {
@@ -106,6 +108,7 @@ TEST("Silver battle chapters are retired by their own win, and played scenes do 
 TEST("Silver's Ecruteak scene needs the resolved Radio Tower, Mt. Moon follows Victory Road, Indigo follows Mt. Moon")
 {
     StartAs(ORIGIN_NEW_BARK);
+    VarSet(VAR_NEWBARKTOWN_LABSTATE, 5); // the lab theft happened
     EXPECT(!Playable(SILVER_CHAPTER_ECRUTEAK));
     FlagSet(FLAG_WAYFARER_JOHTO_RADIO_TOWER_RESOLVED);
     EXPECT(Playable(SILVER_CHAPTER_ECRUTEAK));
@@ -122,6 +125,29 @@ TEST("Silver's Ecruteak scene needs the resolved Radio Tower, Mt. Moon follows V
     EXPECT(!Playable(SILVER_CHAPTER_INDIGO));
     FlagSet(FLAG_WAYFARER_JOHTO_SILVER_WON_11);
     EXPECT(!Playable(SILVER_CHAPTER_MT_MOON));
+    EXPECT(Playable(SILVER_CHAPTER_INDIGO));
+}
+
+TEST("Silver's chapters from Sprout Tower on need the lab theft; chapters 1 and 2 do not")
+{
+    u32 chapter;
+    u16 lab;
+
+    StartAs(ORIGIN_NEW_BARK);
+    FlagSet(FLAG_WAYFARER_JOHTO_RADIO_TOWER_RESOLVED);
+    FlagSet(FLAG_WAYFARER_JOHTO_SILVER_WON_11);
+    VarSet(VAR_WAYFARER_JOHTO_SILVER_CHAPTER, 0);
+    for (lab = 0; lab < 5; lab++)
+    {
+        VarSet(VAR_NEWBARKTOWN_LABSTATE, lab);
+        EXPECT(Playable(SILVER_CHAPTER_NEW_BARK));
+        EXPECT(Playable(SILVER_CHAPTER_CHERRYGROVE));
+        for (chapter = SILVER_CHAPTER_SPROUT_TOWER; chapter <= SILVER_CHAPTER_INDIGO; chapter++)
+            EXPECT(!Playable(chapter));
+    }
+    VarSet(VAR_NEWBARKTOWN_LABSTATE, 5);
+    EXPECT(Playable(SILVER_CHAPTER_SPROUT_TOWER));
+    EXPECT(Playable(SILVER_CHAPTER_ECRUTEAK));
     EXPECT(Playable(SILVER_CHAPTER_INDIGO));
 }
 

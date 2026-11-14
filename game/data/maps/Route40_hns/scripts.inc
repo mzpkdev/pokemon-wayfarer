@@ -119,8 +119,8 @@ Route40_Text_StandingYoungster:
 	.string "HILL?\p"
 	.string "I think a lot of tough trainers\n"
 	.string "have gathered there already.\p"
-	.string "But since you have so many BADGES\n"
-	.string "you shouldn't do badly at all.$"
+	.string "But you look like you can hold\n"
+	.string "your own. You shouldn't do badly.$"
 
 Route40_Text_Monica:
 	.string "MONICA: Glad to meet you.\n"

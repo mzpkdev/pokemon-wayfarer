@@ -19,6 +19,9 @@ GoldenrodCity_RadioTower_5F_EventScript_Petrel::
 	goto_if_ge VAR_GOLDENROD_CITY_STATE, 10, GoldenrodCity_RadioTower_5F_EventScript_Director
 	goto_if_eq VAR_FACING, DIR_SOUTH, GoldenrodCity_RadioTower_5F_EventScript_PetrelNorth
 	faceplayer
+	@ The BASEMENT KEY is a one-time handoff that ends this scene: it only starts with room for it.
+	checkitemspace ITEM_BASEMENT_KEY
+	goto_if_eq VAR_RESULT, FALSE, GoldenrodCity_RadioTower_5F_EventScript_PetrelBagFull
 	msgbox GoldenrodCity_RadioTower_5F_Text_FakeDirector1, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_DIRECTOR_OFFICE, GoldenrodCity_RadioTower_5F_Movement_Spin
@@ -38,6 +41,17 @@ GoldenrodCity_RadioTower_5F_EventScript_Petrel::
 	closemessage
 	release
 	end
+
+GoldenrodCity_RadioTower_5F_EventScript_PetrelBagFull::
+	msgbox GoldenrodCity_RadioTower_5F_Text_DirectorBagFull, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+GoldenrodCity_RadioTower_5F_Text_DirectorBagFull:
+	.string "DIRECTOR: I would like to give you\n"
+	.string "something, but your BAG is full.\p"
+	.string "Please make some room first.$"
 
 GoldenrodCity_RadioTower_5F_EventScript_PetrelNorth::
 	end

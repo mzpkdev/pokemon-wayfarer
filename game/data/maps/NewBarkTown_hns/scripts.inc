@@ -166,6 +166,13 @@ NewBarkTown_EventScript_LeaveTriggersState4::
 NewBarkTown_EventScript_FatMan::
 	lock
 	faceplayer
+#if IS_WAYFARER
+	@ "Yo, {PLAYER}!" is a neighbour's greeting: a visitor (any origin but New Bark) gets the stranger's line at every state.
+	setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_HOUSEHOLD
+	specialvar VAR_RESULT, WayfarerDispatchOriginScene
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, NewBarkTown_EventScript_AuthoredEnd
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_VISITOR, NewBarkTown_EventScript_VisitorFatMan
+#endif
 	goto_if_eq VAR_NEWBARK_TOWN_STATE, 2, NewBarkTown_EventScript_FatManState2
 	msgbox NewBarkTown_Text_FatManState3, MSGBOX_DEFAULT
 	closemessage

@@ -265,7 +265,7 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_ZACH_HNS | Route44_hns | say | If a POKéMON has different colors from usual, it's more valuable. What? You mean that's not true? |  |
 | TRAINER_ALLEN_HNS | Route44_hns | intro | I can tell you're a good trainer by looking at you. I'm good at POKéMON, and I can see that you are too. |  |
 | TRAINER_ALLEN_HNS | Route44_hns | defeat | Tch! It's a total loss on my part. |  |
-| TRAINER_ALLEN_HNS | Route44_hns | say | Wow. You have a lot of BADGES. No wonder you're so tough. I wonder if MORTY is still in training? He really hammered me. |  |
+| TRAINER_ALLEN_HNS | Route44_hns | say | Wow. You're really tough. I wonder if MORTY is still in training? He really hammered me. |  |
 | TRAINER_CYBIL_HNS | Route44_hns | intro | You look strong. Good trainers seek tough opponents instinctively. |  |
 | TRAINER_CYBIL_HNS | Route44_hns | defeat | Nope! This won't do at all. |  |
 | TRAINER_CYBIL_HNS | Route44_hns | say | We all get better by experiencing many battles. I battled a lot to become what I am today--an elite. |  |

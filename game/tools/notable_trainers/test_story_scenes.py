@@ -154,7 +154,8 @@ class PresenceTests(unittest.TestCase):
         check = label_body(tower, "RadioTower1F_EventScript_CheckWhitneyAtTower")
         self.assertIn("NotableStory_IsWhitneyAtTower", check)
         notable = (GAME / "src/notable_story.c").read_text()
-        self.assertIn("!FlagGet(FLAG_ENABLE_RADIO) && GetTimeOfDay() == TIME_MORNING", notable)
+        self.assertIn("!FlagGet(FLAG_ENABLE_RADIO) && GetTimeOfDay() == TIME_MORNING && (goldenrod < 6 || goldenrod > 10)", notable)
+        self.assertIn(".characterId = NOTABLE_TRAINER_LANCE, .var = VAR_MAHOGANY_TOWN_STATE, .varMin = 2, .varMax = 13", notable)
         self.assertIn(".characterId = NOTABLE_TRAINER_WHITNEY, .predicate", notable)
         # The Tower copy and the Gym copy hide on the same temp flag, opposite conditions.
         self.assertIn("call_if_eq VAR_RESULT, FALSE, RadioTower1F_EventScript_HideWhitney", tower)

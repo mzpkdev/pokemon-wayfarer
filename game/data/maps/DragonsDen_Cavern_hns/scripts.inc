@@ -26,6 +26,8 @@ DragonsDen_Text_Clair:
 	.string "DOJO in SAFFRON.$"
 
 DragonsDen_Cavern_Trigger_ClairLeft::
+	checkitemspace ITEM_TM_DRAGON_PULSE
+	goto_if_eq VAR_RESULT, FALSE, DragonsDen_Cavern_EventScript_ClairBagFull
 	lock
 	setflag FLAG_TEMP_HIDE_FOLLOWER 
 	playse SE_PIN
@@ -48,6 +50,8 @@ DragonsDen_Cavern_Trigger_ClairLeft::
 	end
 
 DragonsDen_Cavern_Trigger_ClairMid::
+	checkitemspace ITEM_TM_DRAGON_PULSE
+	goto_if_eq VAR_RESULT, FALSE, DragonsDen_Cavern_EventScript_ClairBagFull
 	lock 
 	playse SE_PIN
 	playbgm MUS_HG_CLAIR, FALSE
@@ -67,6 +71,8 @@ DragonsDen_Cavern_Trigger_ClairMid::
 	end
 
 DragonsDen_Cavern_Trigger_ClairRight::
+	checkitemspace ITEM_TM_DRAGON_PULSE
+	goto_if_eq VAR_RESULT, FALSE, DragonsDen_Cavern_EventScript_ClairBagFull
 	lock 
 	playse SE_PIN
 	playbgm MUS_HG_CLAIR, FALSE
@@ -84,6 +90,35 @@ DragonsDen_Cavern_Trigger_ClairRight::
 	playse SE_EXIT
 	fadedefaultbgm
 	call DragonsDen_Cavern_EventScript_TrialDone
+	release
+	end
+
+@ CLAIR's TM is a one-time handoff: the scene only starts with room for it. Otherwise she stays and
+@ asks the player to make room, then to talk to her (the trigger tiles retry the scene too).
+DragonsDen_Cavern_EventScript_ClairBagFull::
+	lock
+	msgbox DragonsDen_Cavern_Text_Clair_BagFull, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+DragonsDen_Cavern_EventScript_ClairTalk::
+	lock
+	faceplayer
+	goto_if_ne VAR_BLACKTHORN_CITY_STATE, 3, DragonsDen_Cavern_EventScript_ClairTalkDone
+	checkitemspace ITEM_TM_DRAGON_PULSE
+	goto_if_eq VAR_RESULT, FALSE, DragonsDen_Cavern_EventScript_ClairBagFull
+	call DragonsDen_Cavern_EventScript_Clair
+	setflag FLAG_HIDE_DRAGONS_DEN_CAVERN_CLAIR
+	removeobject LOCALID_DRAGONSDEN2_CLAIR
+	playse SE_EXIT
+	fadedefaultbgm
+	call DragonsDen_Cavern_EventScript_TrialDone
+	setrespawn HEAL_LOCATION_BLACKTHORN_CITY_HNS
+	release
+	end
+
+DragonsDen_Cavern_EventScript_ClairTalkDone::
 	release
 	end
 
@@ -147,6 +182,12 @@ DragonsDen_Cavern_Movement_ClairLeaveRight:
 	walk_up
 	walk_up
 	step_end
+
+DragonsDen_Cavern_Text_Clair_BagFull:
+    .string "CLAIR: WAIT!\p"
+    .string "I have something for you, but\n"
+    .string "your BAG is full.\p"
+    .string "Make some room and talk to me.$"
 
 DragonsDen_Cavern_Text_Clair_GiveTM:
     .string "CLAIR: WAIT!\p"

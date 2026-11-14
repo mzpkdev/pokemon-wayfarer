@@ -106,12 +106,17 @@ MrPokemonHouse_EventScript_MrPokemon_RedScale::
 	end	
 
 MrPokemonHouse_EventScript_MrPokemon_RedScale_Accepted::
+	@ Swap, never lose the scale: if the gift does not fit once the scale is out, it goes back in.
 	removeitem ITEM_RED_SCALE
 	giveitem ITEM_EXP_SHARE_SMALL
-	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
+	goto_if_eq VAR_RESULT, FALSE, MrPokemonHouse_EventScript_MrPokemon_RedScale_NoRoom
 	release
 	end
 
+
+MrPokemonHouse_EventScript_MrPokemon_RedScale_NoRoom::
+	giveitem ITEM_RED_SCALE
+	goto Common_EventScript_ShowBagIsFull
 
 MrPokemonHouse_EventScript_Computer::
 	lock

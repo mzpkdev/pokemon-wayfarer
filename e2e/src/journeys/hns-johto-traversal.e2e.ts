@@ -351,7 +351,7 @@ describe.sequential("HNS Johto traversal bypasses", () => {
       checkpoint: "new-bark-after-intro",
       player: { facing: "right", position: { map: "azalea-town", x: 10, y: 16 } },
       story: {
-        vars: { azaleaTownState: 5, starterMon: 0 },
+        vars: { azaleaTownState: 5, starterMon: 0, newBarkTownLabState: 5 },
         flags: { hideAzaleaSilver: true, defeatedAzaleaGym: true },
       },
       party: [{ species: "rattata", level: 1, moves: ["tackle"] }],
