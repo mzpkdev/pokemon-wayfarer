@@ -178,5 +178,19 @@ class WarehouseSightTrainerTests(unittest.TestCase):
             self.assertIn(f"call WayfarerSevii_Warehouse_Reveal{nxt}", body)
 
 
+class ArrivalWarpTests(unittest.TestCase):
+    def test_no_story_actor_stands_on_a_warp_tile(self):
+        manifest = load(MANIFEST)
+        for record in manifest["maps"]:
+            map_json = load(GAME / "data/maps" / record["source_map"] / "map.json")
+            warps = {(row["x"], row["y"]) for row in map_json["warp_events"]}
+            for row in record["retained_events"].get("object_events", []):
+                if row["owner"] != "story":
+                    continue
+                source = row["source"]
+                self.assertNotIn((source["x"], source["y"]), warps,
+                                 f"{row['content_id']} stands on a warp tile in {record['source_map']}")
+
+
 if __name__ == "__main__":
     unittest.main()
