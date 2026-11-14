@@ -1037,9 +1037,10 @@ their haunt.
 - **Home named spots:** author one home place for each non-leader (such
   as Steven's house and Lorelei's house), or keep the town-square
   fallback.
-- **Story scenes:** which story objects suppress an actor (Blue, Giovanni,
-  league hosts), and whether the record should move on instead of
-  waiting.
+- **Story scenes:** temporary story placements that keep a walker away on
+  every map are listed in [notable story continuity](notable-story-continuity.md#4-one-place-at-a-time).
+  Still open: whether other story objects (Blue, league hosts) should join
+  that table.
 - **Story-gated walls:** whether the walker graph reads flagged blockers
   at New Game only (placeholder) or rebuilds edges as story flags change.
 

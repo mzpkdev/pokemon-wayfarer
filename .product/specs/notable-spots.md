@@ -669,8 +669,9 @@ Talking to a trainer at a spot runs three steps, with no menu:
    [talk flow](notable-haunts.md#talk-flow) picks it (`MEET` or `HEARD`,
    `AGAIN`, `HELLO`, `CLOSE`). Talking adds no
    [friendship](notable-trainers.md#friendship): a trainer the player has
-   only talked to stays a Stranger and keeps greeting with `MEET` or
-   `HEARD`. Friendship lives on the trainer, so a win or a quest anywhere
+   only talked to stays a Stranger. After the first greeting they are
+   [introduced](notable-story-continuity.md#1-acquaintance), so a Stranger
+   greets with `MEET` or `HEARD` once and `AGAIN` after that. Friendship lives on the trainer, so a win or a quest anywhere
    changes the greeting everywhere.
 2. **Follow-up or activity line.** The follow-ups play at spots as at
    haunts, in the same order, at most one per talk:

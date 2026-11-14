@@ -1,7 +1,7 @@
 # Notable trainer story continuity
 
 PRD: [Notable trainers](../prds/notable-trainers.md)
-Implemented: No
+Implemented: Yes ([PR #233](https://github.com/mzpkdev/pokemon-wayfarer/pull/233))
 
 ## Scope
 
@@ -61,7 +61,7 @@ cleared. Four things set it:
 
 | Event | When |
 | --- | --- |
-| A battle with the trainer | At the end of any battle against them, won or lost: Gym, story, rematch, league or Masters. |
+| A battle with the trainer | At the end of any battle against them, won or lost: Gym, story, rematch, league or Masters, and a battle beside them as a partner. Battle Pyramid and Trainer Hill opponents are excluded, as for first wins, because their trainer ids overlap the notables'. Debug battles are excluded. |
 | A notable greeting | Whenever `NotableTalk_EventScript_Greeting` plays a line: walker talk, haunt talk, or a Gym greeting. |
 | A story introduction | A scene runs the [introduction](#2-introductions) for this trainer. |
 | A story beat | A [story beat](#5-story-beats) with them completes. |
@@ -98,8 +98,12 @@ Two specials do the work: `NotableStory_IsIntroduced` and
 `NotableStory_MarkIntroduced`. Both take the character id in `VAR_0x8004`. A
 shared script, `NotableStory_EventScript_Introduce`, wraps the branch, and
 the AGAIN-or-warmer greeting comes from `NotableTalk_EventScript_Greeting`.
-Gym pre-battle intros follow the same rule. Today only the post-badge
-branches call the greeting.
+Scenes call it through the `notable_introduce <character>, <text>` macro,
+and story beats through `notable_beat <beat>`. Gym pre-battle intros
+follow the same rule.
+
+Builds other than Wayfarer keep their original scenes: every converted
+line and new branch sits under `#if IS_WAYFARER`.
 
 Scenes to convert:
 
@@ -108,6 +112,7 @@ Scenes to convert:
 | Lance | Lake of Rage, `LakeOfRage_EventScript_Lance` | `LakeOfRage_Text_LanceIntro1` is unused, so he never introduces himself. Restore it as the first-meeting text. |
 | Lance | Indigo Champion, `PokemonLeague_ChampionsRoom_Text_BattleIntro` | Assumes the Lake. A player who never met him needs a first-meeting variant. |
 | Whitney | Radio Tower 1F, `RadioTower1F_Text_Whitney1`, and Goldenrod Gym ("Hi! I'm WHITNEY!") | Both are first-meeting intros, so every player hears two. |
+| Jasmine | Olivine Lighthouse, her first conversation | The Lighthouse beat marks her introduced, so her Gym intro ("allow me to introduce myself") never plays. She introduces herself at the Lighthouse instead. |
 | Wallace | Cave of Origin B1F ("My name is WALLACE.") | Can follow an Indigo league event against him, or a walker talk. Inferred: that the league draw picks him. |
 | Steven | Mossdeep Space Center 1F and 2F | Can be the first meeting, but he never gives his name. |
 | Steven | Granite Cave, Steven's room | Re-introduces him after the Space Center or a Kanto meeting. |
@@ -128,10 +133,10 @@ rule.
 | Trainer | Scene | Claim | Proof | Without the proof |
 | --- | --- | --- | --- | --- |
 | Steven | Route 118, `Route118_Text_StevenQuestions` | "We met in the cave near DEWFORD." | `FLAG_DELIVERED_STEVEN_LETTER` | The same scene without the cave line. Route 120's before/after-Dewford variants are the model. |
-| Steven | Meteor Falls, Steven's cave | "We battled alongside each other at the … SPACE CENTER", "our paths first crossed in GRANITE CAVE" | Space Center: `FLAG_DEFEATED_MAGMA_SPACE_CENTER`. Granite Cave: `FLAG_DELIVERED_STEVEN_LETTER`. | Drop each unproven line. The cave also opens on *Hoenn's* clear, not `FLAG_SYS_GAME_CLEAR`, which clearing Johto or Kanto sets (`wayfarer_persistence.c`). |
+| Steven | Meteor Falls, Steven's cave | "We battled alongside each other at the … SPACE CENTER", "our paths first crossed in GRANITE CAVE" | Space Center: `FLAG_DEFEATED_MAGMA_SPACE_CENTER`. Granite Cave: `FLAG_DELIVERED_STEVEN_LETTER`. | Drop each unproven line, including "You should have a very good idea about how good I am" without the Space Center and the Champion line without Hoenn's clear. A first meeting follows the introduction rule. The cave opens on *Hoenn's* clear, not the global one that clearing Johto or Kanto sets (`wayfarer_persistence.c`). |
 | Steven | Vermilion City | "The Champion from the HOENN region." | None. Wallace is Hoenn's Champion. | Past tense, as Fuchsia already has it: "for some time, I was the champion." |
 | Blue | S.S. Anne 2F, `SSAnne_2F_Corridor_Text_VisitorIntro` | "I didn't expect another visiting TRAINER here." | The player is not Pallet-origin. | For a Pallet-origin player, a rival line. |
-| Blue | Four Island rival scene | A childhood rival ("quit copying me") | Pallet origin | No scene for other origins. Today it is gated on Sevii progress only. |
+| Blue | Four and Six Island rival scenes | Familiarity ("Hey, {PLAYER}!") | Pallet origin, or Blue introduced | No scene. |
 | Blue | Indigo Champion | Rivalry | Pallet origin | The introduction rule. |
 | Misty | Route 25, `Route25_Text_MistyDate` | "Are they JOHTO GYM BADGES? If you have eight…" | Eight Johto badges | A line about the player's actual badges, or none. |
 | Chuck's wife | Cianwood City, `CianwoodCity_Text_ChucksWifeChubby` | "My husband lost to you" | Chuck's badge. Today the check is holding HM Fly, which Hoenn's Route 119 also gives. | Her plain HM Fly gift. Inferred: that a Hoenn player reaches her with Fly before beating Chuck. |
@@ -208,7 +213,6 @@ scripts:
 | Lance | Shutting down the Mahogany hideout | He hands over HM Whirlpool at the hideout finale (`RocketHideout_B2F_hns`). |
 | Steven | Granite Cave letter | `FLAG_DELIVERED_STEVEN_LETTER` is set. |
 | Steven | Space Center tag battle | `FLAG_DEFEATED_MAGMA_SPACE_CENTER` is set. |
-| Tate & Liza | Space Center | `FLAG_DEFEATED_MAGMA_SPACE_CENTER` is set. They keep a score but give no number. |
 | Wallace | The Sootopolis crisis | The weather crisis ends after the Cave of Origin and Sky Pillar scenes. |
 | Jasmine | Olivine Lighthouse medicine | The SecretPotion is delivered to Amphy. |
 | Clair | The Dragon's Den test | She grants the Rising Badge after the Den. |
