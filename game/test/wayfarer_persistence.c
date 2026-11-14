@@ -320,6 +320,7 @@ TEST("Wayfarer Sevii initialization and Tower record validation are atomic")
     EXPECT(FlagGet(FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GIDEON));
     EXPECT(FlagGet(FLAG_WAYFARER_SEVII_HIDE_RUBY_GUARDS));
     EXPECT(FlagGet(FLAG_WAYFARER_SEVII_HIDE_RIVALS));
+    EXPECT(FlagGet(FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS));
 
     records->bestTime[CHALLENGE_TYPE_SINGLE] = 1234;
     EXPECT(!WayfarerSeviiPersistentStateIsValid());

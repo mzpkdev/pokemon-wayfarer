@@ -49,6 +49,7 @@ WayfarerSevii_Story_EventScript_LostellesFather::
 	goto_if_set FLAG_WAYFARER_SEVII_LOSTELLE_RESCUED, WayfarerSevii_Story_EventScript_LostellesFatherAfterRescue
 	goto_if_set FLAG_WAYFARER_SEVII_LOSTELLE_STARTED, WayfarerSevii_Story_EventScript_LostellesFatherReminder
 	setflag FLAG_WAYFARER_SEVII_LOSTELLE_STARTED
+	clearflag FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS
 	checkitem ITEM_METEORITE
 	goto_if_eq VAR_RESULT, TRUE, WayfarerSevii_Story_EventScript_LostellesFatherStartWithMeteorite
 	msgbox WayfarerSevii_Story_Text_LostelleStart
@@ -182,6 +183,7 @@ WayfarerSevii_Story_EventScript_CueBallPaxton::
 
 WayfarerSevii_Story_EventScript_CommitBikersCleared::
 	setflag FLAG_WAYFARER_SEVII_BIKERS_CLEARED
+	setflag FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS
 	msgbox WayfarerSevii_Story_Text_BikersLeave
 	closemessage
 	fadescreenswapbuffers FADE_TO_BLACK

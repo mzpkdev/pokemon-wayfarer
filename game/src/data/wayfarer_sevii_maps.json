@@ -8420,7 +8420,7 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_BikerGoon1",
-              "flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS"
             },
             "actor_role": "actor",
             "trainer": "TRAINER_WAYFARER_SEVII_BIKER_GOON",
@@ -8430,6 +8430,7 @@
             "outcome_policy": "win_progress_loss_pending",
             "state_reads": [
               "SEVII_BIKERS_CLEARED",
+              "SEVII_HIDE_THREE_ISLAND_BIKERS",
               "SEVII_LOSTELLE_STARTED",
               "SEVII_TRAINER_DEFEAT_BIKER_GOON"
             ],
@@ -8460,7 +8461,7 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_BikerGoon2",
-              "flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS"
             },
             "actor_role": "actor",
             "trainer": "TRAINER_WAYFARER_SEVII_BIKER_GOON_2",
@@ -8470,6 +8471,7 @@
             "outcome_policy": "win_progress_loss_pending",
             "state_reads": [
               "SEVII_BIKERS_CLEARED",
+              "SEVII_HIDE_THREE_ISLAND_BIKERS",
               "SEVII_LOSTELLE_STARTED",
               "SEVII_TRAINER_DEFEAT_BIKER_GOON",
               "SEVII_TRAINER_DEFEAT_BIKER_GOON_2"
@@ -8485,8 +8487,8 @@
               "local_id": "LOCALID_THREE_ISLAND_BIKER3",
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_BIKER",
-              "x": 9,
-              "y": 23,
+              "x": 11,
+              "y": 24,
               "elevation": 3,
               "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
               "movement_range_x": 1,
@@ -8502,7 +8504,7 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_BikerGoon3",
-              "flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS"
             },
             "actor_role": "actor",
             "trainer": "TRAINER_WAYFARER_SEVII_BIKER_GOON_3",
@@ -8512,6 +8514,7 @@
             "outcome_policy": "win_progress_loss_pending",
             "state_reads": [
               "SEVII_BIKERS_CLEARED",
+              "SEVII_HIDE_THREE_ISLAND_BIKERS",
               "SEVII_LOSTELLE_STARTED",
               "SEVII_TRAINER_DEFEAT_BIKER_GOON_2",
               "SEVII_TRAINER_DEFEAT_BIKER_GOON_3"
@@ -8544,7 +8547,7 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_CueBallPaxton",
-              "flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS"
             },
             "actor_role": "actor",
             "trainer": "TRAINER_WAYFARER_SEVII_CUE_BALL_PAXTON",
@@ -8554,12 +8557,14 @@
             "outcome_policy": "win_progress_loss_pending",
             "state_reads": [
               "SEVII_BIKERS_CLEARED",
+              "SEVII_HIDE_THREE_ISLAND_BIKERS",
               "SEVII_LOSTELLE_STARTED",
               "SEVII_TRAINER_DEFEAT_BIKER_GOON_3",
               "SEVII_TRAINER_DEFEAT_CUE_BALL_PAXTON"
             ],
             "state_writes": [
               "SEVII_BIKERS_CLEARED",
+              "SEVII_HIDE_THREE_ISLAND_BIKERS",
               "SEVII_TRAINER_DEFEAT_BIKER_GOON_3",
               "SEVII_TRAINER_DEFEAT_CUE_BALL_PAXTON"
             ]
@@ -8733,11 +8738,12 @@
             "reason": "Retains a non-battling member of the ordered Three Island scene without claiming a Trainer allocation.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_BikerOnlooker",
-              "flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS"
             },
             "actor_role": "scene_actor",
             "state_reads": [
-              "SEVII_BIKERS_CLEARED"
+              "SEVII_BIKERS_CLEARED",
+              "SEVII_HIDE_THREE_ISLAND_BIKERS"
             ],
             "state_writes": []
           },
@@ -8764,11 +8770,12 @@
             "reason": "Retains a non-battling member of the ordered Three Island scene without claiming a Trainer allocation.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_BikerOnlooker",
-              "flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS"
             },
             "actor_role": "scene_actor",
             "state_reads": [
-              "SEVII_BIKERS_CLEARED"
+              "SEVII_BIKERS_CLEARED",
+              "SEVII_HIDE_THREE_ISLAND_BIKERS"
             ],
             "state_writes": []
           },
@@ -8795,11 +8802,12 @@
             "reason": "Retains a non-battling member of the ordered Three Island scene without claiming a Trainer allocation.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_BikerOnlooker",
-              "flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS"
             },
             "actor_role": "scene_actor",
             "state_reads": [
-              "SEVII_BIKERS_CLEARED"
+              "SEVII_BIKERS_CLEARED",
+              "SEVII_HIDE_THREE_ISLAND_BIKERS"
             ],
             "state_writes": []
           },
@@ -11130,11 +11138,11 @@
             "reason": "Retains a dependency-free local flavor actor explicitly in the story passive inventory.",
             "overrides": {
               "script": "WayfarerSevii_Story_PassiveInventory_ThreeIslandPort_1",
-              "flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS"
             },
             "actor_role": "passive",
             "state_reads": [
-              "SEVII_BIKERS_CLEARED"
+              "SEVII_HIDE_THREE_ISLAND_BIKERS"
             ],
             "state_writes": []
           },
@@ -11160,11 +11168,11 @@
             "reason": "Retains a dependency-free local flavor actor explicitly in the story passive inventory.",
             "overrides": {
               "script": "WayfarerSevii_Story_PassiveInventory_ThreeIslandPort_2",
-              "flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS"
             },
             "actor_role": "passive",
             "state_reads": [
-              "SEVII_BIKERS_CLEARED"
+              "SEVII_HIDE_THREE_ISLAND_BIKERS"
             ],
             "state_writes": []
           }
@@ -15729,6 +15737,7 @@
               "SEVII_MOON_STONE_RECEIVED"
             ],
             "state_writes": [
+              "SEVII_HIDE_THREE_ISLAND_BIKERS",
               "SEVII_LOSTELLE_STARTED",
               "SEVII_METEORITE_DELIVERED",
               "SEVII_MOON_STONE_RECEIVED"
@@ -25289,9 +25298,7 @@
           "story.lostelle.biker-onlooker-7",
           "story.lostelle.cue-ball-paxton",
           "story.lostelle.three-island-defender",
-          "story.passive.threeislandport.0",
-          "story.passive.threeislandport.1",
-          "story.passive.threeislandport.2"
+          "story.passive.threeislandport.0"
         ],
         "writers": [
           "story.lostelle.cue-ball-paxton"
@@ -26400,6 +26407,41 @@
             "from": 1,
             "to": 0,
             "caller": "story.rival.six-island-arrival"
+          }
+        ]
+      },
+      {
+        "id": "SEVII_HIDE_THREE_ISLAND_BIKERS",
+        "owner": "story",
+        "storage": "flag",
+        "slot": 199,
+        "initial": 1,
+        "lifecycle": "presentation",
+        "readers": [
+          "story.lostelle.biker-goon-1",
+          "story.lostelle.biker-goon-2",
+          "story.lostelle.biker-goon-3",
+          "story.lostelle.biker-onlooker-13",
+          "story.lostelle.biker-onlooker-5",
+          "story.lostelle.biker-onlooker-7",
+          "story.lostelle.cue-ball-paxton",
+          "story.passive.threeislandport.1",
+          "story.passive.threeislandport.2"
+        ],
+        "writers": [
+          "story.lostelle.cue-ball-paxton",
+          "story.lostelle.father"
+        ],
+        "transitions": [
+          {
+            "from": 1,
+            "to": 0,
+            "caller": "story.lostelle.father"
+          },
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.lostelle.cue-ball-paxton"
           }
         ]
       },
