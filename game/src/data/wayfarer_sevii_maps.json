@@ -3143,6 +3143,7 @@
             "battle_type": "single",
             "outcome_policy": "win_progress_loss_pending",
             "state_reads": [
+              "SEVII_HIDE_WAREHOUSE_ADMIN_1",
               "SEVII_HIDE_WAREHOUSE_COMBATANTS",
               "SEVII_PASSWORD_ONE_LEARNED",
               "SEVII_PASSWORD_TWO_LEARNED",
@@ -3150,6 +3151,7 @@
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_GRUNT_42"
             ],
             "state_writes": [
+              "SEVII_HIDE_WAREHOUSE_ADMIN_1",
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_GRUNT_42"
             ]
           },
@@ -3176,7 +3178,7 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_EventScript_WarehouseAdmin1",
-              "flag": "FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_COMBATANTS"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_ADMIN_1"
             },
             "actor_role": "actor",
             "trainer": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_ADMIN",
@@ -3185,13 +3187,15 @@
             "battle_type": "single",
             "outcome_policy": "win_progress_loss_pending",
             "state_reads": [
-              "SEVII_HIDE_WAREHOUSE_COMBATANTS",
+              "SEVII_HIDE_WAREHOUSE_ADMIN_1",
+              "SEVII_HIDE_WAREHOUSE_GRUNT_47",
               "SEVII_PASSWORD_ONE_LEARNED",
               "SEVII_PASSWORD_TWO_LEARNED",
               "SEVII_SAPPHIRE_STOLEN",
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_ADMIN"
             ],
             "state_writes": [
+              "SEVII_HIDE_WAREHOUSE_GRUNT_47",
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_ADMIN"
             ]
           },
@@ -3218,7 +3222,7 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_EventScript_WarehouseGrunt47",
-              "flag": "FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_COMBATANTS"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GRUNT_47"
             },
             "actor_role": "actor",
             "trainer": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_47",
@@ -3227,13 +3231,15 @@
             "battle_type": "single",
             "outcome_policy": "win_progress_loss_pending",
             "state_reads": [
-              "SEVII_HIDE_WAREHOUSE_COMBATANTS",
+              "SEVII_HIDE_WAREHOUSE_GRUNT_47",
+              "SEVII_HIDE_WAREHOUSE_GRUNT_48",
               "SEVII_PASSWORD_ONE_LEARNED",
               "SEVII_PASSWORD_TWO_LEARNED",
               "SEVII_SAPPHIRE_STOLEN",
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_GRUNT_47"
             ],
             "state_writes": [
+              "SEVII_HIDE_WAREHOUSE_GRUNT_48",
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_GRUNT_47"
             ]
           },
@@ -3260,7 +3266,7 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_EventScript_WarehouseGrunt48",
-              "flag": "FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_COMBATANTS"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GRUNT_48"
             },
             "actor_role": "actor",
             "trainer": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_48",
@@ -3269,13 +3275,15 @@
             "battle_type": "single",
             "outcome_policy": "win_progress_loss_pending",
             "state_reads": [
-              "SEVII_HIDE_WAREHOUSE_COMBATANTS",
+              "SEVII_HIDE_WAREHOUSE_ADMIN_2",
+              "SEVII_HIDE_WAREHOUSE_GRUNT_48",
               "SEVII_PASSWORD_ONE_LEARNED",
               "SEVII_PASSWORD_TWO_LEARNED",
               "SEVII_SAPPHIRE_STOLEN",
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_GRUNT_48"
             ],
             "state_writes": [
+              "SEVII_HIDE_WAREHOUSE_ADMIN_2",
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_GRUNT_48"
             ]
           },
@@ -3302,7 +3310,7 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_EventScript_WarehouseAdmin2",
-              "flag": "FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_COMBATANTS"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_ADMIN_2"
             },
             "actor_role": "actor",
             "trainer": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_ADMIN_2",
@@ -3311,7 +3319,7 @@
             "battle_type": "single",
             "outcome_policy": "win_progress_loss_pending",
             "state_reads": [
-              "SEVII_HIDE_WAREHOUSE_COMBATANTS",
+              "SEVII_HIDE_WAREHOUSE_ADMIN_2",
               "SEVII_PASSWORD_ONE_LEARNED",
               "SEVII_PASSWORD_TWO_LEARNED",
               "SEVII_SAPPHIRE_STOLEN",
@@ -3362,7 +3370,11 @@
             ],
             "state_writes": [
               "SEVII_HIDE_LOCAL_ROCKETS",
+              "SEVII_HIDE_WAREHOUSE_ADMIN_1",
+              "SEVII_HIDE_WAREHOUSE_ADMIN_2",
               "SEVII_HIDE_WAREHOUSE_COMBATANTS",
+              "SEVII_HIDE_WAREHOUSE_GRUNT_47",
+              "SEVII_HIDE_WAREHOUSE_GRUNT_48",
               "SEVII_SAPPHIRE_RECOVERED",
               "SEVII_TRAINER_DEFEAT_SCIENTIST_GIDEON",
               "SEVII_WAREHOUSE_CLEARED"
@@ -20728,6 +20740,11 @@
         "WayfarerSevii_Warehouse_GideonVictory",
         "WayfarerSevii_Warehouse_NotReady",
         "WayfarerSevii_Warehouse_PredecessorPending",
+        "WayfarerSevii_Warehouse_RevealAdmin1",
+        "WayfarerSevii_Warehouse_RevealAdmin2",
+        "WayfarerSevii_Warehouse_RevealDone",
+        "WayfarerSevii_Warehouse_RevealGrunt47",
+        "WayfarerSevii_Warehouse_RevealGrunt48",
         "WayfarerSevii_Warehouse_SapphireNoRoom",
         "WayfarerSevii_Warehouse_TryGiveSapphire",
         "WayfarerSevii_RocketWarehouse_Cage",
@@ -26339,6 +26356,118 @@
             "from": 1,
             "to": 0,
             "caller": "story.celio.sapphire-theft"
+          }
+        ]
+      },
+      {
+        "id": "SEVII_HIDE_WAREHOUSE_ADMIN_1",
+        "owner": "story",
+        "storage": "flag",
+        "slot": 200,
+        "initial": 1,
+        "lifecycle": "presentation",
+        "readers": [
+          "story.celio.warehouse-warehouseadmin1",
+          "story.celio.warehouse-warehousegrunt42"
+        ],
+        "writers": [
+          "story.celio.warehouse-warehousegideon",
+          "story.celio.warehouse-warehousegrunt42"
+        ],
+        "transitions": [
+          {
+            "from": 1,
+            "to": 0,
+            "caller": "story.celio.warehouse-warehousegrunt42"
+          },
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.celio.warehouse-warehousegideon"
+          }
+        ]
+      },
+      {
+        "id": "SEVII_HIDE_WAREHOUSE_GRUNT_47",
+        "owner": "story",
+        "storage": "flag",
+        "slot": 201,
+        "initial": 1,
+        "lifecycle": "presentation",
+        "readers": [
+          "story.celio.warehouse-warehouseadmin1",
+          "story.celio.warehouse-warehousegrunt47"
+        ],
+        "writers": [
+          "story.celio.warehouse-warehouseadmin1",
+          "story.celio.warehouse-warehousegideon"
+        ],
+        "transitions": [
+          {
+            "from": 1,
+            "to": 0,
+            "caller": "story.celio.warehouse-warehouseadmin1"
+          },
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.celio.warehouse-warehousegideon"
+          }
+        ]
+      },
+      {
+        "id": "SEVII_HIDE_WAREHOUSE_GRUNT_48",
+        "owner": "story",
+        "storage": "flag",
+        "slot": 202,
+        "initial": 1,
+        "lifecycle": "presentation",
+        "readers": [
+          "story.celio.warehouse-warehousegrunt47",
+          "story.celio.warehouse-warehousegrunt48"
+        ],
+        "writers": [
+          "story.celio.warehouse-warehousegideon",
+          "story.celio.warehouse-warehousegrunt47"
+        ],
+        "transitions": [
+          {
+            "from": 1,
+            "to": 0,
+            "caller": "story.celio.warehouse-warehousegrunt47"
+          },
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.celio.warehouse-warehousegideon"
+          }
+        ]
+      },
+      {
+        "id": "SEVII_HIDE_WAREHOUSE_ADMIN_2",
+        "owner": "story",
+        "storage": "flag",
+        "slot": 203,
+        "initial": 1,
+        "lifecycle": "presentation",
+        "readers": [
+          "story.celio.warehouse-warehouseadmin2",
+          "story.celio.warehouse-warehousegrunt48"
+        ],
+        "writers": [
+          "story.celio.warehouse-warehousegideon",
+          "story.celio.warehouse-warehousegrunt48"
+        ],
+        "transitions": [
+          {
+            "from": 1,
+            "to": 0,
+            "caller": "story.celio.warehouse-warehousegrunt48"
+          },
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.celio.warehouse-warehousegideon"
           }
         ]
       },

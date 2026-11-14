@@ -149,5 +149,34 @@ class MtEmberRubyPathTests(unittest.TestCase):
         self.assertNotIn("goto_if", onload)
 
 
+class WarehouseSightTrainerTests(unittest.TestCase):
+    """Sight trainers must reach `trainerbattle` before any effectful command.
+
+    CheckTrainer runs a sight trainer's script until its first effect. When that
+    effect is not `trainerbattle` (for example `lock`), a beaten Rocket has no
+    defeat check and walks up to the player on every step in view.
+    """
+
+    def test_combatant_scripts_open_with_trainerbattle(self):
+        script = STORY_SCRIPTS.read_text(encoding="utf-8")
+        for name in ("Grunt42", "Admin1", "Grunt47", "Grunt48", "Admin2"):
+            body = re.search(rf"(?ms)^WayfarerSevii_EventScript_Warehouse{name}::\n(.*?)^\tend", script).group(1)
+            first = body.strip().splitlines()[0].split()[0]
+            self.assertEqual(first, "trainerbattle_single", f"{name} must begin with trainerbattle_single")
+
+    def test_each_opponent_appears_only_after_the_previous_one_falls(self):
+        manifest = load(MANIFEST)
+        record = next(row for row in manifest["maps"] if row["source_map"] == "FiveIsland_RocketWarehouse_Frlg")
+        flags = {row["content_id"]: row.get("overrides", {}).get("flag")
+                 for row in record["retained_events"]["object_events"] if "overrides" in row}
+        chain = ["grunt42", "admin1", "grunt47", "grunt48", "admin2"]
+        hide = [flags["story.celio.warehouse-warehouse" + name] for name in chain]
+        self.assertEqual(len(set(hide)), 5, "every opponent needs its own presentation flag")
+        script = STORY_SCRIPTS.read_text(encoding="utf-8")
+        for name, nxt in zip(("Grunt42", "Admin1", "Grunt47", "Grunt48"), ("Admin1", "Grunt47", "Grunt48", "Admin2")):
+            body = re.search(rf"(?ms)^WayfarerSevii_EventScript_Warehouse{name}::\n(.*?)^\tend", script).group(1)
+            self.assertIn(f"call WayfarerSevii_Warehouse_Reveal{nxt}", body)
+
+
 if __name__ == "__main__":
     unittest.main()

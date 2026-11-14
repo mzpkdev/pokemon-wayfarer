@@ -258,8 +258,8 @@ WayfarerSevii_Warehouse_CheckReadyDone:
 	return
 
 @ Passwords can be learned in either order. The final prerequisite transition
-@ presents both the ordered combatants and Gideon; Warehouse clear later hides
-@ only the five combatants so the Sapphire handoff remains retryable.
+@ presents the first combatant and Gideon; each win reveals the next opponent,
+@ and Warehouse clear later hides all five so the Sapphire handoff remains retryable.
 WayfarerSevii_Story_UpdateWarehouseReadiness:
 	goto_if_unset FLAG_WAYFARER_SEVII_SAPPHIRE_STOLEN, WayfarerSevii_Story_UpdateWarehouseReadinessDone
 	goto_if_unset FLAG_WAYFARER_SEVII_PASSWORD_ONE_LEARNED, WayfarerSevii_Story_UpdateWarehouseReadinessDone
@@ -285,70 +285,72 @@ WayfarerSevii_Warehouse_PredecessorPending:
 	release
 	end
 
+@ The combatants are sight trainers, so each script reaches `trainerbattle` before
+@ any effectful command: a beaten Rocket never walks up again. Order is
+@ enforced by presentation instead of by dialogue. Each opponent appears only
+@ once the previous one falls, so nobody out of turn can stop the player.
 WayfarerSevii_EventScript_WarehouseGrunt42::
-	lock
-	faceplayer
-	call WayfarerSevii_Warehouse_CheckReady
-	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Warehouse_NotReady
 	trainerbattle_single TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_42, WayfarerSevii_Text_WarehouseGruntIntro, WayfarerSevii_Text_WarehouseGruntDefeat
-	msgbox WayfarerSevii_Text_WarehouseGruntPostBattle
-	release
+	call WayfarerSevii_Warehouse_RevealAdmin1
+	msgbox WayfarerSevii_Text_WarehouseGruntPostBattle, MSGBOX_AUTOCLOSE
 	end
 
 WayfarerSevii_EventScript_WarehouseAdmin1::
-	lock
-	faceplayer
-	call WayfarerSevii_Warehouse_CheckReady
-	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Warehouse_NotReady
-	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_42, WayfarerSevii_Warehouse_PredecessorPending
 	trainerbattle_single TRAINER_WAYFARER_SEVII_TEAM_ROCKET_ADMIN, WayfarerSevii_Text_WarehouseAdmin1Intro, WayfarerSevii_Text_WarehouseAdmin1Defeat
-	msgbox WayfarerSevii_Text_WarehouseAdmin1PostBattle
-	release
+	call WayfarerSevii_Warehouse_RevealGrunt47
+	msgbox WayfarerSevii_Text_WarehouseAdmin1PostBattle, MSGBOX_AUTOCLOSE
 	end
 
 WayfarerSevii_EventScript_WarehouseGrunt47::
-	lock
-	faceplayer
-	call WayfarerSevii_Warehouse_CheckReady
-	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Warehouse_NotReady
-	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_ADMIN, WayfarerSevii_Warehouse_PredecessorPending
 	trainerbattle_single TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_47, WayfarerSevii_Text_WarehouseGruntIntro, WayfarerSevii_Text_WarehouseGruntDefeat
-	msgbox WayfarerSevii_Text_WarehouseGruntPostBattle
-	release
+	call WayfarerSevii_Warehouse_RevealGrunt48
+	msgbox WayfarerSevii_Text_WarehouseGruntPostBattle, MSGBOX_AUTOCLOSE
 	end
 
 WayfarerSevii_EventScript_WarehouseGrunt48::
-	lock
-	faceplayer
-	call WayfarerSevii_Warehouse_CheckReady
-	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Warehouse_NotReady
-	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_47, WayfarerSevii_Warehouse_PredecessorPending
 	trainerbattle_single TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_48, WayfarerSevii_Text_WarehouseGruntIntro, WayfarerSevii_Text_WarehouseGruntDefeat
-	msgbox WayfarerSevii_Text_WarehouseGruntPostBattle
-	release
+	call WayfarerSevii_Warehouse_RevealAdmin2
+	msgbox WayfarerSevii_Text_WarehouseGruntPostBattle, MSGBOX_AUTOCLOSE
 	end
 
 WayfarerSevii_EventScript_WarehouseAdmin2::
-	lock
-	faceplayer
-	call WayfarerSevii_Warehouse_CheckReady
-	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Warehouse_NotReady
-	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_48, WayfarerSevii_Warehouse_PredecessorPending
 	trainerbattle_single TRAINER_WAYFARER_SEVII_TEAM_ROCKET_ADMIN_2, WayfarerSevii_Text_WarehouseAdmin2Intro, WayfarerSevii_Text_WarehouseAdmin2Defeat, WayfarerSevii_Warehouse_Admin2Victory
-	msgbox WayfarerSevii_Text_WarehouseAdmin2PostBattle
-	release
+	msgbox WayfarerSevii_Text_WarehouseAdmin2PostBattle, MSGBOX_AUTOCLOSE
 	end
+
+WayfarerSevii_Warehouse_RevealAdmin1:
+	goto_if_unset FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_ADMIN_1, WayfarerSevii_Warehouse_RevealDone
+	clearflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_ADMIN_1
+	addobject LOCALID_WAREHOUSE_ADMIN1
+	return
+
+WayfarerSevii_Warehouse_RevealGrunt47:
+	goto_if_unset FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GRUNT_47, WayfarerSevii_Warehouse_RevealDone
+	clearflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GRUNT_47
+	addobject LOCALID_WAREHOUSE_GRUNT2
+	return
+
+WayfarerSevii_Warehouse_RevealGrunt48:
+	goto_if_unset FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GRUNT_48, WayfarerSevii_Warehouse_RevealDone
+	clearflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GRUNT_48
+	addobject LOCALID_WAREHOUSE_GRUNT3
+	return
+
+WayfarerSevii_Warehouse_RevealAdmin2:
+	goto_if_unset FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_ADMIN_2, WayfarerSevii_Warehouse_RevealDone
+	clearflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_ADMIN_2
+	addobject LOCALID_WAREHOUSE_ADMIN2
+WayfarerSevii_Warehouse_RevealDone:
+	return
 
 WayfarerSevii_Warehouse_Admin2Victory:
 	specialvar VAR_RESULT, WayfarerSevii_IsMainlandGiovanniComplete
 	goto_if_eq VAR_RESULT, TRUE, WayfarerSevii_Warehouse_Admin2GiovanniComplete
-	msgbox WayfarerSevii_Text_WarehouseAdmin2LocalEnding
-	release
+	msgbox WayfarerSevii_Text_WarehouseAdmin2LocalEnding, MSGBOX_AUTOCLOSE
 	end
 
 WayfarerSevii_Warehouse_Admin2GiovanniComplete:
-	msgbox WayfarerSevii_Text_WarehouseAdmin2GiovanniEnding
-	release
+	msgbox WayfarerSevii_Text_WarehouseAdmin2GiovanniEnding, MSGBOX_AUTOCLOSE
 	end
 
 WayfarerSevii_EventScript_WarehouseGideon::
@@ -369,6 +371,10 @@ WayfarerSevii_Warehouse_GideonVictory:
 	setflag FLAG_WAYFARER_SEVII_WAREHOUSE_CLEARED
 	setflag FLAG_WAYFARER_SEVII_HIDE_LOCAL_ROCKETS
 	setflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_COMBATANTS
+	setflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_ADMIN_1
+	setflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GRUNT_47
+	setflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GRUNT_48
+	setflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_ADMIN_2
 	removeobject LOCALID_WAREHOUSE_GRUNT2
 	removeobject LOCALID_WAREHOUSE_GRUNT3
 	removeobject LOCALID_WAREHOUSE_ADMIN1
