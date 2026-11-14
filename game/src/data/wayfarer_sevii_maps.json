@@ -485,6 +485,7 @@
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_GRUNT_43"
             ],
             "state_writes": [
+              "SEVII_HIDE_RUBY_GUARDS",
               "SEVII_HIDE_WAREHOUSE_COMBATANTS",
               "SEVII_HIDE_WAREHOUSE_GIDEON",
               "SEVII_PASSWORD_ONE_LEARNED",
@@ -497,8 +498,8 @@
               "local_id": "LOCALID_MT_EMBER_GRUNT2",
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_ROCKET_M",
-              "x": 42,
-              "y": 40,
+              "x": 41,
+              "y": 41,
               "elevation": 3,
               "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
               "movement_range_x": 1,
@@ -531,6 +532,7 @@
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_GRUNT_44"
             ],
             "state_writes": [
+              "SEVII_HIDE_RUBY_GUARDS",
               "SEVII_HIDE_WAREHOUSE_COMBATANTS",
               "SEVII_HIDE_WAREHOUSE_GIDEON",
               "SEVII_PASSWORD_ONE_LEARNED",
@@ -1010,9 +1012,7 @@
           },
           "wayfarer_script": "WayfarerSevii_MtEmberExterior_OnLoad",
           "reason": "Restores a reviewed story arrival or presentation handler without campaign gating.",
-          "state_reads": [
-            "SEVII_CELIO_GEMS_STARTED"
-          ],
+          "state_reads": [],
           "state_writes": []
         }
       ],
@@ -2977,12 +2977,15 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_IcefallLorelei",
-              "flag": "0"
+              "flag": "FLAG_WAYFARER_SEVII_LORELEI_COMPLETE"
             },
             "actor_role": "actor",
             "state_reads": [
               "SEVII_LORELEI_COMPLETE",
               "SEVII_LORELEI_ROCKETS_DEFEATED",
+              "SEVII_PASSWORD_ONE_LEARNED",
+              "SEVII_PASSWORD_TWO_LEARNED",
+              "SEVII_SAPPHIRE_STOLEN",
               "SEVII_WAREHOUSE_CLEARED"
             ],
             "state_writes": [
@@ -3143,6 +3146,7 @@
             "battle_type": "single",
             "outcome_policy": "win_progress_loss_pending",
             "state_reads": [
+              "SEVII_HIDE_WAREHOUSE_ADMIN_1",
               "SEVII_HIDE_WAREHOUSE_COMBATANTS",
               "SEVII_PASSWORD_ONE_LEARNED",
               "SEVII_PASSWORD_TWO_LEARNED",
@@ -3150,6 +3154,7 @@
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_GRUNT_42"
             ],
             "state_writes": [
+              "SEVII_HIDE_WAREHOUSE_ADMIN_1",
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_GRUNT_42"
             ]
           },
@@ -3176,7 +3181,7 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_EventScript_WarehouseAdmin1",
-              "flag": "FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_COMBATANTS"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_ADMIN_1"
             },
             "actor_role": "actor",
             "trainer": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_ADMIN",
@@ -3185,13 +3190,15 @@
             "battle_type": "single",
             "outcome_policy": "win_progress_loss_pending",
             "state_reads": [
-              "SEVII_HIDE_WAREHOUSE_COMBATANTS",
+              "SEVII_HIDE_WAREHOUSE_ADMIN_1",
+              "SEVII_HIDE_WAREHOUSE_GRUNT_47",
               "SEVII_PASSWORD_ONE_LEARNED",
               "SEVII_PASSWORD_TWO_LEARNED",
               "SEVII_SAPPHIRE_STOLEN",
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_ADMIN"
             ],
             "state_writes": [
+              "SEVII_HIDE_WAREHOUSE_GRUNT_47",
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_ADMIN"
             ]
           },
@@ -3218,7 +3225,7 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_EventScript_WarehouseGrunt47",
-              "flag": "FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_COMBATANTS"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GRUNT_47"
             },
             "actor_role": "actor",
             "trainer": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_47",
@@ -3227,13 +3234,15 @@
             "battle_type": "single",
             "outcome_policy": "win_progress_loss_pending",
             "state_reads": [
-              "SEVII_HIDE_WAREHOUSE_COMBATANTS",
+              "SEVII_HIDE_WAREHOUSE_GRUNT_47",
+              "SEVII_HIDE_WAREHOUSE_GRUNT_48",
               "SEVII_PASSWORD_ONE_LEARNED",
               "SEVII_PASSWORD_TWO_LEARNED",
               "SEVII_SAPPHIRE_STOLEN",
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_GRUNT_47"
             ],
             "state_writes": [
+              "SEVII_HIDE_WAREHOUSE_GRUNT_48",
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_GRUNT_47"
             ]
           },
@@ -3260,7 +3269,7 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_EventScript_WarehouseGrunt48",
-              "flag": "FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_COMBATANTS"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GRUNT_48"
             },
             "actor_role": "actor",
             "trainer": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_48",
@@ -3269,13 +3278,15 @@
             "battle_type": "single",
             "outcome_policy": "win_progress_loss_pending",
             "state_reads": [
-              "SEVII_HIDE_WAREHOUSE_COMBATANTS",
+              "SEVII_HIDE_WAREHOUSE_ADMIN_2",
+              "SEVII_HIDE_WAREHOUSE_GRUNT_48",
               "SEVII_PASSWORD_ONE_LEARNED",
               "SEVII_PASSWORD_TWO_LEARNED",
               "SEVII_SAPPHIRE_STOLEN",
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_GRUNT_48"
             ],
             "state_writes": [
+              "SEVII_HIDE_WAREHOUSE_ADMIN_2",
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_GRUNT_48"
             ]
           },
@@ -3302,7 +3313,7 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_EventScript_WarehouseAdmin2",
-              "flag": "FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_COMBATANTS"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_ADMIN_2"
             },
             "actor_role": "actor",
             "trainer": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_ADMIN_2",
@@ -3311,7 +3322,7 @@
             "battle_type": "single",
             "outcome_policy": "win_progress_loss_pending",
             "state_reads": [
-              "SEVII_HIDE_WAREHOUSE_COMBATANTS",
+              "SEVII_HIDE_WAREHOUSE_ADMIN_2",
               "SEVII_PASSWORD_ONE_LEARNED",
               "SEVII_PASSWORD_TWO_LEARNED",
               "SEVII_SAPPHIRE_STOLEN",
@@ -3362,7 +3373,11 @@
             ],
             "state_writes": [
               "SEVII_HIDE_LOCAL_ROCKETS",
+              "SEVII_HIDE_WAREHOUSE_ADMIN_1",
+              "SEVII_HIDE_WAREHOUSE_ADMIN_2",
               "SEVII_HIDE_WAREHOUSE_COMBATANTS",
+              "SEVII_HIDE_WAREHOUSE_GRUNT_47",
+              "SEVII_HIDE_WAREHOUSE_GRUNT_48",
               "SEVII_SAPPHIRE_RECOVERED",
               "SEVII_TRAINER_DEFEAT_SCIENTIST_GIDEON",
               "SEVII_WAREHOUSE_CLEARED"
@@ -4237,7 +4252,7 @@
               "local_id": "LOCALID_DOTTED_HOLE_THIEF",
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_SCIENTIST",
-              "x": 5,
+              "x": 6,
               "y": 9,
               "elevation": 3,
               "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
@@ -8420,7 +8435,7 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_BikerGoon1",
-              "flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS"
             },
             "actor_role": "actor",
             "trainer": "TRAINER_WAYFARER_SEVII_BIKER_GOON",
@@ -8430,6 +8445,7 @@
             "outcome_policy": "win_progress_loss_pending",
             "state_reads": [
               "SEVII_BIKERS_CLEARED",
+              "SEVII_HIDE_THREE_ISLAND_BIKERS",
               "SEVII_LOSTELLE_STARTED",
               "SEVII_TRAINER_DEFEAT_BIKER_GOON"
             ],
@@ -8460,7 +8476,7 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_BikerGoon2",
-              "flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS"
             },
             "actor_role": "actor",
             "trainer": "TRAINER_WAYFARER_SEVII_BIKER_GOON_2",
@@ -8470,6 +8486,7 @@
             "outcome_policy": "win_progress_loss_pending",
             "state_reads": [
               "SEVII_BIKERS_CLEARED",
+              "SEVII_HIDE_THREE_ISLAND_BIKERS",
               "SEVII_LOSTELLE_STARTED",
               "SEVII_TRAINER_DEFEAT_BIKER_GOON",
               "SEVII_TRAINER_DEFEAT_BIKER_GOON_2"
@@ -8485,8 +8502,8 @@
               "local_id": "LOCALID_THREE_ISLAND_BIKER3",
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_BIKER",
-              "x": 9,
-              "y": 23,
+              "x": 11,
+              "y": 24,
               "elevation": 3,
               "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
               "movement_range_x": 1,
@@ -8502,7 +8519,7 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_BikerGoon3",
-              "flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS"
             },
             "actor_role": "actor",
             "trainer": "TRAINER_WAYFARER_SEVII_BIKER_GOON_3",
@@ -8512,6 +8529,7 @@
             "outcome_policy": "win_progress_loss_pending",
             "state_reads": [
               "SEVII_BIKERS_CLEARED",
+              "SEVII_HIDE_THREE_ISLAND_BIKERS",
               "SEVII_LOSTELLE_STARTED",
               "SEVII_TRAINER_DEFEAT_BIKER_GOON_2",
               "SEVII_TRAINER_DEFEAT_BIKER_GOON_3"
@@ -8544,7 +8562,7 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_CueBallPaxton",
-              "flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS"
             },
             "actor_role": "actor",
             "trainer": "TRAINER_WAYFARER_SEVII_CUE_BALL_PAXTON",
@@ -8554,12 +8572,14 @@
             "outcome_policy": "win_progress_loss_pending",
             "state_reads": [
               "SEVII_BIKERS_CLEARED",
+              "SEVII_HIDE_THREE_ISLAND_BIKERS",
               "SEVII_LOSTELLE_STARTED",
               "SEVII_TRAINER_DEFEAT_BIKER_GOON_3",
               "SEVII_TRAINER_DEFEAT_CUE_BALL_PAXTON"
             ],
             "state_writes": [
               "SEVII_BIKERS_CLEARED",
+              "SEVII_HIDE_THREE_ISLAND_BIKERS",
               "SEVII_TRAINER_DEFEAT_BIKER_GOON_3",
               "SEVII_TRAINER_DEFEAT_CUE_BALL_PAXTON"
             ]
@@ -8733,11 +8753,12 @@
             "reason": "Retains a non-battling member of the ordered Three Island scene without claiming a Trainer allocation.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_BikerOnlooker",
-              "flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS"
             },
             "actor_role": "scene_actor",
             "state_reads": [
-              "SEVII_BIKERS_CLEARED"
+              "SEVII_BIKERS_CLEARED",
+              "SEVII_HIDE_THREE_ISLAND_BIKERS"
             ],
             "state_writes": []
           },
@@ -8764,11 +8785,12 @@
             "reason": "Retains a non-battling member of the ordered Three Island scene without claiming a Trainer allocation.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_BikerOnlooker",
-              "flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS"
             },
             "actor_role": "scene_actor",
             "state_reads": [
-              "SEVII_BIKERS_CLEARED"
+              "SEVII_BIKERS_CLEARED",
+              "SEVII_HIDE_THREE_ISLAND_BIKERS"
             ],
             "state_writes": []
           },
@@ -8795,11 +8817,12 @@
             "reason": "Retains a non-battling member of the ordered Three Island scene without claiming a Trainer allocation.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_BikerOnlooker",
-              "flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS"
             },
             "actor_role": "scene_actor",
             "state_reads": [
-              "SEVII_BIKERS_CLEARED"
+              "SEVII_BIKERS_CLEARED",
+              "SEVII_HIDE_THREE_ISLAND_BIKERS"
             ],
             "state_writes": []
           },
@@ -11130,11 +11153,11 @@
             "reason": "Retains a dependency-free local flavor actor explicitly in the story passive inventory.",
             "overrides": {
               "script": "WayfarerSevii_Story_PassiveInventory_ThreeIslandPort_1",
-              "flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS"
             },
             "actor_role": "passive",
             "state_reads": [
-              "SEVII_BIKERS_CLEARED"
+              "SEVII_HIDE_THREE_ISLAND_BIKERS"
             ],
             "state_writes": []
           },
@@ -11160,11 +11183,11 @@
             "reason": "Retains a dependency-free local flavor actor explicitly in the story passive inventory.",
             "overrides": {
               "script": "WayfarerSevii_Story_PassiveInventory_ThreeIslandPort_2",
-              "flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS"
             },
             "actor_role": "passive",
             "state_reads": [
-              "SEVII_BIKERS_CLEARED"
+              "SEVII_HIDE_THREE_ISLAND_BIKERS"
             ],
             "state_writes": []
           }
@@ -15726,9 +15749,11 @@
               "SEVII_LOSTELLE_RESCUED",
               "SEVII_LOSTELLE_STARTED",
               "SEVII_METEORITE_DELIVERED",
+              "SEVII_METEORITE_RECEIVED",
               "SEVII_MOON_STONE_RECEIVED"
             ],
             "state_writes": [
+              "SEVII_HIDE_THREE_ISLAND_BIKERS",
               "SEVII_LOSTELLE_STARTED",
               "SEVII_METEORITE_DELIVERED",
               "SEVII_MOON_STONE_RECEIVED"
@@ -17877,11 +17902,10 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_SelphyButler",
-              "flag": "FLAG_WAYFARER_SEVII_HIDE_RETURNED_SELPHY"
+              "flag": "0"
             },
             "actor_role": "scene_actor",
             "state_reads": [
-              "SEVII_HIDE_RETURNED_SELPHY",
               "SEVII_SELPHY_RETURNED"
             ],
             "state_writes": []
@@ -18008,7 +18032,8 @@
             },
             "actor_role": "pokemon_showing",
             "state_reads": [
-              "SEVII_HERACROSS_REWARD_RECEIVED"
+              "SEVII_HERACROSS_REWARD_RECEIVED",
+              "SEVII_HERACROSS_SIZE_RECORD"
             ],
             "state_writes": [
               "SEVII_HERACROSS_REWARD_RECEIVED"
@@ -19453,7 +19478,10 @@
         "WayfarerSevii_Story_EventScript_IcefallRocketDefeated",
         "WayfarerSevii_Story_EventScript_IcefallRocketLookout",
         "WayfarerSevii_Story_EventScript_IcefallRocketLookoutGone",
+        "WayfarerSevii_Story_EventScript_LoreleiAfterRescue",
         "WayfarerSevii_Story_EventScript_LoreleiCompleteDialogue",
+        "WayfarerSevii_Story_EventScript_LoreleiLeaves",
+        "WayfarerSevii_Story_EventScript_LoreleiThanks",
         "WayfarerSevii_Story_EventScript_LoreleiWarehouseDone",
         "WayfarerSevii_Story_EventScript_LostelleAfterHypno",
         "WayfarerSevii_Story_EventScript_LostelleBeforeBikers",
@@ -19466,9 +19494,12 @@
         "WayfarerSevii_Story_EventScript_LostellesFatherAfterRescue",
         "WayfarerSevii_Story_EventScript_LostellesFatherComplete",
         "WayfarerSevii_Story_EventScript_LostellesFatherNoMeteorite",
+        "WayfarerSevii_Story_EventScript_LostellesFatherOtherMeteorite",
         "WayfarerSevii_Story_EventScript_LostellesFatherReminder",
+        "WayfarerSevii_Story_EventScript_LostellesFatherReminderPlain",
         "WayfarerSevii_Story_EventScript_LostellesFatherReminderWithMeteorite",
         "WayfarerSevii_Story_EventScript_LostellesFatherRescueThanks",
+        "WayfarerSevii_Story_EventScript_LostellesFatherStartPlain",
         "WayfarerSevii_Story_EventScript_LostellesFatherStartWithMeteorite",
         "WayfarerSevii_Story_EventScript_MoonStoneNoRoom",
         "WayfarerSevii_Story_EventScript_ReturnSelphy",
@@ -19518,6 +19549,7 @@
         "WayfarerSevii_Story_Text_IcefallRocketIntro",
         "WayfarerSevii_Story_Text_IcefallRocketLookout",
         "WayfarerSevii_Story_Text_LoreleiNeedsHelp",
+        "WayfarerSevii_Story_Text_LoreleiThanks",
         "WayfarerSevii_Story_Text_LoreleiWarehouseDone",
         "WayfarerSevii_Story_Text_LoreleiWarehouseLead",
         "WayfarerSevii_Story_Text_LostelleBeforeBikers",
@@ -19536,6 +19568,7 @@
         "WayfarerSevii_Story_Text_MoonStoneNoRoom",
         "WayfarerSevii_Story_Text_MoonStoneReceived",
         "WayfarerSevii_Story_Text_NoMeteorite",
+        "WayfarerSevii_Story_Text_OtherMeteorite",
         "WayfarerSevii_Story_Text_PaxtonDefeat",
         "WayfarerSevii_Story_Text_PaxtonIntro",
         "WayfarerSevii_Story_Text_SelphyAlreadyHome",
@@ -19637,6 +19670,7 @@
         "WayfarerSevii_Story_BodySlamTutor",
         "WayfarerSevii_Story_BodySlamTutorDeclined",
         "WayfarerSevii_Story_BodySlamTutorTaught",
+        "WayfarerSevii_Story_CanOnlyBeLearnedOnce",
         "WayfarerSevii_Story_CapeBrinkAllAlreadyTaught",
         "WayfarerSevii_Story_CapeBrinkAllTaught",
         "WayfarerSevii_Story_CapeBrinkCheckLead",
@@ -19652,7 +19686,6 @@
         "WayfarerSevii_Story_ChanseyDanceAlreadyDone",
         "WayfarerSevii_Story_ChanseyDanceDeclined",
         "WayfarerSevii_Story_ChanseyDanceMan",
-        "WayfarerSevii_Story_CanOnlyBeLearnedOnce",
         "WayfarerSevii_Story_ChooseMoveTutorMon",
         "WayfarerSevii_Story_DunsparceProspector",
         "WayfarerSevii_Story_DunsparceProspectorComplete",
@@ -19669,6 +19702,7 @@
         "WayfarerSevii_Story_HeracrossCancel",
         "WayfarerSevii_Story_HeracrossJudge",
         "WayfarerSevii_Story_HeracrossNewRecord",
+        "WayfarerSevii_Story_HeracrossNotRecord",
         "WayfarerSevii_Story_HeracrossRewardFull",
         "WayfarerSevii_Story_HeracrossSizeRecord",
         "WayfarerSevii_Story_HeracrossSizeRecordBlank",
@@ -19695,6 +19729,7 @@
         "WayfarerSevii_Story_MoveManiacPayTiny",
         "WayfarerSevii_Story_Movement_ChanseyDance",
         "WayfarerSevii_Story_OutcastRocket",
+        "WayfarerSevii_Story_PassiveInventory_OneIslandPokemonCenter1F_3",
         "WayfarerSevii_Story_Passive_FiveIsland_0",
         "WayfarerSevii_Story_Passive_FiveIsland_1",
         "WayfarerSevii_Story_Passive_FourIslandLoreleiComplete",
@@ -19744,6 +19779,7 @@
         "WayfarerSevii_Story_Text_LocalRocketAbandoned",
         "WayfarerSevii_Story_Text_LocalRocketInactive",
         "WayfarerSevii_Story_Text_MoveCanOnlyBeLearnedOnce",
+        "WayfarerSevii_Story_Text_OneIslandChildStranger",
         "WayfarerSevii_Story_Text_TectonixMemorial",
         "WayfarerSevii_Story_Text_TectonixNeedsLemonade",
         "WayfarerSevii_Story_TwoIslandShopItems",
@@ -20631,19 +20667,18 @@
         "WayfarerSevii_Moltres_CommitResolution",
         "WayfarerSevii_Moltres_NotReady",
         "WayfarerSevii_Moltres_Resolved",
-        "WayfarerSevii_MtEmberExterior_EndOnLoad",
         "WayfarerSevii_MtEmberExterior_OnLoad",
         "WayfarerSevii_Rival_KnowsBlue",
         "WayfarerSevii_Rival_KnowsBlueNotPallet",
         "WayfarerSevii_Rival_NoScene",
         "WayfarerSevii_Rival_NoSceneTalk",
+        "WayfarerSevii_RubyLead_DismissGuards",
+        "WayfarerSevii_RubyLead_EndDismissGuards",
         "WayfarerSevii_RubyLead_EndEnsurePassword",
-        "WayfarerSevii_RubyLead_EndTryOpenCave",
         "WayfarerSevii_RubyLead_EnsurePassword",
         "WayfarerSevii_RubyLead_NotStarted",
         "WayfarerSevii_RubyLead_NotStartedAll",
         "WayfarerSevii_RubyLead_PasswordKnown",
-        "WayfarerSevii_RubyLead_TryOpenCave",
         "WayfarerSevii_Ruby_AlreadyRecovered",
         "WayfarerSevii_Ruby_GuardsRemain",
         "WayfarerSevii_Ruby_NoRoom",
@@ -20720,6 +20755,11 @@
         "WayfarerSevii_Warehouse_GideonVictory",
         "WayfarerSevii_Warehouse_NotReady",
         "WayfarerSevii_Warehouse_PredecessorPending",
+        "WayfarerSevii_Warehouse_RevealAdmin1",
+        "WayfarerSevii_Warehouse_RevealAdmin2",
+        "WayfarerSevii_Warehouse_RevealDone",
+        "WayfarerSevii_Warehouse_RevealGrunt47",
+        "WayfarerSevii_Warehouse_RevealGrunt48",
         "WayfarerSevii_Warehouse_SapphireNoRoom",
         "WayfarerSevii_Warehouse_TryGiveSapphire",
         "WayfarerSevii_RocketWarehouse_Cage",
@@ -20858,7 +20898,6 @@
         "WayfarerSevii_Story_PassiveInventory_OneIslandHouse1_1",
         "WayfarerSevii_Story_PassiveInventory_OneIslandHouse2_0",
         "WayfarerSevii_Story_PassiveInventory_OneIslandKindleRoadEmberSpa_2",
-        "WayfarerSevii_Story_PassiveInventory_OneIslandPokemonCenter1F_3",
         "WayfarerSevii_Story_PassiveInventory_OneIslandPokemonCenter1F_4",
         "WayfarerSevii_Story_PassiveInventory_OneIslandPokemonCenter1F_5",
         "WayfarerSevii_Story_PassiveInventory_OneIslandTreasureBeach_1",
@@ -20982,12 +21021,6 @@
           "kind": "script_symbol",
           "path": "data/maps/OneIsland_KindleRoad_EmberSpa_Frlg/scripts.inc",
           "sha256": "e28dba61ff465a387ddc7199013595bf2647aa60d2534da848dc48f890d3d089"
-        },
-        {
-          "label": "OneIsland_PokemonCenter_1F_Text_CameFromPalletDontKnowIt",
-          "kind": "script_symbol",
-          "path": "data/maps/OneIsland_PokemonCenter_1F_Frlg/scripts.inc",
-          "sha256": "df271771c0aa437ead897d4a206a5fc0994396e91cbdd2708b15dacee315419b"
         },
         {
           "label": "OneIsland_PokemonCenter_1F_Text_EnormousVolcanoOnIsland",
@@ -25290,9 +25323,7 @@
           "story.lostelle.biker-onlooker-7",
           "story.lostelle.cue-ball-paxton",
           "story.lostelle.three-island-defender",
-          "story.passive.threeislandport.0",
-          "story.passive.threeislandport.1",
-          "story.passive.threeislandport.2"
+          "story.passive.threeislandport.0"
         ],
         "writers": [
           "story.lostelle.cue-ball-paxton"
@@ -25412,7 +25443,8 @@
         "slot": 17,
         "initial": 0,
         "readers": [
-          "story.lostelle.bill-meteorite"
+          "story.lostelle.bill-meteorite",
+          "story.lostelle.father"
         ],
         "writers": [
           "story.lostelle.bill-meteorite"
@@ -25695,7 +25727,6 @@
           "story.celio.local-rocket-49",
           "story.celio.local-rocket-50",
           "story.celio.local-rocket-51",
-          "story.celio.mt-ember-cave-staging",
           "story.celio.network",
           "story.celio.ruby",
           "story.celio.ruby-guard-43",
@@ -25769,7 +25800,8 @@
           "story.celio.warehouse-warehousegideon",
           "story.celio.warehouse-warehousegrunt42",
           "story.celio.warehouse-warehousegrunt47",
-          "story.celio.warehouse-warehousegrunt48"
+          "story.celio.warehouse-warehousegrunt48",
+          "story.lorelei.lorelei"
         ],
         "writers": [
           "story.celio.ruby-guard-43",
@@ -25823,7 +25855,8 @@
           "story.celio.warehouse-warehousegideon",
           "story.celio.warehouse-warehousegrunt42",
           "story.celio.warehouse-warehousegrunt47",
-          "story.celio.warehouse-warehousegrunt48"
+          "story.celio.warehouse-warehousegrunt48",
+          "story.lorelei.lorelei"
         ],
         "writers": [
           "story.celio.sapphire-theft"
@@ -25851,7 +25884,8 @@
           "story.celio.warehouse-warehousegideon",
           "story.celio.warehouse-warehousegrunt42",
           "story.celio.warehouse-warehousegrunt47",
-          "story.celio.warehouse-warehousegrunt48"
+          "story.celio.warehouse-warehousegrunt48",
+          "story.lorelei.lorelei"
         ],
         "writers": [
           "story.celio.sapphire-theft"
@@ -26210,7 +26244,6 @@
         "initial": 1,
         "lifecycle": "presentation",
         "readers": [
-          "story.selphy.butler",
           "story.selphy.requests"
         ],
         "writers": [
@@ -26338,6 +26371,118 @@
         ]
       },
       {
+        "id": "SEVII_HIDE_WAREHOUSE_ADMIN_1",
+        "owner": "story",
+        "storage": "flag",
+        "slot": 200,
+        "initial": 1,
+        "lifecycle": "presentation",
+        "readers": [
+          "story.celio.warehouse-warehouseadmin1",
+          "story.celio.warehouse-warehousegrunt42"
+        ],
+        "writers": [
+          "story.celio.warehouse-warehousegideon",
+          "story.celio.warehouse-warehousegrunt42"
+        ],
+        "transitions": [
+          {
+            "from": 1,
+            "to": 0,
+            "caller": "story.celio.warehouse-warehousegrunt42"
+          },
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.celio.warehouse-warehousegideon"
+          }
+        ]
+      },
+      {
+        "id": "SEVII_HIDE_WAREHOUSE_GRUNT_47",
+        "owner": "story",
+        "storage": "flag",
+        "slot": 201,
+        "initial": 1,
+        "lifecycle": "presentation",
+        "readers": [
+          "story.celio.warehouse-warehouseadmin1",
+          "story.celio.warehouse-warehousegrunt47"
+        ],
+        "writers": [
+          "story.celio.warehouse-warehouseadmin1",
+          "story.celio.warehouse-warehousegideon"
+        ],
+        "transitions": [
+          {
+            "from": 1,
+            "to": 0,
+            "caller": "story.celio.warehouse-warehouseadmin1"
+          },
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.celio.warehouse-warehousegideon"
+          }
+        ]
+      },
+      {
+        "id": "SEVII_HIDE_WAREHOUSE_GRUNT_48",
+        "owner": "story",
+        "storage": "flag",
+        "slot": 202,
+        "initial": 1,
+        "lifecycle": "presentation",
+        "readers": [
+          "story.celio.warehouse-warehousegrunt47",
+          "story.celio.warehouse-warehousegrunt48"
+        ],
+        "writers": [
+          "story.celio.warehouse-warehousegideon",
+          "story.celio.warehouse-warehousegrunt47"
+        ],
+        "transitions": [
+          {
+            "from": 1,
+            "to": 0,
+            "caller": "story.celio.warehouse-warehousegrunt47"
+          },
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.celio.warehouse-warehousegideon"
+          }
+        ]
+      },
+      {
+        "id": "SEVII_HIDE_WAREHOUSE_ADMIN_2",
+        "owner": "story",
+        "storage": "flag",
+        "slot": 203,
+        "initial": 1,
+        "lifecycle": "presentation",
+        "readers": [
+          "story.celio.warehouse-warehouseadmin2",
+          "story.celio.warehouse-warehousegrunt48"
+        ],
+        "writers": [
+          "story.celio.warehouse-warehousegideon",
+          "story.celio.warehouse-warehousegrunt48"
+        ],
+        "transitions": [
+          {
+            "from": 1,
+            "to": 0,
+            "caller": "story.celio.warehouse-warehousegrunt48"
+          },
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.celio.warehouse-warehousegideon"
+          }
+        ]
+      },
+      {
         "id": "SEVII_HIDE_RUBY_GUARDS",
         "owner": "story",
         "storage": "flag",
@@ -26350,7 +26495,9 @@
         ],
         "writers": [
           "story.celio.network",
-          "story.celio.ruby"
+          "story.celio.ruby",
+          "story.celio.ruby-guard-43",
+          "story.celio.ruby-guard-44"
         ],
         "transitions": [
           {
@@ -26362,6 +26509,16 @@
             "from": 0,
             "to": 1,
             "caller": "story.celio.ruby"
+          },
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.celio.ruby-guard-43"
+          },
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.celio.ruby-guard-44"
           }
         ]
       },
@@ -26390,6 +26547,51 @@
             "from": 1,
             "to": 0,
             "caller": "story.rival.six-island-arrival"
+          },
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.rival.four-island-arrival"
+          },
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.rival.six-island-arrival"
+          }
+        ]
+      },
+      {
+        "id": "SEVII_HIDE_THREE_ISLAND_BIKERS",
+        "owner": "story",
+        "storage": "flag",
+        "slot": 199,
+        "initial": 1,
+        "lifecycle": "presentation",
+        "readers": [
+          "story.lostelle.biker-goon-1",
+          "story.lostelle.biker-goon-2",
+          "story.lostelle.biker-goon-3",
+          "story.lostelle.biker-onlooker-13",
+          "story.lostelle.biker-onlooker-5",
+          "story.lostelle.biker-onlooker-7",
+          "story.lostelle.cue-ball-paxton",
+          "story.passive.threeislandport.1",
+          "story.passive.threeislandport.2"
+        ],
+        "writers": [
+          "story.lostelle.cue-ball-paxton",
+          "story.lostelle.father"
+        ],
+        "transitions": [
+          {
+            "from": 1,
+            "to": 0,
+            "caller": "story.lostelle.father"
+          },
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.lostelle.cue-ball-paxton"
           }
         ]
       },
@@ -28332,7 +28534,9 @@
         "storage": "var",
         "slot": 4,
         "initial": 32768,
-        "readers": [],
+        "readers": [
+          "story.local.heracross-judge"
+        ],
         "writers": [],
         "transitions": []
       },

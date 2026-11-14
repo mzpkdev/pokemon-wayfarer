@@ -161,7 +161,14 @@ WayfarerSevii_Story_HeracrossJudge::
 	special CompareHeracrossSize
 	goto_if_eq VAR_RESULT, 1, WayfarerSevii_Story_HeracrossWrongSpecies
 	goto_if_eq VAR_RESULT, 3, WayfarerSevii_Story_HeracrossNewRecord
-	goto_if_unset FLAG_WAYFARER_SEVII_HERACROSS_REWARD_RECEIVED, WayfarerSevii_Story_HeracrossTryGiveReward
+	goto_if_set FLAG_WAYFARER_SEVII_HERACROSS_REWARD_RECEIVED, WayfarerSevii_Story_HeracrossNotRecord
+	@ The Nest Ball is owed only for a record. A failed delivery leaves the record
+	@ above its 0x8000 default, so a later tied or smaller measurement retries it.
+	copyvar VAR_0x8004, VAR_WAYFARER_SEVII_HERACROSS_SIZE_RECORD
+	goto_if_eq VAR_0x8004, 0x8000, WayfarerSevii_Story_HeracrossNotRecord
+	goto WayfarerSevii_Story_HeracrossTryGiveReward
+
+WayfarerSevii_Story_HeracrossNotRecord::
 	msgbox SixIsland_WaterPath_House1_Text_ItsXInchesYInchesWasBiggest
 	release
 	end
@@ -836,3 +843,15 @@ WayfarerSevii_Story_Passive_SixIsland_0::
 WayfarerSevii_Story_Passive_SixIsland_1::
 	msgbox SixIsland_Text_ThatWayToWaterPathRuinValley, MSGBOX_NPC
 	end
+
+@ The child asks every visitor where they came from. The FRLG line named PALLET
+@ TOWN for everyone, so this one stays true for any origin.
+WayfarerSevii_Story_PassiveInventory_OneIslandPokemonCenter1F_3::
+	msgbox WayfarerSevii_Story_Text_OneIslandChildStranger, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_Text_OneIslandChildStranger::
+	.string "Oh, you're a stranger here!\n"
+	.string "Hi! Where did you come from?\p"
+	.string "…Is that far? I've never been off\n"
+	.string "the islands, so I can't picture it!$"

@@ -418,7 +418,7 @@ The Masters' calls come from the caretaker, not from an official league,
 once the Masters joins the call rotation with this format; until then the
 caretaker offers the event at the house, and names the Masters' reigning
 champion there.
-Her first call says that Lorelei, retired to Four Island, spoke of the
+Her first call says that Lorelei, who is from Four Island, spoke of the
 player; beyond being the default [partner](#partner), Lorelei stays an
 ordinary notable trainer with no guaranteed seat. Accepting names the four
 pairs in order, which of the eight hold a Master's seat, and the partner who

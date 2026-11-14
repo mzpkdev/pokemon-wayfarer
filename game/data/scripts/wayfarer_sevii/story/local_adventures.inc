@@ -49,15 +49,29 @@ WayfarerSevii_Story_EventScript_LostellesFather::
 	goto_if_set FLAG_WAYFARER_SEVII_LOSTELLE_RESCUED, WayfarerSevii_Story_EventScript_LostellesFatherAfterRescue
 	goto_if_set FLAG_WAYFARER_SEVII_LOSTELLE_STARTED, WayfarerSevii_Story_EventScript_LostellesFatherReminder
 	setflag FLAG_WAYFARER_SEVII_LOSTELLE_STARTED
+	clearflag FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS
+	@ ITEM_METEORITE is shared with Hoenn, so only BILL's Sevii METEORITE counts.
+	goto_if_unset FLAG_WAYFARER_SEVII_METEORITE_RECEIVED, WayfarerSevii_Story_EventScript_LostellesFatherStartPlain
 	checkitem ITEM_METEORITE
 	goto_if_eq VAR_RESULT, TRUE, WayfarerSevii_Story_EventScript_LostellesFatherStartWithMeteorite
 	msgbox WayfarerSevii_Story_Text_LostelleStart
 	release
 	end
 
+WayfarerSevii_Story_EventScript_LostellesFatherStartPlain::
+	msgbox WayfarerSevii_Story_Text_LostelleStart
+	release
+	end
+
 WayfarerSevii_Story_EventScript_LostellesFatherReminder::
+	goto_if_unset FLAG_WAYFARER_SEVII_METEORITE_RECEIVED, WayfarerSevii_Story_EventScript_LostellesFatherReminderPlain
 	checkitem ITEM_METEORITE
 	goto_if_eq VAR_RESULT, TRUE, WayfarerSevii_Story_EventScript_LostellesFatherReminderWithMeteorite
+	msgbox WayfarerSevii_Story_Text_LostelleReminder
+	release
+	end
+
+WayfarerSevii_Story_EventScript_LostellesFatherReminderPlain::
 	msgbox WayfarerSevii_Story_Text_LostelleReminder
 	release
 	end
@@ -76,6 +90,7 @@ WayfarerSevii_Story_EventScript_LostellesFatherAfterRescue::
 	goto_if_set FLAG_WAYFARER_SEVII_METEORITE_DELIVERED, WayfarerSevii_Story_EventScript_TryMoonStone
 	checkitem ITEM_METEORITE
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Story_EventScript_LostellesFatherRescueThanks
+	goto_if_unset FLAG_WAYFARER_SEVII_METEORITE_RECEIVED, WayfarerSevii_Story_EventScript_LostellesFatherOtherMeteorite
 	msgbox WayfarerSevii_Story_Text_MeteoriteHandoff, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, WayfarerSevii_Story_EventScript_LostellesFatherRescueThanks
 	setvar VAR_0x8004, ITEM_METEORITE
@@ -91,6 +106,11 @@ WayfarerSevii_Story_EventScript_LostellesFatherAfterRescue::
 
 WayfarerSevii_Story_EventScript_LostellesFatherNoMeteorite::
 	msgbox WayfarerSevii_Story_Text_NoMeteorite
+	release
+	end
+
+WayfarerSevii_Story_EventScript_LostellesFatherOtherMeteorite::
+	msgbox WayfarerSevii_Story_Text_OtherMeteorite
 	release
 	end
 
@@ -182,6 +202,7 @@ WayfarerSevii_Story_EventScript_CueBallPaxton::
 
 WayfarerSevii_Story_EventScript_CommitBikersCleared::
 	setflag FLAG_WAYFARER_SEVII_BIKERS_CLEARED
+	setflag FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS
 	msgbox WayfarerSevii_Story_Text_BikersLeave
 	closemessage
 	fadescreenswapbuffers FADE_TO_BLACK
@@ -367,21 +388,35 @@ WayfarerSevii_Story_EventScript_CommitLoreleiComplete::
 	removeobject LOCALID_ICEFALL_ROCKET1
 	removeobject LOCALID_ICEFALL_ROCKET2
 	removeobject LOCALID_ICEFALL_ROCKET3
+	goto WayfarerSevii_Story_EventScript_LoreleiAfterRescue
+
+@ LORELEI thanks the player and heads home, so the cave copy leaves with the
+@ poachers and stays hidden on reload (her object hides on LORELEI_COMPLETE).
+@ The Warehouse tip only appears while that operation is actually active.
+WayfarerSevii_Story_EventScript_LoreleiAfterRescue::
 	goto_if_set FLAG_WAYFARER_SEVII_WAREHOUSE_CLEARED, WayfarerSevii_Story_EventScript_LoreleiWarehouseDone
+	goto_if_unset FLAG_WAYFARER_SEVII_SAPPHIRE_STOLEN, WayfarerSevii_Story_EventScript_LoreleiThanks
+	goto_if_unset FLAG_WAYFARER_SEVII_PASSWORD_ONE_LEARNED, WayfarerSevii_Story_EventScript_LoreleiThanks
+	goto_if_unset FLAG_WAYFARER_SEVII_PASSWORD_TWO_LEARNED, WayfarerSevii_Story_EventScript_LoreleiThanks
 	msgbox WayfarerSevii_Story_Text_LoreleiWarehouseLead
-	releaseall
-	end
+	goto WayfarerSevii_Story_EventScript_LoreleiLeaves
 
 WayfarerSevii_Story_EventScript_LoreleiWarehouseDone::
 	msgbox WayfarerSevii_Story_Text_LoreleiWarehouseDone
+	goto WayfarerSevii_Story_EventScript_LoreleiLeaves
+
+WayfarerSevii_Story_EventScript_LoreleiThanks::
+	msgbox WayfarerSevii_Story_Text_LoreleiThanks
+	goto WayfarerSevii_Story_EventScript_LoreleiLeaves
+
+WayfarerSevii_Story_EventScript_LoreleiLeaves::
+	closemessage
+	removeobject LOCALID_ICEFALL_LORELEI
 	releaseall
 	end
 
 WayfarerSevii_Story_EventScript_LoreleiCompleteDialogue::
-	goto_if_set FLAG_WAYFARER_SEVII_WAREHOUSE_CLEARED, WayfarerSevii_Story_EventScript_LoreleiWarehouseDone
-	msgbox WayfarerSevii_Story_Text_LoreleiWarehouseLead
-	releaseall
-	end
+	goto WayfarerSevii_Story_EventScript_LoreleiAfterRescue
 
 WayfarerSevii_Story_EventScript_IcefallRocketBeforeLorelei::
 	msgbox WayfarerSevii_Story_Text_IcefallRocketBusy
@@ -498,9 +533,11 @@ WayfarerSevii_Story_EventScript_SelphyButlerWaiting::
 @ ---------------------------------------------------------------------------
 
 WayfarerSevii_Story_Text_BillMeteoriteOffer::
-	.string "BILL: A friend on TWO ISLAND studies\n"
-	.string "rare stones. Will you take this\l"
-	.string "METEORITE to him for me?$"
+	.string "BILL: Oh, hello! I'm BILL, a POKéMON\n"
+	.string "researcher passing through.\p"
+	.string "A friend on TWO ISLAND studies rare\n"
+	.string "stones. Will you take this METEORITE\l"
+	.string "to him for me?$"
 WayfarerSevii_Story_Text_BillMeteoriteReceived::
 	.string "BILL handed you the METEORITE.\p"
 	.string "His friend runs TWO ISLAND's\n"
@@ -517,6 +554,12 @@ WayfarerSevii_Story_Text_BillMeteoriteDeclined::
 WayfarerSevii_Story_Text_BillMeteoriteNoRoom::
 	.string "BILL: Your KEY ITEMS pocket is full.\n"
 	.string "Make room and I'll hold it for you.$"
+WayfarerSevii_Story_Text_OtherMeteorite::
+	.string "LOSTELLE's father: Thank you for\n"
+	.string "bringing my daughter home!\p"
+	.string "That METEORITE isn't the one BILL\n"
+	.string "promised me, though. His ONE ISLAND\l"
+	.string "delivery is the one I'm waiting on.$"
 WayfarerSevii_Story_Text_LostelleStart::
 	.string "LOSTELLE's father: LOSTELLE hasn't\n"
 	.string "come home! Please search THREE\l"
@@ -631,6 +674,10 @@ WayfarerSevii_Story_Text_LoreleiWarehouseLead::
 	.string "LORELEI: Thank you. They mentioned a\n"
 	.string "ROCKET WAREHOUSE on FIVE ISLAND.\l"
 	.string "Their operation may still be active.$"
+WayfarerSevii_Story_Text_LoreleiThanks::
+	.string "LORELEI: Thank you. I wonder what\n"
+	.string "TEAM ROCKET wanted with this cave.\l"
+	.string "Please be careful out there.$"
 WayfarerSevii_Story_Text_LoreleiWarehouseDone::
 	.string "LORELEI: Thank you. I heard you also\n"
 	.string "ended their WAREHOUSE operation.$"
@@ -674,4 +721,6 @@ WayfarerSevii_Story_Text_SelphyButlerHome::
 	.string "My lady's smile has regained the\n"
 	.string "brilliance of the sun.$"
 WayfarerSevii_Story_Text_SelphyButlerWaiting::
-	.string "Please bring LADY SELPHY home safely.$"
+	.string "My lady wandered off toward LOST\n"
+	.string "CAVE on FIVE ISLAND. Please bring\l"
+	.string "LADY SELPHY home safely.$"

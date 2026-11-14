@@ -359,12 +359,6 @@ OneIsland_KindleRoad_Text_RouteSign::
 	.string "This is KINDLE ROAD.\p"
 	.string "Go straight for MT. EMBER.$"
 
-OneIsland_PokemonCenter_1F_Text_CameFromPalletDontKnowIt::
-	.string "Oh, you're a stranger here!\n"
-	.string "Hi! Where did you come from?\p"
-	.string "…PALLET TOWN?\n"
-	.string "I don't know it!$"
-
 OneIsland_PokemonCenter_1F_Text_EnormousVolcanoOnIsland::
 	.string "On this island, there's an enormous\n"
 	.string "volcano.\p"

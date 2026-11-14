@@ -94,11 +94,9 @@ WayfarerSevii_Celio_RepairComplete:
 @ Mt. Ember Ruby lead
 
 WayfarerSevii_MtEmberExterior_OnLoad::
-	goto_if_unset FLAG_WAYFARER_SEVII_CELIO_GEMS_STARTED, WayfarerSevii_MtEmberExterior_EndOnLoad
-	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_43, WayfarerSevii_MtEmberExterior_EndOnLoad
-	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_44, WayfarerSevii_MtEmberExterior_EndOnLoad
+	@ Ruby Path is exploration content: the entrance is always open. Only the
+	@ Ruby itself waits on Celio's request and the guards.
 	setmetatile 42, 39, METATILE_MtEmber_CaveEntrance, 0
-WayfarerSevii_MtEmberExterior_EndOnLoad:
 	end
 
 WayfarerSevii_EventScript_RubyGuardPasswordScene::
@@ -118,8 +116,8 @@ WayfarerSevii_EventScript_RubyGuard1::
 	goto_if_unset FLAG_WAYFARER_SEVII_CELIO_GEMS_STARTED, WayfarerSevii_RubyLead_NotStarted
 	call WayfarerSevii_RubyLead_EnsurePassword
 	trainerbattle_single TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_43, WayfarerSevii_Text_RubyGuard1Intro, WayfarerSevii_Text_RubyGuard1Defeat
-	call WayfarerSevii_RubyLead_TryOpenCave
 	msgbox WayfarerSevii_Text_RubyGuard1PostBattle
+	call WayfarerSevii_RubyLead_DismissGuards
 	release
 	end
 
@@ -129,8 +127,8 @@ WayfarerSevii_EventScript_RubyGuard2::
 	goto_if_unset FLAG_WAYFARER_SEVII_CELIO_GEMS_STARTED, WayfarerSevii_RubyLead_NotStarted
 	call WayfarerSevii_RubyLead_EnsurePassword
 	trainerbattle_single TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_44, WayfarerSevii_Text_RubyGuard2Intro, WayfarerSevii_Text_RubyGuard2Defeat
-	call WayfarerSevii_RubyLead_TryOpenCave
 	msgbox WayfarerSevii_Text_RubyGuard2PostBattle
+	call WayfarerSevii_RubyLead_DismissGuards
 	release
 	end
 
@@ -142,12 +140,15 @@ WayfarerSevii_RubyLead_EnsurePassword:
 WayfarerSevii_RubyLead_EndEnsurePassword:
 	return
 
-WayfarerSevii_RubyLead_TryOpenCave:
-	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_43, WayfarerSevii_RubyLead_EndTryOpenCave
-	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_44, WayfarerSevii_RubyLead_EndTryOpenCave
-	setmetatile 42, 39, METATILE_MtEmber_CaveEntrance, 0
-	special DrawWholeMapView
-WayfarerSevii_RubyLead_EndTryOpenCave:
+@ Once both guards are beaten they leave their post, as in FRLG, and stay gone
+@ on reload through the shared hide flag.
+WayfarerSevii_RubyLead_DismissGuards:
+	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_43, WayfarerSevii_RubyLead_EndDismissGuards
+	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_44, WayfarerSevii_RubyLead_EndDismissGuards
+	setflag FLAG_WAYFARER_SEVII_HIDE_RUBY_GUARDS
+	removeobject LOCALID_MT_EMBER_GRUNT1
+	removeobject LOCALID_MT_EMBER_GRUNT2
+WayfarerSevii_RubyLead_EndDismissGuards:
 	return
 
 WayfarerSevii_RubyLead_NotStarted:
@@ -257,8 +258,8 @@ WayfarerSevii_Warehouse_CheckReadyDone:
 	return
 
 @ Passwords can be learned in either order. The final prerequisite transition
-@ presents both the ordered combatants and Gideon; Warehouse clear later hides
-@ only the five combatants so the Sapphire handoff remains retryable.
+@ presents the first combatant and Gideon; each win reveals the next opponent,
+@ and Warehouse clear later hides all five so the Sapphire handoff remains retryable.
 WayfarerSevii_Story_UpdateWarehouseReadiness:
 	goto_if_unset FLAG_WAYFARER_SEVII_SAPPHIRE_STOLEN, WayfarerSevii_Story_UpdateWarehouseReadinessDone
 	goto_if_unset FLAG_WAYFARER_SEVII_PASSWORD_ONE_LEARNED, WayfarerSevii_Story_UpdateWarehouseReadinessDone
@@ -284,70 +285,72 @@ WayfarerSevii_Warehouse_PredecessorPending:
 	release
 	end
 
+@ The combatants are sight trainers, so each script reaches `trainerbattle` before
+@ any effectful command: a beaten Rocket never walks up again. Order is
+@ enforced by presentation instead of by dialogue. Each opponent appears only
+@ once the previous one falls, so nobody out of turn can stop the player.
 WayfarerSevii_EventScript_WarehouseGrunt42::
-	lock
-	faceplayer
-	call WayfarerSevii_Warehouse_CheckReady
-	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Warehouse_NotReady
 	trainerbattle_single TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_42, WayfarerSevii_Text_WarehouseGruntIntro, WayfarerSevii_Text_WarehouseGruntDefeat
-	msgbox WayfarerSevii_Text_WarehouseGruntPostBattle
-	release
+	call WayfarerSevii_Warehouse_RevealAdmin1
+	msgbox WayfarerSevii_Text_WarehouseGruntPostBattle, MSGBOX_AUTOCLOSE
 	end
 
 WayfarerSevii_EventScript_WarehouseAdmin1::
-	lock
-	faceplayer
-	call WayfarerSevii_Warehouse_CheckReady
-	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Warehouse_NotReady
-	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_42, WayfarerSevii_Warehouse_PredecessorPending
 	trainerbattle_single TRAINER_WAYFARER_SEVII_TEAM_ROCKET_ADMIN, WayfarerSevii_Text_WarehouseAdmin1Intro, WayfarerSevii_Text_WarehouseAdmin1Defeat
-	msgbox WayfarerSevii_Text_WarehouseAdmin1PostBattle
-	release
+	call WayfarerSevii_Warehouse_RevealGrunt47
+	msgbox WayfarerSevii_Text_WarehouseAdmin1PostBattle, MSGBOX_AUTOCLOSE
 	end
 
 WayfarerSevii_EventScript_WarehouseGrunt47::
-	lock
-	faceplayer
-	call WayfarerSevii_Warehouse_CheckReady
-	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Warehouse_NotReady
-	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_ADMIN, WayfarerSevii_Warehouse_PredecessorPending
 	trainerbattle_single TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_47, WayfarerSevii_Text_WarehouseGruntIntro, WayfarerSevii_Text_WarehouseGruntDefeat
-	msgbox WayfarerSevii_Text_WarehouseGruntPostBattle
-	release
+	call WayfarerSevii_Warehouse_RevealGrunt48
+	msgbox WayfarerSevii_Text_WarehouseGruntPostBattle, MSGBOX_AUTOCLOSE
 	end
 
 WayfarerSevii_EventScript_WarehouseGrunt48::
-	lock
-	faceplayer
-	call WayfarerSevii_Warehouse_CheckReady
-	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Warehouse_NotReady
-	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_47, WayfarerSevii_Warehouse_PredecessorPending
 	trainerbattle_single TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_48, WayfarerSevii_Text_WarehouseGruntIntro, WayfarerSevii_Text_WarehouseGruntDefeat
-	msgbox WayfarerSevii_Text_WarehouseGruntPostBattle
-	release
+	call WayfarerSevii_Warehouse_RevealAdmin2
+	msgbox WayfarerSevii_Text_WarehouseGruntPostBattle, MSGBOX_AUTOCLOSE
 	end
 
 WayfarerSevii_EventScript_WarehouseAdmin2::
-	lock
-	faceplayer
-	call WayfarerSevii_Warehouse_CheckReady
-	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Warehouse_NotReady
-	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_48, WayfarerSevii_Warehouse_PredecessorPending
 	trainerbattle_single TRAINER_WAYFARER_SEVII_TEAM_ROCKET_ADMIN_2, WayfarerSevii_Text_WarehouseAdmin2Intro, WayfarerSevii_Text_WarehouseAdmin2Defeat, WayfarerSevii_Warehouse_Admin2Victory
-	msgbox WayfarerSevii_Text_WarehouseAdmin2PostBattle
-	release
+	msgbox WayfarerSevii_Text_WarehouseAdmin2PostBattle, MSGBOX_AUTOCLOSE
 	end
+
+WayfarerSevii_Warehouse_RevealAdmin1:
+	goto_if_unset FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_ADMIN_1, WayfarerSevii_Warehouse_RevealDone
+	clearflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_ADMIN_1
+	addobject LOCALID_WAREHOUSE_ADMIN1
+	return
+
+WayfarerSevii_Warehouse_RevealGrunt47:
+	goto_if_unset FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GRUNT_47, WayfarerSevii_Warehouse_RevealDone
+	clearflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GRUNT_47
+	addobject LOCALID_WAREHOUSE_GRUNT2
+	return
+
+WayfarerSevii_Warehouse_RevealGrunt48:
+	goto_if_unset FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GRUNT_48, WayfarerSevii_Warehouse_RevealDone
+	clearflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GRUNT_48
+	addobject LOCALID_WAREHOUSE_GRUNT3
+	return
+
+WayfarerSevii_Warehouse_RevealAdmin2:
+	goto_if_unset FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_ADMIN_2, WayfarerSevii_Warehouse_RevealDone
+	clearflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_ADMIN_2
+	addobject LOCALID_WAREHOUSE_ADMIN2
+WayfarerSevii_Warehouse_RevealDone:
+	return
 
 WayfarerSevii_Warehouse_Admin2Victory:
 	specialvar VAR_RESULT, WayfarerSevii_IsMainlandGiovanniComplete
 	goto_if_eq VAR_RESULT, TRUE, WayfarerSevii_Warehouse_Admin2GiovanniComplete
-	msgbox WayfarerSevii_Text_WarehouseAdmin2LocalEnding
-	release
+	msgbox WayfarerSevii_Text_WarehouseAdmin2LocalEnding, MSGBOX_AUTOCLOSE
 	end
 
 WayfarerSevii_Warehouse_Admin2GiovanniComplete:
-	msgbox WayfarerSevii_Text_WarehouseAdmin2GiovanniEnding
-	release
+	msgbox WayfarerSevii_Text_WarehouseAdmin2GiovanniEnding, MSGBOX_AUTOCLOSE
 	end
 
 WayfarerSevii_EventScript_WarehouseGideon::
@@ -368,6 +371,10 @@ WayfarerSevii_Warehouse_GideonVictory:
 	setflag FLAG_WAYFARER_SEVII_WAREHOUSE_CLEARED
 	setflag FLAG_WAYFARER_SEVII_HIDE_LOCAL_ROCKETS
 	setflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_COMBATANTS
+	setflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_ADMIN_1
+	setflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GRUNT_47
+	setflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GRUNT_48
+	setflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_ADMIN_2
 	removeobject LOCALID_WAREHOUSE_GRUNT2
 	removeobject LOCALID_WAREHOUSE_GRUNT3
 	removeobject LOCALID_WAREHOUSE_ADMIN1
@@ -418,10 +425,14 @@ WayfarerSevii_FourIsland_RivalTryScene::
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Rival_NoScene
 	lockall
 	playbgm MUS_RG_ENCOUNTER_RIVAL, 0
-	msgbox WayfarerSevii_Text_FourIslandRivalScene
 	setflag FLAG_WAYFARER_SEVII_RIVAL_SCENE_SEEN
 	clearflag FLAG_WAYFARER_SEVII_HIDE_RIVALS
 	addobject LOCALID_FOUR_ISLAND_RIVAL
+	msgbox WayfarerSevii_Text_FourIslandRivalScene
+	@ BLUE is a one-time visitor: he leaves after the scene, so he is never
+	@ standing on both islands and both copies stay hidden afterward.
+	setflag FLAG_WAYFARER_SEVII_HIDE_RIVALS
+	removeobject LOCALID_FOUR_ISLAND_RIVAL
 	fadedefaultbgm
 	releaseall
 WayfarerSevii_Rival_NoScene:
@@ -448,10 +459,14 @@ WayfarerSevii_SixIsland_RivalTryScene::
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Rival_NoScene
 	lockall
 	playbgm MUS_RG_ENCOUNTER_RIVAL, 0
-	msgbox WayfarerSevii_Text_SixIslandRivalScene
 	setflag FLAG_WAYFARER_SEVII_RIVAL_SCENE_SEEN
 	clearflag FLAG_WAYFARER_SEVII_HIDE_RIVALS
 	addobject LOCALID_SIX_ISLAND_RIVAL
+	msgbox WayfarerSevii_Text_SixIslandRivalScene
+	@ BLUE is a one-time visitor: he leaves after the scene, so he is never
+	@ standing on both islands and both copies stay hidden afterward.
+	setflag FLAG_WAYFARER_SEVII_HIDE_RIVALS
+	removeobject LOCALID_SIX_ISLAND_RIVAL
 	fadedefaultbgm
 	releaseall
 	return
@@ -517,20 +532,22 @@ WayfarerSevii_Moltres_Resolved:
 @ Text
 
 WayfarerSevii_Text_CelioOfferInvestigation:
-	.string "I'm trying to repair this Network\n"
+	.string "CELIO: Oh, hello! I'm CELIO. I'm\n"
+	.string "trying to repair this Network\l"
 	.string "Machine, but it needs two gems.\p"
 	.string "A RUBY lies somewhere on MT. EMBER,\n"
 	.string "and a SAPPHIRE is hidden on SIX\l"
 	.string "ISLAND. Will you investigate?$"
 
 WayfarerSevii_Text_CelioInvestigationAccepted:
-	.string "Thank you! You can pursue either\n"
-	.string "lead first. Bring back whatever you\l"
-	.string "find, and please be careful.$"
+	.string "CELIO: Thank you! You can pursue\n"
+	.string "either lead first.\p"
+	.string "Bring back whatever you find, and\n"
+	.string "please be careful.$"
 
 WayfarerSevii_Text_CelioOfferDeclined:
-	.string "I understand. The offer will still\n"
-	.string "be here whenever you're ready.$"
+	.string "CELIO: I understand. The offer will\n"
+	.string "still be here whenever you're ready.$"
 
 WayfarerSevii_Text_CelioRubyDelivered:
 	.string "You found the RUBY! This is exactly\n"
@@ -569,7 +586,7 @@ WayfarerSevii_Text_RubyGuardsRevealPassword:
 	.string "The ROCKETS let a password slip:\n"
 	.string "“GOLDEEN need log.”\p"
 	.string "They spot you listening and move to\n"
-	.string "defend the chamber.$"
+	.string "defend their dig.$"
 
 WayfarerSevii_Text_RubyGuard1Intro:
 	.string "You've been eavesdropping on us,\n"
@@ -594,8 +611,8 @@ WayfarerSevii_Text_RubyDormant:
 	.string "A red gem glitters here, but CELIO\n"
 	.string "hasn't asked you to investigate.$"
 WayfarerSevii_Text_RubyGuardsRemain:
-	.string "The ROCKET guards still bar the\n"
-	.string "chamber.$"
+	.string "The ROCKETS outside would notice if\n"
+	.string "you took it. Deal with the guards.$"
 WayfarerSevii_Text_RubyNoRoom:
 	.string "The RUBY remains safely here.\n"
 	.string "Make room in the KEY ITEMS pocket.$"
@@ -676,20 +693,20 @@ WayfarerSevii_Text_WarehouseGideonAfterRecovery:
 	.string "You have the SAPPHIRE. Leave me be.$"
 
 WayfarerSevii_Text_FourIslandRivalScene:
-	.string "{RIVAL}: Hey, {PLAYER}!\n"
+	.string "BLUE: Hey, {PLAYER}!\n"
 	.string "I came looking for rare POKéMON.\p"
 	.string "The islands are bigger than either\n"
 	.string "of us expected. Smell ya later!$"
 WayfarerSevii_Text_SixIslandRivalScene:
-	.string "{RIVAL}: Hey, {PLAYER}!\n"
+	.string "BLUE: Hey, {PLAYER}!\n"
 	.string "Finding every POKéMON here isn't\l"
 	.string "easy, even for a LEAGUE winner.\p"
 	.string "Keep exploring. Smell ya later!$"
 WayfarerSevii_Text_FourIslandRivalAfter:
-	.string "{RIVAL} has already moved on from\n"
+	.string "BLUE has already moved on from\n"
 	.string "FOUR ISLAND.$"
 WayfarerSevii_Text_SixIslandRivalAfter:
-	.string "{RIVAL} has already continued the\n"
+	.string "BLUE has already continued the\n"
 	.string "island search.$"
 
 WayfarerSevii_Text_MoltresNotReady:

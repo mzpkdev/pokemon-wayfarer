@@ -190,10 +190,11 @@ artifact. Standalone event script inclusion remains byte-equivalent.
 
 Keep the source geometry and make these story-independent adaptations:
 
-- Open Mt. Ember and Ruby Path without Rocket actors or story flags. Retain
-  ordinary Rock Smash and Strength terrain.
+- Open Mt. Ember and Ruby Path without story flags: the cave entrance is
+  always open. The Rocket guards that the story overlay adds stand beside the
+  entrance tile, never on it. Retain ordinary Rock Smash and Strength terrain.
 - Open the Three Island route to Bond Bridge and Berry Forest without the
-  biker scene.
+  biker scene. The gang is hidden until Lostelle's father starts the search.
 - Keep Icefall Cave's cracked-ice, falling-hole, and Waterfall behavior without
   Lorelei or the Rocket confrontation.
 - Open Rocket Warehouse without passwords. Retain its floor arrows and allow

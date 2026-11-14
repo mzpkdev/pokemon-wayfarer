@@ -74,11 +74,15 @@ player has met Bill or owns the Meteorite.
 
 1. The father starts the search.
 2. Three Island stages the four original ordered battles: Biker Goon, Biker
-   Goon 2, Biker Goon 3, then Cue Ball Paxton.
+   Goon 2, Biker Goon 3, then Cue Ball Paxton. The gang is hidden
+   (`HIDE_THREE_ISLAND_BIKERS`) until the father starts the search, so both
+   routes stay open before it. Once visible, the four required bikers stand
+   in a row at the south end of the corridor, each reachable from the Port
+   side without passing another actor.
 3. Clearing the bikers advances the local investigation toward Bond Bridge and
-   Berry Forest. Both routes remain physically accessible before the battles,
-   as required by the exploration baseline and the content overlay's primary
-   ownership contract.
+   Berry Forest and hides the gang again. Before the search starts both routes
+   remain physically accessible, as required by the exploration baseline and
+   the content overlay's primary ownership contract.
 4. Lostelle's scripted Hypno encounter starts only from her interaction.
 5. Defeating or catching the level-30 Hypno records `LOSTELLE_FOUND`; running,
    losing, or an interrupted start leaves the encounter available. Then attempt
@@ -86,9 +90,11 @@ player has met Bill or owns the Meteorite.
    replaying Hypno.
 6. The reunion records `LOSTELLE_RESCUED` before changing actor presentation.
 
-The rescue does not require the Meteorite. Before rescue completion, the father
-acknowledges an owned Meteorite but does not consume it. After the reunion he
-accepts the actual item, removes it only when the transaction can complete,
+The rescue does not require the Meteorite. `ITEM_METEORITE` is shared with
+Hoenn, so the father recognizes only the one Bill gave out on the islands
+(`METEORITE_RECEIVED`); any other Meteorite gets a line saying it is not the
+one Bill promised. Before rescue completion, the father acknowledges Bill's
+Meteorite but does not consume it. After the reunion he accepts the actual item, removes it only when the transaction can complete,
 records delivery, and offers the original Moon Stone reward. A full Items
 pocket leaves the Moon Stone claim available without replaying the reunion or
 consuming another Meteorite. Preserve the Three Island defender's original Full
@@ -106,7 +112,9 @@ Celio starts one investigation with two simultaneously available leads.
 
 - Remove the source Champion, National Pokédex, and network-repair gates.
 - Restore the Mt. Ember Rocket guards, their battles, the Ruby chamber, the Ruby,
-  and the first Warehouse password.
+  and the first Warehouse password. Ruby Path itself is always open: the guards
+  stand beside the cave mouth, not on it, and only the Ruby waits on Celio's
+  request and both guard wins. Once both are beaten the guards leave for good.
 - The guards are objective battles. A loss returns through normal recovery and
   leaves the pending actor, approach, and password state intact.
 - The Ruby transaction records recovery only after the Key Item enters the Bag.
@@ -126,7 +134,8 @@ do not advance Ruby or Sapphire recovery.
 - Celio's accepted request makes Dotted Hole's existing Cut entrance and floor
   route lead to the restored Sapphire scene.
 - The scientist appears in the Sapphire room only after the gem request starts
-  and before the theft is complete.
+  and before the theft is complete. He stands beside, not on, the B4F arrival
+  warp.
 - The player discovers the actual Sapphire before the scientist steals it. The
   scene records discovery, theft, and the second password in that order.
 - Leaving before the scene commits keeps the Sapphire room pending. No early
@@ -140,11 +149,13 @@ baseline. Story progress, not collision, controls the confrontation:
 | State | Warehouse behavior |
 | --- | --- |
 | Sapphire not stolen | Empty exploration; no gem or story actors |
-| Sapphire stolen, fewer than two passwords | Grunts may give local locked-operation dialogue, but the confrontation cannot advance |
-| Sapphire stolen, both passwords learned | Restore the ordered Rocket battles, administrators, Gideon, and Sapphire recovery |
+| Sapphire stolen, fewer than two passwords | Empty exploration; the combatants are not yet present, so the confrontation cannot advance |
+| Sapphire stolen, both passwords learned | The first Rocket and Gideon appear. Each later opponent appears only when the previous one is beaten (Grunt 42, Admin, Grunt 47, Grunt 48, Admin 2), so nobody out of turn blocks the route |
 | Warehouse cleared | Show completion dialogue and no repeat battles or duplicate Sapphire |
 
-Victory over each required opponent commits its own defeat state. Loss or
+Victory over each required opponent commits its own defeat state and reveals the
+next one. The combatants are sight trainers, so each script reaches its battle
+before any other command and a beaten Rocket never approaches again. Loss or
 departure resumes at the first undefeated opponent. Gideon's victory writes
 `WAREHOUSE_CLEARED`, then attempts the Sapphire recovery transaction. If the Key
 Items pocket is full, Gideon remains available to hand over the Sapphire; the
@@ -180,9 +191,12 @@ Celio, either gem, Giovanni, or a league win. Preserve the cave traversal and
 the source battle against Rocket Grunt 45. Loss or departure leaves that battle
 and all actors needed to continue pending.
 
-Lorelei's completion dialogue has two variants. Before Warehouse completion she
-may point the player toward the operation; afterward she acknowledges that it is
-already resolved. Her rescue never opens Dotted Hole, teaches a password, or
+Lorelei's completion dialogue has three variants. She points the player toward
+the Rocket Warehouse only while that operation is actually active (the Sapphire
+theft and both passwords are known); after Warehouse completion she
+acknowledges it is resolved; otherwise she gives a neutral thanks. She leaves
+Icefall Cave after the rescue and stays gone on reload, matching the Four Island
+resident's remark that she has gone back. Her rescue never opens Dotted Hole, teaches a password, or
 changes Warehouse completion.
 
 ### Selphy and Lost Cave
@@ -225,12 +239,14 @@ Restore the shared later-island rival scene only after the player has cleared at
 least one Wayfarer League. Early arrival at Four or Six Island does nothing and
 does not consume the scene. Once eligible, the first visit to either source
 location plays its location-appropriate version and sets the shared
-`SEVII_RIVAL_SCENE_SEEN` flag. The other location then uses post-scene dialogue.
+`SEVII_RIVAL_SCENE_SEEN` flag. Blue appears only for that scene and leaves
+with it: neither island keeps a copy afterward, so he is never in two places.
 
 The two source variants are non-battle cutscenes. The rival scene does not start
-or gate a local adventure. Use the player's established Wayfarer rival identity;
-do not infer Red/Leaf identity from the imported FRLG map or allocate a rival
-Trainer party for this scene.
+or gate a local adventure. The scene's actor is Blue and its text names him literally
+("BLUE:"), as Wayfarer's Kanto scripts do; it never uses the HnS rival
+placeholder. Do not infer Red/Leaf identity from the imported FRLG map or
+allocate a rival Trainer party for this scene.
 
 ## Moltres
 
@@ -289,10 +305,11 @@ plus focused story and exploration emulator journeys against one fresh Wayfarer
 E2E ROM. Run the production release-size check once when runtime content changes;
 do not repeat broad product builds for metadata-only reductions.
 
-The shipped evidence includes representative Bill, Lostelle, and Moltres
-journeys plus native checks for shared retry and transaction behavior. It does
-not include a live rival-scene journey; that remains a coverage gap, not a claim
-that the scene was exhaustively exercised. The merged validation snapshot is
+The shipped evidence includes representative Bill, Lostelle (walked from the
+Port through each ordered biker), Mt. Ember Ruby Path (guards, then the open
+cave), rival-scene, and Moltres journeys plus native checks for shared retry and
+transaction behavior. The content tests also walk the layout collision so an
+actor boxed in or standing on the only path fails the audit. The merged validation snapshot is
 recorded once in the [content overlay](sevii-content-overlay.md).
 
 ## Delivered milestones
