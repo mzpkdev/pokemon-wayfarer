@@ -532,20 +532,22 @@ WayfarerSevii_Moltres_Resolved:
 @ Text
 
 WayfarerSevii_Text_CelioOfferInvestigation:
-	.string "I'm trying to repair this Network\n"
+	.string "CELIO: Oh, hello! I'm CELIO. I'm\n"
+	.string "trying to repair this Network\l"
 	.string "Machine, but it needs two gems.\p"
 	.string "A RUBY lies somewhere on MT. EMBER,\n"
 	.string "and a SAPPHIRE is hidden on SIX\l"
 	.string "ISLAND. Will you investigate?$"
 
 WayfarerSevii_Text_CelioInvestigationAccepted:
-	.string "Thank you! You can pursue either\n"
-	.string "lead first. Bring back whatever you\l"
-	.string "find, and please be careful.$"
+	.string "CELIO: Thank you! You can pursue\n"
+	.string "either lead first.\p"
+	.string "Bring back whatever you find, and\n"
+	.string "please be careful.$"
 
 WayfarerSevii_Text_CelioOfferDeclined:
-	.string "I understand. The offer will still\n"
-	.string "be here whenever you're ready.$"
+	.string "CELIO: I understand. The offer will\n"
+	.string "still be here whenever you're ready.$"
 
 WayfarerSevii_Text_CelioRubyDelivered:
 	.string "You found the RUBY! This is exactly\n"

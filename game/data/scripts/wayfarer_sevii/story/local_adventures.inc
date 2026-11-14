@@ -50,15 +50,28 @@ WayfarerSevii_Story_EventScript_LostellesFather::
 	goto_if_set FLAG_WAYFARER_SEVII_LOSTELLE_STARTED, WayfarerSevii_Story_EventScript_LostellesFatherReminder
 	setflag FLAG_WAYFARER_SEVII_LOSTELLE_STARTED
 	clearflag FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS
+	@ ITEM_METEORITE is shared with Hoenn, so only BILL's Sevii METEORITE counts.
+	goto_if_unset FLAG_WAYFARER_SEVII_METEORITE_RECEIVED, WayfarerSevii_Story_EventScript_LostellesFatherStartPlain
 	checkitem ITEM_METEORITE
 	goto_if_eq VAR_RESULT, TRUE, WayfarerSevii_Story_EventScript_LostellesFatherStartWithMeteorite
 	msgbox WayfarerSevii_Story_Text_LostelleStart
 	release
 	end
 
+WayfarerSevii_Story_EventScript_LostellesFatherStartPlain::
+	msgbox WayfarerSevii_Story_Text_LostelleStart
+	release
+	end
+
 WayfarerSevii_Story_EventScript_LostellesFatherReminder::
+	goto_if_unset FLAG_WAYFARER_SEVII_METEORITE_RECEIVED, WayfarerSevii_Story_EventScript_LostellesFatherReminderPlain
 	checkitem ITEM_METEORITE
 	goto_if_eq VAR_RESULT, TRUE, WayfarerSevii_Story_EventScript_LostellesFatherReminderWithMeteorite
+	msgbox WayfarerSevii_Story_Text_LostelleReminder
+	release
+	end
+
+WayfarerSevii_Story_EventScript_LostellesFatherReminderPlain::
 	msgbox WayfarerSevii_Story_Text_LostelleReminder
 	release
 	end
@@ -77,6 +90,7 @@ WayfarerSevii_Story_EventScript_LostellesFatherAfterRescue::
 	goto_if_set FLAG_WAYFARER_SEVII_METEORITE_DELIVERED, WayfarerSevii_Story_EventScript_TryMoonStone
 	checkitem ITEM_METEORITE
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Story_EventScript_LostellesFatherRescueThanks
+	goto_if_unset FLAG_WAYFARER_SEVII_METEORITE_RECEIVED, WayfarerSevii_Story_EventScript_LostellesFatherOtherMeteorite
 	msgbox WayfarerSevii_Story_Text_MeteoriteHandoff, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, WayfarerSevii_Story_EventScript_LostellesFatherRescueThanks
 	setvar VAR_0x8004, ITEM_METEORITE
@@ -92,6 +106,11 @@ WayfarerSevii_Story_EventScript_LostellesFatherAfterRescue::
 
 WayfarerSevii_Story_EventScript_LostellesFatherNoMeteorite::
 	msgbox WayfarerSevii_Story_Text_NoMeteorite
+	release
+	end
+
+WayfarerSevii_Story_EventScript_LostellesFatherOtherMeteorite::
+	msgbox WayfarerSevii_Story_Text_OtherMeteorite
 	release
 	end
 
@@ -514,9 +533,11 @@ WayfarerSevii_Story_EventScript_SelphyButlerWaiting::
 @ ---------------------------------------------------------------------------
 
 WayfarerSevii_Story_Text_BillMeteoriteOffer::
-	.string "BILL: A friend on TWO ISLAND studies\n"
-	.string "rare stones. Will you take this\l"
-	.string "METEORITE to him for me?$"
+	.string "BILL: Oh, hello! I'm BILL, a POKéMON\n"
+	.string "researcher passing through.\p"
+	.string "A friend on TWO ISLAND studies rare\n"
+	.string "stones. Will you take this METEORITE\l"
+	.string "to him for me?$"
 WayfarerSevii_Story_Text_BillMeteoriteReceived::
 	.string "BILL handed you the METEORITE.\p"
 	.string "His friend runs TWO ISLAND's\n"
@@ -533,6 +554,12 @@ WayfarerSevii_Story_Text_BillMeteoriteDeclined::
 WayfarerSevii_Story_Text_BillMeteoriteNoRoom::
 	.string "BILL: Your KEY ITEMS pocket is full.\n"
 	.string "Make room and I'll hold it for you.$"
+WayfarerSevii_Story_Text_OtherMeteorite::
+	.string "LOSTELLE's father: Thank you for\n"
+	.string "bringing my daughter home!\p"
+	.string "That METEORITE isn't the one BILL\n"
+	.string "promised me, though. His ONE ISLAND\l"
+	.string "delivery is the one I'm waiting on.$"
 WayfarerSevii_Story_Text_LostelleStart::
 	.string "LOSTELLE's father: LOSTELLE hasn't\n"
 	.string "come home! Please search THREE\l"

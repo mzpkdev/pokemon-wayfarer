@@ -15749,6 +15749,7 @@
               "SEVII_LOSTELLE_RESCUED",
               "SEVII_LOSTELLE_STARTED",
               "SEVII_METEORITE_DELIVERED",
+              "SEVII_METEORITE_RECEIVED",
               "SEVII_MOON_STONE_RECEIVED"
             ],
             "state_writes": [
@@ -19494,9 +19495,12 @@
         "WayfarerSevii_Story_EventScript_LostellesFatherAfterRescue",
         "WayfarerSevii_Story_EventScript_LostellesFatherComplete",
         "WayfarerSevii_Story_EventScript_LostellesFatherNoMeteorite",
+        "WayfarerSevii_Story_EventScript_LostellesFatherOtherMeteorite",
         "WayfarerSevii_Story_EventScript_LostellesFatherReminder",
+        "WayfarerSevii_Story_EventScript_LostellesFatherReminderPlain",
         "WayfarerSevii_Story_EventScript_LostellesFatherReminderWithMeteorite",
         "WayfarerSevii_Story_EventScript_LostellesFatherRescueThanks",
+        "WayfarerSevii_Story_EventScript_LostellesFatherStartPlain",
         "WayfarerSevii_Story_EventScript_LostellesFatherStartWithMeteorite",
         "WayfarerSevii_Story_EventScript_MoonStoneNoRoom",
         "WayfarerSevii_Story_EventScript_ReturnSelphy",
@@ -19565,6 +19569,7 @@
         "WayfarerSevii_Story_Text_MoonStoneNoRoom",
         "WayfarerSevii_Story_Text_MoonStoneReceived",
         "WayfarerSevii_Story_Text_NoMeteorite",
+        "WayfarerSevii_Story_Text_OtherMeteorite",
         "WayfarerSevii_Story_Text_PaxtonDefeat",
         "WayfarerSevii_Story_Text_PaxtonIntro",
         "WayfarerSevii_Story_Text_SelphyAlreadyHome",
@@ -25439,7 +25444,8 @@
         "slot": 17,
         "initial": 0,
         "readers": [
-          "story.lostelle.bill-meteorite"
+          "story.lostelle.bill-meteorite",
+          "story.lostelle.father"
         ],
         "writers": [
           "story.lostelle.bill-meteorite"
