@@ -133,6 +133,12 @@ DewfordTown_Gym_EventScript_StopCountingTrainers::
 	return
 
 DewfordTown_Gym_EventScript_Brawly::
+	@ Before the first battle the leader introduces themselves once (notable-story-continuity.md#2-introductions)
+	goto_if_defeated TRAINER_BRAWLY_1, DewfordTown_Gym_EventScript_BrawlyBattle
+	lock
+	faceplayer
+	notable_introduce NOTABLE_TRAINER_BRAWLY, DewfordTown_Gym_Text_BrawlyName
+DewfordTown_Gym_EventScript_BrawlyBattle::
 	trainerbattle_single TRAINER_BRAWLY_1, DewfordTown_Gym_Text_BrawlyIntro, DewfordTown_Gym_Text_BrawlyDefeat, DewfordTown_Gym_EventScript_BrawlyDefeated, NO_MUSIC
 	specialvar VAR_RESULT, ShouldTryRematchBattle
 	goto_if_eq VAR_RESULT, TRUE, DewfordTown_Gym_EventScript_BrawlyRematch
@@ -384,9 +390,11 @@ DewfordTown_Gym_Text_CristianPostBattle:
 	.string "You win!\n"
 	.string "Go after that BADGE!$"
 
-DewfordTown_Gym_Text_BrawlyIntro:
+DewfordTown_Gym_Text_BrawlyName:
 	.string "I'm BRAWLY!\n"
-	.string "DEWFORD's GYM LEADER!\p"
+	.string "DEWFORD's GYM LEADER!$"
+
+DewfordTown_Gym_Text_BrawlyIntro:
 	.string "I've been churned in the rough waves\n"
 	.string "of these parts, and I've grown tough\l"
 	.string "in the pitch-black cave!\p"

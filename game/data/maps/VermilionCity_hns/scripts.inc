@@ -479,7 +479,8 @@ VermilionCity_EventScript_TriggerStevenRight::
 VermilionCity_EventScript_LatiChoice::
 	applymovement2 LOCALID_VERMILIONCITY_STEVEN, VermilionCity_Movement_StevenWalkToPlayer
 	waitmovement LOCALID_VERMILIONCITY_STEVEN
-	msgbox VermilionCity_Text_StevenIntro, MSGBOX_DEFAULT
+	notable_introduce NOTABLE_TRAINER_STEVEN, VermilionCity_Text_StevenIntro
+	msgbox VermilionCity_Text_StevenIntroRest, MSGBOX_DEFAULT
 	multichoice 20, 8, MULTI_TV_LATI, TRUE
 	@goto_if_eq VAR_RESULT, MULTI_B_PRESSED, VermilionCity_EventScript_LatiCancel
 	copyvar VAR_0x8004, VAR_RESULT
@@ -500,13 +501,17 @@ VermilionCity_Movement_StevenWalkToPlayer:
 	walk_in_place_down
 	step_end
 
+@ His first meeting; a player he already knows gets his greeting instead
 VermilionCity_Text_StevenIntro:
 	.string "Hi!\n"
 	.string "My name is Steven.\l"
-	.string "The Champion from the HOENN region.\p"
+	.string "For some time, I was the champion\l"
+	.string "of the HOENN region.\p"
 	.string "Have we met...before?\p"
-	.string "That's not possible. \n"
-	.string "All the trainers I have battled\l"
+	.string "That's not possible.$"
+
+VermilionCity_Text_StevenIntroRest:
+	.string "All the trainers I have battled\n"
 	.string "seem to have the same look, anyway.\p"
 	.string "Especially the ones who gave me\n"
 	.string "tough battles.\p"

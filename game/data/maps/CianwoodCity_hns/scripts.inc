@@ -82,10 +82,24 @@ CianwoodCity_EventScript_ChucksWifeGiveFly::
 	end
 
 CianwoodCity_EventScript_ChucksWifeAlreadyHasFly::
+	@ HM FLY can come from elsewhere (HOENN's ROUTE 119): her husband only "lost to you" with his BADGE
+	goto_if_unset FLAG_BADGE05_GET, CianwoodCity_EventScript_ChucksWifeFlyFromElsewhere
 	msgbox CianwoodCity_Text_ChucksWifeChubby, MSGBOX_DEFAULT
 	closemessage
 	release
 	end
+
+CianwoodCity_EventScript_ChucksWifeFlyFromElsewhere::
+	msgbox CianwoodCity_Text_ChucksWifeAlreadyCanFly, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+CianwoodCity_Text_ChucksWifeAlreadyCanFly:
+	.string "Oh, your POKéMON can already FLY?\p"
+	.string "That's handy.\p"
+	.string "My husband is the GYM LEADER here.\n"
+	.string "He's tough, so be careful.$"
 
 CianwoodCity_Text_ChucksWifeEasierToFly:
 	.string "You crossed the sea to get here?\p"

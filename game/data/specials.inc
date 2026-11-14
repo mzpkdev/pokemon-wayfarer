@@ -762,6 +762,7 @@ gSpecials::
 	def_special LeagueEvent_Accept
 	def_special LeagueEvent_GetAcceptedLeague
 	def_special LeagueEvent_BufferRoomName
+	def_special LeagueEvent_GetRoomHostCharacter
 	def_special LeagueEvent_SetRoomGraphics
 	def_special LeagueEvent_BufferChampion
 	def_special LeagueEvent_BufferLineup
@@ -890,4 +891,8 @@ gSpecials::
     def_special NotableTalk_BufferWalkerActivityLine
     def_special NotableFriendship_BufferTrainerName
     def_special NotableFriendship_MarkNumberShown
+    def_special NotableStory_IsIntroduced
+    def_special NotableStory_MarkIntroduced
+    def_special NotableStory_CompleteBeat
+    def_special NotableStory_IsWhitneyAtTower
 #endif

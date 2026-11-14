@@ -361,6 +361,9 @@ WayfarerSevii_Story_EventScript_IcefallRocket::
 
 WayfarerSevii_Story_EventScript_CommitLoreleiComplete::
 	setflag FLAG_WAYFARER_SEVII_LORELEI_COMPLETE
+	@ The poachers are stopped: LORELEI's Icefall Cave story beat, paid once
+	setvar VAR_0x8004, NOTABLE_STORY_BEAT_LORELEI_ICEFALL
+	special NotableStory_CompleteBeat
 	removeobject LOCALID_ICEFALL_ROCKET1
 	removeobject LOCALID_ICEFALL_ROCKET2
 	removeobject LOCALID_ICEFALL_ROCKET3

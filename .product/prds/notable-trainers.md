@@ -187,10 +187,18 @@ knows everything about your party ([Trainer AI](trainer-ai.md)).
 ### Friendship
 
 Every notable trainer has a friendship with you that only grows. It starts
-at Stranger and moves to **Met** once you have beaten them or helped them
-with a quest, **Friend** once you have done both (or helped them twice), and
-**Close** after a lot more helping. Talking never moves it: a trainer you have
-only chatted with is still a stranger, and beating them again adds nothing ([friendship](../specs/notable-trainers.md#friendship)). A trainer
+at Stranger and moves to **Met** once you have beaten them, helped them with
+a quest, or seen a story beat through with them. It moves to **Friend** after
+two of those, and to **Close** after a lot more. Talking never moves it: a
+trainer you have only chatted with is still a stranger, though they remember
+having met you, and beating them again adds nothing
+([friendship](../specs/notable-trainers.md#friendship)).
+
+Story beats count when you actually do something together, such as shutting
+down the Mahogany hideout with Lance or fighting beside Steven at the Space
+Center. A scene where they only say hello, or one where they are your enemy,
+adds nothing. A trainer can become a Friend through the story alone, but
+never Close ([story beats](../specs/notable-story-continuity.md#5-story-beats)). A trainer
 who becomes a Friend gives you their phone number, which the
 [Sevii Masters](sevii-masters.md#design) uses to find you a partner.
 

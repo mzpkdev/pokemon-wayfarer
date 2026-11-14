@@ -92,7 +92,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "RadioTower1F_EventScript_Whitney",
-      "flag": "FLAG_ENABLE_RADIO",
+      "flag": "FLAG_TEMP_1",
       "local_id": "LOCALID_GOLDENROD_RADIOTOWER_WHITNEY"
     }
   ],

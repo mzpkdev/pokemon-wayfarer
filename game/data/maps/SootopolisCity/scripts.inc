@@ -1293,6 +1293,8 @@ SootopolisCity_EventScript_GiveWaterfall::
 	msgbox SootopolisCity_Text_ThankYouForHelpAcceptThis, MSGBOX_DEFAULT
 	giveitem ITEM_HM_WATERFALL
 	setflag FLAG_RECEIVED_HM_WATERFALL
+	@ WALLACE's thanks once the crisis is over: the end of his Sootopolis story beat
+	notable_beat NOTABLE_STORY_BEAT_WALLACE_SOOTOPOLIS
 	msgbox SootopolisCity_Text_ExplainWaterfallGoToGym, MSGBOX_DEFAULT
 	closemessage
 	call_if_eq VAR_FACING, DIR_NORTH, SootopolisCity_EventScript_WallaceMoveFromGym

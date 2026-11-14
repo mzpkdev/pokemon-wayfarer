@@ -25,6 +25,33 @@ NotableTalk_EventScript_Greeting::
 	msgbox gStringVar4, MSGBOX_DEFAULT
 	return
 
+@ A story scene's introduction of the character in VAR_0x8004 (notable-story-continuity.md#2-introductions), used
+@ through the notable_introduce macro, which also puts the scene's first-meeting text in the script data register.
+@ A trainer the player has not met yet plays that text and is marked introduced. One already known gives their
+@ stage greeting (AGAIN or warmer) in its place. The scene then plays its shared remainder.
+NotableStory_EventScript_Introduce::
+	goto_if_eq VAR_0x8004, NOTABLE_TRAINER_BLUE, NotableStory_EventScript_IntroduceBlue
+	specialvar VAR_RESULT, NotableStory_IsIntroduced
+	goto_if_eq VAR_RESULT, TRUE, NotableTalk_EventScript_Greeting
+	callstd MSGBOX_DEFAULT
+	special NotableStory_MarkIntroduced
+	return
+
+@ BLUE grew up beside a player from PALLET TOWN, as their rival: he introduces himself to nobody from there. They
+@ count as introduced without a word; everyone else is introduced as usual.
+NotableStory_EventScript_IntroduceBlue::
+	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
+	goto_if_eq VAR_RESULT, TRUE, NotableStory_EventScript_RivalKnown
+	specialvar VAR_RESULT, NotableStory_IsIntroduced
+	goto_if_eq VAR_RESULT, TRUE, NotableTalk_EventScript_Greeting
+	callstd MSGBOX_DEFAULT
+	special NotableStory_MarkIntroduced
+	return
+
+NotableStory_EventScript_RivalKnown:
+	special NotableStory_MarkIntroduced
+	return
+
 @ The farewell (BYE) of the character in VAR_0x8004, then the message closes.
 NotableTalk_EventScript_Farewell::
 	specialvar VAR_RESULT, NotableTalk_BufferFarewell

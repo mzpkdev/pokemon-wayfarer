@@ -29,7 +29,8 @@ VioletCity_Gym_EventScript_Falkner::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_VIOLET_GYM, VioletCity_Gym_EventScript_Falkner_Defeated
-	msgbox VioletGym_Text_Falkner_Intro, MSGBOX_DEFAULT
+	notable_introduce NOTABLE_TRAINER_FALKNER, VioletGym_Text_Falkner_Intro
+	msgbox VioletGym_Text_Falkner_Before, MSGBOX_DEFAULT
 	trainerbattle_no_intro TRAINER_FALKNER_1_HNS, VioletGym_Text_Falkner_WinLoss
 	message VioletGym_Text_ReceivedZephyrBadge
 	waitmessage
@@ -63,7 +64,9 @@ VioletCity_Gym_EventScript_Falkner_Defeated::
 
 VioletGym_Text_Falkner_Intro:
 	.string "I'm FALKNER, the VIOLET POKéMON\n"
-	.string "GYM leader!\p"
+	.string "GYM leader!$"
+
+VioletGym_Text_Falkner_Before:
 	.string "People say you can clip\n"
 	.string "FLYING-type POKéMON's wings\p"
 	.string "with a jolt of electricity…\n"

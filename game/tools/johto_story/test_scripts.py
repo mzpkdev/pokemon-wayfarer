@@ -169,7 +169,7 @@ def all_script_files():
 class Interp:
     """Runs labels from one or more maps against shared variable and flag state."""
 
-    def __init__(self, *maps, vars=None, flags=(), johto=True, answers=1, bag_full=False):
+    def __init__(self, *maps, vars=None, flags=(), johto=True, answers=1, bag_full=False, introduced=None):
         self.lines = []
         self.labels = {}
         for name in maps:
@@ -198,6 +198,10 @@ class Interp:
         self.given = []
         self.pokenav = []
         self.locked = False
+        # Notable trainers the player knows (share one set between runs to play scenes in sequence), and the
+        # story beats paid: notable_introduce is the scene's own text once, the greeting after.
+        self.introduced = set() if introduced is None else introduced
+        self.beats_paid = []
 
     def get(self, name):
         if name in self.vars:
@@ -279,6 +283,15 @@ class Interp:
                 self.messages.append(args[0])
                 if args[-1] == 'MSGBOX_YESNO':
                     self.vars['VAR_RESULT'] = self.answers.pop(0) if self.answers else self.answer
+            elif command == 'notable_introduce':
+                if args[0] in self.introduced:
+                    self.messages.append('greeting:' + args[0])
+                else:
+                    self.messages.append(args[1])
+                    self.introduced.add(args[0])
+            elif command == 'notable_beat':
+                if args[0] not in self.beats_paid:
+                    self.beats_paid.append(args[0])
             elif command in ('lock', 'lockall'):
                 self.locked = True
             elif command in ('release', 'releaseall'):

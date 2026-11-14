@@ -30,6 +30,9 @@ PokemonTower_2F_EventScript_Blue::
 	lock
 	faceplayer
 	goto_if_set FLAG_WAYFARER_TOWER_BLUE_MET, PokemonTower_2F_EventScript_BlueMet
+#if IS_WAYFARER
+	notable_introduce NOTABLE_TRAINER_BLUE, PokemonTower_2F_Text_BlueName
+#endif
 	msgbox PokemonTower_2F_Text_BlueIntro, MSGBOX_DEFAULT
 	setflag FLAG_WAYFARER_TOWER_BLUE_MET
 	release
@@ -39,6 +42,10 @@ PokemonTower_2F_EventScript_BlueMet::
 	msgbox PokemonTower_2F_Text_BlueMet, MSGBOX_DEFAULT
 	release
 	end
+
+@ His first meeting, whether here or on the S.S. ANNE; a player he already knows gets his greeting instead
+PokemonTower_2F_Text_BlueName::
+	.string "BLUE: I'm BLUE.$"
 
 PokemonTower_2F_Text_BlueIntro::
 	.string "BLUE: I came looking for a\n"

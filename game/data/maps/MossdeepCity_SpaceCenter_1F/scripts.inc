@@ -185,6 +185,9 @@ MossdeepCity_SpaceCenter_1F_EventScript_OldManMagma::
 MossdeepCity_SpaceCenter_1F_EventScript_Steven::
 	lock
 	faceplayer
+#if IS_WAYFARER
+	notable_introduce NOTABLE_TRAINER_STEVEN, MossdeepCity_SpaceCenter_1F_Text_StevenIntro
+#endif
 	msgbox MossdeepCity_SpaceCenter_1F_Text_StevenMagmaCantBeAllowedToTakeFuel, MSGBOX_DEFAULT
 	applymovement VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
@@ -348,6 +351,12 @@ MossdeepCity_SpaceCenter_1F_Text_MagmaWantsToSpoilMyDream:
 	.string "But TEAM MAGMA wants to spoil\n"
 	.string "that dream of mine!\p"
 	.string "I'm not having any of that!$"
+
+@ He knows the player's name but has not given his own: said once, to a player he has not met
+MossdeepCity_SpaceCenter_1F_Text_StevenIntro:
+	.string "STEVEN: Oh, hello. I'm STEVEN.\p"
+	.string "You must be {PLAYER}{KUN}. I've heard\n"
+	.string "your name around town.$"
 
 MossdeepCity_SpaceCenter_1F_Text_StevenMagmaCantBeAllowedToTakeFuel:
 	.string "STEVEN: {PLAYER}{KUN}, have you read that\n"

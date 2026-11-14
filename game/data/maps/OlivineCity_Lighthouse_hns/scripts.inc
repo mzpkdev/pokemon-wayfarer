@@ -367,6 +367,7 @@ OlivineLighthouse_EventScript_JasmineDeliverPotion::
 	setvar VAR_OLIVINE_CITY_STATE, 5
 	setflag FLAG_AMPHAROS_HEALED
 	clearflag FLAG_HIDE_OLIVINE_CITY_GYM_JASMINE
+	notable_beat NOTABLE_STORY_BEAT_JASMINE_LIGHTHOUSE
 	release
 	end
 

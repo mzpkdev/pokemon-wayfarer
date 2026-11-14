@@ -87,6 +87,31 @@
 	.include "asm/macros/event.inc"
 	.include "constants/constants.inc"
 
+@ Notable trainer story continuity (notable-story-continuity.md). Outside Wayfarer there are no notable
+@ trainers: an introduction is just the scene's own text and a beat pays nothing.
+@ notable_introduce: a first meeting plays 'text' (the self-introduction) and marks the trainer introduced; a
+@ trainer the player already knows gives their notable greeting instead. See NotableStory_EventScript_Introduce.
+#if IS_WAYFARER
+	.macro notable_introduce character:req, text:req
+	setvar VAR_0x8004, \character
+	loadword 0, \text
+	call NotableStory_EventScript_Introduce
+	.endm
+
+	@ Pays a story beat's friendship once (NOTABLE_STORY_BEAT_*), on the beat's completion.
+	.macro notable_beat beat:req
+	setvar VAR_0x8004, \beat
+	special NotableStory_CompleteBeat
+	.endm
+#else
+	.macro notable_introduce character:req, text:req
+	msgbox \text
+	.endm
+
+	.macro notable_beat beat:req
+	.endm
+#endif
+
 	.section script_data, "aw", %progbits
 
 	.set ALLOCATE_SCRIPT_CMD_TABLE, 1

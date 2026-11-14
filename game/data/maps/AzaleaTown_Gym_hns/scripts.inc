@@ -526,7 +526,8 @@ AzaleaTown_Gym_EventScript_Bugsy::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_AZALEA_TOWN_GYM, AzaleaTown_Gym_EventScript_Bugsy_Defeated
-	msgbox AzaleaTown_Gym_Text_BugsyIntro, MSGBOX_DEFAULT
+	notable_introduce NOTABLE_TRAINER_BUGSY, AzaleaTown_Gym_Text_BugsyIntro
+	msgbox AzaleaTown_Gym_Text_BugsyBefore, MSGBOX_DEFAULT
 	trainerbattle_no_intro TRAINER_BUGSY_1_HNS, AzaleaTown_Gym_Text_BugsyBeaten
 	message AzaleaTown_Gym_Text_ReceivedHiveBadge
 	waitmessage
@@ -674,7 +675,9 @@ AzaleaTown_Gym_Text_GymStatueCertified:
 	.string "{PLAYER}$"
 
 AzaleaTown_Gym_Text_BugsyIntro:
-	.string "I'm BUGSY!\p"
+	.string "I'm BUGSY!$"
+
+AzaleaTown_Gym_Text_BugsyBefore:
 	.string "I never lose when it comes\n"
 	.string "to bug POKéMON.\p"
 	.string "My research is going to make me the\n"

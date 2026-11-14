@@ -18,6 +18,12 @@ FortreeCity_Gym_EventScript_InitRotatingGates::
 	end
 
 FortreeCity_Gym_EventScript_Winona::
+	@ Before the first battle the leader introduces themselves once (notable-story-continuity.md#2-introductions)
+	goto_if_defeated TRAINER_WINONA_1, FortreeCity_Gym_EventScript_WinonaBattle
+	lock
+	faceplayer
+	notable_introduce NOTABLE_TRAINER_WINONA, FortreeCity_Gym_Text_WinonaName
+FortreeCity_Gym_EventScript_WinonaBattle::
 	trainerbattle_single TRAINER_WINONA_1, FortreeCity_Gym_Text_WinonaIntro, FortreeCity_Gym_Text_WinonaDefeat, FortreeCity_Gym_EventScript_WinonaDefeated, NO_MUSIC
 	specialvar VAR_RESULT, ShouldTryRematchBattle
 	goto_if_eq VAR_RESULT, TRUE, FortreeCity_Gym_EventScript_WinonaRematch
@@ -239,9 +245,11 @@ FortreeCity_Gym_Text_DariusPostBattle:
 	.string "But you'd better watch it! Our LEADER\l"
 	.string "WINONA's POKéMON are all business.$"
 
-FortreeCity_Gym_Text_WinonaIntro:
+FortreeCity_Gym_Text_WinonaName:
 	.string "I am WINONA. I am the LEADER of\n"
-	.string "the FORTREE POKéMON GYM.\p"
+	.string "the FORTREE POKéMON GYM.$"
+
+FortreeCity_Gym_Text_WinonaIntro:
 	.string "I have become one with BIRD POKéMON\n"
 	.string "and have soared the skies…\p"
 	.string "However grueling the battle, we have\n"

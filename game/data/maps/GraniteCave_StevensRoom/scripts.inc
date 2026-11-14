@@ -6,12 +6,14 @@ GraniteCave_StevensRoom_EventScript_Steven::
 	faceplayer
 	checkitem ITEM_LETTER
 	goto_if_eq VAR_RESULT, FALSE, GraniteCave_StevensRoom_EventScript_NoLetter
-	msgbox GraniteCave_StevensRoom_Text_ImStevenLetterForMe, MSGBOX_DEFAULT
+	notable_introduce NOTABLE_TRAINER_STEVEN, GraniteCave_StevensRoom_Text_MyNameIsSteven
+	msgbox GraniteCave_StevensRoom_Text_StonesAndLetterForMe, MSGBOX_DEFAULT
 	checkitemspace ITEM_TM_STEEL_WING
 	goto_if_eq VAR_RESULT, FALSE, GraniteCave_StevensRoom_EventScript_BagFull
 	setvar VAR_0x8004, ITEM_LETTER
 	call Common_EventScript_PlayerHandedOverTheItem
 	setflag FLAG_DELIVERED_STEVEN_LETTER
+	notable_beat NOTABLE_STORY_BEAT_STEVEN_GRANITE_LETTER
 	msgbox GraniteCave_StevensRoom_Text_ThankYouTakeThis, MSGBOX_DEFAULT
 	giveitem ITEM_TM_STEEL_WING
 	msgbox GraniteCave_StevensRoom_Text_CouldBecomeChampionLetsRegister, MSGBOX_DEFAULT
@@ -52,7 +54,8 @@ GraniteCave_StevensRoom_EventScript_StevenExitSouth::
 	return
 
 GraniteCave_StevensRoom_EventScript_NoLetter::
-	msgbox GraniteCave_StevensRoom_Text_ImSteven, MSGBOX_DEFAULT
+	notable_introduce NOTABLE_TRAINER_STEVEN, GraniteCave_StevensRoom_Text_MyNameIsSteven
+	msgbox GraniteCave_StevensRoom_Text_Stones, MSGBOX_DEFAULT
 	release
 	end
 
@@ -89,13 +92,15 @@ GraniteCave_StevensRoom_Movement_StevenExitSouth:
 	delay_8
 	step_end
 
-GraniteCave_StevensRoom_Text_ImSteven:
-	.string "My name is STEVEN.\p"
+@ His first meeting; a player he already knows gets his greeting instead
+GraniteCave_StevensRoom_Text_MyNameIsSteven:
+	.string "My name is STEVEN.$"
+
+GraniteCave_StevensRoom_Text_Stones:
 	.string "I'm interested in rare stones,\n"
 	.string "so I travel here and there.$"
 
-GraniteCave_StevensRoom_Text_ImStevenLetterForMe:
-	.string "My name is STEVEN.\p"
+GraniteCave_StevensRoom_Text_StonesAndLetterForMe:
 	.string "I'm interested in rare stones,\n"
 	.string "so I travel here and there.\p"
 	.string "Oh?\n"
