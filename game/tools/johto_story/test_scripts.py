@@ -62,9 +62,12 @@ def played(chapter):
     return 'FLAG_WAYFARER_JOHTO_SILVER_PLAYED_%d' % chapter
 
 
-def silver_playable(chapter, johto, started, flags):
-    """The spec's Silver table, restated: whether a chapter's scene can play."""
+def silver_playable(chapter, johto, started, flags, lab=5):
+    """The spec's Silver table, restated: whether a chapter's scene can play. From chapter 3 on it needs the
+    lab theft (lab state 5), which most scenes' tests take as done."""
     if not johto or chapter not in range(1, 13):
+        return False
+    if chapter >= 3 and lab < 5:
         return False
     return {
         1: started == 0,
@@ -351,7 +354,7 @@ class Interp:
 
     def silver_playable(self):
         chapter = self.get('VAR_0x8004')
-        return silver_playable(chapter, self.johto, self.vars.get(CHAPTER, 0), self.flags)
+        return silver_playable(chapter, self.johto, self.vars.get(CHAPTER, 0), self.flags, self.vars.get(LAB, 5))
 
     def written(self, kind=None):
         return {name for name, _, k in self.writes if kind in (None, k)}
@@ -505,10 +508,14 @@ class TownSetup(unittest.TestCase):
     def test_goldenrod_elm_call_is_queued_for_johto_origin_only(self):
         for johto in (True, False):
             with self.subTest(johto=johto):
-                interp = Interp('GoldenrodCity_hns', johto=johto)
+                interp = Interp('GoldenrodCity_hns', johto=johto, flags={'FLAG_RECEIVED_TOGEPI_EGG'})
                 interp.run('GoldenrodCity_OnTransition')
                 self.assertEqual(interp.vars.get('VAR_TEMP_1', 0), int(johto))
         interp = Interp('GoldenrodCity_hns', flags={'FLAG_SHOWN_ELM_TOGEPI'})
+        interp.run('GoldenrodCity_OnTransition')
+        self.assertEqual(interp.vars.get('VAR_TEMP_1', 0), 0)
+        # "Has that EGG hatched yet?" is about the Togepi Egg: no egg received, no call.
+        interp = Interp('GoldenrodCity_hns', flags=set())
         interp.run('GoldenrodCity_OnTransition')
         self.assertEqual(interp.vars.get('VAR_TEMP_1', 0), 0)
         frame = _label_block(raw_text('GoldenrodCity_hns'), 'GoldenrodCity_OnFrame')
@@ -1275,6 +1282,174 @@ class SilverChapters(unittest.TestCase):
             self.assertEqual(bool(interp.battles), johto)
 
 
+class SilverNeedsTheTheft(unittest.TestCase):
+    def test_no_chapter_from_sprout_tower_on_plays_before_the_lab_theft(self):
+        for chapter in SCENES:
+            if chapter < 3:
+                continue
+            for lab in (0, 2, 3, 4):
+                interp = play(chapter, vars={LAB: lab}, started=10 if chapter == 11 else 0)
+                with self.subTest(chapter=chapter, lab=lab):
+                    self.assertFalse(silver_text(chapter, interp))
+                    self.assertEqual(interp.battles, [])
+            ran = play(chapter, vars={LAB: 5}, started=10 if chapter == 11 else 0)
+            with self.subTest(chapter=chapter, lab=5):
+                self.assertTrue(silver_text(chapter, ran) or ran.battles)
+
+    def test_the_c_special_checks_the_lab_state_for_chapter_three_on(self):
+        c = (GAME / 'src/wayfarer_johto_story.c').read_text()
+        self.assertRegex(c, r'gSpecialVar_0x8004 >= SILVER_CHAPTER_SPROUT_TOWER && VarGet\(VAR_NEWBARKTOWN_LABSTATE\) < 5')
+
+    def test_earlier_chapters_still_play_without_the_errand(self):
+        for chapter in (2,):
+            interp = play(chapter, vars={LAB: 2})
+            self.assertTrue(silver_text(chapter, interp))
+
+
+class EggChainOrder(unittest.TestCase):
+    def violet_call(self, lab):
+        interp = Interp('VioletCity_hns', vars={'VAR_VIOLET_CITY_STATE': 3, LAB: lab}, flags={'FLAG_HIDE_VIOLET_CITY_AIDE'})
+        interp.run('VioletCity_EventScript_ElmCall_Trigger')
+        return interp
+
+    def test_elms_violet_call_waits_for_the_mystery_egg_to_reach_elm(self):
+        for lab in (2, 3, 4):
+            interp = self.violet_call(lab)
+            self.assertEqual(interp.pokenav, [])
+            self.assertEqual(interp.vars['VAR_VIOLET_CITY_STATE'], 3)
+            self.assertIn('FLAG_HIDE_VIOLET_CITY_AIDE', interp.flags)
+        later = self.violet_call(5)
+        self.assertEqual(len(later.pokenav), 1)
+        self.assertEqual(later.vars['VAR_VIOLET_CITY_STATE'], 4)
+        self.assertNotIn('FLAG_HIDE_VIOLET_CITY_AIDE', later.flags)
+
+    def elm_talk(self, *, lab, goldenrod, egg):
+        flags = {'FLAG_JOHTO_STARTER_CHOICE_COMMITTED'} | ({'FLAG_RECEIVED_TOGEPI_EGG', 'FLAG_SHOWN_ELM_TOGEPI'} if egg else set())
+        interp = Interp('NewBarkTown_Lab_hns', vars={LAB: lab, GOLD: goldenrod}, flags=flags)
+        interp.run('NewBarkTown_Lab_EventScript_ElmCampaignErrand')
+        return interp
+
+    def test_elm_asks_after_the_egg_only_when_the_player_has_it(self):
+        waiting = 'NewBarkTown_Lab_Text_ElmWaitingEggHatch'
+        # A player who visited Goldenrod without the Togepi Egg still gets the errand's own lines.
+        for lab, text in ((2, 'NewBarkTown_Lab_Text_ElmDirections1'), (3, 'NewBarkTown_Lab_Text_ElmDirections1'),
+                          (5, 'NewBarkTown_Lab_Text_ElmStudyingEgg')):
+            interp = self.elm_talk(lab=lab, goldenrod=1, egg=False)
+            self.assertNotIn(waiting, interp.messages)
+            self.assertIn(text, interp.messages)
+        # With the egg received and Togepi not yet shown, he asks.
+        flags = {'FLAG_JOHTO_STARTER_CHOICE_COMMITTED', 'FLAG_RECEIVED_TOGEPI_EGG'}
+        interp = Interp('NewBarkTown_Lab_hns', vars={LAB: 5, GOLD: 1}, flags=flags)
+        interp.run('NewBarkTown_Lab_EventScript_ElmCampaignErrand')
+        self.assertIn(waiting, interp.messages)
+
+    def test_the_goldenrod_egg_call_needs_the_togepi_egg(self):
+        for egg in (False, True):
+            interp = Interp('GoldenrodCity_hns', flags={'FLAG_RECEIVED_TOGEPI_EGG'} if egg else set())
+            interp.run('GoldenrodCity_OnTransition')
+            self.assertEqual(interp.vars.get('VAR_TEMP_1', 0), int(egg))
+
+    def test_zuki_recalls_violet_only_after_the_violet_scene(self):
+        for violet, recalls in ((0, False), (1, False), (2, True)):
+            interp = zuki_talk(extra_vars={'VAR_VIOLET_CITY_KIMONO_GIRL': violet}, lab=5)
+            self.assertEqual('EcruteakCity_Theater_Text_ZukiMetInVioletEgg' in interp.messages, recalls)
+
+
+class BaobaTalk(unittest.TestCase):
+    def talk(self, branch, answers=0):
+        interp = Interp('Route39_hns', vars={BRANCH: branch}, answers=answers)
+        interp.run('Route39_EventScript_Baoba')
+        return interp
+
+    def test_talking_to_baoba_runs_the_same_legend_choice_as_the_strip(self):
+        interp = self.talk(0)
+        self.assertIn('Route39_Text_BaobaIntro', interp.messages)
+        self.assertEqual(interp.vars[BRANCH], 2)  # the interpreter reads multichoice as 0: the GOLD (Ho-Oh) case
+        self.assertIn('FLAG_ENABLE_BAOBA_MATCH_CALL', interp.flags)
+        self.assertFalse(interp.locked)
+        # The same branch values as the strip's trigger.
+        text = raw_text('Route39_hns')
+        self.assertIn('case 0, Route39_EventScript_LegendaryTriggerGold', text)
+        self.assertIn('"script": "Route39_EventScript_Baoba"', (MAPS / 'Route39_hns/map.json').read_text())
+
+    def test_a_chosen_branch_is_never_changed_by_talking(self):
+        interp = self.talk(2)
+        self.assertEqual(interp.vars[BRANCH], 2)
+        self.assertEqual(interp.messages, ['Route39_Text_BaobaAfter'])
+        self.assertNotIn(BRANCH, interp.written())
+
+    def test_olivine_call_waits_on_having_met_baoba(self):
+        for met in (False, True):
+            interp = Interp('OlivineCity_hns', vars={'VAR_SAFARI_ZONE_GATE_STATE': 1},
+                            flags={'FLAG_ENABLE_BAOBA_MATCH_CALL'} if met else set())
+            interp.run('OlivineCity_EventScript_BaobaCall')
+            self.assertEqual(len(interp.pokenav), int(met))
+            self.assertEqual(interp.vars['VAR_SAFARI_ZONE_GATE_STATE'], 2)
+
+
+class FullBagHandoffs(unittest.TestCase):
+    def test_hm_whirlpool_waits_for_room_and_leaves_the_finale_pending(self):
+        interp = Interp('RocketHideout_B2F_hns', vars={MAH: 13, 'VAR_ELECTRODES_FAINTED': 3}, bag_full=True)
+        interp.run('RocketHideout_B2F_Trigger_Electrode')
+        self.assertEqual(interp.given, [])
+        self.assertEqual(interp.vars[MAH], 13)
+        self.assertEqual(interp.beats_paid, [])
+        self.assertFalse(interp.locked)
+        ok = Interp('RocketHideout_B2F_hns', vars={MAH: 13, 'VAR_ELECTRODES_FAINTED': 3})
+        ok.run('RocketHideout_B2F_Trigger_Electrode')
+        self.assertEqual(ok.given, ['ITEM_HM_WHIRLPOOL'])
+        self.assertEqual(ok.vars[MAH], 14)
+
+    def test_the_bells_keep_the_trial_pending_with_a_full_bag(self):
+        for branch, bell in ((1, 'ITEM_TIDAL_BELL'), (2, 'ITEM_CLEAR_BELL')):
+            interp = Interp(*LEGENDARY_MAPS, vars={BRANCH: branch, THEATER: 3, CEREMONY: STARTED, LAB: 5},
+                            flags={RESOLVED}, bag_full=True)
+            interp.items = {WINGS[branch]}
+            interp.tr = LEGENDARY_TR
+            interp.run('EcruteakCity_Theater_EventScript_Zuki')
+            self.assertEqual(interp.given, [], branch)
+            self.assertEqual(interp.battles, [], branch)
+            self.assertLess(interp.vars.get(CEREMONY, 0), DONE)
+            self.assertFalse(interp.locked)
+            ok = zuki_talk(branch=branch, theater=3, ceremony=STARTED)
+            self.assertEqual(ok.given, [bell])
+            self.assertEqual(ok.vars[CEREMONY], DONE)
+
+    def test_basement_key_waits_for_room(self):
+        interp = Interp('GoldenrodCity_RadioTower_5F_hns', vars={GOLD: 6}, bag_full=True)
+        interp.run('GoldenrodCity_RadioTower_5F_EventScript_Petrel')
+        self.assertEqual(interp.given, [])
+        self.assertEqual(interp.vars[GOLD], 6)
+        ok = Interp('GoldenrodCity_RadioTower_5F_hns', vars={GOLD: 6})
+        ok.run('GoldenrodCity_RadioTower_5F_EventScript_Petrel')
+        self.assertEqual(ok.given, ['ITEM_BASEMENT_KEY'])
+        self.assertEqual(ok.vars[GOLD], 7)
+
+    def test_dragon_pulse_waits_for_room_and_clair_stays(self):
+        for label in ('DragonsDen_Cavern_Trigger_ClairLeft', 'DragonsDen_Cavern_Trigger_ClairMid',
+                      'DragonsDen_Cavern_Trigger_ClairRight', 'DragonsDen_Cavern_EventScript_ClairTalk'):
+            interp = Interp('DragonsDen_Cavern_hns', vars={'VAR_BLACKTHORN_CITY_STATE': 3}, bag_full=True)
+            interp.run(label)
+            with self.subTest(label=label):
+                self.assertEqual(interp.given, [])
+                self.assertEqual(interp.vars['VAR_BLACKTHORN_CITY_STATE'], 3)
+                self.assertNotIn('FLAG_HIDE_DRAGONS_DEN_CAVERN_CLAIR', interp.flags)
+                self.assertFalse(interp.locked)
+        talk = Interp('DragonsDen_Cavern_hns', vars={'VAR_BLACKTHORN_CITY_STATE': 3})
+        talk.run('DragonsDen_Cavern_EventScript_ClairTalk')
+        self.assertEqual(talk.given, ['ITEM_TM_DRAGON_PULSE'])
+        self.assertEqual(talk.vars['VAR_BLACKTHORN_CITY_STATE'], 4)
+        self.assertIn(BALL_OWED, talk.flags)
+
+    def test_red_scale_is_never_lost_to_a_full_bag(self):
+        full = Interp('Route30_MrPokemonsHouse_hns', bag_full=True)
+        full.run('MrPokemonHouse_EventScript_MrPokemon_RedScale_Accepted')
+        text = raw_text('Route30_MrPokemonsHouse_hns')
+        body = _label_block(text, 'MrPokemonHouse_EventScript_MrPokemon_RedScale_NoRoom')
+        self.assertIn('giveitem ITEM_RED_SCALE', body)
+        self.assertIn('ITEM_EXP_SHARE_SMALL', _label_block(text, 'MrPokemonHouse_EventScript_MrPokemon_RedScale_Accepted'))
+
+
 class SilverVisitors(unittest.TestCase):
     def test_no_scene_plays_or_writes_silver_state_for_a_visitor(self):
         for chapter in SCENES:
@@ -1566,7 +1741,7 @@ class ElmAndSeedForVisitors(unittest.TestCase):
         )
         for map_name, label, vars_, state, after in cases:
             for johto in (True, False):
-                interp = Interp(map_name, johto=johto, vars=vars_, flags={'FLAG_HIDE_VIOLET_CITY_AIDE'})
+                interp = Interp(map_name, johto=johto, vars={**vars_, LAB: 5}, flags={'FLAG_HIDE_VIOLET_CITY_AIDE'})
                 interp.run(label)
                 with self.subTest(map=map_name, johto=johto):
                     self.assertEqual(bool(interp.pokenav), johto)
@@ -2047,10 +2222,11 @@ class KimonoCallbacks(unittest.TestCase):
         'sayo den': 'EcruteakCity_Theater_Text_SayoDen',
     }
 
-    def play(self, *, johto=True, lab=5, farfetchd=4, well=3, theater=3, ice=1, den=True, branch=1):
+    def play(self, *, johto=True, lab=5, violet=2, farfetchd=4, well=3, theater=3, ice=1, den=True, branch=1):
         flags = {BALL_OWED} if den else set()
         return zuki_talk(branch=branch, johto=johto, lab=lab, theater=theater, extra_flags=flags,
-                         extra_vars={'VAR_ILEX_FOREST_FARFETCHD': farfetchd, WELL: well, 'VAR_ICE_PATH_STATE': ice})
+                         extra_vars={'VAR_ILEX_FOREST_FARFETCHD': farfetchd, WELL: well, 'VAR_ICE_PATH_STATE': ice,
+                                     'VAR_VIOLET_CITY_KIMONO_GIRL': violet})
 
     def test_every_memory_plays_when_its_event_happened(self):
         for branch in (1, 2):
@@ -2064,7 +2240,7 @@ class KimonoCallbacks(unittest.TestCase):
 
     def test_every_memory_is_dropped_without_its_event_and_the_challenge_stays(self):
         cases = {
-            'zuki': dict(lab=4), 'zuki egg': dict(lab=0), 'naoko ilex': dict(farfetchd=3),
+            'zuki': dict(violet=0), 'zuki egg': dict(violet=1), 'naoko ilex': dict(farfetchd=3),
             'naoko well': dict(well=2), 'sayo ice': dict(ice=0), 'sayo den': dict(den=False),
         }
         for name, kwargs in cases.items():
@@ -2096,7 +2272,7 @@ class KimonoCallbacks(unittest.TestCase):
         text = raw_text('EcruteakCity_Theater_hns')
         for needle in ('VAR_ILEX_FOREST_FARFETCHD, 4', 'VAR_WAYFARER_JOHTO_SLOWPOKE_WELL_STATE, 3',
                        'VAR_ICE_PATH_STATE, 1', 'FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_OWED',
-                       'VAR_NEWBARKTOWN_LABSTATE, 5', 'WayfarerIsJohtoOrigin'):
+                       'VAR_VIOLET_CITY_KIMONO_GIRL, 2', 'WayfarerIsJohtoOrigin'):
             self.assertIn(needle, text)
 
 
