@@ -455,6 +455,7 @@ class SourceBoundaryTests(unittest.TestCase):
             "VAR_GIFT_PICHU_SLOT": "other",
             "VAR_LEAGUE_STATE": "other",
             "VAR_LILYCOVE_FAN_CLUB_STATE": "other",
+            "VAR_MAHOGANY_TOWN_STATE": "other",
             "VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE": "other",
             "VAR_MASSAGE_COOLDOWN_STEP_COUNTER": "other",
             "VAR_NEWBARKTOWN_LABSTATE": "other",
