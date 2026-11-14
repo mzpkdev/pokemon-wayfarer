@@ -47,8 +47,8 @@ PewterCity_Gym_EventScript_Brock_Defeated::
 
 
 PewterCity_Gym_Text_Brock_Intro:
-	.string "BROCK: I'm BROCK, the PEWTER\n"
-	.string "GYM LEADER.$"
+	.string "BROCK: I'm BROCK,\n"
+	.string "the PEWTER GYM LEADER.$"
 
 PewterCity_Gym_Text_Brock_Before:
 	.string "It's not often that we get a real\n"

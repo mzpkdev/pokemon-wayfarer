@@ -27,6 +27,7 @@ BUILD_INPUT_DOCS = frozenset({
     ".product/specs/leagues.md",
     ".product/specs/notable-ambience.md",
     ".product/specs/notable-spots.md",
+    ".product/specs/notable-story-continuity.md",
     ".product/specs/notable-trainers.md",
     ".product/specs/notable-world-simulation.md",
     ".product/specs/phone-rematches.md",
