@@ -152,9 +152,8 @@ Route24_Text_RocketAfter:
 
 Route24_Text_RocketDisappears:
 	.string "…\p"
-	.string "You say what? TEAM ROCKET bye-\n"
-	.string "bye a go-go? Broken it is says\l"
-	.string "you?\p"
+	.string "Hmm? Beaten was I, and mine\n"
+	.string "friends here yet are not?\p"
 	.string "Oh, no! Should I do what now on\n"
 	.string "from, me?$"
 

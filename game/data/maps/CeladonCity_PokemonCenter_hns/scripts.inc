@@ -11,6 +11,11 @@ CeladonCity_PokemonCenter_EventScript_CooltrainerF::
 	end
 
 CeladonCity_PokemonCenter_EventScript_Pharmacist::
+	goto_if_set FLAG_HIDE_HIDEOUT_GIOVANNI, CeladonCity_PokemonCenter_EventScript_PharmacistCleared
+	msgbox CeladonCity_PokemonCenter1F_Text_PharmacistActive, MSGBOX_NPC
+	end
+
+CeladonCity_PokemonCenter_EventScript_PharmacistCleared::
 	msgbox CeladonCity_PokemonCenter1F_Text_Pharmacist, MSGBOX_NPC
 	end
 
@@ -24,11 +29,16 @@ CeladonCity_PokemonCenter1F_Text_CooltrainerF:
 	.string "She'll make you pay if you don't\n"
 	.string "watch yourself.$"
 
-CeladonCity_PokemonCenter1F_Text_Pharmacist:
+CeladonCity_PokemonCenter1F_Text_PharmacistActive:
 	.string "TEAM ROCKET's hideout is in the\n"
 	.string "basement of the GAME CORNER.\p"
-	.string "Oh, wait. That was three years\n"
-	.string "ago.$"
+	.string "Please, somebody do something\n"
+	.string "about them.$"
+
+CeladonCity_PokemonCenter1F_Text_Pharmacist:
+	.string "TEAM ROCKET's hideout was in the\n"
+	.string "basement of the GAME CORNER.\p"
+	.string "It has been cleared out now.$"
 
 Celadon_Text_Eusine1:
 	.string "EUSINE: Hi!\p"
