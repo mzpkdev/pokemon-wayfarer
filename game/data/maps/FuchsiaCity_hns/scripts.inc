@@ -97,13 +97,13 @@ FuchsiaCity_EventScript_SafariZone::
 	end
 
 FuchsiaCity_Text_Youngster:
-	.string "One of the ELITE FOUR used to be\n"
-	.string "the LEADER of FUCHSIA's GYM.$"
+	.string "KOGA used to be the LEADER of\n"
+	.string "FUCHSIA's GYM.$"
 
 FuchsiaCity_Text_PokefanM:
 	.string "KOGA's daughter succeeded him as\n"
-	.string "the GYM LEADER after he joined the\l"
-	.string "ELITE FOUR.$"
+	.string "the GYM LEADER after he stepped\l"
+	.string "down.$"
 
 FuchsiaCity_Text_Teacher:
 	.string "The SAFARI ZONE is under new\n"
