@@ -369,21 +369,35 @@ WayfarerSevii_Story_EventScript_CommitLoreleiComplete::
 	removeobject LOCALID_ICEFALL_ROCKET1
 	removeobject LOCALID_ICEFALL_ROCKET2
 	removeobject LOCALID_ICEFALL_ROCKET3
+	goto WayfarerSevii_Story_EventScript_LoreleiAfterRescue
+
+@ LORELEI thanks the player and heads home, so the cave copy leaves with the
+@ poachers and stays hidden on reload (her object hides on LORELEI_COMPLETE).
+@ The Warehouse tip only appears while that operation is actually active.
+WayfarerSevii_Story_EventScript_LoreleiAfterRescue::
 	goto_if_set FLAG_WAYFARER_SEVII_WAREHOUSE_CLEARED, WayfarerSevii_Story_EventScript_LoreleiWarehouseDone
+	goto_if_unset FLAG_WAYFARER_SEVII_SAPPHIRE_STOLEN, WayfarerSevii_Story_EventScript_LoreleiThanks
+	goto_if_unset FLAG_WAYFARER_SEVII_PASSWORD_ONE_LEARNED, WayfarerSevii_Story_EventScript_LoreleiThanks
+	goto_if_unset FLAG_WAYFARER_SEVII_PASSWORD_TWO_LEARNED, WayfarerSevii_Story_EventScript_LoreleiThanks
 	msgbox WayfarerSevii_Story_Text_LoreleiWarehouseLead
-	releaseall
-	end
+	goto WayfarerSevii_Story_EventScript_LoreleiLeaves
 
 WayfarerSevii_Story_EventScript_LoreleiWarehouseDone::
 	msgbox WayfarerSevii_Story_Text_LoreleiWarehouseDone
+	goto WayfarerSevii_Story_EventScript_LoreleiLeaves
+
+WayfarerSevii_Story_EventScript_LoreleiThanks::
+	msgbox WayfarerSevii_Story_Text_LoreleiThanks
+	goto WayfarerSevii_Story_EventScript_LoreleiLeaves
+
+WayfarerSevii_Story_EventScript_LoreleiLeaves::
+	closemessage
+	removeobject LOCALID_ICEFALL_LORELEI
 	releaseall
 	end
 
 WayfarerSevii_Story_EventScript_LoreleiCompleteDialogue::
-	goto_if_set FLAG_WAYFARER_SEVII_WAREHOUSE_CLEARED, WayfarerSevii_Story_EventScript_LoreleiWarehouseDone
-	msgbox WayfarerSevii_Story_Text_LoreleiWarehouseLead
-	releaseall
-	end
+	goto WayfarerSevii_Story_EventScript_LoreleiAfterRescue
 
 WayfarerSevii_Story_EventScript_IcefallRocketBeforeLorelei::
 	msgbox WayfarerSevii_Story_Text_IcefallRocketBusy
@@ -633,6 +647,10 @@ WayfarerSevii_Story_Text_LoreleiWarehouseLead::
 	.string "LORELEI: Thank you. They mentioned a\n"
 	.string "ROCKET WAREHOUSE on FIVE ISLAND.\l"
 	.string "Their operation may still be active.$"
+WayfarerSevii_Story_Text_LoreleiThanks::
+	.string "LORELEI: Thank you. I wonder what\n"
+	.string "TEAM ROCKET wanted with this cave.\l"
+	.string "Please be careful out there.$"
 WayfarerSevii_Story_Text_LoreleiWarehouseDone::
 	.string "LORELEI: Thank you. I heard you also\n"
 	.string "ended their WAREHOUSE operation.$"

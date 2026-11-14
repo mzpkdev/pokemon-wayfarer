@@ -2977,12 +2977,15 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_IcefallLorelei",
-              "flag": "0"
+              "flag": "FLAG_WAYFARER_SEVII_LORELEI_COMPLETE"
             },
             "actor_role": "actor",
             "state_reads": [
               "SEVII_LORELEI_COMPLETE",
               "SEVII_LORELEI_ROCKETS_DEFEATED",
+              "SEVII_PASSWORD_ONE_LEARNED",
+              "SEVII_PASSWORD_TWO_LEARNED",
+              "SEVII_SAPPHIRE_STOLEN",
               "SEVII_WAREHOUSE_CLEARED"
             ],
             "state_writes": [
@@ -19474,7 +19477,10 @@
         "WayfarerSevii_Story_EventScript_IcefallRocketDefeated",
         "WayfarerSevii_Story_EventScript_IcefallRocketLookout",
         "WayfarerSevii_Story_EventScript_IcefallRocketLookoutGone",
+        "WayfarerSevii_Story_EventScript_LoreleiAfterRescue",
         "WayfarerSevii_Story_EventScript_LoreleiCompleteDialogue",
+        "WayfarerSevii_Story_EventScript_LoreleiLeaves",
+        "WayfarerSevii_Story_EventScript_LoreleiThanks",
         "WayfarerSevii_Story_EventScript_LoreleiWarehouseDone",
         "WayfarerSevii_Story_EventScript_LostelleAfterHypno",
         "WayfarerSevii_Story_EventScript_LostelleBeforeBikers",
@@ -19539,6 +19545,7 @@
         "WayfarerSevii_Story_Text_IcefallRocketIntro",
         "WayfarerSevii_Story_Text_IcefallRocketLookout",
         "WayfarerSevii_Story_Text_LoreleiNeedsHelp",
+        "WayfarerSevii_Story_Text_LoreleiThanks",
         "WayfarerSevii_Story_Text_LoreleiWarehouseDone",
         "WayfarerSevii_Story_Text_LoreleiWarehouseLead",
         "WayfarerSevii_Story_Text_LostelleBeforeBikers",
@@ -25791,7 +25798,8 @@
           "story.celio.warehouse-warehousegideon",
           "story.celio.warehouse-warehousegrunt42",
           "story.celio.warehouse-warehousegrunt47",
-          "story.celio.warehouse-warehousegrunt48"
+          "story.celio.warehouse-warehousegrunt48",
+          "story.lorelei.lorelei"
         ],
         "writers": [
           "story.celio.ruby-guard-43",
@@ -25845,7 +25853,8 @@
           "story.celio.warehouse-warehousegideon",
           "story.celio.warehouse-warehousegrunt42",
           "story.celio.warehouse-warehousegrunt47",
-          "story.celio.warehouse-warehousegrunt48"
+          "story.celio.warehouse-warehousegrunt48",
+          "story.lorelei.lorelei"
         ],
         "writers": [
           "story.celio.sapphire-theft"
@@ -25873,7 +25882,8 @@
           "story.celio.warehouse-warehousegideon",
           "story.celio.warehouse-warehousegrunt42",
           "story.celio.warehouse-warehousegrunt47",
-          "story.celio.warehouse-warehousegrunt48"
+          "story.celio.warehouse-warehousegrunt48",
+          "story.lorelei.lorelei"
         ],
         "writers": [
           "story.celio.sapphire-theft"
