@@ -806,6 +806,7 @@ gSpecials::
     def_special WayfarerGrantSharedPokedex
     def_special WayfarerKanto_IsPalletOrigin
     def_special WayfarerBlueRoadScenesRetired
+    def_special WayfarerSetCopycatMimicGraphics
     def_special WayfarerKanto_GetPhase
     def_special WayfarerKanto_GetStarterSlot
     def_special WayfarerKanto_GetCounterSlot

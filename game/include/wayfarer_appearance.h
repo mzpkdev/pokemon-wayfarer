@@ -19,6 +19,7 @@ const struct WayfarerAppearanceProfile *WayfarerGetAppearanceProfile(u8 id);
 u8 WayfarerGetAppearanceIdByIndex(u8 index);
 u8 WayfarerGetPlayerAppearanceId(void);
 u16 WayfarerGetAppearanceGraphicsId(u8 id, u8 state);
+void WayfarerSetCopycatMimicGraphics(void);
 u16 WayfarerGetAppearanceFrontPic(u8 id);
 u16 WayfarerGetAppearanceBackPic(u8 id);
 u16 WayfarerGetAppearancePaletteTag(u8 id);
