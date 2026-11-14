@@ -293,7 +293,9 @@ class EmeraldTraversalContractTests(unittest.TestCase):
             )
         failed = label_body(lavaridge, "LavaridgeTown_EventScript_GoGogglesBagFull")
         self.assertNotIn("FLAG_RECEIVED_GO_GOGGLES", failed)
-        self.assertIn("setvar VAR_LAVARIDGE_TOWN_STATE, 3", failed)
+        # A full Bag leaves the rival's scene waiting (state 4) to replay at a door, never delivered (2).
+        self.assertIn("setvar VAR_LAVARIDGE_TOWN_STATE, 4", failed)
+        self.assertNotIn("setvar VAR_LAVARIDGE_TOWN_STATE, 2", failed)
         waits = label_body(lavaridge, "LavaridgeTown_EventScript_RivalSceneWaits")
         self.assertIn("setvar VAR_LAVARIDGE_TOWN_STATE, 4", waits)
 

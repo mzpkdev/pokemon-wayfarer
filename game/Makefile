@@ -532,7 +532,7 @@ ifeq ($(BUILD_NAME),wayfarer)
 check: $(TEST_RAM_REPORT)
 check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-port-audit
 check: wayfarer-sinnoh-port-audit
-check: league-circuit-test johto-story-test
+check: league-circuit-test johto-story-test wayfarer-origin-test emerald-traversal-static-test
 check: native-hm-windows-test wild-encounters-v2-check
 check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit league-circuit-test trainer-party-scaling-audit trainer-party-scaling-test world-items-audit world-items-test world-trainers-audit world-trainers-test wayfarer-phone-texts-audit wayfarer-phone-texts-test
 endif
@@ -855,6 +855,9 @@ legacy-multiboot-test:
 
 johto-story-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/johto_story -p 'test_*.py' -q
+
+wayfarer-origin-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_origin -p 'test_*.py' -q
 
 league-circuit-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/league_circuit -p 'test_*.py' -q
