@@ -1307,21 +1307,33 @@ class SilverNeedsTheTheft(unittest.TestCase):
 
 
 class EggChainOrder(unittest.TestCase):
-    def violet_call(self, lab):
-        interp = Interp('VioletCity_hns', vars={'VAR_VIOLET_CITY_STATE': 3, LAB: lab}, flags={'FLAG_HIDE_VIOLET_CITY_AIDE'})
-        interp.run('VioletCity_EventScript_ElmCall_Trigger')
+    def arm(self, *, lab, badge, state=1):
+        interp = Interp('VioletCity_hns', vars={'VAR_VIOLET_CITY_STATE': state, LAB: lab},
+                        flags={'FLAG_DEFEATED_VIOLET_GYM'} if badge else set())
+        interp.run('VioletCity_EventScript_ArmElmCall')
         return interp
 
-    def test_elms_violet_call_waits_for_the_mystery_egg_to_reach_elm(self):
+    def test_elms_violet_call_is_armed_only_once_falkner_fell_and_elm_has_the_egg(self):
         for lab in (2, 3, 4):
-            interp = self.violet_call(lab)
-            self.assertEqual(interp.pokenav, [])
-            self.assertEqual(interp.vars['VAR_VIOLET_CITY_STATE'], 3)
-            self.assertIn('FLAG_HIDE_VIOLET_CITY_AIDE', interp.flags)
-        later = self.violet_call(5)
-        self.assertEqual(len(later.pokenav), 1)
-        self.assertEqual(later.vars['VAR_VIOLET_CITY_STATE'], 4)
-        self.assertNotIn('FLAG_HIDE_VIOLET_CITY_AIDE', later.flags)
+            self.assertEqual(self.arm(lab=lab, badge=True).vars['VAR_VIOLET_CITY_STATE'], 1)
+        self.assertEqual(self.arm(lab=5, badge=False).vars['VAR_VIOLET_CITY_STATE'], 1)
+        self.assertEqual(self.arm(lab=5, badge=True).vars['VAR_VIOLET_CITY_STATE'], 3)
+        self.assertEqual(self.arm(lab=5, badge=True, state=4).vars['VAR_VIOLET_CITY_STATE'], 4)
+
+    def test_every_frame_script_target_moves_its_own_variable_on_every_path(self):
+        # An ON_FRAME map_script_2 target that ends without moving the variable it matches on restarts
+        # every frame and freezes the player. Check the Violet Elm call, a coord trigger and frame target.
+        for johto in (True, False):
+            for lab in (0, 2, 4, 5):
+                interp = Interp('VioletCity_hns', johto=johto, vars={'VAR_VIOLET_CITY_STATE': 3, LAB: lab},
+                                flags={'FLAG_HIDE_VIOLET_CITY_AIDE'})
+                interp.run('VioletCity_EventScript_ElmCall_Trigger')
+                self.assertEqual(interp.vars['VAR_VIOLET_CITY_STATE'], 4, (johto, lab))
+                self.assertFalse(interp.locked)
+        text = raw_text('VioletCity_hns')
+        self.assertNotIn('ElmCallWaiting', text)
+        self.assertIn('call VioletCity_EventScript_ArmElmCall', text)
+        self.assertIn('goto_if_lt VAR_NEWBARKTOWN_LABSTATE, 5', raw_text('VioletCity_Gym_hns'))
 
     def elm_talk(self, *, lab, goldenrod, egg):
         flags = {'FLAG_JOHTO_STARTER_CHOICE_COMMITTED'} | ({'FLAG_RECEIVED_TOGEPI_EGG', 'FLAG_SHOWN_ELM_TOGEPI'} if egg else set())

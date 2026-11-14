@@ -47,7 +47,10 @@ VioletCity_Gym_EventScript_Falkner::
 	call Common_EventScript_SetGymTrainers_hns
 	giveitem ITEM_TM_ROOST
 	msgbox VioletGym_Text_Falkner_TMExplain, MSGBOX_DEFAULT
+	@ Elm's Violet call is armed by the town's load once the Mystery Egg is with him (lab state 5).
+	goto_if_lt VAR_NEWBARKTOWN_LABSTATE, 5, VioletCity_Gym_EventScript_FalknerNoElmCall
 	setvar_forward VAR_VIOLET_CITY_STATE, 3
+VioletCity_Gym_EventScript_FalknerNoElmCall::
 	setrespawn HEAL_LOCATION_VIOLET_CITY_HNS
 	closemessage
 	release
