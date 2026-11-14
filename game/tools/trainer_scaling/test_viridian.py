@@ -97,8 +97,9 @@ class ViridianSourceContracts(unittest.TestCase):
             self.assertEqual(warp['wayfarer_dest_warp_id'], '1')
         self.assertEqual([(warp['x'], warp['y']) for warp in gym['warp_events']],
                          [(16, 22), (17, 22), (18, 22)])
-        self.assertEqual(gym['object_events'][7]['wayfarer_flag'],
-                         'FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS')
+        # Giovanni's hide flag is staged on entry (ViridianCity_Gym_EventScript_StageGiovanni):
+        # hidden until the finale prerequisites are met and after he departs.
+        self.assertEqual(gym['object_events'][7]['wayfarer_flag'], 'FLAG_TEMP_2')
         hidden = next(event for event in gym['bg_events'] if event['type'] == 'hidden_item')
         self.assertEqual(hidden['flag'], 'FLAG_HIDDEN_ITEM_VIRIDIAN_CITY_GYM_MACHO_BRACE')
         self.assertEqual(hidden['wayfarer_flag'], 'FLAG_VIRIDIAN_GYM_HIDDEN_MACHO_BRACE_HNS')
