@@ -1,6 +1,9 @@
 import { beforeAll, describe, expect, it } from "webanvil/test"
 
 import { GameSession, type Direction, type GameMap } from "../harness/game-session"
+import { type RunningSkyEmu } from "../harness/skyemu/server"
+import { readSkyEmuSymbols } from "../harness/skyemu/symbols"
+import { requireSymbolsPath } from "../harness/skyemu/utils"
 
 type Location = { map: GameMap; x: number; y: number; facing: Direction }
 
@@ -66,6 +69,26 @@ const winObjectiveBattle = async (
   await finishScript(game, `${description} victory script`, true)
 }
 
+const blue = 9 // NOTABLE_TRAINER_BLUE
+
+const gameOf = (game: GameSession): RunningSkyEmu =>
+  (game as unknown as { running: RunningSkyEmu }).running
+
+// Marks a notable trainer introduced, as beating them at the Indigo League would.
+const markIntroduced = async (game: GameSession, characterId: number): Promise<void> => {
+  const symbols = await readSkyEmuSymbols(requireSymbolsPath())
+  const client = gameOf(game).client
+  const saveBlock3 = new DataView(
+    (await client.readBytes(symbols.address("gSaveBlock3Ptr"), 4)).buffer,
+  ).getUint32(0, true)
+  const offset = new DataView(
+    (await client.readBytes(symbols.address("gE2ENotableIntroducedOffset"), 2)).buffer,
+  ).getUint16(0, true)
+  const address = saveBlock3 + offset + Math.floor((characterId - 1) / 8)
+  const byte = (await client.readBytes(address, 1))[0]!
+  await client.writeBytes(address, new Uint8Array([byte | (1 << ((characterId - 1) % 8))]))
+}
+
 describe.sequential("Wayfarer Sevii independent story journeys", () => {
   let game: GameSession
 
@@ -87,6 +110,9 @@ describe.sequential("Wayfarer Sevii independent story journeys", () => {
       circuit: { clears: { indigo: true, masters: false, hoenn: false } },
       determinism: { textSpeed: "instant" },
     })
+    // A Johto-origin player gets the scene only once Blue knows them; clearing Indigo
+    // means beating him, which introduces him.
+    await markIntroduced(game, blue)
     // Step onto the exit mat, then south off it to leave.
     for (let step = 0; step < 10; step++) {
       if ((await game.state.read()).map.name === "sevii-four-island") break
