@@ -26536,6 +26536,16 @@
             "from": 1,
             "to": 0,
             "caller": "story.rival.six-island-arrival"
+          },
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.rival.four-island-arrival"
+          },
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.rival.six-island-arrival"
           }
         ]
       },

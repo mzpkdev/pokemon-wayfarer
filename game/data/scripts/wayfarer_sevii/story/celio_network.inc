@@ -425,10 +425,14 @@ WayfarerSevii_FourIsland_RivalTryScene::
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Rival_NoScene
 	lockall
 	playbgm MUS_RG_ENCOUNTER_RIVAL, 0
-	msgbox WayfarerSevii_Text_FourIslandRivalScene
 	setflag FLAG_WAYFARER_SEVII_RIVAL_SCENE_SEEN
 	clearflag FLAG_WAYFARER_SEVII_HIDE_RIVALS
 	addobject LOCALID_FOUR_ISLAND_RIVAL
+	msgbox WayfarerSevii_Text_FourIslandRivalScene
+	@ BLUE is a one-time visitor: he leaves after the scene, so he is never
+	@ standing on both islands and both copies stay hidden afterward.
+	setflag FLAG_WAYFARER_SEVII_HIDE_RIVALS
+	removeobject LOCALID_FOUR_ISLAND_RIVAL
 	fadedefaultbgm
 	releaseall
 WayfarerSevii_Rival_NoScene:
@@ -455,10 +459,14 @@ WayfarerSevii_SixIsland_RivalTryScene::
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Rival_NoScene
 	lockall
 	playbgm MUS_RG_ENCOUNTER_RIVAL, 0
-	msgbox WayfarerSevii_Text_SixIslandRivalScene
 	setflag FLAG_WAYFARER_SEVII_RIVAL_SCENE_SEEN
 	clearflag FLAG_WAYFARER_SEVII_HIDE_RIVALS
 	addobject LOCALID_SIX_ISLAND_RIVAL
+	msgbox WayfarerSevii_Text_SixIslandRivalScene
+	@ BLUE is a one-time visitor: he leaves after the scene, so he is never
+	@ standing on both islands and both copies stay hidden afterward.
+	setflag FLAG_WAYFARER_SEVII_HIDE_RIVALS
+	removeobject LOCALID_SIX_ISLAND_RIVAL
 	fadedefaultbgm
 	releaseall
 	return
@@ -683,20 +691,20 @@ WayfarerSevii_Text_WarehouseGideonAfterRecovery:
 	.string "You have the SAPPHIRE. Leave me be.$"
 
 WayfarerSevii_Text_FourIslandRivalScene:
-	.string "{RIVAL}: Hey, {PLAYER}!\n"
+	.string "BLUE: Hey, {PLAYER}!\n"
 	.string "I came looking for rare POKéMON.\p"
 	.string "The islands are bigger than either\n"
 	.string "of us expected. Smell ya later!$"
 WayfarerSevii_Text_SixIslandRivalScene:
-	.string "{RIVAL}: Hey, {PLAYER}!\n"
+	.string "BLUE: Hey, {PLAYER}!\n"
 	.string "Finding every POKéMON here isn't\l"
 	.string "easy, even for a LEAGUE winner.\p"
 	.string "Keep exploring. Smell ya later!$"
 WayfarerSevii_Text_FourIslandRivalAfter:
-	.string "{RIVAL} has already moved on from\n"
+	.string "BLUE has already moved on from\n"
 	.string "FOUR ISLAND.$"
 WayfarerSevii_Text_SixIslandRivalAfter:
-	.string "{RIVAL} has already continued the\n"
+	.string "BLUE has already continued the\n"
 	.string "island search.$"
 
 WayfarerSevii_Text_MoltresNotReady:
