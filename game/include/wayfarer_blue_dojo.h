@@ -5,7 +5,7 @@
 
 #if IS_WAYFARER
 void SyncBlueDojoVisibility(void);
-u16 WayfarerBlueRoadScenesRetired(void);
+void WayfarerBlueRoadScenesRetired(void);
 #endif
 
 #endif // GUARD_WAYFARER_BLUE_DOJO_H

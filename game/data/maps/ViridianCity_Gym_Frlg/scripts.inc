@@ -23,7 +23,7 @@ ViridianCity_Gym_KantoTransitionDone:
 @ GIOVANNI stands in one place at a time: he is away at the hideout and SILPH CO.
 @ until the finale prerequisites are met, and gone for good after it.
 @ FLAG_TEMP_2 is the Wayfarer object's hide flag and is cleared on every map load.
-ViridianCity_Gym_EventScript_StageGiovanni:
+ViridianCity_Gym_EventScript_StageGiovanni::
 	setflag FLAG_TEMP_2
 	goto_if_set FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS, Common_EventScript_NopReturn
 	goto_if_not_defeated TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS, Common_EventScript_NopReturn

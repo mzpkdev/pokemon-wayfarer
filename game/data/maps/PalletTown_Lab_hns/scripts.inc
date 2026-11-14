@@ -282,7 +282,7 @@ PalletTown_Lab_EventScript_KantoFinish:
 
 @ After the opening a native joins the shared badge check, so Oak can open
 @ MT.SILVER for a Pallet-origin player like any other origin.
-PalletTown_Lab_EventScript_KantoComplete:
+PalletTown_Lab_EventScript_KantoComplete::
 	specialvar VAR_RESULT, WayfarerGetKantoBadgeCountForScript
 	goto_if_ge VAR_RESULT, 8, PalletTown_Lab_EventScript_KantoNativeEightBadges
 	goto_if_ge VAR_RESULT, 1, PalletTown_Lab_EventScript_Oak9Badges

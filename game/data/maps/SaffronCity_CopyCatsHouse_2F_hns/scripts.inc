@@ -29,7 +29,7 @@ SaffronCity_CopyCatsHouse_2F_EventScript_Copycat::
 	lock
 	faceplayer
 #if IS_WAYFARER
-	special WayfarerSetCopycatMimicGraphics
+	callnative WayfarerSetCopycatMimicGraphics
 #endif
 	goto_if_ge VAR_FAN_CLUB_CLEFAIRY, 3, SaffronCity_CopyCatsHouse_2F_EventScript_CopycatAfterDollReturned
 	goto_if_eq VAR_FAN_CLUB_CLEFAIRY, 2, SaffronCity_CopyCatsHouse_2F_EventScript_CopycatReturnDoll
