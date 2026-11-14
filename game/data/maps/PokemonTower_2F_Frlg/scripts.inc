@@ -4,8 +4,19 @@ PokemonTower_2F_Frlg_MapScripts::
 
 PokemonTower_2F_OnTransition::
 	setvar VAR_TEMP_0, 0
+#if IS_WAYFARER
+	@ BLUE (hidden through FLAG_TEMP_1) has moved on once the player has beaten him at INDIGO
+	specialvar VAR_RESULT, WayfarerBlueRoadScenesRetired
+	call_if_eq VAR_RESULT, TRUE, PokemonTower_2F_EventScript_BlueRetired
+#endif
 	setescapewarp MAP_LAVENDER_TOWN_RADIO_STATION_HNS, 17, 5
 	end
+
+#if IS_WAYFARER
+PokemonTower_2F_EventScript_BlueRetired::
+	setflag FLAG_TEMP_1
+	return
+#endif
 
 PokemonTower_2F_EventScript_Stair0::
 	lockall
