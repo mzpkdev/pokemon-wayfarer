@@ -94,11 +94,9 @@ WayfarerSevii_Celio_RepairComplete:
 @ Mt. Ember Ruby lead
 
 WayfarerSevii_MtEmberExterior_OnLoad::
-	goto_if_unset FLAG_WAYFARER_SEVII_CELIO_GEMS_STARTED, WayfarerSevii_MtEmberExterior_EndOnLoad
-	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_43, WayfarerSevii_MtEmberExterior_EndOnLoad
-	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_44, WayfarerSevii_MtEmberExterior_EndOnLoad
+	@ Ruby Path is exploration content: the entrance is always open. Only the
+	@ Ruby itself waits on Celio's request and the guards.
 	setmetatile 42, 39, METATILE_MtEmber_CaveEntrance, 0
-WayfarerSevii_MtEmberExterior_EndOnLoad:
 	end
 
 WayfarerSevii_EventScript_RubyGuardPasswordScene::
@@ -118,8 +116,8 @@ WayfarerSevii_EventScript_RubyGuard1::
 	goto_if_unset FLAG_WAYFARER_SEVII_CELIO_GEMS_STARTED, WayfarerSevii_RubyLead_NotStarted
 	call WayfarerSevii_RubyLead_EnsurePassword
 	trainerbattle_single TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_43, WayfarerSevii_Text_RubyGuard1Intro, WayfarerSevii_Text_RubyGuard1Defeat
-	call WayfarerSevii_RubyLead_TryOpenCave
 	msgbox WayfarerSevii_Text_RubyGuard1PostBattle
+	call WayfarerSevii_RubyLead_DismissGuards
 	release
 	end
 
@@ -129,8 +127,8 @@ WayfarerSevii_EventScript_RubyGuard2::
 	goto_if_unset FLAG_WAYFARER_SEVII_CELIO_GEMS_STARTED, WayfarerSevii_RubyLead_NotStarted
 	call WayfarerSevii_RubyLead_EnsurePassword
 	trainerbattle_single TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_44, WayfarerSevii_Text_RubyGuard2Intro, WayfarerSevii_Text_RubyGuard2Defeat
-	call WayfarerSevii_RubyLead_TryOpenCave
 	msgbox WayfarerSevii_Text_RubyGuard2PostBattle
+	call WayfarerSevii_RubyLead_DismissGuards
 	release
 	end
 
@@ -142,12 +140,15 @@ WayfarerSevii_RubyLead_EnsurePassword:
 WayfarerSevii_RubyLead_EndEnsurePassword:
 	return
 
-WayfarerSevii_RubyLead_TryOpenCave:
-	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_43, WayfarerSevii_RubyLead_EndTryOpenCave
-	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_44, WayfarerSevii_RubyLead_EndTryOpenCave
-	setmetatile 42, 39, METATILE_MtEmber_CaveEntrance, 0
-	special DrawWholeMapView
-WayfarerSevii_RubyLead_EndTryOpenCave:
+@ Once both guards are beaten they leave their post, as in FRLG, and stay gone
+@ on reload through the shared hide flag.
+WayfarerSevii_RubyLead_DismissGuards:
+	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_43, WayfarerSevii_RubyLead_EndDismissGuards
+	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_44, WayfarerSevii_RubyLead_EndDismissGuards
+	setflag FLAG_WAYFARER_SEVII_HIDE_RUBY_GUARDS
+	removeobject LOCALID_MT_EMBER_GRUNT1
+	removeobject LOCALID_MT_EMBER_GRUNT2
+WayfarerSevii_RubyLead_EndDismissGuards:
 	return
 
 WayfarerSevii_RubyLead_NotStarted:
@@ -569,7 +570,7 @@ WayfarerSevii_Text_RubyGuardsRevealPassword:
 	.string "The ROCKETS let a password slip:\n"
 	.string "“GOLDEEN need log.”\p"
 	.string "They spot you listening and move to\n"
-	.string "defend the chamber.$"
+	.string "defend their dig.$"
 
 WayfarerSevii_Text_RubyGuard1Intro:
 	.string "You've been eavesdropping on us,\n"
@@ -594,8 +595,8 @@ WayfarerSevii_Text_RubyDormant:
 	.string "A red gem glitters here, but CELIO\n"
 	.string "hasn't asked you to investigate.$"
 WayfarerSevii_Text_RubyGuardsRemain:
-	.string "The ROCKET guards still bar the\n"
-	.string "chamber.$"
+	.string "The ROCKETS outside would notice if\n"
+	.string "you took it. Deal with the guards.$"
 WayfarerSevii_Text_RubyNoRoom:
 	.string "The RUBY remains safely here.\n"
 	.string "Make room in the KEY ITEMS pocket.$"

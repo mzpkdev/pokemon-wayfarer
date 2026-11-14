@@ -485,6 +485,7 @@
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_GRUNT_43"
             ],
             "state_writes": [
+              "SEVII_HIDE_RUBY_GUARDS",
               "SEVII_HIDE_WAREHOUSE_COMBATANTS",
               "SEVII_HIDE_WAREHOUSE_GIDEON",
               "SEVII_PASSWORD_ONE_LEARNED",
@@ -497,8 +498,8 @@
               "local_id": "LOCALID_MT_EMBER_GRUNT2",
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_ROCKET_M",
-              "x": 42,
-              "y": 40,
+              "x": 41,
+              "y": 41,
               "elevation": 3,
               "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
               "movement_range_x": 1,
@@ -531,6 +532,7 @@
               "SEVII_TRAINER_DEFEAT_TEAM_ROCKET_GRUNT_44"
             ],
             "state_writes": [
+              "SEVII_HIDE_RUBY_GUARDS",
               "SEVII_HIDE_WAREHOUSE_COMBATANTS",
               "SEVII_HIDE_WAREHOUSE_GIDEON",
               "SEVII_PASSWORD_ONE_LEARNED",
@@ -1010,9 +1012,7 @@
           },
           "wayfarer_script": "WayfarerSevii_MtEmberExterior_OnLoad",
           "reason": "Restores a reviewed story arrival or presentation handler without campaign gating.",
-          "state_reads": [
-            "SEVII_CELIO_GEMS_STARTED"
-          ],
+          "state_reads": [],
           "state_writes": []
         }
       ],
@@ -20631,19 +20631,18 @@
         "WayfarerSevii_Moltres_CommitResolution",
         "WayfarerSevii_Moltres_NotReady",
         "WayfarerSevii_Moltres_Resolved",
-        "WayfarerSevii_MtEmberExterior_EndOnLoad",
         "WayfarerSevii_MtEmberExterior_OnLoad",
         "WayfarerSevii_Rival_KnowsBlue",
         "WayfarerSevii_Rival_KnowsBlueNotPallet",
         "WayfarerSevii_Rival_NoScene",
         "WayfarerSevii_Rival_NoSceneTalk",
+        "WayfarerSevii_RubyLead_DismissGuards",
+        "WayfarerSevii_RubyLead_EndDismissGuards",
         "WayfarerSevii_RubyLead_EndEnsurePassword",
-        "WayfarerSevii_RubyLead_EndTryOpenCave",
         "WayfarerSevii_RubyLead_EnsurePassword",
         "WayfarerSevii_RubyLead_NotStarted",
         "WayfarerSevii_RubyLead_NotStartedAll",
         "WayfarerSevii_RubyLead_PasswordKnown",
-        "WayfarerSevii_RubyLead_TryOpenCave",
         "WayfarerSevii_Ruby_AlreadyRecovered",
         "WayfarerSevii_Ruby_GuardsRemain",
         "WayfarerSevii_Ruby_NoRoom",
@@ -25695,7 +25694,6 @@
           "story.celio.local-rocket-49",
           "story.celio.local-rocket-50",
           "story.celio.local-rocket-51",
-          "story.celio.mt-ember-cave-staging",
           "story.celio.network",
           "story.celio.ruby",
           "story.celio.ruby-guard-43",
@@ -26350,7 +26348,9 @@
         ],
         "writers": [
           "story.celio.network",
-          "story.celio.ruby"
+          "story.celio.ruby",
+          "story.celio.ruby-guard-43",
+          "story.celio.ruby-guard-44"
         ],
         "transitions": [
           {
@@ -26362,6 +26362,16 @@
             "from": 0,
             "to": 1,
             "caller": "story.celio.ruby"
+          },
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.celio.ruby-guard-43"
+          },
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.celio.ruby-guard-44"
           }
         ]
       },
