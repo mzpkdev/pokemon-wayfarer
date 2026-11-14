@@ -405,8 +405,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ROCKET_M_HNS",
-      "x": 39,
-      "y": 14,
+      "x": 37,
+      "y": 15,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 2,

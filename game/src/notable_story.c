@@ -68,7 +68,10 @@ struct StoryPlacement
 
 u32 NotableStory_IsWhitneyAtTower(void)
 {
-    return !FlagGet(FLAG_ENABLE_RADIO) && GetTimeOfDay() == TIME_MORNING;
+    u16 goldenrod = VarGet(VAR_GOLDENROD_CITY_STATE);
+
+    // Not while the Rockets hold the Tower (states 6-10): the quiz is closed and she stays at her Gym.
+    return !FlagGet(FLAG_ENABLE_RADIO) && GetTimeOfDay() == TIME_MORNING && (goldenrod < 6 || goldenrod > 10);
 }
 
 static bool8 IsWhitneyAtTower(void)
@@ -90,6 +93,9 @@ static const struct StoryPlacement sPlacements[] =
     // Giovanni leaves Viridian for good: once he has departed, his walker never spawns.
     // Whitney's morning outing to the Goldenrod Radio Tower until the quiz is solved (her Tower copy shows then).
     { .characterId = NOTABLE_TRAINER_WHITNEY, .predicate = IsWhitneyAtTower },
+    // Lance through the Mahogany arc: the Lake of Rage copy (state 2-3), the Mahogany shop (4) and the hideout
+    // B2F/B3F copies (5-13) follow one another, so his walker stays away until the hideout is shut down (14).
+    { .characterId = NOTABLE_TRAINER_LANCE, .var = VAR_MAHOGANY_TOWN_STATE, .varMin = 2, .varMax = 13 },
     { .characterId = NOTABLE_TRAINER_GIOVANNI, .flag = FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS, .options = PLACEMENT_FLAG_SET },
 };
 
