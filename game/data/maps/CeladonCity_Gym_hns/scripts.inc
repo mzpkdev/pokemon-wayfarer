@@ -134,7 +134,7 @@ CeladonCity_Gym_Text_PicnickerTanyaBeaten:
 	.string "Oh, that's it?$"
 
 CeladonCity_Gym_Text_PicnickerTanyaAfter:
-	.string "Oh, look at all your BADGES. No\n"
+	.string "Oh, you're really strong. No\n"
 	.string "wonder I couldn't win!$"
 
 CeladonCity_Gym_EventScript_Julia::

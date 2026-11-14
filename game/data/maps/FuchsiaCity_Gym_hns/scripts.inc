@@ -302,6 +302,5 @@ FuchsiaCity_Gym_Text_Guide:
 	.string "Which of them is the real JANINE?$"
 
 FuchsiaCity_Gym_Text_GuideWin:
-	.string "That was a great battle, trainer\n"
-	.string "from JOHTO!$"
+	.string "That was a great battle, trainer!$"
 

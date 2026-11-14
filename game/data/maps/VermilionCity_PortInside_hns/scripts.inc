@@ -5,11 +5,24 @@ VermilionPortIndoor_EventScript_Teacher::
 	msgbox VermilionPortPassage_Text_Teacher, MSGBOX_NPC
 	end
 VermilionPortIndoor_EventScript_Nerd::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerIsJohtoOrigin
+	goto_if_eq VAR_RESULT, FALSE, VermilionPortIndoor_EventScript_NerdNotJohto
+#endif
 	msgbox VermilionPort_Text_SuperNerd, MSGBOX_NPC
+	end
+
+VermilionPortIndoor_EventScript_NerdNotJohto::
+	msgbox VermilionPort_Text_SuperNerdNotJohto, MSGBOX_NPC
 	end
 
 VermilionPortPassage_Text_Teacher:
 	.string "The FAST SHIP sails every day!$"
+
+VermilionPort_Text_SuperNerdNotJohto:
+	.string "Thinking of sailing off somewhere?\p"
+	.string "I hear many rare POKéMON live far\n"
+	.string "across the sea.$"
 
 VermilionPort_Text_SuperNerd:
 	.string "You came from JOHTO?\p"
