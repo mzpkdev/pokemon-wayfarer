@@ -485,6 +485,10 @@ RocketHideout_B2F_EventScript_Ran_Electrode::
 	end
 
 RocketHideout_B2F_EventScript_ElectrodeDone::
+	@ HM Whirlpool is the finale's one-time handoff: check room before the scene commits anything, and
+	@ with none step off the trigger so crossing it again retries the whole scene.
+	checkitemspace ITEM_HM_WHIRLPOOL
+	goto_if_eq VAR_RESULT, FALSE, RocketHideout_B2F_EventScript_ElectrodeNoRoom
 	playse SE_M_HYPER_BEAM
 	removeobject LOCALID_LANCEELECTRODE1
 	removeobject LOCALID_LANCEELECTRODE2
@@ -647,6 +651,19 @@ RocketHideout_B2F_Text_LanceElectrodeFaint:
     .string "It's no fault of the POKéMON, so\n"
     .string "it makes me feel guilty.\p"
     .string "{PLAYER}, let's split the job.$"
+
+RocketHideout_B2F_EventScript_ElectrodeNoRoom::
+	msgbox RocketHideout_B2F_Text_LanceMakeRoom, MSGBOX_DEFAULT
+	closemessage
+	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkLeft1
+	waitmovement 0
+	release
+	end
+
+RocketHideout_B2F_Text_LanceMakeRoom:
+    .string "LANCE: I have something for you,\n"
+    .string "but your BAG is full.\p"
+    .string "Make some room and come back.$"
 
 RocketHideout_B2F_Text_LanceSide:
     .string "LANCE: Leave this side to me.$"

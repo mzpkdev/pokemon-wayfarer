@@ -623,6 +623,11 @@ EcruteakCity_Theater_EventScript_ZukiPure::
 	waitmovement 0
 	setvar_forward VAR_WAYFARER_JOHTO_KIMONO_CEREMONY_STATE, KIMONO_CEREMONY_STARTED
 EcruteakCity_Theater_EventScript_ZukiBattle::
+	@ The trial ends in the branch's Bell, a one-time handoff that the ceremony state and the Ho-Oh route
+	@ depend on: the trial only starts with room for it. A talk with Zuki offers it again.
+	goto_if_eq VAR_LUGIA_OR_HOOH, 1, EcruteakCity_Theater_EventScript_ZukiRoomTidal
+	goto_if_eq VAR_LUGIA_OR_HOOH, 2, EcruteakCity_Theater_EventScript_ZukiRoomClear
+EcruteakCity_Theater_EventScript_ZukiRoomOk::
 	msgbox EcruteakCity_Theater_Text_ZukiSeenAgain, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, EcruteakCity_Theater_EventScript_LegendaryDenied
 	call_if_eq VAR_FACING, DIR_SOUTH, EcruteakCity_Theater_Movement_SouthCorrection
@@ -724,8 +729,23 @@ EcruteakCity_Theater_EventScript_BeatGauntlet::
 	turnobject LOCALID_ECRUTEAK_ZUKI, DIR_SOUTH
 	return
 
+EcruteakCity_Theater_EventScript_ZukiRoomTidal::
+	checkitemspace ITEM_TIDAL_BELL
+	goto_if_eq VAR_RESULT, TRUE, EcruteakCity_Theater_EventScript_ZukiRoomOk
+	goto EcruteakCity_Theater_EventScript_ZukiNoRoom
+
+EcruteakCity_Theater_EventScript_ZukiRoomClear::
+	checkitemspace ITEM_CLEAR_BELL
+	goto_if_eq VAR_RESULT, TRUE, EcruteakCity_Theater_EventScript_ZukiRoomOk
+EcruteakCity_Theater_EventScript_ZukiNoRoom::
+	call Common_EventScript_BagIsFull
+	closemessage
+	release
+	end
+
 EcruteakCity_Theater_EventScript_Lugia::
 	giveitem ITEM_TIDAL_BELL
+	goto_if_eq VAR_RESULT, FALSE, EcruteakCity_Theater_EventScript_ZukiNoRoom
 	closemessage
 	playse SE_M_RAZOR_WIND
 	setvar VAR_0x8004, 1  @ vertical pan
@@ -773,6 +793,7 @@ EcruteakCity_Theater_EventScript_Lugia::
 	end
 EcruteakCity_Theater_EventScript_Hooh::
 	giveitem ITEM_CLEAR_BELL
+	goto_if_eq VAR_RESULT, FALSE, EcruteakCity_Theater_EventScript_ZukiNoRoom
 	closemessage
 	playse SE_M_RAZOR_WIND
 	setvar VAR_0x8004, 1  @ vertical pan
