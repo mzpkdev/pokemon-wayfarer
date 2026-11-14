@@ -230,8 +230,7 @@ Route44_Text_CooltrainermAllenBeaten:
     .string "Tch! It's a total loss on my part.$"
 
 Route44_Text_CooltrainermAllenAfter:
-	.string "Wow. You have a lot of BADGES.\p"
-	.string "No wonder you're so tough.\p"
+	.string "Wow. You're really tough.\p"
 	.string "I wonder if MORTY is still in\n"
 	.string "training?\p"
 	.string "He really hammered me.$"
