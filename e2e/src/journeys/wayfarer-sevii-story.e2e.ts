@@ -69,6 +69,32 @@ const winObjectiveBattle = async (
   await finishScript(game, `${description} victory script`, true)
 }
 
+// One tile in `direction`, retrying until the avatar actually moves (a held button
+// can be swallowed while the previous step animation finishes).
+const walk = async (game: GameSession, direction: Direction, tiles = 1): Promise<void> => {
+  for (let tile = 0; tile < tiles; tile++) {
+    const before = (await game.state.read()).player
+    let moved = false
+    for (let attempt = 0; attempt < 8 && !moved; attempt++) {
+      await game.player.move(direction)
+      await game.wait.frames(20)
+      const after = (await game.state.read()).player
+      moved = after.x !== before.x || after.y !== before.y
+    }
+    if (!moved) throw new Error(`Could not walk ${direction} from ${before.x},${before.y}`)
+  }
+}
+
+// Turn toward a blocker without moving: the avatar only faces an occupied tile.
+const turn = async (game: GameSession, direction: Direction): Promise<void> => {
+  await game.player.move(direction)
+  await game.wait.frames(12)
+}
+
+const expectAt = async (game: GameSession, x: number, y: number): Promise<void> => {
+  expect((await game.state.read()).player).toMatchObject({ x, y })
+}
+
 const blue = 9 // NOTABLE_TRAINER_BLUE
 
 const gameOf = (game: GameSession): RunningSkyEmu =>
@@ -97,7 +123,7 @@ describe.sequential("Wayfarer Sevii independent story journeys", () => {
     return () => game.close()
   })
 
-  it("shows Blue on Four Island as soon as the post-League rival scene ends", async () => {
+  it("plays the post-League rival scene on Four Island and leaves no Blue behind", async () => {
     // Arrive through the Pokémon Center door: the scene runs on Four Island's
     // first frame, which would otherwise hold the arrange mailbox open.
     await game.arrange({
@@ -129,11 +155,10 @@ describe.sequential("Wayfarer Sevii independent story journeys", () => {
       "Four Island rival scene",
     )
     expect(await game.story.flag("seviiRivalSceneSeen")).toBe(true)
-    expect(await game.story.flag("seviiHideRivals")).toBe(false)
-    // Blue stands at (8, 25), out of view from the door at (18, 20), so only
-    // the scene's addobject can have spawned him already.
+    // The scene's actor leaves with it: Blue is never left standing on two islands.
+    expect(await game.story.flag("seviiHideRivals")).toBe(true)
     const { objects } = await game.state.read()
-    expect(objects).toContainEqual(expect.objectContaining({ x: 8, y: 25, visible: true }))
+    expect(objects).not.toContainEqual(expect.objectContaining({ x: 8, y: 25, visible: true }))
   })
 
   it("keeps Bill's Meteorite pending when Key Items are full, then commits it across reload", async () => {
@@ -199,19 +224,27 @@ describe.sequential("Wayfarer Sevii independent story journeys", () => {
       party: [...strongParty()].map((mon) => ({ ...mon, moves: [...mon.moves] })),
       determinism: { textSpeed: "instant" },
     })
+    // The gang only arrives once Lostelle's father asks for help: until then
+    // Three Island is open from the Port.
+    await expect(game.story.flag("seviiHideThreeIslandBikers")).resolves.toBe(true)
     await game.player.interact()
     await finishScript(game, "Lostelle's local introduction")
     await expect(game.story.flag("seviiLostelleStarted")).resolves.toBe(true)
+    await expect(game.story.flag("seviiHideThreeIslandBikers")).resolves.toBe(false)
     await expect(game.story.flag("seviiMeteoriteReceived")).resolves.toBe(false)
 
-    const bikers = [
-      { map: "sevii-three-island", x: 9, y: 25, facing: "up" },
-      { map: "sevii-three-island", x: 11, y: 24, facing: "left" },
-      { map: "sevii-three-island", x: 9, y: 22, facing: "down" },
-      { map: "sevii-three-island", x: 8, y: 25, facing: "up" },
-    ] as const satisfies readonly Location[]
+    // Arrive from the Port and walk north across the connection to the blockade.
+    await warpTo(game, { map: "sevii-three-island-port", x: 11, y: 2, facing: "up" })
+    await walk(game, "up", 3)
+    await game.wait.forMap("sevii-three-island")
+    await walk(game, "up", 13)
+    await expectAt(game, 11, 26)
 
-    await warpTo(game, bikers[1])
+    // Biker Goon 2 (10,24) refuses to fight before Goon 1 is beaten.
+    await walk(game, "left", 1)
+    await walk(game, "up")
+    await expectAt(game, 10, 25)
+    await turn(game, "up")
     await game.player.interact()
     await advanceUntil(
       game,
@@ -221,7 +254,15 @@ describe.sequential("Wayfarer Sevii independent story journeys", () => {
     expect((await game.state.read()).battle.active).toBe(false)
     await finishScript(game, "out-of-order biker refusal")
 
-    await startObjectiveBattle(game, bikers[0], "first biker")
+    // Goon 1 stands at (9,24): fight from (9,25) and lose once.
+    await walk(game, "left")
+    await turn(game, "up")
+    await game.player.interact()
+    await advanceUntil(
+      game,
+      (state) => state.battle.ui === "action-menu",
+      "first biker battle action menu",
+    )
     await game.battle.lose()
     await advanceUntil(
       game,
@@ -233,8 +274,39 @@ describe.sequential("Wayfarer Sevii independent story journeys", () => {
     await expect(game.story.flag("seviiBikersCleared")).resolves.toBe(false)
     await game.saveAndReload()
 
-    for (const [index, location] of bikers.entries())
-      await winObjectiveBattle(game, location, `ordered biker ${index + 1}`)
+    // Beat the four required bikers in order, each one reached on foot from the
+    // Port side. The approach tiles lie south of the line (y 25) and Goon 3 sits
+    // on that line now, so no one is boxed in.
+    const fightFrom = async (x: number, description: string): Promise<void> => {
+      await warpTo(game, { map: "sevii-three-island", x, y: 25, facing: "up" })
+      await game.player.interact()
+      await advanceUntil(
+        game,
+        (state) => state.battle.ui === "action-menu",
+        `${description} battle action menu`,
+      )
+      await game.battle.win()
+      await finishScript(game, `${description} victory script`, true)
+    }
+    await fightFrom(9, "biker goon 1")
+    await walk(game, "right")
+    await turn(game, "up")
+    await game.player.interact()
+    await advanceUntil(game, (state) => state.battle.ui === "action-menu", "biker goon 2")
+    await game.battle.win()
+    await finishScript(game, "biker goon 2 victory script", true)
+    await walk(game, "right")
+    await turn(game, "up")
+    await game.player.interact()
+    await advanceUntil(game, (state) => state.battle.ui === "action-menu", "biker goon 3")
+    await game.battle.win()
+    await finishScript(game, "biker goon 3 victory script", true)
+    await walk(game, "left", 3)
+    await turn(game, "up")
+    await game.player.interact()
+    await advanceUntil(game, (state) => state.battle.ui === "action-menu", "Cue Ball Paxton")
+    await game.battle.win()
+    await finishScript(game, "Cue Ball Paxton victory script", true)
 
     await expect(game.story.flag("seviiBikersCleared")).resolves.toBe(true)
     await game.saveAndReload()
@@ -264,6 +336,50 @@ describe.sequential("Wayfarer Sevii independent story journeys", () => {
     await expect(game.story.flag("seviiLostelleFound")).resolves.toBe(true)
     await expect(game.story.flag("seviiLostelleRescued")).resolves.toBe(true)
     await expect(game.story.flag("seviiIapapaBerryReceived")).resolves.toBe(true)
+  })
+
+  it("keeps Ruby Path open and lets the Mt. Ember guards go once both are beaten", async () => {
+    const approach = {
+      map: "sevii-mt-ember-exterior",
+      x: 42,
+      y: 42,
+      facing: "up",
+    } as const
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { position: approach, facing: approach.facing },
+      story: { flags: { seviiCelioGemsStarted: true, seviiHideRubyGuards: false } },
+      party: [...strongParty()].map((mon) => ({ ...mon, moves: [...mon.moves] })),
+      determinism: { textSpeed: "instant" },
+    })
+
+    // Guard 1 stands at (41,40) beside the cave mouth and guard 2 at (41,41):
+    // neither blocks (42,40), so the cave is open even while they hold their post.
+    await walk(game, "up", 2)
+    await expectAt(game, 42, 40)
+    await walk(game, "down", 2)
+
+    await winObjectiveBattle(
+      game,
+      { map: "sevii-mt-ember-exterior", x: 42, y: 40, facing: "left" },
+      "Mt. Ember guard 1",
+    )
+    await expect(game.story.flag("seviiHideRubyGuards")).resolves.toBe(false)
+    await winObjectiveBattle(
+      game,
+      { map: "sevii-mt-ember-exterior", x: 42, y: 41, facing: "left" },
+      "Mt. Ember guard 2",
+    )
+    // Both beaten: the guards leave their post and stay gone after a reload.
+    await expect(game.story.flag("seviiHideRubyGuards")).resolves.toBe(true)
+    await game.saveAndReload()
+    const { objects } = await game.state.read()
+    expect(objects).not.toContainEqual(expect.objectContaining({ x: 41, y: 41, visible: true }))
+    expect(objects).not.toContainEqual(expect.objectContaining({ x: 41, y: 40, visible: true }))
+
+    await warpTo(game, approach)
+    await walk(game, "up", 3)
+    await game.wait.forMap("sevii-mt-ember-ruby-path-1-f")
   })
 
   it("gates Moltres at TR 119 and resolves only a TR 120 knockout across reload", async () => {

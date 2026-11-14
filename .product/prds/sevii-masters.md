@@ -116,7 +116,7 @@ strong or not.
 ## Presentation
 
 The Masters' call comes from the caretaker, not from an official league,
-and her first call says that Lorelei, retired to Four Island, spoke of the
+and her first call says that Lorelei, who is from Four Island, spoke of the
 player. Lorelei is also the partner who steps in until the player asks
 someone; otherwise she stays an ordinary notable trainer with no guaranteed
 seat. The player asks a partner with a phone call to that trainer, from the

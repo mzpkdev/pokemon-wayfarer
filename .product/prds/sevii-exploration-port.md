@@ -68,8 +68,9 @@ map. This includes Icefall Cave's ice and holes, Lost Cave's directional route,
 Dotted Hole's floor puzzle, Tanoby Key's Strength puzzle, currents, breakable
 rocks, boulders, and ordinary field-move terrain. Remove story-only blockers,
 credentials, actors, and scene checks. The Rocket Warehouse entrance is open,
-the Mt. Ember Ruby path is not guarded by Rockets, and visiting a map early
-does not wait for a story flag.
+the Mt. Ember Ruby path is always open (only obtaining the Ruby waits on
+Celio's request and the guards), and visiting a map early does not wait for a
+story flag.
 
 ### Scripted content
 
