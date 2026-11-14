@@ -269,12 +269,11 @@ describe.sequential("Wayfarer Viridian Giovanni finale", () => {
   })
 
   it("walks the full Gym interior from its doorway to Giovanni", async () => {
+    // Giovanni is staged when the Gym loads, so the investigations are resolved before entering.
     await arrangeAt(game, 43, 15, "up", { map: city, flags: defeatedOrdinary })
+    for (const flag of Object.keys(resolvedInvestigations) as (keyof typeof resolvedInvestigations)[])
+      await game.story.setFlag(flag, true)
     await enterFromCity(game)
-    await game.story.setFlag("celadonHideoutGiovanniTrainerDefeated", true)
-    await game.story.setFlag("celadonHideoutScopeReceived", true)
-    await game.story.setFlag("silphGiovanniDefeated", true)
-    await game.story.setFlag("silphLiberated", true)
     const arrival = await game.state.read()
     expect(arrival.player.y).toBe(22)
     if (arrival.player.x !== 16)
@@ -342,11 +341,12 @@ describe.sequential("Wayfarer Viridian Giovanni finale", () => {
     })
   }
 
-  it("keeps the finale locked until both local investigations resolve in either order", async () => {
+  it("keeps Giovanni away until both local investigations resolve in either order", async () => {
     for (const first of ["hideout", "silph"] as const) {
       await arrangeAt(game, 2, 3, "up")
       const baseline = await game.state.read()
-      expect(await interact(game, "Giovanni before investigations")).toContain("GIOVANNI")
+      // Before readiness he is at the hideout and Silph, not here (the Gym Guide says so).
+      expect(await visibleGymObjects(game)).not.toContainEqual(giovanniObject)
       expect(await game.story.flag("defeatedViridianGym")).toBe(false)
       expect((await game.state.read()).circuit.badges).toEqual(baseline.circuit.badges)
 
@@ -357,7 +357,12 @@ describe.sequential("Wayfarer Viridian Giovanni finale", () => {
         await game.story.setFlag("silphGiovanniDefeated", true)
         await game.story.setFlag("silphLiberated", true)
       }
-      expect(await interact(game, `Giovanni after ${first} only`)).toContain("GIOVANNI")
+      // Re-enter the Gym: one investigation alone is still not enough.
+      await game.player.warp(city, 43, 15, "up")
+      await game.wait.forReady()
+      await game.player.warp(gym, 2, 3, "up")
+      await game.wait.forReady()
+      expect(await visibleGymObjects(game)).not.toContainEqual(giovanniObject)
       expect(await game.story.flag("defeatedViridianGym")).toBe(false)
       await game.saveAndReload()
 
@@ -368,6 +373,8 @@ describe.sequential("Wayfarer Viridian Giovanni finale", () => {
         await game.story.setFlag("celadonHideoutGiovanniTrainerDefeated", true)
         await game.story.setFlag("celadonHideoutScopeReceived", true)
       }
+      await game.player.warp(city, 43, 15, "up")
+      await game.wait.forReady()
       await startGiovanni(game)
       expect((await game.state.read()).battle.enemy).toMatchObject({
         species: "diglett",
