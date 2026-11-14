@@ -489,6 +489,7 @@ NewBarkTown_Lab_EventScript_ElmMasterBall::
 
 NewBarkTown_Lab_EventScript_GiveMasterBall::
 	msgbox NewBarkTown_Lab_Text_ElmGiveMasterBall1, MSGBOX_DEFAULT
+NewBarkTown_Lab_EventScript_GiveMasterBallItem::
 	giveitem ITEM_MASTER_BALL
 	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_EventScript_ElmMasterBallBagFull
 	setflag FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_RECEIVED
@@ -957,6 +958,12 @@ NewBarkTown_Lab_Text_ElmGiveMasterBall1:
 	.string "Take this as a token of my\n"
 	.string "appreciation.$"
 
+NewBarkTown_Lab_Text_VisitorElmGiveMasterBall1:
+	.string "ELM: Word is that you made it\n"
+	.string "through the DRAGON'S DEN, {PLAYER}.\p"
+	.string "Take this as a token of my\n"
+	.string "welcome to JOHTO.$"
+
 NewBarkTown_Lab_Text_ElmGiveMasterBall2:
 	.string "The MASTER BALL is the best!\p"
 	.string "It's the ultimate BALL! It'll\n"
@@ -1098,7 +1105,9 @@ NewBarkTown_Lab_EventScript_VisitorElm::
 	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_OWED, NewBarkTown_Lab_EventScript_VisitorElmNoBall
 	goto_if_set FLAG_WAYFARER_JOHTO_ELM_MASTER_BALL_RECEIVED, NewBarkTown_Lab_EventScript_VisitorElmNoBall
 	msgbox NewBarkTown_Lab_Text_VisitorElmIntroduces, MSGBOX_DEFAULT
-	call NewBarkTown_Lab_EventScript_GiveMasterBall
+	@ A visitor did nothing for Elm's research: the gift is not a thank-you for it.
+	msgbox NewBarkTown_Lab_Text_VisitorElmGiveMasterBall1, MSGBOX_DEFAULT
+	call NewBarkTown_Lab_EventScript_GiveMasterBallItem
 	goto NewBarkTown_Lab_EventScript_VisitorElmEnd
 NewBarkTown_Lab_EventScript_VisitorElmNoBall::
 	goto_if_unset FLAG_WAYFARER_JOHTO_ELM_TICKET_OWED, NewBarkTown_Lab_EventScript_VisitorElmNoTicket
