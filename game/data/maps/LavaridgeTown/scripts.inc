@@ -101,7 +101,11 @@ LavaridgeTown_EventScript_MayGiveGoGoggles::
 	setvar VAR_0x8007, TRUE
 	call EventScript_ObtainItemMessage
 	setflag FLAG_RECEIVED_GO_GOGGLES
+#if IS_WAYFARER
+	call LavaridgeTown_EventScript_MayExplainGoGoggles
+#else
 	msgbox LavaridgeTown_Text_MayExplainGoGogglesChallengeDad, MSGBOX_DEFAULT
+#endif
 	goto LavaridgeTown_EventScript_RivalExit
 	end
 
@@ -116,23 +120,124 @@ LavaridgeTown_EventScript_BrendanGiveGoGoggles::
 	setvar VAR_0x8007, TRUE
 	call EventScript_ObtainItemMessage
 	setflag FLAG_RECEIVED_GO_GOGGLES
+#if IS_WAYFARER
+	call LavaridgeTown_EventScript_BrendanExplainGoGoggles
+#else
 	msgbox LavaridgeTown_Text_BrendanExplainGoGogglesChallengeDad, MSGBOX_DEFAULT
+#endif
 	goto LavaridgeTown_EventScript_RivalExit
 	end
 
 LavaridgeTown_EventScript_MayRecognizeGoGoggles::
 	setflag FLAG_RECEIVED_GO_GOGGLES
 	msgbox LavaridgeTown_Text_MayRecognizeSurveyGoGoggles, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call LavaridgeTown_EventScript_MayAfterSurveyGoGoggles
+#else
 	msgbox LavaridgeTown_Text_MayExplainGoGogglesChallengeDad, MSGBOX_DEFAULT
+#endif
 	goto LavaridgeTown_EventScript_RivalExit
 	end
 
 LavaridgeTown_EventScript_BrendanRecognizeGoGoggles::
 	setflag FLAG_RECEIVED_GO_GOGGLES
 	msgbox LavaridgeTown_Text_BrendanRecognizeSurveyGoGoggles, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	call LavaridgeTown_EventScript_BrendanAfterSurveyGoGoggles
+#else
 	msgbox LavaridgeTown_Text_BrendanExplainGoGogglesChallengeDad, MSGBOX_DEFAULT
+#endif
 	goto LavaridgeTown_EventScript_RivalExit
 	end
+
+#if IS_WAYFARER
+@ The native rival's remarks about NORMAN and the desert depend on what the player has already done
+LavaridgeTown_EventScript_MayExplainGoGoggles::
+	goto_if_set FLAG_DEFEATED_PETALBURG_GYM, LavaridgeTown_EventScript_MayExplainGoGogglesNormanBeaten
+	msgbox LavaridgeTown_Text_MayExplainGoGogglesChallengeDad, MSGBOX_DEFAULT
+	return
+
+LavaridgeTown_EventScript_MayExplainGoGogglesNormanBeaten::
+	msgbox LavaridgeTown_Text_MayExplainGoGogglesNormanBeaten, MSGBOX_DEFAULT
+	return
+
+LavaridgeTown_EventScript_MayAfterSurveyGoGoggles::
+	goto_if_set FLAG_DEFEATED_PETALBURG_GYM, LavaridgeTown_EventScript_MayAfterSurveyNormanBeaten
+	msgbox LavaridgeTown_Text_MayAfterSurveyChallengeDad, MSGBOX_DEFAULT
+	return
+
+LavaridgeTown_EventScript_MayAfterSurveyNormanBeaten::
+	msgbox LavaridgeTown_Text_MayAfterSurveyNormanBeaten, MSGBOX_DEFAULT
+	return
+
+LavaridgeTown_EventScript_BrendanExplainGoGoggles::
+	goto_if_set FLAG_DEFEATED_PETALBURG_GYM, LavaridgeTown_EventScript_BrendanExplainGoGogglesNormanBeaten
+	msgbox LavaridgeTown_Text_BrendanExplainGoGogglesChallengeDad, MSGBOX_DEFAULT
+	return
+
+LavaridgeTown_EventScript_BrendanExplainGoGogglesNormanBeaten::
+	msgbox LavaridgeTown_Text_BrendanExplainGoGogglesNormanBeaten, MSGBOX_DEFAULT
+	return
+
+LavaridgeTown_EventScript_BrendanAfterSurveyGoGoggles::
+	goto_if_set FLAG_DEFEATED_PETALBURG_GYM, LavaridgeTown_EventScript_BrendanAfterSurveyNormanBeaten
+	msgbox LavaridgeTown_Text_BrendanAfterSurveyChallengeDad, MSGBOX_DEFAULT
+	return
+
+LavaridgeTown_EventScript_BrendanAfterSurveyNormanBeaten::
+	msgbox LavaridgeTown_Text_BrendanAfterSurveyNormanBeaten, MSGBOX_DEFAULT
+	return
+
+LavaridgeTown_Text_MayExplainGoGogglesNormanBeaten:
+	.string "MAY: With those GO-GOGGLES, you'll\n"
+	.string "have no trouble getting through the\l"
+	.string "desert near ROUTE 111.\p"
+	.string "But, wow, {PLAYER}{KUN}…\n"
+	.string "Challenging GYMS…\p"
+	.string "You're trying hard because you don't\n"
+	.string "want to lose to me, I bet!\p"
+	.string "See you again!$"
+
+LavaridgeTown_Text_MayAfterSurveyChallengeDad:
+	.string "MAY: But, wow, {PLAYER}{KUN}…\n"
+	.string "Challenging GYMS…\p"
+	.string "You're trying hard because you don't\n"
+	.string "want to lose to me, I bet!\p"
+	.string "{PLAYER}{KUN}, I think I should challenge\n"
+	.string "NORMAN in PETALBURG GYM.\p"
+	.string "See you again!$"
+
+LavaridgeTown_Text_MayAfterSurveyNormanBeaten:
+	.string "MAY: But, wow, {PLAYER}{KUN}…\n"
+	.string "Challenging GYMS…\p"
+	.string "You're trying hard because you don't\n"
+	.string "want to lose to me, I bet!\p"
+	.string "See you again!$"
+
+LavaridgeTown_Text_BrendanExplainGoGogglesNormanBeaten:
+	.string "BRENDAN: Keep those with you if you're\n"
+	.string "planning on going into that desert near\l"
+	.string "ROUTE 111.\p"
+	.string "There should be some POKéMON that\n"
+	.string "are exclusively desert-dwellers.\l"
+	.string "You might look around for those.\p"
+	.string "As for me…\n"
+	.string "I'm not about to fall behind you.\p"
+	.string "See you around!$"
+
+LavaridgeTown_Text_BrendanAfterSurveyChallengeDad:
+	.string "BRENDAN: As for me…\n"
+	.string "I'm considering challenging NORMAN,\l"
+	.string "the GYM LEADER of PETALBURG.\p"
+	.string "Unlike you, {PLAYER}, that man looks like\n"
+	.string "he really is tough.\p"
+	.string "See you around!$"
+
+LavaridgeTown_Text_BrendanAfterSurveyNormanBeaten:
+	.string "BRENDAN: As for me…\n"
+	.string "I'm not about to fall behind you.\p"
+	.string "See you around!$"
+#endif
 
 LavaridgeTown_EventScript_VisitorScene::
 	call WayfarerHoennVisitor_EventScript_RivalGreets
