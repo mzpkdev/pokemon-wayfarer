@@ -53,6 +53,7 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "rtc.h"
+#include "wayfarer_persistence.h"
 #include "constants/layouts.h"
 
 // Menu actions
@@ -853,7 +854,7 @@ static bool8 StartMenuPlayerNameCallback(void)
 
         if (IsOverworldLinkActive() || InUnionRoom())
             ShowPlayerTrainerCard(CB2_ReturnToFieldWithOpenMenu); // Display trainer card
-        else if (FlagGet(FLAG_SYS_FRONTIER_PASS))
+        else if (WayfarerHasFrontierPass())
             ShowFrontierPass(CB2_ReturnToFieldWithOpenMenu); // Display frontier pass
         else
             ShowPlayerTrainerCard(CB2_ReturnToFieldWithOpenMenu); // Display trainer card

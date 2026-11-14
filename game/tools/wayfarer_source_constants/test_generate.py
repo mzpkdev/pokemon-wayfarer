@@ -37,6 +37,14 @@ class SourceConstantTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             GENERATOR.source_value_for_hoenn("FLAG_HAS_MATCH_CALL", 0x12F, {})
 
+    def test_engine_shared_state_takes_the_engine_id_for_vars_and_flags(self):
+        engine = {"VAR_ICE_STEP_COUNT": 0x4022, "FLAG_SYS_CTRL_OBJ_DELETE": 0x866}
+        self.assertEqual(GENERATOR.source_value_for_hoenn("VAR_ICE_STEP_COUNT", 0x4022, engine), 0x4022)
+        self.assertEqual(GENERATOR.source_value_for_hoenn("FLAG_SYS_CTRL_OBJ_DELETE", 0x8C1, engine), 0x866)
+        # An engine id of 0 means the engine has no such state: sharing it would drop the write.
+        with self.assertRaises(ValueError):
+            GENERATOR.source_value_for_hoenn("VAR_ICE_STEP_COUNT", 0x4022, {"VAR_ICE_STEP_COUNT": 0})
+
     def test_engine_shared_flag_needs_no_common_dispatch(self):
         table, data = GENERATOR.render_common_tables(
             {"FLAG_HAS_MATCH_CALL", "FLAG_RESCUED_BIRCH"},

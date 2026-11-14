@@ -222,4 +222,39 @@ TEST("Hoenn misc bank: decoration flags follow the map: engine ids in New Bark, 
     gSaveBlock1Ptr->location = saved;
 }
 
+// Flags only Hoenn's scripts set: the engine id is 0 or another region's flag, so the C readers use the
+// Hoenn copy (Emerald SYSTEM_FLAGS 0x860 + offset).
+TEST("Hoenn misc bank: trendy sayings, the TV, the Frontier Pass and Lanette's PC follow Hoenn's flags")
+{
+    struct WarpData saved = gSaveBlock1Ptr->location;
+
+    StartHoenn();
+    EXPECT(!WayfarerHasTrendySayings());
+    EXPECT(!WayfarerTvHasStarted());
+    EXPECT(!WayfarerHasFrontierPass());
+    FlagSet(HOENN_FLAG_ID(0x860 + 0x6));
+    FlagSet(HOENN_FLAG_ID(0x860 + 0x32));
+    FlagSet(HOENN_FLAG_ID(0x860 + 0x72));
+    EXPECT(WayfarerHasTrendySayings());
+    EXPECT(WayfarerTvHasStarted());
+    EXPECT(WayfarerHasFrontierPass());
+
+    WayfarerTvWatchSet(TRUE);
+    EXPECT(FlagGet(HOENN_FLAG_ID(0x860 + 0x31)));
+    WayfarerTvWatchSet(FALSE);
+    EXPECT(!FlagGet(HOENN_FLAG_ID(0x860 + 0x31)));
+
+    // Lanette's PC is a Hoenn-map fact; elsewhere the engine flag (Bill's PC) decides.
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F);
+    EXPECT(!WayfarerPcHasCreatorName());
+    FlagSet(HOENN_FLAG_ID(0x860 + 0x4B));
+    EXPECT(WayfarerPcHasCreatorName());
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_2F_HNS);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_2F_HNS);
+    EXPECT(!WayfarerPcHasCreatorName());
+
+    gSaveBlock1Ptr->location = saved;
+}
+
 #endif // IS_WAYFARER

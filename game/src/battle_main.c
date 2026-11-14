@@ -94,6 +94,7 @@
 #include "constants/weather.h"
 #include "cable_club.h"
 #include "test/test_runner_battle.h"
+#include "wayfarer_persistence.h"
 
 extern const struct BgTemplate gBattleBgTemplates[];
 extern const struct WindowTemplate *const gBattleWindowTemplates[];
@@ -779,7 +780,7 @@ static void BufferPartyVsScreenHealth_AtStart(void)
     BUFFER_PARTY_VS_SCREEN_STATUS(gPlayerParty, flags, i);
     gBattleStruct->multiBuffer.linkBattlerHeader.vsScreenHealthFlagsLo = flags;
     *(&gBattleStruct->multiBuffer.linkBattlerHeader.vsScreenHealthFlagsHi) = flags >> 8;
-    gBattleStruct->multiBuffer.linkBattlerHeader.vsScreenHealthFlagsHi |= FlagGet(FLAG_SYS_FRONTIER_PASS) << 7;
+    gBattleStruct->multiBuffer.linkBattlerHeader.vsScreenHealthFlagsHi |= WayfarerHasFrontierPass() << 7;
 }
 
 static void SetPlayerBerryDataInBattleStruct(void)
@@ -3246,7 +3247,7 @@ static void EndLinkBattleInSteps(void)
 
             if (!gSaveBlock2Ptr->frontier.disableRecordBattle && i == battlerCount)
             {
-                if (FlagGet(FLAG_SYS_FRONTIER_PASS))
+                if (WayfarerHasFrontierPass())
                 {
                     // Ask player if they want to record the battle
                     FreeAllWindowBuffers();

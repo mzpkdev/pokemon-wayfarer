@@ -29,6 +29,7 @@
 #include "trainer_tower.h"
 #include "window.h"
 #include "line_break.h"
+#include "wayfarer_persistence.h"
 #include "constants/abilities.h"
 #include "constants/battle_dome.h"
 #include "constants/battle_string_ids.h"
@@ -3459,7 +3460,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 toCpy = text;
                 break;
             case B_TXT_PC_CREATOR_NAME: // lanette pc
-                if (FlagGet(FLAG_SYS_PC_LANETTE))
+                if (WayfarerPcHasCreatorName())
                     toCpy = (IS_FRLG || IS_HNS) ? sText_Bills : sText_Lanettes;
                 else
                     toCpy = sText_Someones;

@@ -30,6 +30,7 @@
 #include "constants/songs.h"
 
 #include "data/script_menu.h"
+#include "wayfarer_persistence.h"
 
 // Shiny star indicator graphics and tags
 #define GFXTAG_SHINY_STAR_PREVIEW 5000
@@ -871,7 +872,7 @@ static void CreatePCMultichoice(void)
     }
 
     // Change PC name if player has met Lanette
-    if (FlagGet(FLAG_SYS_PC_LANETTE))
+    if (WayfarerPcHasCreatorName())
     {
         if (IS_FRLG || IS_HNS)
             AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_BillsPc, x, 1, TEXT_SKIP_DRAW, NULL);
