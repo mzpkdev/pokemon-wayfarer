@@ -188,7 +188,8 @@ TEST("Wayfarer Sevii pickups keep unique flags across a save and reload")
     for (u32 i = 0; i < count; i++)
         EXPECT(FlagGet(flags[i]));
     // Nothing else in the pickup range was set, so no two pickups alias.
-    for (u32 slot = SEVII_FIRST_PICKUP_SLOT; slot < WAYFARER_SEVII_FLAG_COUNT; slot++)
+    // Presentation hide flags (Three Island bikers, Warehouse opponents) start set and live above the phone slots.
+    for (u32 slot = SEVII_FIRST_PICKUP_SLOT; slot < FLAG_WAYFARER_SEVII_HIDE_THREE_ISLAND_BIKERS - WAYFARER_SEVII_FLAG_ID(0); slot++)
         setCount += FlagGet(WAYFARER_SEVII_FLAG_ID(slot));
     EXPECT_EQ(setCount, count);
 
