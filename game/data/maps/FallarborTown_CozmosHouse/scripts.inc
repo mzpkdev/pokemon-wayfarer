@@ -6,6 +6,10 @@ FallarborTown_CozmosHouse_EventScript_ProfCozmo::
 	faceplayer
 	goto_if_set FLAG_RECEIVED_TM_RETURN, FallarborTown_CozmosHouse_EventScript_GaveMeteorite
 	checkitem ITEM_METEORITE
+#if IS_WAYFARER
+	@ ITEM_METEORITE is also the SEVII ISLANDS' errand item: only the one from MT. CHIMNEY is the one COZMO wants
+	goto_if_unset FLAG_RECEIVED_METEORITE, FallarborTown_CozmosHouse_EventScript_NoHoennMeteorite
+#endif
 	goto_if_eq VAR_RESULT, TRUE, FallarborTown_CozmosHouse_EventScript_PlayerHasMeteorite
 	msgbox FallarborTown_CozmosHouse_Text_MeteoriteWillNeverBeMineNow, MSGBOX_DEFAULT
 	release
@@ -24,6 +28,27 @@ FallarborTown_CozmosHouse_EventScript_PlayerHasMeteorite::
 	msgbox FallarborTown_CozmosHouse_Text_ReallyGoingToHelpMyResearch, MSGBOX_DEFAULT
 	release
 	end
+
+#if IS_WAYFARER
+FallarborTown_CozmosHouse_EventScript_NoHoennMeteorite::
+	goto_if_eq VAR_RESULT, TRUE, FallarborTown_CozmosHouse_EventScript_WrongMeteorite
+	msgbox FallarborTown_CozmosHouse_Text_MeteoriteWillNeverBeMineNow, MSGBOX_DEFAULT
+	release
+	end
+
+FallarborTown_CozmosHouse_EventScript_WrongMeteorite::
+	msgbox FallarborTown_CozmosHouse_Text_NotTheMeteoriteIWant, MSGBOX_DEFAULT
+	release
+	end
+
+FallarborTown_CozmosHouse_Text_NotTheMeteoriteIWant:
+	.string "PROF. COZMO: Hmm? Is that a METEORITE?\p"
+	.string "Ah, but it's not the one I'm after.\n"
+	.string "That one lies with the machine on\l"
+	.string "MT. CHIMNEY, from METEOR FALLS.\p"
+	.string "Whatever you have there, it will\n"
+	.string "have to serve someone else's research.$"
+#endif
 
 FallarborTown_CozmosHouse_EventScript_NoticeMeteorite::
 	msgbox FallarborTown_CozmosHouse_Text_MeteoriteWillNeverBeMineNow, MSGBOX_DEFAULT
