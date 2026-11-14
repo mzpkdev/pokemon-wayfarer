@@ -24,6 +24,12 @@ class SourceConstantTests(unittest.TestCase):
         self.assertEqual(GENERATOR.hoenn_value("VAR_LITTLEROOT_TOWN_STATE", 0x4050), 0x7050)
         self.assertEqual(GENERATOR.hoenn_value("VAR_RESULT", 0x800D), 0x800D)
 
+    def test_object_graphics_var_keeps_engine_id(self):
+        # The engine reads these at their own ids to draw OBJ_EVENT_GFX_VAR_* objects.
+        self.assertEqual(GENERATOR.hoenn_value("VAR_OBJ_GFX_ID_0", 0x4010), 0x4010)
+        self.assertEqual(GENERATOR.hoenn_value("VAR_OBJ_GFX_ID_F", 0x401F), 0x401F)
+        self.assertEqual(GENERATOR.hoenn_value("VAR_TEMP_F", 0x400F), 0x700F)
+
     def test_engine_shared_flag_takes_the_engine_id(self):
         engine = {"FLAG_HAS_MATCH_CALL": 0x1F3}
         self.assertEqual(GENERATOR.source_value_for_hoenn("FLAG_HAS_MATCH_CALL", 0x12F, engine), 0x1F3)

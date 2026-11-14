@@ -18,6 +18,11 @@ VAR_START = 0x4000
 VAR_END = 0x40FF
 HOENN_FLAG_NAMESPACE = 0x6000
 HOENN_VAR_NAMESPACE = 0x7000
+# The object graphics vars are read by the engine at their own ids
+# (VarGetObjectEventGraphicsId), so Hoenn scripts that pick a sprite must
+# write those ids, not a Hoenn-bank copy.
+OBJ_GFX_VAR_START = 0x4010
+OBJ_GFX_VAR_END = 0x401F
 # Emerald flags that are the same fact as an engine flag. Hoenn scripts get the
 # engine's id at assembly time, so reading one costs nothing at run time
 # (phone-rematches.md: having the Pokégear is one flag).
@@ -178,6 +183,8 @@ def hoenn_value(name, source_value):
         if FLAG_LOW_START <= source_value <= FLAG_LOW_END or FLAG_HIGH_START <= source_value <= FLAG_HIGH_END:
             return HOENN_FLAG_NAMESPACE | source_value
     elif name.startswith("VAR_") and VAR_START <= source_value <= VAR_END:
+        if OBJ_GFX_VAR_START <= source_value <= OBJ_GFX_VAR_END:
+            return source_value
         return HOENN_VAR_NAMESPACE | (source_value - VAR_START)
     return source_value
 

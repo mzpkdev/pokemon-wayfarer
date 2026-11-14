@@ -226,6 +226,10 @@ class SourceBoundaryTests(unittest.TestCase):
         for var in variables:
             self.assertIn(var, self.hoenn)
             value = self.hoenn[var]
+            if GENERATOR_MODULE.OBJ_GFX_VAR_START <= value <= GENERATOR_MODULE.OBJ_GFX_VAR_END:
+                # The engine draws OBJ_EVENT_GFX_VAR_* objects from these ids, so they stay shared.
+                self.assertTrue(var.startswith("VAR_OBJ_GFX_ID_"), var)
+                continue
             self.assertTrue(0x7000 <= value <= 0x70FF or value >= 0x8000, var)
 
     def test_source_boundaries_restore_hns_constants(self):
