@@ -9,7 +9,17 @@ EverGrandeCity_PokemonCenter_1F_OnTransition:
 	end
 
 EverGrandeCity_PokemonCenter_1F_EventScript_TryShowScott::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	@ SCOTT congratulates the player on reaching the LEAGUE, so he waits for League eligibility, not one badge
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
+	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_NopReturn
+#elif IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerGetHoennBadgeCountForScript
+	goto_if_lt VAR_RESULT, 8, Common_EventScript_NopReturn
+#else
 	goto_if_unset FLAG_BADGE06_GET, Common_EventScript_NopReturn
+#endif
 	clearflag FLAG_HIDE_EVER_GRANDE_POKEMON_CENTER_1F_SCOTT
 	return
 
