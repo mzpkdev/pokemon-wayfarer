@@ -49,8 +49,18 @@ EverGrandeCity_HallOfFame_EventScript_ShowStevensHouseBeldum::
 EverGrandeCity_HallOfFame_EventScript_ReadyReceiveSSTicketEvent::
 	setvar VAR_LITTLEROOT_HOUSES_STATE_MAY, 3
 	setvar VAR_LITTLEROOT_HOUSES_STATE_BRENDAN, 3
+#if IS_WAYFARER
+	@ NORMAN is only the player's father in a native Hoenn household; visitors get the scene without him
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, FALSE, EverGrandeCity_HallOfFame_EventScript_ReadyReceiveSSTicketEventNoDad
+#endif
 	clearflag FLAG_HIDE_PLAYERS_HOUSE_DAD
 	return
+
+#if IS_WAYFARER
+EverGrandeCity_HallOfFame_EventScript_ReadyReceiveSSTicketEventNoDad::
+	return
+#endif
 
 EverGrandeCity_HallOfFame_EventScript_ReadyDexUpgradeEvent::
 	setvar VAR_DEX_UPGRADE_JOHTO_STARTER_STATE, 1

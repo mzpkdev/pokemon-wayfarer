@@ -474,6 +474,10 @@ PlayersHouse_1F_EventScript_GetSSTicketAndSeeLatiTV::
 	call_if_eq VAR_RESULT, FEMALE, PlayersHouse_1F_EventScript_SetUpObjectEventVarsFemale
 	call_if_eq VAR_0x8008, MALE, PlayersHouse_1F_EventScript_PlayerEnterRoomMale
 	call_if_eq VAR_0x8008, FEMALE, PlayersHouse_1F_EventScript_PlayerEnterRoomFemale
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, FALSE, PlayersHouse_1F_EventScript_VisitorGetSSTicketAndSeeLatiTV
+#endif
 	applymovement VAR_0x8009, Common_Movement_FacePlayer
 	waitmovement 0
 	playse SE_PIN
@@ -511,12 +515,19 @@ PlayersHouse_1F_EventScript_AlreadyHasSSTicket::
 	delay 20
 	msgbox PlayersHouse_1F_Text_DadShouldStayLonger, MSGBOX_DEFAULT
 	closemessage
+PlayersHouse_1F_EventScript_SeeLatiTV::
 	setflag FLAG_SYS_TV_LATIAS_LATIOS
 	special TurnOnTVScreen
 	delay 60
 	call_if_eq VAR_0x8008, MALE, PlayersHouse_1F_EventScript_MomNoticesLatiBroadcastMale
 	call_if_eq VAR_0x8008, FEMALE, PlayersHouse_1F_EventScript_MomNoticesLatiBroadcastFemale
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	call_if_eq VAR_RESULT, TRUE, PlayersHouse_1F_EventScript_IsThatABreakingStory
+	call_if_eq VAR_RESULT, FALSE, PlayersHouse_1F_EventScript_VisitorIsThatABreakingStory
+#else
 	msgbox PlayersHouse_1F_Text_IsThatABreakingStory, MSGBOX_DEFAULT
+#endif
 	closemessage
 	call_if_eq VAR_0x8008, MALE, PlayersHouse_1F_EventScript_PlayerApproachTVForLatiMale
 	call_if_eq VAR_0x8008, FEMALE, PlayersHouse_1F_EventScript_PlayerApproachTVForLatiFemale
@@ -527,12 +538,24 @@ PlayersHouse_1F_EventScript_AlreadyHasSSTicket::
 	special TurnOffTVScreen
 	call_if_eq VAR_0x8008, MALE, PlayersHouse_1F_EventScript_MomApproachPlayerAfterTVMale
 	call_if_eq VAR_0x8008, FEMALE, PlayersHouse_1F_EventScript_MomApproachPlayerAfterTVFemale
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	call_if_eq VAR_RESULT, TRUE, PlayersHouse_1F_EventScript_WhatColorDidTheySay
+	call_if_eq VAR_RESULT, FALSE, PlayersHouse_1F_EventScript_VisitorWhatColorDidTheySay
+#else
 	msgbox PlayersHouse_1F_Text_WhatColorDidTheySay, MSGBOX_DEFAULT
+#endif
 	multichoice 22, 8, MULTI_TV_LATI, TRUE
 	copyvar VAR_0x8004, VAR_RESULT
 	special InitRoamer
 	copyvar VAR_ROAMER_POKEMON, VAR_RESULT
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	call_if_eq VAR_RESULT, TRUE, PlayersHouse_1F_EventScript_StillUnknownPokemon
+	call_if_eq VAR_RESULT, FALSE, PlayersHouse_1F_EventScript_VisitorStillUnknownPokemon
+#else
 	msgbox PlayersHouse_1F_Text_StillUnknownPokemon, MSGBOX_DEFAULT
+#endif
 	closemessage
 	setvar VAR_LITTLEROOT_HOUSES_STATE_MAY, 4
 	setvar VAR_LITTLEROOT_HOUSES_STATE_BRENDAN, 4
@@ -743,6 +766,93 @@ PlayersHouse_1F_EventScript_Visitor::
 PlayersHouse_1F_Text_Visitor:
     .string "Welcome! You and your POKéMON\n"
     .string "can rest here before heading out.$"
+#endif
+
+#if IS_WAYFARER
+PlayersHouse_1F_EventScript_WhatColorDidTheySay::
+	msgbox PlayersHouse_1F_Text_WhatColorDidTheySay, MSGBOX_DEFAULT
+	return
+
+PlayersHouse_1F_EventScript_StillUnknownPokemon::
+	msgbox PlayersHouse_1F_Text_StillUnknownPokemon, MSGBOX_DEFAULT
+	return
+
+PlayersHouse_1F_EventScript_IsThatABreakingStory::
+	msgbox PlayersHouse_1F_Text_IsThatABreakingStory, MSGBOX_DEFAULT
+	return
+
+PlayersHouse_1F_EventScript_VisitorIsThatABreakingStory::
+	msgbox PlayersHouse_1F_Text_VisitorIsThatABreakingStory, MSGBOX_DEFAULT
+	return
+
+PlayersHouse_1F_EventScript_VisitorWhatColorDidTheySay::
+	msgbox PlayersHouse_1F_Text_VisitorWhatColorDidTheySay, MSGBOX_DEFAULT
+	return
+
+PlayersHouse_1F_EventScript_VisitorStillUnknownPokemon::
+	msgbox PlayersHouse_1F_Text_VisitorStillUnknownPokemon, MSGBOX_DEFAULT
+	return
+
+@ The S.S. Ticket and Lati TV scene for a player whose household is not their own: the host (the Mom object)
+@ hands over MR. BRINEY's ticket herself and no father appears. The TV half is shared, because it starts the roamer.
+PlayersHouse_1F_EventScript_VisitorGetSSTicketAndSeeLatiTV::
+	applymovement VAR_0x800A, Common_Movement_FacePlayer
+	waitmovement 0
+	playse SE_PIN
+	applymovement VAR_0x800A, Common_Movement_ExclamationMark
+	waitmovement 0
+	delay 20
+	call_if_eq VAR_0x8008, MALE, PlayersHouse_1F_EventScript_VisitorHostApproachPlayerMale
+	call_if_eq VAR_0x8008, FEMALE, PlayersHouse_1F_EventScript_VisitorHostApproachPlayerFemale
+	msgbox PlayersHouse_1F_Text_VisitorTicketFromBriney, MSGBOX_DEFAULT
+	checkitem ITEM_SS_TICKET
+	goto_if_eq VAR_RESULT, TRUE, PlayersHouse_1F_EventScript_VisitorAlreadyHasSSTicket
+	giveitem ITEM_SS_TICKET
+PlayersHouse_1F_EventScript_VisitorAlreadyHasSSTicket::
+	msgbox PlayersHouse_1F_Text_VisitorPortsInSlateportLilycove, MSGBOX_DEFAULT
+	closemessage
+	setflag FLAG_RECEIVED_SS_TICKET
+	goto PlayersHouse_1F_EventScript_SeeLatiTV
+
+PlayersHouse_1F_EventScript_VisitorHostApproachPlayerMale::
+	applymovement VAR_0x800A, PlayersHouse_1F_Movement_MomApproachDadMale
+	waitmovement 0
+	applymovement VAR_0x800A, PlayersHouse_1F_Movement_MomApproachPlayerMale
+	waitmovement 0
+	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
+	waitmovement 0
+	return
+
+PlayersHouse_1F_EventScript_VisitorHostApproachPlayerFemale::
+	applymovement VAR_0x800A, PlayersHouse_1F_Movement_MomApproachDadFemale
+	waitmovement 0
+	applymovement VAR_0x800A, PlayersHouse_1F_Movement_MomApproachPlayerFemale
+	waitmovement 0
+	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterRight
+	waitmovement 0
+	return
+
+PlayersHouse_1F_Text_VisitorTicketFromBriney:
+    .string "Oh, there you are!\p"
+    .string "This came for you from someone\n"
+    .string "named MR. BRINEY.$"
+
+PlayersHouse_1F_Text_VisitorPortsInSlateportLilycove:
+    .string "It's a TICKET for a ferry.\p"
+    .string "I hear there are ferry ports in\n"
+    .string "SLATEPORT and LILYCOVE.$"
+
+PlayersHouse_1F_Text_VisitorIsThatABreakingStory:
+    .string "Is that a breaking news story?$"
+
+PlayersHouse_1F_Text_VisitorWhatColorDidTheySay:
+    .string "Did you catch that, {PLAYER}?\p"
+    .string "What color did the announcer say\n"
+    .string "that POKéMON was?$"
+
+PlayersHouse_1F_Text_VisitorStillUnknownPokemon:
+    .string "Well, isn't that something!\n"
+    .string "There are still unknown POKéMON.$"
 #endif
 
 #if IS_WAYFARER
