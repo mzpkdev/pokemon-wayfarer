@@ -12,6 +12,7 @@ SaffronCity_SilphCo_EventScript_Steven::
 	applymovement LOCALID_SILPHCO_STEVEN, Common_Movement_ExclamationMark
 	delay 55
 	waitmovement LOCALID_SILPHCO_STEVEN
+	notable_introduce NOTABLE_TRAINER_STEVEN, SaffronCity_SilphCo_Text_StevenIntro
 SaffronCity_SilphCo_EventScript_StevenChooseStone::
 	message SaffronCity_SilphCo_Text_Steven2
 	waitmessage
@@ -97,9 +98,10 @@ SaffronCity_SilphCo_Text_Steven1:
 	.string "I think it depends on my dad.\l"
 	.string "I see...\n"
 	.string "I'll be on my way. See you soon.$"
+SaffronCity_SilphCo_Text_StevenIntro:
+	.string "STEVEN: Oh, hello there!\n"
+	.string "My name is STEVEN.$"
 SaffronCity_SilphCo_Text_Steven2:
-	.string "STEVEN: You are... I remember your\n"
-	.string "eyes.\p"
 	.string "When I see a trainer whose eyes\n"
 	.string "twinkle, I always remember.\p"
 	.string "You have a POKéDEX! So you are\n"

@@ -25,18 +25,30 @@ Route22_EventScript_DoNothing::
 
 Route22_EventScript_TriggerBottom::
 	goto_if_ne VAR_ROUTE22_GIOVANNI_STATE, 0, Route22_EventScript_DoNothing
+#if IS_WAYFARER
+	@ The flashback shows GIOVANNI already beaten: it waits for the player's own finale.
+	goto_if_unset FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS, Route22_EventScript_DoNothing
+#endif
 	specialvar VAR_RESULT, CheckCelebi
 	goto_if_eq VAR_RESULT, FALSE, Route22_EventScript_DoNothing
 	goto Route22_EventScript_Scene
 	
 Route22_EventScript_TriggerTop::
 	goto_if_ne VAR_ROUTE22_GIOVANNI_STATE, 0, Route22_EventScript_DoNothing
+#if IS_WAYFARER
+	@ The flashback shows GIOVANNI already beaten: it waits for the player's own finale.
+	goto_if_unset FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS, Route22_EventScript_DoNothing
+#endif
 	specialvar VAR_RESULT, CheckCelebi
 	goto_if_eq VAR_RESULT, FALSE, Route22_EventScript_DoNothing
 	goto Route22_EventScript_Scene
 
 Route22_EventScript_TriggerMid::
 	goto_if_ne VAR_ROUTE22_GIOVANNI_STATE, 0, Route22_EventScript_DoNothing
+#if IS_WAYFARER
+	@ The flashback shows GIOVANNI already beaten: it waits for the player's own finale.
+	goto_if_unset FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS, Route22_EventScript_DoNothing
+#endif
 	specialvar VAR_RESULT, CheckCelebi
 	goto_if_eq VAR_RESULT, FALSE, Route22_EventScript_DoNothing
 	goto Route22_EventScript_Scene
