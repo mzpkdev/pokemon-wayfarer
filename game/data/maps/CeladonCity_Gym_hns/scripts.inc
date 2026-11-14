@@ -6,6 +6,7 @@ CeladonCity_Gym_EventScript_Erika::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_CELADON_GYM, CeladonCity_Gym_EventScript_Erika_Defeated
+	notable_introduce NOTABLE_TRAINER_ERIKA, CeladonCity_Gym_Text_ErikaIntro
 	msgbox CeladonCity_Gym_Text_ErikaBeforeBattle, MSGBOX_DEFAULT
 	trainerbattle_no_intro TRAINER_ERIKA_HNS, CeladonCity_Gym_Text_ErikaBeaten
 	message CeladonCity_Gym_Text_PlayerReceivedRainbowBadge
@@ -37,14 +38,15 @@ CeladonCity_Gym_EventScript_Erika_Defeated::
 	release
 	end
 
-CeladonCity_Gym_Text_ErikaBeforeBattle:
+CeladonCity_Gym_Text_ErikaIntro:
 	.string "ERIKA: Hello… Lovely weather,\n"
 	.string "isn't it? It's so pleasant…\p"
 	.string "…I'm afraid I may doze off…\p"
 	.string "My name is ERIKA. I am the LEADER\n"
-	.string "of CELADON GYM.\p"
-	.string "…Oh? All the way from JOHTO, you\n"
-	.string "say? How nice…\p"
+	.string "of CELADON GYM.$"
+
+CeladonCity_Gym_Text_ErikaBeforeBattle:
+	.string "…Oh? A traveler? How nice…\p"
 	.string "Oh. I'm sorry, I didn't realize\n"
 	.string "that you wished to challenge me.\p"
 	.string "Very well, but I shall not lose.$"

@@ -40,6 +40,8 @@ PetalburgCity_EventScript_WallyTutorial::
 	special StartWallyTutorialBattle
 	waitstate
 	msgbox Route102_Text_WallyIDidIt, MSGBOX_DEFAULT
+	@ WALLY's first catch is done: NORMAN's story beat, paid the first time only
+	notable_beat NOTABLE_STORY_BEAT_NORMAN_WALLY_CATCH
 	applymovement LOCALID_PETALBURG_WALLY, Common_Movement_WalkInPlaceFasterLeft, MAP_PETALBURG_CITY
 	waitmovement LOCALID_PETALBURG_WALLY, MAP_PETALBURG_CITY
 	msgbox Route102_Text_LetsGoBack, MSGBOX_DEFAULT

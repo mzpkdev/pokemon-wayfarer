@@ -122,6 +122,10 @@ Route25_Trigger_MistyLeft::
 	goto Route25_EventScript_Misty
 Route25_EventScript_Misty::
 	msgbox Route25_Text_MistyDate, MSGBOX_DEFAULT
+	notable_introduce NOTABLE_TRAINER_MISTY, Route25_Text_MistyIntro
+	@ She only reads the player's BADGES as JOHTO's when all eight are there
+	call Route25_EventScript_MistyReadsBadges
+	msgbox Route25_Text_MistyInvite, MSGBOX_DEFAULT
 	closemessage
 	applymovement2 LOCALID_ROUTE25_MISTY, Route25_Movement_MistyLeave
 	waitmovement 0
@@ -133,6 +137,22 @@ Route25_EventScript_Misty::
 	setvar VAR_CERULEAN_CITY_STATE, 3
 	release
 	end
+
+Route25_EventScript_MistyReadsBadges::
+	goto_if_unset FLAG_BADGE01_GET, Route25_EventScript_MistyNoJohtoBadges
+	goto_if_unset FLAG_BADGE02_GET, Route25_EventScript_MistyNoJohtoBadges
+	goto_if_unset FLAG_BADGE03_GET, Route25_EventScript_MistyNoJohtoBadges
+	goto_if_unset FLAG_BADGE04_GET, Route25_EventScript_MistyNoJohtoBadges
+	goto_if_unset FLAG_BADGE05_GET, Route25_EventScript_MistyNoJohtoBadges
+	goto_if_unset FLAG_BADGE06_GET, Route25_EventScript_MistyNoJohtoBadges
+	goto_if_unset FLAG_BADGE07_GET, Route25_EventScript_MistyNoJohtoBadges
+	goto_if_unset FLAG_BADGE08_GET, Route25_EventScript_MistyNoJohtoBadges
+	msgbox Route25_Text_MistyJohtoBadges, MSGBOX_DEFAULT
+	return
+
+Route25_EventScript_MistyNoJohtoBadges::
+	msgbox Route25_Text_MistySizesYouUp, MSGBOX_DEFAULT
+	return
 
 Route25_Trigger_SuicuneLeft::
 	lock
@@ -391,15 +411,26 @@ Route25_Text_MistyDate:
 	.string "people like you?\p"
 	.string "Pests! You heard me right,\n"
 	.string "pest!\p"
-	.string "…\p"
+	.string "…$"
+
+@ Her first meeting; a player she already knows gets her greeting instead
+Route25_Text_MistyIntro:
+	.string "MISTY: I'm MISTY, the GYM LEADER in\n"
+	.string "CERULEAN.$"
+
+Route25_Text_MistyJohtoBadges:
 	.string "…Oh? Those BADGES you have…\n"
 	.string "Are they JOHTO GYM BADGES?\p"
 	.string "If you have eight, you must be\n"
-	.string "good.\p"
+	.string "good.$"
+
+Route25_Text_MistySizesYouUp:
+	.string "…Oh? You're a TRAINER?\p"
+	.string "Then you must be good, right?$"
+
+Route25_Text_MistyInvite:
 	.string "OK, then. Come to CERULEAN GYM.\p"
-	.string "I'll be happy to take you on.\p"
-	.string "I'm MISTY, the GYM LEADER in\n"
-	.string "CERULEAN.$"
+	.string "I'll be happy to take you on.$"
 
 Route25_Text_SchoolboyDudleySeen:
 	.string "Beat the six of us trainers to\n"

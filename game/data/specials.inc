@@ -762,6 +762,7 @@ gSpecials::
 	def_special LeagueEvent_Accept
 	def_special LeagueEvent_GetAcceptedLeague
 	def_special LeagueEvent_BufferRoomName
+	def_special LeagueEvent_GetRoomHostCharacter
 	def_special LeagueEvent_SetRoomGraphics
 	def_special LeagueEvent_BufferChampion
 	def_special LeagueEvent_BufferLineup

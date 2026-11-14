@@ -8,6 +8,7 @@
 #include "match_call.h"
 #include "pokenav.h"
 #include "wayfarer_daily_slots.h"
+#include "wayfarer_origin.h"
 #include "wayfarer_phone.h"
 #include "strings.h"
 #include "constants/region_map_sections.h"
@@ -1529,8 +1530,40 @@ static void MatchCall_GetMessage_NPC(match_call_t matchCall, u8 *dest)
 }
 
 // This is the one functional difference between MC_TYPE_TRAINER and MC_TYPE_LEADER
+#if IS_WAYFARER
+// NORMAN is "DAD" only to a player who is his child; to a visitor he is NORMAN, with no family in his calls
+// (notable-story-continuity.md#3-history-claims). The unlock flags are the same as DAD's.
+static const match_call_text_data_t sNormanVisitorTextScripts[] = {
+    { MatchCall_Text_NormanVisitor1, FLAG_ENABLE_NORMAN_MATCH_CALL, NO_FLAG_TO_SET },
+    { MatchCall_Text_NormanVisitor2, FLAG_DEFEATED_AZALEA_TOWN_GYM,  NO_FLAG_TO_SET },
+    { MatchCall_Text_NormanVisitor3, FLAG_DEFEATED_ECRUTEAK_CITY_GYM, NO_FLAG_TO_SET },
+    { MatchCall_Text_NormanVisitor4, FLAG_DEFEATED_CIANWOOD_GYM,     NO_FLAG_TO_SET },
+    { MatchCall_Text_NormanVisitor5, FLAG_RECEIVED_RED_OR_BLUE_ORB,  NO_FLAG_TO_SET },
+    { MatchCall_Text_NormanVisitor6, 0xFFFE,                         NO_FLAG_TO_SET },
+    { MatchCall_Text_NormanVisitor7, FLAG_SYS_GAME_CLEAR,            NO_FLAG_TO_SET },
+    { MatchCall_Text_NormanVisitor8, FLAG_SYS_GAME_CLEAR,            NO_FLAG_TO_SET },
+    { MatchCall_Text_NormanVisitor9, FLAG_SYS_GAME_CLEAR,            NO_FLAG_TO_SET },
+    MATCH_CALL_TEXT_END
+};
+
+static const u8 sNormanVisitorName[] = _("NORMAN");
+
+static bool32 MatchCall_IsNormanVisitorCall(match_call_t matchCall)
+{
+    return matchCall.common->type == MC_TYPE_LEADER && matchCall.leader->rematchTableIdx == REMATCH_NORMAN
+        && !WayfarerUsesNativeHoennHousehold();
+}
+#endif
+
 static void MatchCall_GetMessage_Trainer(match_call_t matchCall, u8 *dest)
 {
+#if IS_WAYFARER
+    if (MatchCall_IsNormanVisitorCall(matchCall))
+    {
+        MatchCall_BufferCallMessageTextByRematchTeam(sNormanVisitorTextScripts, matchCall.leader->rematchTableIdx, dest);
+        return;
+    }
+#endif
     if (matchCall.common->type != MC_TYPE_LEADER)
         MatchCall_BufferCallMessageText(matchCall.trainer->textData, dest);
     else
@@ -1635,6 +1668,10 @@ static void MatchCall_GetNameAndDesc_Trainer(match_call_t matchCall, const u8 **
     else
         *name = _matchCall.trainer->name;
     *desc = _matchCall.trainer->desc;
+#if IS_WAYFARER
+    if (MatchCall_IsNormanVisitorCall(matchCall))
+        *name = sNormanVisitorName;
+#endif
 }
 
 static void MatchCall_GetNameAndDesc_Wally(match_call_t matchCall, const u8 **desc, const u8 **name)

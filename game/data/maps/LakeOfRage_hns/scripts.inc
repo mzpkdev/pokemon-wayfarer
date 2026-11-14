@@ -144,6 +144,7 @@ LakeOfRage_EventScript_Lance::
 	delay 20
 	faceplayer
 	turnobject LOCALID_LAKEOFRAGE_OLDMAN, DIR_WEST
+	notable_introduce NOTABLE_TRAINER_LANCE, LakeOfRage_Text_LanceIntro1
 	msgbox LakeOfRage_Text_LanceIntro2, MSGBOX_DEFAULT
 	setvar_forward VAR_MAHOGANY_TOWN_STATE, 3
 	msgbox LakeOfRage_Text_LanceIntro3, MSGBOX_YESNO
@@ -152,6 +153,7 @@ LakeOfRage_EventScript_LanceAccept::
 	lock
 	msgbox LakeOfRage_Text_LanceRadioSignal, MSGBOX_DEFAULT
 	closemessage
+	notable_beat NOTABLE_STORY_BEAT_LANCE_LAKE_REQUEST
 	goto_if_eq VAR_FACING, DIR_NORTH, LakeOfRage_EventScript_LanceDragoniteLeaveNorth
 	applymovement LOCALID_LAKEOFRAGE_LANCE, LakeOfRage_Movement_LanceLeave
 	applymovement LOCALID_LAKEOFRAGE_DRAGONITE, LakeOfRage_Movement_DragoniteLeave

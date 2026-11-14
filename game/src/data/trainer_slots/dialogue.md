@@ -47,7 +47,7 @@ as the dialogue audit read them. A mark in the last column means a line names a 
 | TRAINER_GORDON_HNS | Route32_hns | intro | I found some good POKéMON in the grass! I think they'll do it for me! |  |
 | TRAINER_GORDON_HNS | Route32_hns | defeat | Darn. I thought I could win. |  |
 | TRAINER_GORDON_HNS | Route32_hns | say | The grass is full of clingy things. |  |
-| TRAINER_PETER_HNS | Route32_hns | intro | That BADGE! You beat FALKNER? |  |
+| TRAINER_PETER_HNS | Route32_hns | intro | You're a TRAINER, aren't you? Let's see how you handle a BIRD KEEPER's POKéMON! |  |
 | TRAINER_PETER_HNS | Route32_hns | defeat | I know what my weaknesses are. |  |
 | TRAINER_PETER_HNS | Route32_hns | say | I should train again before my next challenge. |  |
 | TRAINER_ANTHONY_HNS | Route33_hns | intro | I came a long way, but I still have plenty of energy left. |  |

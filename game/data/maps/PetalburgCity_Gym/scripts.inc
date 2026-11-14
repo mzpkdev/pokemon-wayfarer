@@ -136,7 +136,8 @@ PetalburgCity_Gym_EventScript_Norman::
 #if IS_WAYFARER
 	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
 	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowDadYoureHereWithYourPokemonNative
-	msgbox PetalburgCity_Gym_Text_VisitorDadYoureHereWithYourPokemon, MSGBOX_DEFAULT
+	notable_introduce NOTABLE_TRAINER_NORMAN, PetalburgCity_Gym_Text_VisitorDadYoureHereWithYourPokemon
+	msgbox PetalburgCity_Gym_Text_VisitorDadSeeYouTravel, MSGBOX_DEFAULT
 	goto PetalburgCity_Gym_EventScript_ShowDadYoureHereWithYourPokemonDone
 PetalburgCity_Gym_EventScript_ShowDadYoureHereWithYourPokemonNative::
 #endif
@@ -1763,9 +1764,12 @@ PetalburgCity_Gym_Text_NormanRematchNeedTwoMons:
 	.string "with at least two POKéMON.$"
 
 #if IS_WAYFARER
+@ A visitor's first meeting; one he already knows gets his greeting instead
 PetalburgCity_Gym_Text_VisitorDadYoureHereWithYourPokemon:
 	.string "NORMAN: Welcome, {PLAYER}!\p"
-	.string "I'm NORMAN, this town's GYM LEADER.\p"
+	.string "I'm NORMAN, this town's GYM LEADER.$"
+
+PetalburgCity_Gym_Text_VisitorDadSeeYouTravel:
 	.string "I see you're traveling with your\n"
 	.string "POKéMON.\p"
 	.string "It's good to meet a fellow TRAINER.\n"
@@ -1778,7 +1782,7 @@ PetalburgCity_Gym_Text_VisitorNormanIntro:
 	.string "POKéMON battle.\p"
 	.string "{PLAYER}…\p"
 	.string "I'm looking forward to seeing\n"
-	.string "how much you've grown!\p"
+	.string "what your POKéMON can do!\p"
 	.string "I will do everything in my power as\n"
 	.string "a GYM LEADER to win.\p"
 	.string "{PLAYER}, you'd better give it your\n"

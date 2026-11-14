@@ -434,9 +434,12 @@ Route32_Text_LizRematchDefeat:
 Route32_Text_LizPostRematch:
 	.string "I was having a nice chat too.$"
 
+@ The sight-triggered battle reads this text from the trainerbattle command, so the line cannot branch on a
+@ badge. It makes no claim about one.
 Route32_Text_BirdKeeperPeter_Seen:
-	.string "That BADGE!\p"
-	.string "You beat FALKNER?$"
+	.string "You're a TRAINER, aren't you?\p"
+	.string "Let's see how you handle\n"
+	.string "a BIRD KEEPER's POKéMON!$"
 
 Route32_Text_BirdKeeperPeter_Beaten:
 	.string "I know what my weaknesses are.$"

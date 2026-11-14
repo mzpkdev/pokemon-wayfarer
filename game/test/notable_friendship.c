@@ -3,6 +3,7 @@
 #include "battle_setup.h"
 #include "data.h"
 #include "event_data.h"
+#include "fake_rtc.h"
 #include "league_circuit.h"
 #include "league_selection.h"
 #include "league_events.h"
@@ -786,6 +787,30 @@ TEST("A story beat pays once, introduces, and crossing Friend owes the number")
     NotableStory_CompleteBeat();
     EXPECT_EQ(NotableFriendship_GetScore(NOTABLE_TRAINER_TATE_LIZA), NOTABLE_FRIENDSHIP_STORY_BEAT_POINTS);
     EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_TATE_LIZA));
+}
+
+extern const u8 RadioTower1F_EventScript_CheckWhitneyAtTower[];
+
+TEST("Whitney is out at the Radio Tower only on a morning, until the quiz is solved")
+{
+    u32 hour;
+
+    FlagClear(FLAG_ENABLE_RADIO);
+    for (hour = 0; hour < 24; hour++)
+    {
+        // Morning is 4:00 to 8:00 on the in-game clock.
+        FakeRtc_ManuallySetTime(1, hour, 0, 0);
+        RunScriptImmediately(RadioTower1F_EventScript_CheckWhitneyAtTower);
+        EXPECT_EQ(VarGet(VAR_RESULT), hour >= 4 && hour < 8);
+    }
+
+    // Once the quiz is solved she stays in her Gym, morning or not.
+    FlagSet(FLAG_ENABLE_RADIO);
+    FakeRtc_ManuallySetTime(1, 6, 0, 0);
+    RunScriptImmediately(RadioTower1F_EventScript_CheckWhitneyAtTower);
+    EXPECT_EQ(VarGet(VAR_RESULT), FALSE);
+    FlagClear(FLAG_ENABLE_RADIO);
+    FakeRtc_ManuallySetTime(1, 8, 0, 0);
 }
 
 TEST("Each beat belongs to a character, and a character's beats stay below Close")

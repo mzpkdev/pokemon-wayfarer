@@ -141,7 +141,7 @@ class Deliveries(unittest.TestCase):
         met = play('GraniteCave_StevensRoom', self.STEVEN)
         self.assertEqual(story_writes(met), [])
         self.assertEqual(met.given, [])
-        self.assertEqual(met.messages, ['GraniteCave_StevensRoom_Text_ImSteven'])
+        self.assertEqual(met.messages, ['GraniteCave_StevensRoom_Text_MyNameIsSteven', 'GraniteCave_StevensRoom_Text_Stones'])
 
     def test_steven_waits_for_room_and_pays_once(self):
         full = play('GraniteCave_StevensRoom', self.STEVEN, items=[LETTER], bag_full=True)

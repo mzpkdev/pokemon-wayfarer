@@ -126,6 +126,10 @@ Route118_EventScript_StevenTrigger::
 	applymovement LOCALID_ROUTE118_STEVEN, Route118_Movement_StevenJumpLedge
 	waitmovement 0
 	delay 30
+	@ He recalls the cave near DEWFORD only if the player's LETTER reached him there (the same split as ROUTE 120)
+	goto_if_set FLAG_DELIVERED_STEVEN_LETTER, Route118_EventScript_StevenRecallsCave
+	notable_introduce NOTABLE_TRAINER_STEVEN, Route118_Text_StevenIntroducesHimself
+Route118_EventScript_StevenQuestions::
 	msgbox Route118_Text_StevenQuestions, MSGBOX_DEFAULT
 	closemessage
 	call_if_eq VAR_0x8008, 0, Route118_EventScript_StevenExit0
@@ -135,6 +139,10 @@ Route118_EventScript_StevenTrigger::
 	removeobject LOCALID_ROUTE118_STEVEN
 	releaseall
 	end
+
+Route118_EventScript_StevenRecallsCave::
+	msgbox Route118_Text_StevenMetInCave, MSGBOX_DEFAULT
+	goto Route118_EventScript_StevenQuestions
 
 Route118_EventScript_StevenExit0::
 	applymovement LOCALID_PLAYER, Route118_Movement_PlayerWatchStevenExit
@@ -276,12 +284,19 @@ Route118_EventScript_Deandre::
 	msgbox Route118_Text_DeandrePostBattle, MSGBOX_AUTOCLOSE
 	end
 
-Route118_Text_StevenQuestions:
+Route118_Text_StevenMetInCave:
 	.string "STEVEN: Hi, {PLAYER}{KUN}!\p"
 	.string "It's me, STEVEN!\n"
-	.string "We met in the cave near DEWFORD.\p"
+	.string "We met in the cave near DEWFORD.$"
+
+@ A player whose LETTER never reached him in GRANITE CAVE; one he knows gets his greeting instead
+Route118_Text_StevenIntroducesHimself:
+	.string "STEVEN: Hi, {PLAYER}{KUN}!\p"
+	.string "I'm STEVEN.$"
+
+Route118_Text_StevenQuestions:
 	.string "Have you met many kinds of POKéMON\n"
-	.string "since I last saw you?\p"
+	.string "on your travels?\p"
 	.string "There are many, many kinds of POKéMON\n"
 	.string "in this wide world of ours.\p"
 	.string "If you wanted to raise only your\n"

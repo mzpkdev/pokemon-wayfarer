@@ -52,7 +52,7 @@ CONSTANT_PREFIXES = (
     "VAR_", "FLAG_", "MAP_", "ITEM_", "SE_", "MUS_", "SONG_", "SFX_",
     "LOCALID_", "OBJ_EVENT_", "METATILE_", "MOVEMENT_", "STEP_", "GAME_",
     "DAYCARE_", "PARTY_", "SELECT_", "FADE_", "FAMECHECKER_", "TRAINER_",
-    "BATTLE_", "WEATHER_", "MAPSEC_", "FLDEFF_", "TRUE", "FALSE", "YES", "NO",
+    "BATTLE_", "WEATHER_", "MAPSEC_", "FLDEFF_", "NOTABLE_", "TRUE", "FALSE", "YES", "NO",
 )
 
 

@@ -44,6 +44,12 @@ LavaridgeTown_Gym_1F_EventScript_EndCheckBuryTrainers::
 	return
 
 LavaridgeTown_Gym_1F_EventScript_Flannery::
+	@ Before the first battle the leader introduces themselves once (notable-story-continuity.md#2-introductions)
+	goto_if_defeated TRAINER_FLANNERY_1, LavaridgeTown_Gym_1F_EventScript_FlanneryBattle
+	lock
+	faceplayer
+	notable_introduce NOTABLE_TRAINER_FLANNERY, LavaridgeTown_Gym_1F_Text_FlanneryName
+LavaridgeTown_Gym_1F_EventScript_FlanneryBattle::
 	trainerbattle_single TRAINER_FLANNERY_1, LavaridgeTown_Gym_1F_Text_FlanneryIntro, LavaridgeTown_Gym_1F_Text_FlanneryDefeat, LavaridgeTown_Gym_1F_EventScript_FlanneryDefeated, NO_MUSIC
 	specialvar VAR_RESULT, ShouldTryRematchBattle
 	goto_if_eq VAR_RESULT, TRUE, LavaridgeTown_Gym_1F_EventScript_FlanneryRematch
@@ -303,14 +309,16 @@ LavaridgeTown_Gym_B1F_Text_EliPostBattle:
 	.string "of FLANNERY's power.\p"
 	.string "Hehehehe.$"
 
-LavaridgeTown_Gym_1F_Text_FlanneryIntro:
+LavaridgeTown_Gym_1F_Text_FlanneryName:
 	.string "Welcome… No, wait.\p"
 	.string "Puny TRAINER, how good to see you've\n"
 	.string "made it here!\p"
 	.string "I have been entrusted with the…\n"
 	.string "No, wait.\p"
 	.string "I am FLANNERY, and I'm the GYM\n"
-	.string "LEADER here!\p"
+	.string "LEADER here!$"
+
+LavaridgeTown_Gym_1F_Text_FlanneryIntro:
 	.string "Uh…\n"
 	.string "Dare not underestimate me, though\l"
 	.string "I have been LEADER only a short time!\p"

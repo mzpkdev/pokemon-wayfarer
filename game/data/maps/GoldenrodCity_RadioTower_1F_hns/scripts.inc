@@ -1,5 +1,26 @@
 GoldenrodCity_RadioTower_1F_hns_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, RadioTower1F_OnTransition
 	.byte 0
+
+@ WHITNEY comes for the QUIZ on a morning, until it is solved. Out of the morning, or once it is solved, she is in
+@ her GYM and this copy hides (FLAG_TEMP_1, clear on every map load).
+RadioTower1F_OnTransition:
+	call RadioTower1F_EventScript_CheckWhitneyAtTower
+	call_if_eq VAR_RESULT, FALSE, RadioTower1F_EventScript_HideWhitney
+	end
+
+RadioTower1F_EventScript_HideWhitney::
+	setflag FLAG_TEMP_1
+	return
+
+@ VAR_RESULT: TRUE while WHITNEY is out at the RADIO TOWER. The GYM and the GOLDENRODCITY beauty read it too.
+RadioTower1F_EventScript_CheckWhitneyAtTower::
+	setvar VAR_RESULT, FALSE
+	goto_if_set FLAG_ENABLE_RADIO, Common_EventScript_NopReturn
+	gettimeofday
+	goto_if_ne VAR_0x8000, TIME_MORNING, Common_EventScript_NopReturn
+	setvar VAR_RESULT, TRUE
+	return
 RadioTower1F_EventScript_Grunt::
 	lock
 	faceplayer
@@ -38,15 +59,18 @@ RadioTower1F_EventScript_Youngster::
 RadioTower1F_EventScript_Whitney::
 	lock
 	faceplayer
+	notable_introduce NOTABLE_TRAINER_WHITNEY, RadioTower1F_Text_WhitneyIntro
 	msgbox RadioTower1F_Text_Whitney1, MSGBOX_DEFAULT
 	closemessage
 	turnobject LOCALID_GOLDENROD_RADIOTOWER_WHITNEY, DIR_SOUTH
 	release
 	end
 
-RadioTower1F_Text_Whitney1::
+RadioTower1F_Text_WhitneyIntro::
 	.string "WHITNEY: Hi!\p"
-	.string "My name is WHITNEY!\p"
+	.string "My name is WHITNEY!$"
+
+RadioTower1F_Text_Whitney1::
 	.string "I heard about the QUIZ to win a\n"
 	.string "RADIO CARD, so I came here to get\l"
 	.string "one...\p"
@@ -130,6 +154,8 @@ RadioTower1F_EventScript_ReceptionGiveRadio::
 	waitfanfare
 	msgbox RadioTower1F_Text_TuneIn, MSGBOX_DEFAULT
 	closemessage
+	@ WHITNEY is only here on a morning; without her the QUIZ ends here
+	goto_if_set FLAG_TEMP_1, RadioTower1F_EventScript_QuizDoneWithoutWhitney
 	playse SE_PIN
 	applymovement LOCALID_GOLDENROD_RADIOTOWER_WHITNEY, Common_Movement_ExclamationMark
 	delay 55
@@ -143,6 +169,7 @@ RadioTower1F_EventScript_ReceptionGiveRadio::
 	waitmovement 0
 	playse SE_EXIT
 	removeobject LOCALID_GOLDENROD_RADIOTOWER_WHITNEY
+RadioTower1F_EventScript_QuizDoneWithoutWhitney::
 	setflag FLAG_ENABLE_RADIO
 	setflag FLAG_HIDE_GOLDENROD_BEAUTY
 	release

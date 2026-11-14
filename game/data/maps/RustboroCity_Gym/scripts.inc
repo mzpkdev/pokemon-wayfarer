@@ -2,6 +2,12 @@ RustboroCity_Gym_MapScripts::
 	.byte 0
 
 RustboroCity_Gym_EventScript_Roxanne::
+	@ Before the first battle the leader introduces themselves once (notable-story-continuity.md#2-introductions)
+	goto_if_defeated TRAINER_ROXANNE_1, RustboroCity_Gym_EventScript_RoxanneBattle
+	lock
+	faceplayer
+	notable_introduce NOTABLE_TRAINER_ROXANNE, RustboroCity_Gym_Text_RoxanneName
+RustboroCity_Gym_EventScript_RoxanneBattle::
 	trainerbattle_single TRAINER_ROXANNE_1, RustboroCity_Gym_Text_RoxanneIntro, RustboroCity_Gym_Text_RoxanneDefeat, RustboroCity_Gym_EventScript_RoxanneDefeated, NO_MUSIC
 	specialvar VAR_RESULT, ShouldTryRematchBattle
 	goto_if_eq VAR_RESULT, TRUE, RustboroCity_Gym_EventScript_RoxanneRematch
@@ -179,9 +185,11 @@ RustboroCity_Gym_Text_MarcPostBattle:
 	.string "It took smarts and sense for her to\n"
 	.string "pick the ROCK type at her young age.$"
 
-RustboroCity_Gym_Text_RoxanneIntro:
+RustboroCity_Gym_Text_RoxanneName:
 	.string "Hello, I am ROXANNE, the RUSTBORO\n"
-	.string "POKéMON GYM LEADER.\p"
+	.string "POKéMON GYM LEADER.$"
+
+RustboroCity_Gym_Text_RoxanneIntro:
 	.string "I became a GYM LEADER so that I might\n"
 	.string "apply what I learned at the POKéMON\l"
 	.string "TRAINER'S SCHOOL in battle.\p"

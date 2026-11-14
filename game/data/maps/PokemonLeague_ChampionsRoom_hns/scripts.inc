@@ -94,6 +94,7 @@ PokemonLeague_WillsRoom_EventScript_Lance::
 #else
 	goto_if_set FLAG_IS_CHAMPION, PokemonLeague_WillsRoom_EventScript_LanceRematch
 #endif
+	notable_introduce NOTABLE_TRAINER_LANCE, PokemonLeague_ChampionsRoom_Text_FirstMeetingIntro
 	msgbox PokemonLeague_ChampionsRoom_Text_BattleIntro, MSGBOX_DEFAULT
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
@@ -395,11 +396,16 @@ PokemonLeague_ChampionsRoom_Text_RematchBattleIntro:
     .string "Show me the strength that\n"
     .string "conquered JOHTO, CHAMPION.$"
 
+@ A player who never met him at the LAKE OF RAGE or elsewhere; one he knows gets his greeting instead
+PokemonLeague_ChampionsRoom_Text_FirstMeetingIntro:
+    .string "LANCE: So you're {PLAYER}.\p"
+    .string "I'm LANCE, the dragon master.\p"
+    .string "I've been waiting for a trainer\n"
+    .string "with the skill to reach me here.$"
+
 PokemonLeague_ChampionsRoom_Text_BattleIntro:
-    .string "LANCE: I've been waiting for you.\p"
-    .string "{PLAYER}!\p"
-    .string "I knew that you, with your skills,\n"
-    .string "would eventually reach me here.\p"
+    .string "This is the end of the road,\n"
+    .string "{PLAYER}.\p"
     .string "There's no need for words now.\p"
     .string "We will battle to determine who is\n"
     .string "the stronger of the two of us.\p"

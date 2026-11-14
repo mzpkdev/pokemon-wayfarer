@@ -166,6 +166,12 @@ CinnabarIsland_Gym_OnLoadOpenDoor6::
 	return
 
 CinnabarIsland_Gym_EventScript_Blaine::
+	@ Before the first battle he introduces himself once (notable-story-continuity.md#2-introductions)
+	goto_if_defeated TRAINER_LEADER_BLAINE, CinnabarIsland_Gym_EventScript_BlaineBattle
+	lock
+	faceplayer
+	notable_introduce NOTABLE_TRAINER_BLAINE, CinnabarIsland_Gym_Text_BlaineName
+CinnabarIsland_Gym_EventScript_BlaineBattle::
 	trainerbattle_single TRAINER_LEADER_BLAINE, CinnabarIsland_Gym_Text_BlaineIntro, CinnabarIsland_Gym_Text_BlaineDefeat, CinnabarIsland_Gym_EventScript_DefeatedBlaine, NO_MUSIC
 	goto_if_unset FLAG_WAYFARER_CINNABAR_TM38_CLAIMED, CinnabarIsland_Gym_EventScript_GiveTM38
 	setvar VAR_0x8004, NOTABLE_TRAINER_BLAINE
@@ -484,9 +490,11 @@ CinnabarIsland_Gym_EventScript_OpenDoor6::
 	setmetatile 7, 10, METATILE_CinnabarGym_Floor_ShadeDiagonal, 0
 	return
 
-CinnabarIsland_Gym_Text_BlaineIntro::
+CinnabarIsland_Gym_Text_BlaineName::
 	.string "I am BLAINE, the red-hot LEADER\n"
 	.string "of CINNABAR GYM!$"
+CinnabarIsland_Gym_Text_BlaineIntro::
+	.string "Let's see if you can handle the heat!$"
 CinnabarIsland_Gym_Text_BlaineDefeat::
 	.string "I have burned down to nothing!\p"
 	.string "You have earned the VOLCANO BADGE.$"
