@@ -1,5 +1,9 @@
 # Regional story beat independence audit
 
+Status: Historical snapshot of local main `9ab8058a6e` (2026-09-07). The regional
+independent-story-beat PRDs and specifications have since been implemented and
+supersede it; most problems below are fixed. Do not read it as current behavior.
+
 Audited local main revision `9ab8058a6e` on 2026-09-07. Scope: Wayfarer's HNS
 Johto/Kanto and imported Emerald Hoenn. FRLG Kanto is not the active Kanto
 campaign. Unmerged tasks, including regional-start design, are outside this audit.

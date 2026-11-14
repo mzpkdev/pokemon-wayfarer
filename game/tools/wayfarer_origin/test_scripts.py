@@ -36,6 +36,7 @@ class Script:
         self.delivery = delivery
         self.native = native
         self.johto = native
+        self.hoenn = False
         self.starter_slot = 3
         self.policy = policy
         self.effects = []
@@ -90,6 +91,7 @@ class Script:
                 self.vars[args[0]] = ({'WayfarerDispatchOriginScene': self.policy,
                                      'WayfarerUsesNativeJohtoOpening': int(self.native),
                                      'WayfarerIsJohtoOrigin': int(self.johto),
+                                     'WayfarerIsHoennOrigin': int(self.hoenn),
                                      'WayfarerGetOriginStarterSlot': self.starter_slot,
                                      'WayfarerGetJohtoStarterSpecies': 'selected-species',
                                      'GetInGameTradeSpeciesInfo': 0,
@@ -276,6 +278,21 @@ class VisitorScripts(unittest.TestCase):
             self.assertNotIn(RECEIVED, script.flags)
             self.assertNotIn('VAR_NEWBARK_TOWN_STATE', script.vars)
             self.assertEqual(script.grants, [])
+
+    def test_elm_upgrades_a_hoenn_visitors_pokedex_once(self):
+        script = Script(LAB, policy=0)
+        script.hoenn = True
+        script.flags.add('FLAG_SYS_POKEDEX_GET')
+        script.vars['VAR_NEWBARKTOWN_LABSTATE'] = 1
+        script.run(PREFIX + 'Elm')
+        self.assertIn('NewBarkTown_Lab_Text_ElmUpgradePokedex', script.messages)
+        self.assertIn('FLAG_SYS_NATIONAL_DEX', script.flags)
+        again = Script(LAB, policy=0)
+        again.hoenn = True
+        again.flags |= {'FLAG_SYS_POKEDEX_GET', 'FLAG_SYS_NATIONAL_DEX'}
+        again.vars['VAR_NEWBARKTOWN_LABSTATE'] = 1
+        again.run(PREFIX + 'Elm')
+        self.assertNotIn('NewBarkTown_Lab_Text_ElmUpgradePokedex', again.messages)
 
     def test_lab_entry_triggers_end_cleanly(self):
         for entry in ('TriggerStartLabLeft', 'TriggerStartLabRight', 'TriggerStartLab', 'ElmIntro'):
