@@ -180,7 +180,9 @@ MossdeepCity_SpaceCenter_2F_EventScript_Steven::
 	lockall
 	goto_if_set FLAG_INTERACTED_WITH_STEVEN_SPACE_CENTER, MossdeepCity_SpaceCenter_2F_EventScript_ReadyForBattlePrompt
 	setflag FLAG_INTERACTED_WITH_STEVEN_SPACE_CENTER
+#if IS_WAYFARER
 	notable_introduce NOTABLE_TRAINER_STEVEN, MossdeepCity_SpaceCenter_2F_Text_StevenIntro
+#endif
 	msgbox MossdeepCity_SpaceCenter_2F_Text_StevenWhyStealRocketFuel, MSGBOX_DEFAULT
 	msgbox MossdeepCity_SpaceCenter_2F_Text_MaxieUseFuelToEruptVolcano, MSGBOX_DEFAULT
 	closemessage

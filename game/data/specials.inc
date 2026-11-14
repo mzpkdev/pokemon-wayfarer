@@ -894,4 +894,5 @@ gSpecials::
     def_special NotableStory_IsIntroduced
     def_special NotableStory_MarkIntroduced
     def_special NotableStory_CompleteBeat
+    def_special NotableStory_IsWhitneyAtTower
 #endif

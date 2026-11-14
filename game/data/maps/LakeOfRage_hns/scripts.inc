@@ -144,7 +144,9 @@ LakeOfRage_EventScript_Lance::
 	delay 20
 	faceplayer
 	turnobject LOCALID_LAKEOFRAGE_OLDMAN, DIR_WEST
+#if IS_WAYFARER
 	notable_introduce NOTABLE_TRAINER_LANCE, LakeOfRage_Text_LanceIntro1
+#endif
 	msgbox LakeOfRage_Text_LanceIntro2, MSGBOX_DEFAULT
 	setvar_forward VAR_MAHOGANY_TOWN_STATE, 3
 	msgbox LakeOfRage_Text_LanceIntro3, MSGBOX_YESNO

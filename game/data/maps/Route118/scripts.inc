@@ -127,8 +127,12 @@ Route118_EventScript_StevenTrigger::
 	waitmovement 0
 	delay 30
 	@ He recalls the cave near DEWFORD only if the player's LETTER reached him there (the same split as ROUTE 120)
+#if IS_WAYFARER
 	goto_if_set FLAG_DELIVERED_STEVEN_LETTER, Route118_EventScript_StevenRecallsCave
 	notable_introduce NOTABLE_TRAINER_STEVEN, Route118_Text_StevenIntroducesHimself
+#else
+	goto Route118_EventScript_StevenRecallsCave
+#endif
 Route118_EventScript_StevenQuestions::
 	msgbox Route118_Text_StevenQuestions, MSGBOX_DEFAULT
 	closemessage
@@ -296,7 +300,11 @@ Route118_Text_StevenIntroducesHimself:
 
 Route118_Text_StevenQuestions:
 	.string "Have you met many kinds of POKéMON\n"
+#if IS_WAYFARER
 	.string "on your travels?\p"
+#else
+	.string "since I last saw you?\p"
+#endif
 	.string "There are many, many kinds of POKéMON\n"
 	.string "in this wide world of ours.\p"
 	.string "If you wanted to raise only your\n"

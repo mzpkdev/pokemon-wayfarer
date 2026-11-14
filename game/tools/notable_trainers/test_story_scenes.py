@@ -48,7 +48,8 @@ class IntroductionTests(unittest.TestCase):
         champions = script("PokemonLeague_ChampionsRoom_hns")
         self.assertIn(("NOTABLE_TRAINER_LANCE", "PokemonLeague_ChampionsRoom_Text_FirstMeetingIntro"),
                       introductions(champions))
-        self.assertNotIn("eventually reach me here", champions)
+        # Wayfarer plays the new first-meeting text; the original line survives only for non-Wayfarer builds.
+        self.assertNotIn("eventually reach me here", label_body(champions, "PokemonLeague_ChampionsRoom_Text_BattleIntro"))
 
     def test_whitney_introduces_herself_once_across_tower_and_gym(self):
         tower = script("GoldenrodCity_RadioTower_1F_hns")
@@ -145,8 +146,10 @@ class PresenceTests(unittest.TestCase):
     def test_whitney_is_at_the_tower_only_in_the_morning_until_the_quiz_is_solved(self):
         tower = script("GoldenrodCity_RadioTower_1F_hns")
         check = label_body(tower, "RadioTower1F_EventScript_CheckWhitneyAtTower")
-        self.assertIn("FLAG_ENABLE_RADIO", check)
-        self.assertIn("TIME_MORNING", check)
+        self.assertIn("NotableStory_IsWhitneyAtTower", check)
+        notable = (GAME / "src/notable_story.c").read_text()
+        self.assertIn("!FlagGet(FLAG_ENABLE_RADIO) && GetTimeOfDay() == TIME_MORNING", notable)
+        self.assertIn(".characterId = NOTABLE_TRAINER_WHITNEY, .predicate", notable)
         # The Tower copy and the Gym copy hide on the same temp flag, opposite conditions.
         self.assertIn("call_if_eq VAR_RESULT, FALSE, RadioTower1F_EventScript_HideWhitney", tower)
         self.assertIn("call_if_eq VAR_RESULT, TRUE, GoldenrodCity_Gym_EventScript_HideWhitney", script("GoldenrodCity_Gym_hns"))

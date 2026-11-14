@@ -12,6 +12,10 @@ MeteorFalls_StevensCave_EventScript_Steven::
 	waitmovement 0
 	applymovement LOCALID_METEOR_FALLS_STEVEN, Common_Movement_FacePlayer
 	waitmovement 0
+#if IS_WAYFARER
+	@ A player may reach his cave without ever meeting him: he gives his name once, then greets
+	notable_introduce NOTABLE_TRAINER_STEVEN, MeteorFalls_StevensCave_Text_StevenIntro
+#endif
 	msgbox MeteorFalls_StevensCave_Text_ImAmazedYouFoundMe, MSGBOX_DEFAULT
 	@ He only recalls the SPACE CENTER if the player fought beside him there
 	call_if_set FLAG_DEFEATED_MAGMA_SPACE_CENTER, MeteorFalls_StevensCave_EventScript_RecallSpaceCenter
@@ -44,6 +48,10 @@ MeteorFalls_StevensCave_EventScript_PredictionFromGraniteCave::
 	msgbox MeteorFalls_StevensCave_Text_PredictionFromGraniteCave, MSGBOX_DEFAULT
 	msgbox MeteorFalls_StevensCave_Text_MyPredictionCameTrue, MSGBOX_DEFAULT
 	return
+
+MeteorFalls_StevensCave_Text_StevenIntro:
+	.string "STEVEN: I'm STEVEN. You must be\n"
+	.string "{PLAYER}{KUN}.$"
 
 MeteorFalls_StevensCave_Text_ImAmazedYouFoundMe:
 	.string "STEVEN: Oh, wow, {PLAYER}{KUN}.\n"

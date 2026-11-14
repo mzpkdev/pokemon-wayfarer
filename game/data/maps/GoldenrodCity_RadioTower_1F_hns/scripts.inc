@@ -14,13 +14,17 @@ RadioTower1F_EventScript_HideWhitney::
 	return
 
 @ VAR_RESULT: TRUE while WHITNEY is out at the RADIO TOWER. The GYM and the GOLDENRODCITY beauty read it too.
+@ Wayfarer reads the C predicate that also keeps her walker away, so the two cannot drift.
 RadioTower1F_EventScript_CheckWhitneyAtTower::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, NotableStory_IsWhitneyAtTower
+	return
+#else
 	setvar VAR_RESULT, FALSE
 	goto_if_set FLAG_ENABLE_RADIO, Common_EventScript_NopReturn
-	gettimeofday
-	goto_if_ne VAR_0x8000, TIME_MORNING, Common_EventScript_NopReturn
 	setvar VAR_RESULT, TRUE
 	return
+#endif
 RadioTower1F_EventScript_Grunt::
 	lock
 	faceplayer

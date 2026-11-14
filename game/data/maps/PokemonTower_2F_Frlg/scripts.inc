@@ -30,7 +30,9 @@ PokemonTower_2F_EventScript_Blue::
 	lock
 	faceplayer
 	goto_if_set FLAG_WAYFARER_TOWER_BLUE_MET, PokemonTower_2F_EventScript_BlueMet
+#if IS_WAYFARER
 	notable_introduce NOTABLE_TRAINER_BLUE, PokemonTower_2F_Text_BlueName
+#endif
 	msgbox PokemonTower_2F_Text_BlueIntro, MSGBOX_DEFAULT
 	setflag FLAG_WAYFARER_TOWER_BLUE_MET
 	release

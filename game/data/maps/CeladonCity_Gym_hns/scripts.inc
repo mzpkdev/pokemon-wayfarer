@@ -6,7 +6,7 @@ CeladonCity_Gym_EventScript_Erika::
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_CELADON_GYM, CeladonCity_Gym_EventScript_Erika_Defeated
-	notable_introduce NOTABLE_TRAINER_ERIKA, CeladonCity_Gym_Text_ErikaIntro
+	notable_introduce NOTABLE_TRAINER_ERIKA, CeladonCity_Gym_Text_ErikaName
 	msgbox CeladonCity_Gym_Text_ErikaBeforeBattle, MSGBOX_DEFAULT
 	trainerbattle_no_intro TRAINER_ERIKA_HNS, CeladonCity_Gym_Text_ErikaBeaten
 	message CeladonCity_Gym_Text_PlayerReceivedRainbowBadge
@@ -38,7 +38,7 @@ CeladonCity_Gym_EventScript_Erika_Defeated::
 	release
 	end
 
-CeladonCity_Gym_Text_ErikaIntro:
+CeladonCity_Gym_Text_ErikaName:
 	.string "ERIKA: Hello… Lovely weather,\n"
 	.string "isn't it? It's so pleasant…\p"
 	.string "…I'm afraid I may doze off…\p"

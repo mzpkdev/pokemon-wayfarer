@@ -1,4 +1,6 @@
 #include "global.h"
+#include "constants/battle_partner.h"
+#include "constants/opponents.h"
 #include "notable_friendship.h"
 
 #if IS_WAYFARER
@@ -108,10 +110,30 @@ void NotableFriendship_MarkIntroduced(u8 characterId)
         SetBit(gSaveBlock3Ptr->notableFriendship.introduced, characterId);
 }
 
+// In-game battle partners are TRAINER_PARTNER(x), past the trainer table: the notable ones are named here.
+static u8 GetNotableCharacterForPartner(u16 trainerId)
+{
+    switch (trainerId - MAX_TRAINERS_COUNT)
+    {
+    case PARTNER_STEVEN:
+        return NOTABLE_TRAINER_STEVEN;
+    case PARTNER_LANCE_HNS:
+        return NOTABLE_TRAINER_LANCE;
+    default:
+        return NOTABLE_TRAINER_NONE;
+    }
+}
+
 void NotableFriendship_MarkTrainerEncountered(u16 trainerId)
 {
-    const struct NotableTrainer *trainer = GetNotableTrainerForEncounter(trainerId);
+    const struct NotableTrainer *trainer;
 
+    if (trainerId >= MAX_TRAINERS_COUNT)
+    {
+        NotableFriendship_MarkIntroduced(GetNotableCharacterForPartner(trainerId));
+        return;
+    }
+    trainer = GetNotableTrainerForEncounter(trainerId);
     if (trainer != NULL)
         NotableFriendship_MarkIntroduced(trainer->characterId);
 }

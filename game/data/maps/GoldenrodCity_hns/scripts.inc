@@ -307,8 +307,10 @@ GoldenrodCity_EventScript_SignGameCorner::
 GoldenrodCity_EventScript_Beauty::
 	lock
 	faceplayer
+#if IS_WAYFARER
 	call RadioTower1F_EventScript_CheckWhitneyAtTower
 	goto_if_eq VAR_RESULT, FALSE, GoldenrodCity_EventScript_BeautyWhitneyInGym
+#endif
 	msgbox GoldenrodCity_Text_Beauty, MSGBOX_DEFAULT
 	closemessage
 	release

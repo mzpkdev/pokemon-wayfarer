@@ -15,41 +15,44 @@ GAME = Path(__file__).resolve().parents[2]
 CATALOG = GAME / "tools/notable_trainers/catalog.json"
 SCRIPT_ROOTS = [GAME / "data"]
 
-# Map directories, files and labels that say "I am X" outside the shared introduction, each with its reason.
-# Keep this short: a scene that plays in Wayfarer converts to `notable_introduce` instead.
+# Labels that say "I am X" outside the shared introduction, each with its reason. Explicit labels, so a new
+# self-introduction in the same file is still caught. Keep this short: a scene that plays in Wayfarer converts to
+# `notable_introduce` instead.
 ALLOWED = {
     # FRLG and HNS League rooms. Wayfarer's League runs through the circuit scripts (wayfarer_indigo_league.inc,
     # wayfarer_masters_league.inc, league_circuit.inc), so these rooms' own intros never play there.
-    "PokemonLeague_BrunosRoom_Frlg": "FRLG league room, replaced by the circuit in Wayfarer",
-    "PokemonLeague_LoreleisRoom_Frlg": "FRLG league room, replaced by the circuit in Wayfarer",
-    "PokemonLeague_AgathasRoom_Frlg": "FRLG league room, replaced by the circuit in Wayfarer",
-    "PokemonLeague_KarensRoom_hns": "HNS league room, replaced by the circuit in Wayfarer",
-    "PokemonLeague_WillsRoom_hns": "HNS league room, replaced by the circuit in Wayfarer",
-    "PokemonLeague_BrunosRoom_hns": "HNS league room, replaced by the circuit in Wayfarer",
-    "PokemonLeague_KogasRoom_hns": "HNS league room, replaced by the circuit in Wayfarer",
-    "EverGrandeCity_SidneysRoom": "Hoenn league room, replaced by the circuit in Wayfarer",
-    "EverGrandeCity_PhoebesRoom": "Hoenn league room, replaced by the circuit in Wayfarer",
-    "EverGrandeCity_GlaciasRoom": "Hoenn league room, replaced by the circuit in Wayfarer",
-    "EverGrandeCity_DrakesRoom": "Hoenn league room, replaced by the circuit in Wayfarer",
-    # FRLG Cinnabar Gym: Wayfarer runs wayfarer_cinnabar_full_scripts.inc instead.
-    "CinnabarIsland_Gym_Frlg": "FRLG Cinnabar Gym, replaced in Wayfarer",
-    # BLUE at Cinnabar is `#if !IS_WAYFARER`: it never plays in Wayfarer.
+    "PokemonLeague_BrunosRoom_Text_Intro": "FRLG league room, replaced by the circuit in Wayfarer",
+    "PokemonLeague_BrunosRoom_Text_RematchIntro": "FRLG league room, replaced by the circuit in Wayfarer",
+    "PokemonLeague_LoreleisRoom_Text_Intro": "FRLG league room, replaced by the circuit in Wayfarer",
+    "PokemonLeague_AgathasRoom_Text_Intro": "FRLG league room, replaced by the circuit in Wayfarer",
+    "PokemonLeague_AgathasRoom_Text_RematchIntro": "FRLG league room, replaced by the circuit in Wayfarer",
+    "PokemonLeague_KarensRoom_Text_Before": "HNS league room, replaced by the circuit in Wayfarer",
+    "PokemonLeague_WillsRoom_Text_Before": "HNS league room, replaced by the circuit in Wayfarer",
+    "PokemonLeague_BrunosRoom_Text_Before": "HNS league room, replaced by the circuit in Wayfarer",
+    "PokemonLeague_KogasRoom_Text_Before": "HNS league room, replaced by the circuit in Wayfarer",
+    "EverGrandeCity_SidneysRoom_Text_IntroSpeech": "Hoenn league room, replaced by the circuit in Wayfarer",
+    "EverGrandeCity_PhoebesRoom_Text_IntroSpeech": "Hoenn league room, replaced by the circuit in Wayfarer",
+    "EverGrandeCity_GlaciasRoom_Text_IntroSpeech": "Hoenn league room, replaced by the circuit in Wayfarer",
+    # FRLG Cinnabar and Pewter Gyms: Wayfarer runs wayfarer_cinnabar_full_scripts.inc and PewterCity_Gym_hns.
+    "CinnabarIsland_Gym_Text_BlaineIntro": "FRLG Cinnabar Gym label, shadowed by the Wayfarer script's own copy",
+    "PewterCity_Gym_Text_BrockIntro": "FRLG Pewter Gym, not in Wayfarer",
+    "CeladonCity_Gym_Text_ErikaIntro": "FRLG Celadon Gym, not in Wayfarer (CeladonCity_Gym_hns is)",
+    # BLUE at Cinnabar and Viridian is `#if !IS_WAYFARER`: it never plays in Wayfarer.
     "CinnabarIsland_Text_BlueBefore": "HNS-only scene, not built in Wayfarer",
     "CinnabarIsland_Text_Blue": "HNS-only scene, not built in Wayfarer",
+    "ViridianCity_Text_BlueIntro": "HNS-only scene, not built in Wayfarer",
     # Janine's Gym trainers pose as her (ninja decoys); the "I'm JANINE" is the disguise, not an introduction.
     "FuchsiaCity_Gym_Text_PicnickerCindy_Before": "a decoy claims to be her",
     "FuchsiaCity_Gym_Text_CamperBarry_Before": "a decoy claims to be her",
     "FuchsiaCity_Gym_Text_LassAlice_Before": "a decoy claims to be her",
-    # FRLG Pewter Gym: Wayfarer's Pewter is PewterCity_Gym_hns, converted.
-    "PewterCity_Gym_Frlg": "FRLG Pewter Gym, not in Wayfarer",
+    "FuchsiaCity_PokemonCenter1F_Text_JanineImpersonator1": "an impersonator claims to be her",
     # ROXANNE's rematch lines only play after the battle that first introduced her.
     "RustboroCity_Gym_Text_RoxannePreRematch": "a rematch follows a battle, which introduces",
     "RustboroCity_Gym_Text_RoxanneRematchNeedTwoMons": "a rematch follows a battle, which introduces",
-    # BLUE's Viridian intro is `#if !IS_WAYFARER` (Giovanni holds the Gym there in Wayfarer).
-    "ViridianCity_Text_BlueIntro": "HNS-only scene, not built in Wayfarer",
-    "FuchsiaCity_PokemonCenter1F_Text_JanineImpersonator1": "an impersonator claims to be her",
     # Fame checker entries are a trainer card's own blurb, not a scene.
-    "data/text/fame_checker_frlg.inc": "FRLG fame checker text, not in Wayfarer",
+    "gFameCheckerFlavorText_Lorelei0": "FRLG fame checker text, not a scene",
+    "gFameCheckerFlavorText_Bruno0": "FRLG fame checker text, not a scene",
+    "gFameCheckerFlavorText_Agatha0": "FRLG fame checker text, not a scene",
 }
 
 LABEL = re.compile(r"^([A-Za-z_][A-Za-z0-9_]*)::?\s*(?:@.*)?$")
@@ -111,8 +114,15 @@ def introduced_labels():
     return labels
 
 
+def INTRODUCE_LABELS():
+    labels = set()
+    for path in inc_files():
+        labels.update(m.group(2) for m in INTRO.finditer(path.read_text(errors="replace")))
+    return labels
+
+
 def allowed(path, label):
-    return label in ALLOWED or path.parent.name in ALLOWED or str(path.relative_to(GAME)) in ALLOWED
+    return label in ALLOWED
 
 
 class StoryIntroductionGuard(unittest.TestCase):
@@ -125,6 +135,22 @@ class StoryIntroductionGuard(unittest.TestCase):
                     offenders.append(f"{path.relative_to(GAME)}: {label}: {pattern.search(plain(text)).group(0)}")
         self.maxDiff = None
         self.assertEqual(offenders, [], "self-introductions outside notable_introduce, see the module docstring")
+
+    def test_an_introduction_text_is_played_only_by_notable_introduce(self):
+        # Reusing a first-meeting text anywhere else would play the self-introduction to a known trainer.
+        texts_by_label = set(INTRODUCE_LABELS())
+        misuse = []
+        for path in inc_files():
+            for number, raw in enumerate(path.read_text(errors="replace").splitlines(), 1):
+                line = raw.split("@")[0]
+                if re.match(r"^\s*notable_introduce\b", line) or re.match(r"^\s*(\w+)::?\s*$", line):
+                    continue
+                if re.match(r"^\s*loadword 0,\s*\w+\s*$", line) and "LeagueEvent_Text_ImHost" in line:
+                    continue
+                for word in re.findall(r"\b\w+\b", line):
+                    if word in texts_by_label:
+                        misuse.append(f"{path.relative_to(GAME)}:{number}: {word}")
+        self.assertEqual(misuse, [])
 
     def test_the_guard_sees_an_introduction(self):
         pattern = self_introduction()

@@ -19,6 +19,10 @@ void NotableStory_MarkIntroduced(void);
 // Pays the beat's friendship points once, introduces the trainer; repeat calls do nothing.
 void NotableStory_CompleteBeat(void);
 
+// specialvar: TRUE while Whitney's morning copy shows at the Goldenrod Radio Tower (a morning, quiz unsolved). The
+// Tower, the Gym, the Goldenrod Beauty and her walker's story-away row all read this one predicate.
+u32 NotableStory_IsWhitneyAtTower(void);
+
 // Story-away table: TRUE while any temporary story placement of this character is showing, anywhere in the world.
 // The character's walker does not spawn then (wayfarer_walkers.c).
 bool8 NotableStory_IsAway(u8 characterId);

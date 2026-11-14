@@ -1,5 +1,7 @@
 GoldenrodCity_Gym_hns_MapScripts::
+#if IS_WAYFARER
 	map_script MAP_SCRIPT_ON_TRANSITION, GoldenrodCity_Gym_OnTransition
+#endif
 	.byte 0
 
 @ WHITNEY is out at the RADIO TOWER on a morning until the QUIZ is solved: her Gym copy hides then

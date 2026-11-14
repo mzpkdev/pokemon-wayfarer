@@ -21,6 +21,7 @@
 #include "wayfarer_persistence.h"
 #include "wayfarer_world_data.h"
 #include "test/test.h"
+#include "constants/battle_partner.h"
 #include "constants/battle_setup.h"
 #include "constants/characters.h"
 #include "constants/flags.h"
@@ -735,7 +736,7 @@ TEST("Any battle against a notable introduces them, lost or won, and a debug bat
     // A tag match introduces both opponents; the partner beside the player is an acquaintance, with no points.
     gBattleTypeFlags = BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_TRAINER;
     gBattleOutcome = B_OUTCOME_LOST;
-    gPartnerTrainerId = TRAINER_LTSURGE_HNS;
+    gPartnerTrainerId = TRAINER_PARTNER(PARTNER_STEVEN);
     InitTrainerBattleParameter();
     TRAINER_BATTLE_PARAM.mode = TRAINER_BATTLE_DOUBLE;
     TRAINER_BATTLE_PARAM.opponentA = TRAINER_SABRINA_HNS;
@@ -743,8 +744,8 @@ TEST("Any battle against a notable introduces them, lost or won, and a debug bat
     Test_EndTrainerBattle();
     EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_SABRINA));
     EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_JANINE));
-    EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_LT_SURGE));
-    EXPECT_EQ(NotableFriendship_GetScore(NOTABLE_TRAINER_LT_SURGE), 0);
+    EXPECT(NotableFriendship_IsIntroduced(NOTABLE_TRAINER_STEVEN));
+    EXPECT_EQ(NotableFriendship_GetScore(NOTABLE_TRAINER_STEVEN), 0);
 
     // A lost rematch introduces too.
     gBattleTypeFlags = BATTLE_TYPE_TRAINER;
@@ -809,6 +810,25 @@ TEST("Whitney is out at the Radio Tower only on a morning, until the quiz is sol
     FakeRtc_ManuallySetTime(1, 6, 0, 0);
     RunScriptImmediately(RadioTower1F_EventScript_CheckWhitneyAtTower);
     EXPECT_EQ(VarGet(VAR_RESULT), FALSE);
+    FlagClear(FLAG_ENABLE_RADIO);
+    FakeRtc_ManuallySetTime(1, 8, 0, 0);
+}
+
+TEST("Whitney's walker stays away exactly while her morning Radio Tower copy shows")
+{
+    u32 hour;
+
+    FlagClear(FLAG_ENABLE_RADIO);
+    for (hour = 0; hour < 24; hour++)
+    {
+        FakeRtc_ManuallySetTime(1, hour, 0, 0);
+        RunScriptImmediately(RadioTower1F_EventScript_CheckWhitneyAtTower);
+        EXPECT_EQ(NotableStory_IsAway(NOTABLE_TRAINER_WHITNEY), VarGet(VAR_RESULT) != 0);
+        EXPECT_EQ(NotableStory_IsAway(NOTABLE_TRAINER_WHITNEY), hour >= 4 && hour < 8);
+    }
+    FlagSet(FLAG_ENABLE_RADIO);
+    FakeRtc_ManuallySetTime(1, 6, 0, 0);
+    EXPECT(!NotableStory_IsAway(NOTABLE_TRAINER_WHITNEY));
     FlagClear(FLAG_ENABLE_RADIO);
     FakeRtc_ManuallySetTime(1, 8, 0, 0);
 }

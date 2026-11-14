@@ -3,6 +3,7 @@
 
 #if IS_WAYFARER
 #include "event_data.h"
+#include "rtc.h"
 #include "notable_friendship.h"
 #include "constants/flags.h"
 #include "constants/notable_story_beats.h"
@@ -63,7 +64,18 @@ struct StoryPlacement
     u8 varMin;
     u8 varMax;
     u8 options;
+    bool8 (*predicate)(void); // NULL, or an extra condition that must hold
 };
+
+u32 NotableStory_IsWhitneyAtTower(void)
+{
+    return !FlagGet(FLAG_ENABLE_RADIO) && GetTimeOfDay() == TIME_MORNING;
+}
+
+static bool8 IsWhitneyAtTower(void)
+{
+    return NotableStory_IsWhitneyAtTower();
+}
 
 static const struct StoryPlacement sPlacements[] =
 {
@@ -76,6 +88,8 @@ static const struct StoryPlacement sPlacements[] =
     { .characterId = NOTABLE_TRAINER_STEVEN, .flag = HOENN_FLAG_ID(FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_2F_STEVEN),
       .var = HOENN_VAR_ID(VAR_MOSSDEEP_SPACE_CENTER_STATE), .varMin = 1, .varMax = 2 },
     // Giovanni leaves Viridian for good: once he has departed, his walker never spawns.
+    // Whitney's morning outing to the Goldenrod Radio Tower until the quiz is solved (her Tower copy shows then).
+    { .characterId = NOTABLE_TRAINER_WHITNEY, .predicate = IsWhitneyAtTower },
     { .characterId = NOTABLE_TRAINER_GIOVANNI, .flag = FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS, .options = PLACEMENT_FLAG_SET },
 };
 
@@ -97,6 +111,8 @@ bool8 NotableStory_IsPlacementShowing(u32 index)
     if (index >= ARRAY_COUNT(sPlacements))
         return FALSE;
     placement = &sPlacements[index];
+    if (placement->predicate != NULL && !placement->predicate())
+        return FALSE;
     if (placement->flag != 0 && FlagGet(placement->flag) != ((placement->options & PLACEMENT_FLAG_SET) != 0))
         return FALSE;
     if (placement->var != 0)
