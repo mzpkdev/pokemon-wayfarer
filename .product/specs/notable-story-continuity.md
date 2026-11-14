@@ -19,7 +19,9 @@ same trainer, so trainers misbehave in three ways:
    story copy and a Gym copy, or a story copy and a walker.
 
 This spec sets one rule for each problem and lists the scenes that break
-each rule today. Lance at the Lake of Rage is the example case. His first
+each rule today. It also defines the **story beats** that move friendship
+([PRD](../prds/notable-trainers.md#friendship)), so that seeing a story
+through with a trainer counts the way a quest does. Lance at the Lake of Rage is the example case. His first
 Johto scene never uses the self-introduction HNS wrote for it
 (`LakeOfRage_Text_LanceIntro1`). It greets every player the same, including
 one who beat him at Indigo. If the lake is skipped, the Indigo Champion
@@ -37,7 +39,11 @@ Out of scope:
 - The Celebi flashbacks of Giovanni. See
   [FRLG/HNS Kanto story conflicts](../research/frlg-hns-kanto-story-conflicts.md).
 - Story TMs that repeat notable lesson rewards.
-- Friendship credit for story help. See [Open questions](#open-questions).
+- The HNS post-badge cameos that point to the Saffron Dojo: Janine at the
+  Reception Gate, Erika at the Celadon fountain, Misty at Cerulean Cape,
+  Chuck's Dojo pointer, and the Den Clair. Each one stands while the leader's
+  Gym copy and walker also stand. [Notable haunts](notable-haunts.md#cameos-and-the-dojo)
+  retires them with the Dojo seats.
 
 ## Behavior
 
@@ -58,6 +64,7 @@ cleared. Three things set it:
 | A battle with the trainer | At the end of any battle against them, won or lost: Gym, story, rematch, league or Masters. |
 | A notable greeting | Whenever `NotableTalk_EventScript_Greeting` plays a line: walker talk, haunt talk, or a Gym greeting. |
 | A story introduction | A scene runs the [introduction](#2-introductions) for this trainer. |
+| A story beat | A [story beat](#5-story-beats) with them completes. |
 
 The greeting rule changes in one place. `NotableTalk_GetGreeting` still reads
 the stage, except that an introduced Stranger gets **AGAIN** instead of
@@ -163,12 +170,51 @@ Known cases:
 
 | Trainer | Copies | Change |
 | --- | --- | --- |
-| Whitney | The Radio Tower 1F copy, shown from New Game until the quiz is solved (`FLAG_ENABLE_RADIO`), plus the always-visible Gym copy | Make the Tower copy a scheduled [outing](#open-questions). The Gym copy hides and the Beauty's line shows only during it. |
-| Clair | The Gym copy, always visible, plus the Den rematch copy (`FLAG_HIDE_DEN_CLAIR`), plus her walker, whose favourite spot is the Den | Once the Den copy shows, the Gym copy hides, or the Den copy becomes her haunt and is retired as a story object. |
-| Chuck | The Gym copy stays after `ChuckGotoDojo` sends the player to the Saffron Dojo | Drop the Dojo pointer along with the Dojo retirement in [notable haunts](notable-haunts.md). |
-| Janine, Erika, Misty | Post-badge outing copies (Reception Gate, Celadon, Route 25) while the Gym copy and walker stay | Outings join the story-away table. Reception Gate's "The ELITE FOUR has no time to rest" line also assumes Koga is in the League. |
-| Steven, Wallace | Walkers simulated from New Game, while the story places them elsewhere (Wallace inside the Cave of Origin during the Sootopolis crisis; Steven at the Space Center) | Add their crisis placements to the table. Inferred: no play test. |
-| Giovanni | His walker keeps Viridian and the Game Corner after `FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS` removes him | His walker reads the departure. Inferred: the sim reads no story flags today. |
+| Whitney | The Radio Tower 1F copy, shown from New Game until the quiz is solved (`FLAG_ENABLE_RADIO`), plus the always-visible Gym copy | The Tower copy becomes a morning outing (`gettimeofday` is `TIME_MORNING`) until the quiz is solved. During it, the Gym copy hides and the Goldenrod Beauty says Whitney may be at the Radio Tower. At other times the Tower copy hides, Whitney is in her Gym, and the Beauty gives a plain Gym line. Once the quiz is solved she is always in the Gym. |
+| Steven, Wallace | Walkers simulated from New Game, while the story places them elsewhere (Wallace inside the Cave of Origin during the Sootopolis crisis; Steven at the Space Center) | Add their temporary story placements to the table. Inferred: not play-tested. |
+| Giovanni | His walker keeps Viridian and the Game Corner after `FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS` removes him | After the departure, his walker stops spawning. Inferred: the sim reads no story flags today. |
+
+### 5. Story beats
+
+**Rule:** a story beat is a story event where the player and a notable
+trainer actually do something together: the player helps them, fights beside
+them, or sees their crisis through. Completing a beat adds the
+[friendship](notable-trainers.md#friendship) "Story beat completed" points
+(+10, placeholder) and sets the introduced bit.
+
+- **Listed beats only.** Only the beats in the table below count. Points come
+  only from explicit, bounded events, as with quests.
+- **Once each.** Each beat has a saved bit, so it pays once even if its
+  scene can run again. For example, Lance asks again when you decline.
+- **On completion.** A beat pays when it completes, never on an attempt, a
+  decline or a lost battle. A partner battle inside a beat adds nothing on
+  its own; the beat pays when it ends.
+- **No hellos, no enemies.** A scene where the trainer only greets the
+  player, or one where they are the player's enemy (Giovanni), is not a
+  beat. A battle against them already counts as a first win.
+- **Never Close from the story.** The beats listed for one trainer add up to
+  less than the Close threshold. A test checks this against the placeholder
+  weights.
+- **The number handover** follows the existing rule: crossing Friend owes
+  the "Registered X's number" line, which plays once the scene hands back
+  control.
+
+Beats in v0. The implementation confirms each completion point in the
+scripts:
+
+| Trainer | Beat | Completes when |
+| --- | --- | --- |
+| Lance | The Lake of Rage request | The player accepts his request (`LakeOfRage_EventScript_LanceAccept`). |
+| Lance | Shutting down the Mahogany hideout | He hands over HM Whirlpool at the hideout finale (`RocketHideout_B2F_hns`). |
+| Steven | Granite Cave letter | `FLAG_DELIVERED_STEVEN_LETTER` is set. |
+| Steven | Space Center tag battle | `FLAG_DEFEATED_MAGMA_SPACE_CENTER` is set. |
+| Tate & Liza | Space Center | `FLAG_DEFEATED_MAGMA_SPACE_CENTER` is set. They keep a score but give no number. |
+| Wallace | The Sootopolis crisis | The weather crisis ends after the Cave of Origin and Sky Pillar scenes. |
+| Jasmine | Olivine Lighthouse medicine | The SecretPotion is delivered to Amphy. |
+| Clair | The Dragon's Den test | She grants the Rising Badge after the Den. |
+| Wattson | New Mauville generator | He thanks the player for shutting down the generator. |
+| Norman | Wally's first catch | Wally catches his Ralts on Route 102 with the player. |
+| Lorelei | Icefall Cave poachers | The Icefall Cave poaching scene ends with the poachers stopped. |
 
 ### Guard
 
@@ -183,16 +229,6 @@ and not met first.
 
 ## Open questions
 
-- **Story help as friendship.** The [PRD](../prds/notable-trainers.md#friendship)
-  moves a trainer to Met when the player "helped them with a quest".
-  Story help, such as answering Lance's call at the Lake, finishing the
-  hideout, or Steven's Space Center tag battle, could award the same +10
-  quest points. Recommended: yes, once per story beat. It changes phone
-  number pacing, so it needs a product decision.
-  `NotableFriendship_AddQuestPoints` has no callers yet.
-- **Whitney's outing schedule.** Choose the days and hours she is at the
-  Radio Tower, using the [daily world slots](daily-world-slots.md), or
-  retire the Tower copy.
 - **Steven's two contacts.** Granite Cave registers Steven in the Pokénav,
   and the notable phone gives him a number at Friend. Confirm whether he
   shows twice. Inferred.
