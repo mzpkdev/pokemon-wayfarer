@@ -875,7 +875,7 @@ TEST("A listed story placement keeps its character's walker away while it shows,
         EXPECT(!NotableStory_IsAway(i));
 
     // Steven's Space Center copy: shown from the invasion until the battle.
-    FlagClear(HOENN_FLAG_ID(0x35F) // FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_2F_STEVEN);
+    FlagClear(HOENN_FLAG_ID(0x35F)); // FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_2F_STEVEN
     VarSet(HOENN_VAR_ID(VAR_MOSSDEEP_SPACE_CENTER_STATE), 1);
     EXPECT(NotableStory_IsAway(NOTABLE_TRAINER_STEVEN));
     EXPECT(!NotableStory_IsAway(NOTABLE_TRAINER_WALLACE));
