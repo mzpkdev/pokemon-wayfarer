@@ -11,12 +11,14 @@ AzaleaTown_OnTransition::
 	setvar VAR_0x8004, SILVER_CHAPTER_AZALEA
 	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
 	call_if_eq VAR_RESULT, FALSE, AzaleaTown_MapScript_Hide_Silver
+	call WayfarerJohto_EventScript_ArmElmEggCall
 	end
 	
 @ VAR_TEMP_1 arms Kurt's GS Ball once per visit, so a full Poke Ball pocket
 @ leaves it owed for the next visit instead of replaying it every frame.
 AzaleaTown_OnFrame::
 	map_script_2 VAR_TEMP_1, 1, AzaleaTown_EventScript_GSBall
+	map_script_2 VAR_TEMP_C, 1, WayfarerJohto_EventScript_ElmEggCall
 	.2byte 0
 
 AzaleaTown_MapScript_ArmGSBall::

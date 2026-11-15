@@ -56,6 +56,7 @@ VioletCity_PokemonCenter_EventScript_Aide_GiveEgg::
 	goto_if_eq VAR_RESULT, MON_CANT_GIVE, Common_EventScript_NoMoreRoomForPokemon @ party limit of 1 and every BOX full
 	call_if_eq VAR_RESULT, MON_GIVEN_TO_PC, VioletCity_PokemonCenter_EventScript_Aide_EggSentToPC
 	setflag FLAG_RECEIVED_TOGEPI_EGG
+	call WayfarerJohto_EventScript_OweElmEggCall
 	msgbox VioletCity_PokeCenter_Text_ElmsAideGiveItem, MSGBOX_DEFAULT
 	giveitem ITEM_EXP_SHARE_SMALL
 	setflag FLAG_HIDE_VIOLET_CITY_AIDE

@@ -11,10 +11,12 @@ CianwoodCity_RemoveEusine::
 
 CianwoodCity_OnFrame::
 	map_script_2 VAR_GETFLY, 1, CianwoodCity_EventScript_Flytrigger
+	map_script_2 VAR_TEMP_C, 1, WayfarerJohto_EventScript_ElmEggCall
 	.2byte 0
 
 CianwoodCity_EventScript_CityEnter::
 	setflag FLAG_VISITED_CIANWOOD_CITY
+	call WayfarerJohto_EventScript_ArmElmEggCall
 	callnative SetTimeBasedEncounters
 	goto_if_ge VAR_OLIVINE_CITY_STATE, 5, OlivineCity_MapScript_ClearWeather
 	end

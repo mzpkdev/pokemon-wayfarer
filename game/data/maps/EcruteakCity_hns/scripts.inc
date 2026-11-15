@@ -2,13 +2,19 @@
 
 EcruteakCity_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, EcruteakCity_OnTransition
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, EcruteakCity_OnFrame
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters
 	.byte 0
 
 EcruteakCity_OnTransition::
 	call_if_unset FLAG_WAYFARER_JOHTO_SETUP_ECRUTEAK, EcruteakCity_EventScript_Setup
+	call WayfarerJohto_EventScript_ArmElmEggCall
 	callnative SetTimeBasedEncounters
 	end
+
+EcruteakCity_OnFrame::
+	map_script_2 VAR_TEMP_C, 1, WayfarerJohto_EventScript_ElmEggCall
+	.2byte 0
 
 EcruteakCity_Test_Lugia::
 	setvar VAR_LUGIA_OR_HOOH, 1
