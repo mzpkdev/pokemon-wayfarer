@@ -8,6 +8,7 @@ OlivineCity_hns_MapScripts::
 
 OlivineCity_MapScript_OnTransition::
 	call_if_unset FLAG_WAYFARER_JOHTO_SETUP_OLIVINE, OlivineCity_EventScript_Setup
+	call WayfarerJohto_EventScript_ArmElmEggCall
 	callnative SetTimeBasedEncounters
 	goto_if_ge VAR_OLIVINE_CITY_STATE, 5, OlivineCity_MapScript_ClearWeather
 	end
@@ -18,6 +19,7 @@ OlivineCity_MapScript_ClearWeather::
 
 OlivineCity_OnFrame::
 	map_script_2 VAR_SAFARI_ZONE_GATE_STATE, 1, OlivineCity_EventScript_BaobaCall
+	map_script_2 VAR_TEMP_C, 1, WayfarerJohto_EventScript_ElmEggCall
 	.2byte 0
 
 OlivineCity_EventScript_BaobaCall::

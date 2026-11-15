@@ -157,7 +157,7 @@ def source(map_name):
     return subprocess.check_output([
         'cpp', '-P', '-x', 'assembler-with-cpp', '-I%s' % (GAME / 'include'),
         '-DIS_WAYFARER=1', '-DWAYFARER_LEAGUE_CIRCUIT_ENABLED=1', '-DWAYFARER_TR_MARTS_ENABLED=1',
-        str(MAPS / map_name / 'scripts.inc'),
+        str(GAME / map_name if map_name.endswith('.inc') else MAPS / map_name / 'scripts.inc'),
     ], text=True)
 
 
@@ -207,6 +207,7 @@ class Interp:
         self.beats_paid = []
         self.character = None   # the name last put in VAR_0x8004
         self.pallet = pallet    # the player is from PALLET TOWN
+        self.party = set()      # hatched species in the party (an Egg is not its species)
 
     def get(self, name):
         if name in self.vars:
@@ -309,6 +310,8 @@ class Interp:
                 self.locked = False
             elif command == 'pokenavcall':
                 self.pokenav.append(args[0])
+            elif command == 'checkspecies':
+                self.vars['VAR_RESULT'] = int(args[0] in self.party)
             elif command.startswith('trainerbattle'):
                 self.battles.append((command, self.vars.get(CHAPTER, 0)))
                 if command == 'trainerbattle_single':
@@ -339,7 +342,11 @@ class Interp:
                     pc = self.labels[args[0]]
             elif command.startswith(('goto_if_', 'call_if_')):
                 kind = command.split('_if_')[1]
-                if self.cond(kind, args) and args[-1] in self.labels:
+                if self.cond(kind, args) and args[-1] == 'Common_EventScript_NopReturn' and command.startswith('goto'):
+                    if not stack:
+                        return
+                    pc = stack.pop()
+                elif self.cond(kind, args) and args[-1] in self.labels:
                     if command.startswith('call'):
                         stack.append(pc)
                     pc = self.labels[args[-1]]
@@ -504,22 +511,6 @@ class TownSetup(unittest.TestCase):
             self.assertIn('setflag %s\n' % flag, reset)
         interp = run_setup('azalea')
         self.assertFalse(ILEX_ERRAND_FLAGS & interp.written())
-
-    def test_goldenrod_elm_call_is_queued_for_johto_origin_only(self):
-        for johto in (True, False):
-            with self.subTest(johto=johto):
-                interp = Interp('GoldenrodCity_hns', johto=johto, flags={'FLAG_RECEIVED_TOGEPI_EGG'})
-                interp.run('GoldenrodCity_OnTransition')
-                self.assertEqual(interp.vars.get('VAR_TEMP_1', 0), int(johto))
-        interp = Interp('GoldenrodCity_hns', flags={'FLAG_SHOWN_ELM_TOGEPI'})
-        interp.run('GoldenrodCity_OnTransition')
-        self.assertEqual(interp.vars.get('VAR_TEMP_1', 0), 0)
-        # "Has that EGG hatched yet?" is about the Togepi Egg: no egg received, no call.
-        interp = Interp('GoldenrodCity_hns', flags=set())
-        interp.run('GoldenrodCity_OnTransition')
-        self.assertEqual(interp.vars.get('VAR_TEMP_1', 0), 0)
-        frame = _label_block(raw_text('GoldenrodCity_hns'), 'GoldenrodCity_OnFrame')
-        self.assertIn('map_script_2 VAR_TEMP_1, 1, GoldenrodCity_Elm_Togepi_Call', frame)
 
     def test_ecruteak_from_route_38_keeps_eusine_burned_tower_reachable(self):
         interp = run_setup('ecruteak')
@@ -1355,16 +1346,97 @@ class EggChainOrder(unittest.TestCase):
         interp.run('NewBarkTown_Lab_EventScript_ElmCampaignErrand')
         self.assertIn(waiting, interp.messages)
 
-    def test_the_goldenrod_egg_call_needs_the_togepi_egg(self):
-        for egg in (False, True):
-            interp = Interp('GoldenrodCity_hns', flags={'FLAG_RECEIVED_TOGEPI_EGG'} if egg else set())
-            interp.run('GoldenrodCity_OnTransition')
-            self.assertEqual(interp.vars.get('VAR_TEMP_1', 0), int(egg))
-
     def test_zuki_recalls_violet_only_after_the_violet_scene(self):
         for violet, recalls in ((0, False), (1, False), (2, True)):
             interp = zuki_talk(extra_vars={'VAR_VIOLET_CITY_KIMONO_GIRL': violet}, lab=5)
             self.assertEqual('EcruteakCity_Theater_Text_ZukiMetInVioletEgg' in interp.messages, recalls)
+
+
+EGG_CALL_SCRIPTS = 'data/scripts/wayfarer_johto_elm_egg_call.inc'
+EGG_CALL_OWED = 'FLAG_WAYFARER_JOHTO_ELM_EGG_CALL_OWED'
+# Each town that can play Elm's egg call, with its load script and frame table.
+EGG_CALL_TOWNS = {
+    'CherrygroveCity_hns': ('CherryGroveCity_OnTransition', 'CherryGroveCity_OnFrame'),
+    'AzaleaTown_hns': ('AzaleaTown_OnTransition', 'AzaleaTown_OnFrame'),
+    'GoldenrodCity_hns': ('GoldenrodCity_OnTransition', 'GoldenrodCity_OnFrame'),
+    'EcruteakCity_hns': ('EcruteakCity_OnTransition', 'EcruteakCity_OnFrame'),
+    'OlivineCity_hns': ('OlivineCity_MapScript_OnTransition', 'OlivineCity_OnFrame'),
+    'CianwoodCity_hns': ('CianwoodCity_EventScript_CityEnter', 'CianwoodCity_OnFrame'),
+    'Mahoganytown_hns': ('Mahoganytown_OnTransition', 'Mahoganytown_OnFrame'),
+    'BlackthornCity_hns': ('BlackthornCity_EventScript_CityEnter', 'BlackthornCity_OnFrame'),
+}
+EGG_CALL_FRAME = 'map_script_2 VAR_TEMP_C, 1, WayfarerJohto_EventScript_ElmEggCall'
+
+
+class ElmEggCall(unittest.TestCase):
+    """The Togepi Egg handoff owes Elm's call; the first Johto town loaded afterwards plays it."""
+
+    def egg_handoff(self, johto):
+        interp = Interp('VioletCity_PokemonCenter_hns', EGG_CALL_SCRIPTS, johto=johto)
+        interp.run('VioletCity_PokemonCenter_EventScript_Aide_GiveEgg')
+        return interp
+
+    def load(self, town, flags, party=()):
+        interp = Interp(town, EGG_CALL_SCRIPTS, flags=flags)
+        interp.party = set(party)
+        interp.run(EGG_CALL_TOWNS[town][0])
+        return interp
+
+    def test_the_egg_handoff_owes_the_call_to_the_johto_origin_only(self):
+        for johto in (True, False):
+            with self.subTest(johto=johto):
+                interp = self.egg_handoff(johto)
+                self.assertIn('FLAG_RECEIVED_TOGEPI_EGG', interp.flags)
+                self.assertEqual(EGG_CALL_OWED in interp.flags, johto)
+                # The rest of the handoff still runs for a visitor.
+                self.assertIn('FLAG_HIDE_VIOLET_CITY_AIDE', interp.flags)
+
+    def test_every_town_after_violet_arms_and_plays_the_owed_call(self):
+        for town, (transition, frame) in EGG_CALL_TOWNS.items():
+            with self.subTest(town=town):
+                text = raw_text(town)
+                self.assertIn('call WayfarerJohto_EventScript_ArmElmEggCall', _label_block(text, transition))
+                table = _label_block(text, frame)
+                # Last in the table, so a town's own arrival scene plays first.
+                entries = [line.strip() for line in table.splitlines() if 'map_script_2' in line]
+                self.assertEqual(entries[-1], EGG_CALL_FRAME)
+                self.assertIn('MAP_SCRIPT_ON_FRAME_TABLE, %s' % frame, text)
+                self.assertEqual(self.load(town, {EGG_CALL_OWED}).vars.get('VAR_TEMP_C', 0), 1)
+                self.assertEqual(self.load(town, set()).vars.get('VAR_TEMP_C', 0), 0)
+        # Violet just handed the Egg over and New Bark is Elm's own town.
+        for town in ('VioletCity_hns', 'NewBarkTown_hns'):
+            self.assertNotIn('WayfarerJohto_EventScript_ArmElmEggCall', raw_text(town))
+
+    def test_an_egg_received_after_goldenrod_still_gets_the_call(self):
+        # The open world: Goldenrod first, the Egg later. The call is not tied to Goldenrod's first visit.
+        first = self.load('GoldenrodCity_hns', set())
+        self.assertIn('FLAG_WAYFARER_JOHTO_SETUP_GOLDENROD', first.flags)
+        self.assertEqual(first.vars.get('VAR_TEMP_C', 0), 0)
+        flags = set(first.flags) | (self.egg_handoff(True).flags & {EGG_CALL_OWED})
+        later = self.load('GoldenrodCity_hns', flags)
+        self.assertEqual(later.vars.get('VAR_TEMP_C', 0), 1)
+
+    def test_the_call_plays_once_and_never_waits(self):
+        interp = Interp(EGG_CALL_SCRIPTS, flags={EGG_CALL_OWED}, vars={'VAR_TEMP_C': 1})
+        interp.run('WayfarerJohto_EventScript_ElmEggCall')
+        self.assertEqual(interp.pokenav, ['WayfarerJohto_Text_ElmEggCall'])
+        self.assertEqual(interp.vars['VAR_TEMP_C'], 0)
+        self.assertNotIn(EGG_CALL_OWED, interp.flags)
+        self.assertFalse(interp.locked)
+        self.assertEqual(self.load('AzaleaTown_hns', interp.flags).vars.get('VAR_TEMP_C', 0), 0)
+
+    def test_elm_hears_the_egg_hatched_when_togepi_is_in_the_party(self):
+        for species in ('SPECIES_TOGEPI', 'SPECIES_TOGETIC', 'SPECIES_TOGEKISS'):
+            with self.subTest(species=species):
+                interp = Interp(EGG_CALL_SCRIPTS, flags={EGG_CALL_OWED})
+                interp.party = {species}
+                interp.run('WayfarerJohto_EventScript_ElmEggCall')
+                self.assertEqual(interp.pokenav, ['WayfarerJohto_Text_ElmEggCallHatched'])
+
+    def test_showing_elm_the_togepi_first_settles_the_call(self):
+        interp = self.load('EcruteakCity_hns', {EGG_CALL_OWED, 'FLAG_SHOWN_ELM_TOGEPI'})
+        self.assertEqual(interp.vars.get('VAR_TEMP_C', 0), 0)
+        self.assertNotIn(EGG_CALL_OWED, interp.flags)
 
 
 class BaobaTalk(unittest.TestCase):

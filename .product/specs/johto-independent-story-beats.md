@@ -64,9 +64,9 @@ flags: `FLAG_VISITED_BLACKTHORN_CITY` is set on transition, before load
 scripts run, and `FLAG_VISITED_MAHOGANY_TOWN` is set only by the setup itself.
 Move the Blackthorn and Dragon's Den writes, including the Den cavern hides
 for Clair, Lance, and Silver, out of Mahogany's setup into Blackthorn's.
-Goldenrod's setup starts with Elm's Togepi call, which a load script cannot
-show. Do the state initialization on load, and play the call, which is
-Johto-origin only, from an OnFrame entry. Remove the old road triggers.
+Remove the old road triggers. Elm's "Has that EGG hatched yet?" call no
+longer rides on Goldenrod's setup: it belongs to the Togepi Egg beat (see
+[Elm's egg call](#elms-egg-call)).
 
 Setup only initializes state that is still at its initial value, and never
 clears a reward, a branch choice, or another adventure's progress, including
@@ -102,7 +102,7 @@ and the visitor starter choice, gift, and storage retry, plus their
 - Mr. Pokémon has ordinary dialogue and gives no Mystery Egg.
   `MrPokemonHouse_EventScript_WaitForElm` must not hold a visitor.
 - Elm's calls are Johto-origin only: the Togepi call after Falkner
-  (`VioletCity_hns:9,178-188`), the Goldenrod call, the Blackthorn call, and
+  (`VioletCity_hns:9,178-188`), the egg call, the Blackthorn call, and
   the post-League call. The Violet Pokémon Center aide never appears for
   visitors, so they get no Togepi Egg. Under the League circuit the post-League
   call (`VAR_NEWBARK_TOWN_STATE` 6) and the S.S. ticket handoff no longer fire:
@@ -112,8 +112,8 @@ and the visitor starter choice, gift, and storage retry, plus their
   they have entered the Indigo League (`FLAG_WAYFARER_JOHTO_INDIGO_ENTERED`).
 - The egg chain keeps its order. Elm's Violet call and the aide's Togepi Egg wait
   until the Mystery Egg has been handed to Elm (lab state ≥ 5). Elm's "has that
-  EGG changed any?" line, the Goldenrod "Has that EGG hatched yet?" call (queued
-  by the first Goldenrod load) and the Violet Kimono Girl's egg-route line
+  EGG changed any?" line, the "Has that EGG hatched yet?" call (owed by the
+  Egg handoff itself) and the Violet Kimono Girl's egg-route line
   need the Togepi Egg actually received (`FLAG_RECEIVED_TOGEPI_EGG`). Elm's
   Mr. Pokémon directions are never replaced while the errand is owed.
 - Silver never appears. Every Silver object and trigger stays hidden or inert,
@@ -232,6 +232,25 @@ supersedes the Mt. Moon specification's always-visible Silver
 | Ecruteak (chapter 9) | "Don't get cocky just because you defeated Team Rocket!" | Plays only after the Radio Tower is resolved, so the line holds. |
 | Victory Road (chapter 10) | After: "I'm beginning to understand what that dragon master said to me…" | Only if chapter 7 played; otherwise end at "What you possess, and what I lack…" |
 | Mt. Moon (chapter 11) | "It's been a while… Since I lost to you…" | If the player has never won a Silver battle, drop "Since I lost to you". |
+
+### Elm's egg call
+
+Elm's "Has that EGG hatched yet?" call follows the Togepi Egg, not a town. The
+aide's Egg handoff in Violet's Pokémon Center owes it to a Johto-origin player
+(`FLAG_WAYFARER_JOHTO_ELM_EGG_CALL_OWED`). The first Johto town loaded after
+that plays it: Cherrygrove, Azalea, Goldenrod, Ecruteak, Olivine, Cianwood,
+Mahogany, or Blackthorn, whichever comes first and whether or not the player
+has been there before. Violet (the Egg was just handed over) and New Bark (Elm
+is next door) never play it. The call is each town's last frame entry, so a
+town's own arrival scene plays first, and it clears its trigger before anything
+else, so it plays once and never waits.
+
+- With Togepi, Togetic, or Togekiss in the party, Elm hears the Egg has hatched
+  and asks to see it, instead of asking whether it has.
+- Showing Elm the hatched Togepi in the lab before any call plays settles the
+  call; it never plays afterwards.
+
+The shared scripts are in `data/scripts/wayfarer_johto_elm_egg_call.inc`.
 
 ### Slowpoke Well and Azalea
 
@@ -490,7 +509,7 @@ Mechanical checks extend the existing script and journey tests. Cover:
   Johto-origin, claim it before returning the Mystery Egg, before meeting the
   Violet aide, and after the ceremony; the errand still completes.
 - **Visitors:** as both Kanto- and Hoenn-origin visitors, Elm and Mr. Pokémon
-  offer nothing, no Elm call plays in Violet, Goldenrod, or Blackthorn, the
+  offer nothing, no Elm call plays in Violet, any town after it, or Blackthorn, the
   Violet aide never appears, and no Silver object ever shows, including in New
   Bark. The Burned Tower release, Morty's Gym, the Underground step, and the
   ceremony all complete. Jessica trades. The starter preview shows no Johto

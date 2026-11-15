@@ -6,11 +6,13 @@ BlackthornCity_hns_MapScripts::
 
 BlackthornCity_OnFrame::
 	map_script_2 VAR_BLACKTHORN_CITY_STATE, 4, BlackthornCity_EventScript_Call
+	map_script_2 VAR_TEMP_C, 1, WayfarerJohto_EventScript_ElmEggCall
 	.2byte 0
 
 BlackthornCity_EventScript_CityEnter:: 
 	setflag FLAG_VISITED_BLACKTHORN_CITY
 	call_if_unset FLAG_WAYFARER_JOHTO_SETUP_BLACKTHORN, BlackthornCity_EventScript_Setup
+	call WayfarerJohto_EventScript_ArmElmEggCall
 	callnative SetTimeBasedEncounters
 	end
 

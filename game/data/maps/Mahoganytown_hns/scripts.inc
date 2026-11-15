@@ -1,11 +1,17 @@
 Mahoganytown_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Mahoganytown_OnTransition
 	map_script MAP_SCRIPT_ON_LOAD, Mahoganytown_OnLoad
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, Mahoganytown_OnFrame
 	.byte 0
 
 Mahoganytown_OnTransition::
 	call_if_unset FLAG_WAYFARER_JOHTO_SETUP_MAHOGANY, MahoganyTown_EventScript_Setup
+	call WayfarerJohto_EventScript_ArmElmEggCall
 	end
+
+Mahoganytown_OnFrame::
+	map_script_2 VAR_TEMP_C, 1, WayfarerJohto_EventScript_ElmEggCall
+	.2byte 0
 
 Mahoganytown_OnLoad::
 	call_if_ge VAR_MAHOGANY_TOWN_STATE, 13, MahoganyTown_EventScript_FixTree

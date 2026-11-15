@@ -5,10 +5,11 @@ GoldenrodCity_hns_MapScripts::
 
 GoldenrodCity_OnTransition::
 	call_if_unset FLAG_WAYFARER_JOHTO_SETUP_GOLDENROD, GoldenrodCity_EventScript_Setup
+	call WayfarerJohto_EventScript_ArmElmEggCall
 	end
 
 GoldenrodCity_OnFrame::
-	map_script_2 VAR_TEMP_1, 1, GoldenrodCity_Elm_Togepi_Call
+	map_script_2 VAR_TEMP_C, 1, WayfarerJohto_EventScript_ElmEggCall
 	.2byte 0
 
 @ First-visit setup, run once from the map load however the player arrives.
@@ -16,7 +17,6 @@ GoldenrodCity_OnFrame::
 @ left alone once the takeover has started, and Bill stays where his
 @ Ecruteak visit put him.
 GoldenrodCity_EventScript_Setup:: @flagheap
-	call_if_unset FLAG_SHOWN_ELM_TOGEPI, GoldenrodCity_Setup_QueueElmCall
 	setflag FLAG_WAYFARER_JOHTO_SETUP_GOLDENROD
 	setflag FLAG_VISITED_GOLDENROD_CITY
 	goto_if_set FLAG_SYS_PC_BILL, GoldenrodCity_Setup_BillMoved
@@ -33,17 +33,6 @@ GoldenrodCity_Setup_BillMoved:
 	setflag FLAG_HIDE_ROCKET_GOLDENROD_RADIOTOWER_1
 GoldenrodCity_Setup_TakeoverStarted:
 	setvar_forward VAR_GOLDENROD_CITY_STATE, 1
-	return
-
-@ A load script cannot show Elm's call, so the setup queues it for the OnFrame
-@ entry. Only Johto-origin players get it.
-GoldenrodCity_Setup_QueueElmCall::
-	@ "Has that EGG hatched yet?" is about the Togepi Egg the player got in Violet City.
-	goto_if_unset FLAG_RECEIVED_TOGEPI_EGG, GoldenrodCity_Setup_NoElmCall
-	specialvar VAR_RESULT, WayfarerIsJohtoOrigin
-	goto_if_eq VAR_RESULT, FALSE, GoldenrodCity_Setup_NoElmCall
-	setvar VAR_TEMP_1, 1
-GoldenrodCity_Setup_NoElmCall:
 	return
 
 GoldenrodCity_Trigger_Music::
@@ -65,16 +54,6 @@ GoldenrodCity_Trigger_Music2::
 GoldenrodCity_Trigger_MusicNotYet::
 	special ShowMapNamePopup
 	setvar VAR_TEMP_0, 1
-	end
-
-GoldenrodCity_Elm_Togepi_Call::
-	lock
-	setvar VAR_TEMP_1, 0
-	setspeaker GoldenrodCity_Text_ElmName
-	pokenavcall GoldenrodCity_Text_ElmCall
-	waitmessage
-	delay 30
-	release
 	end
 
 GoldenrodCity_EventScript_PokefanM::
@@ -357,16 +336,6 @@ GoldenrodCity_Text_Snubbull:
 
 GoldenrodCity_Text_MrMime:
 	.string "............................$"
-
-GoldenrodCity_Text_ElmName:
-	.string "PROF.ELM$"
-
-GoldenrodCity_Text_ElmCall:
-	.string "PROF.ELM: Hello, {PLAYER}?\n"
-	.string "Has that EGG hatched yet?\p"
-	.string "Once it hatches, don't forget to\n"
-	.string "bring it by the lab! I need to\l"
-	.string "see it!$"
 
 GoldenrodCity_Text_PokefanM:
 	.string "They built the new RADIO TOWER\n"

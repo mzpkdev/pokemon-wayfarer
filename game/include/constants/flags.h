@@ -2796,6 +2796,9 @@
 #define FLAG_WAYFARER_JOHTO_PEWTER_WING_GIVEN         WAYFARER_COAST_FLAG_ID(155)
 // The Cianwood pharmacist gave the Secret Potion before Jasmine asked for it (Jasmine's delivery opens differently).
 #define FLAG_WAYFARER_JOHTO_LIGHTHOUSE_MEDICINE_FIRST WAYFARER_COAST_FLAG_ID(156)
+// Elm's "has that EGG hatched yet?" call is owed: set by the Togepi Egg handoff in Violet (Johto origin only),
+// cleared when a Johto town plays the call or when the player shows Elm the hatched Togepi first.
+#define FLAG_WAYFARER_JOHTO_ELM_EGG_CALL_OWED         WAYFARER_COAST_FLAG_ID(157)
 // Background hidden-item fields are 13 bits, so reserve distinct HNS-bank
 // slots below 0x1000 for the seven coast hidden items.
 #define FLAG_WAYFARER_HIDDEN_ITEM_ROUTE20_STARDUST 0x942

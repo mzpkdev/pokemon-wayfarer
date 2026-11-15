@@ -1972,6 +1972,7 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 #if IS_WAYFARER
 	.include "data/scripts/wayfarer_ss_anne_item_balls.inc"
 	.include "data/scripts/wayfarer_mt_moon.inc"
+	.include "data/scripts/wayfarer_johto_elm_egg_call.inc"
 	.include "data/scripts/wayfarer_nugget_bridge.inc"
 	.include "data/scripts/wayfarer_fuchsia_safari.inc"
 	.include "data/scripts/wayfarer_silph.inc"

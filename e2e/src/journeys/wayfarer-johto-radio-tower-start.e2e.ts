@@ -38,8 +38,8 @@ describe.sequential("Johto Radio Tower start", () => {
       await game.arrange({
         checkpoint: "new-bark-after-intro",
         player: { facing: "up", position: { map: "goldenrod-city", x: 18, y: 23 } },
-        // Elm's first-visit call is skipped so nothing else holds the player on arrival.
-        story: { vars: { goldenrodCityState: 1 }, flags: { shownElmTogepi: true } },
+        // No Elm egg call is owed (only the Violet Egg handoff owes one), so nothing holds the player.
+        story: { vars: { goldenrodCityState: 1 } },
         party: [{ species: "rattata", level: 5 }],
         determinism: { rngSeed: 1, textSpeed: "instant" },
       })

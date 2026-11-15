@@ -2,6 +2,7 @@
 
 CherrygroveCity_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, CherryGroveCity_OnTransition
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, CherryGroveCity_OnFrame
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters
 	.byte 0
 
@@ -9,8 +10,13 @@ CherryGroveCity_OnTransition::
 	setvar VAR_0x8004, SILVER_CHAPTER_CHERRYGROVE
 	specialvar VAR_RESULT, WayfarerJohtoSilverAvailable
 	call_if_eq VAR_RESULT, FALSE, CherryGroveCity_EventScript_HideSilver
+	call WayfarerJohto_EventScript_ArmElmEggCall
 	callnative SetTimeBasedEncounters
 	end
+
+CherryGroveCity_OnFrame::
+	map_script_2 VAR_TEMP_C, 1, WayfarerJohto_EventScript_ElmEggCall
+	.2byte 0
 
 CherryGroveCity_EventScript_HideSilver::
 	setflag FLAG_HIDE_SILVER_CHERRYGROVE
