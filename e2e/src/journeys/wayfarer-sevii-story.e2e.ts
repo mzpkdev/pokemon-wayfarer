@@ -208,10 +208,18 @@ describe.sequential("Wayfarer Sevii independent story journeys", () => {
     await finishScript(game, "Bill successful Meteorite handoff")
     await expect(game.story.flag("seviiMeteoriteReceived")).resolves.toBe(true)
     await expect(game.inventory.contains("meteorite")).resolves.toBe(true)
+    await expect(game.story.flag("seviiBillMet")).resolves.toBe(true)
+    // BILL was only passing through: he catches his boat once the Meteorite is handed over.
+    await expect(game.story.flag("seviiHideOneIslandBill")).resolves.toBe(true)
+    const billGone = (await game.state.read()).objects
+    expect(billGone).not.toContainEqual(expect.objectContaining({ x: 14, y: 6, visible: true }))
 
     await game.saveAndReload()
     await expect(game.story.flag("seviiMeteoriteReceived")).resolves.toBe(true)
     await expect(game.inventory.contains("meteorite")).resolves.toBe(true)
+    expect((await game.state.read()).objects).not.toContainEqual(
+      expect.objectContaining({ x: 14, y: 6, visible: true }),
+    )
   })
 
   it("starts Lostelle locally and preserves ordered battles through loss, blackout, and reload", async () => {

@@ -26,14 +26,21 @@ Restore the original Bill and Celio objects in the One Island Pokémon Center as
 Wayfarer-owned actors. They offer independent work through direct conversation;
 arrival on One Island starts no quest automatically.
 
-- Bill introduces himself when necessary and offers the Meteorite delivery.
-  Accepting it adds the actual Meteorite before recording receipt. Declining or
+- Bill offers the Meteorite delivery. He introduces himself only on the
+  player's first meeting with him in any region: `FLAG_WAYFARER_SEVII_BILL_MET`
+  is shared with his Route 25 rescue and his Ecruteak Pokémon Center scene, and
+  whichever plays first sets it; the others open with a greeting instead.
+  Accepting adds the actual Meteorite before recording receipt. Declining or
   lacking Key Item capacity leaves the offer available. This interaction does
   not require or advance Blaine, Cinnabar, Bill's mainland rescue, or travel.
+- Bill is only passing through One Island. Once he has handed over the
+  Meteorite he says he is catching his boat and leaves
+  (`FLAG_WAYFARER_SEVII_HIDE_ONE_ISLAND_BILL`), so he is never on One Island
+  and at one of his homes (Route 25, Goldenrod) for good.
 - Celio offers the two-gem repair investigation. Accepting it opens both the
   Ruby and Sapphire leads together. It does not grant a pass, change PC access,
   set Champion state, or change Pokédex eligibility.
-- Bill and Celio retain completion-conditioned dialogue. Neither actor blocks
+- Celio retains completion-conditioned dialogue. Neither actor blocks
   the Center desk, PC, stairs, door, or ferry route.
 
 This settles the PRD's entry-point question: Bill in the One Island Center owns

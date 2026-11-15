@@ -7,11 +7,21 @@
 @ Lostelle, the Three Island bikers, and Bill's Meteorite
 @ ---------------------------------------------------------------------------
 
+@ BILL is passing through One Island: once the METEORITE is handed over he catches his boat and leaves,
+@ so he is never here and at one of his homes for good. He introduces himself only if no other BILL
+@ scene (Route 25, Ecruteak) has met the player first.
 WayfarerSevii_Story_EventScript_BillMeteorite::
 	lock
 	faceplayer
-	goto_if_set FLAG_WAYFARER_SEVII_METEORITE_RECEIVED, WayfarerSevii_Story_EventScript_BillMeteoriteAccepted
+	goto_if_set FLAG_WAYFARER_SEVII_METEORITE_RECEIVED, WayfarerSevii_Story_EventScript_BillLeaves
+	goto_if_set FLAG_WAYFARER_SEVII_BILL_MET, WayfarerSevii_Story_EventScript_BillMeteoriteOfferKnown
+	setflag FLAG_WAYFARER_SEVII_BILL_MET
 	msgbox WayfarerSevii_Story_Text_BillMeteoriteOffer, MSGBOX_YESNO
+	goto WayfarerSevii_Story_EventScript_BillMeteoriteOfferAnswered
+
+WayfarerSevii_Story_EventScript_BillMeteoriteOfferKnown:
+	msgbox WayfarerSevii_Story_Text_BillMeteoriteOfferKnown, MSGBOX_YESNO
+WayfarerSevii_Story_EventScript_BillMeteoriteOfferAnswered:
 	goto_if_eq VAR_RESULT, NO, WayfarerSevii_Story_EventScript_BillMeteoriteDeclined
 	setvar VAR_0x8004, ITEM_METEORITE
 	setvar VAR_0x8005, FLAG_WAYFARER_SEVII_METEORITE_RECEIVED
@@ -19,17 +29,13 @@ WayfarerSevii_Story_EventScript_BillMeteorite::
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Story_EventScript_BillMeteoriteNoRoom
 	setflag FLAG_WAYFARER_SEVII_METEORITE_RECEIVED
 	msgbox WayfarerSevii_Story_Text_BillMeteoriteReceived
-	release
-	end
-
-WayfarerSevii_Story_EventScript_BillMeteoriteAccepted::
-	goto_if_set FLAG_WAYFARER_SEVII_METEORITE_DELIVERED, WayfarerSevii_Story_EventScript_BillMeteoriteDelivered
-	msgbox WayfarerSevii_Story_Text_BillMeteoriteReminder
-	release
-	end
-
-WayfarerSevii_Story_EventScript_BillMeteoriteDelivered::
-	msgbox WayfarerSevii_Story_Text_BillMeteoriteThanks
+WayfarerSevii_Story_EventScript_BillLeaves::
+	msgbox WayfarerSevii_Story_Text_BillCatchingBoat
+	closemessage
+	fadescreenswapbuffers FADE_TO_BLACK
+	setflag FLAG_WAYFARER_SEVII_HIDE_ONE_ISLAND_BILL
+	removeobject VAR_LAST_TALKED
+	fadescreenswapbuffers FADE_FROM_BLACK
 	release
 	end
 
@@ -542,12 +548,16 @@ WayfarerSevii_Story_Text_BillMeteoriteReceived::
 	.string "BILL handed you the METEORITE.\p"
 	.string "His friend runs TWO ISLAND's\n"
 	.string "GAME CORNER.$"
-WayfarerSevii_Story_Text_BillMeteoriteReminder::
-	.string "BILL: Please take the METEORITE to\n"
-	.string "LOSTELLE's father on TWO ISLAND.$"
-WayfarerSevii_Story_Text_BillMeteoriteThanks::
-	.string "BILL: The delivery went through?\n"
-	.string "Thanks for helping my friend!$"
+WayfarerSevii_Story_Text_BillMeteoriteOfferKnown::
+	.string "BILL: Oh, {PLAYER}! Good to see\n"
+	.string "you out here.\p"
+	.string "A friend on TWO ISLAND studies rare\n"
+	.string "stones. Will you take this METEORITE\l"
+	.string "to him for me?$"
+WayfarerSevii_Story_Text_BillCatchingBoat::
+	.string "BILL: Thanks, {PLAYER}!\n"
+	.string "Now I'd better catch my boat.\p"
+	.string "See you around!$"
 WayfarerSevii_Story_Text_BillMeteoriteDeclined::
 	.string "BILL: No problem. Ask me again if\n"
 	.string "you feel like making the delivery.$"
