@@ -16,10 +16,7 @@ export const openPcStorage = async (game: GameSession, mode: StorageMode): Promi
   await game.wait.until((state) => state.scriptActive && !state.dialogueOpen, "outer PC menu")
   await game.wait.frames(12)
   await game.controls.press("a")
-  await game.wait.until((state) => state.dialogue.sequence > sequence, "Bill's PC message")
-  sequence = (await game.state.read()).dialogue.sequence
-  await game.wait.frames(60)
-  await game.controls.press("a")
+  // POKéMON STORAGE opens with one message; the PC has no creator's name to announce first.
   await game.wait.until((state) => state.dialogue.sequence > sequence, "storage opened message")
   await game.wait.frames(60)
   await game.controls.press("a")

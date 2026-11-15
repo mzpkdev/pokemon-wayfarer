@@ -1126,10 +1126,11 @@ bool8 WayfarerHasFrontierPass(void)
 bool8 WayfarerPcHasCreatorName(void)
 {
 #if IS_WAYFARER
-    if (WayfarerIsCurrentMapHoennSource())
-        return FlagGet(WAYFARER_HOENN_SYS_FLAG(0x4B));
-#endif
+    // One network, one name (POKéMON STORAGE) in every region: meeting BILL or LANETTE never renames it.
+    return FALSE;
+#else
     return FlagGet(FLAG_SYS_PC_LANETTE);
+#endif
 }
 
 void WayfarerTvWatchSet(bool8 set)

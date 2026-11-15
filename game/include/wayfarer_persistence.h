@@ -155,6 +155,6 @@ bool8 WayfarerHasTrendySayings(void);   // FLAG_UNLOCKED_TRENDY_SAYINGS
 bool8 WayfarerTvHasStarted(void);       // FLAG_SYS_TV_START
 void WayfarerTvWatchSet(bool8 set);     // FLAG_SYS_TV_WATCH
 bool8 WayfarerHasFrontierPass(void);    // FLAG_SYS_FRONTIER_PASS
-bool8 WayfarerPcHasCreatorName(void);   // FLAG_SYS_PC_LANETTE: Lanette in Hoenn, Bill elsewhere
+bool8 WayfarerPcHasCreatorName(void);   // FLAG_SYS_PC_LANETTE; always FALSE in Wayfarer (one neutral name)
 
 #endif // GUARD_WAYFARER_PERSISTENCE_H
