@@ -19121,7 +19121,7 @@
           "label": "EventScript_PC",
           "kind": "script_symbol",
           "path": "data/scripts/pc.inc",
-          "sha256": "6de256d14006aef27e5578a8695fbc63cfaa4337049d489790e3fc6bd1058653"
+          "sha256": "d68fabdfff4e6a4221a7ba26a0879bd929a53141c383934d6c67d62adcc5f45f"
         },
         {
           "label": "GetDaycareCost",

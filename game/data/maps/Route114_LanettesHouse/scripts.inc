@@ -54,7 +54,11 @@ Route114_LanettesHouse_Text_EverythingClutteredKeepThis:
 	.string "this a secret in exchange for this.$"
 
 Route114_LanettesHouse_Text_OrganizeYourBoxes:
+#if IS_WAYFARER
+	.string "May I offer advice on the POKéMON\n"
+#else
 	.string "May I offer advice about my POKéMON\n"
+#endif
 	.string "Storage System?\p"
 	.string "You should organize your BOXES so you\n"
 	.string "can tell which POKéMON are in them.$"

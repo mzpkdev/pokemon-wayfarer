@@ -112,8 +112,11 @@ EventScript_AccessPlayersFakePC::
 
 EventScript_AccessPokemonStorage::
 	playse SE_PC_LOGIN
+	@ Wayfarer's PC has one name, and "POKéMON Storage System opened." already says what opened.
+#if !IS_WAYFARER
 	call_if_unset FLAG_SYS_PC_LANETTE, EventScript_AccessSomeonesPC
 	call_if_set FLAG_SYS_PC_LANETTE, EventScript_AccessLanettesPC
+#endif
 	msgbox gText_StorageSystemOpened, MSGBOX_DEFAULT
 	special ShowPokemonStorageSystemPC
 	waitstate
@@ -122,8 +125,10 @@ EventScript_AccessPokemonStorage::
 
 EventScript_AccessFakePokemonStorage::
 	playse SE_PC_LOGIN
+#if !IS_WAYFARER
 	call_if_unset FLAG_SYS_PC_LANETTE, EventScript_AccessSomeonesPC
 	call_if_set FLAG_SYS_PC_LANETTE, EventScript_AccessLanettesPC
+#endif
 	msgbox gText_StorageSystemOpened, MSGBOX_DEFAULT
 	special ShowPokemonStorageSystemPC
 	waitstate

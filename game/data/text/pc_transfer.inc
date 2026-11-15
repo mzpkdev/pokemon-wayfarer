@@ -1,6 +1,10 @@
 gText_PkmnTransferredSomeonesPC::
 	.string "{STR_VAR_2} was transferred to\n"
+#if IS_WAYFARER
+	.string "POKéMON STORAGE.\p"
+#else
 	.string "SOMEONE'S PC.\p"
+#endif
 	.string "It was placed in \n"
 	.string "BOX “{STR_VAR_1}.”$"
 
@@ -15,8 +19,13 @@ gText_PkmnTransferredLanettesPC::
 	.string "BOX “{STR_VAR_1}.”$"
 
 gText_PkmnTransferredSomeonesPCBoxFull::
+#if IS_WAYFARER
+	.string "BOX “{STR_VAR_3}” in POKéMON\n"
+	.string "STORAGE was full.\p"
+#else
 	.string "BOX “{STR_VAR_3}” on\n"
 	.string "SOMEONE'S PC was full.\p"
+#endif
 	.string "{STR_VAR_2} was transferred to\n"
 	.string "BOX “{STR_VAR_1}.”$"
 
@@ -32,7 +41,11 @@ gText_PkmnTransferredLanettesPCBoxFull::
 
 gText_PkmnSentToPCAfterCatch::
 	.string "{STR_VAR_2} was sent to\n"
+#if IS_WAYFARER
+	.string "POKéMON STORAGE.\p"
+#else
 	.string "{B_PC_CREATOR_NAME} PC.\p"
+#endif
 	.string "It was placed in \n"
 	.string "BOX “{STR_VAR_1}”.$"
 

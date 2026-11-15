@@ -532,7 +532,12 @@ const u8 gText_Medicine[] = _("MEDICINE");
 const u8 gText_BattleItems[] = _("BATTLE ITEMS");
 const u8 gText_Treasures[] = _("TREASURES");
 #endif
+#if IS_WAYFARER
+// Wayfarer's PC has one name in every region: no creator ever renames it.
+const u8 gText_SomeonesPC[] = _("POKéMON STORAGE");
+#else
 const u8 gText_SomeonesPC[] = _("SOMEONE'S PC");
+#endif
 const u8 gText_LanettesPC[] = _("LANETTE'S PC");
 const u8 gText_BillsPc[] = _("BILL'S PC");
 const u8 gText_PlayersPC[] = _("{PLAYER}'s PC");

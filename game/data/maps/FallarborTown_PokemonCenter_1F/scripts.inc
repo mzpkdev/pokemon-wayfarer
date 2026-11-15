@@ -87,12 +87,21 @@ FallarborTown_PokemonCenter_1F_Text_LanetteGreeting:
 	.string "Okay, your name's {PLAYER}{KUN}.\n"
 	.string "I can see that you're a TRAINER.\p"
 	.string "So that means you use the POKéMON\n"
+#if IS_WAYFARER
+	.string "Storage System.\p"
+#else
 	.string "Storage System I developed.\p"
+#endif
 	.string "How I arrived at that conclusion is\n"
 	.string "a simple deductive process.\p"
 	.string "You spoke to me because you wanted\n"
 	.string "to access something on this PC.\p"
 	.string "Oh, I'm sorry. I'm LANETTE.\p"
+#if IS_WAYFARER
+	.string "BILL in KANTO built the system,\n"
+	.string "but I'm the one who linked HOENN\l"
+	.string "to it.\p"
+#endif
 	.string "Honestly, I'm glad to meet you--it's\n"
 	.string "great you're using the Storage System.\p"
 	.string "If you could, please visit me at home.\n"
