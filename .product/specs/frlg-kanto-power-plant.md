@@ -33,13 +33,13 @@ Repair continues to enable its existing consumers: Misty's Route 25 date and Gym
 
 Move the single Wayfarer Route 10 exterior Zapdos encounter into the FRLG hall's
 source position. Remove its exterior object and interaction so there is only one
-Zapdos. Exploration and approach remain available below Trainer Rating (TR) 55.
-Below TR 55, interaction gives a brief readiness message without starting battle
-or changing Zapdos state. At TR 55 or above, start the fixed level 50 static
+Zapdos. Exploration and approach remain available below Trainer Rating (TR)
+`WAYFARER_LEGENDARY_TR`. Below it, interaction gives a brief readiness message
+without starting battle or changing Zapdos state. At or above it, start the fixed level 50 static
 Zapdos battle; TR is an eligibility check, not a level-scaling or capture-rate
 change. No Articuno, Rocket, Machine Part, badge, or League condition is added.
-TR 55 is today's threshold; v0: TR 120 (≈ 16 badges) on the
-[v0 TR scale](player-trainer-rating.md#formula-v0).
+`WAYFARER_LEGENDARY_TR` is 120 under the v0 trainers (≈ 16 badges on the
+[v0 TR scale](player-trainer-rating.md#formula-v0)) and 55 otherwise.
 
 Use FRLG's Zapdos outcome policy, with Wayfarer's TR gate added before battle:
 
@@ -56,7 +56,7 @@ Give the hall's Zapdos a dedicated persistent resolved state and visibility stat
 
 - Visit the hall before initiating repair, during the Machine Part errand, and after repair. Inspect the worker interaction, all five FRLG exit records, both HNS rooms and doors, the repair-gated west exit, Escape, blackout, and save/reload. No path bypasses or advances the repair sequence.
 - Traverse the full maze and verify ordinary encounters, five visible items, two hidden items, and both Electrode decoys. Items and resolved decoys do not reset on reentry; Bag failures remain claimable.
-- Approach Zapdos below TR 55 and at TR 55. Confirm fixed level 50, one indoor object, no exterior duplicate, and no requirement from repair, other birds, Rockets, or League.
+- Approach Zapdos below and at `WAYFARER_LEGENDARY_TR`. Confirm fixed level 50, one indoor object, no exterior duplicate, and no requirement from repair, other birds, Rockets, or League.
 - Exercise catch, KO, run, teleport, and blackout separately, then leave/reenter, save/reload, and finish the League. Only run, teleport, and blackout permit another battle; completion never respawns.
 - Complete the existing repair with and without prior hall exploration. Confirm Thunder TM/Part failure recovery and the Misty, radio, Copycat, Underground Path, train, and Magneton trade behaviors.
 
@@ -65,7 +65,7 @@ Give the hall's Zapdos a dedicated persistent resolved state and visibility stat
 - [Focused SkyEmu journey](../../e2e/src/journeys/wayfarer-power-plant.e2e.ts): 16/16 cases pass, including staffed-room traversal and repair gating, a controller-only maze route, all exits and content, full-pocket recovery, successful Magneton trade, every Zapdos outcome, real blackout recovery, and save/reload.
 - [Magnet Train](../../e2e/src/journeys/hns-magnet-train-traversal.e2e.ts), [Kanto traversal](../../e2e/src/journeys/hns-kanto-traversal.e2e.ts), and [radio handoff](../../e2e/src/journeys/wayfarer-kanto-scope-handoff.e2e.ts) regressions: all 22 consumer cases pass against the implementation ROM.
 - [League circuit journey](../../e2e/src/journeys/wayfarer-league-circuit.e2e.ts): the full 13-case circuit passes and retains resolved Zapdos state through the earliest Kanto Hall of Fame route.
-- [Focused map/source tests](../../game/tools/mapjson/tests/test_power_plant.py) and [native persistence test](../../game/test/wayfarer_persistence.c): map selection/state allocation and TR 55 eligibility pass; the final strict production build passes its enforced ROM reserve check without any `map.bin` change.
+- [Focused map/source tests](../../game/tools/mapjson/tests/test_power_plant.py) and [native persistence test](../../game/test/wayfarer_persistence.c): map selection/state allocation and `WAYFARER_LEGENDARY_TR` eligibility pass; the final strict production build passes its enforced ROM reserve check without any `map.bin` change.
 - [FRLG Power Plant map](../../game/data/maps/PowerPlant_Frlg/map.json) and [scripts](../../game/data/maps/PowerPlant_Frlg/scripts.inc)
 - [HNS entrance hall](../../game/data/maps/Route10_PowerPlantEntrance_hns/map.json), [back room](../../game/data/maps/Route10_PowerPlantBackRoom_hns/map.json), and [Route 10 Zapdos](../../game/data/maps/Route10_hns/scripts.inc)
 - [Battle return callback](../../game/src/battle_setup.c) and [Hall of Fame reset](../../game/data/maps/PokemonLeague_HallOfFame_hns/scripts.inc)

@@ -421,7 +421,7 @@ only drive trainers and items, since nothing spawns there.
 | `MAP_MT_CHIMNEY` | Jagged Pass | Wilds: the summit above the trail |
 | `MAP_UNDERWATER_ROUTE127`, `MAP_UNDERWATER_ROUTE128` | Underwater Route 126 | Outlands: deep water |
 | `MAP_SOUTHERN_ISLAND_INTERIOR_HNS` | Southern Island | Outlands |
-| `MAP_NAVEL_ROCK_TOP` | Remote islands | Outlands |
+| `MAP_NAVEL_ROCK_TOP` | Remote islands | Outlands (retired: Navel Rock is unreachable in Wayfarer, so the assignment never applies) |
 
 #### New dungeons
 

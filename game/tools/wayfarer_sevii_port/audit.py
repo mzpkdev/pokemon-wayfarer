@@ -661,10 +661,12 @@ def recovery_and_ferry_report(root: Path, enabled_ids: set[str], release_enabled
         for destination, target in expected_rows:
             if not re.search(rf"\[{destination}\]\s*=\s*\{{\s*MAP_GROUP\({target}\),\s*MAP_NUM\({target}\),\s*0x08,\s*0x05", seagallop):
                 raise AuditError(f"Wayfarer ferry has wrong {destination} target or arrival tile")
-        # Birth Island needs the Aurora Ticket alone (no Aqua gate, no flag); Navel Rock the League clear and the
-        # Mystic Ticket. tools/wayfarer_hoenn_entry/generate.py pins the exact Birth Island predicate.
-        for name, item, gate in (("BirthIsland", "ITEM_AURORA_TICKET", None),
-                                 ("NavelRock", "ITEM_MYSTIC_TICKET", "FLAG_SYS_GAME_CLEAR")):
+        # Birth Island needs the Aurora Ticket alone (no Aqua gate, no flag). Navel Rock is retired: its Mystic
+        # Ticket only ever came from Mystery Gift, so the ferry never offers it. tools/wayfarer_hoenn_entry/generate.py
+        # pins the exact Birth Island predicate and the absence of a Navel Rock row.
+        if re.search(r"WayfarerCanSailToNavelRock|SEAGALLOP_NAVEL_ROCK|ITEM_MYSTIC_TICKET", ferry_source):
+            raise AuditError("Wayfarer ferry must not offer retired Navel Rock")
+        for name, item, gate in (("BirthIsland", "ITEM_AURORA_TICKET", None),):
             match = re.search(rf"u16\s+WayfarerCanSailTo{name}\(void\)\s*\{{([\s\S]*?)\n\}}", ferry_source)
             if match is None or item not in match.group(1) or (gate is not None and gate not in match.group(1)):
                 raise AuditError(f"Wayfarer ferry lacks the reviewed {name} read-only eligibility predicate")

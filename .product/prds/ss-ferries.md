@@ -178,9 +178,10 @@ The ships' destination menus go, but the special trips to the event islands
 stay where their own games had them. Lilycove's harbor sailor offers a
 charter to Southern Island (with the Eon Ticket), Faraway Island (with the Old
 Sea Map) and the Battle Frontier, each shown only when you qualify, as in
-Emerald. Birth Island and Navel Rock stay on the Seagallop from Vermilion and
-the Sevii harbors, as in FireRed and LeafGreen. The copies of these trips at
-Olivine and Slateport go.
+Emerald. Birth Island stays on the Seagallop from Vermilion and the Sevii
+harbors, as in FireRed and LeafGreen. Navel Rock is retired in Wayfarer: the
+Seagallop no longer offers it, and its maps stay in the build, unreachable.
+The copies of these trips at Olivine and Slateport go.
 
 ### Departure boards
 
@@ -192,7 +193,7 @@ don't show ships, and nothing ashore shows who's aboard.
 ## Boundaries
 
 - **The other boats stay** as they are: the Seagallop between Vermilion and
-  the Sevii Islands (with its Birth Island and Navel Rock tickets), the Route
+  the Sevii Islands (with its Birth Island ticket), the Route
   104 boat, and the Route 13 boat to Alola, which keeps its Strange Souvenir
   check. They are extras, not part of the network.
 - **The ships' menus go.** The S.S. Aqua's Olivine, Vermilion and Slateport

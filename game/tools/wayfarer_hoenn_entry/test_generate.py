@@ -168,12 +168,22 @@ class RepositoryContractTest(unittest.TestCase):
             "return FlagGet(FLAG_SYS_GAME_CLEAR) && CheckBagHasItem(ITEM_AURORA_TICKET, 1);",
             AUDIT.audit_menus_and_routes, "Birth Island eligibility")
 
-    def test_navel_eligibility_does_not_use_the_unavailable_ship_flag(self):
+    def test_retired_navel_rock_cannot_return_to_the_sevii_menu(self):
         self.assert_script_mutation_rejected(
             "src/wayfarer_sevii_ferry.c",
-            "FlagGet(FLAG_SYS_GAME_CLEAR) && CheckBagHasItem(ITEM_MYSTIC_TICKET, 1)",
-            "FlagGet(FLAG_ENABLE_SHIP_NAVEL_ROCK) && CheckBagHasItem(ITEM_MYSTIC_TICKET, 1)",
-            AUDIT.audit_menus_and_routes, "unavailable ship flag")
+            "        destinations[count++] = SEAGALLOP_BIRTH_ISLAND;\n",
+            "        destinations[count++] = SEAGALLOP_BIRTH_ISLAND;\n"
+            "    if (CheckBagHasItem(ITEM_MYSTIC_TICKET, 1))\n"
+            "        destinations[count++] = SEAGALLOP_NAVEL_ROCK;\n",
+            AUDIT.audit_menus_and_routes, "retired Navel Rock")
+
+    def test_retired_navel_rock_cannot_return_to_the_sailor_dispatch(self):
+        self.assert_script_mutation_rejected(
+            "data/maps/VermilionCity_PortInside_hns/scripts.inc",
+            "\tcase SEAGALLOP_BIRTH_ISLAND, VermilionPort_EventScript_Sailor_SetSailToSeviiDestination\n",
+            "\tcase SEAGALLOP_BIRTH_ISLAND, VermilionPort_EventScript_Sailor_SetSailToSeviiDestination\n"
+            "\tcase SEAGALLOP_NAVEL_ROCK, VermilionPort_EventScript_Sailor_SetSailToSeviiDestination\n",
+            AUDIT.audit_menus_and_routes, "retired Navel Rock")
 
     def test_numbered_island_harbors_cannot_reintroduce_story_gates(self):
         self.assert_script_mutation_rejected(

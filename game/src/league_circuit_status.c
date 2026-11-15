@@ -16,9 +16,9 @@ static const u8 sIndigo[] = _("Indigo League: ");
 static const u8 sMasters[] = _("Sevii Masters: ");
 static const u8 sHoenn[] = _("Hoenn League: ");
 #if WAYFARER_LEAGUE_EVENTS
-static const u8 sIndigoRequirement[] = _("  TR 80 + Kanto/Johto badge");
-static const u8 sMastersRequirement[] = _("  TR 80 + both league clears");
-static const u8 sHoennRequirement[] = _("  TR 80 + Hoenn badge");
+static const u8 sIndigoRequirement[] = _("  Skill + Kanto/Johto badge");
+static const u8 sMastersRequirement[] = _("  Skill + both league clears");
+static const u8 sHoennRequirement[] = _("  Skill + Hoenn badge");
 #else
 static const u8 sIndigoRequirement[] = _("  8 badges");
 static const u8 sMastersRequirement[] = _("  16 badges + Indigo clear");

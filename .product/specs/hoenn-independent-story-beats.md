@@ -82,8 +82,8 @@ opening. Visitors never have one: Birch gives them no starter, as the
 [content specification](wayfarer-hoenn-content-port.md) defines.
 
 **Legendary threshold.** The later Rayquaza, Groudon, and Kyogre captures use
-the one constant Johto's legendaries use, TR 55 (`WAYFARER_LEGENDARY_TR` in
-`game/include/wayfarer_sevii_story.h`). Compare with `GetTrainerRating()`.
+the one constant Johto's legendaries use, `WAYFARER_LEGENDARY_TR` in
+`game/include/wayfarer_sevii_story.h` (120 under the v0 trainers, 55 otherwise). Compare with `GetTrainerRating()`.
 
 **Scott.** Petalburg's meeting raises `VAR_SCOTT_STATE` with `addvar`, as the
 other twelve do. Scott's meetings may then happen in any order.
@@ -447,14 +447,14 @@ always precede them.
 ### Legendary captures
 
 The crisis, Rayquaza's awakening, and Juan need no Trainer Rating. The later
-captures do. "TR 55" here means `WAYFARER_LEGENDARY_TR`: 55 on today's scale and
-120 on the v0 scale that Wayfarer runs.
+captures do. The gate is `WAYFARER_LEGENDARY_TR`: 120 under the v0 trainers that
+Wayfarer runs, 55 otherwise.
 
 - **Rayquaza.** It waits at the top of Sky Pillar once the crisis is resolved,
-  as today. Interacting with it below TR 55 gives a not-ready line and leaves
-  it there. At TR 55 the battle starts.
+  as today. Interacting with it below the threshold gives a not-ready line and leaves
+  it there. At the threshold the battle starts.
 - **Groudon and Kyogre.** The Weather Institute scientist reports abnormal
-  weather once the crisis is resolved and the player has TR 55. He is the only
+  weather once the crisis is resolved and the player has `WAYFARER_LEGENDARY_TR`. He is the only
   source of the report, so these two also need the Institute rescued. Remove the
   `FLAG_SYS_GAME_CLEAR` check from the scientist and from the 1F hint: no Hall
   of Fame in any region is needed, and none is enough. Below the threshold the
@@ -544,9 +544,9 @@ Mechanical checks extend the existing script and journey tests. Cover:
   escaped; the guard blocks the door. Finish Aqua Hideout and return; it is
   open. The states without Steven's Dive cannot be reached in play; cover them
   from arranged state only.
-- **Crisis:** finish it and beat Juan below TR 55. Rayquaza's awakening awards
+- **Crisis:** finish it and beat Juan below the threshold. Rayquaza's awakening awards
   and requires no capture.
-- **Captures:** below and at TR 55, try Rayquaza at Sky Pillar and the Weather
+- **Captures:** below and at the threshold, try Rayquaza at Sky Pillar and the Weather
   Institute scientist, before and after the crisis, with and without a Kanto
   or Johto Hall of Fame. Flee from each and return.
 - **Scott:** meet him in Petalburg last. The count is not reset.

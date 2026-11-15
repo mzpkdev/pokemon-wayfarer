@@ -779,6 +779,20 @@ u16 WayfarerPowerPlant_IsZapdosEligible(void)
         && GetTrainerRating() >= WAYFARER_BIRD_CAPTURE_TR;
 }
 
+// Johto's Mt. Silver Moltres waits for the same threshold as its Mt. Ember twin and the other birds. Its
+// battle hides it for good (FLAG_HIDE_MOLTRES), so the threshold is its only gate.
+u16 WayfarerMtSilver_IsMoltresEligible(void)
+{
+    return GetTrainerRating() >= WAYFARER_BIRD_CAPTURE_TR;
+}
+
+// Mewtwo keeps HnS's Cerulean Cave guard, who leaves after a Kanto League clear, and adds the legendary
+// threshold on top (.product/prds/frlg-kanto-independent-story-beats.md).
+u16 WayfarerCeruleanCave_IsMewtwoEligible(void)
+{
+    return GetTrainerRating() >= WAYFARER_LEGENDARY_TR;
+}
+
 // Rayquaza at Sky Pillar and the Weather Institute's abnormal-weather reports, which alone open
 // Terra and Marine Cave: the crisis resolved, plus the legendary threshold. No Hall of Fame counts.
 u16 WayfarerHoenn_IsLateLegendaryReady(void)

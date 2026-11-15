@@ -15,6 +15,22 @@ except where this specification names regional ownership. The Hoenn content port
 owns the surrounding Hall of Fame, player-house, S.S. Ticket, and ferry content.
 Eon Ticket acquisition remains owned by its existing Wayfarer content.
 
+### Current Wayfarer behavior
+
+Hoenn Lati roaming is still unimplemented, so the sections below describe the
+approved design rather than the build. Two parts are live:
+
+- The Littleroot TV color choice only records which Lati Southern Island shows,
+  in `VAR_ROAMER_POKEMON`. It does not call `InitRoamer`, which under HNS
+  restarted Raikou and Entei, and it starts no Hoenn roamer.
+- The Lati encounter in Emerald `SouthernIsland_Interior` no longer checks
+  `FLAG_ENABLE_SHIP_SOUTHERN_ISLAND` in Wayfarer. Arriving by the Eon Ticket
+  charter from Lilycove is enough.
+
+Steven's Vermilion City scene, which starts Kanto Lati roaming, waits for
+`FLAG_IS_KANTO_CHAMPION`, the same gate as his Eon Ticket at the Fuchsia Safari
+Zone entrance. HNS had no gate there.
+
 ## Behavior
 
 ### Build isolation

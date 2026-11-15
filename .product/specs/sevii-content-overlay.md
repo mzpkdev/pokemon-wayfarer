@@ -32,7 +32,7 @@ below without changing these access rules:
 - The existing maps, layouts, connections, wild encounters, healing, PCs,
   Marts, Day Care, and environmental puzzles remain unchanged unless another
   specification names an exact extension.
-- Birth Island and Navel Rock remain separate existing Wayfarer features.
+- Birth Island remains a separate existing Wayfarer feature; Navel Rock is retired and unreachable.
 
 Do not restore the older Seagallop shakedown, temporary PC shutdown, Ruby travel
 gate, National Pokédex gate, or Cinnabar forced trip. Do not include the complete

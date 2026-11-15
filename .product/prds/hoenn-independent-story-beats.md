@@ -152,8 +152,9 @@ alone is not a gate. An unmet requirement leaves the encounter available later,
 with local guidance through existing characters or presentation. It does not
 consume the encounter or award capture-related completion.
 
-The three captures share one threshold, TR 55, the number Johto's legendaries
-use. Each needs the resolved crisis and TR 55, and nothing else. Terra Cave and
+The three captures share one threshold, `WAYFARER_LEGENDARY_TR` (120 under the
+v0 trainers, 55 otherwise), the one Johto's legendaries use. Each needs the
+resolved crisis and that threshold, and nothing else. Terra Cave and
 Marine Cave no longer need a Hall of Fame entry, which today a Kanto or Johto
 win satisfies and Hoenn's own may not. Other Hoenn legendary families and event
 encounters require their own inventory and decision before this policy is
@@ -237,7 +238,7 @@ passing through a region does not complete its adventures.
   branches make it available without another unrelated activation event.
 - Finish the crisis and access Juan below the eventual legendary capture threshold.
   Rayquaza's story intervention occurs without awarding or requiring a capture.
-- Below and at TR 55, test the later Rayquaza, Groudon, and Kyogre encounters,
+- Below and at `WAYFARER_LEGENDARY_TR`, test the later Rayquaza, Groudon, and Kyogre encounters,
   with and without a Hall of Fame entry in another region, and with a save made
   before readiness.
 - Win Wattson's badge without Norman's defeat, then begin and complete New
@@ -271,7 +272,7 @@ detail.
    delivery after the harbor scene is a plain handover.
 2. **Early villain scenes played late.** Meteor Falls and Mt. Chimney come
    before the central story. The Weather Institute gets a withdraw variant.
-3. **Capture thresholds.** TR 55 for Rayquaza, Groudon, and Kyogre, with the
+3. **Capture thresholds.** `WAYFARER_LEGENDARY_TR` for Rayquaza, Groudon, and Kyogre, with the
    resolved crisis and no Hall of Fame check.
 4. **Rival chapters.** Brendan and May's rivalry is for Hoenn-origin players; a
    visitor gets the gifts in short scenes with no battle. Wally's later chapters

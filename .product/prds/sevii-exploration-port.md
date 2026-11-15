@@ -28,20 +28,22 @@ approved S.S. Anne option. Selecting Sevii for the first time sails to One
 Island. Every numbered-island harbor then offers Vermilion and all seven
 numbered islands, with a return option available on every visit.
 
-Birth Island and Navel Rock already exist in Wayfarer through HNS and Emerald
-content. Connect their existing harbors to the same transport system using the
-FRLG special-island routes. Birth Island remains available only when the
-current origin can use the regular S.S. Aqua service and the player has the
-Aurora Ticket. Navel Rock remains available only after the league win and
-with the Mystic Ticket. These are read-only travel checks: the connection does
-not grant tickets or write ticket, shown-ticket, unlock, or story flags. The
-Sevii port does not own or change either island's maps, encounters, actors,
-battles, static Pokemon, puzzles, items, rewards, or non-ferry scripts.
+Birth Island already exists in Wayfarer through HNS content. Connect its
+existing harbor to the same transport system using the FRLG special-island
+route. Birth Island remains available only when the current origin can use the
+regular S.S. Aqua service and the player has the Aurora Ticket. This is a
+read-only travel check: the connection does not grant tickets or write ticket,
+shown-ticket, unlock, or story flags. The Sevii port does not own or change
+the island's maps, encounters, actors, battles, static Pokemon, puzzles, items,
+rewards, or non-ferry scripts.
+
+Navel Rock is retired in Wayfarer. Its Lugia and Ho-Oh needed the Mystic
+Ticket, which only comes from Mystery Gift, so the Seagallop does not offer
+the island. Its maps stay in the build, unreachable. Johto keeps both birds.
 
 Wayfarer does not require Bill's Cinnabar trip, Celio's repair, the National
 Pokedex, a league win, a Rainbow Pass, or another Sevii quest to use the
-ordinary One through Seven Island service. This rule does not remove the
-separate league-win requirement for Navel Rock. Entering the region does not
+ordinary One through Seven Island service. Entering the region does not
 start or complete any FRLG story state.
 
 ### Geography
@@ -58,10 +60,10 @@ The FRLG portion contains every registered map whose source name begins with
 Island house is excluded because it is not registered in the source map
 catalog.
 
-Do not import the FRLG copies of Birth Island or Navel Rock. Their existing
-Wayfarer versions remain separate, unchanged features. This port may add only
-the ferry destination and return routing needed to connect them in the same
-way as FRLG.
+Do not import the FRLG copies of Birth Island or Navel Rock. The existing
+Wayfarer Birth Island remains a separate, unchanged feature. This port may add
+only the ferry destination and return routing needed to connect it in the same
+way as FRLG. Navel Rock gets no routing: it is retired and unreachable.
 
 Keep self-contained environmental traversal where it is part of exploring the
 map. This includes Icefall Cave's ice and holes, Lost Cave's directional route,
@@ -119,11 +121,13 @@ they do not replace the authored Sevii roster.
   HNS, and Emerald map catalogs and behavior remain unchanged.
 - The [Sevii independent story design](sevii-independent-story-beats.md) is
   implemented as a compatible layer on this exploration baseline.
-- Birth Island and Navel Rock remain owned by their existing Wayfarer content.
-  Preserve all of their current story, Trainers, encounters, static Pokemon,
-  puzzles, tickets, items, rewards, and state. Only their ferry connection is
-  part of this plan. Their special routes pass through Vermilion as in FRLG;
-  they are not added to the ordinary One through Seven Island harbor pages.
+- Birth Island remains owned by its existing Wayfarer content; Navel Rock is
+  retired and unreachable.
+  Preserve all of Birth Island's current story, Trainers, encounters, static
+  Pokemon, puzzles, tickets, items, rewards, and state. Only its ferry
+  connection is part of this plan. Its special route passes through Vermilion
+  as in FRLG; it is not added to the ordinary One through Seven Island harbor
+  pages.
 - Moltres, Hypno, the Sapphire theft, Ruby delivery, Lostelle, Lorelei's
   confrontation, Selphy, Rocket Warehouse battles, and Trainer Tower are owned
   by the delivered content layers, not this baseline.
@@ -147,13 +151,13 @@ Waterfall where the FRLG geography uses them. Ferry access to each island hub
 never requires one of those moves.
 
 The first milestone uses the ferry for numbered-island regional travel. It
-does not add Sevii Fly destinations or change existing Birth Island and Navel
-Rock travel behavior beyond their FRLG-style ferry connection.
+does not add Sevii Fly destinations or change existing Birth Island travel
+behavior beyond its FRLG-style ferry connection.
 
 Wild encounters remain ordinary regional encounters for Pokedex area data,
 DexNav, Lures, ability attraction, and TR. Static and scripted
 Pokémon are outside this baseline and owned by the story layer where selected.
-Existing Birth Island and Navel Rock Pokémon remain unchanged.
+Existing Birth Island Pokémon remain unchanged.
 
 The complete port must fit the 32 MiB ROM and retain the active release reserve.
 If the full catalog cannot meet that gate, implementation pauses for an
@@ -168,10 +172,11 @@ islands, interiors, or encounter profiles.
 - Walk every outdoor connection and enter and exit every registered interior.
   No missing map, null header, invalid warp, story actor, or Trainer battle may
   interrupt the route.
-- With their existing access conditions satisfied, sail from Vermilion to the
-  existing Birth Island and Navel Rock maps and return through their harbors.
-  Confirm that their story, Trainers, encounters, static Pokemon, puzzles,
-  items, rewards, and save state behave exactly as before this port.
+- With its existing access conditions satisfied, sail from Vermilion to the
+  existing Birth Island map and return through its harbor. Confirm the
+  Seagallop menu never offers Navel Rock. Confirm that its story, Trainers,
+  encounters, static Pokemon, puzzles, items, rewards, and save state behave
+  exactly as before this port.
 - Exercise Icefall Cave, Lost Cave, Dotted Hole, Tanoby Key, Rocket Warehouse,
   Mt. Ember, and the empty Trainer Tower. Each remains recoverable after save,
   reload, escape, blackout, and ferry travel where those actions apply.

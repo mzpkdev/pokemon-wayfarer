@@ -493,8 +493,10 @@ and the Tidal's `SSTidalRooms` beds lose their free heal.
 - The Seagallop's Birth Island trip, which also read
   `WayfarerCanUseRegularAqua`, now needs only the Aurora Ticket
   (`WayfarerCanSailToBirthIsland` = the Bag holds `ITEM_AURORA_TICKET`), as in
-  FireRed and LeafGreen. Navel Rock keeps its league-win and Mystic Ticket
-  check.
+  FireRed and LeafGreen. Navel Rock is retired in Wayfarer: the Seagallop
+  menu no longer offers it (see [Sevii exploration map
+  port](sevii-exploration-map-port.md)), and its maps stay in the build,
+  unreachable.
 - The Tidal no longer checks `FLAG_SYS_GAME_CLEAR`. The Slateport and
   Lilycove ship objects no longer hide on it.
 - The Ticket is checked with `checkitem ITEM_SS_TICKET` at every gangway and
@@ -536,7 +538,10 @@ condition holds:
 
 - No `FLAG_SYS_GAME_CLEAR` gate on the attendant and no `FLAG_ENABLE_SHIP_*`
   flags. Wayfarer's real sources for the Eon Ticket and the Old Sea Map
-  (Steven at Fuchsia, the Vermilion find) never set those flags.
+  (Steven at Fuchsia, the Vermilion find) never set those flags. Southern
+  Island's Lati encounter (`SouthernIsland_Interior`) likewise no longer needs
+  `FLAG_ENABLE_SHIP_SOUTHERN_ISLAND`: arriving by the Lilycove charter is
+  enough. Steven's Eon Ticket needs `FLAG_IS_KANTO_CHAMPION`.
 - The first-time "may I see your ticket" scenes play as today and still set
   their `FLAG_SHOWN_*` flags. Their first-time detection
   (`GetEonTicketState` and its siblings in `LilycoveCity_Harbor`) and the C
@@ -546,8 +551,8 @@ condition holds:
 - The Battle Frontier's ferry attendant returns to Lilycove only; its
   Slateport option goes.
 
-Birth Island and Navel Rock leave the Lilycove and Olivine menus and stay on
-the Seagallop only.
+Birth Island and Navel Rock leave the Lilycove and Olivine menus. Birth Island
+stays on the Seagallop only; Navel Rock is retired and offered nowhere.
 
 ### Region and saves
 

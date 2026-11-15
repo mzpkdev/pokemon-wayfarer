@@ -142,8 +142,9 @@ to the walkable side of the sailor without changing state.
 
 If `FLAG_SEVII_TRAVEL_INTRO_SEEN` is unset, the Sevii choice always sails to One
 Island and does not show another destination. Once that flag is set, it routes
-through the existing Rainbow Pass dispatch, including the Mystic Ticket and
-Aurora Ticket branches when those branches are independently available.
+through the existing Rainbow Pass dispatch, including the Aurora Ticket branch
+when it is independently available. The Mystic Ticket branch is retired in
+Wayfarer: the Navel Rock destination is never offered.
 
 ### Historical travel-only One Island introduction
 

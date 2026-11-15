@@ -16,15 +16,15 @@ static void SetAllBadges(u8 count)
         SetBadgeStateForRegion(REGION_KANTO + i / 8, i % 8, i < count);
 }
 
-TEST("Trainer Card shows TR and regional gates with independent league wins")
+TEST("Trainer Card shows regional gates without a TR number, with independent league wins")
 {
-    static const u8 initial[] = _("Badges: 0/24\nIndigo League: Locked\n  TR 80 + Kanto/Johto badge\nSevii Masters: Locked\n  TR 80 + both league clears\nHoenn League: Locked\n  TR 80 + Hoenn badge");
-    static const u8 allBadges[] = _("Badges: 24/24\nIndigo League: Available\n  TR 80 + Kanto/Johto badge\nSevii Masters: Locked\n  TR 80 + both league clears\nHoenn League: Available\n  TR 80 + Hoenn badge");
-    static const u8 indigoClear[] = _("Badges: 24/24\nIndigo League: Cleared\n  TR 80 + Kanto/Johto badge\nSevii Masters: Locked\n  TR 80 + both league clears\nHoenn League: Available\n  TR 80 + Hoenn badge");
-    static const u8 mastersAvailable[] = _("Badges: 24/24\nIndigo League: Cleared\n  TR 80 + Kanto/Johto badge\nSevii Masters: Available\n  TR 80 + both league clears\nHoenn League: Cleared\n  TR 80 + Hoenn badge");
-    static const u8 complete[] = _("Badges: 24/24\nIndigo League: Cleared\n  TR 80 + Kanto/Johto badge\nSevii Masters: Cleared\n  TR 80 + both league clears\nHoenn League: Cleared\n  TR 80 + Hoenn badge\nCircuit complete");
+    static const u8 initial[] = _("Badges: 0/24\nIndigo League: Locked\n  Skill + Kanto/Johto badge\nSevii Masters: Locked\n  Skill + both league clears\nHoenn League: Locked\n  Skill + Hoenn badge");
+    static const u8 allBadges[] = _("Badges: 24/24\nIndigo League: Available\n  Skill + Kanto/Johto badge\nSevii Masters: Locked\n  Skill + both league clears\nHoenn League: Available\n  Skill + Hoenn badge");
+    static const u8 indigoClear[] = _("Badges: 24/24\nIndigo League: Cleared\n  Skill + Kanto/Johto badge\nSevii Masters: Locked\n  Skill + both league clears\nHoenn League: Available\n  Skill + Hoenn badge");
+    static const u8 mastersAvailable[] = _("Badges: 24/24\nIndigo League: Cleared\n  Skill + Kanto/Johto badge\nSevii Masters: Available\n  Skill + both league clears\nHoenn League: Cleared\n  Skill + Hoenn badge");
+    static const u8 complete[] = _("Badges: 24/24\nIndigo League: Cleared\n  Skill + Kanto/Johto badge\nSevii Masters: Cleared\n  Skill + both league clears\nHoenn League: Cleared\n  Skill + Hoenn badge\nCircuit complete");
 #if WAYFARER_LEAGUE_EVENTS
-    static const u8 accepted[] = _("Badges: 24/24\nIndigo League: Cleared\n  TR 80 + Kanto/Johto badge\nSevii Masters: Accepted\n  TR 80 + both league clears\nHoenn League: Cleared\n  TR 80 + Hoenn badge\nCircuit complete");
+    static const u8 accepted[] = _("Badges: 24/24\nIndigo League: Cleared\n  Skill + Kanto/Johto badge\nSevii Masters: Accepted\n  Skill + both league clears\nHoenn League: Cleared\n  Skill + Hoenn badge\nCircuit complete");
 #endif
     u8 text[LEAGUE_CIRCUIT_STATUS_BUFFER_SIZE];
 

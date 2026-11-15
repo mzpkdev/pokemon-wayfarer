@@ -25,7 +25,8 @@ map-port baseline and are layered through the Sevii content overlay and
 interregional circuit specifications.
 
 Birth Island and Navel Rock are preexisting Wayfarer content. This port changes
-only their ferry connection and preserves everything inside those features.
+only Birth Island's ferry connection and preserves everything inside both
+features. Navel Rock is retired in Wayfarer and unreachable.
 
 ## Behavior
 
@@ -251,42 +252,39 @@ numbered-island sailor opens the complete menu for One through Seven Island,
 Vermilion, and Cancel from the first visit. The current island is omitted using
 the existing menu behavior.
 
-Keep Birth Island and Navel Rock as FRLG-style special routes rather than
-adding them to the always-available numbered-island pages. Add read-only
-helpers with these authoritative Wayfarer predicates:
+Keep Birth Island as an FRLG-style special route rather than adding it to the
+always-available numbered-island pages. Navel Rock is retired in Wayfarer: the
+selector never offers it, and its maps stay in the build, unreachable. Add a
+read-only helper with this authoritative Wayfarer predicate:
 
 - `WayfarerCanSailToBirthIsland` is true only when
   `WayfarerCanUseRegularAqua()` is true and the Bag contains
   `ITEM_AURORA_TICKET`. This preserves the effective parent gate and ticket
   check of the current HNS Vermilion route.
-- `WayfarerCanSailToNavelRock` is true only when `FLAG_SYS_GAME_CLEAR` is set
-  and the Bag contains `ITEM_MYSTIC_TICKET`. This preserves the effective
-  league-win and ticket ownership requirements of the Emerald ferry while
-  making the requested Vermilion connection usable in Wayfarer. Do not read,
-  allocate, set, or clear `FLAG_ENABLE_SHIP_NAVEL_ROCK`: it is the constant
-  zero in the selected HNS flag catalog and cannot represent persistent
-  Wayfarer state.
 
-The dynamic selector includes Birth Island or Navel Rock only when its helper
-returns true. The helpers perform no writes. In particular, this feature must
+There is no Navel Rock predicate. The Mystic Ticket only comes from Mystery
+Gift, and the Seagallop does not read it. Do not read, allocate, set, or clear
+`FLAG_ENABLE_SHIP_NAVEL_ROCK`: it is the constant zero in the selected HNS flag
+catalog and cannot represent persistent Wayfarer state.
+
+The dynamic selector includes Birth Island only when its helper returns true.
+The helper performs no writes. In particular, this feature must
 not write any `FLAG_ENABLE_SHIP_*`, `FLAG_SHOWN_*_TICKET`,
 `FLAG_RECEIVED_*_TICKET`, ticket item, League, origin, Aqua, or story state.
 Keep the current Lilycove and existing Vermilion routes unchanged.
 
 Predicate tests cover the complete truth table. Birth is hidden for
 `Aqua = false, Ticket = false`, `false, true`, and `true, false`, and visible
-only for `true, true`. Navel Rock is hidden for
-`GameClear = false, Ticket = false`, `false, true`, and `true, false`, and
-visible only for `true, true`. Each case snapshots the relevant persistent
+only for `true, true`. Navel Rock is hidden in every case, including with the
+Mystic Ticket and a league win. Each case snapshots the relevant persistent
 flags and Bag state before opening and canceling the selector and proves that
 none changed.
 
 The Wayfarer Seagallop destination table maps those special routes to the
-existing canonical targets: `MAP_BIRTH_ISLAND_HARBOR_HNS` and
-`MAP_NAVEL_ROCK_HARBOR`, both at their existing Seagallop landing coordinate
-`(8, 5)`. Their harbor sailors return only to
+existing canonical target: `MAP_BIRTH_ISLAND_HARBOR_HNS` at its existing
+Seagallop landing coordinate `(8, 5)`. Its harbor sailor returns only to
 `MAP_VERMILION_CITY_PORT_INSIDE_HNS` at `(8, 9)`, matching the FRLG
-event-island topology. They do not open the numbered island destination pages.
+event-island topology. It does not open the numbered island destination pages.
 Keep every other event-island script, object, encounter, battle, puzzle, item,
 reward, and state transition exactly as it was before this port. Standalone
 HNS and Emerald keep their current Lilycove return behavior.
@@ -299,7 +297,7 @@ that the regular Hoenn route calls `WayfarerCanUseRegularAqua` and
 
 No pass, item, badge, league win, Pokedex milestone, or story flag authorizes
 the numbered-island menu. This rule does not relax the existing event-ticket
-requirements for Birth Island or Navel Rock. Cancel leaves the player on the
+requirement for Birth Island. Cancel leaves the player on the
 walkable side of the sailor. A departure cannot change S.S. Aqua, S.S. Anne,
 Hoenn entry, or regional campaign state.
 
@@ -314,7 +312,7 @@ Enable the numbered-island Sevii map pages in Wayfarer when the player first
 selects the destination. Do not give a Town Map, pass, or event ticket.
 Visiting a numbered island sets only its map visibility and heal-location
 state. This milestone is ferry-only and does not allocate numbered-island Fly
-flags or add Fly destinations. Existing Birth Island and Navel Rock map and
+flags or add Fly destinations. Existing Birth Island map and
 Fly behavior remains unchanged.
 
 The seven numbered-island heal records in
@@ -376,8 +374,7 @@ The only permitted event-island integration diffs are:
 - the Wayfarer-only Vermilion selector and its read-only eligibility helpers;
 - the Wayfarer destination rows in `game/src/seagallop.c`;
 - a Wayfarer-only return target inside
-  `BirthIsland_Harbor_hns_EventScript_Sailor`; and
-- a Wayfarer-only return target inside `NavelRock_Harbor_EventScript_Sailor`.
+  `BirthIsland_Harbor_hns_EventScript_Sailor`.
 
 The allowlist names files, labels, preprocessor scope, and permitted command
 changes. A whole-file exception is forbidden. The audit compares the working
@@ -400,9 +397,8 @@ before starting the next.
    generated audit with no map enabled in the release link.
 2. Enable the seven hubs, harbors, Pokemon Centers, Marts, houses, Day Care,
    and the Vermilion ferry integration. Connect the existing ticket-gated
-   Birth Island route and league-win, ticket-gated Navel Rock route without
-   changing their content. Prove
-   numbered-island entry, return, healing, and blackout behavior.
+   Birth Island route without changing its content. Navel Rock gets no route.
+   Prove numbered-island entry, return, healing, and blackout behavior.
 3. Enable outdoor routes and their direct connections, with story and Trainer
    events removed.
 4. Enable Mt. Ember, Berry Forest, Icefall Cave, Pattern Bush, Altering Cave,
@@ -435,17 +431,17 @@ Required automated validation:
 - `make -C game wayfarer release`, with the generated size report checked
   against the active reserve; and
 - a Wayfarer E2E ROM journey from Vermilion through all seven numbered islands
-  and back, plus ticket-authorized round trips to the existing Birth Island and
-  Navel Rock destinations.
+  and back, plus a ticket-authorized round trip to the existing Birth Island
+  destination, and proof the Seagallop never offers Navel Rock.
 
 The E2E journey must cover all 135 imported maps, enter and exit every
 registered interior, traverse every outdoor connection, exercise each retained
 environmental mechanic, save and reload on each numbered island, black out once
 per heal hub, and prove that no imported Trainer or story scene starts. The
-special-island checks exercise every row of both predicate truth tables, both
-positive Vermilion departures, both `(8, 5)` harbor arrivals, both cancel paths,
-and both `(8, 9)` HNS Vermilion returns. They also exercise every existing Birth
-Island and Navel Rock story, Trainer, wild encounter, static battle, puzzle,
+special-island checks exercise every row of the Birth Island and Navel Rock
+predicate truth tables, the positive Birth Island departure, its `(8, 5)`
+harbor arrival, the cancel path, and its `(8, 9)` HNS Vermilion return. They
+also exercise every existing Birth Island story, Trainer, wild encounter, static battle, puzzle,
 item, reward, save, heal, blackout, region-map, and Fly behavior reachable in
 the baseline fixtures. The baseline audit, rather than a representative smoke
 test alone, proves that unrelated content was not sanitized. Add a

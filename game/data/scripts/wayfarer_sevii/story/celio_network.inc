@@ -710,9 +710,9 @@ WayfarerSevii_Text_SixIslandRivalAfter:
 	.string "island search.$"
 
 WayfarerSevii_Text_MoltresNotReady:
-	.string "MOLTRES radiates overwhelming heat.\n"
-	.string "It is too dangerous to challenge\l"
-	.string "before Trainer Rating 55.$"
+	.string "MOLTRES radiates overwhelming heat.\p"
+	.string "You need more experience before\n"
+	.string "you can challenge it.$"
 WayfarerSevii_Text_MoltresResolved:
 	.string "Only warm volcanic air remains.$"
 WayfarerSevii_Text_MoltresCry:

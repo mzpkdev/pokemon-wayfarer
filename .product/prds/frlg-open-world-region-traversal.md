@@ -82,7 +82,7 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 ## Out of scope
 
 - Indigo Plateau, Route 23's badge challenge, and Victory Road are endgame content.
-- Birth Island, Navel Rock, legendary encounters, optional caves, and Trainer Tower are optional destinations.
+- Birth Island, legendary encounters, optional caves, and Trainer Tower are optional destinations.
 - Cerulean to Route 9 and Route 16 may remain gated shortcuts. Cycling Road remains Bicycle-gated because Route 12 is Fuchsia's core lane.
 - This pass does not redesign shortcut rewards or optional encounters unless they block the only settlement route.
 

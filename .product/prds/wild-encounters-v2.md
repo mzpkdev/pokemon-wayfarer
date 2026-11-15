@@ -200,7 +200,7 @@ western start rather than strict longitude.
 ### Legendaries
 
 Most legendaries roam. A few stay static behind longer story arcs or puzzles.
-Lairs such as Faraway Island, Southern Island, Birth Island, Navel Rock,
+Lairs such as Faraway Island, Southern Island, Birth Island,
 Cinnabar's volcano and Seafoam's depths each host a single legendary or
 mythical.
 
