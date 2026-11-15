@@ -1746,10 +1746,52 @@ static void Task_PlayPokeFlute(u8 taskId)
     gTasks[taskId].func = Task_DisplayPokeFluteMessage;
 }
 
+#if IS_WAYFARER
+extern const u8 VermilionCity_EventScript_SnorlaxFlute[];
+
+// The Vermilion Snorlax (60..62, 12..13) wakes to the POKe FLUTE item as well as the radio.
+static bool32 IsNextToVermilionSnorlax(void)
+{
+    s16 x, y;
+
+    if (gSaveBlock1Ptr->location.mapGroup != MAP_GROUP(MAP_VERMILION_CITY_HNS)
+     || gSaveBlock1Ptr->location.mapNum != MAP_NUM(MAP_VERMILION_CITY_HNS)
+     || FlagGet(FLAG_HIDE_VERMILION_SNORLAX))
+        return FALSE;
+    PlayerGetDestCoords(&x, &y);
+    return x >= 59 && x <= 63 && y >= 11 && y <= 14;
+}
+
+static void ItemUseOnFieldCB_PokeFluteSnorlax(u8 taskId)
+{
+    LockPlayerFieldControls();
+    ScriptContext_SetupScript(VermilionCity_EventScript_SnorlaxFlute);
+    DestroyTask(taskId);
+}
+#endif
+
 void ItemUseOutOfBattle_PokeFlute(u8 taskId)
 {
     bool32 wokeSomeoneUp = FALSE;
     u32 i;
+
+#if IS_WAYFARER
+    if (IsNextToVermilionSnorlax())
+    {
+        if (!gTasks[taskId].tUsingRegisteredKeyItem)
+        {
+            sItemUseOnFieldCB = ItemUseOnFieldCB_PokeFluteSnorlax;
+            gFieldCallback = FieldCB_UseItemOnField;
+            gBagMenu->newScreenCallback = CB2_ReturnToField;
+            Task_FadeAndCloseBagMenu(taskId);
+        }
+        else
+        {
+            gTasks[taskId].func = ItemUseOnFieldCB_PokeFluteSnorlax;
+        }
+        return;
+    }
+#endif
 
     for (i = 0; i < CalculatePlayerPartyCount(); i++)
     {

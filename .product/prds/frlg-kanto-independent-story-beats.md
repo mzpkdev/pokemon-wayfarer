@@ -40,11 +40,11 @@ Returning after the real prerequisite is satisfied makes it available normally.
 | Adventure | Preserved content | Required independence or retained connection |
 | --- | --- | --- |
 | Mt. Moon fossils | Rocket encounters, the Super Nerd battle, and the existing fossil choice. | Treat as a local cave adventure. No later Rocket adventure requires its completion. Fossil rewards remain attached to their existing interactions. |
-| Cerulean burglary | Investigate the robbed house, confront the Rocket, and recover the TM. | Keep independent of Bill, travel to Vermilion, and the major Rocket stories. |
+| Cerulean burglary | Investigate the robbed house, confront the Rocket, and recover the TM. | Keep independent of Bill, travel to Vermilion, and the major Rocket stories. **Not built:** no script exists yet; it stays a planned beat. |
 | Nugget Bridge | Trainer challenge, prize, and Rocket recruitment attempt. | Preserve the local challenge order without requiring another Rocket adventure. |
 | Bill and the S.S. Anne | Help Bill and receive his Ticket; board the ship, help the captain, and receive Cut. | Bill is one route to the Ticket, not a boarding prerequisite when the player already owns one. The [dedicated Anne specification](../specs/frlg-kanto-ss-anne-adventure.md) owns the persistent, one-time ship adventure. |
 | Celadon and Pokémon Tower | Discover the hideout, defeat Giovanni, obtain the Scope, resolve Marowak's ghost, rescue Fuji, and receive the Flute. | Keep as a connected investigation, independent of Silph Co., Mt. Moon completion, and specific Gyms. |
-| Snorlax | Use the Poké Flute for the existing Route 12 and Route 16 encounters. | Retain the Flute prerequisite. Either encounter may be completed first; neither gates ordinary regional travel. |
+| Snorlax | Wake the sleeping Snorlax with the Poké Flute. | **As built:** the Vermilion City Snorlax is the Flute's target. Fuji's Poké Flute item wakes it when the player stands beside it (from the bag, or by talking to it with the Flute), in addition to the Kanto radio's Poké Flute channel. Either path resolves the same battle and releases the Reception Gate Kanto guard. The Route 12 and Route 16 pair is not built and is not planned. It never gated ordinary regional travel. |
 | Silph Co. | Infiltrate the occupied company, solve its local access puzzles, defeat Giovanni, and rescue the staff. | Remove Mr. Fuji's rescue as an entrance prerequisite. Keep this adventure independently available in Saffron. |
 | Safari Zone | Reach the Secret House for Surf; find the Gold Teeth and return them to the Warden for Strength. | Keep as parallel local objectives. Neither requires the other or a distant adventure. Koga's challenge remains separate. |
 | Pokémon Mansion and Blaine | Explore the mansion, find the Secret Key, and unlock Blaine's Gym. | The [FRLG Cinnabar and Seafoam port](frlg-cinnabar-seafoam-port.md) owns this complete local adventure and its independence from unrelated campaigns. |
@@ -72,7 +72,7 @@ Preserve the sequence:
 ```text
 Game Corner investigation -> Rocket Hideout -> Silph Scope
     -> Pokémon Tower / Marowak -> Fuji rescue -> Poké Flute
-        -> Route 12 and Route 16 Snorlax, in either order
+        -> Vermilion Snorlax (the radio channel also wakes it)
 ```
 
 A player may discover Lavender's problem first. Existing local dialogue must
@@ -82,8 +82,8 @@ not resolve Marowak, rescue Fuji, or award the Flute.
 
 Do not grant the Scope merely for entering the hideout or skip its normal reward
 event. Keep the Tower's ghost encounter, Rocket rescue, and Fuji's return as one
-recoverable sequence. Receiving the Flute does not automatically resolve either
-Snorlax encounter. For Wayfarer, radio access and its Machine Part upgrade stay
+recoverable sequence. Receiving the Flute does not automatically resolve the
+Vermilion Snorlax encounter. For Wayfarer, radio access and its Machine Part upgrade stay
 independent of this sequence; Fuji's physical Flute remains its own reward.
 
 ### Two investigations and Giovanni's finale
@@ -106,7 +106,7 @@ Viridian's Giovanni confrontation becomes available after Celadon's Giovanni
 has been defeated and its Scope obtained, and Silph's occupation has ended.
 Fuji's rescue is independent. Outstanding ordinary
 reward collection must remain recoverable; claiming a TR-gated Master Ball is
-not a finale prerequisite. Neither Snorlax encounter is required.
+not a finale prerequisite. The Snorlax encounter is not required.
 
 Remove the existing specific-Kanto-badge access condition for this finale. Do not
 replace it with TR, a total badge count, or a league win. This is a direct story
@@ -209,10 +209,9 @@ the whole original campaign order.
 ## Interactions
 
 Passing through an area does not complete its story. Preserve the open-traversal
-principle while retaining field preparation and optional shortcuts. The proposed
-Snorlax travel contract includes both encounters; it is broader than the existing
-FRLG traversal pass's selected Route 12 bypass. The specification must reconcile
-Route 16 access without treating either capture as a regional road requirement.
+principle while retaining field preparation and optional shortcuts. The built
+Snorlax travel contract is the single Vermilion encounter. It releases the Reception
+Gate Kanto guard and is not otherwise a road requirement.
 
 Each adventure must preserve its own progress and unclaimed rewards through losses,
 travel, save/reload, and Bag or party capacity failures. Reordered Giovanni battles
@@ -240,7 +239,7 @@ distinct from unrelated regional progression.
   interleaving. Giovanni's dialogue and each adventure's state remain truthful.
 - Approach Viridian with neither investigation resolved, with each alone resolved,
   and with both resolved. Only both enable its finale; badge count and TR do not
-  add requirements. Unclaimed Master Ball and unfinished Snorlax encounters do not
+  add requirements. Unclaimed Master Ball and an unfinished Snorlax encounter do not
   prevent the finale.
 - Finish Silph below Master Ball readiness. The city recovers and other stories
   proceed. Return at the threshold to receive the reward once, including after a
@@ -249,8 +248,9 @@ distinct from unrelated regional progression.
   come from their respective givers. Neither objective requires Koga or another arc.
 - Complete the separately specified Mansion/Secret Key/Blaine adventure
   without unrelated campaign progress.
-- Resolve the Snorlax encounters in either order after obtaining the Flute. Travel
-  without resolving either must not require a capture or story victory.
+- Wake the Vermilion Snorlax with the Flute item and, separately, with the radio
+  channel. Both must resolve the same encounter and release the Reception Gate
+  Kanto guard. Ordinary Kanto travel must not require it.
 - Test Articuno and Zapdos discovery below readiness and capture eligibility at
   the chosen boundary. Neither requires the other. Test Mewtwo's higher boundary
   without Celio's quest, including alternate access and save/reload paths.

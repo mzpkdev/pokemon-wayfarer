@@ -280,8 +280,20 @@ PalletTown_Lab_EventScript_KantoFinish:
 	release
 	end
 
-PalletTown_Lab_EventScript_KantoComplete:
+@ After the opening a native joins the shared badge check, so Oak can open
+@ MT.SILVER for a Pallet-origin player like any other origin.
+PalletTown_Lab_EventScript_KantoComplete::
+	specialvar VAR_RESULT, WayfarerGetKantoBadgeCountForScript
+	goto_if_ge VAR_RESULT, 8, PalletTown_Lab_EventScript_KantoNativeEightBadges
+	goto_if_ge VAR_RESULT, 1, PalletTown_Lab_EventScript_Oak9Badges
 	msgbox PalletTown_Lab_Text_KantoComplete, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+PalletTown_Lab_EventScript_KantoNativeEightBadges:
+	goto_if_ne VAR_PALLETTOWN_LABSTATE, 2, PalletTown_Lab_EventScript_Oak16Badges
+	msgbox PalletTown_Lab_Text_KantoNativeSilverOpen, MSGBOX_DEFAULT
 	closemessage
 	release
 	end
@@ -1416,6 +1428,12 @@ PalletTown_Lab_Text_KantoOakIsAuthorityOnMons:
 PalletTown_Lab_Text_KantoComplete:
 	.string "OAK: Your journey starts now.\p"
 	.string "Good luck, {PLAYER}!$"
+
+PalletTown_Lab_Text_KantoNativeSilverOpen:
+	.string "OAK: You've beaten every GYM in\n"
+	.string "KANTO, {PLAYER}. I'm proud of you.\p"
+	.string "The way to MT.SILVER is open to\n"
+	.string "you, up past INDIGO PLATEAU.$"
 
 PalletTown_Lab_Text_KantoParcelMissing:
 	.string "OAK: I can't find the PARCEL.\p"

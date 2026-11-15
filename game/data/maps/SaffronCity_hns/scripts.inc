@@ -47,6 +47,11 @@ SaffronCity_EventScript_CooltrainerM::
 	end
 
 SaffronCity_EventScript_CooltrainerF::
+	goto_if_set FLAG_SILPH_LIBERATED_HNS, SaffronCity_EventScript_CooltrainerFLiberated
+	msgbox SaffronCity_Text_CooltrainerFOccupied, MSGBOX_NPC
+	end
+
+SaffronCity_EventScript_CooltrainerFLiberated::
 	msgbox SaffronCity_Text_CooltrainerF, MSGBOX_NPC
 	end
 
@@ -125,11 +130,18 @@ SaffronCity_Text_CooltrainerM:
 	.string "unused GYM next door.\p"
 	.string "Boy, I was pretty embarrassed.$"
 
+SaffronCity_Text_CooltrainerFOccupied:
+	.string "This is SILPH CO., famous for\n"
+	.string "POKéMON merchandise.\p"
+	.string "TEAM ROCKET has taken over the\n"
+	.string "building because of that.$"
+
 SaffronCity_Text_CooltrainerF:
 	.string "This is SILPH CO., famous for\n"
 	.string "POKéMON merchandise.\p"
-	.string "In the past, TEAM ROCKET wanted\n"
-	.string "the company because of that.$"
+	.string "TEAM ROCKET wanted the company\n"
+	.string "because of that, but they were\l"
+	.string "driven out.$"
 
 SaffronCity_Text_Fisher:
 	.string "Chew… Chew…\p"

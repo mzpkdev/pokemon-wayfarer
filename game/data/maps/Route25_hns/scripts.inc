@@ -137,6 +137,8 @@ Route25_EventScript_Misty::
 	clearflag FLAG_HIDE_CERULEAN_GYM_TRAINERS
 	setflag FLAG_HIDE_CERULEAN_GYM_POKEMON
 	setvar VAR_CERULEAN_CITY_STATE, 3
+	@ Same readiness check as Route 14, so either order releases Suicune the same way.
+	call_if_eq VAR_SUICUNE_ENCOUNTERS, 5, CeruleanCity_Gym_SetSuicuneScene
 	release
 	end
 

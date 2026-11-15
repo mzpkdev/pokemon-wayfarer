@@ -79,6 +79,13 @@ static bool8 IsWhitneyAtTower(void)
     return NotableStory_IsWhitneyAtTower();
 }
 
+// The Viridian Gym copy shows once SILPH CO. is freed and the SILPH SCOPE (hideout win) is claimed, until he departs.
+static bool8 IsGiovanniAtViridianGym(void)
+{
+    return FlagGet(FLAG_SILPH_LIBERATED_HNS) && FlagGet(FLAG_CELADON_ROCKET_HIDEOUT_SILPH_SCOPE_RECEIVED_HNS)
+        && !FlagGet(FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS);
+}
+
 static const struct StoryPlacement sPlacements[] =
 {
     // Wallace through the Sootopolis crisis: states 2-3 the Cave of Origin and the Sky Pillar copies (their hide flags
@@ -89,6 +96,13 @@ static const struct StoryPlacement sPlacements[] =
     // (state 3). The 1F copy is never listed: Space Center 1F hides it on entry, as the invasion starts once Groudon is awake.
     { .characterId = NOTABLE_TRAINER_STEVEN, .flag = HOENN_FLAG_ID(0x35F), // FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_2F_STEVEN
       .var = HOENN_VAR_ID(VAR_MOSSDEEP_SPACE_CENTER_STATE), .varMin = 1, .varMax = 2 },
+    // Giovanni is in one place at a time: the hideout until its battle and the SILPH SCOPE claim (B4F copy), SILPH CO. until it is freed
+    // (11F copy), then the Viridian Gym until the finale sends him away.
+    { .characterId = NOTABLE_TRAINER_GIOVANNI, .flag = FLAG_CELADON_ROCKET_HIDEOUT_SILPH_SCOPE_RECEIVED_HNS },
+    { .characterId = NOTABLE_TRAINER_GIOVANNI, .flag = FLAG_SILPH_LIBERATED_HNS },
+    { .characterId = NOTABLE_TRAINER_GIOVANNI, .predicate = IsGiovanniAtViridianGym },
+    // Misty is out of her Gym (its note is up and her trainers away) from New Game until her Route 25 date ends.
+    { .characterId = NOTABLE_TRAINER_MISTY, .flag = FLAG_HIDE_CERULEAN_GYM_TRAINERS, .options = PLACEMENT_FLAG_SET },
     // Giovanni leaves Viridian for good: once he has departed, his walker never spawns.
     // Whitney's morning outing to the Goldenrod Radio Tower until the quiz is solved (her Tower copy shows then).
     { .characterId = NOTABLE_TRAINER_WHITNEY, .predicate = IsWhitneyAtTower },

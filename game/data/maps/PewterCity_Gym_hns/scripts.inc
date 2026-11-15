@@ -111,7 +111,7 @@ PewterCity_Gym_Text_CamperJerry_Beaten:
 	.string "I have to win these battles…$"
 
 PewterCity_Gym_Text_CamperJerry_AfterBattle:
-	.string "Hey, you! Trainer from JOHTO! BROCK is\n"
+	.string "Hey, you! Trainer! BROCK is\n"
 	.string "tough. He'll punish you if you don't\l"
 	.string "take him seriously.$"
 
@@ -121,7 +121,7 @@ PewterCity_Gym_Text_Guide:
 	.string "Are you battling the GYM LEADERS of\n"
 	.string "KANTO?\p"
 	.string "They're strong and dedicated people,\n"
-	.string "just like JOHTO's GYM LEADERS.$"
+	.string "every one of them.$"
 
 PewterCity_Gym_Text_Guide_Win:
 	.string "Yo! CHAMP in making! That GYM didn't\n"

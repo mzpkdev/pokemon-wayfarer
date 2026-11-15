@@ -1346,6 +1346,8 @@ SilphCo_11F_EventScript_BattleGiovanni::
 	applymovement LOCALID_SILPH_CO_GIOVANNI, Common_Movement_WalkInPlaceFasterDown
 	waitmovement 0
 	msgbox WayfarerSilph_Text_GiovanniIntro, MSGBOX_DEFAULT
+	setvar VAR_0x8004, NOTABLE_TRAINER_GIOVANNI
+	special NotableStory_MarkIntroduced
 	closemessage
 	call_if_eq VAR_TEMP_1, 0, SilphCo_11F_EventScript_GiovanniApproachLeft
 	call_if_eq VAR_TEMP_1, 1, SilphCo_11F_EventScript_GiovanniApproachRight

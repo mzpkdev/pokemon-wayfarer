@@ -41,8 +41,9 @@ Route27_EventScript_FirstSteps::
     setflag FLAG_HIDE_INDIGO_PLATEAU_MARY_OAK
     
     clearflag FLAG_GOT_TM_SANDSTORM
-    clearflag FLAG_INDIGOJUNCTION_HIDE_SILVER_GUARD
-    clearflag FLAG_INDIGOJUNCTION_HIDE_KANTO_GUARD
+    @ The Reception Gate guard flags start clear (guards present) and are set
+    @ only by their own release (Oak's Mt. Silver go-ahead, the Vermilion Snorlax).
+    @ Clearing them here would resurrect a guard whose condition is already met.
 
     setvar VAR_ROUTE27_STATE, 1
     release

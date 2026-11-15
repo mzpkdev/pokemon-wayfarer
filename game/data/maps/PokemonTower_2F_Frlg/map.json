@@ -30,7 +30,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PokemonTower_2F_EventScript_Blue",
-      "flag": "0"
+      "flag": "0",
+      "wayfarer_flag": "FLAG_TEMP_1"
     },
     {
       "type": "object",

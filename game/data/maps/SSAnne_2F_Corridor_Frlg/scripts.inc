@@ -22,6 +22,8 @@ SSAnne_2F_Corridor_EventScript_RivalTriggerRight::
 SSAnne_2F_Corridor_EventScript_RivalTrigger::
 #if IS_WAYFARER
 	goto_if_set FLAG_WAYFARER_SS_ANNE_BLUE_MET, SSAnne_2F_Corridor_EventScript_VisitorDone
+	callnative WayfarerBlueRoadScenesRetired
+	goto_if_eq VAR_RESULT, TRUE, SSAnne_2F_Corridor_EventScript_VisitorDone
 	textcolor NPC_TEXT_COLOR_MALE
 	clearflag FLAG_WAYFARER_SS_ANNE_HIDE_BLUE
 	playse SE_EXIT

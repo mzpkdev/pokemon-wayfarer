@@ -24,7 +24,12 @@ battle and Silph Scope reward, and Silph's Giovanni battle and liberation, are
 the two local prerequisites. Pokémon Tower/Fuji, either Snorlax, any specific
 badge count, Trainer Rating (TR), an Indigo clear, and unrelated regional
 progress are not prerequisites. Entering early gives truthful local guidance
-without granting a victory or closing the Gym. A loss leaves Giovanni available
+without granting a victory or closing the Gym: until both prerequisites are met
+Giovanni is not in the Gym (he is at the Hideout and Silph Co.; the Gym Guide
+says the Leader is waiting on matters in Celadon and Silph Co.), and the Gym stays
+explorable. The Gym stages him when it loads, from the same conditions the story-away
+table uses: Hideout Giovanni defeated, Silph Scope received, Silph liberated, and
+not yet departed. Once they hold he stands at his post and runs the finale. A loss leaves Giovanni available
 to retry and does not award a badge, TM, or finale state.
 
 The current finale uses the FRLG final Gym source order: Rhyhorn 45, Dugtrio 42,

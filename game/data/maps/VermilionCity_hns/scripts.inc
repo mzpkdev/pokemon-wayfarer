@@ -180,15 +180,38 @@ VermilionCity_EventScript_Snorlax::
 	lock
 	special CheckRadioStation
 	goto_if_eq VAR_RESULT, TRUE, VermilionCity_EventScript_SnorlaxWakeUp
-	@goto_if_set FLAG_KANTO_RADIO_GOT, VermilionCity_EventScript_SnorlaxWakeUp
+	checkitem ITEM_POKE_FLUTE
+	goto_if_eq VAR_RESULT, TRUE, VermilionCity_EventScript_SnorlaxOfferFlute
 	msgbox VermilionCity_Text_SnorlaxSleeping, MSGBOX_DEFAULT
 	closemessage
 	release
 	end
 
+VermilionCity_EventScript_SnorlaxOfferFlute::
+	msgbox VermilionCity_Text_SnorlaxPlayFlute, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, VermilionCity_EventScript_SnorlaxLeave
+	goto VermilionCity_EventScript_SnorlaxFlute
+
+VermilionCity_EventScript_SnorlaxLeave::
+	closemessage
+	release
+	end
+
+@ Also run from the bag (ItemUseOutOfBattle_PokeFlute) when standing beside the Snorlax.
+VermilionCity_EventScript_SnorlaxFlute::
+	lockall
+	playfanfare MUS_RG_POKE_FLUTE
+	waitfanfare
+	msgbox VermilionCity_Text_FluteNearSnorlax, MSGBOX_DEFAULT
+	goto VermilionCity_EventScript_SnorlaxBattle
+
 VermilionCity_EventScript_SnorlaxWakeUp::
     playbgm MUS_HG_RADIO_POKE_FLUTE, FALSE
     msgbox VermilionCity_Text_RadioNearSnorlax, MSGBOX_DEFAULT
+    goto VermilionCity_EventScript_SnorlaxBattle
+
+@ Shared resolution for the radio channel and the POKé FLUTE item: one win releases the Reception Gate Kanto guard.
+VermilionCity_EventScript_SnorlaxBattle::
     playmoncry SPECIES_SNORLAX, CRY_MODE_ENCOUNTER
     delay 40
     waitmoncry
@@ -347,7 +370,17 @@ VermilionCity_Text_SuperNerd:
 	.string "POKéMON GYM.$"
 
 VermilionCity_Text_SnorlaxSleeping:
-	.string "SNORLAX is snoring peacefully…$"
+	.string "SNORLAX is snoring peacefully…\p"
+	.string "Some music might wake it up.$"
+
+VermilionCity_Text_SnorlaxPlayFlute:
+	.string "SNORLAX is snoring peacefully…\p"
+	.string "Play the POKé FLUTE?$"
+
+VermilionCity_Text_FluteNearSnorlax:
+	.string "{PLAYER} played the POKé FLUTE!\p"
+	.string "…\p"
+	.string "SNORLAX woke up!$"
 
 VermilionCity_Text_RadioNearSnorlax:
 	.string "The POKéGEAR was placed near \n"

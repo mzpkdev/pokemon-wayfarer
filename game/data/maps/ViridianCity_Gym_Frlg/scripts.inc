@@ -10,6 +10,7 @@ ViridianCity_Gym_Frlg_MapScripts::
 @ trigger refuses a northward approach; this catches any other entry and
 @ returns the player to the doorstep. Not FRLG text: FRLG never reaches it.
 ViridianCity_Gym_KantoOnTransition:
+	call ViridianCity_Gym_EventScript_StageGiovanni
 	setvar VAR_TEMP_1, 0
 	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
 	goto_if_eq VAR_RESULT, FALSE, ViridianCity_Gym_KantoTransitionDone
@@ -18,6 +19,18 @@ ViridianCity_Gym_KantoOnTransition:
 	setvar VAR_TEMP_1, 1
 ViridianCity_Gym_KantoTransitionDone:
 	end
+
+@ GIOVANNI stands in one place at a time: he is away at the hideout and SILPH CO.
+@ until the finale prerequisites are met, and gone for good after it.
+@ FLAG_TEMP_2 is the Wayfarer object's hide flag and is cleared on every map load.
+ViridianCity_Gym_EventScript_StageGiovanni::
+	setflag FLAG_TEMP_2
+	goto_if_set FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS, Common_EventScript_NopReturn
+	goto_if_not_defeated TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS, Common_EventScript_NopReturn
+	goto_if_unset FLAG_CELADON_ROCKET_HIDEOUT_SILPH_SCOPE_RECEIVED_HNS, Common_EventScript_NopReturn
+	goto_if_unset FLAG_SILPH_LIBERATED_HNS, Common_EventScript_NopReturn
+	clearflag FLAG_TEMP_2
+	return
 
 ViridianCity_Gym_KantoOnFrame:
 	map_script_2 VAR_TEMP_1, 1, ViridianCity_Gym_KantoRefuseEntry

@@ -186,6 +186,17 @@ Keep the Machine Part and radio story's current causal chain: repair enables
 Misty's return, the Magnet Train's power, Copycat's Pass, and the radio upgrade.
 The old generating hall and Zapdos neither require nor advance that chain.
 
+Accepted consequences of that chain (audit K18, K3):
+
+- Copycat's doll and Pass quest is gated on the Machine Part repair, an inherited
+  HNS gate. Wayfarer keeps it.
+- A visiting origin needs eight Kanto badges, including the Giovanni finale and
+  Misty's chain, before Oak opens Mt. Silver. A Pallet-origin player reaches the
+  same check through Oak after the opening.
+- The Vermilion Snorlax is the Poké Flute's target: the Flute item or the radio
+  channel wakes it, and beating it releases the Reception Gate Kanto guard. Route 27's
+  first steps never reset a Reception Gate guard.
+
 Retained HNS side quests must not become new prerequisites for the FRLG
 investigations or restore removed restrictions on interregional travel. Their
 unfinished scenes and rewards must remain coherent after Giovanni's finale.
@@ -200,7 +211,7 @@ unfinished scenes and rewards must remain coherent after Giovanni's finale.
   liberation. Preserve the Up-Grade interaction. Steven's gift reward design
   remains open, including how it serves a Hoenn-origin player.
 - Preserve the Celebi scenes as an optional adventure: Route 22 after the
-  player's actual Giovanni finale, and Tohjo after that finale and the relevant
+  player's actual Giovanni finale (`FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS`), and Tohjo after that finale and the relevant
   Goldenrod story. Adapt exact-year references, Giovanni's recognition of the
   player, and time-travel framing. These prerequisites gate only this optional
   adventure, not either regional campaign.

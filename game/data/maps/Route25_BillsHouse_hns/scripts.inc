@@ -594,9 +594,15 @@ Route25_BillsHouse_Movement_MonCelebration:
 Route25_BillsHouse_Text_GrandpaIntro:
 	.string "Hm? You know BILL? He's my\n"
 	.string "grandson.\p"
+#if IS_WAYFARER
+	.string "He's right over there. He does\n"
+	.string "something with PCs, so I'm\l"
+	.string "housesitting while he tinkers.$"
+#else
 	.string "He's in JOHTO. He does\n"
 	.string "something with PCs, so I'm\l"
 	.string "housesitting.$"
+#endif
 
 Route25_BillsHouse_Text_GrampsMeowth:
 	.string "My grandson BILL told me about\n"
@@ -680,9 +686,9 @@ Route25_BillsHouse_Text_WrongPokemon:
 
 #if IS_WAYFARER
 Route25_BillsHouse_Text_BillNeedsHelp:
-	.string "BILL is trapped inside this test\n"
-	.string "TELEPORTER! Will you\n"
-	.string "reset it?$"
+	.string "BILL: Help! My test TELEPORTER\n"
+	.string "locked up and its field has me\l"
+	.string "pinned in place! Will you reset it?$"
 
 Route25_BillsHouse_Text_BillResetTeleporter:
 	.string "You reset the TELEPORTER's\n"

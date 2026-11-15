@@ -871,8 +871,14 @@ TEST("A listed story placement keeps its character's walker away while it shows,
     VarSet(HOENN_VAR_ID(VAR_MOSSDEEP_SPACE_CENTER_STATE), 0);
     VarSet(HOENN_VAR_ID(VAR_SOOTOPOLIS_CITY_STATE), 0);
     FlagClear(FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS);
+    FlagClear(FLAG_HIDE_CERULEAN_GYM_TRAINERS);
+    FlagSet(FLAG_CELADON_ROCKET_HIDEOUT_SILPH_SCOPE_RECEIVED_HNS);
+    FlagSet(FLAG_SILPH_LIBERATED_HNS);
+    FlagSet(FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS);
+    // Giovanni is the exception: he has a story copy at every stage, so his walker never spawns.
     for (i = 1; i <= NOTABLE_TRAINER_COUNT; i++)
-        EXPECT(!NotableStory_IsAway(i));
+        EXPECT_EQ(NotableStory_IsAway(i), i == NOTABLE_TRAINER_GIOVANNI);
+    FlagClear(FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS);
 
     // Steven's Space Center copy: shown from the invasion until the battle.
     FlagClear(HOENN_FLAG_ID(0x35F)); // FLAG_HIDE_MOSSDEEP_CITY_SPACE_CENTER_2F_STEVEN
@@ -890,7 +896,20 @@ TEST("A listed story placement keeps its character's walker away while it shows,
     VarSet(HOENN_VAR_ID(VAR_SOOTOPOLIS_CITY_STATE), 6);
     EXPECT(!NotableStory_IsAway(NOTABLE_TRAINER_WALLACE));
 
-    // Giovanni never returns once he has departed.
+    // Misty is out of her Gym until her Route 25 date ends.
+    FlagSet(FLAG_HIDE_CERULEAN_GYM_TRAINERS);
+    EXPECT(NotableStory_IsAway(NOTABLE_TRAINER_MISTY));
+    FlagClear(FLAG_HIDE_CERULEAN_GYM_TRAINERS);
+    EXPECT(!NotableStory_IsAway(NOTABLE_TRAINER_MISTY));
+
+    // Giovanni: the hideout, then SILPH CO., then the Viridian Gym, then gone for good.
+    FlagClear(FLAG_CELADON_ROCKET_HIDEOUT_SILPH_SCOPE_RECEIVED_HNS);
+    FlagClear(FLAG_SILPH_LIBERATED_HNS);
+    EXPECT(NotableStory_IsAway(NOTABLE_TRAINER_GIOVANNI));
+    FlagSet(FLAG_CELADON_ROCKET_HIDEOUT_SILPH_SCOPE_RECEIVED_HNS);
+    EXPECT(NotableStory_IsAway(NOTABLE_TRAINER_GIOVANNI));
+    FlagSet(FLAG_SILPH_LIBERATED_HNS);
+    EXPECT(NotableStory_IsAway(NOTABLE_TRAINER_GIOVANNI));
     FlagSet(FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS);
     EXPECT(NotableStory_IsAway(NOTABLE_TRAINER_GIOVANNI));
     EXPECT(!NotableStory_IsAway(NOTABLE_TRAINER_BLUE));

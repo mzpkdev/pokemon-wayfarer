@@ -257,9 +257,9 @@ CeruleanGym_Text_Note1:
 CeruleanGym_Text_MistyIntro:
 	.string "MISTY: I was expecting you, you\n"
 	.string "pest!\p"
-	.string "You may have a lot of JOHTO GYM\n"
-	.string "BADGES, but you'd better not\l"
-	.string "take me too lightly.\p"
+	.string "Whatever BADGES you may carry,\n"
+	.string "you'd better not take me too\l"
+	.string "lightly.\p"
 	.string "My WATER-type POKéMON are\n"
 	.string "tough!$"
 
@@ -273,8 +273,8 @@ CeruleanGym_Text_ReceivedBadge:
 
 CeruleanGym_Text_MistyFightDone:
 	.string "MISTY: Are there many strong\n"
-	.string "trainers in JOHTO? Like you, I\l"
-	.string "mean.\p"
+	.string "trainers beyond CERULEAN? Like\l"
+	.string "you, I mean.\p"
 	.string "I'm going to travel one day, so\n"
 	.string "I can battle some skilled\l"
 	.string "trainers.$"

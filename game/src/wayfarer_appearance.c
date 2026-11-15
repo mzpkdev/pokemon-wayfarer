@@ -1,6 +1,8 @@
 #include "global.h"
 #include "wayfarer_appearance.h"
 #if IS_WAYFARER
+#include "event_data.h"
+#include "constants/vars.h"
 #include "constants/event_objects.h"
 #include "constants/trainers.h"
 
@@ -107,6 +109,17 @@ u16 WayfarerGetAppearanceGraphicsId(u8 id, u8 state)
     if (profile == NULL || state >= ARRAY_COUNT(profile->graphicsIds))
         return APPEARANCE_INVALID_GRAPHICS;
     return profile->graphicsIds[state];
+}
+
+// The Copycat's mimic objects use VAR_OBJ_GFX_ID_8: the player's own overworld look,
+// not a Gold or Kris picked from gender alone.
+void WayfarerSetCopycatMimicGraphics(void)
+{
+    u16 graphicsId = WayfarerGetAppearanceGraphicsId(WayfarerGetPlayerAppearanceId(), PLAYER_AVATAR_STATE_NORMAL);
+
+    if (graphicsId == APPEARANCE_INVALID_GRAPHICS)
+        graphicsId = gSaveBlock2Ptr->playerGender == FEMALE ? OBJ_EVENT_GFX_KRIS_NORMAL_HNS : OBJ_EVENT_GFX_GOLD_NORMAL_HNS;
+    VarSet(VAR_OBJ_GFX_ID_8, graphicsId);
 }
 
 u16 WayfarerGetAppearanceFrontPic(u8 id)

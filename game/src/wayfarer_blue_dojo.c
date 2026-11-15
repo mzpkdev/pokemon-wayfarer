@@ -17,4 +17,12 @@ void SyncBlueDojoVisibility(void)
         FlagSet(FLAG_HIDE_DOJO_BLUE);
 }
 
+// BLUE's Kanto road scenes (Pokemon Tower, S.S. ANNE) retire once the player has beaten him
+// as INDIGO champion: he would otherwise still be "ahead" of a player who already won.
+// Called with callnative (no special-table entry): the answer comes back in VAR_RESULT.
+void WayfarerBlueRoadScenesRetired(void)
+{
+    gSpecialVar_Result = HasCommittedFirstIndigoVictory();
+}
+
 #endif

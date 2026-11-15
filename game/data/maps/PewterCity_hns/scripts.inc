@@ -31,9 +31,21 @@ PewterCity_EventScript_Gramps::
 	goto_if_eq VAR_LUGIA_OR_HOOH, 1, PewterCity_EventScript_GrampsRainbowWing
 	goto PewterCity_EventScript_GrampsSilverWing
 
+PewterCity_EventScript_GrampsSpeech::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerIsJohtoOrigin
+	goto_if_eq VAR_RESULT, FALSE, PewterCity_EventScript_GrampsSpeechAway
+#endif
+	msgbox PewterCity_Text_Gramps, MSGBOX_DEFAULT
+	return
+
+PewterCity_EventScript_GrampsSpeechAway::
+	msgbox PewterCity_Text_GrampsAway, MSGBOX_DEFAULT
+	return
+
 @ Receipt is recorded only after the add; a full Bag leaves the Wing with him.
 PewterCity_EventScript_GrampsRainbowWing::
-	msgbox PewterCity_Text_Gramps, MSGBOX_DEFAULT
+	call PewterCity_EventScript_GrampsSpeech
 	giveitem ITEM_RAINBOW_WING
 	goto_if_eq VAR_RESULT, FALSE, PewterCity_EventScript_GrampsBagFull
 	setflag FLAG_WAYFARER_JOHTO_PEWTER_WING_GIVEN
@@ -44,7 +56,7 @@ PewterCity_EventScript_GrampsRainbowWing::
 	goto PewterCity_EventScript_GrampsGave
 
 PewterCity_EventScript_GrampsSilverWing::
-	msgbox PewterCity_Text_Gramps, MSGBOX_DEFAULT
+	call PewterCity_EventScript_GrampsSpeech
 	giveitem ITEM_SILVER_WING
 	goto_if_eq VAR_RESULT, FALSE, PewterCity_EventScript_GrampsBagFull
 	setflag FLAG_WAYFARER_JOHTO_PEWTER_WING_GIVEN
@@ -103,6 +115,16 @@ PewterCity_Text_BugCatcher:
 	.string "At night, CLEFAIRY come out to play at\n"
 	.string "MT.MOON.\p"
 	.string "But not every night.$"
+
+PewterCity_Text_GrampsAway:
+	.string "Ah, you came a long way to get out\n"
+	.string "here, didn't you?\p"
+	.string "That brings back memories. When I was\n"
+	.string "young, I went to JOHTO to train.\p"
+	.string "You remind me so much of what I was like\n"
+	.string "as a young man.\p"
+	.string "Here. I want you to have this item I\n"
+	.string "found in JOHTO.$"
 
 PewterCity_Text_Gramps:
 	.string "Ah, you came all the way out here from\n"

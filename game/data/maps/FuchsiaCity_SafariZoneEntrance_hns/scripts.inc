@@ -51,6 +51,7 @@ FuchsiaCity_SafariZoneEntrance_EventScript_MeetSteven::
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkUp1
 	waitmovement LOCALID_SAFARIZONEFUCHSIA_STEVEN
 
+	notable_introduce NOTABLE_TRAINER_STEVEN, FuchsiaCity_SafariZoneEntrance_Text_StevenIntro
 	msgbox FuchsiaCity_SafariZoneEntrance_Text_StevenWelcome, MSGBOX_DEFAULT
 	closemessage
 	checkitem ITEM_POKEBLOCK_CASE
@@ -216,8 +217,11 @@ FuchsiaCity_SafariZoneEntrance_Movement_ReturnToTable:
 	face_right
 	step_end
 
+FuchsiaCity_SafariZoneEntrance_Text_StevenIntro:
+	.string "Hello, {PLAYER}!\n"
+	.string "My name is STEVEN.$"
+
 FuchsiaCity_SafariZoneEntrance_Text_StevenWelcome:
-	.string "Hello again, {PLAYER}!\p"
 	.string "Welcome to the DEVON SAFARI ZONE!\p"
 	.string "This specially designed safari\n"
 	.string "has 4 different habitats that\l"

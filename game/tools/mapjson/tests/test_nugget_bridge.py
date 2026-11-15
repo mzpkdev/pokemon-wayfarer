@@ -50,9 +50,9 @@ class NuggetBridgeTest(unittest.TestCase):
         self.assertEqual(len(original['object_events']), 8)
         self.assertEqual(digest(canonical(original)), '16b69c9ca80324616f9fa3f71894f1c83ca4362c355f8c79ae3270ddcc298283')
         files = {
-            'data/maps/Route24_hns/scripts.inc': '774a527e23c07627ce021f1e14ffbf2a914d1b259dde86bb1e49199223506318',
+            'data/maps/Route24_hns/scripts.inc': '06027a99a65a01baa6c8792a64d099aab80babf7be609cbd081525cdc5bcc4a2',
             'data/maps/Route24_Frlg/scripts.inc': '1411b48acab4b080e877fa865344dd6b468d6d8ec5a1cb6046ce3cc977222dcd',
-            'data/maps/Route25_hns/scripts.inc': '47dc4c70596a0f9f5be088816bd6b316333bd84f0c885d4623cf25217272bf16',
+            'data/maps/Route25_hns/scripts.inc': '2ca874d11c92f81cf6cb13dc1f108ac44dab72776f1dd51e789274746b74b7bf',
             'data/layouts/Route24_hns/map.bin': '56f43c61dfc7c2557a7673dd56fbf3f7a310c7ff59002e8243c58e4e6bd67696',
         }
         for path, expected in files.items():
