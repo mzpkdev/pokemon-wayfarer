@@ -2687,6 +2687,11 @@
 #define FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GRUNT_47 WAYFARER_SEVII_FLAG_ID(201)
 #define FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GRUNT_48 WAYFARER_SEVII_FLAG_ID(202)
 #define FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_ADMIN_2 WAYFARER_SEVII_FLAG_ID(203)
+// BILL has introduced himself, in whichever of his scenes came first: Route 25, Ecruteak or One Island.
+// It lives in the Sevii bank because Sevii scripts may only touch Sevii-bank state; Kanto and Johto read it too.
+#define FLAG_WAYFARER_SEVII_BILL_MET WAYFARER_SEVII_FLAG_ID(204)
+// BILL has caught his boat after handing over the METEORITE (One Island was only a stop on his way).
+#define FLAG_WAYFARER_SEVII_HIDE_ONE_ISLAND_BILL WAYFARER_SEVII_FLAG_ID(205)
 #define FLAG_WAYFARER_SILVER_AZALEA_COMPLETE 0x93D
 #define FLAG_WAYFARER_SILVER_BURNED_TOWER_COMPLETE 0x93E
 #define FLAG_WAYFARER_BURNED_TOWER_DISCOVERED 0x93F

@@ -1000,6 +1000,8 @@ export const storyFlags = {
   seviiHideRivals: 0xc03b,
   seviiHideRubyGuards: 0xc03a,
   seviiHideThreeIslandBikers: 0xc0c7,
+  seviiBillMet: 0xc0cc,
+  seviiHideOneIslandBill: 0xc0cd,
   seviiPasswordOneLearned: 0xc021,
   seviiMoltresResolved: 0xc02a,
   powerPlantMaxPotionClaimed: 0xe035,

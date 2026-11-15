@@ -12,7 +12,19 @@ EcruteakCity_PokemonCenter_EventScript_Bill::
 	playse SE_PC_OFF
 	delay 55
 	faceplayer
+#if IS_WAYFARER
+	@ BILL introduces himself only if Route 25 or One Island has not met the player first.
+	goto_if_set FLAG_WAYFARER_SEVII_BILL_MET, EcruteakCity_PokemonCenter_EventScript_BillKnown
+	setflag FLAG_WAYFARER_SEVII_BILL_MET
+#endif
 	msgbox EcruteakCity_PokemonCenter1F_Text_Bill1, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	goto EcruteakCity_PokemonCenter_EventScript_BillStorage
+
+EcruteakCity_PokemonCenter_EventScript_BillKnown:
+	msgbox EcruteakCity_PokemonCenter1F_Text_Bill1Known, MSGBOX_DEFAULT
+EcruteakCity_PokemonCenter_EventScript_BillStorage:
+#endif
 	msgbox EcruteakCity_PokemonCenter1F_Text_Bill2, MSGBOX_DEFAULT
 	closemessage
 	call_if_eq VAR_FACING, DIR_NORTH, EcruteakCity_PokemonCenter_EventScript_BillLeaveBot
@@ -101,6 +113,13 @@ EcruteakCity_PokemonCenter1F_Text_Bill1:
 	.string "Hmm, {PLAYER}, huh?\n"
 	.string "You've come at the right time.$"
 
+#if IS_WAYFARER
+EcruteakCity_PokemonCenter1F_Text_Bill1Known:
+	.string "Oh, {PLAYER}! Fancy running into\n"
+	.string "you here.\p"
+	.string "You've come at the right time.$"
+
+#endif
 EcruteakCity_PokemonCenter1F_Text_Bill2:
 	.string "I just finished adjustments on my\n"
 	.string "POKéMON STORAGE SYSTEM.\p"

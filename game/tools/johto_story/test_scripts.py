@@ -208,6 +208,7 @@ class Interp:
         self.character = None   # the name last put in VAR_0x8004
         self.pallet = pallet    # the player is from PALLET TOWN
         self.party = set()      # hatched species in the party (an Egg is not its species)
+        self.specials = {}      # specialvar results to force, by special name
 
     def get(self, name):
         if name in self.vars:
@@ -271,7 +272,9 @@ class Interp:
                 if self.get(args[0]) == switch_value:
                     pc = self.labels[args[1]]
             elif command == 'specialvar':
-                if args[1] == 'WayfarerJohtoSilverAvailable':
+                if args[1] in self.specials:
+                    self.vars[args[0]] = self.specials[args[1]]
+                elif args[1] == 'WayfarerJohtoSilverAvailable':
                     self.vars[args[0]] = int(self.silver_playable())
                 elif args[1] == 'GetBattleOutcome':
                     self.vars[args[0]] = self.get('B_OUTCOME_' + self.outcome)
@@ -1437,6 +1440,76 @@ class ElmEggCall(unittest.TestCase):
         interp = self.load('EcruteakCity_hns', {EGG_CALL_OWED, 'FLAG_SHOWN_ELM_TOGEPI'})
         self.assertEqual(interp.vars.get('VAR_TEMP_C', 0), 0)
         self.assertNotIn(EGG_CALL_OWED, interp.flags)
+
+
+BILL_MET = 'FLAG_WAYFARER_SEVII_BILL_MET'
+ONE_ISLAND_BILL_HIDDEN = 'FLAG_WAYFARER_SEVII_HIDE_ONE_ISLAND_BILL'
+SEVII_STORY = 'data/scripts/wayfarer_sevii/story/local_adventures.inc'
+# Each BILL scene: its map or script file, its talk label, and its first-meeting and already-met openings.
+BILL_SCENES = {
+    'route25': ('Route25_BillsHouse_hns', 'Route25_BillsHouse_EventScript_Bill',
+                'Route25_BillsHouse_Text_BillNeedsHelp', 'Route25_BillsHouse_Text_BillNeedsHelpKnown'),
+    'ecruteak': ('EcruteakCity_PokemonCenter_hns', 'EcruteakCity_PokemonCenter_EventScript_Bill',
+                 'EcruteakCity_PokemonCenter1F_Text_Bill1', 'EcruteakCity_PokemonCenter1F_Text_Bill1Known'),
+    'one_island': (SEVII_STORY, 'WayfarerSevii_Story_EventScript_BillMeteorite',
+                   'WayfarerSevii_Story_Text_BillMeteoriteOffer', 'WayfarerSevii_Story_Text_BillMeteoriteOfferKnown'),
+}
+
+
+class BillAcquaintance(unittest.TestCase):
+    """BILL introduces himself once, in whichever of his scenes comes first, and leaves One Island after the errand."""
+
+    def meet(self, scene, flags, answers=1, give_ok=1):
+        source, label, _, _ = BILL_SCENES[scene]
+        interp = Interp(source, flags=flags, answers=answers)
+        interp.specials['WayfarerSevii_TryGiveItemThenSetFlag'] = give_ok
+        interp.run(label)
+        return interp
+
+    def test_only_the_first_scene_introduces_bill_in_any_order(self):
+        for order in permutations(BILL_SCENES):
+            with self.subTest(order=order):
+                flags = set()
+                for index, scene in enumerate(order):
+                    interp = self.meet(scene, flags)
+                    _, _, intro, greeting = BILL_SCENES[scene]
+                    self.assertEqual(intro in interp.messages, index == 0)
+                    self.assertEqual(greeting in interp.messages, index > 0)
+                    self.assertIn(BILL_MET, interp.flags)
+                    flags = interp.flags
+
+    def test_declining_still_counts_as_meeting(self):
+        for scene in ('route25', 'one_island'):
+            with self.subTest(scene=scene):
+                interp = self.meet(scene, set(), answers=0)
+                self.assertIn(BILL_MET, interp.flags)
+                again = self.meet(scene, interp.flags)
+                self.assertIn(BILL_SCENES[scene][3], again.messages)
+
+    def test_ecruteak_still_tells_the_storage_story_either_way(self):
+        for flags in (set(), {BILL_MET}):
+            interp = self.meet('ecruteak', flags)
+            self.assertIn('EcruteakCity_PokemonCenter1F_Text_Bill2', interp.messages)
+            self.assertIn('FLAG_HIDE_ECRUTEAK_BILL', interp.flags)
+
+    def test_one_island_bill_catches_his_boat_after_the_meteorite(self):
+        interp = self.meet('one_island', set())
+        self.assertIn('FLAG_WAYFARER_SEVII_METEORITE_RECEIVED', interp.flags)
+        self.assertIn('WayfarerSevii_Story_Text_BillCatchingBoat', interp.messages)
+        self.assertIn(ONE_ISLAND_BILL_HIDDEN, interp.flags)
+        # Declining or a full Key Items pocket keeps him there with the offer open.
+        for answers, give_ok in ((0, 1), (1, 0)):
+            stays = self.meet('one_island', set(), answers=answers, give_ok=give_ok)
+            self.assertNotIn(ONE_ISLAND_BILL_HIDDEN, stays.flags)
+            self.assertNotIn('FLAG_WAYFARER_SEVII_METEORITE_RECEIVED', stays.flags)
+
+    def test_one_island_bill_object_uses_the_departure_flag(self):
+        manifest = json.loads((GAME / 'src/data/wayfarer_sevii_maps.json').read_text())
+        center = next(m for m in manifest['maps'] if m['source_map'] == 'OneIsland_PokemonCenter_1F_Frlg')
+        bill = next(e for e in center['retained_events']['object_events']
+                    if e['source'].get('local_id') == 'LOCALID_ONE_ISLAND_POKEMON_CENTER_BILL')
+        self.assertEqual(bill['overrides']['flag'], ONE_ISLAND_BILL_HIDDEN)
+        self.assertEqual(bill['overrides']['script'], 'WayfarerSevii_Story_EventScript_BillMeteorite')
 
 
 class BaobaTalk(unittest.TestCase):

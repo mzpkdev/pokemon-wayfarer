@@ -395,7 +395,15 @@ Route25_BillsHouse_EventScript_Bill::
 	lock
 	faceplayer
 	goto_if_set FLAG_WAYFARER_BILL_RESCUED, Route25_BillsHouse_EventScript_BillTicket
+	@ BILL introduces himself only if Ecruteak or One Island has not met the player first.
+	goto_if_set FLAG_WAYFARER_SEVII_BILL_MET, Route25_BillsHouse_EventScript_BillNeedsHelpKnown
+	setflag FLAG_WAYFARER_SEVII_BILL_MET
 	msgbox Route25_BillsHouse_Text_BillNeedsHelp, MSGBOX_YESNO
+	goto Route25_BillsHouse_EventScript_BillHelpAnswered
+
+Route25_BillsHouse_EventScript_BillNeedsHelpKnown:
+	msgbox Route25_BillsHouse_Text_BillNeedsHelpKnown, MSGBOX_YESNO
+Route25_BillsHouse_EventScript_BillHelpAnswered:
 	goto_if_eq VAR_RESULT, FALSE, Route25_BillsHouse_EventScript_BillDeclined
 	msgbox Route25_BillsHouse_Text_BillResetTeleporter, MSGBOX_DEFAULT
 	closemessage
@@ -686,7 +694,16 @@ Route25_BillsHouse_Text_WrongPokemon:
 
 #if IS_WAYFARER
 Route25_BillsHouse_Text_BillNeedsHelp:
-	.string "BILL: Help! My test TELEPORTER\n"
+	.string "BILL: Hey, you! I'm BILL, a\n"
+	.string "POKéMANIAC!\p"
+	.string "Help! My test TELEPORTER\n"
+	.string "locked up and its field has me\l"
+	.string "pinned in place! Will you reset it?$"
+
+Route25_BillsHouse_Text_BillNeedsHelpKnown:
+	.string "BILL: {PLAYER}! Am I glad to see\n"
+	.string "you!\p"
+	.string "Help! My test TELEPORTER\n"
 	.string "locked up and its field has me\l"
 	.string "pinned in place! Will you reset it?$"
 

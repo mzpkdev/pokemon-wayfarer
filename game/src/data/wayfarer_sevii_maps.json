@@ -15253,14 +15253,17 @@
             "reason": "Restores reviewed local Sevii story content without campaign or travel gates.",
             "overrides": {
               "script": "WayfarerSevii_Story_EventScript_BillMeteorite",
-              "flag": "0"
+              "flag": "FLAG_WAYFARER_SEVII_HIDE_ONE_ISLAND_BILL"
             },
             "actor_role": "actor",
             "state_reads": [
-              "SEVII_METEORITE_DELIVERED",
+              "SEVII_BILL_MET",
+              "SEVII_HIDE_ONE_ISLAND_BILL",
               "SEVII_METEORITE_RECEIVED"
             ],
             "state_writes": [
+              "SEVII_BILL_MET",
+              "SEVII_HIDE_ONE_ISLAND_BILL",
               "SEVII_METEORITE_RECEIVED"
             ]
           },
@@ -19458,11 +19461,12 @@
         "WayfarerSevii_Story_EventScript_BikersCleared",
         "WayfarerSevii_Story_EventScript_BikersEarlierOpponent",
         "WayfarerSevii_Story_EventScript_BikersNotStarted",
+        "WayfarerSevii_Story_EventScript_BillLeaves",
         "WayfarerSevii_Story_EventScript_BillMeteorite",
-        "WayfarerSevii_Story_EventScript_BillMeteoriteAccepted",
         "WayfarerSevii_Story_EventScript_BillMeteoriteDeclined",
-        "WayfarerSevii_Story_EventScript_BillMeteoriteDelivered",
         "WayfarerSevii_Story_EventScript_BillMeteoriteNoRoom",
+        "WayfarerSevii_Story_EventScript_BillMeteoriteOfferAnswered",
+        "WayfarerSevii_Story_EventScript_BillMeteoriteOfferKnown",
         "WayfarerSevii_Story_EventScript_CommitBikersCleared",
         "WayfarerSevii_Story_EventScript_CommitLoreleiComplete",
         "WayfarerSevii_Story_EventScript_CommitLostelleRescue",
@@ -19531,12 +19535,12 @@
         "WayfarerSevii_Story_Text_BikersGone",
         "WayfarerSevii_Story_Text_BikersLeave",
         "WayfarerSevii_Story_Text_BikersLocalTrouble",
+        "WayfarerSevii_Story_Text_BillCatchingBoat",
         "WayfarerSevii_Story_Text_BillMeteoriteDeclined",
         "WayfarerSevii_Story_Text_BillMeteoriteNoRoom",
         "WayfarerSevii_Story_Text_BillMeteoriteOffer",
+        "WayfarerSevii_Story_Text_BillMeteoriteOfferKnown",
         "WayfarerSevii_Story_Text_BillMeteoriteReceived",
-        "WayfarerSevii_Story_Text_BillMeteoriteReminder",
-        "WayfarerSevii_Story_Text_BillMeteoriteThanks",
         "WayfarerSevii_Story_Text_DefenderAfterReward",
         "WayfarerSevii_Story_Text_DefenderBeforeBikers",
         "WayfarerSevii_Story_Text_FullRestoreNoRoom",
@@ -25464,7 +25468,6 @@
         "slot": 18,
         "initial": 0,
         "readers": [
-          "story.lostelle.bill-meteorite",
           "story.lostelle.father"
         ],
         "writers": [
@@ -26479,6 +26482,47 @@
             "from": 0,
             "to": 1,
             "caller": "story.celio.warehouse-warehousegideon"
+          }
+        ]
+      },
+      {
+        "id": "SEVII_BILL_MET",
+        "owner": "story",
+        "storage": "flag",
+        "slot": 204,
+        "initial": 0,
+        "readers": [
+          "story.lostelle.bill-meteorite"
+        ],
+        "writers": [
+          "story.lostelle.bill-meteorite"
+        ],
+        "transitions": [
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.lostelle.bill-meteorite"
+          }
+        ]
+      },
+      {
+        "id": "SEVII_HIDE_ONE_ISLAND_BILL",
+        "owner": "story",
+        "storage": "flag",
+        "slot": 205,
+        "initial": 0,
+        "lifecycle": "presentation",
+        "readers": [
+          "story.lostelle.bill-meteorite"
+        ],
+        "writers": [
+          "story.lostelle.bill-meteorite"
+        ],
+        "transitions": [
+          {
+            "from": 0,
+            "to": 1,
+            "caller": "story.lostelle.bill-meteorite"
           }
         ]
       },
