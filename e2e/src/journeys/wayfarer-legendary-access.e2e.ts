@@ -4,7 +4,8 @@ import { GameSession, type Direction, type GameMap } from "../harness/game-sessi
 
 // Legendary access in the Wayfarer build (.product/prds/frlg-kanto-independent-story-beats.md,
 // .product/specs/ss-ferries.md): Moltres and Mewtwo wait for the legendary Trainer Rating (120 on the
-// v0 scale), Steven's Vermilion Lati scene waits for a Kanto champion, the Vermilion sailor never
+// v0 scale), Steven's Vermilion Lati scene waits for a Kanto champion and starts the Kanto Lati, the
+// first Indigo clear starts none (wayfarer-league-circuit), the Vermilion sailor never
 // offers Navel Rock, and the Southern Island Lati no longer needs the Mystery Event ship flag.
 
 type State = Awaited<ReturnType<GameSession["state"]["read"]>>
@@ -150,6 +151,7 @@ describe.sequential("Wayfarer legendary access", () => {
     // The player walked onto the trigger tile and was left in control.
     expect(state.player.y).toBe(2)
     await expect(game.story.var("vermilionCityStevenState")).resolves.toBe(0)
+    await expect(game.story.flag("kantoLatiRoaming")).resolves.toBe(false)
 
     await arrangeAt(game, at, "up", { flags: { isKantoChampion: true } })
     await game.player.move("up")
@@ -161,7 +163,8 @@ describe.sequential("Wayfarer legendary access", () => {
       await game.wait.frames(30)
     }
     expect((await game.state.read()).choice.kind).toBe("multichoice")
-    // Pick the first row and read Steven's farewell through: the scene then marks itself done.
+    // Pick the second row (Blue) and read Steven's farewell through: the scene then marks itself done.
+    await game.controls.press("down")
     await game.controls.press("a")
     for (let attempt = 0; attempt < 120; attempt++) {
       if ((await game.story.var("vermilionCityStevenState")) === 1) break
@@ -170,6 +173,9 @@ describe.sequential("Wayfarer legendary access", () => {
       await game.wait.frames(30)
     }
     await expect(game.story.var("vermilionCityStevenState")).resolves.toBe(1)
+    // His choice is the only start for the Kanto Lati: Blue is Latios.
+    await expect(game.story.flag("kantoLatiRoaming")).resolves.toBe(true)
+    await expect(game.story.var("kantoLatiChoice")).resolves.toBe(1)
   })
 
   it("never offers Navel Rock from the Vermilion sailor's Sevii menu", async () => {

@@ -31,6 +31,13 @@ Steven's Vermilion City scene, which starts Kanto Lati roaming, waits for
 `FLAG_IS_KANTO_CHAMPION`, the same gate as his Eon Ticket at the Fuchsia Safari
 Zone entrance. HNS had no gate there.
 
+His choice is the only start. HNS's Hall of Fame also called `InitKantoRoamers`
+on every Kanto clear, using whatever `VAR_ROAMER_POKEMON_HNS` held. Wayfarer's
+Indigo Hall of Fame doesn't. It sets the Kanto clear flags only on the first
+Indigo clear, and that same clear is what lets Steven appear, so a call there
+would always start a Latias before his choice. Catching or defeating the Kanto
+Lati only leaves its roamer inactive, and nothing restarts it.
+
 ## Behavior
 
 ### Build isolation
@@ -113,7 +120,8 @@ not a Pokémon sighting.
 Keep the existing HNS APIs region-specific in Wayfarer:
 
 - `InitRoamer` continues to initialize level-40 Raikou and Entei in Johto; and
-- `InitKantoRoamers` continues to initialize the selected level-60 Lati in Kanto.
+- `InitKantoRoamers` continues to initialize the selected level-60 Lati in Kanto,
+  called only from Steven's Vermilion choice.
 
 Register the Hoenn special explicitly in the special table. Do not dispatch a
 shared initializer according to the current map.
