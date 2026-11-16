@@ -258,13 +258,15 @@ allocate a rival Trainer party for this scene.
 ## Moltres
 
 Restore Moltres at the Mt. Ember summit. Use the shared bird threshold
-`WAYFARER_BIRD_CAPTURE_TR = 55`, consistent with Articuno and Zapdos. TR 55 is
-today's value; v0: TR 120 (≈ 16 badges) on the
-[v0 TR scale](player-trainer-rating.md#formula-v0).
+`WAYFARER_BIRD_CAPTURE_TR`, consistent with Articuno and Zapdos. It aliases
+`WAYFARER_LEGENDARY_TR`: 120 under the v0 trainers (≈ 16 badges on the
+[v0 TR scale](player-trainer-rating.md#formula-v0)), 55 otherwise. The player
+is never shown the number. The Mt. Silver Moltres (HNS `MtSilver_1F_MoltresRoom`)
+uses the same gate and the same kind of not-ready message.
 
-- Below TR 55, interaction explains that the Pokémon is too dangerous and ends
+- Below the threshold, interaction explains that the Pokémon is too dangerous and ends
   without starting a battle or hiding Moltres.
-- At TR 55 or above, start the original static encounter with its source species,
+- At or above the threshold, start the original static encounter with its source species,
   level, and presentation.
 - Catching or knocking out Moltres sets `MOLTRES_RESOLVED` and hides it.
 - Running, losing, or failing to start the encounter leaves it available.

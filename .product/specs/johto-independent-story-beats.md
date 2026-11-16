@@ -86,9 +86,11 @@ claimable from its owner after a full Bag or party. A repeat conversation never
 gives it twice. This applies to the Wings, Bells, HM Surf, HM Whirlpool, the
 Secret Potion, and Elm's Master Ball, among others.
 
-**Legendary threshold.** One constant, TR 55, serves Johto's legendary stages.
-Share it with the existing `WAYFARER_BIRD_CAPTURE_TR`
-(`game/include/wayfarer_sevii_story.h`) so every legendary tier reads one
+**Legendary threshold.** One constant, `WAYFARER_LEGENDARY_TR` (120 under the v0
+trainers, 55 otherwise), serves Johto's legendary stages. It is the same
+constant as the existing `WAYFARER_BIRD_CAPTURE_TR`
+(`game/include/wayfarer_sevii_story.h`), including for the Mt. Silver Moltres,
+and Mewtwo uses it as well, so every legendary tier reads one
 number. Compare with `GetTrainerRating()`.
 
 ### Visitors
@@ -410,13 +412,13 @@ test trainers worthy of the legendary Pokémon. She names what is still
 missing:
 
 - the Wing, held by the Radio Tower's Director;
-- more experience as a trainer (TR below 55).
+- more experience as a trainer (TR below `WAYFARER_LEGENDARY_TR`).
 
 With no branch chosen yet, she speaks of the legendary Pokémon without naming
 one, and points the player to Baoba at the Route 39 farm.
 
 **Trial.** With the selected branch's Wing in the Bag, the Radio Tower
-resolved, and TR ≥ 55, Zuki offers the trial. Accepting runs the existing
+resolved, and TR at `WAYFARER_LEGENDARY_TR`, Zuki offers the trial. Accepting runs the existing
 `LegendaryCutscene` and five battles. The Kimono Girls appear only for the
 trial and afterwards. Remove the theater state-5 entry triggers and Elm's
 activation. The Bell, the sage-office Clear Bell access, the ceremony, and the
@@ -451,7 +453,7 @@ Pewter's old man gives the other branch's Wing only when all hold:
   both chambers set on a win, a catch, or the Pokémon fleeing
   (`WhirlIslands_LugiaChamber_hns:184-198`, `TinTower_RoofDay_hns:184-195`); a
   run or Teleport writes nothing and leaves it unresolved;
-- TR ≥ 55;
+- TR at `WAYFARER_LEGENDARY_TR`;
 - he has not given it before.
 
 Before a branch is chosen he has ordinary dialogue, and the branch-0 path no
@@ -526,7 +528,7 @@ Mechanical checks extend the existing script and journey tests. Cover:
   Take Surf from the giver's conversation and from his trigger; it is given
   once.
 - **Ceremony:** Zuki with neither requirement, with only the Wing, with only
-  TR 55, and with both. Only both offers the trial. Cover both branches, the
+  the TR, and with both. Only both offers the trial. Cover both branches, the
   Kimono callbacks with and without their events, and visitors.
 - **Pewter:** before the branch choice, before the trial, after the trial but
   before resolving the encounter, after each completing outcome, and below TR

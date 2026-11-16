@@ -2,6 +2,12 @@
 
 Status: Approved product design. Not implemented.
 
+Today in Wayfarer, the Littleroot television choice only records which Lati
+Southern Island shows, and arriving there by the Eon Ticket charter from
+Lilycove is enough to meet it. No Hoenn roamer starts. Steven's Vermilion City
+scene, which starts Kanto Lati roaming, waits for the Kanto Champion, like his
+Eon Ticket at the Fuchsia Safari Zone entrance.
+
 ## Intent
 
 Restore Emerald's postgame Latias or Latios hunt in Wayfarer. The player's TV

@@ -15,6 +15,10 @@ MtSilver_1F_MoltresRoom_OnTransition:
 MtSilver_1F_MoltresRoom_EventScript_Moltres::
 	lock
 	faceplayer
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerMtSilver_IsMoltresEligible
+	goto_if_eq VAR_RESULT, FALSE, MtSilver_1F_MoltresRoom_EventScript_MoltresNotReady
+#endif
 	playmoncry SPECIES_MOLTRES, CRY_MODE_ENCOUNTER
 	msgbox Text_Gyaoo
 	delay 40
@@ -34,3 +38,15 @@ MtSilver_1F_MoltresRoom_EventScript_Moltres::
 MtSilver_1F_MoltresRoom_EventScript_MoltresRan::
 	release
 	end
+
+#if IS_WAYFARER
+MtSilver_1F_MoltresRoom_EventScript_MoltresNotReady::
+	msgbox MtSilver_1F_MoltresRoom_Text_MoltresNotReady
+	release
+	end
+
+MtSilver_1F_MoltresRoom_Text_MoltresNotReady:
+	.string "MOLTRES is watching you warily.\p"
+	.string "You need more experience before\n"
+	.string "you can challenge it.$"
+#endif

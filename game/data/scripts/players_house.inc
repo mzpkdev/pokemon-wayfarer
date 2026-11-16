@@ -547,7 +547,12 @@ PlayersHouse_1F_EventScript_SeeLatiTV::
 #endif
 	multichoice 22, 8, MULTI_TV_LATI, TRUE
 	copyvar VAR_0x8004, VAR_RESULT
+#if IS_WAYFARER
+	@ The choice only picks Southern Island's Lati. Hoenn Lati roaming is not implemented
+	@ (.product/specs/emerald-lati-roaming.md), and HnS's InitRoamer restarts Raikou and Entei.
+#else
 	special InitRoamer
+#endif
 	copyvar VAR_ROAMER_POKEMON, VAR_RESULT
 #if IS_WAYFARER
 	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold

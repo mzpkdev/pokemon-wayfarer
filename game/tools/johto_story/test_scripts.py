@@ -209,6 +209,7 @@ class Interp:
         self.pallet = pallet    # the player is from PALLET TOWN
         self.party = set()      # hatched species in the party (an Egg is not its species)
         self.specials = {}      # specialvar results to force, by special name
+        self.called = []        # plain `special` calls, in order
 
     def get(self, name):
         if name in self.vars:
@@ -294,6 +295,8 @@ class Interp:
                                           # ORIGIN_SCENE_NATIVE (1) for Johto, ORIGIN_SCENE_VISITOR (0) otherwise.
                                           'WayfarerDispatchOriginScene': int(self.johto),
                                           'WayfarerGetOriginStarterSlot': self.starter_slot}.get(args[1], 0)
+            elif command == 'special':
+                self.called.append(args[0])
             elif command == 'msgbox':
                 self.messages.append(args[0])
                 if args[-1] == 'MSGBOX_YESNO':

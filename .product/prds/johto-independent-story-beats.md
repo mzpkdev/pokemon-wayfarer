@@ -77,8 +77,8 @@ In Johto the exception covers:
 | Main legendary (Lugia or Ho-Oh) | The five-Kimono-Girl trial | Radio Tower completed and its Wing received |
 | Other legendary | Pewter's old man giving the other Wing | Main legendary encounter resolved |
 
-Both stages use TR 55 on today's scale (TR 120 on the v0 scale), the same
-threshold as Kanto's Zapdos, so legendaries share one tier across regions.
+Both stages use `WAYFARER_LEGENDARY_TR` (120 under the v0 trainers, 55
+otherwise), the same threshold as Kanto's Zapdos, so legendaries share one tier across regions.
 
 Elm's Master Ball is not on this list. Like
 [Silph's](../specs/silph-president-master-ball.md), it is immediate: Elm hands it
@@ -200,7 +200,9 @@ their rewards, or erase their participants.
 Keep the branch selection, characters, five-dancer challenge, Bell reward,
 ceremony, and legendary encounter. Baoba's Route 39 choice selects Lugia or
 Ho-Oh as the main legendary; the other remains available through Pewter's Wing
-giver.
+giver. Navel Rock's copies of both birds are retired in Wayfarer, so Johto is
+the only place to meet them: Lugia at Whirl Islands and Ho-Oh at Tin Tower,
+plus Pewter's postgame level-70 rematch.
 
 The main sequence is:
 

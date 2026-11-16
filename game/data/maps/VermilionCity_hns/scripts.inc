@@ -451,6 +451,9 @@ VermilionCity_Text_PortSign:
 	.string "ENTRANCE$"
 
 VermilionCity_EventScript_TriggerStevenLeft::
+#if IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, VermilionCity_EventScript_StevenNotYet
+#endif
 	lock
 	playse SE_PIN
 	applymovement2 LOCALID_PLAYER, Common_Movement_ExclamationMark
@@ -471,6 +474,9 @@ VermilionCity_EventScript_TriggerStevenLeft::
 	end
 
 VermilionCity_EventScript_TriggerStevenMiddle::
+#if IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, VermilionCity_EventScript_StevenNotYet
+#endif
 	lock
 	playse SE_PIN
 	applymovement2 LOCALID_PLAYER, Common_Movement_ExclamationMark
@@ -489,6 +495,9 @@ VermilionCity_EventScript_TriggerStevenMiddle::
 	end
  
 VermilionCity_EventScript_TriggerStevenRight::
+#if IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, VermilionCity_EventScript_StevenNotYet
+#endif
 	lock
 	playse SE_PIN
 	applymovement2 LOCALID_PLAYER, Common_Movement_ExclamationMark
@@ -509,6 +518,12 @@ VermilionCity_EventScript_TriggerStevenRight::
 	end
 
 
+#if IS_WAYFARER
+@ Steven waits for a Kanto champion, as his Eon Ticket at the Safari Zone entrance does; HnS has no gate here.
+VermilionCity_EventScript_StevenNotYet::
+	end
+
+#endif
 VermilionCity_EventScript_LatiChoice::
 	applymovement2 LOCALID_VERMILIONCITY_STEVEN, VermilionCity_Movement_StevenWalkToPlayer
 	waitmovement LOCALID_VERMILIONCITY_STEVEN

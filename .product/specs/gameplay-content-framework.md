@@ -426,7 +426,7 @@ services or encounter-data generation in v1.
 | Sevii script-table generator | Reuse inventory, include resolution, and deterministic emission infrastructure | Reviewed Wayfarer-owned handlers and empty tables; no import of FRLG story bodies |
 | Python wild generator and Cartographer encounter join | Publish one resolved FRLG source-pair view consumed by both tools | Species choice, slot order, source levels, weights, rates, omissions, and day/night alias policy |
 | Fixed-stock marts and other NPC services | Add domain adapters only when separately specified | Exact stock and existing healing, PC, daycare, and follow-up behavior |
-| Ferry menus and routes | Later travel profiles with explicit destination identity | Direction, cancellation, ticket/origin conditions, and protected Birth Island/Navel Rock routes |
+| Ferry menus and routes | Later travel profiles with explicit destination identity | Direction, cancellation, ticket/origin conditions, and protected Birth Island route (Navel Rock is retired) |
 
 Source event snapshots/indexes in the port manifest are deliberate drift guards.
 A later compiler adapter may generate normalized review snapshots or fingerprints,

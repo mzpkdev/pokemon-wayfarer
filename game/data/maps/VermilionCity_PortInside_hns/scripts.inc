@@ -76,7 +76,6 @@ VermilionPort_EventScript_Sailor_Sevii::
 	switch VAR_0x8006
 	case SEAGALLOP_ONE_ISLAND, VermilionPort_EventScript_Sailor_SetSailToSeviiDestination
 	case SEAGALLOP_BIRTH_ISLAND, VermilionPort_EventScript_Sailor_SetSailToSeviiDestination
-	case SEAGALLOP_NAVEL_ROCK, VermilionPort_EventScript_Sailor_SetSailToSeviiDestination
 	case MULTI_B_PRESSED, VermilionPort_EventScript_Sailor_Cancel
 	release
 	end

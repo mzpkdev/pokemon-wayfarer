@@ -301,6 +301,8 @@ gSpecials::
 	def_special WayfarerShouldWhiteOutToLavaridge
 	def_special WayfarerCoast_IsArticunoEligible
 	def_special WayfarerPowerPlant_IsZapdosEligible
+	def_special WayfarerMtSilver_IsMoltresEligible
+	def_special WayfarerCeruleanCave_IsMewtwoEligible
 	def_special WayfarerHoenn_IsLateLegendaryReady
 	def_special WayfarerHoenn_IsMtPyreLead
 	def_special WayfarerGrantKantoBadge15
@@ -862,7 +864,6 @@ gSpecials::
     def_special DrawWayfarerVermilionSeviiDestinationMenu
     def_special GetWayfarerVermilionSeviiDestination
     def_special WayfarerCanSailToBirthIsland
-    def_special WayfarerCanSailToNavelRock
     def_special WayfarerSSAnne_HasUnfinishedContent
     def_special WayfarerSevii_HasPartyCapacity
     def_special WayfarerSevii_PartyHasSpecies

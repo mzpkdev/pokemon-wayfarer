@@ -258,8 +258,8 @@ LeagueCircuit_Text_Unavailable::
 	.string "available here.$"
 
 LeagueCircuit_Text_NeedQualification::
-	.string "A TRAINER RATING of at least 80\n"
-	.string "is needed for LEAGUE events.$"
+	.string "You need more experience before\n"
+	.string "you can enter LEAGUE events.$"
 
 LeagueCircuit_Text_NeedMaster::
 	.string "Clear both INDIGO and HOENN\n"

@@ -158,7 +158,8 @@ keeps its repair condition. No exterior replacement or `map.bin` edit is part
 of this port.
 
 Move the only Route 10 Zapdos into the old hall. Players can explore it before
-TR 55; the fixed level 50 battle becomes available at TR 55. Zapdos
+`WAYFARER_LEGENDARY_TR`; the fixed level 50 battle becomes available at it
+(120 under the v0 trainers, 55 otherwise). Zapdos
 uses FRLG outcomes: catch or KO resolves it permanently, while running,
 teleporting, or blacking out leaves it available on return. League completion
 does not respawn it. The [Power Plant specification](../specs/frlg-kanto-power-plant.md)
@@ -325,9 +326,9 @@ Repeated conversations cannot repeatedly award one-time items or Pokémon.
 Bag and party capacity failures leave rewards claimable later.
 
 Retain the independent-story design's readiness requirements for the Master
-Ball and legendary captures. Zapdos's battle threshold is TR 55 (v0:
-TR 120, ≈ 16 badges); other
-unsettled thresholds are decided separately. A deferred Master Ball does not
+Ball and legendary captures. The birds and Mewtwo share the battle threshold
+`WAYFARER_LEGENDARY_TR` (120 under the v0 trainers, ≈ 16 badges; 55
+otherwise); other unsettled thresholds are decided separately. A deferred Master Ball does not
 delay Silph's rescue or Giovanni's finale. No Sevii
 delivery requirement is imported for Mewtwo.
 

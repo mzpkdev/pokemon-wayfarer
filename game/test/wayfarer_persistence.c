@@ -51,6 +51,26 @@ TEST("Wayfarer Power Plant Zapdos requires its scaled TR threshold and unresolve
     EXPECT(!WayfarerPowerPlant_IsZapdosEligible());
 }
 
+TEST("Mt. Silver Moltres waits for the birds' TR threshold, like its Mt. Ember twin")
+{
+    EXPECT_EQ(WAYFARER_BIRD_CAPTURE_TR, WAYFARER_LEGENDARY_TR);
+
+    SetTrainerRating(WAYFARER_BIRD_CAPTURE_TR - 1);
+    EXPECT(!WayfarerMtSilver_IsMoltresEligible());
+
+    SetTrainerRating(WAYFARER_BIRD_CAPTURE_TR);
+    EXPECT(WayfarerMtSilver_IsMoltresEligible());
+}
+
+TEST("Cerulean Cave Mewtwo waits for the legendary TR threshold on top of its guard")
+{
+    SetTrainerRating(WAYFARER_LEGENDARY_TR - 1);
+    EXPECT(!WayfarerCeruleanCave_IsMewtwoEligible());
+
+    SetTrainerRating(WAYFARER_LEGENDARY_TR);
+    EXPECT(WayfarerCeruleanCave_IsMewtwoEligible());
+}
+
 TEST("Late Hoenn legendaries wait for the resolved crisis and the legendary TR, never a Hall of Fame")
 {
     VarSet(WAYFARER_HOENN_SKY_PILLAR_STATE_VAR, 1);

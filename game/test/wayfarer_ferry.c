@@ -23,6 +23,8 @@
 #include "constants/items.h"
 #include "constants/maps.h"
 #include "constants/script_commands.h"
+#include "constants/script_menu.h"
+#include "constants/seagallop.h"
 #include "constants/moves.h"
 #include "constants/opponents.h"
 #include "constants/pokemon.h"
@@ -173,11 +175,33 @@ TEST("Ferry: the Birth Island trip needs the Aurora Ticket alone")
     EXPECT(WayfarerCanSailToBirthIsland());
     EXPECT(RemoveBagItem(ITEM_AURORA_TICKET, 1));
     EXPECT(!WayfarerCanSailToBirthIsland());
-    // Navel Rock keeps its league-win and Mystic Ticket check.
+}
+
+TEST("Ferry: the Vermilion Sevii menu never offers retired Navel Rock")
+{
+    s32 destinations[WAYFARER_VERMILION_SEVII_MAX_ROWS];
+    u8 count;
+
+    ResetFerryFixture();
+    count = WayfarerGetVermilionSeviiDestinations(destinations);
+    EXPECT_EQ(count, 2);
+    EXPECT_EQ(destinations[0], SEAGALLOP_ONE_ISLAND);
+    EXPECT_EQ(destinations[1], MULTI_B_PRESSED);
+
+    // The Mystic Ticket and a League win once opened Navel Rock; it is retired, so they add no row.
     EXPECT(AddBagItem(ITEM_MYSTIC_TICKET, 1));
-    EXPECT(!WayfarerCanSailToNavelRock());
     FlagSet(FLAG_SYS_GAME_CLEAR);
-    EXPECT(WayfarerCanSailToNavelRock());
+    count = WayfarerGetVermilionSeviiDestinations(destinations);
+    EXPECT_EQ(count, 2);
+    EXPECT_EQ(destinations[1], MULTI_B_PRESSED);
+
+    // The Aurora Ticket adds Birth Island alone, before Cancel.
+    EXPECT(AddBagItem(ITEM_AURORA_TICKET, 1));
+    count = WayfarerGetVermilionSeviiDestinations(destinations);
+    EXPECT_EQ(count, 3);
+    EXPECT_EQ(destinations[0], SEAGALLOP_ONE_ISLAND);
+    EXPECT_EQ(destinations[1], SEAGALLOP_BIRTH_ISLAND);
+    EXPECT_EQ(destinations[2], MULTI_B_PRESSED);
 }
 
 TEST("Ferry: boarding sets every field of the voyage state and keeps a pending Anne departure")

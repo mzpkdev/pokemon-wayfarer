@@ -18,7 +18,7 @@ travel, interiors, environmental scripts, and the absence of story and
 Trainers. Static, scripted, gift, trade, roaming, and legendary Pokemon are not
 ordinary encounter profiles and remain out of scope.
 
-Birth Island and Navel Rock are existing Wayfarer content outside this
+Birth Island and Navel Rock (retired, unreachable) are existing Wayfarer content outside this
 encounter port. Do not add, remove, alias, or otherwise modify any encounter or
 static Pokemon behavior they already own.
 

@@ -19,6 +19,9 @@ export const maps = {
   "pokemon-tower-5f": { mapGroup: 66, mapNum: 92 },
   "pokemon-tower-6f": { mapGroup: 66, mapNum: 93 },
   "pokemon-tower-7f": { mapGroup: 66, mapNum: 94 },
+  "mt-silver-moltres-room": { mapGroup: 24, mapNum: 79 },
+  "cerulean-cave-b2f": { mapGroup: 24, mapNum: 63 },
+  "southern-island-interior": { mapGroup: 57, mapNum: 10 },
   "power-plant-old-hall": { mapGroup: 66, mapNum: 95 },
   "silph-lobby": { mapGroup: 18, mapNum: 6 },
   "silph-2f": { mapGroup: 66, mapNum: 48 },
@@ -624,6 +627,8 @@ export const storyVars = {
   // Emerald's VAR_SCOTT_BF_CALL_STEP_COUNTER in the Hoenn bank: steps until Scott's Frontier call.
   hoennScottFrontierCallSteps: 0x70f5,
   vermilionCityState: 0x408f,
+  // VAR_VERMILION_CITY_STEVEN: 0 until Steven's Lati scene has played.
+  vermilionCityStevenState: 0x40a3,
   violetCityState: 0x4091,
   trainerRating: 0x40f7,
   // Wayfarer coast bank vars (0xf000 | slot): the Johto story's per-adventure state.
@@ -912,6 +917,8 @@ export const storyFlags = {
   hideCinnabarBlue: 0x0d5,
   hideDragonsDenCavernClair: 0x09f,
   hideDragonsDenShrineClair: 0x0a2,
+  hideMoltres: 0x042,
+  hideMewtwo: 0x043,
   hideCeruleanCapeRocket: 0x0b5,
   hideCeruleanGymRocket: 0x0b6,
   hideCeruleanGymTrainers: 0x0b7,
@@ -1098,6 +1105,9 @@ export const species = {
   nidoking: 34,
   zapdos: 145,
   moltres: 146,
+  mewtwo: 150,
+  latias: 380,
+  latios: 381,
   misdreavus: 200,
   murkrow: 198,
   honchkrow: 430,

@@ -10,6 +10,7 @@
 #include "strings.h"
 #include "wayfarer_ferry.h"
 #include "wayfarer_origin.h"
+#include "wayfarer_sevii_ferry.h"
 #include "wayfarer_ss_anne.h"
 #include "constants/flags.h"
 #include "constants/items.h"
@@ -47,11 +48,6 @@ static struct ListMenuItem *CreateMenuItems(const u8 *const *labels, const s32 *
 u16 WayfarerCanSailToBirthIsland(void)
 {
     return CheckBagHasItem(ITEM_AURORA_TICKET, 1);
-}
-
-u16 WayfarerCanSailToNavelRock(void)
-{
-    return FlagGet(FLAG_SYS_GAME_CLEAR) && CheckBagHasItem(ITEM_MYSTIC_TICKET, 1);
 }
 
 // Vermilion's sailor runs the S.S. berth, the Seagallop and, until the captain's reward, the S.S. Anne
@@ -174,28 +170,43 @@ u16 GetFerryLilycoveCharter(void)
     return gSpecialVar_Result;
 }
 
-void DrawWayfarerVermilionSeviiDestinationMenu(void)
+// The rows of the Vermilion sailor's Sevii menu in order, as SEAGALLOP_* ids, then MULTI_B_PRESSED for Cancel.
+// Destination IDs are stored with each visible row.  Ticket-gated destinations can therefore never reindex the
+// ordinary One Island entry. Navel Rock is retired: its Mystic Ticket only ever came from Mystery Gift, and Johto
+// keeps Lugia and Ho-Oh (.product/specs/ss-ferries.md).
+u8 WayfarerGetVermilionSeviiDestinations(s32 *destinations)
 {
-    const u8 *labels[4];
-    s32 destinations[4];
     u8 count = 0;
 
-    // Destination IDs are stored with each visible row.  Ticket-gated destinations
-    // can therefore never reindex the ordinary One Island entry.
-    labels[count] = sTextOneIsland;
     destinations[count++] = SEAGALLOP_ONE_ISLAND;
     if (WayfarerCanSailToBirthIsland())
-    {
-        labels[count] = gText_BirthIsland;
         destinations[count++] = SEAGALLOP_BIRTH_ISLAND;
-    }
-    if (WayfarerCanSailToNavelRock())
-    {
-        labels[count] = gText_NavelRock;
-        destinations[count++] = SEAGALLOP_NAVEL_ROCK;
-    }
-    labels[count] = gText_Cancel2;
     destinations[count++] = MULTI_B_PRESSED;
+    return count;
+}
+
+void DrawWayfarerVermilionSeviiDestinationMenu(void)
+{
+    const u8 *labels[WAYFARER_VERMILION_SEVII_MAX_ROWS];
+    s32 destinations[WAYFARER_VERMILION_SEVII_MAX_ROWS];
+    u8 count = WayfarerGetVermilionSeviiDestinations(destinations);
+    u8 i;
+
+    for (i = 0; i < count; i++)
+    {
+        switch (destinations[i])
+        {
+        case SEAGALLOP_ONE_ISLAND:
+            labels[i] = sTextOneIsland;
+            break;
+        case SEAGALLOP_BIRTH_ISLAND:
+            labels[i] = gText_BirthIsland;
+            break;
+        default:
+            labels[i] = gText_Cancel2;
+            break;
+        }
+    }
 
     ScriptMenu_MultichoiceDynamic(15, 4, count, CreateMenuItems(labels, destinations, count),
                                   FALSE, count, 0, DYN_MULTICHOICE_CB_NONE);

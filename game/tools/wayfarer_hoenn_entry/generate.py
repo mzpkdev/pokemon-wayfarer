@@ -432,9 +432,10 @@ def audit_menus_and_routes(game_root: Path) -> dict:
         and "specialvar VAR_0x8006, GetWayfarerVermilionSeviiDestination" in sevii_branch
         and all(
             re.search(rf"case\s+{destination}\s*,\s*VermilionPort_EventScript_Sailor_SetSailToSeviiDestination", sevii_branch) is not None
-            for destination in ("SEAGALLOP_ONE_ISLAND", "SEAGALLOP_BIRTH_ISLAND", "SEAGALLOP_NAVEL_ROCK")
-        ),
-        "Wayfarer Sevii selector does not dispatch stable Seagallop destination IDs",
+            for destination in ("SEAGALLOP_ONE_ISLAND", "SEAGALLOP_BIRTH_ISLAND")
+        )
+        and "SEAGALLOP_NAVEL_ROCK" not in sevii_branch,
+        "Wayfarer Sevii selector does not dispatch stable Seagallop destination IDs, or still dispatches retired Navel Rock",
     )
     bill_path = game_root / "data/maps/Route25_BillsHouse_hns/scripts.inc"
     bill_raw = read_text(bill_path)
@@ -466,12 +467,9 @@ def audit_menus_and_routes(game_root: Path) -> dict:
         re.search(r"u16\s+WayfarerCanSailToBirthIsland\s*\([^)]*\)\s*\{\s*return\s+CheckBagHasItem\s*\(\s*ITEM_AURORA_TICKET\s*,\s*1\s*\)\s*;\s*\}", ferry_source, re.DOTALL) is not None,
         "Birth Island eligibility must be the read-only Aurora Ticket check",
     )
-    require("FLAG_ENABLE_SHIP_NAVEL_ROCK" not in ferry_source,
-            "Wayfarer Navel Rock eligibility must not use the unavailable ship flag")
-    require(
-        re.search(r"u16\s+WayfarerCanSailToNavelRock\s*\([^)]*\)\s*\{\s*return\s+FlagGet\s*\(\s*FLAG_SYS_GAME_CLEAR\s*\)\s*&&\s*CheckBagHasItem\s*\(\s*ITEM_MYSTIC_TICKET\s*,\s*1\s*\)\s*;\s*\}", ferry_source, re.DOTALL) is not None,
-        "Navel Rock eligibility must be the read-only League-clear and Mystic Ticket conjunction",
-    )
+    # Navel Rock is retired in Wayfarer: its Mystic Ticket only ever came from Mystery Gift.
+    require(all(token not in ferry_source for token in ("NavelRock", "SEAGALLOP_NAVEL_ROCK", "ITEM_MYSTIC_TICKET")),
+            "Wayfarer ferry must not offer retired Navel Rock")
     require(re.search(r"\b(?:FlagSet|FlagClear|AddBagItem|RemoveBagItem)\s*\(", ferry_source) is None,
             "Wayfarer special-island eligibility helpers must not mutate flags or the Bag")
 
