@@ -76,7 +76,20 @@ decreases. A new game starts at 0.
   Today that chance grows with the number of species you have caught. RR
   replaces that count, so catching many species alone no longer raises it.
 - **Obedience.** Today Pokémon obey you up to TR's soft level cap. RR adds a
-  margin on top of that cap. Experience still follows TR's level cap.
+  modest margin on top of that cap, about 5 to 10 levels at full RR (a
+  placeholder). TR stays the main control. The margin matters most for
+  Pokémon you did not raise yourself, such as legendaries, gifts and trades.
+  Experience still follows TR's level cap.
+- **Poké Mart stock.** RR unlocks its own shelf in ordinary marts and shares
+  the field supplies with TR. See [Poké Mart stock](#poké-mart-stock).
+- **Rare encounters.** RR works like a weak Lure that is always on. On every
+  wild encounter, a small chance grows with RR. When it hits, the slot is read
+  from the far end of the table, so the rarest slots take the odds of the most
+  common ones. This uses the Lure's own mechanism. A Lure still stacks on top
+  and stays stronger. It applies to every encounter method, including fishing
+  and surfing. Prowlers in rare slots get the same small boost.
+- **A DexNav.** An early RR reward that grows with every seal. See
+  [The DexNav](#the-dexnav).
 - **Roamer hints.** Researchers and professors share sightings of roaming
   Pokémon, and higher RR gives sharper hints. A future roamer design owns the
   details.
@@ -200,8 +213,9 @@ traded Pokémon that evolves by trade evolves on arrival.
 
 ## Boundaries
 
-- RR never changes wild Pokémon levels, trainer levels, the level cap,
-  experience or shop stock. TR alone drives those.
+- RR never changes wild Pokémon levels, trainer levels, the level cap or
+  experience. TR alone drives those. RR only adds to shop stock; it never
+  removes anything TR opens.
 - RR and TR never read each other.
 - The challenge NPCs' existing quests, trades and services stay as they are.
 - Rival-style research characters are not part of this design.
@@ -223,9 +237,114 @@ Four needed attention:
 | Petalburg | Route 102 Ralts | 2% by day, 1% at night | Move it to a 5% day slot |
 | Lavaridge | Torkoal holding Charcoal | About 0.5–0.7% per encounter | Keep the odds. The hint points to a Compound Eyes lead, which raises the held-item chance from 5% to 20% (about 35 encounters). Route 116 Nincada has Compound Eyes |
 
+### The DexNav
+
+The DexNav comes from Omega Ruby and Alpha Sapphire. Wayfarer's engine ships a
+port of it (`src/dexnav.c`, `include/config/dexnav.h`), which is off today
+(`DEXNAV_ENABLED FALSE`). RR gives it to the player early, and every seal makes
+it better along three lines.
+
+**A Pokégear app.** Every origin carries the same Pokégear: Emerald's PokéNav,
+dressed and named as Heart & Soul's Pokégear (`WayfarerGrantSharedEquipment`
+in `src/wayfarer_origin.c`). The DexNav is a new app in it, as it was on the
+PokéNav Plus in Omega Ruby and Alpha Sapphire, and keeps the name DexNav. It
+appears in the Pokégear's menu once unlocked, next to the map and the phone.
+In the field, the R button searches for the species registered in the DexNav,
+as the port already does. The DexNav has no Start menu entry of its own. The
+Field Notebook stays a separate key item that holds the research pages and
+seals.
+
+**What it shows.**
+
+| RR | The area view shows |
+| --- | --- |
+| From the start | Every species in the area for the current method. Caught species show their icon, seen ones a silhouette, and ones never met a "?" |
+| Low | Species that appear only at the other time of day |
+| Mid | Each species' rarity, and whether it can carry a held item |
+| High | The names behind "?" |
+
+**What you can search for.**
+
+| RR | Search |
+| --- | --- |
+| From the start | Caught species only, with a short timeout and a close approach |
+| Low | A longer timeout and approach |
+| Mid | Species you have seen but not caught |
+| High | Detector mode: hidden Pokémon ping you as you walk |
+| Top | Chaining, which raises shiny odds |
+
+Species you have never seen cannot be searched for, so discovering them still
+takes exploring.
+
+**How good the finds are.** RR stands in for the port's search level. ORAS
+keeps one search level per species, which would cost a byte per species, so RR
+works as one global level instead. Each tier uses one of the port's search
+levels and its values:
+
+| Seals | Port search level | Shown before the battle | Egg move | Held item |
+| --- | --- | --- | --- | --- |
+| 0 | 0 | Level | 0% | 0% |
+| 4 | 5 | One move as well | 21% | 0% |
+| 8 | 10 | Whether it holds an item | 46% | 1% |
+| 12 | 25 | Its ability | 58% | 7% |
+| 16 | 50 | Its potential stars | 63% | 6% |
+| 24 | 100 | Everything | 83% | 12% |
+
+The seal thresholds are placeholders. The port also raises potential, its IV
+stars, and the chance of a hidden ability (up to 23%).
+
+**Wayfarer's encounter rules still apply.** A DexNav find gets the same level
+and stage as an ordinary encounter, from TR, the reach and the downward rule. A
+prowler keeps its minimum level. A rarer species is harder to find with the
+DexNav than a common one, so it never ignores rarity. The port has to read
+Wayfarer's encounter data rather than the tables it was written for.
+
+### Poké Mart stock
+
+Ordinary marts sell unlimited stock in tiers, and each tier stays open once
+reached ([Poké Marts](global-tr-pokemarts.md)). RR splits that stock with TR by
+theme:
+
+| Shelf | Opened by | Items |
+| --- | --- | --- |
+| Battle supplies | TR, as today | Super, Hyper and Max Potion, Full Restore, Revive, Full Heal |
+| Field supplies | Whichever rating reaches the tier first | Great and Ultra Balls, Super and Max Repel |
+| Research supplies | RR | Lure, then Super Lure, then Max Lure |
+
+A pure researcher can buy Ultra Balls without seven badges, and a pure battler
+without seals. The research shelf is new to ordinary marts. Today a Lure is
+only found on Route 49, and only New Sinjoh's shop sells the Max Lure. The seal
+counts for each tier are placeholders.
+
+**Specialist shops and town signatures stay as they are.** Each town's own
+items, such as Mossdeep's Net and Dive Balls or Verdanturf's Nest Balls, and the
+specialist shops, such as Kurt's balls, Mahogany's evolution items, Goldenrod's
+flower shop and the department stores' specialist floors, keep their stock,
+prices and access for every player. Travelling to them for items found
+nowhere else is part of the game for battlers and researchers alike.
+
+### Rare-encounter odds
+
+Placeholder values. On land, the 1% slots trade places with the 20% ones and the
+4% slots with the 10% ones.
+
+| RR | Mirror chance | A 1% land slot | A 4% land slot |
+| --- | --- | --- | --- |
+| 0 | 0% | 1% | 4% |
+| After 8 seals | 5% | about 2% | about 4.3% |
+| After 16 seals | 10% | about 2.9% | about 4.6% |
+| After 24 seals | 15% | about 3.9% | about 4.9% |
+| A Lure, for comparison | 20% | about 4.8% | about 5.2% |
+
+The researcher challenges must still be fair at RR 0, because the first
+researcher meets a player with no seals. The boost makes later hunts smoother,
+not possible.
+
 ## Content
 
 - **New key item:** the Field Notebook.
+- **Engine feature:** the DexNav port, turned on as a Pokégear app and adapted
+  to Wayfarer's encounters.
 - **New researchers:** seven new NPCs, in Cianwood, Mahogany, Blackthorn,
   Cerulean, Viridian, Dewford and Petalburg.
 - **New dialogue:** the researcher conversations for all 24, the professors'
@@ -325,6 +444,12 @@ pick a party Pokémon, then checks its line and where it was met.
   at another. Devon only handles Lileep and Anorith. The Pewter revival
   scientist also borrows the Ruins of Alph local id, which only matches by
   object order.
+- **Poké Marts.** The Mart design gains RR thresholds for the field supplies
+  and the new research shelf. Its tiers, town signatures and specialist shops
+  otherwise stay as designed ([Poké Marts](global-tr-pokemarts.md)).
+- **Lures.** The RR mirror chance and a Lure's both read the slot from the far
+  end of the table. Their combined effect needs a cap, so that a Lure on top of
+  full RR does not make rare slots common.
 - **Pokédex obtainability.** Baoba's trade makes Tyrunt and Amaura obtainable,
   along with Tyrantrum and Aurorus. They lose `dexNotRequired`, and the pinned
   obtainability record changes with them
@@ -362,6 +487,15 @@ pick a party Pokémon, then checks its line and where it was met.
 - Which professor plays the midpoint and the payoff for a player who has met
   more than one?
 - The RR curve values, and how far it raises critical captures and obedience.
+- **Mart thresholds:** how many seals open the field supplies and each Lure.
+- **DexNav unlock:** does the origin professor install the app when the
+  origins study begins, or does the first Research Seal unlock it?
+- **DexNav finds:** may they have hidden abilities and higher potential, or do
+  those stay at 0 so the DexNav only gives knowledge?
+- **DexNav save cost:** the flags and variables it needs, and confirming that no
+  per-species search levels are stored.
+- The final mirror chances, and how the RR chance combines with a Lure's: added
+  together, or rolled separately.
 - What each researcher gives as their local reward alongside the seal.
 - Names, sprites and places for the seven new researchers.
 - What each researcher's hint says.
