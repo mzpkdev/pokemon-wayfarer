@@ -6,7 +6,9 @@ Today in Wayfarer, the Littleroot television choice only records which Lati
 Southern Island shows, and arriving there by the Eon Ticket charter from
 Lilycove is enough to meet it. No Hoenn roamer starts. Steven's Vermilion City
 scene, which starts Kanto Lati roaming, waits for the Kanto Champion, like his
-Eon Ticket at the Fuchsia Safari Zone entrance.
+Eon Ticket at the Fuchsia Safari Zone entrance. His choice is the only start:
+the Indigo Hall of Fame never spawns a Kanto Lati, so a caught or defeated one
+stays resolved.
 
 ## Intent
 

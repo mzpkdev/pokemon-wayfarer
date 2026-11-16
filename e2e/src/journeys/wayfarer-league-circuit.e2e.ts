@@ -596,6 +596,9 @@ describe.sequential("Wayfarer League Circuit", () => {
     const rating = await admitIndigo(game)
     await finishRoomChain(game, "indigo", rating)
     await expect(game.story.flag("badge16")).resolves.toBe(true)
+    // The Kanto Lati waits for Steven's Vermilion choice, which this clear only unlocks.
+    await expect(game.story.flag("isKantoChampion")).resolves.toBe(true)
+    await expect(game.story.flag("kantoLatiRoaming")).resolves.toBe(false)
     await expect(game.inventory.battlePoints()).resolves.toBe(0)
     await enterDojo(game)
     await expect(game.story.flag("hideDojoBlue")).resolves.toBe(false)

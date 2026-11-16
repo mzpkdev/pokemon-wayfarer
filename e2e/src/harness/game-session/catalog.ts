@@ -629,6 +629,8 @@ export const storyVars = {
   vermilionCityState: 0x408f,
   // VAR_VERMILION_CITY_STEVEN: 0 until Steven's Lati scene has played.
   vermilionCityStevenState: 0x40a3,
+  // VAR_ROAMER_POKEMON_HNS: the Kanto Lati Steven's choice started (0 Latias, 1 Latios).
+  kantoLatiChoice: 0x40a2,
   violetCityState: 0x4091,
   trainerRating: 0x40f7,
   // Wayfarer coast bank vars (0xf000 | slot): the Johto story's per-adventure state.
@@ -980,6 +982,8 @@ export const storyFlags = {
   cyclingRoad: 0x896,
   isChampion: 0x89f,
   isKantoChampion: 0x8a0,
+  // FLAG_LATIOS_OR_LATIAS_ROAMING (HnS bank): set when Steven's Vermilion choice starts the Kanto Lati.
+  kantoLatiRoaming: 0x2fb,
   systemGameClear: 0x893,
   visitedNewBarkTown: 0x8f0,
   visitedKanto: 0x8ff,

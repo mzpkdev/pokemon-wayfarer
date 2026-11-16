@@ -124,7 +124,8 @@ PokemonLeague_HallOfFame_EventScript_SetGameClearFlags::
 	setflag FLAG_HIDE_BATTLEFRONTIER_ENGINEER
 	setflag FLAG_IS_KANTO_CHAMPION
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	call PokemonLeague_HallOfFame_EventScript_SpawnKantoRoamers
+	@ Steven's Vermilion choice is the only start for the Kanto Lati. These flags are set once, on the
+	@ first Indigo clear, which is also what lets Steven appear, so a spawn here would come before his choice.
 #else
 	setvar VAR_COMPLETED_LUGIA, 4
 	clearflag FLAG_HIDE_LUGIA

@@ -1,14 +1,15 @@
 """Every legendary is reachable and gated like its peers (Wayfarer build).
 
 Runs the Wayfarer-preprocessed scripts through the interpreter in test_scripts.py: Steven's Vermilion
-Lati scene waits for the Kanto championship, the Littleroot TV choice never restarts the Johto beasts,
+Lati scene waits for the Kanto championship and is the only start for the Kanto Lati (the Hall of Fame
+never spawns one), the Littleroot TV choice never restarts the Johto beasts,
 Southern Island's Lati needs only the Eon Ticket charter, and the Mt. Silver Moltres and Cerulean Cave
 Mewtwo wait for the legendary Trainer Rating like the other birds.
 """
 import re
 import unittest
 
-from test_scripts import Interp, source
+from test_scripts import GAME, Interp, source
 
 STEVEN_TRIGGERS = ('VermilionCity_EventScript_TriggerStevenLeft', 'VermilionCity_EventScript_TriggerStevenMiddle',
                    'VermilionCity_EventScript_TriggerStevenRight')
@@ -31,6 +32,68 @@ class StevenVermilionLati(unittest.TestCase):
             self.assertIn('InitKantoRoamers', interp.called, label)
             self.assertIn('FLAG_LATIOS_OR_LATIAS_ROAMING', interp.flags, label)
             self.assertEqual(interp.vars['VAR_VERMILION_CITY_STEVEN'], 1, label)
+
+    def test_the_choice_starts_the_chosen_lati(self):
+        # The multichoice row lands in VAR_RESULT: 0 is Red (Latias), 1 is Blue (Latios).
+        for row in (0, 1):
+            interp = Interp('VermilionCity_hns', flags={'FLAG_IS_KANTO_CHAMPION'}, vars={'VAR_RESULT': row})
+            interp.run('VermilionCity_EventScript_TriggerStevenMiddle')
+            self.assertEqual(interp.called.count('InitKantoRoamers'), 1, row)
+            # InitKantoRoamers reads the species from VAR_0x8004.
+            self.assertEqual(interp.vars['VAR_0x8004'], row)
+            self.assertEqual(interp.vars['VAR_ROAMER_POKEMON_HNS'], row)
+            self.assertIn('FLAG_LATIOS_OR_LATIAS_ROAMING', interp.flags, row)
+
+
+class KantoHallOfFameLati(unittest.TestCase):
+    """The first Indigo clear sets the Kanto clear flags once; it is also what lets Steven appear."""
+
+    SPAWNERS = ('PokemonLeague_HallOfFame_EventScript_SpawnKantoRoamers',
+                'PokemonLeague_HallOfFame_EventScript_SpawnRoamers')
+
+    def clear_indigo(self, **state):
+        interp = Interp('data/scripts/league_circuit.inc', 'PokemonLeague_HallOfFame_hns', **state)
+        interp.specials.update({'LeagueCircuit_GetRunRegion': interp.get('REGION_KANTO'),
+                                'LeagueCircuit_ValidateRun': 1, 'LeagueCircuit_RecordClear': 1})
+        interp.run('LeagueCircuit_EventScript_IndigoHallOfFame')
+        # The clear ran: it set the Kanto clear flags and reached the ceremony's end.
+        self.assertIn('FLAG_IS_KANTO_CHAMPION', interp.flags)
+        self.assertIn('GameClear', interp.called)
+        return interp
+
+    def test_a_kanto_clear_without_stevens_choice_starts_no_lati(self):
+        interp = self.clear_indigo()
+        self.assertNotIn('InitKantoRoamers', interp.called)
+        self.assertNotIn('FLAG_LATIOS_OR_LATIAS_ROAMING', interp.flags)
+        self.assertNotIn('VAR_ROAMER_POKEMON_HNS', interp.written('var'))
+
+    def test_a_clear_never_restarts_a_caught_lati(self):
+        # Steven's choice made (Latios) and the roamer since caught: catching only deactivates the roamer,
+        # so a clear that called InitKantoRoamers would bring it back.
+        interp = self.clear_indigo(vars={'VAR_VERMILION_CITY_STEVEN': 1, 'VAR_ROAMER_POKEMON_HNS': 1},
+                                   flags={'FLAG_LATIOS_OR_LATIAS_ROAMING'})
+        self.assertNotIn('InitKantoRoamers', interp.called)
+
+    def test_only_stevens_choice_starts_the_kanto_lati(self):
+        starts, references = set(), set()
+        for path in sorted((GAME / 'data').rglob('*.inc')):
+            if 'KantoRoamers' not in path.read_text():
+                continue
+            label = None
+            for line in source(str(path.relative_to(GAME))).splitlines():
+                code = line.split('@')[0].strip()
+                if re.fullmatch(r'\w+:+', code):
+                    label = code.rstrip(':')
+                elif re.fullmatch(r'special\s+InitKantoRoamers', code):
+                    starts.add(label)
+                elif any(re.search(r'\b%s\b' % name, code) for name in self.SPAWNERS):
+                    references.add((label, code))
+        # The debug menu's roamer entry is the one other caller, and it is not part of play.
+        self.assertEqual(starts, {'VermilionCity_EventScript_LatiChoice', 'Debug_EventScript_Script_5',
+                                  'PokemonLeague_HallOfFame_EventScript_SpawnKantoRoamers'})
+        # The Hall of Fame keeps its HnS spawn labels, but no Wayfarer script reaches them.
+        self.assertEqual(references, {('PokemonLeague_HallOfFame_EventScript_SpawnRoamers',
+                                       'call PokemonLeague_HallOfFame_EventScript_SpawnKantoRoamers')})
 
 
 class LittlerootTvLati(unittest.TestCase):
