@@ -787,7 +787,7 @@ u16 WayfarerMtSilver_IsMoltresEligible(void)
 }
 
 // Mewtwo keeps HnS's Cerulean Cave guard, who leaves after a Kanto League clear, and adds the legendary
-// threshold on top (.product/prds/frlg-kanto-independent-story-beats.md).
+// threshold on top, as the Kanto independent story beats PRD decides.
 u16 WayfarerCeruleanCave_IsMewtwoEligible(void)
 {
     return GetTrainerRating() >= WAYFARER_LEGENDARY_TR;

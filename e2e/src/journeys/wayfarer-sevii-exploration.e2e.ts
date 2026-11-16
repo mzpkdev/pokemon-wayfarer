@@ -198,42 +198,21 @@ describe.sequential("Wayfarer Sevii exploration", () => {
     }
   })
 
-  it("hides Navel Rock unless both the League-clear flag and Mystic Ticket hold", async () => {
+  it("never offers retired Navel Rock, even with the League-clear flag and Mystic Ticket", async () => {
     for (const options of [
       { gameClear: false, mysticTicket: false },
       { gameClear: false, mysticTicket: true },
       { gameClear: true, mysticTicket: false },
+      { gameClear: true, mysticTicket: true },
     ]) {
       await arrangeAtVermilion(game, options)
       const before = await dockSnapshot(game)
       await openSeviiMenu(game)
-      // No Aurora Ticket is arranged, so the second row is CANCEL if Navel is hidden.
+      // No Aurora Ticket is arranged, so the second row is CANCEL: Navel Rock is never listed.
       await chooseSeviiRow(game, 1)
       await game.wait.forReady()
       await expect(game.state.read()).resolves.toMatchObject({ map: { name: vermilionDock.map } })
       expect(await dockSnapshot(game)).toEqual(before)
     }
-
-    await arrangeAtVermilion(game, { gameClear: true, mysticTicket: true })
-    const before = await dockSnapshot(game)
-    await openSeviiMenu(game)
-    await chooseSeviiRow(game, 1)
-    await waitForFerry(game, "navel-rock-harbor")
-    await expect(game.state.read()).resolves.toMatchObject({
-      map: { name: "navel-rock-harbor" },
-      player: { x: 8, y: 5 },
-    })
-    await game.saveAndReload()
-    await game.wait.forMap("navel-rock-harbor")
-    const after = await dockSnapshot(game)
-    expect({ ...after, origin: undefined }).toEqual({ ...before, origin: undefined })
-    // Navel Rock is existing Emerald content. Loading it has always selected
-    // Wayfarer's Hoenn context; the Vermilion connection must not rewrite that
-    // legacy region-map/Fly classification.
-    expect(after.origin).toMatchObject({
-      ...before.origin,
-      currentRegion: 3,
-      visitedRegions: before.origin.visitedRegions | 4,
-    })
   })
 })
