@@ -16,8 +16,8 @@ PRD's other conveniences are not part of it.
 
 - A new row, **BATTLE SPEED**, on the BATTLE OPTIONS tab of the options menu
   (`src/option_menu.c`). It goes directly after FAST BATTLES.
-- Choices: `1×`, `2×`, `3×`, `4×` (the charmap has `×`). The default for a new
-  game is `1×`.
+- Choices: `1×`, `2×`, `3×`, and `4×` unless open question 2 drops it (the
+  charmap has `×`). The default for a new game is open question 1.
 - Descriptions:
   - 1×: "Battles run at normal speed."
   - 2×–4×: "Battles run faster. Music and\nsound keep their normal speed."
@@ -50,10 +50,32 @@ At speed N, each frame of the main battle runs up to N **ticks** instead of 1.
 - The extra ticks run only while the main callbacks are still `BattleMainCB1`
   and `BattleMainCB2`. When either one changes (the battle ends, or the bag
   or party screen opens), the frame stops ticking.
-- **Speed is a ceiling.** Skip an extra tick when it would not finish before
-  the next VBlank. Measure this with the scanline counter, using a tunable
-  threshold. A heavy frame drops ticks, never whole frames. The speed never
-  falls below 1×.
+- **Extra ticks stop** for the rest of the frame, and the battle runs at 1×,
+  while any of these holds. Check before every extra tick, because each can
+  start mid-frame:
+  - the player is choosing an action, a move, a target or a Pokémon;
+  - a palette fade is active or waiting for its VBlank transfer
+    (`gPaletteFade.active`, `sPlttBufferTransferPending` in `src/palette.c`);
+  - the capture-success animation is playing, or a Pokémon has just been
+    caught. Its sparkles toggle each tick and flicker when several ticks
+    share one drawn frame.
+- **Speed is a ceiling** (only if 4× stays, see open question 2). Skip an extra
+  tick when it would not finish before the next VBlank. Measure this with the
+  scanline counter, using a tunable threshold. A heavy frame drops ticks,
+  never whole frames. The speed never falls below 1×.
+
+### Same outcomes at every speed
+
+A battle's result never depends on its speed. The same seed and the same
+inputs give the same moves, damage, critical hits and catches at 1× and 4×.
+
+- Today `VBlankIntr` advances the RNG once per drawn frame
+  (`AdvanceRandom` in `src/main.c`, skipped in link, Frontier and recorded
+  battles). At 4× a battle draws a quarter of the frames, so it would see
+  different random numbers than at 1×.
+- Fix: in battle, advance the RNG once per **tick** instead of once per
+  drawn frame, under the same exclusions. Waiting at a menu still changes
+  later rolls, as it does now.
 
 ### What speeds up
 
@@ -65,8 +87,7 @@ Everything driven by battle ticks:
 - battle text printing (`BattlePutTextOnWindow` in `src/battle_message.c`,
   printed by `RunTextPrinters`);
 - the scripted `pause` and `waitmessage` waits, when FAST BATTLES is off;
-- HP and Exp. bar movement (`MoveBattleBar` in `src/battle_interface.c`);
-- palette fades inside the battle, including the end-of-battle fade.
+- HP and Exp. bar movement (`MoveBattleBar` in `src/battle_interface.c`).
 
 ### What does not speed up
 
@@ -80,6 +101,11 @@ Everything driven by battle ticks:
     calls) count frames, not ticks;
   - cry and fanfare waits already wait until the sound ends.
   - So a long cry holds a 4× battle as long as it holds a 1× battle.
+  - SoulGold counts these waits per call, so at speed it stops long sound
+    effects early. Counting frames avoids that.
+- **Palette fades and the capture-success animation.** They run at 1×, as
+  [above](#how-a-faster-battle-runs). A fade can't run faster anyway:
+  `UpdatePaletteFade` takes one step per VBlank transfer.
 - **Play time and the in-game clock.** `PlayTimeCounter_Update` runs once per
   pass of `AgbMainLoop`, not once per tick. A 4× battle uses the same in-game
   time per real second as a 1× battle ([In-game clock](in-game-clock.md)).
@@ -137,7 +163,11 @@ Everything driven by battle ticks:
   - it returns 1 for link, recorded, recorded link, catch tutorial and
     Pokédude battles;
   - it returns 1 in the `TESTING` build unless a test sets the speed.
-- `SetDefaultChallengeSettings` leaves `battleSpeed` at 1×.
+  - it returns 1 while the player chooses a move, during a palette fade, and
+    during the capture-success animation.
+- Same outcome: one scripted wild battle with a fixed seed ends with the same
+  damage, critical hits and catch result at 1× and 4×.
+- `SetDefaultChallengeSettings` leaves `battleSpeed` at the default.
 - `ChallengeSettingsLayoutPinned` still compiles (size 32).
 
 **E2E (`e2e/`):** a new `e2e/src/journeys/wayfarer-battle-speed.e2e.ts`.
@@ -163,11 +193,18 @@ corrupted sprites and no cut-off cries.
 ## Open questions
 
 1. **Default speed.** 1× or 2×? This is the PRD's open question 1.
-   *Recommendation:* 1×.
-2. **Top speed.** Stop at 4×, or offer only 1×–3×?
-   *Recommendation:* 4×. The ceiling rule drops ticks in heavy frames, so 4×
-   cannot cause lag. Drop it only if playtesting finds 4× unreadable.
-3. **FAST BATTLES wording.** Its descriptions are misleading. "Skips all
+   SoulGold starts new games at 2×.
+   *Recommendation:* 2×, following SoulGold. Players who dislike it find the
+   option at once, and new players get the feature players asked for.
+2. **Top speed.** Stop at 4×, or offer only 1×–3×? SoulGold defines 4× but
+   its menu stops at 3×, and it has no ceiling rule.
+   *Recommendation:* 3×, without the ceiling rule. It is proven in a shipped
+   hack on the same engine, and it drops the unmeasured scanline threshold.
+   Add 4× later if players ask.
+3. **Hold L for 1×.** SoulGold runs a battle at 1× while L is held, to read a
+   message or watch an animation.
+   *Recommendation:* yes, unless the L=A button mode is on, where L is A.
+4. **FAST BATTLES wording.** Its descriptions are misleading. "Skips all
    delays" promises more than it does now that BATTLE SPEED exists.
    *Recommendation:* rename it SKIP PAUSES and change its On text to "Skips
    the pauses after battle messages."
@@ -179,3 +216,19 @@ corrupted sprites and no cut-off cries.
   `src/battle_anim.c`, `src/battle_message.c`, `src/text.c`,
   `src/battle_interface.c`, `src/battle_script_commands.c`, `src/option_menu.c`
 - [In-game clock](in-game-clock.md)
+
+### Prior art
+
+[SoulGold](https://github.com/Eemeliri/soulgold) (read at commit `3f4d90aa`)
+is built on Heart and Soul like Wayfarer and ships the same tick loop. Its
+README credits the battle speed-up to Pokabbie's
+[Emerald Rogue](https://github.com/Pokabbie/pokeemerald-rogue).
+
+- Same design: `BattleMainCB2` runs extra ticks, and only VBlank uploads to
+  the hardware (`src/battle_main.c`).
+- This spec takes from it: the guards on extra ticks
+  (`CanRunExtraBattleTick`), the RNG per tick (`AdvanceBattleFrameRng`), and
+  hold L for 1× (`Rogue_GetBattleSpeedScale` in `src/battle_controllers.c`).
+- Neither repository has a license. Use them as reference only: write
+  Wayfarer's own code, or get the authors' permission before porting any.
+  Credit Pokabbie in `game/CREDITS.md` either way.
