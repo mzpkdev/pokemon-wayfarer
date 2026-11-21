@@ -1,6 +1,7 @@
 # Regional starter gifts
 
-Status: Draft product design, 2026-11-07, for the owner's review. Not implemented.
+Status: Agreed product design, 2026-11-07. Not implemented.
+Specification: [Regional starter gifts](../specs/regional-starter-gifts.md)
 It revises the starter gifts in [Johto, Hoenn, and Kanto starting regions](wayfarer-regional-start-choice.md),
 [Johto independent story beats](johto-independent-story-beats.md#who-plays-which-story),
 [Hoenn independent story beats](hoenn-independent-story-beats.md) and the Hoenn-list
@@ -29,7 +30,7 @@ that person, so a starter becomes a memento of something you did in that land.
 | Hoenn | Professor Birch, Littleroot lab | Treecko, Torchic, Mudkip | Beating his friend Norman at the Petalburg Gym |
 | Hoenn (Unova lives here) | Professor Cozmo, Fallarbor | Snivy, Tepig, Oshawott | Returning his Meteorite |
 | Safari Zones (Kalos) | Baoba, Safari Zone Gate | Chespin, Fennekin, Froakie | Finishing his Safari challenge |
-| Alola | Samson Oak, Melemele Isle | Rowlet, Litten, Popplio | Defeating the Melemele totem |
+| Alola | Samson Oak, Melemele Isle | Rowlet, Litten, Popplio | Surveying Melemele Isle's Alolan forms |
 | Sevii (Galar) | Celio, One Island | Grookey, Scorbunny, Sobble | Repairing his Network Machine |
 
 Each gifter lets you pick one of their three starters, once per game; you
@@ -69,9 +70,12 @@ a Unova starter as well. Each player can end with one starter from every trio.
 - **Baoba: finish the Safari challenge.** Baoba already asks you to show him an
   exotic Pokémon from each Safari area in turn. When the last one is done and
   the Safari Zone is "thriving", he adds the Kalos starter to his thanks.
-- **Samson Oak: defeat the totem.** Melemele's totem battle (Totem Alolan
-  Raticate, or Totem Leafeon by day) already involves Samson Oak. Win it and he
-  offers a choice of Rowlet, Litten or Popplio.
+- **Samson Oak: survey Melemele.** Samson Oak already asks the player to
+  survey each isle's Alolan forms and report back to his villa. Report
+  Melemele Isle's four (Alolan Rattata, Raticate, Meowth and Persian) and he
+  offers a choice of Rowlet, Litten or Popplio. His home isle's survey is the
+  first deed he asks for; the totems come only after every isle is surveyed,
+  far too late for a starter.
 - **Celio: repair the Network Machine.** The Sevii gem investigation ends when
   Celio has both the Ruby and the Sapphire. His thanks for the finished repair
   now include the Galar starter.
@@ -103,14 +107,15 @@ game and a second Hoenn starter for Littleroot players. Birch's gift replaces it
 
 ## Interactions
 
-- **Johto visitors.** The Johto story revision gave visitors no Elm errand, no
+- **Johto visitors.** Visitors to Johto are players who started in Kanto or
+  Hoenn. The Johto story revision gave them no Elm errand, no
   starter choice and no gift. This design keeps the first two and the Mystery
   Egg and Silver story for New Bark players only, but gives visitors Elm's
   starter gift once they hatch an Egg.
 - **Hoenn visitors.** Birch's rescue scene still thanks a visitor and rates
   their Pokédex with no gift. His starter gift comes later, after Norman.
-- **Birch's old Johto-starter reward is removed.** Heart & Soul has Birch offer
-  a Johto starter for completing the Hoenn list. Under this design each trio
+- **Birch's old Johto-starter reward is removed.** Emerald has Birch offer
+  a Johto starter for completing the Hoenn Pokédex, and Heart & Soul kept it. Under this design each trio
   comes only from its own land's gifter, so Elm gives a Johto starter and Birch
   gives only a Hoenn starter. Completing the Hoenn list keeps Birch's Pokédex
   rating but no longer earns a starter. This revises the Hoenn reward named in
@@ -125,8 +130,8 @@ game and a second Hoenn starter for Littleroot players. Birch's gift replaces it
 ## Balance
 
 The gifts spread across the game. Cozmo's Meteorite and Elm's Egg come early;
-Norman, Baoba's challenge and Celio's repair sit mid-game; Blue and the level-60
-Melemele totem come late. A dedicated traveller ends with one starter
+Norman, Baoba's challenge, Celio's repair and Samson's Melemele survey sit
+mid-game; Blue comes late. A dedicated traveller ends with one starter
 from each of the seven trios: the opening one plus six gifts.
 
 Every gift starter arrives at level 5, as today's gifts do. A late gift is a
@@ -145,7 +150,7 @@ nickname prompt. The thanks line names what you did ("You beat my grandson!",
   handout?
 - Do players notice the gifters without a hint, or does each land need one line
   of foreshadowing (an aide, a sign, a phone call)?
-- Do players raise a level-5 gift that arrives late, after Blue or the totem,
+- Do players raise a level-5 gift that arrives late, after Blue,
   or leave it in the PC?
 - Does Cozmo's explanation for having Unova Pokémon read naturally?
 
