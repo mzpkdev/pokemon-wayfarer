@@ -1,7 +1,7 @@
 # FireRed and LeafGreen open-world regional traversal
 
 PRD: [FireRed and LeafGreen open-world regional traversal](../prds/frlg-open-world-region-traversal.md)
-Implemented: Yes
+Implemented: Yes (in the FireRed and LeafGreen builds; see the note below)
 
 The implemented [FRLG Cinnabar and Seafoam Islands port](../prds/frlg-cinnabar-seafoam-port.md)
 supersedes this feature's former Cinnabar, Seafoam, Route 19 through Route 21,
@@ -11,10 +11,15 @@ contract through FRLG Route 21 North and South, uses the selected FRLG
 Cinnabar endpoint, and leaves the Meteorite story and Sevii travel
 independently owned.
 
-The unimplemented [S.S. Anne adventure port](frlg-kanto-ss-anne-adventure.md)
+The implemented [S.S. Anne adventure port](frlg-kanto-ss-anne-adventure.md)
 also supersedes this historical implementation's Anne departure and removal
-behavior. The Seagallop unlock, destinations, and state-isolation requirements
-remain binding; future implementation must adapt only the Anne branch.
+behavior in Wayfarer. The Seagallop unlock, destinations, and state-isolation requirements
+remain binding; only the Anne branch was adapted.
+
+This specification is built in the FireRed and LeafGreen builds' map and script
+data. Wayfarer's Kanto roads are HNS maps, covered by the
+[HNS traversal specification](hns-open-world-region-traversal.md), and its Sevii ferries need
+no Rainbow Pass; only the Cinnabar crossing above carries over.
 
 ## Scope
 

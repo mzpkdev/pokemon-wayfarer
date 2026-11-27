@@ -1,8 +1,12 @@
 # HNS open-world regional traversal
 
+Specification: [HNS open-world regional traversal](../specs/hns-open-world-region-traversal.md)
+Implemented: Yes. The Kanto and Johto settlement network is built and checked in `make check`; the native HM catch windows revision's full route acceptance is still pending.
+
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes named native-utility carriers and permanent-retention
-assumptions in this document. It is not implemented yet. Regional routes,
+assumptions in this document. Its core implementation is complete, while full
+route acceptance remains pending. Regional routes,
 field-use authorization, scaling and unrelated mechanics remain unchanged;
 standalone builds retain their existing contract.
 

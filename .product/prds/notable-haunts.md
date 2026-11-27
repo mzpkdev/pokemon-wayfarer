@@ -1,7 +1,12 @@
 # Notable haunts
 
-Implemented: No Specification: [Notable haunts
-specification](../specs/notable-haunts.md) Design status: v0 draft for review:
+Implemented: No. No haunt, haunt placement or quest exists in the ROM. The pieces
+that shipped under other specs are the friendship greetings and voice bits, the
+quest-points function, and the buddy value in the catalog.
+
+Specification: [Notable haunts specification](../specs/notable-haunts.md)
+
+Design status: v0 draft for review:
 notable trainers spend their time between Gyms and leagues at **haunts**, one
 shared pool of authored places that names no trainer. Placement fills each haunt
 with the best-fitting free trainer, recomputed whenever world progress changes,

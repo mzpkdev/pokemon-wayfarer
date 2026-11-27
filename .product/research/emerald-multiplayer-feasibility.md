@@ -1,5 +1,7 @@
 # Multiplayer experience research for Pokémon Wayfarer
 
+Status (2026-11-27): research only. PoC [PR #144](https://github.com/mzpkdev/pokemon-wayfarer/pull/144) was closed without merging; nothing multiplayer is on `main` and no PRD or spec exists.
+
 Research date: 2026-09-30. Wayfarer baseline:
 `3e820fb584f3bb27cafb2ee66987e575107699dc`.
 Status: source research plus completed, disposable native-link PoC experiments.

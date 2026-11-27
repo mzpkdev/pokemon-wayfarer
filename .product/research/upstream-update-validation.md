@@ -1,5 +1,7 @@
 # HNS upstream integration evidence
 
+Status (2026-11-27): shipped in [PR #76](https://github.com/mzpkdev/pokemon-wayfarer/pull/76) (merge commit, 2026-09-08). The landing constraint is met, and the missing ROM-report fixture was restored in PR #83.
+
 ## Inputs and ancestry
 
 - Wayfarer baseline: `28aaad96a0b8a2b9d790d22d78c384cca05d189d`.

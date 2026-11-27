@@ -1,5 +1,7 @@
 # ROM footprint proposal audit
 
+Status (2026-11-27): historical. Surf sharing, legacy multiboot removal and map compression (PR #121) have since shipped; exact asset aliases and tileset storage are still unbuilt. Several anchors below point into specs that were rewritten.
+
 The five proposals use credible techniques. Two already have measured release
 savings. The other three are plausible. This report records the source-contract,
 inventory, and validation defects found in the audited planning baseline.

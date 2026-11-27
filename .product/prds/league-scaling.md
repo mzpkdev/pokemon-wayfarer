@@ -1,14 +1,18 @@
 # League scaling
 
-Status: Scaling engine and fixed circuit wiring implemented; campaign balance acceptance pending.
-Implemented: Partial
+Status: Superseded in Wayfarer by [Leagues](leagues.md) (league events, [PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)); the scaling code is kept as a compile-time fallback.
+Implemented: Partial. The scaling engine was built and merged, but Wayfarer's
+league battles no longer use it: they are built from saved league event
+lineups at each trainer's own TR, so none of the levels below apply to the
+shipped game. The engine runs only when `WAYFARER_LEAGUE_EVENTS` is off; its
+tests (`game/test/league_tiers.c`) are compiled only when `WAYFARER_V0_TRAINERS` is off.
 
-This document describes Today; the v0 successor is
+This document describes the pre-v0 scaling; its successor is
 [Leagues](leagues.md).
 
 The fixed Indigo/Masters/Hoenn roster and league wiring, stage/replay identity,
-TR snapshot taken when entering a league, and +8-per-league progression are
-implemented. See
+TR snapshot taken when entering a league, and +8-per-league progression were
+implemented for that circuit. See
 [Today's circuit contract](../specs/wayfarer-interregional-league-circuit.md)
 and [runtime producer](../../game/src/league_circuit.c). The
 [original scaling evidence](../research/league-scaling-implementation.md)

@@ -4,6 +4,9 @@ PRD: [FRLG Cinnabar and Seafoam Islands port](../prds/frlg-cinnabar-seafoam-port
 Implemented: Yes
 
 The behavior merged in [PR #110](https://github.com/mzpkdev/pokemon-wayfarer/pull/110).
+Historical: the full port ([PR #112](https://github.com/mzpkdev/pokemon-wayfarer/pull/112))
+retired these preview maps (the `_Port` interiors and `CinnabarIsland_SeamPoc`) from the
+Wayfarer catalog; the [town specification](frlg-cinnabar-town-port.md) describes what ships.
 
 ## Scope
 

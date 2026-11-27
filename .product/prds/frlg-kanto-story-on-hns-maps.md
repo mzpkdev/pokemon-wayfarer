@@ -1,7 +1,13 @@
 # FRLG Kanto story on HNS maps
 
-Status: Draft product design. Not implemented. FRLG is Kanto's narrative
-baseline and HNS is its general geographic base. The full FRLG Cinnabar,
+Implemented: Partial. Built on `main`, each with its own spec: the Mt. Moon, Nugget
+Bridge, S.S. Anne, Celadon Hideout, Pokémon Tower, Power Plant, Safari and Silph
+adventures, the Viridian finale, the coastal port, the Pallet-origin opening, the
+shared Indigo League and the Sevii Masters Challenge. Not built: the Cerulean
+burglary, the Route 12 and Route 16 Snorlax pair, Blue's later Kanto-origin
+chapters, and the choices still listed under Open questions.
+
+FRLG is Kanto's narrative baseline and HNS is its general geographic base. The full FRLG Cinnabar,
 Seafoam, and Routes 19–21 port is owned by
 [its dedicated PRD](frlg-cinnabar-seafoam-port.md).
 The [S.S. Anne adventure port](../specs/frlg-kanto-ss-anne-adventure.md)
@@ -16,11 +22,11 @@ League-dependent successor: the v0
 lineups and fixed visiting-origin Blue League profile below with the
 strongest willing trainers by league score. Its
 [runtime contract](../specs/leagues.md) keeps
-Blue's Dojo unlock on the first committed Indigo win. These changes take
-precedence for league appearances only once the v0 design is adopted. Local Kanto
+Blue's Dojo unlock on the first committed Indigo win. The v0 design now ships
+(partly; see its own status), so these changes take
+precedence for league appearances. Local Kanto
 adventures, Blue's origin-specific rivalry and forward story progression, and
-Giovanni's badge role remain owned here; the current port and approved fixed
-circuit retain their existing behavior meanwhile.
+Giovanni's badge role remain owned here.
 
 Giovanni's and Blue's battles follow the v0
 [notable trainers](notable-trainers.md) design; Blue gains no badge.
@@ -69,9 +75,9 @@ floor connections, and entrance positions belong in the implementation specs.
 ### Coastal port ownership
 
 The [FRLG coastal port](frlg-cinnabar-seafoam-port.md) owns Cinnabar, Seafoam,
-Routes 19–21, their local puzzles, services, encounters, rewards, the current
-coastal port's Blue Viridian introduction, and the coastal connections. The
-Viridian finale removes that introduction. The Mansion Secret
+Routes 19–21, their local puzzles, services, encounters, rewards, the coastal
+port's former Blue Viridian introduction, and the coastal connections. The
+implemented Viridian finale removed that introduction. The Mansion Secret
 Key leads to Blaine's Cinnabar Gym. Its Seafoam cave contains the FRLG current
 puzzle and Articuno. Bill's Sevii story remains independent, and Groudon is
 catchable through Hoenn's Terra Cave rather than the removed HNS Seafoam
@@ -85,11 +91,11 @@ eruption state.
 | Mt. Moon | Place the Rocket encounters, Super Nerd battle, and fossil choice in the existing HNS cave where practical. Preserve the local sequence and reward choice; reproducing FRLG's full cave topology is not required. |
 | Cerulean burglary | Use the HNS city and a suitable house/back-exit arrangement for the theft, Rocket confrontation, and recovered TM. Local doorway or event changes are allowed. |
 | Nugget Bridge | Adapt the ordered Trainer challenge, prize, and recruitment attempt to HNS Route 24. Avoid overlapping its existing Rocket scenes. |
-| Bill and the S.S. Anne | Preserve Bill's rescue and Ticket reward, plus the captain's adventure and Cut reward aboard a persistent Anne. Any S.S. Ticket permits boarding; Bill is not a prerequisite for players who already have one. Persistence prevents missable content; the ship provides no transport or recurring utility. |
+| Bill and the S.S. Anne | Preserve Bill's rescue and Ticket reward, plus the captain's adventure and Cut reward aboard a persistent Anne. Any S.S. Ticket permits boarding; Bill is not a prerequisite for players who already have one. Bill introduces himself only once across Route 25, Ecruteak and One Island (`FLAG_WAYFARER_SEVII_BILL_MET`, [PR #243](https://github.com/mzpkdev/pokemon-wayfarer/pull/243)); the Route 25 Bill always stays. Persistence prevents missable content; the ship provides no transport or recurring utility. |
 | Celadon Rocket Hideout | Connect imported hideout interiors to the HNS Game Corner. Preserve discovery of the entrance, local key and lift progression, Giovanni, and the Silph Scope reward. Mahogany's HNS Rocket Hideout remains a separate Johto location. |
 | Pokémon Tower and Fuji | Restore the upper memorial floors while the ground floor is being converted for radio use. Preserve the Scope-dependent ghosts, Marowak resolution, Rocket rescue, Fuji's return, and physical Flute handoff. The [Tower specification](../specs/frlg-kanto-pokemon-tower.md) owns the shared building and transition. |
-| Snorlax | Preserve the two FRLG encounters associated with Routes 12 and 16 and the Flute requirement, adapting event placement to HNS geography. Neither encounter may close the only ordinary travel route. Resolve the existing HNS Vermilion Snorlax separately rather than accidentally duplicating the same encounter. |
-| Silph Co. | Extend the existing Saffron destination with the missing interior adventure. Preserve access puzzles, staff rescue, Giovanni, Lapras, and the deferred Master Ball reward. |
+| Snorlax | **As built:** the existing HNS Vermilion Snorlax is the one Flute target, woken by Fuji's Flute item or the radio channel ([PR #239](https://github.com/mzpkdev/pokemon-wayfarer/pull/239)). The FRLG Route 12 and Route 16 pair is not built and is not planned. It never closes the only ordinary travel route. |
+| Silph Co. | Extend the existing Saffron destination with the missing interior adventure. Preserve access puzzles, staff rescue, Giovanni, Lapras, and the Master Ball reward, which the President gives right after liberation ([specification](../specs/silph-president-master-ball.md)). |
 | Safari Zone and Warden | Use HNS Fuchsia's existing Safari areas for the Surf destination and Gold Teeth search. Keep returning the Teeth for Strength as a separate local objective. Do not import the entire FRLG Safari merely to reproduce coordinates. |
 | Mansion and Blaine | The dedicated coastal port owns the intact town, Mansion, Secret Key, Gym, Lab, Center, Mart, and Blaine's local rewards. No broader Rocket or League prerequisite is added. |
 | Giovanni's finale | After Celadon Hideout and Silph liberation, use the full FRLG Viridian Gym for Giovanni's one-time Earth Badge and Earthquake TM. Blue leaves Viridian entirely; his repeatable Dojo battle unlocks on the first committed Indigo victory. The [finale specification](../specs/frlg-kanto-viridian-finale.md) owns both roles. |
@@ -250,6 +256,12 @@ opening past the completed Parcel-delivery lab scene. Supported visiting
 origins continue to use Blue's visitor role and never replay native opening
 scenes.
 
+**As built:** Blue's chapters so far are the opening lab battle, a no-battle
+S.S. Anne scene (with a greeting for a Pallet-origin player) and a no-battle
+Tower 2F scene. Both road scenes retire once the player's first Indigo win is
+committed ([PR #239](https://github.com/mzpkdev/pokemon-wayfarer/pull/239)).
+The later battle chapters are not built.
+
 For Kanto-origin players, Blue's story moves forward when the player actually
 starts a later authored encounter with him. Retire all earlier Blue encounters
 so returning to an earlier location never starts an obsolete rivalry chapter.
@@ -314,10 +326,10 @@ badge identity and one first-award contribution to TR; Giovanni departs after
 the Earthquake TM is delivered and has no rematch or successor. Blue's existing
 repeatable Dojo battle instead unlocks on the first committed Indigo Champion
 victory, independently of Giovanni and player origin. No new TR, badge-count,
-or league-win condition is introduced for the Earth Badge. The delivered
-coastal port's Blue Gym remains current runtime until this story port lands;
-the [finale specification](../specs/frlg-kanto-viridian-finale.md) supersedes
-its Viridian invitation and Gym requirements then.
+or league-win condition is introduced for the Earth Badge. The coastal port's
+earlier Blue Gym is gone: the implemented
+[finale specification](../specs/frlg-kanto-viridian-finale.md) replaced its
+Viridian invitation and Gym requirements.
 
 Keep ordinary local rewards attached to their adventures even when the player
 already owns the corresponding HM or can use the field move through another
@@ -325,10 +337,10 @@ region's progression. A prior acquisition must not auto-complete the story.
 Repeated conversations cannot repeatedly award one-time items or Pokémon.
 Bag and party capacity failures leave rewards claimable later.
 
-Retain the independent-story design's readiness requirements for the Master
-Ball and legendary captures. The birds and Mewtwo share the battle threshold
+Retain the independent-story design's readiness requirements for the
+legendary captures. The Silph Master Ball has no threshold. The birds and Mewtwo share the battle threshold
 `WAYFARER_LEGENDARY_TR` (120 under the v0 trainers, ≈ 16 badges; 55
-otherwise); other unsettled thresholds are decided separately. A deferred Master Ball does not
+otherwise); other unsettled thresholds are decided separately. The Master Ball does not
 delay Silph's rescue or Giovanni's finale. No Sevii
 delivery requirement is imported for Mewtwo.
 
@@ -341,10 +353,11 @@ saved state. Any S.S. Ticket permits boarding. Bill remains the normal Kanto
 source, but his rescue stays playable when the player already owns a Ticket.
 
 The Anne remains accessible so players can recover unfinished one-time
-content. It does not depart after the captain's reward, reset on revisit, sail
-to another port, or provide recurring services, battles, or rewards. S.S. Aqua
-and Seagallop remain the travel networks. The port must preserve their menus,
-eligibility, state, and destinations.
+content. The port itself does not reset on revisit or provide recurring
+services, battles, or rewards. It originally did not sail anywhere, with S.S. Aqua
+and Seagallop as the travel networks. The [S.S. ferries](ss-ferries.md) design
+since made the Anne a sailing ferry after the captain's reward; it owns that
+change and the ferry menus.
 
 Keep the current open-traversal behavior and all supported origins.
 Tower, Silph, ship, and Gym completion must not newly gate ordinary city access,
@@ -373,29 +386,27 @@ His reward still provides a route to boarding for a player without the Ticket.
 
 ### Superseded transport and circuit requirements
 
-The following are approved future Wayfarer changes, not claims about current
-implementation. Their corresponding specifications record the same scoped
-overrides; the runtime and existing audits remain unchanged in this docs-only
-proposal.
+The following were approved changes. Both are built. Their corresponding
+specifications record the same scoped overrides.
 
 - **Vermilion menu extension:** The
   [S.S. Anne specification](../specs/frlg-kanto-ss-anne-adventure.md#boarding-and-return)
-  owns the exact additive menu contract and the required Aqua audit changes.
+  owns the exact additive menu contract and the required Aqua audit changes (the
+  ferries design later reworked these menus).
 - **Circuit opponents:** Indigo is the one shared Kanto/Johto League and uses
   the FRLG rooms with Lorelei, Bruno, Agatha, Lance, and Blue. The HNS sequence
   of Will, Koga, Bruno, Karen, and Lance moves to the non-League Sevii Masters
   Challenge in the existing Seven Island battle house. The
   [circuit specification](../specs/wayfarer-interregional-league-circuit.md)
   owns admission, order, scaling, save/load recovery, loss/retry, rewards, and
-  presentation for both stages. Update affected roster validation with the
-  implementation; this proposal does not change ROM code.
+  presentation for both stages. Roster validation was updated with the
+  implementation.
 
 The [Viridian finale specification](../specs/frlg-kanto-viridian-finale.md)
 supersedes the coastal port's Blue invitation and Gym ownership and the League
 specification's older Blue badge path. Giovanni awards one Earth Badge and
 departs permanently after the TM handoff; Blue has no Gym succession. Indigo's
-shared admission and Champion role are unchanged. Current runtime continues to
-use Blue until implementation.
+shared admission and Champion role are unchanged.
 
 Other conflicts are not implicitly resolved. The decisions below must be
 recorded here and reconciled with the affected story, League, or transport

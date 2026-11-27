@@ -1,5 +1,7 @@
 # FRLG Pallet opening inventory
 
+Status (2026-11-27): the opening this inventory supports shipped in PR #135. Treat it as the source oracle; its port-gap count (section 13) is a pre-implementation list.
+
 Authoritative oracle for porting the FireRed/LeafGreen Pallet Town opening onto
 the Wayfarer HNS Pallet maps and for the verbatim-dialogue e2e journey. It covers
 a new game from the bedroom through Oak's Pokédex and Poké Ball handoff after the

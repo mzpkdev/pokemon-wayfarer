@@ -1,5 +1,7 @@
 # PR #96 ROM footprint
 
+Status (2026-11-27): superseded. PR #96 merged as the flag-only design in [PR #96 flag-only footprint](pr96-flag-only-footprint.md); the encounter and scene registries measured below are not on `main`. The numbers are history.
+
 PR #96 adds **27,320 bytes (26.68 KiB)** to the Wayfarer release ROM. Fresh local
 builds reproduced the current CI numbers exactly: 32,668,400 bytes at base
 `ec18cfffd21f31b54a60a73d750863bde30be83d`, and 32,695,720 bytes at PR head

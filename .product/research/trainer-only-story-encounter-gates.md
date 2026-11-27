@@ -1,5 +1,7 @@
 # Trainer-only encounters and story battle gates
 
+Status (2026-11-27): superseded. Trainer-only shipped as the explicit author-owned wild mechanic only (PR #96); the story gates, rival deferral and recovery recommendations below were not built. See [Trainer-only story encounters](../specs/trainer-only-story-encounters.md).
+
 Status: Source audit and design recommendations. No gameplay changes.
 
 ## Question and baseline

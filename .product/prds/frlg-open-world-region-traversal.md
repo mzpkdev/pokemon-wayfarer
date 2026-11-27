@@ -1,5 +1,10 @@
 # FireRed and LeafGreen open-world regional traversal
 
+Implemented: Yes, for the FireRed and LeafGreen builds. The lane changes and the Seagallop
+shakedown are in the FRLG map and script data (`IS_FRLG`). Wayfarer does not use them: its Kanto roads
+are HNS maps (see [HNS open-world regional traversal](hns-open-world-region-traversal.md)) and its
+Sevii ferries need no Rainbow Pass. Wayfarer does use the Cinnabar crossing described below.
+
 The implemented [FRLG Cinnabar and Seafoam Islands port](frlg-cinnabar-seafoam-port.md)
 supersedes this PRD's former Cinnabar, Seafoam, Route 19 through Route 21, and
 Bill-at-Cinnabar assumptions. This PRD retains the historical implementation
@@ -49,17 +54,17 @@ Indigo Plateau and event-only islands are not settlements in this pass. A route,
 
 ## Sevii unlock story
 
-The S.S. Anne behavior in this implemented historical design is superseded for
-future work by the [S.S. Anne adventure port](../specs/frlg-kanto-ss-anne-adventure.md).
-The Sevii service and its isolation remain binding; the future Anne stays
-accessible as one non-resetting adventure and does not depart.
+The S.S. Anne behavior in this implemented historical design is superseded in
+Wayfarer by the built [S.S. Anne adventure port](../specs/frlg-kanto-ss-anne-adventure.md).
+The Sevii service and its isolation remain binding; the Anne stays
+accessible as one non-resetting adventure (the [S.S. ferries](ss-ferries.md) later made it a ferry).
 
 ### Seagallop shakedown
 
 - Start: speak to the port builder beside Machop's construction lot in Vermilion. This is available on the first visit to the city.
 - Job: inspect three marked soft spots in the construction lot. Machop follows the player to each marker and tamps it down. This uses no battle, item, field move, badge, or earlier story flag.
 - Turn-in: report to the builder, who certifies the pier for Seagallop service. The ferry sailor gives the player the Rainbow Pass and adds Sevii Islands to the shared dock's service choices. This does not change the S.S. Anne scene.
-- Shared dock: the shipped baseline keeps the source Anne departure behavior. The dedicated Anne specification supersedes that branch when implemented; Sevii Islands never advances, resets, or hides the Anne.
+- Shared dock: the shipped baseline keeps the source Anne departure behavior. The dedicated Anne specification supersedes that branch in Wayfarer; Sevii Islands never advances, resets, or hides the Anne.
 - First Sevii trip: choosing Sevii Islands for the first time takes the player to One Island. Celio gives a new travel-only introduction and expands the Town Map. This introduction does not give the Meteorite or Tri-Pass, disable PC storage, move Bill, or advance the existing One Island quest state.
 - Existing Meteorite story: its independently owned entry remains available after early Sevii travel. Its owner defines any later invitation, location, rewards, and state transitions. It may reuse the player's Rainbow Pass without giving a duplicate pass, but it does not depend on visiting Cinnabar or defeating Blaine.
 - Permanent service: as soon as Celio's introduction ends, the One Island sailor offers One through Seven Island and Vermilion. Every other Sevii port uses that same eight-destination menu from its first visit. The Rainbow Pass is the only credential.

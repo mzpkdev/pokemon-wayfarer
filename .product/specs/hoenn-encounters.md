@@ -209,7 +209,7 @@ species, so it stays out of sea caves such as the Seafloor Cavern.
 
 ### Day and night
 
-Hoenn's tables have no night versions today, so every night table is new.
+Before v2, Hoenn's tables had no night versions, so every night table is new.
 
 - Every map has its own night table.
 - Outdoors, at least 30% of a land table's night weight goes to species that

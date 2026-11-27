@@ -8,8 +8,10 @@ scaling and unrelated mechanics remain unchanged; standalone builds retain
 their existing contract.
 
 PRD: [Wayfarer Hoenn integration](../prds/wayfarer-hoenn-integration.md)
-Implemented: Partial; content and Today's circuit runtime exist, full
+Implemented: Partial; content and the circuit runtime exist, full
 content/balance acceptance remains separate.
+
+Status (2026-11-27): the shipped Wayfarer build runs the v0 [Leagues](leagues.md) events ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139), [PR #172](https://github.com/mzpkdev/pokemon-wayfarer/pull/172)): Hoenn calls by invitation and fields saved event lineups. The fixed Tier 3 admission and saved-TR league scaling called "Today" below are the pre-v0 fallback that compiles only when `WAYFARER_LEAGUE_EVENTS` is off.
 
 Today's [circuit producer](../../game/src/league_circuit.c) uses fixed Tier 3
 Hoenn admission, the
@@ -25,7 +27,8 @@ which this content port does not implement.
 
 The draft [regional start choice](wayfarer-regional-start-choice.md) defines
 the native Hoenn exception to the visitor-only opening below, including truck
-content and first-starter acquisition. That extension is not implemented.
+content and first-starter acquisition. That extension is implemented
+([PR #75](https://github.com/mzpkdev/pokemon-wayfarer/pull/75)).
 
 This specification defines the Hoenn content included in Wayfarer and the rules
 for making that content work with the HNS engine. It covers maps, NPCs, items,
@@ -231,8 +234,13 @@ late-game Hoenn progression.
 
 ### Adapted Hoenn opening
 
-Birch's Route 101 rescue remains the start of the Emerald campaign, but it uses
-the Wayfarer player and existing party:
+Since [PR #231](https://github.com/mzpkdev/pokemon-wayfarer/pull/231), Birch's Route 101 rescue plays only for Hoenn-origin players; see
+the [Hoenn story beats specification](hoenn-independent-story-beats.md). A
+visitor's first Hoenn arrival marks the rescue done, so Route 101 has no
+trigger, and Birch waits in his lab. At the first talk he thanks the visitor,
+hands over a Pokédex if they have none, upgrades it to National and rates it,
+with no starter and no gift. The existing-party rescue below is the design this
+replaced:
 
 1. Approaching the retained trigger starts Birch's normal request for help.
 2. The battle uses the first non-Egg, non-fainted Pokémon in the player's
@@ -268,8 +276,8 @@ baseline prepared for the adapted rescue. Brendan or May remains the local
 rival according to the normal player-gender relationship without replacing the
 Wayfarer player, family, home, or Trainer identity.
 
-This existing-party rescue is the visitor branch used by the staged Hoenn
-entry milestone. It does not define a future Hoenn native new-game opening.
+This existing-party rescue was the visitor branch used by the staged Hoenn
+entry milestone, until PR #231 retired it. It does not define a future Hoenn native new-game opening.
 That future opening, including its initial party and starter behavior, is
 separately scoped and does not gate the Johto-start interregional circuit.
 

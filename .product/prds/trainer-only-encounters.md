@@ -1,5 +1,8 @@
 # Trainer-only wild encounters
 
+Implemented: Yes. The core mechanic is built ([spec](../specs/trainer-only-encounters.md)); no production scenario enables it, and the
+story-encounter spec is not built by design.
+
 Status: Supported core mechanic. This PRD defines only the explicit, author-owned
 wild-encounter mode; it does not define a global no-party, NPC, story, or recovery
 policy.

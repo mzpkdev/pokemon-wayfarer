@@ -1,5 +1,7 @@
 # Emerald Hoenn story traversal blockers
 
+Status (2026-11-27): historical. This is the pre-traversal baseline; the [Emerald traversal spec](../specs/emerald-open-world-region-traversal.md) shipped and says which of these still gate the player.
+
 ## Scope
 
 This inventory covers Emerald Hoenn maps without the `_hns` or `_Frlg` suffix.

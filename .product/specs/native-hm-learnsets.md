@@ -1,7 +1,7 @@
 # Native HM utility learnsets
 
 PRD: [Native HM utility learnsets](../prds/native-hm-learnsets.md)
-Implemented: Yes
+Implemented: Yes, in its original form. In Wayfarer the catch-window revision replaced it: `game/src/data/pokemon/level_up_learnsets/gen_7.h` carries the `IS_WAYFARER` catch-window rows and none of the `IS_FRLG`/`IS_HNS`-gated rows this spec describes.
 
 For Wayfarer, [Native HM catch windows](native-hm-catch-windows.md) is the
 approved replacement design. Its core implementation is complete, while full
@@ -220,5 +220,5 @@ Compile the affected learnset and Pokémon objects for Emerald, FireRed, LeafGre
 - [Initial moveset and learnset selection](../../game/src/pokemon.c)
 - [HM compatibility data](../../game/src/data/pokemon/all_learnables.json)
 - [Wild encounter data](../../game/src/data/wild_encounters.json)
-- [Wild encounter scaling](../../game/src/data/wild_encounter_scaling.json)
+- [Wild encounter data for Wayfarer](../../game/src/data/wild_encounters_v2/meta.json)
 - [Pokémon learnset tests](../../game/test/pokemon.c)

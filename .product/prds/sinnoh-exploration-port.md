@@ -1,5 +1,7 @@
 # Sinnoh geography foundation
 
+Implemented: Yes. The 133-map catalog is checked in and compiled. Sinnoh itself is not playable: it has no entry route, events, encounters or story.
+
 ## Intent
 
 Preserve the available Sinnoh geography in Wayfarer as checked-in source material for a

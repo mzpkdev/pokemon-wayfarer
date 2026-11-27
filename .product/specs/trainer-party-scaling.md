@@ -1,19 +1,20 @@
 # Regular trainer and Gym member scaling
 
 PRD: [Regular trainer and Gym member scaling](../prds/trainer-party-scaling.md)
-Implemented: Partial; runtime policies exist, campaign balance acceptance remains pending.
-[v0 final-stage rosters](#v0-final-stage-rosters) are implemented (#157), and so are
-the [v0 levels](#v0-levels).
+Implemented: Yes. Classification, [v0 final-stage rosters](#v0-final-stage-rosters) (#157) and
+the [v0 levels](#v0-levels) (#160) are live in Wayfarer; balance playtesting is not recorded.
 
-Today's routing includes [League scaling](league-scaling.md) with the player's
-TR saved when entering a league, so League levels scale from that saved TR. See
-[the level resolver](../../game/src/trainer_party_scaling.c) and
-[the circuit producer](../../game/src/league_circuit.c). The v0 TR design
+The `LEAGUE` routing to [League scaling](league-scaling.md) is pre-v0: it applies
+only when `WAYFARER_LEAGUE_EVENTS` is off, because Wayfarer's league battles use
+saved league event lineups. See
+[the level resolver](../../game/src/trainer_party_scaling.c). The v0 TR design
 (rescaled formula, uncapped TR, scalers, and notable trainers' separate TR) is
 in [Player Trainer Rating](player-trainer-rating.md); this document owns the
 v0 levels in [v0 levels](#v0-levels) and the v0 rosters in
 [v0 final-stage rosters](#v0-final-stage-rosters). Everything else here is
-Today.
+Today; the level curve and the no-forward-evolution rule are replaced by v0 and run only
+when `WAYFARER_V0_TRAINERS` is off, while classification, moves, fields and
+runtime integration apply in both.
 
 ## Scope and authority
 

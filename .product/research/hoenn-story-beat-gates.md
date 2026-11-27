@@ -1,5 +1,7 @@
 # Hoenn story beat gates
 
+Status (2026-11-27): historical. The fixes this audit led to shipped (Hoenn independent story beats, PRs #209 to #219, #225 to #230, #234, #237). It records the game at `e00a436914`; for current behavior read the [specification](../specs/hoenn-independent-story-beats.md).
+
 Audited `main` at `e00a436914` on 2026-11-06 for the
 [Hoenn independent story beats](../prds/hoenn-independent-story-beats.md)
 design. Scope: Emerald's Hoenn maps in the Wayfarer build, which are the maps

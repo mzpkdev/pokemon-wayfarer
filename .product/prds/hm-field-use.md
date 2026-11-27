@@ -1,5 +1,7 @@
 # Badge-free HM field use
 
+Implemented: Yes, with one exception. Wayfarer's Dive (added as HM09) is not badge-free: it is allowed per map source, by the Mind Badge on HNS maps and by the received-Dive flag on Hoenn maps (`WayfarerIsDiveAuthorizedForMap`). Specification: [HM field use](../specs/hm-field-use.md).
+
 ## Intent
 
 Make HMs useful in an open-world campaign without tying field use to Gym order. A player who has found an HM and brought a Pokémon capable of learning it can use that field move immediately without teaching it. A Pokémon that already knows the move may provide the field action before the HM is found, trading a party slot and move slot for earlier access.

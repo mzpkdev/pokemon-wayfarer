@@ -130,8 +130,9 @@ Systems that only need two halves use:
 - **by day**: `TIME_DAY`, 8:00–20:00;
 - **by night**: `TIME_EVENING`, `TIME_NIGHT` or `TIME_MORNING`, 20:00–8:00.
 
-Each lasts an hour of play. Nothing reads the halves yet; the S.S. ferries
-will be the first.
+Each lasts an hour of play. The S.S. ferries read them: the day ship sails
+in the 8:00–20:00 half and the night ship in the other half
+([S.S. ferries](ss-ferries.md)).
 
 #### Lighting
 

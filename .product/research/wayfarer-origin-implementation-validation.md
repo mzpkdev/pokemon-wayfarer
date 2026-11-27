@@ -1,5 +1,7 @@
 # Starting-origin implementation validation
 
+Status (2026-11-27): shipped — the spec is `Implemented: Yes` (PR #75; Kanto start in PR #135). The ownership table below is a point-in-time record: the Aqua attendants and menus it names were replaced by the S.S. ferries (PR #177), and the Slateport attendant's Ticket moved to the gangway sailor.
+
 This records implementation evidence for the task based on merged PR #73.
 The [specification](../specs/wayfarer-regional-start-choice.md) remains
 `Implemented: No` until runtime is on main and its acceptance requirements

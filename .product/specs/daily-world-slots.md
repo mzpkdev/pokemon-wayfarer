@@ -225,7 +225,7 @@ the limits in `src/save.c`: nine storage sectors hold 35,712 bytes, and four
 SaveBlock1 sectors of 3,968 bytes hold 15,872 against 15,760 used (`gSaveblock1`
 is 0x3E10, less the 128-byte `SAVEBLOCK_MOVE_RANGE` pad in `load_save.h`).
 `save.c` asserts the daily struct's size and its 330-byte budget, and keeps
-`PokemonStorageFreeSpace`. The layout change bumped `SAVE_VERSION` to 14. Follow the RAM rules in `AGENTS.md`; the
+`PokemonStorageFreeSpace`. The layout change bumped `SAVE_VERSION` (to 14 then; later changes took it to 19). Follow the RAM rules in `AGENTS.md`; the
 per-map resolved occupants live in EWRAM for the map's lifetime only.
 
 ## Trainers

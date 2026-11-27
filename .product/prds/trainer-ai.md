@@ -1,7 +1,10 @@
 # Trainer AI
 
-Implemented: No. Today, every trainer battles the way its party data sets;
-the balance explorer shows the new behaviour as placeholder tooling.
+Implemented: Yes (Wayfarer, [PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)).
+Notable trainers battle with their play style, AI skill, ace protection and
+boss flag; every other trainer keeps the AI set in its party data. The Handicap
+quest battle's extra-smart override is not built: it waits on
+[notable haunts](notable-haunts.md).
 Design status: v0 accepted. Each trainer's play style is approved and open
 to review; how quickly trainers get smarter is placeholder, tuned by
 playtesting. Terms follow the

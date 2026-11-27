@@ -28,9 +28,9 @@ the selected proposal automatically. Whirl Islands are out of scope.
 
 ## Wild encounters v2 revision
 
-[Wild encounters v2](../prds/wild-encounters-v2.md) replaces every encounter
-table and the way wild levels are set, so the encounter coverage below changes
-when it ships. The
+[Wild encounters v2](../prds/wild-encounters-v2.md) replaced every encounter
+table and the way wild levels are set, so the encounter coverage below changed
+when it shipped. The
 [v2 revision](../research/native-hm-windows/revisions/wild-encounters-v2/README.md)
 then replaces the nearby-access evidence:
 
@@ -246,7 +246,7 @@ separately. Do not substitute a daytime witness for a night gap or require the
 player to wait. Hoenn's static encounter profile is evaluated in both clock
 cases rather than inventing a separate night population.
 
-TR 0-80 throughout this specification is today's scale. The
+TR 0-80 throughout this specification is the old scale. The
 [wild encounters v2 revision](#wild-encounters-v2-revision) re-verifies the
 coverage on the v0 scale against the v2 tables.
 Water encounters cannot certify acquisition before Surf. The inventory must

@@ -1,5 +1,7 @@
 # Notable trainer routines (review draft)
 
+Status (2026-11-27): shipped in PR #147 as `game/tools/wayfarer_world/routines.json`, which the build reads. All 37 cycles match. Two favourites changed later: Blue's visit favourite is now the Pewter Gym, since the Viridian Gym no longer hosts him (PR #239), and Pryce's relax favourite is Route 44's water's edge, not the Ice Path.
+
 Starting **activity cycles** and **favourite spots** for the 37 placeable
 notable trainers in `devtools/ui/src/modules/trainer-balance/catalog.json`
 (every entry but Tate & Liza, who are never placed). The

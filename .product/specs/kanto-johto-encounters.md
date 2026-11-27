@@ -65,7 +65,7 @@ share of encounter slots falls the further east you travel:
 | --- | --- | --- |
 | Johto west | Cianwood, Olivine, Ecruteak, Goldenrod, Azalea, Routes 34–41 and 47–48, Safari Zone Gate, Ilex Forest, National Park, Slowpoke Well, Cliff Edge Cave, Whirl Islands, Tin Tower, Burned Tower | ~50% |
 | Johto east | Violet, Cherrygrove, New Bark, Mahogany, Blackthorn, Routes 29–33 and 42–46, Lake of Rage, Ruins of Alph, Union Cave, Dark Cave, Ice Path, Mt. Mortar, Dragon's Den, Sprout Tower, Rocket Hideout | ~40% |
-| Border | Routes 22, 23 and 26–28, Tohjo Falls, Victory Road, Mt. Silver | ~30% |
+| Border | Routes 22, 23 and 26–28, Tohjo Falls, Victory Road, Mt. Silver, Faraway Island, Southern Island | ~30% |
 | Kanto west | Pallet, Viridian, Pewter, Cinnabar, Routes 1–4, 20 and 21, Viridian Forest, Mt. Moon, Diglett's Cave, Seafoam Islands, Pokémon Mansion | ~20% |
 | Kanto east | Cerulean, Saffron, Celadon, Vermilion, Lavender, Fuchsia, Routes 5–19 and 24–25, Rock Tunnel, Power Plant, Pokémon Tower, Cerulean Cave | ~10–15% |
 

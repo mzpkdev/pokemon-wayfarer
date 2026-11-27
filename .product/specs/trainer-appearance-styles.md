@@ -78,7 +78,7 @@ standalone HNS dialogue.
 
 ### Identity and save lifecycle
 
-Add a proposed `u8 playerAppearanceId` to the Wayfarer-owned persistent state in
+Added `u8 playerAppearanceId` to the Wayfarer-owned persistent state in
 [global.h](../../game/include/global.h), currently
 `SaveBlock3.wayfarerHoenn` / `WayfarerHoennPersistentState`. Zero is invalid or
 unconfirmed. The explicit IDs above are stable and must never depend on a menu
@@ -131,13 +131,12 @@ versions unchanged. There is no migration for prerelease saves.
 
 ### Appearance lookup and ownership
 
-Introduce a proposed `wayfarer_appearance.h` / `wayfarer_appearance.c` module
-with a registered descriptor for each ID. Each descriptor supplies the legacy
+The `wayfarer_appearance.h` / `wayfarer_appearance.c` module holds
+a registered descriptor for each ID. Each descriptor supplies the legacy
 gender, front portrait ID, battle back picture ID, and graphics/palette metadata
-for every supported avatar state. Proposed API names below describe the required
-boundary; they are not existing symbols:
+for every supported avatar state. Its main API:
 
-| Proposed API | Contract |
+| API | Contract |
 | --- | --- |
 | `WayfarerGetAppearanceProfile(id)` | Return a descriptor for a registered ID; reject all other values. |
 | `WayfarerGetPlayerAppearanceId()` | Read the validated persistent local identity. |
@@ -175,7 +174,7 @@ in `gold`, `kris`, `brendan`, and `may`. Existing front and back
 trainer IDs also cover all four characters. Asset presence alone does not prove
 that every engine animation state is compatible.
 
-Provide a checked manifest for all four styles covering normal walking/running,
+The checked manifest for all four styles (`game/tools/trainer_appearance/manifest.json`, checked by `check_manifest.py`) covers normal walking/running,
 Mach Bike, Acro Bike and tricks, surfing, underwater, field-move poses, fishing,
 watering, and VS Seeker when available. For each combination, record graphics
 and palette symbols, frame dimensions/counts, animation tables, and whether the
@@ -243,15 +242,11 @@ Add focused mechanics/state tests for descriptor completeness, ID validation,
 gender mapping, pending-to-persistent handoff, and movement-state preservation
 when sheets are shared. Extend the existing
 [new-game E2E playbook](../../e2e/src/playbooks/new-game-intro.ts) to accept an
-explicit style and origin and assert resulting state. The E2E README currently
-describes an HNS ROM setup; confirm or add Wayfarer ROM support before claiming
-these runs cover Wayfarer. Use actual emulator
+explicit style and origin and assert resulting state. The E2E README
+describes the Wayfarer e2e ROM build these runs use. Use actual emulator
 captures for UI and animation acceptance; compilation and an asset inventory
 alone cannot prove visible correctness. Follow the repository restriction on
 serial builds because different map versions share generated files.
-
-This documentation does not implement the feature. Keep `Implemented: No` until
-the implementation lands on main with the required state and emulator evidence.
 
 Keep existing production ROM reserve checks enabled when measuring the asset
 delta. Fitting the physical ROM limit alone does not waive the project's reserve.

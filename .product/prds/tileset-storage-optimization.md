@@ -1,5 +1,7 @@
 # Tileset ROM storage optimization
 
+Implemented: No. The Secret Base and Cable Club tileset graphics are still stored raw.
+
 ## Intent
 
 Reduce the Wayfarer release ROM footprint without removing or changing game

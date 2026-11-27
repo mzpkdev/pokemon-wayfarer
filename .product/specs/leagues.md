@@ -56,18 +56,19 @@ regional integration.
   never restates how they are computed.
 - [Player Trainer Rating](player-trainer-rating.md) owns the player's TR,
   which this spec reads only for the qualification gate and as world
-  progress. In v0 a league win adds no player TR; Today's +8 per first league
-  win stays documented in the circuit spec until adoption.
+  progress. A league win adds no player TR; the old +8 per first league
+  win is documented in the circuit spec as the record of the pre-v0 circuit.
 - Today's [interregional circuit spec](wayfarer-interregional-league-circuit.md)
   stays the record of Today's admission, fixed league order, and replays, and
   keeps owning the first-league-win facts, ceremonies,
-  and unlocks this spec reuses. Upon adoption, this spec replaces its
+  and unlocks this spec reuses. This spec replaces its
   admission, order, replay, and loss rules with invitations and one attempt
-  per accepted event.
+  per accepted event (built in Wayfarer; the old rules remain compiled only
+  with `WAYFARER_LEAGUE_EVENTS` off).
 
-Upon adoption this replaces the fixed lineups and the level policy based on the
+This replaces the fixed lineups and the level policy based on the
 player's TR when entering a league in [League scaling](league-scaling.md),
-which stays the record of Today.
+which stays the record of the pre-v0 circuit.
 
 ## League identity
 
@@ -880,7 +881,8 @@ above the base lineup level. The Gym ladder and team targets stay in
 
 Check in an inventory: aliases, roster references, presentation coverage,
 exclusion reasons, provenance, and content versions. Required implementation
-evidence (not yet run):
+evidence (the mechanics suites and E2E journeys named at the end now cover
+most of it; balance playtesting is not recorded):
 
 1. **Registry.** Reject duplicate characters or aliases, unresolved source
    IDs, missing assets, double-battle flags, and trainers without valid

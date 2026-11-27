@@ -1,5 +1,7 @@
 # Notable trainer voice bits (review draft)
 
+Status (2026-11-27): partly wired. `MEET`, `HEARD`, `AGAIN`, `HELLO`, `CLOSE` and `BYE` (plus the phone `HELLO`, `CLOSE` and `BYE`) are in `game/tools/notable_trainers/catalog.json` and play at walkers and in phone calls. The haunt-only bits (`ASK`, `YES`, `NO`, `NOT_READY`, `PRAISE`, `GIFT`, `QUIRK`, `NOT_YET`, `NEWS`) are not in the ROM, because haunts are not built.
+
 Voice bits are short reusable lines for the 38 notable trainers in
 `devtools/ui/src/modules/trainer-balance/catalog.json`.
 [Notable haunts](../prds/notable-haunts.md) splice them into generic dialogue

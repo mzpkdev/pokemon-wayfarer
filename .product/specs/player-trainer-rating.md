@@ -1,8 +1,8 @@
 # Player Trainer Rating
 
 PRD: [Player Trainer Rating](../prds/player-trainer-rating.md)
-Implemented: Partial. Wayfarer runs the v0 formula, the uncapped saved high-water
-value, and the level cap and notable-trainer world progress consumers
+Implemented: Yes. Wayfarer runs the v0 formula, the uncapped saved high-water
+value, and the level cap, wild, regular trainer, Poké Mart and notable-trainer world progress consumers
 ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)), and
 the TR 80 gate for phone league invitations (Indigo and Hoenn; the Sevii
 Masters keeps its lobby acceptance until its format ships). Mart tier acceptance is tracked in
@@ -58,7 +58,7 @@ Wayfarer TR is the global badge contribution (4 per badge for badges 1–4, 6
 for 5–8, 1 for 9–24) plus +8 for each canonical first league win (Indigo,
 Masters, Hoenn), clamped to 0–80. The exact contract and milestones are in the
 [circuit contract](wayfarer-interregional-league-circuit.md#trainer-rating).
-It stays in the ROM until v0 is adopted.
+It is compiled only when `WAYFARER_V0_TRAINERS` is off; Wayfarer ships v0.
 
 ### Range
 
@@ -176,8 +176,9 @@ result is a baby form.
 | [Regular trainers and Gym members](trainer-party-scaling.md#species-moves-and-per-pokémon-fields) | Authored species at the effective level |
 | [Wild encounters](wild-level-scaling.md#stage-mix) | Ordinary non-randomized encounters at their encounter level, with the stage mix |
 
-Today, regular trainers and wild encounters step down numeric level evolutions
-only, and non-level evolutions have no reverse; the table is v0.
+Regular trainers (PR #157) and wild encounters step down every evolution method
+through this table in Wayfarer; builds with `WAYFARER_V0_TRAINERS` off step down numeric
+level evolutions only.
 
 ## What player TR drives
 

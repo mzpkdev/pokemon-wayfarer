@@ -1,6 +1,7 @@
 # Four trainer appearance styles
 
-Status: Approved four-style v1 scope (2026-09-09); implementation and validation in progress.
+Status: Approved four-style v1 scope (2026-09-09).
+Implemented: Yes ([PR #88](https://github.com/mzpkdev/pokemon-wayfarer/pull/88)). Four styles shipped; Red and Leaf stay deferred.
 Specification: [Trainer appearance styles](../specs/trainer-appearance-styles.md)
 
 ## Intent

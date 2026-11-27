@@ -1,6 +1,6 @@
 # Sevii and Kanto coast phone rematches
 
-Implemented: Yes
+Implemented: Yes. Shipped in [PR #164](https://github.com/mzpkdev/pokemon-wayfarer/pull/164) together with the Hoenn contacts; the contact-list and save limits below were raised as the spec records.
 
 Specification: [Phone rematches](../specs/phone-rematches.md)
 

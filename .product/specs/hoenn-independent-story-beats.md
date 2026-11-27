@@ -31,10 +31,10 @@ completable.
 
 **Adventure progress is separate.** Each adventure owns its progress. A scene
 writes only the progress of its own adventure, and only forward. A Gym win
-awards its badge and nothing that belongs to another adventure. Today these
-writes cross adventures:
+awards its badge and nothing that belongs to another adventure. Before this
+work these writes crossed adventures (each is split or guarded below):
 
-| Write today | Problem |
+| Write before this work | Problem |
 | --- | --- |
 | Roxanne's defeat sets `VAR_RUSTBORO_CITY_STATE` to 1 | It is the only start of the Rustboro theft, and it would rewind a theft already under way. |
 | Rustboro's, Dewford's, Mauville's, and Lavaridge's defeats each raise `VAR_PETALBURG_GYM_STATE` | Petalburg Gym is readied for battle only when the count reaches 6. |
@@ -429,7 +429,7 @@ leave Hoenn between their steps.
 
 ### Dialogue variants
 
-| Speaker | Line today | Variant |
+| Speaker | Original line | Variant |
 | --- | --- | --- |
 | Devon employee, Rustboro street | Recalls the player's help "in PETALBURG WOODS". | Without the Woods scene: drop the recall. |
 | Devon employee, Route 116 | Recalls the player's help "in PETALBURG WOODS". | Without the Woods scene: drop the recall. |
@@ -480,7 +480,7 @@ Wayfarer runs, 55 otherwise.
 
 ### Related documents updated with this work
 
-When implementing, update:
+Updated with the implementation:
 
 - the [content specification](wayfarer-hoenn-content-port.md)'s "Main campaign
   and regional progression" section, which keeps Emerald's campaign in its
@@ -490,7 +490,7 @@ When implementing, update:
   for Wattson and Norman in both orders;
 - the [traversal specification](emerald-open-world-region-traversal.md), if
   its Lilycove, Mt. Pyre, Slateport, or Aqua statements change;
-- this specification's `Implemented` marker and the PRD's status line.
+- this specification's `Implemented` marker and the PRD's status line (both done).
 
 ## Validation
 

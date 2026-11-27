@@ -5,13 +5,14 @@ and [technical specification](../../specs/native-hm-catch-windows.md). Keep the
 files together in the repository. Links are the attachment mechanism; duplicate
 copies in the PRD and spec directories are not required.
 
-## Current selected revision
+## Previous selected revision
 
-The [nearby-access revision](revisions/nearby-access/README.md) is the current
+The [nearby-access revision](revisions/nearby-access/README.md) was the
 designer-selected distribution and encounter plan, following the user's request
 to audit routes and select a design. It contains 121 species and 154 utility
-roles, with code-traced acquisition areas and TR-by-TR simulations. Production
-implementation remains pending.
+roles, with code-traced acquisition areas and TR-by-TR simulations. Its roster
+shipped in Wayfarer (PR #65); its 17 encounter replacements were retired by
+wild encounters v2 (PR #156), whose revision below is now current.
 
 Use its [proposal](revisions/nearby-access/proposal.json),
 [effective roster](revisions/nearby-access/roster.md),
@@ -27,13 +28,14 @@ The [wild encounters v2 revision](revisions/wild-encounters-v2/README.md)
 re-audits the roster against the v2 encounter tables and wild level scaling,
 and extends the guarantee to the Sevii Islands, Alola and Sinjoh. It changes
 fourteen roster entries, authors the crossing carriers into the v2 tables, and holds
-the 8% floor from two badges on. It takes over when the v2
-tables ship; until then the nearby-access revision stays current.
+the 8% floor from two badges on. It is implemented for Wayfarer and is now
+the current revision.
 
 ## Original approved snapshot and authority
 
 The user approved the single-entry design and initial 117-species, 148-role
-distribution. The feature is not implemented. Research files retain their
+distribution. The feature has since shipped in Wayfarer, with later revisions.
+Research files retain their
 original proposal wording as a record of the investigation; approval status
 and implementation requirements live in the PRD and spec.
 

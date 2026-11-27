@@ -1,9 +1,10 @@
 # Player Trainer Rating
 
-Implemented: Partial. Today's badge and first-league-win formula, its saved
-value that never decreases, and every consumer listed below except
-notable-trainer world progress and league invitations (v0) exist. The new
-badge scale, uncapped TR, and the world scaling that follows it are v0.
+Implemented: Yes (Wayfarer, [PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)).
+The badge scale, uncapped saved TR that never decreases, and every consumer
+listed below, including notable-trainer world progress and league
+invitations, are live. The old formula survives only in builds with
+`WAYFARER_V0_TRAINERS` off.
 Design status: v0 accepted. How TR is earned and how the world answers it are
 approved; the exact numbers are placeholders tuned by playtesting.
 
@@ -34,9 +35,8 @@ League wins give you nothing. A league is a test of what you have built, not a
 source of power: winning one proves you are ready, and your next step still
 comes from badges.
 
-Today, the ROM uses a different formula, where each first league win also
-raises TR and the total stops at a fixed ceiling. It stays in place until the
-v0 scale is adopted.
+The pre-v0 formula, where each first league win also raised TR and the total
+stopped at a fixed ceiling, is no longer what Wayfarer runs.
 
 ### No ceiling
 

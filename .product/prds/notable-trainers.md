@@ -1,7 +1,6 @@
 # Notable trainers
 
-Implemented: No. Today, the ROM keeps its existing Gym and league scaling
-until this design is adopted; the balance explorer is placeholder tooling.
+Implemented: Partial. The v0 catalog, trainer TR growth, rosters, move pools, the battle snapshot, Gym and league battles on notable TR ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)), friendship, phone contacts and the story-continuity rules ([PR #233](https://github.com/mzpkdev/pokemon-wayfarer/pull/233)) are built. The Masters partner and haunt quests are not; the balance explorer is placeholder tooling.
 Design status: v0 accepted. Every trainer's team is approved (draft v1:
 who they bring, in what order, and which are aces); their favourite moves
 and items, their growth numbers, and the exact team-size steps are still
@@ -204,11 +203,11 @@ who becomes a Friend gives you their phone number, which the
 
 ### Out in the world
 
-Between their Gym and league battles, notable trainers also turn up at
-haunts around the overworld, where each offers the haunt's quest
-([Notable haunts](notable-haunts.md)). Once routines and travel arrive,
-they spend the rest of their time at everyday [spots](notable-spots.md),
-such as a Pokémon Center or the edge of a pond. The
+Between their Gym and league battles, notable trainers spend their time at
+everyday [spots](notable-spots.md), such as a Pokémon Center or the edge of a
+pond. Designed but not built yet, they also turn up at haunts around the
+overworld, where each offers the haunt's quest
+([Notable haunts](notable-haunts.md)). The
 [world simulation](notable-world-simulation.md) moves them between those
 places on daily routines.
 
@@ -237,9 +236,8 @@ leader is ahead of you.
 A Gym battle uses the leader's own TR at that point in your journey, with their
 team and levels. The Gym adds nothing on top: the same leader met anywhere else
 at that point is the same trainer at the same strength. The badge is awarded
-after the battle. Until adoption, the ROM keeps today's behavior: the earlier
-player-TR Gym scaler exists in code but is disabled by default, and Giovanni's
-Wayfarer finale has its own path.
+after the battle. The earlier player-TR Gym scaler still exists in code but is
+disabled by default (`B_GYM_LEADER_SCALING`).
 
 Wayfarer has 24 badge encounters, and this design covers all of them: Brock, Misty, Lt. Surge, Erika, Janine, Sabrina, Blaine, Giovanni
 (his Viridian finale); Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce,

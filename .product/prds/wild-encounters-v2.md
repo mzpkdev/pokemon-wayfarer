@@ -22,10 +22,10 @@ All numbers are placeholders for playtesting.
 
 ## Intent
 
-Today, wild levels come from the original games' tables, squeezed by a global
-Trainer Rating curve. Danger reflects each game's old story order, not the
-place itself. Late in the game every area converges to the same level, and
-early routes offer little worth the trip.
+Before v2, wild levels came from the original games' tables, squeezed by a
+global Trainer Rating curve. Danger reflected each game's old story order, not
+the place itself. Late in the game every area converged to the same level, and
+early routes offered little worth the trip.
 
 V2 makes danger something players read from geography, and gives every region
 its own natives. Roads are safe and remote places are dangerous. Each region is

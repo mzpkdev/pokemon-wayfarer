@@ -1,5 +1,9 @@
 # Celadon Rocket Hideout
 
+PRD: [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md) (the Celadon Rocket Hideout row)
+
+Supporting requirements: [FRLG Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md#celadon-lavender-and-the-flute)
+
 Implemented: Yes ([PR #124](https://github.com/mzpkdev/pokemon-wayfarer/pull/124))
 
 This adventure restores the five existing FRLG Hideout interiors in Wayfarer:

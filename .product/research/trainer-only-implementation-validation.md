@@ -1,5 +1,7 @@
 # Trainer-only implementation validation
 
+Status (2026-11-27): historical. It validates the earlier build with story encounters and regional recovery, which PR #96 replaced with the flag-gated, author-owned wild mechanic described in [the spec](../specs/trainer-only-encounters.md); the story and recovery results below no longer describe `main`.
+
 Status: Supported core and current story implementation complete and locally
 validated. Implementation status excludes future ports, new exceptional policies
 and shipping balance approval. Historical runs below retain their original

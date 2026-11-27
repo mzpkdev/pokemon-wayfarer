@@ -1,5 +1,7 @@
 # Wayfarer Surf Pokémon pixel sheet deduplication
 
+Implemented: Yes (PR #84). 61 pairs share one pixel blob, saving 430,080 bytes.
+
 ## Intent
 
 Wayfarer needs more room within the 32 MiB GBA ROM limit without removing

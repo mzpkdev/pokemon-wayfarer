@@ -1,5 +1,7 @@
 # Johto legendary ceremony gates
 
+Status (2026-11-27): historical. The ceremony now follows the Wing, the Radio Tower and TR (PR #184), and Navel Rock's copies of the birds are retired (PR #245). Read the [Johto independent story beats spec](../specs/johto-independent-story-beats.md) for current behavior.
+
 Source audit of Wayfarer's HNS scripts at `9ab8058a6e`. A runner traced the
 reward and encounter paths; the root reconciled the main reward and alternate
 Pewter branch against source. No ROM journey was performed.

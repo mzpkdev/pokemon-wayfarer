@@ -1,5 +1,7 @@
 # Wayfarer legacy multiboot removal
 
+Implemented: Yes (PR #83). Hardware/link and prepared-save runtime checks were never run; see the [validation report](../research/wayfarer-legacy-multiboot-validation.md).
+
 ## Intent
 
 Wayfarer removes three hardware-specific multiboot features that do not serve

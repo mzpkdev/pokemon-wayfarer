@@ -1,6 +1,6 @@
 # Notable ambience
 
-Implemented: No
+Implemented: Yes ([PR #151](https://github.com/mzpkdev/pokemon-wayfarer/pull/151)). Fame and friendship reactions are not built.
 
 Specification: [Notable ambience specification](../specs/notable-ambience.md)
 
@@ -110,8 +110,8 @@ room.
 - **Spots, routines, travel, and capacity don't change.** Ambience never moves
   a trainer to another spot or map, and never changes a record.
 - **No saved state.** Ambience is lost on a reload and rebuilt from scratch.
-- **No dialogue.** Talking to walkers belongs to the friendship work, which
-  comes later.
+- **No dialogue.** Talking to walkers is not part of ambience: it follows the
+  [spots talk flow](../specs/notable-spots.md#talk-flow).
 - **The off-screen simulation is untouched.**
 - **Fame and friendship reactions are left for later.** A trainer who has heard
   of the player, or is their friend, should react to them. This needs fame and

@@ -1,10 +1,10 @@
 # Sevii wild encounters
 
 **Retired.** Replaced by [Wild encounters v2](../prds/wild-encounters-v2.md).
-It still describes today's game until v2 ships; don't build new work from it.
+v2 shipped in Wayfarer ([PR #156](https://github.com/mzpkdev/pokemon-wayfarer/pull/156)); don't build new work from this document.
 
 PRD: [Sevii exploration port](../prds/sevii-exploration-port.md)
-Implemented: Yes
+Implemented: No. Retired and replaced in Wayfarer by wild encounters v2 ([PR #156](https://github.com/mzpkdev/pokemon-wayfarer/pull/156)).
 
 ## Scope
 

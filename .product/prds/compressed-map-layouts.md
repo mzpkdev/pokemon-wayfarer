@@ -1,5 +1,7 @@
 # Content-preserving map layout compression
 
+Implemented: Yes. Hybrid storage is Wayfarer's default (PR #121); see the [build](../specs/compressed-map-layout-build-storage.md), [runtime](../specs/compressed-map-layout-runtime-loading.md) and [validation](../specs/compressed-map-layout-validation-rollout.md) specs.
+
 ## Intent
 
 Pokemon Wayfarer needs ROM headroom without deleting or simplifying maps. Map layout

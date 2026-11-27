@@ -1,5 +1,7 @@
 # Notable spots inventory (draft)
 
+Status (2026-11-27): the extraction this inventory fed shipped in PR #147 (`game/tools/wayfarer_world/`). The scope numbers the spec cites still hold on main (52 nurse maps, 49 town and city maps), and so do its Center, store, Game Corner and Gym counts. Other totals have drifted as maps changed: a re-run now finds 877 NPC chats (843 below), Sevii's town squares cover 163 tiles (192 below), and the water's-edge and tall-grass tile counts move by a few. The committed JSON and CSV are the original run.
+
 Related PRD: [Notable spots](../prds/notable-spots.md)
 
 Related spec: [Notable spots](../specs/notable-spots.md)

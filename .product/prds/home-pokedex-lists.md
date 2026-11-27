@@ -8,6 +8,8 @@ lands, the National upgrade shows every species, and the professors give that
 upgrade on a traveller's first meeting.
 Specification: [Home Pokédex lists](../specs/home-pokedex-lists.md)
 
+Implemented: Yes (#220 obtainability audit, #222 home lists, #221 the professors' upgrade).
+
 ## Intent
 
 The Pokédex should show what the player meets. Wayfarer's regions are not the

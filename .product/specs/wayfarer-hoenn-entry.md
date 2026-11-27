@@ -1,12 +1,11 @@
 # Wayfarer Hoenn entry and S.S. Aqua circuit
 
 PRD: [Wayfarer Hoenn integration](../prds/wayfarer-hoenn-integration.md)
-Implemented: Yes
+Implemented: Yes, then superseded in part. First-arrival Hoenn initialization, the S.S. Ticket checks and the Hoenn-side safe arrival are built. The dedicated Slateport Aqua attendant and the next-stop destination menus were replaced by S.S. ferries ([PR #177](https://github.com/mzpkdev/pokemon-wayfarer/pull/177)).
 
 Superseded in part by [S.S. ferries](ss-ferries.md): the Aqua circuit as a destination menu, "the circuit is the only approved Hoenn-to-HNS route", "S.S. Tidal remains unchanged" with its Champion gate, and the validation items that check them.
 
-The S.S. Anne port is not implemented. This status describes the existing Aqua
-circuit only.
+The S.S. Anne port is implemented ([PR #75](https://github.com/mzpkdev/pokemon-wayfarer/pull/75)). The sections below keep the Aqua circuit as first specified. The Slateport attendant it describes (`WayfarerHoennEntry_EventScript_SlateportAquaAttendant`, `(15,11)`) is retired: Slateport's harbor sailor, `SlateportCity_Harbor_EventScript_FerryAttendant`, now boards the ship and gives the Hoenn start's S.S. Ticket.
 
 ## Future S.S. Anne compatibility
 
@@ -21,7 +20,8 @@ runtime and audits remain the implemented baseline.
 
 The draft [regional start choice](wayfarer-regional-start-choice.md) defines
 Hoenn-origin ticket acquisition and regular-circuit eligibility without the
-Johto maiden voyage. That extension is not implemented. The maiden-voyage and
+Johto maiden voyage. That extension is implemented ([PR #75](https://github.com/mzpkdev/pokemon-wayfarer/pull/75),
+[PR #135](https://github.com/mzpkdev/pokemon-wayfarer/pull/135)). The maiden-voyage and
 visitor-initialization rules below continue to apply to Johto-origin players.
 
 This specification defines Wayfarer's permanent S.S. Aqua circuit. After the
@@ -40,7 +40,7 @@ boundary.
 The interregional League circuit uses the existing Johto opening for this
 release. Its completed maiden voyage supplies the Ticket and state-8
 entitlement for this circuit without changing its direction or port hooks.
-Future regional starts are outside this specification and do not gate travel.
+Regional starts are outside this specification and do not gate travel.
 
 The runtime foundation owns the build, map catalog, persistent-state model,
 active-region dispatch, and ROM budget. The Hoenn content port owns the adapted

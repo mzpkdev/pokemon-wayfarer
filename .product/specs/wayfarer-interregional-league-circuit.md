@@ -2,9 +2,9 @@
 
 PRD: [Wayfarer interregional League circuit](../prds/wayfarer-interregional-league-circuit.md)
 
-Implemented: Yes
+Implemented: Yes ([PR #136](https://github.com/mzpkdev/pokemon-wayfarer/pull/136)). Wayfarer now ships the v0 [Leagues](leagues.md) ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139), [PR #172](https://github.com/mzpkdev/pokemon-wayfarer/pull/172)) on top of it. The admission, order, replay, loss and run rules, the +8 TR per first league win, the TR-scaled opponent levels and the old Trainer Card requirement lines below are compiled only when `WAYFARER_LEAGUE_EVENTS` or `WAYFARER_V0_TRAINERS` is off (`game/include/config/league_circuit.h`, `game/include/config/notable_trainers.h`); both are on in the shipped game. Still live there: the circuit stage identity, the room chains, the first-league-win ceremonies and Hall of Fame handling, Red's unlock, and the Trainer Card league page.
 
-This contract remains the record of Today's implementation; the v0 design is
+This contract is the record of the pre-v0 circuit ("Today" below); the v0 design is
 [Leagues](leagues.md).
 
 The runtime uses one persisted circuit stage identity for FRLG Indigo,
@@ -98,9 +98,8 @@ passable and his offer available.
 
 ## Opening and travel
 
-The existing Johto opening initializes zero badges, no league wins, no
-regional Champion/game-clear result, and TR 0. Kanto and Hoenn
-starts remain separate future work.
+Every opening (Johto, Hoenn and Kanto) initializes zero badges, no league wins, no
+regional Champion/game-clear result, and TR 0.
 
 The S.S. Aqua maiden voyage remains available without a Ticket, awards the
 Ticket during its reunion flow, and reaches state 8 on arrival at Vermilion.
@@ -386,7 +385,7 @@ stage was previously won.
 
 ## Trainer Rating
 
-This is today's formula. In v0, TR follows the badge scale in
+This is the pre-v0 formula. In v0, which Wayfarer ships, TR follows the badge scale in
 [Player Trainer Rating](player-trainer-rating.md#formula-v0), with no
 league TR.
 

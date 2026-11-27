@@ -292,7 +292,8 @@ Dispatch Route 101's rescue on saved origin and local rescue state:
 - A Hoenn-origin player resuming after that grant uses the already granted
   partner. Resuming must not permit another grant or a changed choice.
 - A Johto-origin visitor retains the existing-party rescue and optional lab
-  gift defined by the Hoenn content port.
+  gift defined by the Hoenn content port. (Superseded by [PR #231](https://github.com/mzpkdev/pokemon-wayfarer/pull/231): visitors
+  never play the rescue; Birch thanks them in his lab with no gift.)
 
 Adapt `ChooseStarter`/`CB2_GiveStarter` and their callbacks explicitly. The C
 callback currently writes `VAR_STARTER_MON`, outside the Hoenn script alias
@@ -471,7 +472,7 @@ that a mixed-region script writes the intended bank.
 | New-game state | All three origins, all four appearance/gender mappings, preserved challenge settings, zero TR/badges/clears, correct visited bits, correct home, and correct initialized marker. |
 | Native starters | All three local choices in each region, exact-once delivery, native first-battle loss continuation versus visitor rescue retry, correct local rival branch, and no writes to the other starter choice. |
 | Shared services | Each origin's owned running-shoes, Pokégear, Pokédex, later-professor, and pre-Center recovery behavior works through the actual Wayfarer UI and scripts. Kanto grants its Pokédex and five Poké Balls during Parcel delivery but not Daisy's deferred Town Map. |
-| Visitor stories | Johto-to-Hoenn rescue still uses the existing party. (Superseded: the Hoenn-to-Johto Elm choice, gift and reclaim are removed; visitors get an ordinary Elm and Mr. Pokémon, no Silver, and the Johto story beats stand alone.) |
+| Visitor stories | Johto-to-Hoenn rescue still uses the existing party. (Superseded by PR #231: visitors skip the rescue and meet Birch in his lab.) (Superseded: the Hoenn-to-Johto Elm choice, gift and reclaim are removed; visitors get an ordinary Elm and Mr. Pokémon, no Silver, and the Johto story beats stand alone.) |
 | Persistence | Save/reload at permitted opening checkpoints, after starter choice, after local rewards, in another region, and after completing the full circuit; no opening replay or origin change. |
 | Travel | Fresh Hoenn reaches Slateport, obtains Ticket, visits Olivine and Vermilion, and returns to progressed Hoenn with zero badges/clears; Johto still completes its maiden voyage and all three regular legs. |
 | Recovery | Early first-battle loss, ordinary blackout before first Center, local blackout after each travel leg, Teleport where available, and existing Hoenn special whiteout cases. |

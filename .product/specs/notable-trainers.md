@@ -15,11 +15,13 @@ placeholder. Growth
 values (start TR, archetype, peak TR), home regions, trait assignments, and
 every anchor marked placeholder are catalog content under review.
 
-**Catalog as design reference.** "Catalog" in this spec means the
-[balance explorer](../../devtools/ui/README.md#trainer-balance-explorer)'s
-data: the design reference for rosters, growth values, and scalers. It is not
-the ROM's data source. At implementation the same content is written directly
-in game code, and the validation rules here apply to that code.
+**Catalog.** "Catalog" in this spec means the ROM's data source,
+`game/tools/notable_trainers/catalog.json`: `generate.py` validates it and
+writes `src/data/notable_trainers/catalog.h`. The
+[balance explorer](../../devtools/ui/README.md#trainer-balance-explorer) keeps
+its own copy (`devtools/ui/src/modules/trainer-balance/catalog.json`) as the
+design reference for rosters, growth values, and scalers; the two are not
+generated from each other.
 
 ## Ownership and scope
 
@@ -42,8 +44,8 @@ rather than restating it.
 - [Notable haunts](notable-haunts.md) places notable trainers in the
   overworld and owns the meaning of the buddy and reward pool
   values ([below](#haunt-and-routine-values)).
-- [Notable spots](notable-spots.md) is the everyday layer of the future
-  routine and travel design. It owns the meaning of the home-base and
+- [Notable spots](notable-spots.md) is the everyday layer of the routine and
+  travel design. It owns the meaning of the home-base and
   favourite-spots values.
 - [Player Trainer Rating](player-trainer-rating.md) owns the player's TR,
   the scaler definition, and the downward rule and shared evolution-level table
@@ -250,7 +252,10 @@ Rules:
 Saved state: one score byte per notable trainer, one **first-win bit** per
 notable trainer (the bit records that the first win was counted), and one
 **number-shown bit** per notable trainer (the handover's line has played).
-A contact is read from the score; nothing else registers one. New Game
+The
+[story continuity](notable-story-continuity.md#1-acquaintance) rules add an
+**introduced bit** per trainer and one **story-beat bit** per beat; the
+whole friendship state is 56 bytes in SaveBlock3. A contact is read from the score; nothing else registers one. New Game
 saves every score at 0 and every bit clear. On load, drop the scores and bits
 of characters no longer in the registry; a first-win bit set with a score
 under the Met threshold, a number-shown bit set with a score under the Friend
@@ -784,9 +789,10 @@ rules (placeholders tuned in the explorer):
 The [explorer](../../devtools/ui/README.md#trainer-balance-explorer) is
 placeholder evidence and predicts species, sizes, levels, moves, and the
 resolved AI flags. Playtesting owns combat balance (moves, items, how the AI
-plays). Finalize catalog content and playtest
-evidence before enabling this policy; the existing Gym and league
-implementations stay active until then.
+plays). The policy is enabled: Gym, rematch, story
+and league battles with a notable trainer resolve through it
+([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)). Catalog
+content and playtest evidence are still placeholders under review.
 
 ## Open questions
 

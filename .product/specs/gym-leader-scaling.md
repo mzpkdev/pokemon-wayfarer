@@ -121,10 +121,10 @@ restores existing encounter behavior rather than exposing an unscaled new
 roster. Standalone builds are untouched. On adoption, leader rematches
 resolve from the leader's TR under the
 [every-battle rule](notable-trainers.md#trainer-rating), built with these same
-rules; Today they keep their authored, static parties.
+rules: the leaders' rematch encounter IDs are in the catalog.
 
-Keep the policy disabled until inventory, content, validation, and playtesting
-pass. Invalid shipped metadata fails the build; runtime invalidity fails
+The policy shipped enabled with [PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139);
+content and playtest acceptance stay open. Invalid shipped metadata fails the build; runtime invalidity fails
 preparation before any party is replaced, never falling back to player TR,
 another trainer, or a random team.
 

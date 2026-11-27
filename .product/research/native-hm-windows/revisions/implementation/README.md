@@ -1,5 +1,7 @@
 # Native utility catch-window implementation
 
+Status (2026-11-27): shipped in PR #65, then partly superseded. Wild encounters v2 (PR #156) retired the 17 encounter replacements and the TR 0-80 acceptance below; the roster itself stays, with fourteen v2 changes (see the [v2 revision](../wild-encounters-v2/README.md)).
+
 Implementation base: `f7a2b95b7bde184141cf5b91215dc4e7ab9068a6`.
 Approved source baseline: `479b0c83aea4ad90feb0af649e83ccb1a5916770`.
 Distribution authority: [nearby-access proposal](../nearby-access/proposal.json).

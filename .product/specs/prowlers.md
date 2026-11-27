@@ -509,8 +509,9 @@ listed separately.
 
 ### Data
 
-This roster replaces the minimum-level list in
-`game/src/data/wild_encounter_species.json`, so every species with a minimum
-level is a reward, and takes it only where it is a prowler. The change itself
-belongs to the implementation.
+This roster replaced the minimum-level list that lived in
+`game/src/data/wild_encounter_species.json`. The encounter generator
+(`game/tools/wild_encounters/v2/v2_emit.py`) now reads the tables above and
+builds the minimum levels from them, so every species with a minimum level is
+a reward, and takes it only where it is a prowler.
 

@@ -1,5 +1,7 @@
 # Silph President Master Ball
 
+PRD: [FRLG Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md#late-game-rewards) (this spec replaces its Master Ball TR-threshold row); see also [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md)
+
 Dependencies: [Silph Co. liberation](frlg-kanto-silph-liberation.md), [Wayfarer runtime foundation](wayfarer-runtime-foundation.md)
 
 Implemented: Yes ([PR #125](https://github.com/mzpkdev/pokemon-wayfarer/pull/125))

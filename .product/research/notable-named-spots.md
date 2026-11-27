@@ -1,5 +1,7 @@
 # Notable named spots (starting list)
 
+Status (2026-11-27): shipped in PR #147 as `game/tools/wayfarer_world/named_spots.json`: 58 of these 59 rows. The Cerulean Bike Shop is dropped (its only door never fires), and the Berry Forest row moved to (19, 28), the west pond's shore.
+
 Related spec: [Notable spots](../specs/notable-spots.md#named-spots)
 
 Evidence: [inventory.py](notable-spots-inventory/inventory.py) reads the

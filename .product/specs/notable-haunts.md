@@ -1,7 +1,7 @@
 # Notable haunts
 
 PRD: [Notable haunts](../prds/notable-haunts.md)
-Implemented: No
+Implemented: No. No haunt, placement, quest, reward, traded slot, Courier or Egg sitting exists in the ROM; the HNS cameos still stand. Built under other specs: the friendship greetings and farewell (the haunts' talk flow, used at spots and by walkers), `MEET`, `HEARD`, `AGAIN`, `HELLO`, `CLOSE` and `BYE` voice bits plus the phone bits, the buddy slot in the catalog, and `NotableFriendship_AddQuestPoints` (unused until quests exist).
 Design status: v0 draft for review: one shared pool of **haunts**, each
 tagged by region, theme types, elite gate, hometown, up to two activities,
 setting, capacity, and one **quest**, and naming no trainer. **Placement**
