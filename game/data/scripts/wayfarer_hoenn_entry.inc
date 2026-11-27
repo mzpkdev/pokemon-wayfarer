@@ -181,6 +181,14 @@ WayfarerHoennVisitor_EventScript_InitializeArrival::
     setflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_2
     setflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_TRUCK
     setflag FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_TRUCK
+    @ BIRCH's Route 101 rescue belongs to a player who started in HOENN. A visitor arrives after it:
+    @ the route has no chase, and BIRCH waits in his LAB to thank them at their first talk.
+    setvar VAR_ROUTE101_STATE, 3
+    setflag FLAG_RESCUED_BIRCH
+    setflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
+    setflag FLAG_HIDE_ROUTE_101_ZIGZAGOON
+    setflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
+    clearflag FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_BIRCH
     end
 
 @ BRENDAN's and MAY's rivalry belongs to a player who started in HOENN. A trigger jumps here when the

@@ -107,8 +107,9 @@ game and a second Hoenn starter for Littleroot players. Birch's gift replaces it
   starter choice and no gift. This design keeps the first two and the Mystery
   Egg and Silver story for New Bark players only, but gives visitors Elm's
   starter gift once they hatch an Egg.
-- **Hoenn visitors.** Birch's rescue scene still thanks a visitor and rates
-  their Pokédex with no gift. His starter gift comes later, after Norman.
+- **Hoenn visitors.** Visitors meet Birch in his lab, with no rescue: the
+  Route 101 rescue belongs to Hoenn-origin players. His first talk thanks a
+  visitor and rates their Pokédex with no gift. His starter gift comes later, after Norman.
 - **Birch's old Johto-starter reward is removed.** Heart & Soul has Birch offer
   a Johto starter for completing the Hoenn list. Under this design each trio
   comes only from its own land's gifter, so Elm gives a Johto starter and Birch

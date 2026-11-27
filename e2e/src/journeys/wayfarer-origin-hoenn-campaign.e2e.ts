@@ -6,8 +6,10 @@ import { GameSession } from "../harness/game-session"
 import {
   advanceOpeningUntil,
   finishOpeningDialogue,
+  meetBirchAsVisitor,
   receiveBirchStarter,
   receiveElmStarter,
+  walkRoute101AsVisitor,
 } from "../playbooks/regional-opening"
 import { rideAquaFromVermilionToSlateport } from "../playbooks/wayfarer-ports"
 
@@ -106,7 +108,7 @@ describe.sequential("Wayfarer Hoenn native and visitor campaign handoffs", () =>
     }
   })
 
-  it("rescues Birch with the Johto party and leaves with no Hoenn starter", async () => {
+  it("meets Birch in his lab with the Johto party and leaves with no Hoenn starter", async () => {
     const game = await GameSession.launch()
     try {
       await game.arrange({
@@ -120,61 +122,11 @@ describe.sequential("Wayfarer Hoenn native and visitor campaign handoffs", () =>
       // The S.S. Aqua is Vermilion's ship by day: one leg to Slateport.
       await rideAquaFromVermilionToSlateport(game)
       expect((await game.state.read()).map.name).toBe("slateport-city-harbor")
-      await game.player.warp("route-101", 9, 19, "right")
-      await game.player.move("right")
-      await finishOpeningDialogue(game)
-      await game.player.warp("route-101", 7, 15, "up")
-      await game.player.interact()
-      await advanceOpeningUntil(
-        game,
-        (state) => state.battle.active,
-        "Visitor rescue did not battle",
-      )
-      expect(await game.state.read()).toMatchObject({
-        origin: {
-          id: 1,
-          johtoChoice: 1,
-          johtoReceived: true,
-          hoennChoice: 65535,
-          hoennReceived: false,
-          starterChooseStage: 0,
-        },
-        party: [{ species: "cyndaquil" }],
-      })
-      await game.battle.lose()
-      await advanceOpeningUntil(
-        game,
-        (state) => state.ready && !state.battle.active,
-        "Visitor loss did not recover locally",
-      )
-      expect((await game.state.read()).origin).toMatchObject({
-        hoennChoice: 65535,
-        hoennReceived: false,
-      })
-      expect((await game.state.read()).party).toHaveLength(1)
-      await game.player.warp("route-101", 7, 15, "up")
-      await game.player.interact()
-      await advanceOpeningUntil(
-        game,
-        // `gMain.inBattle` rises during initialization, before the new battle
-        // resets the preceding loss outcome. A forced win there would combine
-        // LOST with WON into a draw and cause a second whiteout.
-        (state) => state.battle.ui === "action-menu",
-        "Visitor rescue was not retryable after loss",
-      )
-      await game.battle.win()
-      await advanceOpeningUntil(
-        game,
-        (state) => state.dialogue.text.includes("You handled"),
-        "Birch did not thank the visitor",
-      )
-      // A visitor's rescue ends in thanks and a rating: no starter, no gift, no rival.
-      await advanceOpeningUntil(
-        game,
-        (state) => state.dialogue.text.startsWith("Look for POK"),
-        "Birch did not rate the visitor's Pokédex",
-      )
-      await finishOpeningDialogue(game)
+      // The rescue belongs to a Hoenn-origin player: a visitor walks Route 101 with no scene.
+      await walkRoute101AsVisitor(game)
+      await expect(game.story.flag("hoennRescuedBirch")).resolves.toBe(true)
+      // A visitor's opening is thanks and a rating in the lab: no starter, no gift, no rival.
+      await meetBirchAsVisitor(game)
       expect((await game.state.read()).origin).toMatchObject({
         id: 1,
         johtoChoice: 1,

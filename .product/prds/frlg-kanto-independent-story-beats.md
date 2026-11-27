@@ -1,7 +1,19 @@
 # FRLG Kanto independent story beats
 
-Status: Draft product design for a future Wayfarer story port. Not implemented.
-Some late-game reward thresholds and bounded scene decisions remain open.
+Status: Agreed product design. Implemented through the per-adventure
+specifications that cite it: [Celadon Rocket Hideout](../specs/frlg-kanto-celadon-hideout.md),
+[Mt. Moon](../specs/frlg-kanto-mt-moon.md),
+[Nugget Bridge](../specs/frlg-kanto-nugget-bridge.md),
+[Safari teeth](../specs/frlg-kanto-safari-teeth.md),
+[Silph liberation](../specs/frlg-kanto-silph-liberation.md),
+[Silph President and Master Ball](../specs/silph-president-master-ball.md),
+[Pokémon Tower](../specs/frlg-kanto-pokemon-tower.md),
+[Viridian finale](../specs/frlg-kanto-viridian-finale.md),
+[Power Plant](../specs/frlg-kanto-power-plant.md), and
+[S.S. Anne](../specs/frlg-kanto-ss-anne-adventure.md). The Cerulean burglary
+is not built yet (see Independent adventures with minimal changes). The
+legendary rewards, Mewtwo included, share one readiness threshold (see
+Late-game rewards).
 
 ## Intent
 
@@ -105,7 +117,7 @@ an earlier loss.
 Viridian's Giovanni confrontation becomes available after Celadon's Giovanni
 has been defeated and its Scope obtained, and Silph's occupation has ended.
 Fuji's rescue is independent. Outstanding ordinary
-reward collection must remain recoverable; claiming a TR-gated Master Ball is
+reward collection must remain recoverable; claiming the Master Ball is
 not a finale prerequisite. The Snorlax encounter is not required.
 
 Remove the existing specific-Kanto-badge access condition for this finale. Do not
@@ -131,7 +143,7 @@ their ordinary adventures playable. TR determines eligibility; it is not spent.
 
 | Reward | Required treatment |
 | --- | --- |
-| Silph Master Ball | Require the resolved Silph rescue and sufficient TR. The President remains the reward giver. Below the threshold, he explains that the reward can be claimed later. |
+| Silph Master Ball | Require the resolved Silph rescue only. The President remains the reward giver. The [Master Ball specification](../specs/silph-president-master-ball.md) (Contract, "There is no Trainer Rating (TR), badge, League, legendary-readiness, origin, or other story threshold") overrides the earlier TR-gated treatment: the ball is immediate after liberation, and a full Ball pocket leaves it pending for retry. |
 | Silph Lapras | Keep as an ordinary local gift with its existing giver and one-time delivery behavior. No legendary-tier TR gate is added. |
 | Articuno and Zapdos | Preserve their local exploration and puzzles. Gate each encounter by legendary readiness, without requiring the other bird or a Rocket story. The coastal port owns FRLG Seafoam and Articuno's placement; the [Power Plant specification](../specs/frlg-kanto-power-plant.md) selects Wayfarer's Zapdos hall, legendary-readiness battle threshold, and FRLG encounter outcomes. |
 | Mewtwo | Gate the level 80 encounter on `WAYFARER_LEGENDARY_TR`, the same threshold as the birds, in addition to the Cerulean Cave guard (below), replacing the unrelated Celio Ruby/Sapphire campaign dependency. Preserve Cerulean Cave and the existing encounter rather than add a new capture quest. Below the threshold, interacting gives a not-ready message and leaves Mewtwo in place, as with Articuno. |
@@ -157,8 +169,7 @@ Every legendary bird, and Mewtwo, shares one threshold,
 `WAYFARER_LEGENDARY_TR` (alias `WAYFARER_BIRD_CAPTURE_TR`): 120 under the v0
 trainers (≈ 16 badges), 55 otherwise. The Wayfarer Power Plant port uses it for
 Zapdos, Seafoam for Articuno, and Mt. Silver's Moltres room uses it too. The
-Master Ball threshold remains a balance decision against the wider journey; do
-not assume it shares this one. All alternate activation paths must obey the
+Master Ball has no threshold. All alternate activation paths must obey the
 final reward rules.
 
 ### Rival continuity
@@ -219,7 +230,7 @@ Each adventure must preserve its own progress and unclaimed rewards through loss
 travel, save/reload, and Bag or party capacity failures. Reordered Giovanni battles
 must not regress Saffron, reset the hideout, erase the Tower rescue, or award the
 Earth Badge prematurely. Viridian completion must not suppress unfinished minor
-Rocket incidents or the President's deferred Master Ball.
+Rocket incidents.
 
 These requirements guide the future story port alongside the
 [FRLG traversal design](frlg-open-world-region-traversal.md). That document's
@@ -243,9 +254,8 @@ distinct from unrelated regional progression.
   and with both resolved. Only both enable its finale; badge count and TR do not
   add requirements. Unclaimed Master Ball and an unfinished Snorlax encounter do not
   prevent the finale.
-- Finish Silph below Master Ball readiness. The city recovers and other stories
-  proceed. Return at the threshold to receive the reward once, including after a
-  full-Bag failure and save/reload.
+- Finish Silph with a full Ball pocket. The city recovers and other stories
+  proceed. Return to receive the reward once, including after save/reload.
 - Complete both Safari objectives in either order and verify Surf and Strength
   come from their respective givers. Neither objective requires Koga or another arc.
 - Complete the separately specified Mansion/Secret Key/Blaine adventure
@@ -254,9 +264,9 @@ distinct from unrelated regional progression.
   channel. Both must resolve the same encounter and release the Reception Gate
   Kanto guard. Ordinary Kanto travel must not require it.
 - Test Articuno and Zapdos discovery below readiness and capture eligibility at
-  the chosen boundary. Neither requires the other. Test Mewtwo below and at the
-  same threshold, with the Cerulean Cave guard present and gone, without Celio's
-  quest, including alternate access and save/reload paths.
+  the same `WAYFARER_LEGENDARY_TR` boundary. Neither requires the other. Test
+  Mewtwo below and at that threshold, with the Cerulean Cave guard present and
+  gone, without Celio's quest, including alternate access and save/reload paths.
 - Visit later rival locations early, finish their host adventures where possible,
   then progress the rival and return. No chapter or reward is silently lost.
 
@@ -264,20 +274,32 @@ Players unfamiliar with FRLG should understand each local problem and its next
 step. Players familiar with it should recognize the original adventures and
 Giovanni's finale without a replacement plot.
 
+## Settled by implementation
+
+- Finding the Tower first: the 2F clue and Lavender dialogue point toward the
+  Silph Scope without granting it. The Scope gates only the Marowak spirit and
+  passage to Fuji, not entry or the radio
+  ([Pokémon Tower](../specs/frlg-kanto-pokemon-tower.md), Design).
+- Optional Rocket incidents after Giovanni withdraws: his defeat must not run the
+  source's broad `FLAG_HIDE_MISC_KANTO_ROCKETS` cleanup or mark optional
+  incidents complete ([Viridian finale](../specs/frlg-kanto-viridian-finale.md)).
+- Rival chapters and Silph: Blue's S.S. Anne scene is a one-time visitor scene
+  with no battle, rivalry, or forward progress
+  ([S.S. Anne](../specs/frlg-kanto-ss-anne-adventure.md), "Blue"); the Tower's
+  Blue scene never gates the stair, Scope, Marowak, Rockets, Fuji, or Flute.
+  The rival's League appearance has not been reviewed by any specification.
+- Master Ball threshold: none; the President hands it over after liberation and
+  retries after a full Ball pocket
+  ([Master Ball](../specs/silph-president-master-ball.md), Contract). Because
+  there is no deferral, no deferred-collection line is needed.
+- Legendary readiness: Articuno, Zapdos, and Mewtwo share
+  `WAYFARER_LEGENDARY_TR`; Mewtwo also keeps the Cerulean Cave guard (see
+  Late-game rewards).
+
 ## Open questions
 
-1. Which existing Lavender interactions give the clearest minimal lead toward the
-   Scope when the player discovers the Tower first?
-2. Which dialogue and visibility changes preserve optional minor Rocket incidents
-   after Giovanni's withdrawal without adding mandatory prerequisites?
-3. Which rival chapters genuinely depend on earlier scenes? Review the League
-   appearance separately from access to Silph; the dedicated Anne specification
-   has settled recovery and captain access aboard the ship.
-4. What TR threshold governs the Master Ball? The birds and Mewtwo share
-   `WAYFARER_LEGENDARY_TR`. Resolved: Mewtwo keeps the Cerulean Cave guard and
-   also needs `WAYFARER_LEGENDARY_TR`, checked at the encounter.
-5. How should the President explain deferred Master Ball collection, and which
-   existing local presentation explains each legendary readiness requirement?
+1. Which existing local presentation explains each legendary's readiness
+   requirement to a player below the threshold?
 
 ## References
 
