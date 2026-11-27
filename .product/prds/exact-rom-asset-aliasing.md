@@ -1,5 +1,7 @@
 # Exact ROM asset aliasing
 
+Implemented: No. None of the five alias families is built; the linked ROM still stores every copy independently.
+
 ## Intent
 
 Pokemon Wayfarer needs more usable space within the 32 MiB GBA ROM without

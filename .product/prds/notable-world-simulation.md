@@ -1,6 +1,6 @@
 # Notable world simulation
 
-Implemented: No
+Implemented: Partial. Walkers on routines, the heartbeat, travel, the saved world record, the on-screen local actor, life events, talking to a walker and a Gym Leader's own-Gym talk are built ([PR #147](https://github.com/mzpkdev/pokemon-wayfarer/pull/147)). Haunts, the Masters partner and momentum do not exist yet, so nobody is ever pinned at a haunt or away as a partner, and the 12 face-only trainers stay out of the world.
 
 Specification: [Notable world simulation specification](../specs/notable-world-simulation.md)
 
@@ -35,7 +35,7 @@ they are today. A trainer is out of the world for a while when:
 - they are the player's Sevii Masters **partner**: they travel with the
   player.
 
-A trainer placed at a **haunt** stays there, as today. A **Gym Leader the
+A trainer placed at a **haunt** would stay there (haunts are not built yet). A **Gym Leader the
 player hasn't beaten yet stays home** in their Gym, ready for the badge
 battle; they start going out once the player has their badge.
 

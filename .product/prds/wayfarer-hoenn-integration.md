@@ -1,7 +1,16 @@
 # Wayfarer Hoenn integration
 
-Implemented: Partial; content and Today's circuit runtime exist, full
+Implemented: Partial; content and the circuit runtime exist, full
 content/balance acceptance remains separate.
+
+Status (2026-11-27): the shipped Wayfarer build runs the v0 [Leagues](../specs/leagues.md) events ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139), [PR #172](https://github.com/mzpkdev/pokemon-wayfarer/pull/172)): Hoenn calls by invitation and fields saved event lineups. The fixed Tier 3 admission and saved-TR league scaling called "Today" below are the pre-v0 fallback that compiles only when `WAYFARER_LEAGUE_EVENTS` is off.
+
+The S.S. Aqua circuit below is superseded in part by [S.S. ferries](ss-ferries.md)
+([PR #177](https://github.com/mzpkdev/pokemon-wayfarer/pull/177)): ports and
+ships sail on a schedule, the S.S. Ticket alone gates boarding, the dedicated
+Slateport Aqua attendant is retired, and S.S. Tidal is a ferry like the others.
+The first-arrival Hoenn initialization, shared player and save, and Hoenn
+story state below are built as described.
 
 Today's [circuit producer](../../game/src/league_circuit.c) uses fixed Tier 3
 Hoenn admission, and the implemented
@@ -58,7 +67,7 @@ limit.
 
 The draft [regional start choice](wayfarer-regional-start-choice.md) extends
 this Johto-origin contract with a native Hoenn opening and Hoenn-origin Aqua
-access. That extension is not implemented; the visitor flow below remains
+access. That extension is implemented ([PR #75](https://github.com/mzpkdev/pokemon-wayfarer/pull/75)); the visitor flow below remains
 the contract for Johto starters entering Hoenn.
 
 ### Shared player and save
@@ -117,10 +126,10 @@ The operation runs once. Saving and reloading in Hoenn cannot repeat it.
 ### Hoenn campaign start
 
 The player reaches Littleroot and Route 101 through Hoenn's open settlement
-network. Birch's adapted rescue uses a Pokémon from the existing party instead
-of forcing Emerald's starter-selection bag.
-
-After the rescue, Birch thanks the player and rates their Pokédex. A visitor
+network. Birch's Route 101 rescue belongs to Hoenn-origin players alone
+([PR #231](https://github.com/mzpkdev/pokemon-wayfarer/pull/231)). A visitor arrives after it: Route 101 has no rescue, and Birch
+waits in his lab. At the first talk there he thanks the visitor, hands over a
+Pokédex if they have none, upgrades it to National and rates it. A visitor
 gets no Treecko, Torchic, or Mudkip and no gift from him, matching Elm's and
 Oak's visitors. Those three Pokémon stay part of the Hoenn-origin opening.
 
@@ -326,7 +335,8 @@ Acceptance answers these questions:
   exclude every HNS destination?
 - On HNS maps before and after Kanto unlock, do the existing Town Map and Fly
   behavior remain unchanged and exclude every Hoenn destination?
-- Does Route 101 retain the adapted Birch rescue afterward?
+- Does Route 101 retain the adapted Birch rescue afterward? Resolved: no.
+  The rescue plays only for Hoenn-origin players ([PR #231](https://github.com/mzpkdev/pokemon-wayfarer/pull/231)).
 - Does Slateport's separate Aqua interaction provide Olivine without changing
   any S.S. Tidal route, gate, menu, ship object, attendant, or script, and does
   the existing HNS Battle Frontier option remain unchanged?

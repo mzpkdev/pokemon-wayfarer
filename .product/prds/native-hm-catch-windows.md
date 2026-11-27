@@ -1,9 +1,10 @@
 # Native HM catch windows
 
-Status: Core implementation complete; full route acceptance pending.
+Implemented: Partial. Core data and production tests are complete; full route acceptance pending.
 Implementation: [Production changes and acceptance evidence](../research/native-hm-windows/revisions/implementation/README.md)
 Specification: [Native HM catch windows](../specs/native-hm-catch-windows.md)
-Current design: [Nearby-access distribution and route audit](../research/native-hm-windows/revisions/nearby-access/README.md)
+Current design: [Wild encounters v2 revision](../research/native-hm-windows/revisions/wild-encounters-v2/README.md), implemented for Wayfarer
+Previous design: [Nearby-access distribution and route audit](../research/native-hm-windows/revisions/nearby-access/README.md)
 Attachments: [Original distribution and research package](../research/native-hm-windows/attachments.md)
 
 ## Intent
@@ -111,8 +112,8 @@ never add probabilities from different places or methods. For fishing, 8%
 means 2% per unmodified cast at the Old Rod's 25% bite rate. Land-encounter
 probability is conditional on encountering a Pokemon, not on each step.
 
-TR 0-80 is today's scale. With [wild encounters v2](wild-encounters-v2.md),
-the range becomes TR 0-160 (0 to 24 badges) on the
+TR 0-80 was the old scale. With [wild encounters v2](wild-encounters-v2.md),
+which shipped in Wayfarer, the range is TR 0-160 (0 to 24 badges) on the
 [v0 scale](player-trainer-rating.md#how-you-earn-it). The
 [v2 revision](../research/native-hm-windows/revisions/wild-encounters-v2/README.md)
 re-checks it and extends the guarantee to the Sevii Islands, Alola and

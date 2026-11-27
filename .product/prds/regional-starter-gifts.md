@@ -1,5 +1,6 @@
 # Regional starter gifts
 
+Implemented: No.
 Status: Agreed product design, 2026-11-07. Not implemented.
 Specification: [Regional starter gifts](../specs/regional-starter-gifts.md)
 It revises the starter gifts in [Johto, Hoenn, and Kanto starting regions](wayfarer-regional-start-choice.md),

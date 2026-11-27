@@ -1,15 +1,19 @@
 # Trainer Rating wild encounter and party progression
 
 **Partly retired.** Its wild-encounter parts are replaced by
-[Wild encounters v2](wild-encounters-v2.md). Its party progression, level cap
+[Wild encounters v2](wild-encounters-v2.md), which shipped in Wayfarer
+([PR #156](https://github.com/mzpkdev/pokemon-wayfarer/pull/156)). Its party progression, level cap
 and obedience rules still apply.
 
-Implemented: Partial
+Implemented: Partial. Wayfarer's wild levels come from Wild encounters v2, not
+from this document. The level cap, half-experience reduction and obedience are
+live; the checks for obedience, Exp. Candy and the catch penalty are not
+covered by tests ([specification](../specs/trainer-rating-party-progression.md)).
 
 Today's [circuit producer](../../game/src/league_circuit.c) implements
 +8/+8/+8 first-league-win contributions for Indigo, Masters, and Hoenn. Badge
-contributions and level cap anchors are unchanged. The Partial marker does not
-certify all wild-scaling and party-progression acceptance below.
+contributions and level cap anchors are unchanged. These are the pre-v0 rules:
+they run only when `WAYFARER_V0_TRAINERS` is off, and Wayfarer ships the v0 TR.
 
 The v0 TR design (the v0 badge scale, uncapped TR, scalers, and notable
 trainers' separate TR) is in [Player Trainer Rating](player-trainer-rating.md);
@@ -18,7 +22,8 @@ this document describes Today.
 
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes named native-utility carriers and permanent-retention
-assumptions in this document. It is not implemented yet. Regional routes,
+assumptions in this document. Its core data is implemented; full route
+acceptance is pending. Regional routes,
 field-use authorization, scaling and unrelated mechanics remain unchanged;
 standalone builds retain their existing contract.
 
@@ -118,6 +123,8 @@ above the cap.
 
 ### v0
 
+(Wayfarer now ships the reach levels of [Wild level scaling](../specs/wild-level-scaling.md#reach-levels)
+instead of the single curve described here; the gaps below are the earlier draft.)
 On the v0 TR scale, wild Pokémon follow their own wild level curve instead of
 sitting a fixed 10 levels under the level cap. With a few badges they press
 close to the cap, about 4 levels under it at four badges, so the early world is

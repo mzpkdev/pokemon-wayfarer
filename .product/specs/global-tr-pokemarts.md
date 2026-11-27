@@ -3,13 +3,16 @@
 PRD: [Poké Marts across the three regions](../prds/global-tr-pokemarts.md)
 Implemented: Partial; converted-counter runtime is enabled, release acceptance remains pending.
 
-Today's [circuit producer](../../game/src/league_circuit.c) already
-contributes +8 once for each canonical league's first league win. Replays add
-no player TR. The v0 TR design (rescaled formula, uncapped TR, scalers, and
-notable trainers' separate TR) is in
-[Player Trainer Rating](player-trainer-rating.md); this document owns the v0
-thresholds in [v0 thresholds](#v0-thresholds). The thresholds elsewhere in this
-document are Today.
+Wayfarer runs the v0 TR design (rescaled formula, uncapped TR, scalers, and
+notable trainers' separate TR), in
+[Player Trainer Rating](player-trainer-rating.md), and the marts use this
+document's [v0 thresholds](#v0-thresholds): `WAYFARER_V0_TRAINERS` is on in
+the Wayfarer build, and `ResolveMartCatalog` ([wayfarer_marts.c](../../game/src/wayfarer_marts.c))
+opens each tier at the v0 TR. The thresholds elsewhere in this document are the
+legacy "Today" values, kept as the tier labels in the catalog rows; the
+legacy circuit producer's +8 per canonical league first win
+([league_circuit.c](../../game/src/league_circuit.c)) is compiled only when
+v0 is off.
 
 ## Scope
 
@@ -435,7 +438,7 @@ duplicate bindings and residual legacy stock paths at converted counters.
 Include shared-script users and both Lilycove counters. Outlying-region NULL
 callers must be classified and retain legacy behavior, not be reprofiled.
 
-For each profile and every integer TR 0 through 80, test exact expected item
+For each profile and every integer TR 0 through 80 (0 through 160 in v0), test exact expected item
 membership, no duplicates, correct order/terminator, capacity and monotonic
 common stock. Assert that each of the 30 current town-counter signature sets
 has two to four IDs and that those sets are pairwise distinct. The six facility
@@ -447,7 +450,8 @@ normal/challenge switching; equal TR with Johto-only, Kanto-only, Hoenn-only
 and mixed progress; 24 badges without league wins (TR 56) and eight badges
 plus the first league win (TR 48). The TR 56 case has all essentials; the
 TR 48 case has the TR 45 tier and excludes Max Potion and Full Restore, which
-unlock at TR 55. These are today's thresholds.
+unlock at TR 55. These are the legacy thresholds; the v0 build tests every TR
+0 through 160 (`test/wayfarer_marts.c`).
 Use the real global TR path in integration tests, not only a stubbed tier input.
 
 Verify the 19 common items cannot appear early through signatures or retained

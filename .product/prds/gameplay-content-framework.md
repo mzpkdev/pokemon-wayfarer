@@ -1,5 +1,7 @@
 # Shared gameplay content framework
 
+Implemented: No. Nothing here is built; the [specification](../specs/gameplay-content-framework.md) is a proposed contract.
+
 ## Intent
 
 Make gameplay additions fit Wayfarer's connected world without requiring each

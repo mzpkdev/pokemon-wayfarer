@@ -98,7 +98,7 @@ post-battle dialogue.
 Miguel uses the available `OBJ_EVENT_GFX_SCIENTIST_M_HNS` overworld adaptation
 and his authored FRLG Super Nerd party. He does not use the unreachable HNS
 scientist/fossil tableau. Before he stages a battle, the canonical usable-party
-predicate must refuse with `NP_FOSSIL` if the player has no non-Egg Pokemon with
+predicate must refuse with `WayfarerMtMoon_Text_MiguelNoParty` if the player has no non-Egg Pokemon with
 HP. That refusal does not lock the player, start a battle, set a trainer flag,
 reveal a fossil, or change a map state.
 
@@ -176,6 +176,10 @@ Alph flags.
 
 Add five Wayfarer-only trainers in the current shared trainer registry,
 preserving every source roster, class, portrait, AI, music, and authored moves.
+Since [PR #157](https://github.com/mzpkdev/pokemon-wayfarer/pull/157) the party
+files store each Pokémon at its final evolution stage and the scaler steps it back
+to the stage its level supports, so a species below can differ from the file
+(for example Raticate 13 in the file is a Rattata when met).
 The current Wayfarer runtime IDs are 1768 through 1772.
 
 | Runtime ID | New symbol | Source trainer | Exact normal roster | Scaling policy |
@@ -203,7 +207,7 @@ trainerbattle-label pairs. Do not broaden the generic script parser. A defeated
 sight grunt must remain suppressed, an undefeated sight grunt with no usable
 party must not approach, and direct no-party talk must show the ordinary
 refusal without an empty-party fallback. Miguel has no sight route and uses the
-same predicate directly with `NP_FOSSIL`.
+same predicate directly with that refusal.
 
 ## Implementation and validation
 

@@ -1,6 +1,7 @@
 # Pallet Town Kanto origin opening
 
-Status: Draft design for implementation. No runtime changes are included.
+Implemented: Yes ([PR #135](https://github.com/mzpkdev/pokemon-wayfarer/pull/135)). The opening is
+built as designed; Daisy's Town Map and later Blue chapters stay unbuilt, as the scope says.
 Specification: [Wayfarer Kanto origin opening](../specs/wayfarer-kanto-origin-opening.md)
 
 ## Intent

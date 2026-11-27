@@ -1,6 +1,6 @@
 # Hoenn phone rematches
 
-Implemented: Yes
+Implemented: Yes. Shipped in [PR #164](https://github.com/mzpkdev/pokemon-wayfarer/pull/164) together with the Sevii and coast contacts, under daily world slots; the table, save and contact-list limits below were raised as the spec records, and readiness is the 255 region steps, not a home-map count.
 
 Specification: [Phone rematches](../specs/phone-rematches.md)
 

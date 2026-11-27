@@ -1,5 +1,7 @@
 # Johto story traversal blockers
 
+Status (2026-11-27): historical. Johto's independent story beats shipped; read the [Johto independent story beats spec](../specs/johto-independent-story-beats.md) for current behavior.
+
 Snapshot at `9ab8058a6e`. Several blockers listed here were already gone in
 the Wayfarer build; see the [2026-11 refresh](johto-story-beat-gates.md#corrections-to-the-september-inventory).
 

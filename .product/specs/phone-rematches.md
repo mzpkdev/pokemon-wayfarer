@@ -90,8 +90,9 @@ owned by Notable trainers.
   `TRAINER_REGISTERED_FLAGS_START +` finds no other site.
   The gym leader, Elite Four, Wally and Steven rows have their own
   `FLAG_REGISTERED_*` flags and are unaffected.
-  Sevii and coast contacts use 41 new Sevii bank flags, in slots 61 upward
-  beside the 97 restored item flags (138 of the 195 free slots).
+  Sevii and coast contacts use 41 new Sevii bank flags, in slots 158 to 198
+  (`FLAG_WAYFARER_SEVII_PHONE_FIRST`), after the 97 restored item flags in
+  slots 61 to 157.
 - **Rematch progress.** `trainerRematches` grows from 100 (`MAX_REMATCH_ENTRIES`)
   to 118, the table size. This adds 18 bytes to SaveBlock1, which has 112
   free, leaving 94. The day-start sets and the other daily slot state live in

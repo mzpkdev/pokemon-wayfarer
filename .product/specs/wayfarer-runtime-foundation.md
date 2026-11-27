@@ -189,6 +189,8 @@ the applicable league and region. A whiteout in Johto cannot relocate a Hoenn
 NPC. The Masters Gallery cannot run a regional Hall of Fame path, and entering
 the Hoenn Hall of Fame cannot reset Indigo or Masters rooms.
 
+Status (2026-11-27): the shipped Wayfarer build runs the v0 [Leagues](leagues.md) events ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139), [PR #172](https://github.com/mzpkdev/pokemon-wayfarer/pull/172)): Hoenn calls by invitation and fields saved event lineups. The fixed Tier 3 admission and saved-TR league scaling called "Today" below are the pre-v0 fallback that compiles only when `WAYFARER_LEAGUE_EVENTS` is off.
+
 Today's circuit uses fixed Indigo, Sevii Masters, then Hoenn order. Its
 first-league-win result advances only after completion commits. Only Indigo
 projects its win into both Kanto and Johto Champion recognition.

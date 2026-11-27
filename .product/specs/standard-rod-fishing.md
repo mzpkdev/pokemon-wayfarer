@@ -14,8 +14,10 @@ that actually know the required utility at each TR and time. Its selected
 [nearby-access proposal](../research/native-hm-windows/revisions/nearby-access/proposal.json)
 requires an 8% chance at one reachable land source or successful Old Rod fishing
 source, without summing across places. A qualifying fishing source therefore
-provides at least 2% per unmodified cast. The code-only simulation passes its
-selected scenarios; production acceptance remains pending.
+provides at least 2% per unmodified cast. The v2 revision re-checks this
+against the v2 tables, and a production test replays its scenarios
+(`game/test/native_hm_catch_coverage.c`); full route acceptance remains
+pending.
 
 Only the proposal's enumerated encounter replacements override the no-table-edit
 boundaries below for Wayfarer. Apply each fishing replacement consistently to
@@ -32,7 +34,7 @@ including all 120 distinct giver orders, and six Wayfarer emulator journeys.
 The journeys cover Hoenn awards and repeat visits, mixed-region upgrades,
 Dewford's capped tutorial, and Kanto-to-Hoenn travel followed by save/reload.
 The Wayfarer release ROM builds and passes its size check. The separate native
-HM catch-window production acceptance noted above remains pending.
+HM catch-window full route acceptance noted above remains pending.
 
 ## Scope
 
@@ -263,7 +265,10 @@ differ. Each view contains all ten entries, applies its quality's generated
 weights, shows eligibility and renormalized probability, and labels the former
 groups as rarity bands rather than exclusive rod partitions.
 
-Bump the generated Cartographer projection to schema version 2. Every fishing
+Bump the generated Cartographer projection to schema version 2. (The v2
+projection, `game/tools/wild_encounters/v2/cartographer_projection.py`, is at
+version 3 and carries the fishing weights per quality in its top-level
+`weights`.) Every fishing
 profile row includes a `weights` array copied from its quality profile and has
 `runtimeSlotCount` equal to 10. Non-fishing profile rows keep their existing
 shape. The catalog validates the ten weights and the slot count, then the UI
@@ -278,9 +283,12 @@ contract defines no permanent named-carrier records for other builds.
 
 The wild encounter generator's deterministic balance report
 covers every Wayfarer map profile and time-of-day variant at every
-integer TR from 0 through 80 (today's scale; v0: 0 through
+integer TR from 0 through 80 (the old scale; v0: 0 through
 160, 0 to 24 badges, on the [v0 TR scale](player-trainer-rating.md#formula-v0)).
-For every quality it reports:
+Wild encounters v2 replaced this report for Wayfarer: the generator no longer
+writes it, and `make wild-encounters-v2-check`, `make wild-encounters-v2-hm-audit`
+and the Cartographer projection (`game/tools/wild_encounters/v2/`) cover
+the same ground. For every quality it reported:
 
 - Raw entry weights and eligible entries.
 - Renormalized entry and aggregate species probabilities.

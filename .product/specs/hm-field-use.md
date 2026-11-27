@@ -1,7 +1,7 @@
 # HM field use
 
 PRD: [HM field use](../prds/hm-field-use.md)
-Implemented: Yes
+Implemented: Yes, with one exception. Wayfarer's Dive (added as HM09) is not badge-free: it is allowed per map source, by the Mind Badge on HNS maps and by the received-Dive flag on Hoenn maps (`WayfarerIsDiveAuthorizedForMap`).
 
 ## Scope
 

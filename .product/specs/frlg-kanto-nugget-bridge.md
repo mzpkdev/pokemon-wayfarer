@@ -117,7 +117,7 @@ usable party:
    receives one additional Nugget even when the pocket has no free entry.
 3. After successful receipt, release the prize transaction's control lock.
    Apply `WayfarerCanStartOrdinaryBattleForScript` with the existing
-   `NP_RECRUITER` no-party wording before locking control again, facing the
+   `WayfarerNuggetBridge_Text_RecruiterNoParty` no-party wording before locking control again, facing the
    player, or presenting recruitment dialogue. A no-party refusal preserves
    the already received Nugget and leaves the recruiter battle retryable.
 4. On a usable party, present the Rocket recruitment dialogue and start the
@@ -149,7 +149,12 @@ no new save field, migration, or global item policy is required.
 ## Trainer identity and scaling
 
 Append the following six Wayfarer Trainers after the current Kanto adventure
-trainer range. Preserve the source class, portrait, gender metadata, encounter
+trainer range. Since [PR #157](https://github.com/mzpkdev/pokemon-wayfarer/pull/157) the party
+file stores each Pokémon at its final evolution stage and the scaler steps it back
+to the stage its level supports, so the table below lists the FRLG source species
+and a Pokémon already at its evolution level shows its later stage (Cale's file
+team has Butterfree and Beedrill at level 10 where the source has Metapod and Kakuna).
+Preserve the source class, portrait, gender metadata, encounter
 music, single-battle type, `Check Bad Move` AI, and zero-IV authored normal
 parties. All six are ordinary scripted Trainers and use the existing `ORDINARY`
 Trainer Rating (TR) scaling policy. None is an objective boss exclusion and this
@@ -169,8 +174,10 @@ overworld graphics. This is a visual adaptation only: preserve each source
 Trainer's class, portrait, encounter music, and gender metadata, including the
 FRLG Lass source records' male metadata with female encounter music. Do not
 make a FRLG object graphic Wayfarer-available or import an asset for this
-milestone. Set
-`TRAINERS_COUNT_NUGGET_BRIDGE_WAYFARER` to 6 and extend the accumulated
+milestone. The six
+records are part of the local-adventure range
+(`TRAINER_WAYFARER_LOCAL_FIRST` 1737 to `TRAINER_WAYFARER_LOCAL_LAST` 1778, 42
+trainers in `wayfarer_local_trainers.h`), which extends the accumulated
 Wayfarer count to 1779. Add range assertions proving the six IDs are
 contiguous and that the Rocket's runtime ID plus one equals
 `TRAINERS_COUNT_WAYFARER`. The new records use current Wayfarer Trainer defeat

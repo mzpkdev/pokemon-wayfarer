@@ -1,5 +1,7 @@
 # Kanto and Johto inter-region travel
 
+Status (2026-11-27): describes the inherited HNS travel rules only. Wayfarer has since replaced most of them: the S.S. ferries, regional start choice, badge-free field moves, and a Vermilion Snorlax that Fuji's Flute item can also wake (PR #239). Use it for HNS history, not as current Wayfarer behavior.
+
 ## Scope
 
 This document maps the player-facing ways to travel between Johto and Kanto in

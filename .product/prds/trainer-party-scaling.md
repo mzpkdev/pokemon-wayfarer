@@ -1,14 +1,15 @@
 # Regular trainer and Gym member scaling
 
-Implemented: Partial; runtime policies exist, campaign balance acceptance remains pending.
-Final-stage rosters are implemented (#157), and so are the v0 reach levels (the generated
+Implemented: Yes. Classification, the v0 reach levels and Gym-member curve (#160, the generated
 [map table](../../game/src/data/trainer_scaling/trainer_places.h) and its
-[report](../../game/src/data/trainer_scaling/reach_report.md)).
+[report](../../game/src/data/trainer_scaling/reach_report.md)) and final-stage rosters (#157)
+are live in Wayfarer. Balance playtesting is not recorded.
 
-Today's routing includes [League scaling](league-scaling.md) with the player's
-TR saved when entering a league, so League levels scale from that saved TR. See
-[the level resolver](../../game/src/trainer_party_scaling.c) and
-[the circuit producer](../../game/src/league_circuit.c). The v0 TR design (a
+Outside [v0](#v0), the level curve and the rule that base species never evolve
+are pre-v0 and run only when `WAYFARER_V0_TRAINERS` is off. The `LEAGUE` policy
+and [League scaling](league-scaling.md) are also pre-v0: Wayfarer's league
+battles use saved league event lineups instead. See
+[the level resolver](../../game/src/trainer_party_scaling.c). The v0 TR design (a
 v0 badge scale, uncapped TR, scalers, and notable trainers' separate TR) is in
 [Player Trainer Rating](player-trainer-rating.md); its effect on regular
 trainers is under [v0](#v0).

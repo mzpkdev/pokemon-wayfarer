@@ -1,12 +1,13 @@
 # Notable spots
 
-Implemented: No
+Implemented: Partial. Spots, named spots, capacity, favourites, behaviour templates, the talk at a spot and the "just leaving" Gym visit are built ([PR #147](https://github.com/mzpkdev/pokemon-wayfarer/pull/147)). The Egg sitting and Courier follow-ups are not, because haunts are not built.
 
 Specification: [Notable spots specification](../specs/notable-spots.md)
 
-Design status: the everyday layer of the future **routine and travel**
-design. Spots switch on together with routines and travel; until then,
-nothing changes and v0 haunt placement works exactly as the
+Design status: the everyday layer of the **routine and travel**
+design. Spots switched on together with the
+[world simulation](notable-world-simulation.md)'s routines and travel; v0
+haunt placement is not built yet, and would work exactly as the
 [haunts PRD](notable-haunts.md) describes. Terms follow the
 [glossary](player-trainer-rating.md#glossary).
 
@@ -77,7 +78,7 @@ from its activity unless its author chooses otherwise
 
 ### Who goes where
 
-Each trainer's routine (future work) moves them through **activities**.
+Each trainer's routine (the [world simulation](notable-world-simulation.md)) moves them through **activities**.
 The activity picks a spot kind, and the kind picks a spot:
 
 | Activity | Spot kinds |
@@ -159,9 +160,9 @@ beside a seat. Talking to them runs straight through with no menu.
 - **Egg sitting and Courier.** A trainer with an egg out asks after it at a
   spot as they would at a haunt, and a Courier recipient takes the parcel
   wherever the player finds them
-  ([talk flow](../specs/notable-haunts.md#talk-flow)). Once routines run,
-  the recipient can be out at a spot, and the sender names the town or
-  route they were last seen in, such as "CERULEAN CITY".
+  ([talk flow](../specs/notable-haunts.md#talk-flow)). Both follow-ups
+  wait for haunts. The recipient can be out at a spot, and the sender
+  names the town or route they were last seen in, such as "CERULEAN CITY".
 - **Gyms.** A visitor walks out as the player walks in, and never blocks
   the Gym battle or its trainers.
 - **Following Pokémon.** The Pokémon that walks behind the player competes
@@ -170,8 +171,7 @@ beside a seat. Talking to them runs straight through with no menu.
 
 ## Constraints
 
-- Spots add little or no saved data beyond what routines and travel will
-  save: which spot a trainer is at is worked out, not stored.
+- Spots add no saved data beyond what routines and travel save: which spot a trainer is at is worked out, not stored.
 - Few notables per map, because the overworld has room for only 16 people
   at once and each walker costs processing time
   ([travel proof of concept](../research/notable-trainer-travel-poc.md)).

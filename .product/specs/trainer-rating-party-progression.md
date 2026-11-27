@@ -1,13 +1,13 @@
 # Trainer Rating party progression
 
 PRD: [Trainer Rating wild encounter and party progression](../prds/trainer-rating-wild-encounter-scaling.md)
-Implemented: Partial. The v0 level cap curve is live in Wayfarer ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)).
+Implemented: Partial. The v0 level cap curve, the half-experience reduction (battle and Day Care awards) and level-cap obedience are live in Wayfarer ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)). Only the experience reduction has mechanics tests (`game/test/trainer_rating.c`); the obedience, Exp. Candy and catch-penalty checks and the cross-build acceptance listed below are not covered.
 
 Today's [circuit producer](../../game/src/league_circuit.c) implements +8/+8/+8
-first-league-win contributions for Indigo, Masters, and Hoenn. The badge formula
-and level cap anchors are unchanged. These circuit inputs are live today; the
-Partial marker does not certify completion of all experience, obedience, and
-cross-build acceptance listed below.
+first-league-win contributions for Indigo, Masters, and Hoenn, and Today's cap
+anchors below are the wild curve plus 10. Both run only when `WAYFARER_V0_TRAINERS`
+is off; Wayfarer ships the v0 formula, where league wins add no TR and the cap
+follows the v0 curve.
 
 The v0 TR design (rescaled formula, uncapped TR, scalers, and notable
 trainers' separate TR) is in [Player Trainer Rating](player-trainer-rating.md);

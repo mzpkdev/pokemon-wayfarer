@@ -1,5 +1,6 @@
 # Regional and expanding National Pokédex
 
+Implemented: Yes, then revised in part (see below).
 Status: Implemented, then revised on 2026-11-07 by
 [Home Pokédex lists and the National upgrade](home-pokedex-lists.md), which
 replaces the three regional catalogs with two home lists, makes National mode

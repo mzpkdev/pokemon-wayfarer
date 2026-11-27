@@ -21,7 +21,7 @@ names does not make their raw Trainer IDs safe to reuse.
 Giovanni's challenge becomes available once the Celadon Rocket Hideout is
 resolved **and** Silph Co. is liberated, in either order. The Hideout's Giovanni
 battle and Silph Scope reward, and Silph's Giovanni battle and liberation, are
-the two local prerequisites. Pokémon Tower/Fuji, either Snorlax, any specific
+the two local prerequisites. Pokémon Tower/Fuji, the Snorlax, any specific
 badge count, Trainer Rating (TR), an Indigo clear, and unrelated regional
 progress are not prerequisites. Entering early gives truthful local guidance
 without granting a victory or closing the Gym: until both prerequisites are met

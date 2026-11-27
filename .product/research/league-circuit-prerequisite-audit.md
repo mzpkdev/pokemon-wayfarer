@@ -1,5 +1,7 @@
 # Johto-start League circuit route audit
 
+Status (2026-11-27): historical. The revisions it calls pending shipped (free badge collection in PR #64, the circuit in PR #136; the Trainer Card shows all three leagues), and league admission has since been replaced by phone invitations (PR #139, PR #172). The Johto-only start no longer holds: Hoenn and Kanto openings exist (PR #75, PR #135).
+
 ## Evidence scope
 
 The implementation observations below describe commit `a1334dd634`. The

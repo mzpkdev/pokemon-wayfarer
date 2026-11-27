@@ -23,8 +23,9 @@ The ship remains available after the captain's reward so optional rooms and
 missed rewards cannot be lost. Its ordinary item spots join
 [daily world slots](daily-world-slots.md) like every other region's, so the
 ship holds daily finds; see [Daily world slots on board](#daily-world-slots-on-board).
-The Anne doesn't become transport or a service hub here; a later change makes it
-a ferry the player can board whenever it is in port.
+The Anne doesn't become transport or a service hub here; the later, built
+[S.S. ferries](ss-ferries.md) change makes it a ferry the player can board
+whenever it is in port.
 
 ## Port boundary
 
@@ -64,6 +65,12 @@ map-section IDs in another build.
 ## Player flow
 
 ### Boarding and return
+
+**As built:** the fixed selector and the "Other Destinations" submenu below were
+replaced by the [S.S. ferries](ss-ferries.md) menu. Vermilion's sailor now lists the
+ship in port, Sevii Islands, "BOARD S.S. ANNE" until the captain's reward, and Cancel
+(`DrawWayfarerVermilionPortMenu` in `game/src/wayfarer_sevii_ferry.c`). The Anne row
+still needs only an S.S. Ticket and still warps to the 1F corridor at `(19, 2)`.
 
 Extend the Wayfarer-only top-level Vermilion selector to these fixed results:
 
@@ -115,9 +122,9 @@ Ether, Super Potion, Great Ball and the hidden Hyper Potion, Chesto, Pecha and
 Cheri Berries) are dynamic daily spots. Dynamic spots never set their
 `FLAG_WAYFARER_SS_ANNE_ITEM_*` flags, so completion counts only one-time
 content: the sixteen Trainers, the two prize spots, Blue's scene and the
-captain's reward. Once those are done the sailor gives the "visiting hours are
-over" refusal, as before, so the ship's daily finds are out of reach after
-completion until the ferry change replaces that refusal.
+captain's reward. Once those are done the "Board S.S. Anne" row is gone from the sailor's menu
+(its "visiting hours are over" refusal is a fallback), and the player boards the
+Anne as a ferry instead, where the daily finds are within reach.
 
 This section supersedes, for daily world slots only, the rules below that keep
 the nine dynamic items one-time or forbid renewable items.
@@ -150,8 +157,8 @@ The port must not add any of the following:
 - random or wild encounters introduced to create a repeatable activity;
 - a second completion reward or a reason to farm the completed ship.
 
-S.S. Aqua and Seagallop remain Wayfarer's travel ships. This specification adds
-no Anne travel; a later change turns the Anne into a ferry.
+S.S. Aqua and Seagallop were Wayfarer's travel ships. This specification adds
+no Anne travel; the later [S.S. ferries](ss-ferries.md) change turns the Anne into a ferry.
 
 ## Adventure content
 
@@ -171,15 +178,15 @@ HNS, Emerald, system, or partner ranges.
 
 ### Blue
 
-The source approach triggers converge on one nonblocking Wayfarer visitor
-introduction for every currently supported origin. It plays at most once,
-describes Blue as a visiting Trainer, does not start a battle, and does not
-claim a childhood rivalry, replace the player's own rival, set unrelated Kanto
-story completion, or block the captain.
-
-A future Kanto-origin implementation may replace this scene for that origin
-under the broader story's forward-progression rules. That upgrade is outside
-this port and must preserve captain access and the one-time visitor state.
+The source approach triggers converge on one nonblocking Wayfarer scene. It
+plays at most once, does not start a battle, and does not
+claim a childhood rivalry for a visitor, replace the player's own rival, set unrelated Kanto
+story completion, or block the captain. A visiting origin meets Blue as a
+visiting Trainer. As built, a Pallet-origin player instead gets a short greeting
+from a rival who needs no introduction, with the same one-time state. The scene
+is gone once the player's first Indigo win is committed
+([PR #239](https://github.com/mzpkdev/pokemon-wayfarer/pull/239)). Later
+Kanto-origin Blue chapters are not built and must preserve captain access and the one-time state.
 
 ### Items
 

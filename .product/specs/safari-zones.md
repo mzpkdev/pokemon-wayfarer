@@ -155,14 +155,16 @@ patterns are found only in the contest.
 
 ### Implementation notes
 
-- **The Safari tables replace the current Safari Zone tables.** The old
+- **The Safari tables replaced the old Safari Zone tables.** The old
   FireRed and LeafGreen Safari Zone maps aren't reachable in Wayfarer, so they
   get no tables.
-- **The contest needs three day tables and a weekday check.** The engine has
-  one table for the contest map today, and the gate runs the contest every day,
-  although its dialogue names Tuesday, Thursday and Saturday. The
-  implementation must hold the contest only on those days and choose the table
-  by day.
+- **The contest has three day tables and a weekday check.** The National Park
+  gate attendant runs the contest only on Tuesday, Thursday and Saturday
+  (`IsBugContestHeldToday` in `game/src/bug_contest.c`) and says it isn't on
+  other days. The contest map picks its table by day (`GetBugContestTableIndex`):
+  Tuesday's table for Tuesday and Wednesday, Thursday's for Thursday and
+  Friday, and Saturday's for Saturday through Monday, so a contest running past
+  midnight keeps its table.
 
 ## Open questions
 

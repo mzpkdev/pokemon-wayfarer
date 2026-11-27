@@ -1,7 +1,8 @@
 # Johto, Hoenn, and Kanto starting regions
 
-Status: Draft design for implementation. No runtime changes are included.
 Specification: [Wayfarer regional start choice](../specs/wayfarer-regional-start-choice.md)
+
+Implemented: Yes ([PR #75](https://github.com/mzpkdev/pokemon-wayfarer/pull/75); the Kanto start came with [PR #135](https://github.com/mzpkdev/pokemon-wayfarer/pull/135)). The starter gifts it describes are being revised by [Regional starter gifts](regional-starter-gifts.md), not yet built.
 
 ## Intent
 

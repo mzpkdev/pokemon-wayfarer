@@ -1,17 +1,21 @@
 # Sevii content overlay
 
-PRDs: [Sevii exploration port](../prds/sevii-exploration-port.md),
-[Sevii independent story beats](../prds/sevii-independent-story-beats.md),
+PRD: [Sevii exploration port](../prds/sevii-exploration-port.md)
+Related PRDs: [Sevii independent story beats](../prds/sevii-independent-story-beats.md),
 [Sevii Trainer Tower](../prds/sevii-trainer-tower.md), and
 [Interregional League circuit](../prds/wayfarer-interregional-league-circuit.md)
 
-Implemented: Partial — foundation in
+Implemented: Yes — foundation in
 [PR #101](https://github.com/mzpkdev/pokemon-wayfarer/pull/101), with the
 regular trainers, story, and Trainer Tower delivered in
 [PR #105](https://github.com/mzpkdev/pokemon-wayfarer/pull/105),
 [PR #104](https://github.com/mzpkdev/pokemon-wayfarer/pull/104), and
-[PR #102](https://github.com/mzpkdev/pokemon-wayfarer/pull/102). The Masters
-domain is approved but pending.
+[PR #102](https://github.com/mzpkdev/pokemon-wayfarer/pull/102). The `masters`
+domain shipped with the interregional circuit and the Leagues runtime
+([PR #136](https://github.com/mzpkdev/pokemon-wayfarer/pull/136),
+[PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)): the Seven
+Island battle house is the Masters lobby. The rest of the Masters format is
+not built yet and belongs to [Sevii Masters](sevii-masters.md).
 
 ## Scope and authority
 

@@ -1,5 +1,8 @@
 # FRLG Kanto independent story beats
 
+Implemented: Partial. Not built: the Cerulean burglary. The Route 12 and Route 16
+Snorlax pair is dropped; the other Kanto adventures below each have a spec.
+
 Status: Agreed product design. Implemented through the per-adventure
 specifications that cite it: [Celadon Rocket Hideout](../specs/frlg-kanto-celadon-hideout.md),
 [Mt. Moon](../specs/frlg-kanto-mt-moon.md),
@@ -22,8 +25,8 @@ their original characters, locations, objectives, battles, rewards, and most
 dialogue. Retain short causal connections and Giovanni's final confrontation
 rather than rewrite every scene as an unrelated episode.
 
-This document treats FRLG Kanto on its own. It prepares the story requirements
-for a future Wayfarer port; it does not decide how FRLG and HNS Kanto coexist or
+This document treats FRLG Kanto on its own. It sets the story requirements
+for the Wayfarer port; it does not decide how FRLG and HNS Kanto coexist or
 merge. References to Viridian, Lavender, the rival, and other content below mean
 their FRLG versions. The [Wayfarer Kanto story PRD](frlg-kanto-story-on-hns-maps.md#lavender-during-the-radio-conversion)
 selects Lavender's shared radio and memorial building; the
@@ -150,8 +153,8 @@ their ordinary adventures playable. TR determines eligibility; it is not spent.
 | Cut, Surf, Strength, Flute, fossils, and ordinary gifts | Retain their local acquisition requirements without late-game TR gates. |
 
 Ending Silph's occupation, returning its civilians, receiving ordinary rewards,
-and proceeding toward Giovanni must not wait for Master Ball eligibility. The
-President's deferred reward survives travel, save/reload, and a failed Bag handoff.
+and proceeding toward Giovanni must not wait for the Master Ball. The
+President's reward survives travel, save/reload, and a failed Bag handoff.
 
 The player may discover and explore the birds' sites before capture readiness.
 Keep Articuno's boulder/current puzzle in the full FRLG Seafoam port and the
@@ -199,8 +202,8 @@ the whole original campaign order.
 
 ## Boundaries
 
-- This is a future Wayfarer FRLG Kanto story contract, not a claim that the story
-  port exists or that standalone FireRed/LeafGreen behavior changes now.
+- This is Wayfarer's FRLG Kanto story contract. It does not change standalone
+  FireRed/LeafGreen behavior.
 - HNS Kanto coexistence, replacement, shared locations, NPC identities, badge
   ownership, and transport integration remain outside this document. The
   [coastal port](frlg-cinnabar-seafoam-port.md) owns its named Cinnabar,
@@ -232,9 +235,9 @@ must not regress Saffron, reset the hideout, erase the Tower rescue, or award th
 Earth Badge prematurely. Viridian completion must not suppress unfinished minor
 Rocket incidents.
 
-These requirements guide the future story port alongside the
+These requirements guide the story port alongside the
 [FRLG traversal design](frlg-open-world-region-traversal.md). That document's
-existing script assumptions are not proof of narrative independence. The future
+existing script assumptions are not proof of narrative independence. The
 port must adopt the named changes here explicitly and keep its story state
 distinct from unrelated regional progression.
 
@@ -252,7 +255,7 @@ distinct from unrelated regional progression.
   interleaving. Giovanni's dialogue and each adventure's state remain truthful.
 - Approach Viridian with neither investigation resolved, with each alone resolved,
   and with both resolved. Only both enable its finale; badge count and TR do not
-  add requirements. Unclaimed Master Ball and an unfinished Snorlax encounter do not
+  add requirements. An unclaimed Master Ball and an unfinished Snorlax encounter do not
   prevent the finale.
 - Finish Silph with a full Ball pocket. The city recovers and other stories
   proceed. Return to receive the reward once, including after save/reload.

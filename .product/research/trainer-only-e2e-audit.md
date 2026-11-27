@@ -1,5 +1,7 @@
 # Trainer-only emulator coverage audit
 
+Status (2026-11-27): historical. The story, Johto, Hoenn and objective suites counted below were dropped when PR #96 gated trainer-only mode to an author-set flag (`test(e2e): drop obsolete trainer-only coverage`); only the core wild-encounter journeys remain (`e2e/src/journeys/wayfarer-trainer-only*.e2e.ts`).
+
 The suite retains emulator checks for distinct entry, UI, staging, restoration,
 outcome and field-return behavior. Mechanics tests own numeric combinations and
 shared predicates; source audits own the complete caller inventory. Variant

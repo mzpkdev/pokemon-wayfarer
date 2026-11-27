@@ -1,18 +1,21 @@
 # Wayfarer interregional League circuit
 
-Implemented: Yes
+Implemented: Yes. Merged in [PR #136](https://github.com/mzpkdev/pokemon-wayfarer/pull/136); the v0
+[Leagues](leagues.md) ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139),
+[PR #172](https://github.com/mzpkdev/pokemon-wayfarer/pull/172)) now run on top of it.
 
-This is the record of today's implemented circuit; the v0 design is
-[Leagues](leagues.md).
-
-Today's runtime implements the fixed Indigo → Sevii Masters → Hoenn circuit with
-canonical first league wins, one shared Indigo result projected to Kanto/Johto,
-and +8 player Trainer Rating (TR) per first league win. Opponents remain fixed
-and scale from the player's TR saved when entering a league; the successor is
-not implemented. See the
-[implemented circuit contract](../specs/wayfarer-interregional-league-circuit.md)
-and [Today's producer](../../game/src/league_circuit.c). Campaign balance
-acceptance remains pending under [League scaling](league-scaling.md).
+This is the record of the pre-v0 circuit, which this document calls "Today".
+Its fixed Indigo → Sevii Masters → Hoenn admission (8, 16 and 24 badges),
+replays, loss rule, +8 player Trainer Rating (TR) per first league win, and
+opponent levels scaled from the TR saved on entry still exist in the code, but
+only run when `WAYFARER_LEAGUE_EVENTS` or `WAYFARER_V0_TRAINERS` is off; the
+shipped Wayfarer game has both on. Still live there: the circuit stage identity,
+the league rooms and Seven Island entrance, the first-league-win ceremonies and
+Hall of Fame handling, Red's unlock after all three first wins, and the Trainer
+Card league page. See the
+[circuit contract](../specs/wayfarer-interregional-league-circuit.md)
+and [the producer](../../game/src/league_circuit.c). Campaign balance
+acceptance was never recorded under [League scaling](league-scaling.md).
 
 ## Today's intent
 
@@ -39,9 +42,10 @@ reset, and challenge participation never gates earning another badge. A player
 may collect all twenty-four badges before attempting any circuit stage, then
 win the three stages consecutively.
 
-The existing Johto opening remains the sole new-game start for the current
-release. Kanto and Hoenn openings are separately scoped future features and do
-not change the circuit.
+New games can start in Johto (New Bark), Hoenn (Littleroot) or Kanto (Pallet)
+([PR #75](https://github.com/mzpkdev/pokemon-wayfarer/pull/75),
+[PR #135](https://github.com/mzpkdev/pokemon-wayfarer/pull/135)). None of the
+openings changes the circuit.
 
 ### Indigo League
 
@@ -61,8 +65,9 @@ because two regions recognize the title.
 
 For the current Johto-origin release, Blue uses the existing FRLG
 first-league-win Blastoise roster. Do not infer his team from the Johto starter.
-A future Kanto opening may select among the three FRLG starter-dependent
-variants from that opening's own origin state.
+Selecting among the three FRLG starter-dependent variants from the Kanto
+opening's origin state is not built; the Pokémon of the shipped v0 Blue come
+from the [notable trainers](notable-trainers.md) catalog.
 
 The future FRLG Kanto story port owns Blue's origin-dependent rival dialogue
 and his authored party selection. Giovanni owns the initial Earth Badge through
@@ -141,7 +146,7 @@ first-league-win unlock. Ordinary battle rewards remain unchanged.
 
 ## Trainer Rating
 
-This is today's formula. In v0, TR follows the badge scale in
+This is the pre-v0 formula. In v0, which Wayfarer ships, TR follows the badge scale in
 [Player Trainer Rating](player-trainer-rating.md), with no league TR.
 
 The existing badge contribution remains unchanged. First league wins

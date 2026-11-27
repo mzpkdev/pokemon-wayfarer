@@ -109,8 +109,8 @@ evolutions then work there, as Hisui-only evolutions already do in Sinjoh:
 - Koffing evolves into Galarian Weezing.
 - Mime Jr. evolves into Galarian Mr. Mime when it knows Mimic.
 
-The implementation must check anything else that reads the region, such as the
-Pokédex or the Town Map, before changing it.
+Every Sevii map now carries `REGION_GALAR`. Code that reads the region handles
+it; Sevii's battle music, for one, keeps the Kanto theme.
 
 ### What must be catchable
 
@@ -190,8 +190,8 @@ each map's type.
 
 ### Day and night
 
-Sevii's night tables are copies of its day tables today, so every night table
-is new.
+Before v2, Sevii's night tables were copies of its day tables, so every night
+table is new.
 
 - Every map has its own night table.
 - Outdoors, at least 30% of a land table's night weight goes to species that

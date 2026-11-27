@@ -2,6 +2,8 @@
 
 Status: design evidence, 2026-09-09. This investigation supports the [PRD](../prds/gameplay-content-framework.md) and [technical specification](../specs/gameplay-content-framework.md). It does not implement the framework or establish a ROM saving.
 
+Status (2026-11-27): still open; the framework is not built. Two details have moved: PR #85 was closed without merging, and `wayfarer_native_hm_audit.py` was removed with wild encounters v2 (PR #156).
+
 ## Recommendation
 
 Build a shared host-side content compiler with typed gameplay domain APIs. Existing source content remains authoritative; authors declare missing semantics once, and domain backends generate only the runtime data their consumers need. Start with progression curves, NPC service declarations for rods and marts, and a conservative trainer encounter adapter. Keep species analysis, reachability, and travel as later extensions.

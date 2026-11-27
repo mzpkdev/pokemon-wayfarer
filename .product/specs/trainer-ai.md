@@ -156,7 +156,8 @@ automatic double-battle flag and the two auto-includes); the resolver
 reproduces them because it writes after that setup. Resolution is a pure
 function of play style, trainer TR, aces, the boss flag, the battle type, and
 trainer-species randomization: no save seed, RNG, player party, or call history.
-One override sits on top: a
+One override sits on top (not built yet: it belongs to notable haunts, which are
+not implemented): a
 [Handicap](notable-haunts.md#handicap) quest battle uses tier 3
 (Predictive) plus Omniscient and Ace Pokemon, whatever the trainer's TR.
 
@@ -241,7 +242,7 @@ encounter's authored AI line along with its party
 - A resolved-flags report per trainer at world progress 0, 40, 80, 120, and
   160: TR, AI skill tier, aces in the team, and the flag list, matching the
   examples above.
-- ROM checks once implemented: the override runs after the standard flag
+- ROM checks (`game/test/notable_ai.c`, `game/test/notable_battle.c`): the override runs after the standard flag
   setup and before the first decision, writes every controlled battler and
   the prediction slots, keeps Double Battle in a double battle, reproduces
   identically on reconstruction and retry, and leaves regular trainers and

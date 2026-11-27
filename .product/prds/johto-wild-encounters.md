@@ -1,9 +1,9 @@
 # Johto wild encounter ecology
 
 **Retired.** Replaced by [Wild encounters v2](../prds/wild-encounters-v2.md).
-It still describes today's game until v2 ships; don't build new work from it.
+v2 shipped in Wayfarer ([PR #156](https://github.com/mzpkdev/pokemon-wayfarer/pull/156)); don't build new work from this document.
 
-Implemented: Outdated
+Implemented: No. Retired and replaced in Wayfarer by wild encounters v2 ([PR #156](https://github.com/mzpkdev/pokemon-wayfarer/pull/156)).
 
 The campaign validation samples now follow +8/+8/+8 League rewards. Existing
 implementation and validation evidence must be refreshed for those milestones.
@@ -12,8 +12,9 @@ For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes this document's permanent named native-HM anchors,
 per-anchor utility-retention tests and named-carrier accessibility shares.
 Use its roster-level known-move coverage and aggregate Old Rod minimum instead.
-That revision is not implemented yet. Unrelated ecology, authored encounter
-rules, scaling and standalone-build contracts remain unchanged.
+That revision's core implementation is complete, while full route acceptance
+remains pending. Unrelated ecology, authored encounter rules, scaling and
+standalone-build contracts remain unchanged.
 
 ## Intent
 

@@ -1,5 +1,7 @@
 # Story-blocking traversal audit
 
+Status (2026-11-27): historical. This is the pre-traversal baseline for HNS, FRLG and Emerald; the Emerald and HNS traversal specs shipped (see their `Implemented` markers) and replace its blocker lists.
+
 ## Question
 
 Which story, badge, key-item, forced-battle, transport, and field-move checks stop the player from traveling through the regions shipped by HNS, FRLG, and Emerald? Which of those checks can be made nonblocking with a small, localized change that leaves the related story available?

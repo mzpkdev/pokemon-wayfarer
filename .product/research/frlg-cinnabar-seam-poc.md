@@ -1,5 +1,7 @@
 # FRLG Cinnabar seam probe
 
+Status (2026-11-27): resolved — shipped as the full FRLG Cinnabar and coast port in PR #112; the probe map and the `CoastPoc` maps are retired from the Wayfarer catalog, and the open Porymap and size items below no longer apply. The `cinnabar-seam-poc.e2e.ts` journey it names no longer exists.
+
 Base revision: `3ff46adcfabc41278d1a8ab6ab700be126b24c3f`.
 
 This task branch contains a temporary, empty 24×20 Cinnabar exterior using the

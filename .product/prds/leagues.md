@@ -32,11 +32,12 @@ the league is and who played last. Each opponent fights as the same person the
 player meets elsewhere, at their own Trainer Rating (TR) and with their own
 team, so a league battle and a Gym battle with Clair are the same Clair.
 
-On adoption, Leagues replaces today's fixed lineups and their levels scaled
-from the player's TR when entering a league
+Leagues replaces the old fixed lineups and their levels scaled from the
+player's TR when entering a league
 ([League scaling](league-scaling.md),
-[interregional League circuit](wayfarer-interregional-league-circuit.md)),
-which remain the record of Today.
+[interregional League circuit](wayfarer-interregional-league-circuit.md)); it
+shipped in Wayfarer with [PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139),
+and those two documents remain the record of the pre-v0 circuit.
 
 ## Design
 
@@ -187,8 +188,7 @@ whether they have ever reigned at Hoenn, which decides who is a Master.
 ceremonies, and unlocks, all once only; what the Masters gives is in [Sevii
 Masters](sevii-masters.md#design). Winning again brings prize money and the
 title back. No win gives the player TR: a league is a test, not a source of
-power ([Player Trainer Rating](player-trainer-rating.md)). Today, the ROM
-still adds TR for a first league win until that design is adopted.
+power ([Player Trainer Rating](player-trainer-rating.md)).
 
 **Presentation.** Invitations and results come by phone call, on a
 Pokégear/PokéNav-style phone as in HeartGold/SoulSilver and Emerald; the exact
@@ -265,10 +265,9 @@ Out of scope for v0: seeded or reputation-based league choice, news of who won
 the events the player declined (beyond the Masters Gallery), special
 invitational events, balance targets for leagues, and field conditions
 outside the leagues' halls (such as Gym arenas). Red's unlock after all
-three leagues and Blue's Dojo stay as they are. Today's circuit, with its
-fixed order and replays, stays documented as Today until this design is
-adopted; its record, ceremony, and unlock rules carry
-over to first wins. Player TR follows [Player Trainer
+three leagues and Blue's Dojo stay as they are. The pre-v0 circuit, with its
+fixed order and replays, stays documented as the old record; its record,
+ceremony, and unlock rules carry over to first wins. Player TR follows [Player Trainer
 Rating](player-trainer-rating.md), where league wins add nothing. Wild
 encounters, shops, regular trainers, and standalone builds follow their own
 contracts, except that the snow and sandstorm halls' shared room maps carry

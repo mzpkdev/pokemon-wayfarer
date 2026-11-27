@@ -1,5 +1,7 @@
 # HNS Kanto stories against the FRLG baseline
 
+Status (2026-11-27): mostly resolved. The decisions are recorded in the Kanto story PRD, and the Cinnabar, Tower, Power Plant, Viridian finale, Anne and Indigo League choices shipped. The Vermilion Snorlax is the Flute's target (PR #239). The League section's "Wayfarer currently uses Will, Koga, Bruno, Karen, Lance" is out of date: Indigo now runs Lorelei, Bruno, Agatha, Lance and Blue, and the HNS lineup is the Sevii Masters Challenge. The Anne boarding section was reworked by the S.S. ferries.
+
 ## Scope and decision rule
 
 This inventory supports [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md).

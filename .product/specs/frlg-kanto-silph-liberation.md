@@ -237,14 +237,14 @@ Preserve exact source class, portrait, gender metadata, battle music, battle
 type, AI, zero-IV party, moves, and held items. Assign the records in the
 following explicit sequence.
 
-| Runtime IDs | Source records | Scaling classification and encounter profile |
+| Runtime IDs | Source records | Scaling classification and no-party refusal |
 | ---: | --- | --- |
 | 1737 through 1755 | TRAINER_TEAM_ROCKET_GRUNT_23 through _41 | ORDINARY; hostile faction fallback through the ordinary resolver |
-| 1756 through 1765 | Scientists Beau, Connor, Ed, Jerry, Jose, Joshua, Parker, Rodney, Taylor, and Travis | ORDINARY; stable NP_ORDINARY encounter profile |
-| 1766 | TRAINER_JUGGLER_DALTON | ORDINARY; stable NP_ORDINARY encounter profile |
-| 1767 | TRAINER_BOSS_GIOVANNI_2 | Objective-boss exclusion; NP_ROCKET_GUARD |
+| 1756 through 1765 | Scientists Beau, Connor, Ed, Jerry, Jose, Joshua, Parker, Rodney, Taylor, and Travis | ORDINARY; no-party refusal `WayfarerSilph_EventScript_OrdinaryNoParty` |
+| 1766 | TRAINER_JUGGLER_DALTON | ORDINARY; no-party refusal `WayfarerSilph_EventScript_OrdinaryNoParty` |
+| 1767 | TRAINER_BOSS_GIOVANNI_2 | Objective-boss exclusion (scaling policy `EXCLUDED`); Rocket no-party refusal |
 
-Set TRAINERS_COUNT_SILPH_LIBERATION_WAYFARER to 31 and extend TRAINERS_COUNT_WAYFARER through runtime ID 1767. Add range assertions proving that Silph follows the reserved Celadon block and Giovanni is the last Silph record.
+The 31 Silph records are part of the local-adventure range in `wayfarer_local_trainers.h` (1737 through 1778 once Mt. Moon and Nugget Bridge are added), and Giovanni is runtime ID 1767. Add range assertions proving that Silph follows the reserved Celadon block and Giovanni is the last Silph record.
 The ordinary records use existing appended-HNS defeat storage and ordinary
 TR scaling. Giovanni uses the existing objective-boss exclusion.
 No new Trainer enters the Hoenn fixed runtime bank, and shared scaling changes

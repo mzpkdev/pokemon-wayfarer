@@ -1,8 +1,10 @@
 # Sevii Masters
 
-Implemented: No Specification: [Sevii Masters
-specification](../specs/sevii-masters.md) Design status: v0 approved: the
-Sevii Masters is an off-the-record club for champions, one of the three
+Implemented: Partial. The Master rule, Master seats in a five-seat lineup, the
+lobby acceptance and the Gallery win counts are built; the partner, the tag
+battles, the final and the caretaker's calls are not.
+Specification: [Sevii Masters specification](../specs/sevii-masters.md)
+Design status: v0 approved: the Sevii Masters is an off-the-record club for champions, one of the three
 [Leagues](leagues.md), that calls the player once they are a Master, with wins
 at both Indigo and Hoenn. It plays as a team game: the player and a partner
 they asked by phone face four pairs from an eight-strong lineup in tag

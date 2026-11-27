@@ -1,5 +1,7 @@
 # Native utility catch-window proposal
 
+Status (2026-11-27): shipped in Wayfarer. The roster is in the learnsets (PR #65) and the wild encounters v2 revision (PR #156) re-audited it for the v2 tables; the 117-species figures below are the original snapshot. Full route acceptance is still pending.
+
 The design and initial distribution are now approved in the [PRD](../../prds/native-hm-catch-windows.md)
 and [specification](../../specs/native-hm-catch-windows.md). This investigation is
 preserved as their [attachment package](attachments.md); production implementation
@@ -155,7 +157,7 @@ Before implementation acceptance, review critical banks/obstacles for actual rea
 ## Source references
 
 - [Build content flags](../../../game/include/constants/global.h) and [active learnset generation](../../../game/include/config/pokemon.h)
-- [Modern native learnsets](../../../game/src/data/pokemon/level_up_learnsets/gen_7.h), [legacy native learnsets](../../../game/src/data/pokemon/level_up_learnsets/gen_3.h), and [species compatibility](../../../game/src/data/pokemon/all_learnables.json)
+- [Modern native learnsets](../../../game/src/data/pokemon/level_up_learnsets/gen_7.h), legacy native learnsets (`gen_3.h`, since removed), and [species compatibility](../../../game/src/data/pokemon/all_learnables.json)
 - [Initial moveset creation and mode selection](../../../game/src/pokemon.c)
-- [Wild encounter tables](../../../game/src/data/wild_encounters.json), [TR scaling data](../../../game/src/data/wild_encounter_scaling.json), and [runtime projection/devolution](../../../game/src/wild_encounter.c)
+- [Wild encounter tables](../../../game/src/data/wild_encounters.json), TR scaling data (`wild_encounter_scaling.json`, since removed), and [runtime projection/devolution](../../../game/src/wild_encounter.c)
 - [Field-move eligibility](../../../game/src/field_move.c), [Hoenn content authorization](../../specs/wayfarer-hoenn-content-port.md), and [Standard Rod rules](../../specs/standard-rod-fishing.md)

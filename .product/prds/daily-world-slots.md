@@ -309,6 +309,8 @@ Itemfinder finds hidden dynamic items the same way it finds authored ones.
 
 The 2026-10-07 inventory of the Wayfarer build, with the Battle Pyramid's
 generated objects excluded:
+The counts below are that day's; today's generated tables hold 705 trainer
+slots and 838 item spots, Sevii included.
 
 - **Trainer slots:** 1,182 in total, of which about 719 look regular and 463
   look like story trainers. Regular slots by region: Hoenn 377, Johto 141,
@@ -321,7 +323,7 @@ generated objects excluded:
   Kanto ports keep every authored item.
 - **Sevii items (prerequisite):** Sevii's 97 FRLG items (39 item balls and 58
   hidden items) were left out by the
-  [exploration port](sevii-exploration-port.md) and never restored. The
+  [exploration port](sevii-exploration-port.md) and have since been restored. The
   [Sevii exploration restoration](../specs/sevii-exploration-restoration.md)
   brings them back first, with the rest of what the port meant to keep, so
   Sevii's spots start with their authored items like every other region.
@@ -334,9 +336,10 @@ generated objects excluded:
   rules in [Phone numbers and rematches](#phone-numbers-and-rematches):
   - 39 Johto and Kanto trainers from HNS give a phone number and call for
     tiered rematches (Nicole is not compiled in Wayfarer).
-  - 64 Hoenn trainers register for Emerald's Match Call. Wayfarer compiles the
-    HNS rematch table, which has no Hoenn entries, so these rematches appear
-    to be inert today.
+  - 64 Hoenn trainers registered for Emerald's Match Call. Wayfarer compiles the
+    HNS rematch table, which had no Hoenn entries, so these rematches were
+    inert at design time. [Phone rematches](../specs/phone-rematches.md) now
+    gives them table rows.
   - 73 FRLG families, 64 on Sevii and 9 on Kanto's Routes 19–21, support
     Vs. Seeker rematches, but the Vs. Seeker can't be obtained in Wayfarer.
 

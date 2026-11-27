@@ -1,7 +1,10 @@
 # Standard Rod fishing progression
 
+Implemented: Yes
+
 For Wayfarer, [Wild encounters v2](wild-encounters-v2.md) replaces this document's level
-and eligibility rules once its tables ship. Every rod rolls the place's level
+and eligibility rules; its tables shipped in
+[PR #156](https://github.com/mzpkdev/pokemon-wayfarer/pull/156). Every rod rolls the place's level
 as [wild level scaling](../specs/wild-level-scaling.md#encounter-level) defines;
 TR eligibility, level projection, predecessor resolution and the encounter
 replacements below go, and the v2 encounter tables hold each map's fishing
@@ -14,8 +17,10 @@ that actually know the required utility at each TR and time. Its selected
 [nearby-access proposal](../research/native-hm-windows/revisions/nearby-access/proposal.json)
 requires an 8% chance at one reachable land source or successful Old Rod fishing
 source, without summing across places. A qualifying fishing source therefore
-provides at least 2% per unmodified cast. The code-only simulation passes its
-selected scenarios; production acceptance remains pending.
+provides at least 2% per unmodified cast. The v2 revision re-checks this
+against the v2 tables, and a production test replays its scenarios
+(`game/test/native_hm_catch_coverage.c`); full route acceptance remains
+pending.
 
 Only the proposal's enumerated encounter replacements override the no-table-edit
 boundaries below for Wayfarer. Global weights, bite rates, rod progression and
@@ -178,9 +183,10 @@ bite rate, averaging no more than 50 casts. Lure use is not required.
 The selected nearby-source report owns the qualifying catches and includes
 Surf and the Den's required Whirlpool acquisition. Ineligible-entry filtering
 must preserve a qualifying nearby known-move source at every TR
-from 0 through 80 under that contract. That is today's scale; on the
-[v0 scale](player-trainer-rating.md#how-you-earn-it) the range becomes
-TR 0 through 160 (0 to 24 badges), to be re-checked against the new wild curve.
+from 0 through 80 under that contract. That was the old scale; on the
+[v0 scale](player-trainer-rating.md#how-you-earn-it) the range is
+TR 0 through 160 (0 to 24 badges), re-checked against the v2 wild levels in the
+[v2 revision](../research/native-hm-windows/revisions/wild-encounters-v2/README.md).
 
 An upgrade should be noticeable during ordinary play. Good Rod should make the
 former Good and Super entries collectively more common than they are with Old

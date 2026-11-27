@@ -167,7 +167,7 @@ names each map's type.
 
 ### Day and night
 
-Alola's tables have no night versions today, so every night table is new.
+Before v2, Alola's tables had no night versions, so every night table is new.
 
 - **Sun by day, Moon by night.** Outdoors, the species split between Pokémon
   Sun and Moon follow the clock: Passimian, Turtonator and Alolan Vulpix's line

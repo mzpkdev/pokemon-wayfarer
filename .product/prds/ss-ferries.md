@@ -2,6 +2,8 @@
 
 Specifications: [S.S. ferries](../specs/ss-ferries.md)
 
+Implemented: Yes ([S.S. ferries spec](../specs/ss-ferries.md); sailing in PR #177, cabins in PR #182, passengers in PR #185).
+
 Design status: agreed for v0. Times build on the
 [in-game clock](in-game-clock.md#design)'s times of day and its by-day and
 by-night halves.

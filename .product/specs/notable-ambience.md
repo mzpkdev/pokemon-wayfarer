@@ -26,14 +26,14 @@ It doesn't cover:
 - **Where a trainer goes** (spot choice, routines, travel, capacity). That stays
   in [notable spots](notable-spots.md) and the
   [world simulation](notable-world-simulation.md).
-- **Talking to walkers.** That is the friendship work, later.
+- **Talking to walkers.** That is the [spots talk flow](notable-spots.md#talk-flow).
 - **Fame and friendship reactions.** They are listed under [Later](#later).
 
 ## Behavior
 
 ### Layers
 
-A walker's on-screen behaviour has three layers. Only the first two exist today:
+A walker's on-screen behaviour has three layers:
 
 1. **Movement:** walking a path to a goal, as the walker does now.
 2. **Template:** what the walker does with the spot (stand, roam an area,

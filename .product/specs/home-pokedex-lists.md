@@ -12,7 +12,10 @@ lists, makes National mode show every enabled species, retires the per-region
 extension grants, and adds the professors' first-meeting upgrade. The canonical
 National foundation, global seen and caught records, trade independence, and
 the Pokédex screens are unchanged. Line references are to main at
-`6591781ef1`.
+`6591781ef1`, before this work; the "Today" columns and the table names it
+replaces (`sKantoToNationalOrder`, `sJohtoToNationalOrder`) describe that
+snapshot. As built there is one `sKantoJohtoToNationalOrder` table in
+`game/src/pokemon.c`.
 
 ## Behavior
 
@@ -194,7 +197,7 @@ counts changes:
 
 | Site | Today | With this work |
 | --- | --- | --- |
-| Birch's lab, traveller's thanks after the Route 101 rescue, the scene the Hoenn rival revision (task `hoenn-rival-origin`, which must land first) adds | No upgrade | For `ORIGIN_PALLET` and `ORIGIN_NEW_BARK`: after the thanks and the Pokédex handover if the traveller had none, and before the rating, Birch upgrades the Pokédex with the lab's existing `..._Text_PokedexUpgradedToNational` line, unless it is already held. The rating that follows reports the National counts. A traveller whose save is already past the rescue gets the same upgrade and line at the start of their next lab talk with Birch. |
+| Birch's lab, traveller's thanks (since PR #231 a visitor never plays the Route 101 rescue; the thanks is their first lab talk), the scene the Hoenn rival revision (task `hoenn-rival-origin`, which must land first) adds | No upgrade | For `ORIGIN_PALLET` and `ORIGIN_NEW_BARK`: after the thanks and the Pokédex handover if the traveller had none, and before the rating, Birch upgrades the Pokédex with the lab's existing `..._Text_PokedexUpgradedToNational` line, unless it is already held. The rating that follows reports the National counts. A traveller whose save is already past the rescue gets the same upgrade and line at the start of their next lab talk with Birch. |
 | New Bark lab, `VisitorElm` (`game/data/maps/NewBarkTown_Lab_hns/scripts.inc:1086-1095`) | No upgrade; no record of the first talk | For `ORIGIN_LITTLEROOT`: at the end of the first talk, after Elm's own lines on whichever branch ran (the Master Ball, the S.S. ticket, or the plain greeting), a shared subroutine upgrades the Pokédex with a short line of Elm's, unless it is already held or the player has no Pokédex. The upgrade flag is the record. |
 | Pallet lab, `OakWelcomeKanto` branch (`game/data/maps/PalletTown_Lab_hns/scripts.inc:116-130`) | Sets `VAR_PALLETTOWN_LABSTATE` to 1; no upgrade | For `ORIGIN_LITTLEROOT`: the welcome ends with the upgrade and a short line of Oak's, before the eight-badge jump at `:128-130`, unless already held or the player has no Pokédex. Oak in the Johto Champion's room is not a lab talk and does not upgrade. |
 | Pallet lab, `OakDex` at eight Kanto badges (`PalletTown_Lab_hns/scripts.inc:1033-1038`, `1077`) | Upgrade plus the Kanto grant | Upgrade only, still guarded by `FLAG_SYS_NATIONAL_DEX`. The grant call goes. Reached by New Bark and Littleroot origins; a Pallet origin's lab talk is the opening script (`:119-122`), which never comes here. |
@@ -280,8 +283,8 @@ and the E2E journeys. Cover:
   required enabled species caught.
 - **Critical capture:** the progress does not change when the upgrade is
   granted.
-- **Upgrades (E2E):** a New Bark origin catches a Hoenn species, rescues
-  Birch, and sees it in National mode after his thanks; a Littleroot origin
+- **Upgrades (E2E):** a New Bark origin catches a Hoenn species, talks
+  to Birch in his lab, and sees it in National mode after his thanks; a Littleroot origin
   talks to Elm first and Oak second, and only Elm upgrades; a Littleroot origin
   who never leaves Hoenn gets the upgrade after the Hall of Fame, and one who
   already holds it hears the acknowledgement, still arms Scott's call, and

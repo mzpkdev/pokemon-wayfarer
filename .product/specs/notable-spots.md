@@ -2,9 +2,10 @@
 
 PRD: [Notable spots](../prds/notable-spots.md)
 Implemented: Partial. Build-time spot extraction, named spots, capacity, home bases, favourites, and the behaviour templates shipped with [PR #147](https://github.com/mzpkdev/pokemon-wayfarer/pull/147). The talk flow shipped for walkers on the road: greeting by friendship stage (with fame), the activity line of the spot kind or the named-spot activity, and the farewell, and a Gym Leader's own-Gym talk wraps the Gym's post-battle line in the same greeting and farewell. The follow-ups (Courier, Egg sitting) are not built.
-Design status: the everyday layer of the future **routine and travel**
-design. Spots switch on together with routines and travel; v0 haunt
-placement is unchanged, and nothing in this spec runs before then. Spots
+Design status: the everyday layer of the **routine and travel**
+design. Spots switched on together with the
+[world simulation](notable-world-simulation.md)'s routines and travel; v0
+haunt placement is unbuilt and unchanged. Spots
 are found automatically from map data, plus a short authored list of
 [named spots](#named-spots), in one pool for every region, and carry no
 quests. Home bases are decided; talking at a spot greets by
@@ -26,7 +27,7 @@ rule, and the saved-state stance.
   extend, the [talk flow](notable-haunts.md#talk-flow) whose greeting and
   follow-up steps spots reuse, and the
   [travel engine note](notable-haunts.md#travel-and-on-map-walking).
-- The routine design (future work) owns activity cycles: when a trainer
+- The [world simulation](notable-world-simulation.md) owns activity cycles: when a trainer
   does which activity, travel between maps, the world record,
   and the heartbeat. This spec owns only what happens once an activity is
   chosen. The
@@ -317,7 +318,11 @@ detection rule can see: a lab, a tower, a café, a Day Care, a harbour. They
 are authored as one small list next to the eight detected kinds, and join
 the same pool. The starting list, 59 rows across the four regions, is
 [notable named spots](../research/notable-named-spots.md); its Haunt column
-marks the rows whose map also hosts a haunt.
+marks the rows whose map also hosts a haunt. The build uses
+`game/tools/wayfarer_world/named_spots.json`: 58 rows, since the Cerulean
+Bike Shop's only door can never fire, so no walker can reach it (it is
+recorded under `dropped`), and the Berry Forest row stands at (19, 28) on the
+west pond's shore, not (28, 11), a pocket walkers can't enter.
 
 Each row authors:
 
@@ -701,7 +706,7 @@ review:
 | Pokémon Center | "Just letting my team rest up." |
 | Poké Mart and department store | "Just stocking up on supplies." |
 | Game Corner | "Trying my luck for a while." |
-| Other Gyms | "Just dropped by to see the Gym." |
+| Other Gyms | "Just dropped by to see the GYM." |
 | Tall grass | "Seeing what turns up in this grass." |
 | Water's edge | "Waiting for a bite." |
 | Town squares and benches | "Taking a breather." |
@@ -720,7 +725,7 @@ and visit, and for the rest:
 
 ### Courier recipients at spots
 
-Once routines run, a [Courier recipient](notable-haunts.md#the-recipient)
+A [Courier recipient](notable-haunts.md#the-recipient)
 can be a trainer out at a spot, not only one at a haunt. `{PLACE}` then
 says the spot map's own location name: the name of its region-map section,
 such as "CERULEAN CITY" or "ROUTE 2". Spots have no authored name of their

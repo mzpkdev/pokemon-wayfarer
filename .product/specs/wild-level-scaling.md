@@ -259,13 +259,13 @@ as the [prowlers spec](prowlers.md#prowlers) defines.
   Morning and day use a map's day table, and evening and night use its night
   table. Every method follows the same rule, and every reader of the wild
   population uses it too.
-- **This replaces today's projection.** The v0 wild level curve, authored
+- **This replaced the old projection.** The v0 wild level curve, authored
   levels, the retention shape, the cumulative maximum, the per-table level
-  offsets and the old species floors all go. A wild level is the place's
+  offsets and the old species floors are gone. A wild level is the place's
   level at your TR, then the steps above. Every scaler only rises, so a
   higher TR never lowers a place's level.
-- **Pokémon Tower's ghost Marowak** uses today's projection, which goes. It
-  takes its floor's level instead, with no spread. Other scripted and static
+- **Pokémon Tower's ghost Marowak** takes its floor's level (6F), with no
+  spread, once the player has the Silph Scope. Other scripted and static
   encounters keep their own levels.
 - **Each map needs its reach, and each dungeon map its floor index, floor
   count, intent and whether the dungeon is flat,** generated from
@@ -295,14 +295,16 @@ as the [prowlers spec](prowlers.md#prowlers) defines.
   `game/include/config/species_enabled.h`. `P_GEN_9_CROSS_EVOS` stays on, so
   Generation IX evolutions of older lines, such as Annihilape,
   Farigiraf, Kingambit and Dudunsparce, remain. No v2 table uses a Paldean
-  form, and today's trainer data uses no Generation IX species outside those
+  form, and the trainer data uses no Generation IX species outside those
   evolutions. The build and the mechanics tests must pass with the switch off.
 - **The tables fit the ROM budget.** The v2 tables hold 13,176 slots in 1,464
-  method and time-of-day tables across 356 table keys. Stored in today's
-  structs, with a level pair per slot and four times of day per header, they
-  take about 92 KiB, about 22 KiB more than today's 70 KiB of encounter data,
-  against 874 KiB of headroom before the protected reserve. Dropping the
-  per-slot levels, which v2 no longer uses, brings them to about 66 KiB.
+  method and time-of-day tables across 356 table keys. Stored in the
+  engine's structs, with a level pair per slot and four times of day per
+  header, they were estimated at about 92 KiB, about 22 KiB more than the old
+  70 KiB of encounter data, against 874 KiB of headroom before the protected
+  reserve. Dropping the per-slot levels, which v2 no longer uses, was
+  estimated to bring them to about 66 KiB. The shipped tables still carry a
+  placeholder level pair per slot.
 
 ## Validation
 

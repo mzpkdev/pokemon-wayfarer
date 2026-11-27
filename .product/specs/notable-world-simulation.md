@@ -1,7 +1,7 @@
 # Notable world simulation
 
 PRD: [Notable world simulation](../prds/notable-world-simulation.md)
-Implemented: Partial. Walkers on routines, the heartbeat, travel, the saved record, and the local actor shipped in [PR #147](https://github.com/mzpkdev/pokemon-wayfarer/pull/147). Talking to a walker shipped: the greeting by friendship, the line of the activity it is doing or heading for, and the farewell; talking adds nothing, and the follow-ups are not built. A phone call to a notable contact reads the record to say where they are ([phone](#interactions)). A Gym Leader's own-Gym talk shipped: the Gym's script runs unchanged while it owes the player something, and once nothing is owed the talk is the greeting, the Gym's existing post-battle line, and the farewell. Haunts as destinations, the Masters partner, and momentum remain; Bruno, Koga, and the face-only-sprite trainers keep their fixed spots.
+Implemented: Partial. Walkers on routines, the heartbeat, travel, the saved record, and the local actor shipped in [PR #147](https://github.com/mzpkdev/pokemon-wayfarer/pull/147). Talking to a walker shipped: the greeting by friendship, the line of the activity it is doing or heading for, and the farewell; talking adds nothing, and the follow-ups are not built. A phone call to a notable contact reads the record to say where they are ([phone](#interactions)). A Gym Leader's own-Gym talk shipped: the Gym's script runs unchanged while it owes the player something, and once nothing is owed the talk is the greeting, the Gym's existing post-battle line, and the farewell. Haunts as destinations, the Masters partner, and momentum remain, so no trainer is ever Pinned or Away: partner yet; Bruno, Koga, and the face-only-sprite trainers keep their fixed spots. The offline itinerary report is built (`game/tools/wayfarer_world_report/`); the in-game debug menu is not (only the `gWayfarerWorldDebug` counters exist).
 Design status: draft for review. The model is decided: a saved, abstract
 **world simulation** advanced by a map-change **heartbeat**, plus a
 **local actor** on the player's map, with a handoff both ways, as the
@@ -487,7 +487,7 @@ gamble, train, relax, fish, visit, study, home, sightsee, lie low). The
 cycle repeats. Cycles and [favourites](notable-spots.md#favourites) are
 authored together, per trainer, in the
 [routines research file](../research/notable-trainer-routines.md), which
-then moves into the catalog. A trainer without a cycle would use the
+the build reads as `game/tools/wayfarer_world/routines.json`. A trainer without a cycle would use the
 placeholder default **train → care → relax → home**; every simulated
 trainer has one.
 
@@ -644,7 +644,7 @@ When a dwell runs out (in a heartbeat, or locally while watched):
   follower is hidden while fewer than 2 slots (placeholder) would remain
   free with every actor spawned, and comes back when the actors leave.
 - **Shared search scheduler.** Only one grid search runs at a time,
-  across all actors on the map, in one shared 11,200-byte heap workspace
+  across all actors on the map, in one shared heap workspace (11,308 bytes: `struct WalkerWork`)
   at eight node expansions per field update (the proof of concept
   measured slices of about 0.56-0.63 of a frame). Requests queue in
   priority order; an actor waiting for a search stands still or keeps
@@ -752,6 +752,17 @@ trainers later ([walking sprites](#known-limitation-walking-sprites)) takes
 it to 37 records, 312 bytes.
 
 #### Save budget
+
+Status (2026-11-27): this is the design-time budget, kept as the record of why
+the PC has 13 boxes. Everything it waited on has merged. PR #139 (saved
+leagues) is on main. `TOTAL_BOXES_COUNT` is 13. `PokemonStorage` holds the
+league teams, the 216-byte `WayfarerWorldState`, the daily slots and the ferry
+voyage, under a `STATIC_ASSERT` of 35,712 bytes. Friendship is built, in
+SaveBlock3, at 56 bytes: scores, first-win, number-shown, introduced and
+story-beat bits. The haunt, Masters and traded-slot rows below are still
+unbuilt, so their sizes stay estimates. The world state's 216 bytes are the
+records (200), the local actor block (9), the header (4), and the walker
+layer's own flag byte plus padding.
 
 Measured with `sizeof` against this branch's headers (cross-compiled for
 `POKEMON_WAYFARER`), and against open PR
@@ -1057,9 +1068,10 @@ their haunt.
   boulders in view, and Cut and Strength edges in the graph, for trainers
   whose team can use them. Off-screen water edges exist already
   ([walker graph](#walker-graph)).
-- **Routines into the catalog:** the
-  [routines research file's](../research/notable-trainer-routines.md)
-  cycles and favourites become catalog values.
+- **Routines into the catalog:** the cycles and favourites live in
+  `game/tools/wayfarer_world/routines.json` (from the
+  [routines research file](../research/notable-trainer-routines.md)); they
+  can become catalog values.
 - Play style or momentum shaping dwell lengths.
 
 ## References

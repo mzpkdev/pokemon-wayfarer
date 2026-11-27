@@ -1,5 +1,7 @@
 # Custom origin framework exercise
 
+Status (2026-11-27): the origin framework it tested shipped (PR #75), so "the framework itself is a draft" below no longer holds. The three hypothetical origins remain paper only; none was built.
+
 ## Evidence and scope
 
 A native Codex runner read the [regional-start PRD](../prds/wayfarer-regional-start-choice.md)

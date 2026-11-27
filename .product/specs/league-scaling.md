@@ -1,15 +1,15 @@
 # League scaling
 
 PRD: [League scaling](../prds/league-scaling.md)
-Implemented: Partial. Wayfarer's v0 league events ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)) replace this scaling there; it still describes Today.
+Implemented: Partial. The scaling engine is merged, but Wayfarer's v0 league events ([PR #139](https://github.com/mzpkdev/pokemon-wayfarer/pull/139)) replace it in the shipped game: league battles are built from saved event lineups, never through `GetLeagueScalingLevel`. The engine (`GetLeagueScalingBaseline`, `B_LEAGUE_SCALING`) is compiled and runs only when `WAYFARER_LEAGUE_EVENTS` is off, and its tests in `game/test/league_tiers.c` are compiled only when `WAYFARER_V0_TRAINERS` is off.
 
-Everything below describes Today; the v0 successor is
+Everything below describes the pre-v0 circuit; its successor is
 [Leagues](leagues.md).
 
 The scaling engine, fixed Indigo/Masters/Hoenn roster and league wiring,
 persisted stage/replay identity and Trainer Rating (TR) snapshot taken when
-entering a league, and +8-per-league progression are implemented. Campaign
-balance acceptance remains pending. See the
+entering a league, and +8-per-league progression were implemented for that
+circuit. Its campaign balance acceptance was never recorded. See the
 [current circuit contract](wayfarer-interregional-league-circuit.md) and
 [runtime producer](../../game/src/league_circuit.c). The
 [original scaling evidence](../research/league-scaling-implementation.md)

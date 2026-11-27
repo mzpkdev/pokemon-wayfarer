@@ -1,5 +1,7 @@
 # League scaling implementation evidence
 
+Status (2026-11-27): superseded for the shipped game. Wayfarer's league battles use saved league event lineups since PR #139, so the scaling engine this evidence covers runs only when `WAYFARER_LEAGUE_EVENTS` is off, and its tests are compiled only when `WAYFARER_V0_TRAINERS` is off. The levels, rewards and admission TR below do not describe Wayfarer's current leagues.
+
 This record accompanies the [League scaling specification](../specs/league-scaling.md).
 Structural checks and mechanics tests do not establish playable balance.
 

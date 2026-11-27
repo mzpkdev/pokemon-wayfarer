@@ -1,6 +1,6 @@
 # FRLG Cinnabar, Seafoam Islands, and coastal routes port
 
-Status: Implemented. The unlocked Cinnabar interior preview and initial HNS
+Implemented: Yes. The unlocked Cinnabar interior preview and initial HNS
 map retirement merged in
 [PR #110](https://github.com/mzpkdev/pokemon-wayfarer/pull/110). The full FRLG
 Cinnabar, Seafoam, Route 19, Route 20, and Route 21 North/South port replaced

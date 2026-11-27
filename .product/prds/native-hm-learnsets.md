@@ -1,9 +1,12 @@
 # Native HM utility learnsets
 
+Implemented: Yes, in its original form. In Wayfarer the catch-window revision replaced it: `gen_7.h` carries the `IS_WAYFARER` catch-window rows and none of the `IS_FRLG`/`IS_HNS` rows below.
+
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 PRD supersedes this document's roster, permanent-anchor, repeated-entry and
-successor-reminder requirements. That revision is not implemented yet. This
-document records the existing feature and remains applicable to standalone builds.
+successor-reminder requirements. That revision's core implementation is done in
+Wayfarer; full route acceptance is pending. This document records the earlier
+feature and remains applicable to standalone builds.
 
 ## Intent
 

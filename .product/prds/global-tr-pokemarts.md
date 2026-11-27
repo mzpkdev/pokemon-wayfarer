@@ -1,7 +1,10 @@
 # Poké Marts across the three regions
 
-Status: Design for implementation; runtime changes are not part of this document PR.
 Specification: [Global TR Poké Marts](../specs/global-tr-pokemarts.md)
+
+Implemented: Partial. The converted counters run on the shared essentials and
+the permanent local stock, at the v0 thresholds; release acceptance (emulator
+checks) remains pending in the specification.
 
 ## Intent
 
@@ -53,8 +56,8 @@ On the v0 TR scale the thresholds become TR 0, 10, 40, 70, 80, and 120, so
 each tier still opens at the same badge point: Great Balls after the first
 badge, Super Repels after four, Ultra Balls after seven, Full Heals after
 eight, and Max Potions and Full Restores after sixteen. The tier contents and
-the rest of this design are unchanged. The thresholds in the table above stay
-Today's until adoption.
+the rest of this design are unchanged. Wayfarer runs v0, so these are the
+thresholds the marts use; the table above holds the legacy values.
 
 ### Local character
 

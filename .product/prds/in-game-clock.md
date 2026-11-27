@@ -2,6 +2,8 @@
 
 Specifications: [In-game clock](../specs/in-game-clock.md)
 
+Implemented: Yes.
+
 Design status: agreed and implemented. The 90-minute day with the engine's
 hours shipped first; the 2-hour day with Wayfarer's own times of day below
 replaced it. Both lengths are placeholders for playtesting.
@@ -9,7 +11,7 @@ replaced it. Both lengths are placeholders for playtesting.
 ## Intent
 
 Wayfarer's days drive a lot of the world: the daily world slots, phone
-rematches, berries, day and night, and soon league invitations. Today those
+rematches, berries, day and night, and league invitations. Today those
 days follow the cartridge's real-time clock (RTC), so the world changes while
 the game is off, a player who plays one long session sees one day, and anyone
 can skip days by setting a clock. Wayfarer instead keeps its own clock that
@@ -118,9 +120,9 @@ Shoal Cave tide lasts 30 minutes instead of 22.5.
 
 ## Later
 
-- **S.S. ferries.** The S.S. Aqua, Anne and Tidal will sail between regions,
-  and ports shared by two ships will host one by day and the other by night
-  ([S.S. ferries](ss-ferries.md)). Their design builds on this clock's halves.
+- **S.S. ferries.** Built: the S.S. Aqua, Anne and Tidal sail between regions,
+  and ports shared by two ships host one by day and the other by night
+  ([S.S. ferries](ss-ferries.md)), on this clock's halves.
 
 ## References
 

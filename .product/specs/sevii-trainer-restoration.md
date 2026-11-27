@@ -1,7 +1,7 @@
 # Sevii regular trainer restoration
 
-PRDs: [Sevii exploration port](../prds/sevii-exploration-port.md) and
-[Sevii independent story beats](../prds/sevii-independent-story-beats.md)
+PRD: [Sevii exploration port](../prds/sevii-exploration-port.md)
+Related PRD: [Sevii independent story beats](../prds/sevii-independent-story-beats.md)
 
 Implemented: Yes — delivered in [PR #105](https://github.com/mzpkdev/pokemon-wayfarer/pull/105) on the [content-overlay foundation](https://github.com/mzpkdev/pokemon-wayfarer/pull/101).
 

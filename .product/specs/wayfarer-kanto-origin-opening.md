@@ -406,8 +406,14 @@ include:
 | Build isolation | Wayfarer compiles and passes map/script validation with the new profile. Standalone HNS, Emerald, FireRed, and LeafGreen compile with their existing opening behavior and no Wayfarer-only state reference. |
 
 Run ROM builds that share generated map outputs serially. Record source/manifest
-checks separately from emulator acceptance. Keep `Implemented: No` until the
-behavior lands on the main branch and all required validation passes.
+checks separately from emulator acceptance. The behavior landed on `main` in
+[PR #135](https://github.com/mzpkdev/pokemon-wayfarer/pull/135).
+
+After the opening, Oak's lab joins the shared badge check: a Pallet-origin player
+with eight Kanto badges can have Oak open Mt. Silver like any other origin
+([PR #239](https://github.com/mzpkdev/pokemon-wayfarer/pull/239)). Daisy's "you battled Blue" line
+waits until the first Blue battle is resolved, and after the opening she keeps her
+HNS tea and grooming service (no Town Map gift yet).
 
 ## References
 

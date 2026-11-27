@@ -1,5 +1,7 @@
 # Trainer party scaling implementation audit
 
+Status (2026-11-27): partly superseded. Wayfarer ships v0 levels (an ordinary slot takes its map's reach level, PR #160) and final-stage rosters that step back by level (PR #157), so the level curve, authored-level adjustment and "no forward evolution" described below apply only to builds with `WAYFARER_V0_TRAINERS` off. The classification manifest and the `B_TRAINER_PARTY_SCALING` rollback switch still hold.
+
 This audit accompanies the [Trainer scaling specification](../specs/trainer-party-scaling.md).
 The implementation consumes `GetTrainerRating()` without changing its progression
 inputs. The League circuit remains a separate task.

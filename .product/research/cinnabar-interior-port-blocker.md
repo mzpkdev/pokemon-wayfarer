@@ -1,5 +1,7 @@
 # Cinnabar interior port warp investigation
 
+Status (2026-11-27): historical. The unlocked preview interiors it tested were retired when the full FRLG Cinnabar port shipped in PR #112; the FRLG behavior and warp findings below still explain how the shipped FRLG interiors work in Wayfarer.
+
 ## Scope
 
 The task adds HNS-addressable, FRLG-layout copies of Cinnabar's Center, Mart,

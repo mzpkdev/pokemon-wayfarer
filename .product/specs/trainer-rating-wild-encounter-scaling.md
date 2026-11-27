@@ -2,9 +2,10 @@
 
 **Partly retired.** Its wild-encounter parts, from Eligible profiles through
 Consumers of the effective population, are replaced by
-[Wild encounters v2](../prds/wild-encounters-v2.md); they still describe today's
-game until v2 ships. Its Trainer Rating lifecycle and progression targets
-still apply.
+[Wild encounters v2](../prds/wild-encounters-v2.md), which shipped in Wayfarer
+([PR #156](https://github.com/mzpkdev/pokemon-wayfarer/pull/156)); they now describe only builds that have not adopted
+it. Its Trainer Rating lifecycle and progression targets
+still apply, except that Wayfarer ships the v0 TR (`WAYFARER_V0_TRAINERS`).
 
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes named native-utility carriers and permanent-retention
@@ -14,7 +15,7 @@ scaling and unrelated mechanics remain unchanged; standalone builds retain
 their existing contract.
 
 PRD: [Trainer Rating wild encounter scaling](../prds/trainer-rating-wild-encounter-scaling.md)
-Implemented: Partial; foundation and Today's circuit producer exist, broader acceptance remains pending.
+Implemented: Partial. The TR foundation is live; Wayfarer's wild levels come from Wild encounters v2 and its TR from the v0 formula. Today's +8 circuit producer runs only when `WAYFARER_V0_TRAINERS` is off. Broader acceptance remains pending.
 
 ## Scope
 
@@ -137,6 +138,10 @@ run from the original selected slot. Its level still projects through TR, but
 predecessor resolution and species-floor eligibility filtering are bypassed.
 
 ### v0 wild level curve
+
+Superseded: Wayfarer ships the reach levels of
+[Wild level scaling](wild-level-scaling.md#reach-levels) (Road, Wilds and
+Outlands) instead of this curve. The table below is the earlier draft.
 
 On the [v0 TR scale](player-trainer-rating.md#formula-v0) the
 projection follows the wild level curve below instead of today's anchors (the

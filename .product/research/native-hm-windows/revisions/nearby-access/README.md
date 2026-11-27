@@ -1,5 +1,7 @@
 # Nearby utility acquisition: selected design
 
+Status (2026-11-27): superseded by the [wild encounters v2 revision](../wild-encounters-v2/README.md). The roster shipped in PR #65; the 17 encounter replacements and the TR 0-80 evidence were retired by wild encounters v2 (PR #156), and the figures below no longer hold for Wayfarer's tables.
+
 Status: selected design revision; production implementation remains pending.
 
 Keep the single-entry distribution, permit short walking detours, and adjust
