@@ -123,8 +123,8 @@ through a ferry voyage. This PRD does not overturn that rule. See the
 ## Open questions
 
 1. **Battle speed default.** 1× or 2× for a new game?
-   *Recommendation:* 1×, and make it easy to find in the options. Players who
-   want it will look for it.
+   *Recommendation:* 2×, as SoulGold ships it. See the
+   [spec's open questions](../specs/battle-speed.md#open-questions).
 2. **Natures.** Add a party-menu nature changer, or keep mints?
    *Recommendation:* keep mints. Sell them in one shop per region, after the
    same badge count as Goldenrod's, so every origin can get them. A free
